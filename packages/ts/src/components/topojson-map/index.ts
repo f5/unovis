@@ -17,6 +17,7 @@ import { getCSSVariableValue, isStringCSSVariable, rectIntersect } from 'utils/m
 import { estimateStringPixelLength } from 'utils/text'
 
 // Types
+import { GenericDataRecord } from 'types/data'
 import { MapLink } from 'types/map'
 import { Rect } from 'types/misc'
 
@@ -27,14 +28,20 @@ import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapP
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { arc, getLonLat, getPointPathData } from './utils'
+import { arc, getLonLat, getPointPathData, collideLabels } from './utils'
 
 // Styles
 import * as s from './style'
 
+
+// Extend SVGTextElement to track label visibility for area labels
+interface LabelSVGTextElement extends SVGTextElement {
+  _labelVisible?: boolean;
+}
+
 export class TopoJSONMap<
   AreaDatum,
-  PointDatum = unknown,
+  PointDatum extends GenericDataRecord = GenericDataRecord,
   LinkDatum = unknown,
 > extends ComponentCore<
   MapData<AreaDatum, PointDatum, LinkDatum>,
@@ -57,8 +64,9 @@ export class TopoJSONMap<
   private _prevWidth: number
   private _prevHeight: number
   private _animFrameId: number
-
-  private _collideLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
+  private _isZooming = false
+  private _zoomEndTimeoutId: ReturnType<typeof setTimeout>
+  private _collisionDetectionAnimFrameId: ReturnType<typeof requestAnimationFrame>
 
   private _featureCollection: GeoJSON.FeatureCollection
   private _zoomBehavior: ZoomBehavior<SVGGElement, unknown> = zoom()
@@ -81,7 +89,9 @@ export class TopoJSONMap<
 
   constructor (config?: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, data?: MapData<AreaDatum, PointDatum, LinkDatum>) {
     super()
-    this._zoomBehavior.on('zoom', this._onZoom.bind(this))
+    this._zoomBehavior
+      .on('zoom', this._onZoom.bind(this))
+      .on('end', this._onZoomEnd.bind(this))
 
     if (config) this.setConfig(config)
     if (data) this.setData(data)
@@ -150,6 +160,11 @@ export class TopoJSONMap<
     // When zoom behaviour is active we assign the `draggable` class to show the grabbing cursor
     this.g.classed('draggable', !config.disableZoom)
     this._firstRender = false
+
+    // Run collision detection after initial render
+    if (!this._isZooming) {
+      this._runCollisionDetection()
+    }
   }
 
   _renderBackground (): void {
@@ -307,43 +322,41 @@ export class TopoJSONMap<
       .style('opacity', 0)
       .remove()
 
-    // Run collision detection immediately to prevent flickering during zoom
-    if (candidateLabels.length > 0) {
-      window.cancelAnimationFrame(this._collideLabelsAnimFrameId)
-      // Run collision detection synchronously first
-      this._collideLabels()
-
-      // Then schedule follow-up collision detection for any dynamic changes
-      this._collideLabelsAnimFrameId = window.requestAnimationFrame(() => {
-        this._collideLabels()
-      })
+    // Only update opacity after zoom completes
+    if (!this._isZooming) {
+      smartTransition(labelsMerged, duration)
+        .style('opacity', 1)
     }
-
-    // Animate to visible state AFTER collision detection
-    smartTransition(labelsMerged, duration)
-      .style('opacity', 1)
   }
 
   private _collideLabels (): void {
     const labels = this._areaLabelsGroup.selectAll<SVGTextElement, any>(`.${s.areaLabel}`)
-    const labelNodes = labels.nodes()
+    const labelNodes = labels.nodes() as LabelSVGTextElement[]
     const labelData = labels.data()
 
     if (labelNodes.length === 0) return
 
     // Reset all labels to visible and mark them as such
-    labelNodes.forEach((node: any) => {
+    labelNodes.forEach((node) => {
       node._labelVisible = true
     })
 
-    // Helper function to get bounding box
+    // Get the computed font size which already has zoom division applied
+    // (The CSS uses calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel}))
+    let actualFontSize = 12 // Default fallback
+    if (labelNodes.length > 0) {
+      const computedStyle = getComputedStyle(labelNodes[0])
+      const fontSize = computedStyle.fontSize
+      if (fontSize) {
+        actualFontSize = parseFloat(fontSize)
+      }
+    }
+
     const getBBox = (labelData: any): Rect => {
       const [x, y] = labelData.centroid
       const labelText = labelData.labelText || ''
-      const fontSize = 12 // Default font size
-
-      const width = estimateStringPixelLength(labelText, fontSize, 0.6)
-      const height = fontSize * 1.2 // Line height factor
+      const width = estimateStringPixelLength(labelText, actualFontSize, 0.6)
+      const height = actualFontSize
 
       return {
         x: x - width / 2,
@@ -353,8 +366,7 @@ export class TopoJSONMap<
       }
     }
 
-    // Run collision detection similar to scatter plot
-    labelNodes.forEach((node1: any, i) => {
+    labelNodes.forEach((node1, i) => {
       const data1 = labelData[i]
       if (!node1._labelVisible) return
 
@@ -369,7 +381,7 @@ export class TopoJSONMap<
         if (!node2._labelVisible) continue
 
         const label2BoundingRect = getBBox(data2)
-        const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, 2)
+        const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, 0.25)
 
         if (intersect) {
           // Priority based on area size - larger areas keep their labels
@@ -612,6 +624,13 @@ export class TopoJSONMap<
     const isMouseEvent = event.sourceEvent !== undefined
     const isExternalEvent = !event?.sourceEvent && !this._isResizing
 
+    this._isZooming = true
+
+    // Clear any pending zoom end timeout
+    if (this._zoomEndTimeoutId) {
+      clearTimeout(this._zoomEndTimeoutId)
+    }
+
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent))
 
@@ -621,6 +640,46 @@ export class TopoJSONMap<
       this._center = [event.transform.x, event.transform.y]
     }
     this._currentZoomLevel = (event?.transform.k / this._initialScale) || 1
+
+    // Fallback timeout in case zoom end event doesn't fire
+    this._zoomEndTimeoutId = setTimeout(() => {
+      this._isZooming = false
+      this._runCollisionDetection()
+    }, 150)
+  }
+
+  _onZoomEnd (): void {
+    if (this._zoomEndTimeoutId) {
+      clearTimeout(this._zoomEndTimeoutId)
+    }
+    this._isZooming = false
+    this._runCollisionDetection()
+  }
+
+  private _runCollisionDetection (): void {
+    const { config, datamodel } = this
+
+    window.cancelAnimationFrame(this._collisionDetectionAnimFrameId)
+    this._collisionDetectionAnimFrameId = window.requestAnimationFrame(() => {
+      // Run collision detection for area labels
+      const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, any>(`.${s.areaLabel}`)
+      if (areaLabels.size() > 0) {
+        this._collideLabels()
+      }
+
+      // Run collision detection for point labels
+      const pointData = datamodel.points || []
+      if (config.pointLabelPosition === MapPointLabelPosition.Bottom && pointData.length > 0) {
+        collideLabels(
+          this._pointsGroup.selectAll<SVGGElement, PointDatum>(`.${s.point}`),
+          this._projection,
+          config.pointRadius,
+          config.longitude,
+          config.latitude,
+          this._currentZoomLevel
+        )
+      }
+    })
   }
 
   _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean, isExternalEvent: boolean): void {
@@ -882,5 +941,9 @@ export class TopoJSONMap<
   destroy (): void {
     window.cancelAnimationFrame(this._animFrameId)
     this._stopFlowAnimation()
+    window.cancelAnimationFrame(this._collisionDetectionAnimFrameId)
+    if (this._zoomEndTimeoutId) {
+      clearTimeout(this._zoomEndTimeoutId)
+    }
   }
 }

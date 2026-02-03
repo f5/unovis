@@ -3,13 +3,14 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component
 
 // Types
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import { MapPointLabelPosition, TopoJSONMapPointShape, TopoJSONMapPointStyles } from './types'
 
 export interface TopoJSONMapConfigInterface<
   AreaDatum,
-  PointDatum = unknown,
+  PointDatum extends GenericDataRecord,
   LinkDatum = unknown,
 > extends ComponentConfigInterface {
   // General
@@ -117,7 +118,7 @@ export interface TopoJSONMapConfigInterface<
   heatmapModeZoomLevelThreshold?: number;
 }
 
-export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unknown, unknown> = {
+export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, GenericDataRecord, unknown> = {
   ...ComponentDefaultConfig,
   projection: undefined,
   duration: 1500,
@@ -134,8 +135,8 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   linkColor: (d: unknown): string => (d as { color: string }).color ?? null,
   linkCursor: null,
   linkId: (d: unknown, i: number | undefined): string => `${(d as { id: string }).id ?? i}`,
-  linkSource: (d: unknown): (number | string | unknown) => (d as { source: string }).source,
-  linkTarget: (d: unknown): (number | string | unknown) => (d as { target: string }).target,
+  linkSource: (d: unknown): number | string | GenericDataRecord => (d as { source: number | string | GenericDataRecord }).source,
+  linkTarget: (d: unknown): number | string | GenericDataRecord => (d as { target: number | string | GenericDataRecord }).target,
 
   // Flow defaults
   sourceLongitude: (f: unknown): number => (f as { sourceLongitude: number }).sourceLongitude as number,
