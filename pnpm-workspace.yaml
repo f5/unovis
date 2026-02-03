@@ -8,3 +8,6 @@ packages:
   - packages/shared
   - packages/dev
   - packages/website
+
+catalog:
+  vite: ^7.3.1
