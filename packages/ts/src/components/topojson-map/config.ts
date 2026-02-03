@@ -4,7 +4,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component
 // Types
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 // Local Types
-import { MapPointLabelPosition, TopoJSONMapPointStyles } from './types'
+import { MapPointLabelPosition, TopoJSONMapPointShape, TopoJSONMapPointStyles } from './types'
 
 export interface TopoJSONMapConfigInterface<
   AreaDatum,
@@ -55,6 +55,10 @@ export interface TopoJSONMapConfigInterface<
   pointRadius?: NumericAccessor<PointDatum>;
   /** Point stroke width accessor. Default: `d => d.strokeWidth ?? null` */
   pointStrokeWidth?: NumericAccessor<PointDatum>;
+  /** Point shape accessor. Default: `TopoJSONMapPointShape.Circle` */
+  pointShape?: StringAccessor<PointDatum>;
+  /** Point ring width for ring-shaped points. Default: `2` */
+  pointRingWidth?: NumericAccessor<PointDatum>;
   /** Point cursor constant value or accessor function. Default: `null` */
   pointCursor?: StringAccessor<PointDatum>;
   /** Point longitude accessor function. Default: `d => d.longitude ?? null` */
@@ -129,6 +133,8 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   pointColor: (d: unknown): string => (d as { color: string }).color ?? null,
   pointRadius: (d: unknown): number => (d as { radius: number }).radius ?? 8,
   pointStrokeWidth: (d: unknown): number => (d as { strokeWidth: number }).strokeWidth ?? 0,
+  pointShape: (): string => TopoJSONMapPointShape.Circle,
+  pointRingWidth: (d: unknown): number => (d as { ringWidth: number }).ringWidth ?? 2,
   pointCursor: null,
   pointLabel: undefined,
   pointLabelPosition: MapPointLabelPosition.Bottom,

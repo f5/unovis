@@ -60,6 +60,7 @@ export type {
   TopoJSONMapPieDatum,
   TopoJSONMapPointStyle,
   TopoJSONMapPointStyles,
+  TopoJSONMapPointShape,
   MapPointLabelPosition,
   MapData,
   MapFeature,

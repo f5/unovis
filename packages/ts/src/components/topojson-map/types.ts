@@ -47,6 +47,13 @@ export enum MapPointLabelPosition {
   Bottom = 'bottom',
 }
 
+export enum TopoJSONMapPointShape {
+  Square = 'square',
+  Circle = 'circle',
+  Triangle = 'triangle',
+  Ring = 'ring',
+}
+
 export type MapFeature<D> = Feature<Geometry> & { data: D }
 
 export type TopoJSONMapPieDatum = {

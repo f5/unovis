@@ -19,13 +19,13 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { MapLink } from 'types/map'
 
 // Local Types
-import { MapData, MapFeature, MapPointLabelPosition, MapProjection } from './types'
+import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapPointShape } from './types'
 
 // Config
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { arc, getLonLat, getDonutData } from './utils'
+import { arc, getLonLat, getDonutData, getPointPathData } from './utils'
 import { updateDonut } from './modules/donut'
 
 // Styles
@@ -252,8 +252,8 @@ export class TopoJSONMap<
       })
       .style('opacity', 0)
 
-    pointsEnter.append('circle').attr('class', s.pointCircle)
-      .attr('r', 0)
+    pointsEnter.append('path').attr('class', s.pointShape)
+      .attr('d', 'M0,0')
       .style('fill', (d, i) => getColor(d, config.pointColor, i))
       .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
 
@@ -274,7 +274,7 @@ export class TopoJSONMap<
       .style('cursor', d => getString(d, config.pointCursor))
       .style('opacity', 1)
 
-    // Update donut charts and circles
+    // Update donut charts
     const currentZoomLevel = this._currentZoomLevel || 1
     pointsMerged.select(`.${s.pointDonut}`).each(function (d, i) {
       const donutData = getDonutData(d, config.colorMap)
@@ -288,18 +288,26 @@ export class TopoJSONMap<
       }
     })
 
-    smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
-      .attr('r', d => {
-        const radius = getNumber(d, config.pointRadius) / currentZoomLevel
-        const hasDonut = getDonutData(d, config.colorMap).length > 0
-        return hasDonut ? 0 : radius
-      })
+    // Update point shapes
+    smartTransition(pointsMerged.select(`.${s.pointShape}`), duration)
+      .attr('r', d => getNumber(d, config.pointRadius) / this._currentZoomLevel)
       .style('fill', (d, i) => {
         const hasDonut = getDonutData(d, config.colorMap).length > 0
         return hasDonut ? 'transparent' : getColor(d, config.pointColor, i)
       })
+      .attr('d', d => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const r = getNumber(d, config.pointRadius) / this._currentZoomLevel
+        // Center at 0,0 for transform
+        return getPointPathData({ x: 0, y: 0 }, r, shape)
+      })
       .style('stroke', (d, i) => getColor(d, config.pointColor, i))
-      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth) / currentZoomLevel)
+      .style('stroke-width', d => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const isRing = shape === TopoJSONMapPointShape.Ring
+        const baseStrokeWidth = isRing ? getNumber(d, config.pointRingWidth) : getNumber(d, config.pointStrokeWidth)
+        return baseStrokeWidth / this._currentZoomLevel
+      })
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged

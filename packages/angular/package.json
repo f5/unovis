@@ -43,7 +43,8 @@
     "dist"
   ],
   "dependencies": {
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "d3-geo": "~3"
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.4",
