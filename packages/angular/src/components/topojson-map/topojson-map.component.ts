@@ -4,6 +4,7 @@ import {
   TopoJSONMap,
   TopoJSONMapConfigInterface,
   ContainerCore,
+  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -20,7 +21,7 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisTopoJSONMapComponent }],
 })
-export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, AfterViewInit {
+export class VisTopoJSONMapComponent<AreaDatum, PointDatum extends GenericDataRecord, LinkDatum> implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration?: number
 
@@ -122,6 +123,9 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   /** Area cursor value or accessor function. Default: `null` */
   @Input() areaCursor?: StringAccessor<AreaDatum>
 
+  /** Area label accessor function. Default: `undefined` */
+  @Input() areaLabel?: StringAccessor<AreaDatum>
+
   /** Point color accessor. Default: `d => d.color ?? null` */
   @Input() pointColor?: ColorAccessor<PointDatum>
 
@@ -187,8 +191,8 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   }
 
   private getConfig (): TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {
-    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold } = this
-    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold }
+    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, areaLabel, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold } = this
+    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, areaLabel, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold }
     const keys = Object.keys(config) as (keyof TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
