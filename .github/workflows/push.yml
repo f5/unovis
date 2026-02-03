@@ -3,30 +3,37 @@ name: Cypress Percy Tests
 on:
   schedule:
     # 8:10 UTC time on Tuesdays
-    - cron: '10 8 * * 2'
+    - cron: '10 8 * * 3'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10.23.0
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
       with:
         node-version: '20.x'
+        cache: 'pnpm'
+        cache-dependency-path: pnpm-lock.yaml
     - name: Cache Cypress binary
       uses: actions/cache@v4
       with:
         path: ~/.cache/Cypress
-        key: cypress-cache-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        key: cypress-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
-          cypress-cache-${{ runner.os }}-
-    - name: Install pnpm
-      run: npm install -g pnpm@10.23.0
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 10.23.0
+          cypress-${{ runner.os }}-
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
+    - name: Install Cypress binary
+      run: cd packages/dev && pnpm exec cypress install
+    - name: Verify Cypress installation
+      run: cd packages/dev && pnpm exec cypress version
     - name: Build
       run: pnpm run build && pnpm run build:dev
     - name: Install Percy
