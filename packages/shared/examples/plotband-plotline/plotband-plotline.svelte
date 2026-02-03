@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { VisAxis, VisLine, VisPlotband, VisPlotline, VisXYContainer } from '@unovis/svelte';
-  import { data } from './data';
+  import { VisAxis, VisLine, VisPlotband, VisPlotline, VisXYContainer } from '@unovis/svelte'
+  import { data } from './data'
 </script>
 
 <template>

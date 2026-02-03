@@ -34,7 +34,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (<>
     <select onChange={(e: ChangeEvent<HTMLSelectElement>) => setChart(chartOptions[Number(e.target.value)])}>
-      {chartOptions.map((o, i) => <option value={i}>{o.type}</option>)}
+      {chartOptions.map((o, i) => <option key={o.type} value={i}>{o.type}</option>)}
     </select>
     <VisBulletLegend
       items={legendItems}

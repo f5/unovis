@@ -122,7 +122,7 @@ export class AppComponent {
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterPlotModule, SizedScatterPlotModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, StackedAreaWithAttributesModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
-    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule, PlotbandPlotlineModule, PatchyLineChartModule
+    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule, PlotbandPlotlineModule, PatchyLineChartModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],
