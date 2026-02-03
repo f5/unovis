@@ -49,7 +49,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         <label>
           Fallback value:
           <select onChange={e => setFallbackValue(fallbacks[Number(e.target.value)])}>
-            {fallbacks.map((o, i) => <option value={i}>{String(o)}</option>)}
+            {fallbacks.map((o, i) => <option key={i} value={i}>{String(o)}</option>)}
           </select>
         </label>
         <label>

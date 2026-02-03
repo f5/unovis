@@ -11,7 +11,7 @@ import {
   Sizing,
   VerticalAlign,
 } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 import apiRawData from '../sankey-api-endpoints/apieplist.json'
 import { getSankeyData, ApiEndpointNode, ApiEndpointLink, linkSort, nodeSort } from '../sankey-api-endpoints/data'

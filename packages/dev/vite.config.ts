@@ -22,4 +22,13 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
+  define: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    UNOVIS_MAP_TILE_SERVER_URL: JSON.stringify(process.env.UNOVIS_MAP_TILE_SERVER_URL ?? ''),
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    UNOVIS_MAP_TILE_SERVER_API_KEY: JSON.stringify(process.env.UNOVIS_MAP_TILE_SERVER_API_KEY ?? ''),
+  },
+  optimizeDeps: {
+    exclude: ['elkjs'],
+  },
 })

@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react'
 import { VisXYContainer, VisAxis, VisLine } from '@unovis/react'
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
+import { XYDataRecord, generateXYDataRecords } from '@/utils/data'
 import { Scale } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 export const title = 'Axis with Ticks Rotation Slider'
 export const subTitle = 'All 4 axis types'

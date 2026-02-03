@@ -8,8 +8,9 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": false,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src"],
+      "@/*": ["./src/*"]
     },
     "types": [
       "node",

@@ -15,7 +15,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/compone
 
 // Types
 import { TrimMode } from '@/types/text'
-import { Spacing } from 'types/spacing'
+import { Spacing } from '@/types/spacing'
 import { GraphInputLink, GraphInputNode, GraphInputData } from '@/types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from '@/types/accessor'
 

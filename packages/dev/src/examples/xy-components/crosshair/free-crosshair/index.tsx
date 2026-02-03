@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
 import { VisXYContainer, VisArea, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { XYDataRecord, generateXYDataRecords } from '@/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import { CrosshairCircle, getStackedValues, ContinuousScale, getColor, CurveType } from '@unovis/ts'
 
 export const title = 'Free Crosshair'

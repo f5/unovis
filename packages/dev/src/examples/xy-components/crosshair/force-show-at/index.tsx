@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react'
 import { VisXYContainer, VisArea, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { XYDataRecord, generateXYDataRecords } from '@/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 export const title = 'Force Show At Position'
 export const subTitle = 'Crosshair forced to show at specific position'

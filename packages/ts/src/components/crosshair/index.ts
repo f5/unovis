@@ -12,7 +12,7 @@ import { getColor } from '@/utils/color'
 
 // Types
 import { Position } from '@/types/position'
-import { FindNearestDirection } from 'types/data'
+import { FindNearestDirection } from '@/types/data'
 
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'

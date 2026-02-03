@@ -12,11 +12,11 @@ import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValu
 import { smartTransition } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { textAlignToAnchor, trimSVGText } from '@/utils/text'
-import { arrowPolylinePath } from 'utils/path'
-import { guid } from 'utils/misc'
+import { arrowPolylinePath } from '@/utils/path'
+import { guid } from '@/utils/misc'
 
 // Types
-import { TextAlign, Spacing, Arrangement } from 'types'
+import { TextAlign, Spacing, Arrangement } from '@/types'
 
 // Config
 import { TimelineDefaultConfig, TimelineConfigInterface } from './config'

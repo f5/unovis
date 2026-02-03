@@ -33,7 +33,7 @@
   "scripts": {
     "build": "vite build --mode production",
     "build:types": "tsc --project tsconfig.lib.json --emitDeclarationOnly",
-    "watch": "concurrently \"vite build --mode development --watch\" \"npm run build:types --watch\"",
+    "watch": "concurrently \"vite build --mode development --watch\" \"pnpm build:types --watch\"",
     "tsc": "tsc",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs"
   },
@@ -59,7 +59,7 @@
     "rollup-plugin-typescript2": "^0.31.1",
     "tslib": "^2.3.1",
     "typescript": "~4.2.4",
-    "vite": "^6.2.2",
+    "vite": "catalog:",
     "vite-plugin-dts": "~3.5.3",
     "vite-plugin-externalize-deps": "^0.9.0"
   }

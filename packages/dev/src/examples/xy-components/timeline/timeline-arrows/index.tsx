@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis } from '@unovis/react'
 
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import { Arrangement, TextAlign, TimelineArrow } from '@unovis/ts'
 
 // Icons

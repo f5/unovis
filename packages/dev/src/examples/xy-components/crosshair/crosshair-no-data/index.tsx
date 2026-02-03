@@ -1,8 +1,8 @@
 import React, { useMemo, useRef } from 'react'
 import { VisXYContainer, VisArea, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { XYDataRecord, generateXYDataRecords } from '@/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 export const title = 'Crosshair without Data'
 export const subTitle = 'Warning emitted'

@@ -4,21 +4,12 @@
   "packageManager": "pnpm@10.23.0",
   "license": "Apache-2.0",
   "private": true,
-  "workspaces": [
-    "packages/ts",
-    "packages/angular",
-    "packages/react",
-    "packages/svelte",
-    "packages/vue",
-    "packages/solid",
-    "packages/shared"
-  ],
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
   },
   "scripts": {
-    "dev": "concurrently \"cd packages/react && npm run watch\" \"cd packages/dev && pnpm dev\"",
+    "dev": "concurrently \"pnpm --filter @unovis/react watch\" \"pnpm --filter @unovis/dev dev\"",
     "website": "cd packages/website && pnpm start",
     "build": "pnpm build:ts && pnpm build:react && pnpm build:angular && pnpm build:svelte && pnpm build:vue && pnpm build:solid && pnpm build:website",
     "build:ts": "cd packages/ts && pnpm build",

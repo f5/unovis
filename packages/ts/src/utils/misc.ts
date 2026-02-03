@@ -1,7 +1,7 @@
 import { StringAccessor } from '@/types/accessor'
 import { LengthUnit, Rect } from '@/types/misc'
 import { getString, isString } from '@/utils/data'
-import { toPx } from 'utils/to-px'
+import { toPx } from '@/utils/to-px'
 
 export function guid (): string {
   const s4 = (): string =>

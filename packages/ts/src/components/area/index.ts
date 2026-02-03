@@ -14,8 +14,8 @@ import { getColor } from '@/utils/color'
 // Types
 import { Curve, CurveType } from '@/types/curve'
 import { NumericAccessor } from '@/types/accessor'
-import { Spacing } from 'types/spacing'
-import { Direction } from 'types/direction'
+import { Spacing } from '@/types/spacing'
+import { Direction } from '@/types/direction'
 
 // Local Types
 import { AreaDatum } from './types'

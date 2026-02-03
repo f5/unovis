@@ -1,4 +1,4 @@
-import { randomNumberGenerator } from '@/utils/data'
+import { randomNumberGenerator, ExampleViewerDurationProps } from '@/utils/data'
 import { VisAxis, VisBulletLegend, VisStackedBar, VisXYContainer } from '@unovis/react'
 import { BulletLegendOrientation } from '@unovis/ts'
 import React from 'react'

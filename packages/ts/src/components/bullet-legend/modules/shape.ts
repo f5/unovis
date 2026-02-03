@@ -8,8 +8,8 @@ import { Symbol, SymbolType } from '@/types/symbol'
 // Utils
 import { getColor } from '@/utils/color'
 import { ensureArray, getString } from '@/utils/data'
-import { getCSSVariableValueInPixels } from 'utils/misc'
-import { toPx } from 'utils/to-px'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
+import { toPx } from '@/utils/to-px'
 
 // Constants
 import { PATTERN_SIZE_PX } from '@/styles/patterns'

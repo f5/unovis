@@ -1,4 +1,4 @@
-import { XYDataRecord } from '@/utils/data'
+import { XYDataRecord, ExampleViewerDurationProps } from '@/utils/data'
 import { VisAxis, VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
 import { Position, Scatter } from '@unovis/ts'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'

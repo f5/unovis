@@ -1,13 +1,12 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { LeafletFlowMap, LeafletFlowMapConfigInterface } from '@unovis/ts'
-import { GenericDataRecord } from '@/types/data'
+import { LeafletFlowMap, LeafletFlowMapConfigInterface, GenericDataRecord } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisLeafletFlowMapRef<PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord> = {
   component?: LeafletFlowMap<PointDatum, FlowDatum>;

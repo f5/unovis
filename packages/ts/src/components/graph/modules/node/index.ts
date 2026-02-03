@@ -13,7 +13,7 @@ import { smartTransition, Selection$Transition } from '@/utils/d3'
 import { getBoolean, getNumber, getString, getValue, throttle } from '@/utils/data'
 import { getColor } from '@/utils/color'
 import { isStringSvg } from '@/utils/svg'
-import { getCSSVariableValueInPixels } from 'utils/misc'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
 
 // Local Types
 import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement, GraphNodeShape } from '../../types'

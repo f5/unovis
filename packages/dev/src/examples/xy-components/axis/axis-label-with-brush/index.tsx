@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { BulletLegendItemInterface, FitMode } from '@unovis/ts'
 import { VisXYContainer, VisAxis, VisBrush, VisGroupedBar, VisBulletLegend } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/utils/data'
 import { data, groups, GroupItem, DataRecord } from './data'
 
 export const title = 'Axis with Long Label and Brush'

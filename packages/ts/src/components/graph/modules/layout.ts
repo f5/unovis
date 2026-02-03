@@ -482,8 +482,11 @@ export async function applyELKLayout<N extends GraphInputNode, L extends GraphIn
   config: GraphConfigInterface<N, L>,
   width: number
 ): Promise<void> {
-  const ELK = (await import('elkjs/lib/elk.bundled.js')).default
-  const elk = new ELK()
+  // Use the browser-bundled version of elkjs
+  const elkModule = await import('elkjs/lib/elk.bundled.js')
+  // Handle both ESM default export and CommonJS module.exports
+  const ELK = (elkModule as { default?: typeof elkModule }).default ?? elkModule
+  const elk = new (ELK as new () => { layout: (graph: unknown) => Promise<unknown> })()
 
   const labelApprxHeight = 30
   const nodes = datamodel.nodes.map((n, i) => ({

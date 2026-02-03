@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis } from '@unovis/react'
 
-import { generateTimeSeries } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { generateTimeSeries } from '@/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import { TextAlign } from '@unovis/ts'
 
 // Icons

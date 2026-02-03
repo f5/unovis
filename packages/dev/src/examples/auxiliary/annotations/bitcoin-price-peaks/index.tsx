@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { VisXYContainer, VisStackedBar, VisLine, VisAxis, VisAnnotations } from '@unovis/react'
 import { AnnotationItem, Scale } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 import { data, DataRecord } from '@unovis/shared/examples/basic-annotations/data'
 

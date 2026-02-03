@@ -10,7 +10,7 @@ import { getNumber } from '@/utils/data'
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { TrimMode, VerticalAlign, FitMode } from '@/types/text'
 import { Position } from '@/types/position'
-import { Spacing } from 'types/spacing'
+import { Spacing } from '@/types/spacing'
 import {
   SankeyInputLink,
   SankeyInputNode,

@@ -1,5 +1,5 @@
 import { css } from '@emotion/css'
-import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
+import { getCssVarNames, injectGlobalCssVariables } from '@/utils/style'
 import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from '@/styles/index'
 
 export const SANKEY_ICON_SIZE = 22

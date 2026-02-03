@@ -17,7 +17,7 @@ import { smartTransition } from '@/utils/d3'
 import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from '@/utils/text'
 import { isEqual } from '@/utils/data'
 import { rectIntersect } from '@/utils/misc'
-import { getFontWidthToHeightRatio } from 'styles/index'
+import { getFontWidthToHeightRatio } from '@/styles/index'
 
 // Local Types
 import { AxisType } from './types'

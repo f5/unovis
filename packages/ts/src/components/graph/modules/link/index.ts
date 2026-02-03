@@ -7,7 +7,7 @@ import { throttle, getValue, getNumber, getBoolean, ensureArray } from '@/utils/
 import { smartTransition } from '@/utils/d3'
 import { getCSSVariableValueInPixels } from '@/utils/misc'
 import { estimateStringPixelLength } from '@/utils/text'
-import { toPx } from 'utils/to-px'
+import { toPx } from '@/utils/to-px'
 
 // Types
 import { GraphInputLink, GraphInputNode } from '@/types/graph'

@@ -1,4 +1,4 @@
-import { generateStackedDataRecords, StackedDataRecord } from '@/utils/data'
+import { generateStackedDataRecords, StackedDataRecord, ExampleViewerDurationProps } from '@/utils/data'
 import { VisAxis, VisBulletLegend, VisScatter, VisXYContainer } from '@unovis/react'
 import { BulletLegendItemInterface, BulletShape } from '@unovis/ts'
 import React, { useCallback, useEffect, useState } from 'react'

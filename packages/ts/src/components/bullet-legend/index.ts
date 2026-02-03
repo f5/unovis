@@ -1,9 +1,9 @@
 import { select, Selection } from 'd3-selection'
 
 // Utils
-import { toPx } from 'utils/to-px'
+import { toPx } from '@/utils/to-px'
 import { merge } from '@/utils/data'
-import { getCSSVariableValueInPixels } from 'utils/misc'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
 
 // Config
 import { BulletLegendDefaultConfig, BulletLegendConfigInterface } from './config'

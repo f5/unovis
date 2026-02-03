@@ -1,17 +1,17 @@
 import { Selection } from 'd3-selection'
 
 // Utils
-import { estimateStringPixelLength, estimateTextSize, trimSVGText, wrapSVGText } from '@utils/text'
-import { clamp, getString, getValue } from '@utils/data'
-import { getColor } from '@utils/color'
-import { getCSSVariableValueInPixels } from '@utils/misc'
-import { cssvar } from '@utils/style'
+import { estimateStringPixelLength, estimateTextSize, trimSVGText, wrapSVGText } from '@/utils/text'
+import { clamp, getString, getValue } from '@/utils/data'
+import { getColor } from '@/utils/color'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
+import { cssvar } from '@/utils/style'
 
 // Types
 import { GenericAccessor } from '@/types/accessor'
 import { FitMode, VerticalAlign } from '@/types/text'
 import { Position } from '@/types/position'
-import { Spacing } from 'types/spacing'
+import { Spacing } from '@/types/spacing'
 
 // Local Types
 import { SankeyInputLink, SankeyInputNode, SankeyNode, SankeySubLabelPlacement } from '../types'

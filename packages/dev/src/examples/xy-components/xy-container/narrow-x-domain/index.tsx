@@ -1,8 +1,8 @@
 import React from 'react'
 import { VisXYContainer, VisArea, VisAxis, VisLine } from '@unovis/react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { XYDataRecord, generateXYDataRecords } from '@/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 export const title = 'Narrow X Domain'
 export const subTitle = 'Testing Y Scale calculation'

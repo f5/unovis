@@ -24,7 +24,7 @@
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.4",
     "typescript-plugin-css-modules": "^5.1.0",
-    "vite": "^6.2.2"
+    "vite": "catalog:"
   },
   "dependencies": {
     "@unovis/react": "workspace:*",

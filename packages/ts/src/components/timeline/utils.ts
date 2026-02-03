@@ -1,6 +1,6 @@
-import type { NumericAccessor, StringAccessor } from 'types/accessor'
-import { Arrangement } from 'types/position'
-import { getNumber, getString, getValue } from 'utils/data'
+import type { NumericAccessor, StringAccessor } from '@/types/accessor'
+import { Arrangement } from '@/types/position'
+import { getNumber, getString, getValue } from '@/utils/data'
 
 export const getIconBleed = <Datum>(
   datum: Datum,

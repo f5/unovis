@@ -1,6 +1,6 @@
-import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { FitMode, TrimMode } from 'types/text'
+import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
+import { ColorAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { FitMode, TrimMode } from '@/types/text'
 import { TreemapNode } from './types'
 
 export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface {

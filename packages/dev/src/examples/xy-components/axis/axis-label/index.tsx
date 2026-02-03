@@ -1,8 +1,8 @@
 import React from 'react'
 import { VisXYContainer, VisAxis, VisLine, VisGroupedBar } from '@unovis/react'
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
+import { XYDataRecord, generateXYDataRecords } from '@/utils/data'
 import { FitMode, TrimMode } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 export const title = 'Axis with Label Text Fit Mode'
 export const subTitle = 'Trim and Wrap'

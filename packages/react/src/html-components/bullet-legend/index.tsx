@@ -6,7 +6,7 @@ import { BulletLegend, BulletLegendConfigInterface } from '@unovis/ts'
 import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisBulletLegendRef = {
   component?: BulletLegend;

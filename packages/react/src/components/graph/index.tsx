@@ -1,7 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Graph, GraphConfigInterface } from '@unovis/ts'
-import { GraphInputNode, GraphInputLink } from '@/types/graph'
+import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from '@/utils/react'

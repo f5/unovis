@@ -11,7 +11,7 @@ import { Crosshair } from '@/components/crosshair'
 // Types
 import { ContinuousScale } from '@/types/scale'
 import { Direction } from '@/types/direction'
-import { Spacing } from 'types/spacing'
+import { Spacing } from '@/types/spacing'
 
 export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
   /** An array of visualization components. Default: `[]` */

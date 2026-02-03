@@ -6,7 +6,7 @@
     "outDir": "./dist",
     "declaration": true,
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["*"]
     },
     "noImplicitAny": true,
     "alwaysStrict": true,

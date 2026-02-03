@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis, VisTooltip } from '@unovis/react'
 import { Position, Timeline, TimelineRowLabel } from '@unovis/ts'
+import { generateTimeSeries, TimeDataRecord, ExampleViewerDurationProps } from '@/utils/data'
 
 
 export const title = 'Tooltip and Scrolling'
