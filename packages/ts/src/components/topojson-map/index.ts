@@ -13,12 +13,10 @@ import { MapGraphDataModel } from 'data-models/map-graph'
 import { clamp, getNumber, getString, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor, hexToBrightness } from 'utils/color'
-import { getCSSVariableValue, isStringCSSVariable, rectIntersect } from 'utils/misc'
-import { estimateStringPixelLength } from 'utils/text'
+import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 
 // Types
 import { MapLink } from 'types/map'
-import { Rect } from 'types/misc'
 
 // Local Types
 import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapPointShape, FlowParticle } from './types'
@@ -27,16 +25,10 @@ import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapP
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { arc, getLonLat, getPointPathData, collideLabels } from './utils'
+import { arc, getLonLat, getPointPathData, collideAreaLabels } from './utils'
 
 // Styles
 import * as s from './style'
-
-
-// Extend SVGTextElement to track label visibility for area labels
-interface LabelSVGTextElement extends SVGTextElement {
-  _labelVisible?: boolean;
-}
 
 export class TopoJSONMap<
   AreaDatum,
@@ -328,76 +320,6 @@ export class TopoJSONMap<
     }
   }
 
-  private _collideLabels (): void {
-    const labels = this._areaLabelsGroup.selectAll<SVGTextElement, any>(`.${s.areaLabel}`)
-    const labelNodes = labels.nodes() as LabelSVGTextElement[]
-    const labelData = labels.data()
-
-    if (labelNodes.length === 0) return
-
-    // Reset all labels to visible and mark them as such
-    labelNodes.forEach((node) => {
-      node._labelVisible = true
-    })
-
-    // Get the computed font size which already has zoom division applied
-    // (The CSS uses calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel}))
-    let actualFontSize = 12 // Default fallback
-    if (labelNodes.length > 0) {
-      const computedStyle = getComputedStyle(labelNodes[0])
-      const fontSize = computedStyle.fontSize
-      if (fontSize) {
-        actualFontSize = parseFloat(fontSize)
-      }
-    }
-
-    const getBBox = (labelData: any): Rect => {
-      const [x, y] = labelData.centroid
-      const labelText = labelData.labelText || ''
-      const width = estimateStringPixelLength(labelText, actualFontSize, 0.6)
-      const height = actualFontSize
-
-      return {
-        x: x - width / 2,
-        y: y - height / 2,
-        width,
-        height,
-      }
-    }
-
-    labelNodes.forEach((node1, i) => {
-      const data1 = labelData[i]
-      if (!node1._labelVisible) return
-
-      const label1BoundingRect = getBBox(data1)
-
-      for (let j = 0; j < labelNodes.length; j++) {
-        if (i === j) continue
-
-        const node2 = labelNodes[j]
-        const data2 = labelData[j]
-
-        if (!node2._labelVisible) continue
-
-        const label2BoundingRect = getBBox(data2)
-        const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, 0.25)
-
-        if (intersect) {
-          // Priority based on area size - larger areas keep their labels
-          if (data1.area >= data2.area) {
-            node2._labelVisible = false
-          } else {
-            node1._labelVisible = false
-            break
-          }
-        }
-      }
-    })
-
-    // Apply visibility based on collision detection
-    labels.style('opacity', (d, i) => labelNodes[i]._labelVisible ? 1 : 0)
-  }
-
   _renderLinks (duration: number): void {
     const { config, datamodel } = this
     const links = datamodel.links
@@ -656,28 +578,11 @@ export class TopoJSONMap<
   }
 
   private _runCollisionDetection (): void {
-    const { config, datamodel } = this
-
     window.cancelAnimationFrame(this._collisionDetectionAnimFrameId)
     this._collisionDetectionAnimFrameId = window.requestAnimationFrame(() => {
       // Run collision detection for area labels
       const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, any>(`.${s.areaLabel}`)
-      if (areaLabels.size() > 0) {
-        this._collideLabels()
-      }
-
-      // Run collision detection for point labels
-      const pointData = datamodel.points || []
-      if (config.pointLabelPosition === MapPointLabelPosition.Bottom && pointData.length > 0) {
-        collideLabels(
-          this._pointsGroup.selectAll<SVGGElement, PointDatum>(`.${s.point}`),
-          this._projection,
-          config.pointRadius,
-          config.longitude,
-          config.latitude,
-          this._currentZoomLevel
-        )
-      }
+      collideAreaLabels(areaLabels)
     })
   }
 
