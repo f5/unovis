@@ -1,5 +1,6 @@
 import { css, injectGlobal } from '@emotion/css'
 import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from 'styles/index'
+import { darkThemeCssSelectors } from 'utils/style'
 import { FlowLegendItem } from './types'
 
 export const root = css`
@@ -24,7 +25,7 @@ export const globalStyles = injectGlobal`
     --vis-dark-flow-legend-arrow-color: #71788a;
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-flow-legend-label-background: var(--vis-dark-flow-legend-label-background);
     --vis-flow-legend-label-color: var(--vis-dark-flow-legend-label-color);
     --vis-flow-legend-link-color: var(--vis-dark-flow-legend-link-color);

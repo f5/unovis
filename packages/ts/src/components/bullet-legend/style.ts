@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const root = css`
   label: bullet-legend-component;
@@ -21,7 +22,7 @@ export const variables = injectGlobal`
     --vis-dark-legend-label-color: #eee;
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-legend-label-color: var(--vis-dark-legend-label-color);
   }
 

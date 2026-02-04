@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const root = css`
   label: donut-component;
@@ -29,7 +30,7 @@ export const variables = injectGlobal`
     --vis-dark-donut-background-color: #18160C;
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-donut-central-label-text-color: var(--vis-dark-donut-central-label-text-color);
     --vis-donut-central-sub-label-text-color: var(--vis-dark-donut-central-sub-label-text-color);
     --vis-donut-background-color: var(--vis-dark-donut-background-color);

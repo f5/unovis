@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const root = css`
   label: free-brush-component;
@@ -17,7 +18,7 @@ export const variables = injectGlobal`
     --vis-dark-free-brush-handle-fill-color: #6d778c;
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-free-brush-selection-fill-color: var(--vis-dark-free-brush-selection-fill-color);
     --vis-free-brush-selection-stroke-color: var(--vis-dark-free-brush-selection-stroke-color);
     --vis-free-brush-handle-fill-color: var(--vis-dark-free-brush-selection-fill-color);

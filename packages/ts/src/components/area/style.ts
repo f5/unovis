@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 
 export const root = css`
@@ -20,7 +21,8 @@ export const globalStyles = injectGlobal`
     --vis-dark-area-stroke-color: none;
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
+    --vis-area-fill-opacity: 0.5;
     --vis-area-stroke-color: var(--vis-dark-area-stroke-color);
   }
 
