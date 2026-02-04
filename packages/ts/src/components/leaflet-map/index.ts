@@ -17,6 +17,7 @@ import { GenericDataRecord } from 'types/data'
 // Utils
 import { ResizeObserver } from 'utils/resize-observer'
 import { clamp, isNil, getNumber, getString, isString } from 'utils/data'
+import { isDarkThemeEnabled } from 'utils/style'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 import {
   projectPoint,
@@ -183,7 +184,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
 
         this._map.leaflet.setView(initialMapCenter, initialMapZoom)
 
-        if (['theme-dark', 'dark-theme'].some(className => [document.body, document.documentElement].some(element => element.classList.contains(className))) && config.styleDarkTheme) {
+        if (isDarkThemeEnabled() && config.styleDarkTheme) {
           this._isDarkThemeActive = true
           this.setTheme(config.styleDarkTheme)
         }
@@ -209,7 +210,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
       this.themeObserver = new MutationObserver((mutations) => {
         mutations.forEach(change => {
           if (change.attributeName === 'class') {
-            const isDarkTheme = ['theme-dark', 'dark-theme'].some(className => (change.target as HTMLElement).classList.contains(className))
+            const isDarkTheme = isDarkThemeEnabled(change.target as HTMLElement))
             if (this._isDarkThemeActive !== isDarkTheme) {
               this.setTheme(isDarkTheme ? this.config.styleDarkTheme : this.config.style)
               this._isDarkThemeActive = isDarkTheme
