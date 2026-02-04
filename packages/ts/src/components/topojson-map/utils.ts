@@ -10,21 +10,18 @@ import { rectIntersect } from 'utils/misc'
 
 // Types
 import { NumericAccessor } from 'types/accessor'
-import { GenericDataRecord } from 'types/data'
 import { Rect } from 'types/misc'
 
 // Styles
 import * as s from './style'
 
-// Extend SVGGElement to track label visibility
+// Local Types
+import { TopoJSONMapPointShape } from './types'
 interface LabelSVGGElement extends SVGGElement {
   labelVisible?: boolean;
 }
 
 const BOTTOM_LABEL_TOP_MARGIN = 10
-
-// Local Types
-import { TopoJSONMapPointShape } from './types'
 
 export function getLonLat<Datum> (d: Datum, pointLongitude: NumericAccessor<Datum>, pointLatitude: NumericAccessor<Datum>): [number, number] {
   const lat = getNumber(d, pointLatitude)
@@ -62,6 +59,8 @@ export function getPointPathData ({ x, y }: { x: number; y: number }, radius: nu
     default:
       return circlePath(x, y, radius)
   }
+}
+
 function getCSSVariableValueInPixels (cssVariable: string, element: SVGGElement | null): number {
   if (!element) return 0
 
@@ -88,15 +87,15 @@ function getCSSVariableValueInPixels (cssVariable: string, element: SVGGElement 
   return isNaN(numericValue) ? 0 : numericValue
 }
 
-export function collideLabels<D extends GenericDataRecord> (
-  selection: Selection<SVGGElement, D, SVGGElement, unknown>,
+export function collideLabels (
+  selection: Selection<SVGGElement, unknown, SVGGElement, unknown>,
   projection: GeoProjection,
-  pointRadius: NumericAccessor<D>,
-  pointLongitude: NumericAccessor<D>,
-  pointLatitude: NumericAccessor<D>,
+  pointRadius: NumericAccessor<unknown>,
+  pointLongitude: NumericAccessor<unknown>,
+  pointLatitude: NumericAccessor<unknown>,
   currentZoomLevel: number
 ): void {
-  selection.each((datum1: D, i: number, elements: ArrayLike<LabelSVGGElement>) => {
+  selection.each((datum1: unknown, i: number, elements: ArrayLike<LabelSVGGElement>) => {
     const group1LabelElement = elements[i]
     const group1 = select(group1LabelElement)
     const label1: Selection<SVGTextElement, any, SVGElement, any> = group1.select(`.${s.pointLabel}`)
@@ -122,7 +121,7 @@ export function collideLabels<D extends GenericDataRecord> (
       const group2LabelElement = elements[j]
       const group2 = select(group2LabelElement)
       const label2: Selection<SVGTextElement, any, SVGElement, any> = group2.select(`.${s.pointLabel}`)
-      const datum2 = group2.datum() as D
+      const datum2 = group2.datum() as unknown
 
       // Calculate bounding rect of the second point's circle
       const pos2 = projection(getLonLat(datum2, pointLongitude, pointLatitude))
