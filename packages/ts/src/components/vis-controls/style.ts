@@ -1,5 +1,6 @@
 import { css, injectGlobal } from '@emotion/css'
 import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from 'styles/index'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const root = css`
   label: vis-controls-component;
@@ -17,7 +18,7 @@ export const variables = injectGlobal`
     --vis-dark-controls-button-color: #fff;
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-controls-buttons-border-color: var(--vis-dark-controls.buttons-border-color);
     --vis-controls-buttons-background-color: var(--vis-dark-controls-buttons-background-color);
     --vis-controls-button-color: var(--vis-dark-controls-button-color);

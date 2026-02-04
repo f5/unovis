@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const root = css`
   label: chord-diagram-component;
@@ -23,7 +24,7 @@ export const variables = injectGlobal`
     --vis-dark-chord-diagram-link-fill-color: #575c65;
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-chord-diagram-link-fill-color: var(--vis-dark-chord-diagram-link-fill-color);
   }
 `
@@ -68,7 +69,7 @@ export const labelText = css`
   dominant-baseline: middle;
   user-select: none;
   font-size: var(--vis-chord-diagram-label-text-font-size);
-  
+
   > textPath {
     dominant-baseline: central;
   }

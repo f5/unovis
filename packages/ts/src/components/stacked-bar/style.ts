@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const root = css`
   label: stacked-bar-component;
@@ -17,7 +18,7 @@ export const globalStyles = injectGlobal`
     --vis-dark-stacked-bar-stroke-color: none;
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-stacked-bar-stroke-color: var(--vis-dark-stacked-bar-stroke-color);
   }
 `
