@@ -17,7 +17,6 @@ import { getCSSVariableValue, isStringCSSVariable, rectIntersect } from 'utils/m
 import { estimateStringPixelLength } from 'utils/text'
 
 // Types
-import { GenericDataRecord } from 'types/data'
 import { MapLink } from 'types/map'
 import { Rect } from 'types/misc'
 
@@ -41,7 +40,7 @@ interface LabelSVGTextElement extends SVGTextElement {
 
 export class TopoJSONMap<
   AreaDatum,
-  PointDatum extends GenericDataRecord = GenericDataRecord,
+  PointDatum = unknown,
   LinkDatum = unknown,
 > extends ComponentCore<
   MapData<AreaDatum, PointDatum, LinkDatum>,
