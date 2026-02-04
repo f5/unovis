@@ -4,7 +4,6 @@ import {
   TopoJSONMap,
   TopoJSONMapConfigInterface,
   ContainerCore,
-  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -21,7 +20,7 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisTopoJSONMapComponent }],
 })
-export class VisTopoJSONMapComponent<AreaDatum, PointDatum extends GenericDataRecord, LinkDatum> implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, AfterViewInit {
+export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration?: number
 
