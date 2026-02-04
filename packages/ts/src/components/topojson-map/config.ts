@@ -3,10 +3,9 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component
 
 // Types
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { GenericDataRecord } from 'types/data'
 
 // Local Types
-import { MapPointLabelPosition, TopoJSONMapPointShape, TopoJSONMapPointStyles } from './types'
+import { MapPointLabelPosition, TopoJSONMapPointShape } from './types'
 
 export interface TopoJSONMapConfigInterface<
   AreaDatum,
