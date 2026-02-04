@@ -10,7 +10,7 @@ import { MapPointLabelPosition, TopoJSONMapPointShape, TopoJSONMapPointStyles } 
 
 export interface TopoJSONMapConfigInterface<
   AreaDatum,
-  PointDatum extends GenericDataRecord,
+  PointDatum = unknown,
   LinkDatum = unknown,
 > extends ComponentConfigInterface {
   // General
@@ -118,7 +118,7 @@ export interface TopoJSONMapConfigInterface<
   heatmapModeZoomLevelThreshold?: number;
 }
 
-export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, GenericDataRecord, unknown> = {
+export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unknown, unknown> = {
   ...ComponentDefaultConfig,
   projection: undefined,
   duration: 1500,
@@ -135,8 +135,8 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, Gener
   linkColor: (d: unknown): string => (d as { color: string }).color ?? null,
   linkCursor: null,
   linkId: (d: unknown, i: number | undefined): string => `${(d as { id: string }).id ?? i}`,
-  linkSource: (d: unknown): number | string | GenericDataRecord => (d as { source: number | string | GenericDataRecord }).source,
-  linkTarget: (d: unknown): number | string | GenericDataRecord => (d as { target: number | string | GenericDataRecord }).target,
+  linkSource: (d: unknown): number | string | unknown => (d as { source: number | string | unknown }).source,
+  linkTarget: (d: unknown): number | string | unknown => (d as { target: number | string | unknown }).target,
 
   // Flow defaults
   sourceLongitude: (f: unknown): number => (f as { sourceLongitude: number }).sourceLongitude as number,

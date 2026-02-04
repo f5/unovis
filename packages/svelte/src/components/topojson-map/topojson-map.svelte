@@ -1,13 +1,13 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { TopoJSONMap, TopoJSONMapConfigInterface, GenericDataRecord } from '@unovis/ts'
+  import { TopoJSONMap, TopoJSONMapConfigInterface } from '@unovis/ts'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
   import { arePropsEqual } from '../../utils/props'
   // type defs
   type AreaDatum = $$Generic
-  type PointDatum = $$Generic<GenericDataRecord>
+  type PointDatum = $$Generic
   type LinkDatum = $$Generic
 
   // data and required props
