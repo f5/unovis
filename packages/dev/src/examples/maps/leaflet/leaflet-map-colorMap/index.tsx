@@ -1,11 +1,10 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
 import { LeafletMap, LeafletMapClusterDatum, LeafletMapPoint, LeafletMapPointStyles, Tooltip } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
-
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 // Data
-import { MapPointDataRecord, points, totalEvents, mapStyleLight, mapStyleDark } from './data'
+import { MapPointDataRecord, mapStyleDark, mapStyleLight, points, totalEvents } from './data'
+
 
 // Style
 

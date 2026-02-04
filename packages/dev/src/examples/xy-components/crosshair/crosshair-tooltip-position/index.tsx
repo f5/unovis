@@ -1,9 +1,9 @@
-import React, { useRef } from 'react'
-import { VisXYContainer, VisArea, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisArea, VisAxis, VisCrosshair, VisTooltip, VisXYContainer } from '@unovis/react'
 import { Position } from '@unovis/ts'
+import React, { useRef } from 'react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Custom Tooltip Placement'
 export const subTitle = 'Tooltip always on the right'

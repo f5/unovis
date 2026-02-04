@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useEffect } from 'react'
 import { VisAnnotations, VisSingleContainer, VisNestedDonut } from '@unovis/react'
 import { Annotations, StringAccessor } from '@unovis/ts'
+import { ExampleViewerDurationProps } from '@/utils/data'
 
 export const title = 'Single Container'
 export const subTitle = 'Donut with annotation button'

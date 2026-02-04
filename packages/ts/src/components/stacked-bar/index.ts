@@ -1,19 +1,19 @@
 import { min, max } from 'd3-array'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getString, getNumber, getStackedData, getExtent } from 'utils/data'
-import { roundedRectPath } from 'utils/path'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
+import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getString, getNumber, getStackedData, getExtent } from '@/utils/data'
+import { roundedRectPath } from '@/utils/path'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
 
 // Types
-import { ContinuousScale } from 'types/scale'
-import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
-import { Orientation } from 'types/position'
+import { ContinuousScale } from '@/types/scale'
+import { NumericAccessor } from '@/types/accessor'
+import { Spacing } from '@/types/spacing'
+import { Orientation } from '@/types/position'
 
 // Local Types
 import { StackedBarDataRecord } from './types'

@@ -1,5 +1,5 @@
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
 import { VisAxis, VisCrosshair, VisLine, VisPlotline, VisTooltip, VisXYContainer } from '@unovis/react'
 import { PlotlineLegendOrientation, PlotlineLegendPosition, PlotlineLineStylePresets } from '@unovis/ts'
 import React, { useRef, useState } from 'react'

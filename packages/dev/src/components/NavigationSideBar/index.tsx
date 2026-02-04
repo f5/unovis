@@ -1,13 +1,11 @@
-import React, { useRef, useState } from 'react'
-import Fuse from 'fuse.js'
-
-import { NavigationItem } from '@src/components/NavigationItem'
-
+import { NavigationItem } from '@/components/NavigationItem'
 // Examples
-import { ExampleGroup } from '@src/examples'
-
+import { ExampleGroup } from '@/examples'
+import Fuse from 'fuse.js'
+import React, { useRef, useState } from 'react'
 // Styles
 import s from './style.module.css'
+
 
 export type NavigationSideBarProps = {
   exampleGroups: ExampleGroup[];

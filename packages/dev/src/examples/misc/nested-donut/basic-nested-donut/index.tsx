@@ -1,8 +1,8 @@
-import React from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateNestedData, NestedDatum } from '@/utils/data'
+import { VisNestedDonut, VisSingleContainer } from '@unovis/react'
 import { NestedDonutSegment } from '@unovis/ts'
-import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
-import { NestedDatum, generateNestedData } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React from 'react'
 
 export const title = 'Basic Nested Donut'
 export const subTitle = 'with custom colors'
@@ -37,4 +37,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </VisSingleContainer>
   )
 }
-

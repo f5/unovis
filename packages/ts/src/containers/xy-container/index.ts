@@ -3,25 +3,25 @@ import { extent, merge as mergeArrays } from 'd3-array'
 import { Selection } from 'd3-selection'
 
 // Global CSS variables (side effects import)
-import 'styles/index'
+import '@/styles/index'
 
 // Core
-import { ContainerCore } from 'core/container'
-import { XYComponentCore } from 'core/xy-component'
-import { XYComponentConfigInterface } from 'core/xy-component/config'
+import { ContainerCore } from '@/core/container'
+import { XYComponentCore } from '@/core/xy-component'
+import { XYComponentConfigInterface } from '@/core/xy-component/config'
 
 // Data Model
-import { CoreDataModel } from 'data-models/core'
+import { CoreDataModel } from '@/data-models/core'
 
 // Types
-import { Spacing } from 'types/spacing'
-import { AxisType } from 'components/axis/types'
-import { ScaleDimension } from 'types/scale'
-import { Direction } from 'types/direction'
+import { Spacing } from '@/types/spacing'
+import { AxisType } from '@/components/axis/types'
+import { ScaleDimension } from '@/types/scale'
+import { Direction } from '@/types/direction'
 
 // Utils
-import { clamp, clean, flatten, isEqual } from 'utils/data'
-import { guid } from 'utils/misc'
+import { clamp, clean, flatten, isEqual } from '@/utils/data'
+import { guid } from '@/utils/misc'
 
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'

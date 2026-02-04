@@ -1,4 +1,4 @@
-import { Arrangement } from 'types/position'
+import { Arrangement } from '@/types/position'
 
 export type TimelineRowIcon = {
   href: string;

@@ -1,13 +1,13 @@
-import React, { useState, useMemo } from 'react'
-import { Spacing, TextAlign, Scale } from '@unovis/ts'
-import { VisXYContainer } from '@unovis/react/containers/xy-container'
-import { VisArea } from '@unovis/react/components/area'
-import { VisAxis } from '@unovis/react/components/axis'
-import { VisCrosshair } from '@unovis/react/components/crosshair'
-import { VisTooltip } from '@unovis/react/components/tooltip'
-import { VisBrush } from '@unovis/react/components/brush'
-
+import { VisArea } from '@/components/area'
+import { VisAxis } from '@/components/axis'
+import { VisBrush } from '@/components/brush'
+import { VisCrosshair } from '@/components/crosshair'
+import { VisTooltip } from '@/components/tooltip'
+import { VisXYContainer } from '@/containers/xy-container'
+import { Scale, Spacing, TextAlign } from '@unovis/ts'
+import React, { useMemo, useState } from 'react'
 import s from './style.module.css'
+
 
 export type VisTimeSeriesDatum = {
   timestamp: number;

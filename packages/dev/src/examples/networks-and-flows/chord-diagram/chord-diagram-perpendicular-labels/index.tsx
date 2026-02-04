@@ -1,6 +1,6 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisChordDiagram, VisSingleContainer } from '@unovis/react'
 import React, { useCallback } from 'react'
-import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { data, NodeDatum } from './data'
 
 

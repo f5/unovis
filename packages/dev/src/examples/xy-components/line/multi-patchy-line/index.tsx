@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer'
 import { VisAxis, VisBulletLegend, VisBulletLegendSelectors, VisCrosshair, VisLine, VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
-import { BulletLegendItemInterface, BulletShape, NumericAccessor, colors, CurveType } from '@unovis/ts'
+import { BulletLegendItemInterface, BulletShape, colors, CurveType, NumericAccessor } from '@unovis/ts'
+import React, { useCallback, useEffect, useState } from 'react'
 
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer'
 
 export const title = 'Interpolated Multi-Line Chart'
 export const subTitle = 'With interactive bullet legend'

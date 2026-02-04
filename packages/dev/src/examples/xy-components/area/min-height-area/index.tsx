@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react'
 import { VisXYContainer, VisArea, VisAxis } from '@unovis/react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { XYDataRecord, generateXYDataRecords } from '@/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 export const title = 'Area Min Height'
 export const subTitle = 'Negative stacking'

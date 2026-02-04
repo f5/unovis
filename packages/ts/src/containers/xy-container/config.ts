@@ -1,17 +1,17 @@
 // Core
-import { XYComponentCore } from 'core/xy-component'
-import { ContainerDefaultConfig, ContainerConfigInterface } from 'core/container/config'
+import { XYComponentCore } from '@/core/xy-component'
+import { ContainerDefaultConfig, ContainerConfigInterface } from '@/core/container/config'
 
 // Components
-import { Annotations } from 'components/annotations'
-import { Tooltip } from 'components/tooltip'
-import { Axis } from 'components/axis'
-import { Crosshair } from 'components/crosshair'
+import { Annotations } from '@/components/annotations'
+import { Tooltip } from '@/components/tooltip'
+import { Axis } from '@/components/axis'
+import { Crosshair } from '@/components/crosshair'
 
 // Types
-import { ContinuousScale } from 'types/scale'
-import { Direction } from 'types/direction'
-import { Spacing } from 'types/spacing'
+import { ContinuousScale } from '@/types/scale'
+import { Direction } from '@/types/direction'
+import { Spacing } from '@/types/spacing'
 
 export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
   /** An array of visualization components. Default: `[]` */
@@ -133,4 +133,3 @@ export const XYContainerDefaultConfig: XYContainerConfigInterface<unknown> = {
 
   clipPathExtend: 2,
 }
-

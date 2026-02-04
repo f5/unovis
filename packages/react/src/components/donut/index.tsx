@@ -3,10 +3,10 @@ import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect,
 import { Donut, DonutConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisDonutRef<Datum> = {
   component?: Donut<Datum>;

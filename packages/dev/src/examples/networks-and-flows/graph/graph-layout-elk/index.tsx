@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import { VisGraph, VisSingleContainer } from '@unovis/react'
 import { GraphElkLayoutSettings, GraphNodeShape } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React from 'react'
 
 export const title = 'Layout: ELK'
 export const subTitle = 'Layered hierarchical layout'
@@ -104,4 +104,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </>
   )
 }
-

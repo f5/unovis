@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { VisXYContainer, VisTimeline } from '@unovis/react'
 
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import { TextAlign } from '@unovis/ts'
 
 export const title = 'Animation Tweaking'

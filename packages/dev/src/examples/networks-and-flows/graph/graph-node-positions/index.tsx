@@ -1,7 +1,7 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generatePrecalculatedNodeLinkData, LinkDatum, NodeDatum } from '@/utils/data'
+import { VisGraph, VisGraphRef, VisSingleContainer } from '@unovis/react'
 import React, { useCallback, useMemo, useRef } from 'react'
-import { VisSingleContainer, VisGraph, VisGraphRef } from '@unovis/react'
-import { generatePrecalculatedNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Graph: Node Positions'
 export const subTitle = 'Pass in node positions'
@@ -23,4 +23,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </VisSingleContainer>
   )
 }
-

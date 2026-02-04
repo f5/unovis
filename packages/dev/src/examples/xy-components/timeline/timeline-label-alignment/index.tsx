@@ -1,8 +1,8 @@
 import React from 'react'
 import { VisXYContainer, VisTimeline, VisAxis } from '@unovis/react'
 
-import { TimeDataRecord, generateTimeSeries } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { TimeDataRecord, generateTimeSeries } from '@/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import { TextAlign } from '@unovis/ts'
 
 export const title = 'Label Alignment & Style'

@@ -1,5 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
-import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from 'styles/index'
+import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from '@/styles/index'
 import { FlowLegendItem } from './types'
 
 export const root = css`

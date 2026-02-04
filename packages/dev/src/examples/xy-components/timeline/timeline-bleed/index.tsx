@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
 import { Arrangement } from '@unovis/ts'
 
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 // Icons
 import icon from './icon.svg?raw'

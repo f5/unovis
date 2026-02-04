@@ -1,8 +1,8 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { XYDataRecord } from '@/utils/data'
+import { VisAxis, VisLine, VisScatter, VisXYContainer } from '@unovis/react'
 import React, { useCallback } from 'react'
-import { VisXYContainer, VisScatter, VisAxis, VisLine } from '@unovis/react'
 
-import { XYDataRecord } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Point Label Positions'
 export const subTitle = 'Toggle label content'

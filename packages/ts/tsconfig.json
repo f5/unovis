@@ -6,12 +6,7 @@
     "outDir": "./dist",
     "declaration": true,
     "paths": {
-      "types/*": ["./types/*"],
-      "utils/*": ["./utils/*"],
-      "core/*": ["./core/*"],
-      "components/*": ["./components/*"],
-      "styles/*": ["./styles/*"],
-      "data-models/*": ["./data-models/*"]
+      "@/*": ["*"]
     },
     "noImplicitAny": true,
     "alwaysStrict": true,
@@ -20,10 +15,12 @@
     // "strictPropertyInitialization": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
-    "strictBindCallApply": true
+    "strictBindCallApply": true,
+    "skipLibCheck": true
   },
   "exclude": [
     "index.ts",
-    "maps.ts"
+    "maps.ts",
+    "vite.config.ts"
   ]
 }

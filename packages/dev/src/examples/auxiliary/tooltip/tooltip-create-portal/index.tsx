@@ -1,9 +1,9 @@
+import { XYDataRecord, ExampleViewerDurationProps } from '@/utils/data'
+import { VisAxis, VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
+import { Position, Scatter } from '@unovis/ts'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Position, Scatter, Tooltip } from '@unovis/ts'
-import { VisXYContainer, VisAxis, VisScatter, VisTooltip } from '@unovis/react'
-
-import { XYDataRecord } from '@src/utils/data'
 import { createPortal } from 'react-dom'
+
 
 export const title = 'Tooltip Rendered in Portal'
 export const subTitle = 'Dynamic content in tooltip'

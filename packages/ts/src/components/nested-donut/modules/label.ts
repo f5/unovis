@@ -3,12 +3,12 @@ import { color } from 'd3-color'
 import { Arc } from 'd3-shape'
 
 // Utils
-import { getColor, getHexValue, rgbaToRgb, rgbToBrightness } from 'utils/color'
-import { smartTransition } from 'utils/d3'
-import { getString } from 'utils/data'
-import { getCSSVariableValueInPixels } from 'utils/misc'
-import { cssvar } from 'utils/style'
-import { wrapSVGText } from 'utils/text'
+import { getColor, getHexValue, rgbaToRgb, rgbToBrightness } from '@/utils/color'
+import { smartTransition } from '@/utils/d3'
+import { getString } from '@/utils/data'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
+import { cssvar } from '@/utils/style'
+import { wrapSVGText } from '@/utils/text'
 
 // Config
 import { NestedDonutConfigInterface } from '../config'

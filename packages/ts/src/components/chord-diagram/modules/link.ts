@@ -6,12 +6,12 @@ import { Transition } from 'd3-transition'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Types
-import { Curve } from 'types/curve'
+import { Curve } from '@/types/curve'
 
 // Utils
-import { getColor } from 'utils/color'
-import { smartTransition } from 'utils/d3'
-import { convertLineToArc } from 'utils/path'
+import { getColor } from '@/utils/color'
+import { smartTransition } from '@/utils/d3'
+import { convertLineToArc } from '@/utils/path'
 
 // Local Types
 import { ChordInputLink, ChordInputNode, ChordRibbon, ChordRibbonPoint } from '../types'

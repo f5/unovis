@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index.tsx'
+import { VisNestedDonut, VisSingleContainer } from '@unovis/react'
 import { NestedDonutSegmentLabelAlignment } from '@unovis/ts'
-import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import React, { useCallback, useState } from 'react'
 import s from './styles.module.css'
+
 
 export const title = 'Segment labels'
 export const subTitle = 'Alignment and hiding'
@@ -22,7 +22,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     <button onClick={toggleHiddenLabels}>{hideLabels ? 'Show' : 'Hide'} Labels</button>
     <div className={s.flex}>
       {Object.values(NestedDonutSegmentLabelAlignment).map(labelAlignment =>
-        <VisSingleContainer height={500} width={500} data={data}>
+        <VisSingleContainer key={labelAlignment} height={500} width={500} data={data}>
           <VisNestedDonut
             direction='outwards'
             hideOverflowingSegmentLabels={hideLabels}
@@ -37,4 +37,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   </>
   )
 }
-

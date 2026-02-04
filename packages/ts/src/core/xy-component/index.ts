@@ -1,15 +1,15 @@
 import { Selection } from 'd3-selection'
 
 // Core
-import { ComponentCore } from 'core/component'
-import { SeriesDataModel } from 'data-models/series'
+import { ComponentCore } from '@/core/component'
+import { SeriesDataModel } from '@/data-models/series'
 
 // Utils
-import { filterDataByRange, getExtent, isArray } from 'utils/data'
+import { filterDataByRange, getExtent, isArray } from '@/utils/data'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
-import { ContinuousScale, Scale, ScaleDimension } from 'types/scale'
+import { NumericAccessor } from '@/types/accessor'
+import { ContinuousScale, Scale, ScaleDimension } from '@/types/scale'
 
 // Config
 import { XYComponentDefaultConfig, XYComponentConfigInterface } from './config'

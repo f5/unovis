@@ -1,11 +1,11 @@
 // Core
-export { ComponentCore } from 'core/component'
-export type { ComponentConfigInterface } from 'core/component/config'
-export { XYComponentCore } from 'core/xy-component'
-export type { XYComponentConfigInterface } from 'core/xy-component/config'
+export { ComponentCore } from '@/core/component'
+export type { ComponentConfigInterface } from '@/core/component/config'
+export { XYComponentCore } from '@/core/xy-component'
+export type { XYComponentConfigInterface } from '@/core/xy-component/config'
 
 // Components
-export { Tooltip } from './components/tooltip'
+export { Tooltip } from '@/components/tooltip'
 export { Line } from './components/line'
 export { StackedBar } from './components/stacked-bar'
 export { GroupedBar } from './components/grouped-bar'
@@ -30,10 +30,10 @@ export { Donut } from './components/donut'
 export { FreeBrush } from './components/free-brush'
 export { XYLabels } from './components/xy-labels'
 export { NestedDonut } from './components/nested-donut'
-export { Annotations } from './components/annotations'
-export { Plotband } from './components/plotband'
-export { Plotline } from './components/plotline'
-export { Treemap } from './components/treemap'
+export { Annotations } from '@/components/annotations'
+export { Plotband } from '@/components/plotband'
+export { Plotline } from '@/components/plotline'
+export { Treemap } from '@/components/treemap'
 
 // Constants
 export * from './components/donut/constants'

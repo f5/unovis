@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useEffect, ChangeEvent } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateStackedDataRecords, StackedDataRecord } from '@/utils/data'
+import { VisAxis, VisBulletLegend, VisGroupedBar, VisLine, VisScatter, VisXYContainer } from '@unovis/react'
 import { BulletLegendItemInterface, BulletShape } from '@unovis/ts'
-import { VisBulletLegend, VisXYContainer, VisScatter, VisGroupedBar, VisLine, VisAxis } from '@unovis/react'
-import { generateStackedDataRecords, StackedDataRecord } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 
 export const title = 'Bullet Shapes'
 export const subTitle = 'Select chart type'
@@ -34,7 +34,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (<>
     <select onChange={(e: ChangeEvent<HTMLSelectElement>) => setChart(chartOptions[Number(e.target.value)])}>
-      {chartOptions.map((o, i) => <option value={i}>{o.type}</option>)}
+      {chartOptions.map((o, i) => <option key={o.type} value={i}>{o.type}</option>)}
     </select>
     <VisBulletLegend
       items={legendItems}

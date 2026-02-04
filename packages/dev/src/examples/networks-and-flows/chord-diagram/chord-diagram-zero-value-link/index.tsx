@@ -1,6 +1,6 @@
 import React from 'react'
 import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 export const title = 'Chord Diagram Zero Value Link'
 export const subTitle = 'External select node'

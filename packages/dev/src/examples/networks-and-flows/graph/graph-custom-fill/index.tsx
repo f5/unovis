@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
 import { VisSingleContainer, VisGraph, VisTooltip } from '@unovis/react'
 import { Graph } from '@unovis/ts'
-import { generateNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { generateNodeLinkData, NodeDatum, LinkDatum } from '@/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 type ExtendedNodeDatum = NodeDatum & { i: number }
 
@@ -55,4 +55,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </VisSingleContainer>
   )
 }
-

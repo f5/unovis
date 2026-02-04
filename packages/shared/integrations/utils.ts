@@ -192,7 +192,7 @@ export function getImportStatements (
     for (const importEl of importDec.importClause.namedBindings.elements) {
       let importSource: string = importDec.moduleSpecifier.text
       if (!importSource || importSource.startsWith('./') || importSource.startsWith('core/') ||
-        importSource.startsWith('types/') || importSource.startsWith('utils/') || importSource.startsWith('components/') ||
+        importSource.startsWith('@/types/') || importSource.startsWith('@/utils/') || importSource.startsWith('components/') ||
         importSource.startsWith('styles/') || importSource.startsWith('data-models/') || importSource.startsWith('data/')
       ) importSource = '@unovis/ts'
 

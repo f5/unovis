@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { VisXYContainer, VisStackedBar, VisAxis, VisCrosshair, VisTooltip } from '@unovis/react'
 
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 
 const NUM_ITEMS = 100
 const NUM_KEYS = 300

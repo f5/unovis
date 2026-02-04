@@ -2,16 +2,16 @@ import { Selection } from 'd3-selection'
 import { pie, arc } from 'd3-shape'
 
 // Core
-import { ComponentCore } from 'core/component'
-import { SeriesDataModel } from 'data-models/series'
+import { ComponentCore } from '@/core/component'
+import { SeriesDataModel } from '@/data-models/series'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { isNumber, clamp, getNumber } from 'utils/data'
-import { wrapSVGText } from 'utils/text'
+import { smartTransition } from '@/utils/d3'
+import { isNumber, clamp, getNumber } from '@/utils/data'
+import { wrapSVGText } from '@/utils/text'
 
 // Types
-import { Spacing } from 'types/spacing'
+import { Spacing } from '@/types/spacing'
 
 // Local Types
 import { DonutArcDatum, DonutArcAnimState, DonutDatum } from './types'
@@ -195,4 +195,3 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       }))
   }
 }
-

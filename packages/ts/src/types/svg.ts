@@ -1,4 +1,4 @@
-import { TextAlign } from 'types/text'
+import { TextAlign } from '@/types/text'
 
 export type TransformValues = {
   translate: {
@@ -28,5 +28,3 @@ export function getTextAnchorFromTextAlign (textAlign: TextAlign | string): 'sta
       return 'start'
   }
 }
-
-

@@ -1,8 +1,8 @@
-import React, { useCallback, useState } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateNestedData, NestedDatum } from '@/utils/data'
+import { VisNestedDonut, VisSingleContainer } from '@unovis/react'
 import { NestedDonut, NestedDonutSegment } from '@unovis/ts'
-import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
-import { generateNestedData, NestedDatum } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React, { useCallback, useState } from 'react'
 
 
 export const title = 'Interactive Nested Donut'
@@ -44,4 +44,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </VisSingleContainer></>
   )
 }
-

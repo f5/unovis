@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
 import { Scatter } from '@unovis/ts'
 import { VisXYContainer, VisAxis, VisScatter, VisTooltip } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-import { randomNumberGenerator } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { randomNumberGenerator } from '@/utils/data'
 
 export const title = 'Tooltip: Empty Content'
 export const subTitle = 'Testing empty tooltip behavior'

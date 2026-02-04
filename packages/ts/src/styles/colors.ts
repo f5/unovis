@@ -1,5 +1,5 @@
 import { hsl } from 'd3-color'
-import { isNumber } from 'utils/data'
+import { isNumber } from '@/utils/data'
 
 /** Array of default colors */
 export const colors = globalThis?.UNOVIS_COLORS || ['#4D8CFD', '#FF6B7E', '#F4B83E', '#A6CC74', '#00C19A', '#6859BE']

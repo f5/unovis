@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
+import { generateTimeSeries, TimeDataRecord, ExampleViewerDurationProps } from '@/utils/data'
 
-import { TimeDataRecord, generateTimeSeries } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Timeline: Empty Segments'
 export const subTitle = 'Small and Negative Lengths'

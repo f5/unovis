@@ -3,17 +3,17 @@ import { Transition } from 'd3-transition'
 import { arc } from 'd3-shape'
 
 // Types
-import { GraphInputLink, GraphInputNode } from 'types/graph'
-import { TrimMode } from 'types/text'
+import { GraphInputLink, GraphInputNode } from '@/types/graph'
+import { TrimMode } from '@/types/text'
 
 // Utils
-import { trimString } from 'utils/text'
-import { polygon } from 'utils/path'
-import { smartTransition, Selection$Transition } from 'utils/d3'
-import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data'
-import { getColor } from 'utils/color'
-import { isStringSvg } from 'utils/svg'
-import { getCSSVariableValueInPixels } from 'utils/misc'
+import { trimString } from '@/utils/text'
+import { polygon } from '@/utils/path'
+import { smartTransition, Selection$Transition } from '@/utils/d3'
+import { getBoolean, getNumber, getString, getValue, throttle } from '@/utils/data'
+import { getColor } from '@/utils/color'
+import { isStringSvg } from '@/utils/svg'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
 
 // Local Types
 import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement, GraphNodeShape } from '../../types'

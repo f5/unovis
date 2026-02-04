@@ -1,4 +1,4 @@
-import { RollingPinLegendItem } from 'components/rolling-pin-legend/types'
+import { RollingPinLegendItem } from '@/components/rolling-pin-legend/types'
 
 export interface RollingPinLegendConfigInterface {
   /** Rects forming a legend. Array of `string`, representing colors.

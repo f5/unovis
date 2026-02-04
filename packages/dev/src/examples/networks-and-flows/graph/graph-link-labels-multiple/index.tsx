@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-import { sample } from '@src/utils/array'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { sample } from '@/utils/array'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
 import type { GraphCircleLabel } from '@unovis/ts'
+import React, { useEffect, useState } from 'react'
 
 export const title = 'Graph: Multiple Link Labels'
 export const subTitle = 'Link Label Transitions'
@@ -66,4 +66,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </VisSingleContainer>
   )
 }
-

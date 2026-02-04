@@ -1,10 +1,10 @@
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { WithOptional } from 'types/misc'
-import { ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
-import { TextAlign } from 'types/text'
-import { Arrangement } from 'types/position'
+import { WithOptional } from '@/types/misc'
+import { ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from '@/types/accessor'
+import { TextAlign } from '@/types/text'
+import { Arrangement } from '@/types/position'
 
 // Local Types
 import type { TimelineArrow, TimelineLineRenderState, TimelineRowIcon, TimelineRowLabel } from './types'

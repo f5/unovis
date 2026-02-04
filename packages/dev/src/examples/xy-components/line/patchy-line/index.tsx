@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
-import { VisXYContainer, VisLine, VisAxis, VisScatter, VisCrosshair, VisTooltip, VisAnnotations } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer'
+import { VisAnnotations, VisAxis, VisCrosshair, VisLine, VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
 import { CurveType } from '@unovis/ts'
-
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer'
-
+import React, { useState } from 'react'
 import s from './style.module.css'
+
 
 export const title = 'Patchy Line Chart'
 export const subTitle = 'Various test cases'
@@ -50,7 +49,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         <label>
           Fallback value:
           <select onChange={e => setFallbackValue(fallbacks[Number(e.target.value)])}>
-            {fallbacks.map((o, i) => <option value={i}>{String(o)}</option>)}
+            {fallbacks.map((o, i) => <option key={i} value={i}>{String(o)}</option>)}
           </select>
         </label>
         <label>

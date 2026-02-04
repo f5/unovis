@@ -3,10 +3,10 @@ import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect,
 import { XYLabels, XYLabelsConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisXYLabelsRef<Datum> = {
   component?: XYLabels<Datum>;

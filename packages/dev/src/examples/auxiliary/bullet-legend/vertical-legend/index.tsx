@@ -1,9 +1,9 @@
-import React from 'react'
-import { VisBulletLegend, VisXYContainer, VisAxis, VisStackedBar } from '@unovis/react'
+import { randomNumberGenerator, ExampleViewerDurationProps } from '@/utils/data'
+import { VisAxis, VisBulletLegend, VisStackedBar, VisXYContainer } from '@unovis/react'
 import { BulletLegendOrientation } from '@unovis/ts'
-import { randomNumberGenerator } from '@src/utils/data'
-
+import React from 'react'
 import s from './styles.module.css'
+
 
 export const title = 'Vertical Legend'
 export const subTitle = 'Scrollable'

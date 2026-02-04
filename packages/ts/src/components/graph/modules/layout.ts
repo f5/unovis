@@ -4,13 +4,13 @@ import type { ElkNode } from 'elkjs/lib/elk.bundled.js'
 import type { graphlib, Node } from 'dagre'
 
 // Core
-import { GraphDataModel } from 'data-models/graph'
+import { GraphDataModel } from '@/data-models/graph'
 
 // Utils
-import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue, merge, isFunction, isNil, isArray } from 'utils/data'
+import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue, merge, isFunction, isNil, isArray } from '@/utils/data'
 
 // Types
-import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { GraphInputLink, GraphInputNode } from '@/types/graph'
 
 // Local Types
 import { GraphNode, GraphLink, GraphForceSimulationNode } from '../types'
@@ -482,8 +482,11 @@ export async function applyELKLayout<N extends GraphInputNode, L extends GraphIn
   config: GraphConfigInterface<N, L>,
   width: number
 ): Promise<void> {
-  const ELK = (await import('elkjs/lib/elk.bundled.js')).default
-  const elk = new ELK()
+  // Use the browser-bundled version of elkjs
+  const elkModule = await import('elkjs/lib/elk.bundled.js')
+  // Handle both ESM default export and CommonJS module.exports
+  const ELK = (elkModule as { default?: typeof elkModule }).default ?? elkModule
+  const elk = new (ELK as new () => { layout: (graph: unknown) => Promise<unknown> })()
 
   const labelApprxHeight = 30
   const nodes = datamodel.nodes.map((n, i) => ({

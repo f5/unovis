@@ -1,12 +1,11 @@
 // eslint-disable-next-line no-use-before-define
-import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { SingleContainer, SingleContainerConfigInterface, ComponentCore, Tooltip, Annotations } from '@unovis/ts'
-
-// Utils
-import { arePropsEqual } from 'src/utils/react'
-
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
+// Utils
+import { arePropsEqual } from '@/utils/react'
+import { Annotations, ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip } from '@unovis/ts'
+import React, { PropsWithChildren, useEffect, useRef } from 'react'
+
 
 export type VisSingleContainerProps<Data> = SingleContainerConfigInterface<Data> & {
   data?: Data;

@@ -3,10 +3,10 @@ import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect,
 import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisGraphRef<N extends GraphInputNode, L extends GraphInputLink> = {
   component?: Graph<N, L>;

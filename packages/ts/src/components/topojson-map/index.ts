@@ -6,17 +6,17 @@ import { color } from 'd3-color'
 import { feature } from 'topojson-client'
 
 // Core
-import { ComponentCore } from 'core/component'
-import { MapGraphDataModel } from 'data-models/map-graph'
+import { ComponentCore } from '@/core/component'
+import { MapGraphDataModel } from '@/data-models/map-graph'
 
 // Utils
-import { clamp, getNumber, getString, isNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getColor, hexToBrightness } from 'utils/color'
-import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
+import { clamp, getNumber, getString, isNumber } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getColor, hexToBrightness } from '@/utils/color'
+import { getCSSVariableValue, isStringCSSVariable } from '@/utils/misc'
 
 // Types
-import { MapLink } from 'types/map'
+import { MapLink } from '@/types/map'
 
 // Local Types
 import { MapData, MapFeature, MapPointLabelPosition, MapProjection } from './types'

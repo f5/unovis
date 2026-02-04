@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { GraphLayoutType } from '@unovis/ts'
-import { generateNodeLinkData, LinkDatum, NodeDatum } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { generateNodeLinkData, LinkDatum, NodeDatum } from '@/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import * as s from './styles'
 
 export const title = 'Parallel Layout Spacing'

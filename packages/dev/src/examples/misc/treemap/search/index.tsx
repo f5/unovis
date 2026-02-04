@@ -1,8 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { format } from 'd3-format'
 import { VisSingleContainer, VisTooltip, VisTreemap } from '@unovis/react'
-import { Position, Treemap, TreemapNode } from '@unovis/ts'
-import { colors } from '@unovis/ts/styles/colors'
+import { Position, Treemap, TreemapNode, colors } from '@unovis/ts'
 import s from './styles.module.css'
 
 export const title = 'Treemap: Search'

@@ -1,6 +1,6 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisDonut, VisSingleContainer } from '@unovis/react'
 import React from 'react'
-import { VisSingleContainer, VisDonut } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Donut: Empty Segments'
 export const subTitle = '+ Padding'
@@ -20,4 +20,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </VisSingleContainer>
   )
 }
-

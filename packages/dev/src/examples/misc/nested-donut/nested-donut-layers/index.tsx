@@ -1,7 +1,7 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateNestedData, NestedDatum } from '@/utils/data'
+import { VisNestedDonut, VisSingleContainer } from '@unovis/react'
 import React from 'react'
-import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
-import { generateNestedData, NestedDatum } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Nested Donut Layer Configuration'
 export const subTitle = 'with inward/outward direction'
@@ -31,4 +31,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   </>
   )
 }
-
