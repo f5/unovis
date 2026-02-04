@@ -1,11 +1,9 @@
 import { polygon, circlePath } from 'utils/path'
-import { select, Selection } from 'd3-selection'
-import { GeoProjection } from 'd3-geo'
+import { Selection } from 'd3-selection'
 
 // Utils
 import { getNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { estimateTextSize } from 'utils/text'
+import { estimateStringPixelLength } from 'utils/text'
 import { rectIntersect } from 'utils/misc'
 
 // Types
@@ -17,11 +15,6 @@ import * as s from './style'
 
 // Local Types
 import { TopoJSONMapPointShape } from './types'
-interface LabelSVGGElement extends SVGGElement {
-  labelVisible?: boolean;
-}
-
-const BOTTOM_LABEL_TOP_MARGIN = 10
 
 export function getLonLat<Datum> (d: Datum, pointLongitude: NumericAccessor<Datum>, pointLatitude: NumericAccessor<Datum>): [number, number] {
   const lat = getNumber(d, pointLatitude)
@@ -61,101 +54,73 @@ export function getPointPathData ({ x, y }: { x: number; y: number }, radius: nu
   }
 }
 
-function getCSSVariableValueInPixels (cssVariable: string, element: SVGGElement | null): number {
-  if (!element) return 0
-
-  const computedValue = getComputedStyle(element).getPropertyValue(cssVariable)
-  if (!computedValue) return 0
-
-  // Parse the value and convert to pixels if needed
-  const trimmedValue = computedValue.trim()
-
-  // Handle pixel values
-  if (trimmedValue.endsWith('px')) {
-    return parseFloat(trimmedValue)
-  }
-
-  // Handle em/rem values by converting to pixels
-  if (trimmedValue.endsWith('em') || trimmedValue.endsWith('rem')) {
-    const numericValue = parseFloat(trimmedValue)
-    const fontSize = parseFloat(getComputedStyle(element).fontSize)
-    return numericValue * fontSize
-  }
-
-  // Handle unitless or already numeric values
-  const numericValue = parseFloat(trimmedValue)
-  return isNaN(numericValue) ? 0 : numericValue
+// Extend SVGTextElement to track label visibility for area labels
+interface LabelSVGTextElement extends SVGTextElement {
+  _labelVisible?: boolean;
 }
 
-export function collideLabels (
-  selection: Selection<SVGGElement, unknown, SVGGElement, unknown>,
-  projection: GeoProjection,
-  pointRadius: NumericAccessor<unknown>,
-  pointLongitude: NumericAccessor<unknown>,
-  pointLatitude: NumericAccessor<unknown>,
-  currentZoomLevel: number
+export function collideAreaLabels (
+  selection: Selection<SVGTextElement, any, SVGGElement, unknown>
 ): void {
-  selection.each((datum1: unknown, i: number, elements: ArrayLike<LabelSVGGElement>) => {
-    const group1LabelElement = elements[i]
-    const group1 = select(group1LabelElement)
-    const label1: Selection<SVGTextElement, any, SVGElement, any> = group1.select(`.${s.pointLabel}`)
-    group1LabelElement.labelVisible = true
+  if (selection.size() === 0) return
 
-    // Calculate bounding rect of point's bottom label
-    const bottomLabelFontSizePx = getCSSVariableValueInPixels('--vis-map-point-label-font-size', selection.node())
-    const pos1 = projection(getLonLat(datum1, pointLongitude, pointLatitude))
-    if (!pos1) return
+  const labelNodes = selection.nodes() as LabelSVGTextElement[]
+  const labelData = selection.data()
 
-    const p1Pos = { x: pos1[0], y: pos1[1] }
-    const radius1 = getNumber(datum1, pointRadius) / currentZoomLevel
-    const label1Size = estimateTextSize(label1, bottomLabelFontSizePx, 0.32, true, 0.6)
-    const label1BoundingRect: Rect = {
-      x: p1Pos.x - label1Size.width / 2,
-      y: p1Pos.y - label1Size.height / 2 + radius1 + BOTTOM_LABEL_TOP_MARGIN,
-      width: label1Size.width,
-      height: label1Size.height,
+  // Reset all labels to visible
+  labelNodes.forEach((node) => {
+    node._labelVisible = true
+  })
+
+  // Get actual font size
+  let actualFontSize = 12
+  if (labelNodes.length > 0) {
+    const computedStyle = getComputedStyle(labelNodes[0])
+    const fontSize = computedStyle.fontSize
+    if (fontSize) actualFontSize = parseFloat(fontSize)
+  }
+
+  const getBBox = (labelData: any): Rect => {
+    const [x, y] = labelData.centroid
+    const labelText = labelData.labelText || ''
+    const width = estimateStringPixelLength(labelText, actualFontSize, 0.6)
+    const height = actualFontSize
+
+    return {
+      x: x - width / 2,
+      y: y - height / 2,
+      width,
+      height,
     }
+  }
 
-    for (let j = 0; j < elements.length; j += 1) {
+  labelNodes.forEach((node1, i) => {
+    const data1 = labelData[i]
+    if (!node1._labelVisible) return
+
+    const label1BoundingRect = getBBox(data1)
+
+    for (let j = 0; j < labelNodes.length; j++) {
       if (i === j) continue
-      const group2LabelElement = elements[j]
-      const group2 = select(group2LabelElement)
-      const label2: Selection<SVGTextElement, any, SVGElement, any> = group2.select(`.${s.pointLabel}`)
-      const datum2 = group2.datum() as unknown
 
-      // Calculate bounding rect of the second point's circle
-      const pos2 = projection(getLonLat(datum2, pointLongitude, pointLatitude))
-      if (!pos2) continue
+      const node2 = labelNodes[j]
+      const data2 = labelData[j]
 
-      const p2Pos = { x: pos2[0], y: pos2[1] }
-      const radius2 = getNumber(datum2, pointRadius) / currentZoomLevel
-      const point2BoundingRect = {
-        x: p2Pos.x - radius2,
-        y: p2Pos.y - radius2,
-        width: 2 * radius2,
-        height: 2 * radius2,
-      }
+      if (!node2._labelVisible) continue
 
-      let intersect = rectIntersect(label1BoundingRect, point2BoundingRect)
-
-      // If there's not intersection, check a collision with the second point's label
-      const label2Visible = group2LabelElement.labelVisible
-      if (!intersect && label2Visible) {
-        const label2Size = estimateTextSize(label2, bottomLabelFontSizePx, 0.32, true, 0.6)
-        intersect = rectIntersect(label1BoundingRect, {
-          x: p2Pos.x - label2Size.width / 2,
-          y: p2Pos.y + radius2 + BOTTOM_LABEL_TOP_MARGIN - label2Size.height / 2,
-          width: label2Size.width,
-          height: label2Size.height,
-        })
-      }
+      const label2BoundingRect = getBBox(data2)
+      const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, 0.25)
 
       if (intersect) {
-        group1LabelElement.labelVisible = false
-        break
+        if (data1.area >= data2.area) {
+          node2._labelVisible = false
+        } else {
+          node1._labelVisible = false
+          break
+        }
       }
     }
-
-    smartTransition(label1, 0).attr('opacity', group1LabelElement.labelVisible ? 1 : 0)
   })
+
+  selection.style('opacity', (d, i) => labelNodes[i]._labelVisible ? 1 : 0)
 }
