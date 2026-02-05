@@ -56,7 +56,18 @@ export type { AreaConfigInterface } from './components/area/config'
 export type { TopoJSONMapConfigInterface } from './components/topojson-map/config'
 
 // Types
-export { TopoJSONMapPointShape } from './components/topojson-map/types'
+export type {
+  TopoJSONMapPieDatum,
+  TopoJSONMapPointShape,
+  TopoJSONMapPointStyle,
+  TopoJSONMapPointStyles,
+  TopoJSONMapPoint,
+  TopoJSONMapPointDatum,
+  TopoJSONMapClusterDatum,
+  MapPointLabelPosition,
+  MapData,
+  MapFeature,
+} from './components/topojson-map/types'
 export type { LeafletMapConfigInterface } from './components/leaflet-map/config'
 export type { LeafletFlowMapConfigInterface } from './components/leaflet-flow-map/config'
 export type { ChordDiagramConfigInterface } from './components/chord-diagram/config'
