@@ -439,7 +439,7 @@ export class TopoJSONMap<
         const pointLabelText = getString(d, config.pointLabel) || ''
         const textLength = pointLabelText.length
         const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
-        return clamp(fontSize, fontSize, 16)
+        return clamp(fontSize, fontSize, 16) / this._currentZoomLevel
       })
       .attr('y', null)
       .attr('dy', '0.32em')
@@ -467,7 +467,7 @@ export class TopoJSONMap<
       })
       .attr('y', d => {
         const pointRadius = getNumber(d, config.pointRadius) / this._currentZoomLevel
-        return pointRadius + 12 // offset below the point
+        return pointRadius + (12 / this._currentZoomLevel) // offset below the point, scaled with zoom
       })
       .attr('dy', '0.32em')
       .style('font-size', `calc(var(--vis-map-point-bottom-label-font-size, 10px) / ${this._currentZoomLevel})`)
