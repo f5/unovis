@@ -100,10 +100,20 @@ export interface TopoJSONMapConfigInterface<
   longitude?: NumericAccessor<PointDatum>;
   /** Point latitude accessor function. Default: `d => d.latitude ?? null` */
   latitude?: NumericAccessor<PointDatum>;
-  /** Point label accessor function. Default: `undefined` */
+  /** Point inner label accessor function. Default: `undefined`  */
   pointLabel?: StringAccessor<PointDatum>;
-  /** Point label position. Default: `Position.Bottom` */
+  /** Point inner label color accessor function or constant value.
+   * By default, the label color will be set, depending on the point brightness, either to
+   * `--vis-map-point-label-text-color-dark` or to `--vis-map-point-label-text-color-light` CSS variable.
+   * Default: `undefined`
+  */
+  pointLabelColor?: ColorAccessor<PointDatum>;
+  /** Point label position. Default: `MapPointLabelPosition.Center`
+   * @deprecated Point labels are now always centered within points. Use pointBottomLabel for labels below points.
+   */
   pointLabelPosition?: MapPointLabelPosition;
+  /** Point bottom label accessor function. Default: `undefined` */
+  pointBottomLabel?: StringAccessor<PointDatum>;
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   pointLabelTextBrightnessRatio?: number;
   /** Point id accessor function. Default: `d => d.id` */
@@ -167,7 +177,9 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   pointRingWidth: (d: unknown): number => (d as { ringWidth: number }).ringWidth ?? 2,
   pointCursor: null,
   pointLabel: undefined,
-  pointLabelPosition: MapPointLabelPosition.Bottom,
+  pointLabelColor: undefined,
+  pointLabelPosition: MapPointLabelPosition.Center,
+  pointBottomLabel: undefined,
   pointLabelTextBrightnessRatio: 0.65,
   pointId: (d: unknown): string => (d as { id: string }).id,
 
