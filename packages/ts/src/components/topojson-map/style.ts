@@ -38,6 +38,11 @@ export const variables = injectGlobal`
     --vis-map-point-default-stroke-color: #959da3;
     --vis-map-point-default-stroke-width: 0px;
 
+    --vis-map-cluster-default-fill-color: #fff;
+    --vis-map-cluster-default-stroke-color: #B9BEC3;
+    --vis-map-cluster-default-stroke-width: 1.5px;
+    --vis-map-cluster-donut-fill-color: #959da3;
+
     /* Dark Theme */
     --vis-dark-map-feature-color: #5b5f6d;
     --vis-dark-map-boundary-color: #2a2a2a;
@@ -47,6 +52,9 @@ export const variables = injectGlobal`
     --vis-dark-map-point-default-fill-color: #B9BEC3;
     --vis-dark-map-point-default-stroke-color: #959da3;
     --vis-dark-map-point-ring-fill-color: #5b5f6d;
+    --vis-dark-map-cluster-default-fill-color: #5b5f6d;
+    --vis-dark-map-cluster-default-stroke-color: #B9BEC3;
+    --vis-dark-map-cluster-donut-fill-color: #959da3;
   }
 
   body.theme-dark ${`.${root}`} {
@@ -96,6 +104,10 @@ export const points = css`
   label: points;
 `
 
+export const clusterBackgroundCircle = css`
+  label: cluster-background-circle;
+`
+
 export const point = css`
   label: point;
 `
@@ -136,6 +148,42 @@ export const pointBottomLabel = css`
   font-family: var(--vis-map-point-label-font-family, var(--vis-font-family));
   font-weight: 600;
   fill: var(--vis-map-point-bottom-label-text-color, #5b5f6d);
+`
+
+// Style class exported for custom CSS targeting of donut chart paths
+// Can be used to apply custom styles to pie chart segments
+export const pointDonut = css`
+  label: point-donut;
+
+  path {
+    stroke-opacity: 0.8;
+  }
+`
+
+export const clusterDonut = css`
+  label: cluster-donut;
+  transform: scale(1);
+  transition: .3s transform;
+
+  path {
+    stroke-opacity: 0.8;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    
+    path {
+      stroke: white;
+      stroke-width: 2;
+    }
+  }
+`
+
+export const clusterBackground = css`
+  label: cluster-background;
+  fill: var(--vis-map-cluster-default-fill-color);
+  stroke: none;
+  pointer-events: all;
 `
 
 export const links = css`
