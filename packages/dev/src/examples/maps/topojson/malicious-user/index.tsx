@@ -1,6 +1,7 @@
 import React from 'react'
-import { VisSingleContainer, VisTopoJSONMap } from '@unovis/react'
+import { VisSingleContainer, VisTooltip, VisTopoJSONMap } from '@unovis/react'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
+import { TopoJSONMap } from '@unovis/ts'
 import s from './style.module.css'
 
 export const title = 'Malicious User'
@@ -40,6 +41,11 @@ export const component = (): React.ReactNode => {
           pointRadius={10}
           pointLabelColor={'#fff'}
         />
+        <VisTooltip triggers={{
+          [TopoJSONMap.selectors.point]: (d: DataRecord) => {
+            return `<strong>${d.id}</strong><br/>Shape: ${d.shape || 'circle'}`
+          },
+        }} />
       </VisSingleContainer>
     </div>
   )
