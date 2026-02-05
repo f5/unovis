@@ -41,7 +41,7 @@ export const component = (): React.ReactNode => {
         <VisTopoJSONMap<any, DataRecord, any>
           topojson={WorldMapTopoJSON}
           pointRingWidth={ringWidth}
-          pointLabel={d => d.id}
+          pointBottomLabel={d => d.id}
           pointShape={d => d.shape}
           pointColor={d => d.pointColor}
           duration={500}
