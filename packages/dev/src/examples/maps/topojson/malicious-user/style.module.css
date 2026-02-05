@@ -1,0 +1,14 @@
+@keyframes pulse {
+  0% {
+    stroke-width: 5;
+    stroke-opacity: 1;
+  }
+  100% {
+    stroke-width: 20;
+    stroke-opacity: 0;
+  }
+}
+
+.mmap [class*="point-shape"] {
+  animation: pulse 1.5s ease-in-out infinite;
+}
