@@ -60,7 +60,7 @@ export const flowData: FlowDataRecord[] = [
 // Generate more data points for better clustering demonstration
 export const data: { points: DataRecord[]; links?: FlowDataRecord[] } = {
   points: [
-    { id: 'San Jose', latitude: 37.3382, longitude: -121.8863, shape: 'ring', pointColor: '#ff0000', className: 'point-1' },
+    { id: 'San Jose Metric with Long Label', latitude: 37.3382, longitude: -121.8863, shape: 'ring', pointColor: '#ff0000', className: 'point-1' },
     { id: 'Paris', latitude: 48.8566, longitude: 2.3522, shape: 'ring', pointColor: '#ff0000', className: 'point-2' },
   ],
   links: flowData,
@@ -80,7 +80,7 @@ export const component = (): React.ReactNode => {
           duration={0}
           flowParticleDensity={0.4}
           pointRingWidth={10}
-          pointLabel={d => d.id}
+          pointBottomLabel={d => d.id}
           pointShape={d => d.shape}
           pointColor={d => d.pointColor}
           pointRadius={6}
