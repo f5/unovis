@@ -255,7 +255,6 @@ export const component = (): React.ReactNode => {
         <VisTopoJSONMap
           topojson={WorldMapTopoJSON}
           duration={0}
-          areaColor='red'
           areaLabel={(d: AreaDatum) => d?.name}
           events={{
             [TopoJSONMap.selectors.feature]: {
