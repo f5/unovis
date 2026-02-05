@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { VisSingleContainer, VisTopoJSONMap } from '@unovis/react'
+import { VisSingleContainer, VisTooltip, VisTopoJSONMap } from '@unovis/react'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
+import { TopoJSONMap } from '@unovis/ts'
 import s from './style.module.css'
-
 export const title = 'Point Shapes'
 export const subTitle = 'Points with different shapes based on data field'
 
@@ -46,6 +46,11 @@ export const component = (): React.ReactNode => {
           pointColor={d => d.pointColor}
           duration={500}
         />
+        <VisTooltip triggers={{
+          [TopoJSONMap.selectors.point]: (d: DataRecord) => {
+            return `<strong>${d.id}</strong><br/>Shape: ${d.shape || 'circle'}`
+          },
+        }} />
       </VisSingleContainer>
     </div>
   )
