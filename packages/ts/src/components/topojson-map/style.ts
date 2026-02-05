@@ -27,7 +27,11 @@ export const variables = injectGlobal`
     // Undefined by default to allow proper fallback to var(--vis-font-family)
     /* --vis-map-point-label-font-family: */
     --vis-map-point-label-font-weight: 600;
-    --vis-map-point-label-font-size: 12px;'
+    --vis-map-point-label-font-size: 12px;
+
+    --vis-map-area-label-text-color: #5b5f6d;
+    --vis-map-area-label-font-weight: 600;
+    --vis-map-area-label-font-size: 12px;
 
     --vis-map-point-default-fill-color: #B9BEC3;
     --vis-map-point-ring-fill-color: #ffffff;
@@ -39,6 +43,7 @@ export const variables = injectGlobal`
     --vis-dark-map-boundary-color: #2a2a2a;
     --vis-dark-map-point-label-text-color-dark: #fff;
     --vis-dark-map-point-label-text-color-light:#5b5f6d;
+    --vis-dark-map-area-label-text-color: #fff;
     --vis-dark-map-point-default-fill-color: #B9BEC3;
     --vis-dark-map-point-default-stroke-color: #959da3;
     --vis-dark-map-point-ring-fill-color: #5b5f6d;
@@ -49,6 +54,7 @@ export const variables = injectGlobal`
     --vis-map-boundary-color: var(--vis-dark-map-boundary-color);
     --vis-map-point-label-text-color-dark: var(--vis-dark-map-point-label-text-color-dark);
     --vis-map-point-label-text-color-light: var(--vis-dark-map-point-label-text-color-light);
+    --vis-map-area-label-text-color: var(--vis-dark-map-area-label-text-color);
     --vis-map-point-default-fill-color: var(--vis-dark-map-point-default-fill-color);
     --vis-map-point-default-stroke-color: var(--vis-dark-map-point-default-stroke-color);
     --vis-map-point-ring-fill-color: var(--vis-dark-map-point-ring-fill-color);
@@ -73,10 +79,10 @@ export const areaLabel = css`
   cursor: default;
   pointer-events: none;
 
-  font-size: var(--vis-map-point-label-font-size);
-  font-family: var(--vis-map-point-label-font-family, var(--vis-font-family));
-  font-weight: var(--vis-map-point-label-font-weight);
-  fill: var(--vis-map-point-label-text-color-dark);
+  font-size: var(--vis-map-area-label-font-size);
+  font-family: var(--vis-map-area-label-font-family, var(--vis-font-family));
+  font-weight: var(--vis-map-area-label-font-weight);
+  fill: var(--vis-map-area-label-text-color);
 `
 
 export const background = css`
@@ -117,6 +123,19 @@ export const pointLabel = css`
   font-weight: var(--vis-map-point-label-font-weight);
   fill: var(--vis-map-point-default-fill-color);
   stroke-width: var(--vis-map-point-default-stroke-width);
+`
+
+export const pointBottomLabel = css`
+  label: point-bottom-label;
+
+  text-anchor: middle;
+  cursor: default;
+  pointer-events:none;
+
+  font-size: var(--vis-map-point-bottom-label-font-size, 10px);
+  font-family: var(--vis-map-point-label-font-family, var(--vis-font-family));
+  font-weight: 600;
+  fill: var(--vis-map-point-bottom-label-text-color, #5b5f6d);
 `
 
 export const links = css`

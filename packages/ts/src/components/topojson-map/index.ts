@@ -14,12 +14,13 @@ import { clamp, getNumber, getString, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor, hexToBrightness } from 'utils/color'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
+import { trimStringMiddle } from 'utils/text'
 
 // Types
 import { MapLink } from 'types/map'
 
 // Local Types
-import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapPointShape, FlowParticle } from './types'
+import { MapData, MapFeature, MapProjection, TopoJSONMapPointShape, FlowParticle } from './types'
 
 // Config
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
@@ -382,6 +383,9 @@ export class TopoJSONMap<
     pointsEnter.append('text').attr('class', s.pointLabel)
       .style('opacity', 0)
 
+    pointsEnter.append('text').attr('class', s.pointBottomLabel)
+      .style('opacity', 0)
+
     // Update
     const pointsMerged = pointsEnter.merge(points)
     smartTransition(pointsMerged, duration)
@@ -431,26 +435,19 @@ export class TopoJSONMap<
     pointLabelsMerged
       .text(d => getString(d, config.pointLabel) ?? '')
       .style('font-size', d => {
-        if (config.pointLabelPosition === MapPointLabelPosition.Bottom) {
-          return `calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel}`
-        }
         const pointDiameter = 2 * getNumber(d, config.pointRadius)
         const pointLabelText = getString(d, config.pointLabel) || ''
         const textLength = pointLabelText.length
         const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
         return clamp(fontSize, fontSize, 16)
       })
-      .attr('y', d => {
-        if (config.pointLabelPosition === MapPointLabelPosition.Center) return null
-
-        const pointRadius = getNumber(d, config.pointRadius) / this._currentZoomLevel
-        return pointRadius
-      })
-      .attr('dy', config.pointLabelPosition === MapPointLabelPosition.Center ? '0.32em' : '1em')
+      .attr('y', null)
+      .attr('dy', '0.32em')
 
     smartTransition(pointLabelsMerged, duration)
       .style('fill', (d, i) => {
-        if (config.pointLabelPosition === MapPointLabelPosition.Bottom) return null
+        const labelColor = getColor(d, config.pointLabelColor, i)
+        if (labelColor) return labelColor
 
         const pointColor = getColor(d, config.pointColor, i)
         const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
@@ -461,12 +458,30 @@ export class TopoJSONMap<
       })
       .style('opacity', 1)
 
+    // Point Bottom Labels
+    const pointBottomLabelsMerged = pointsMerged.select(`.${s.pointBottomLabel}`)
+    pointBottomLabelsMerged
+      .text(d => {
+        const bottomLabelText = getString(d, config.pointBottomLabel) ?? ''
+        return trimStringMiddle(bottomLabelText, 15)
+      })
+      .attr('y', d => {
+        const pointRadius = getNumber(d, config.pointRadius) / this._currentZoomLevel
+        return pointRadius + 12 // offset below the point
+      })
+      .attr('dy', '0.32em')
+      .style('font-size', `calc(var(--vis-map-point-bottom-label-font-size, 10px) / ${this._currentZoomLevel})`)
+
+    smartTransition(pointBottomLabelsMerged, duration)
+      .style('opacity', 1)
+
     // Exit
     points.exit().remove()
 
     // Heatmap
     this._pointsGroup.style('filter', (config.heatmapMode && this._currentZoomLevel < config.heatmapModeZoomLevelThreshold) ? 'url(#heatmapFilter)' : null)
     this._pointsGroup.selectAll(`.${s.pointLabel}`).style('display', (config.heatmapMode && (this._currentZoomLevel < config.heatmapModeZoomLevelThreshold)) ? 'none' : null)
+    this._pointsGroup.selectAll(`.${s.pointBottomLabel}`).style('display', (config.heatmapMode && (this._currentZoomLevel < config.heatmapModeZoomLevelThreshold)) ? 'none' : null)
   }
 
   _fitToPoints (points?: PointDatum[], pad = 0.1): void {
