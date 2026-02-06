@@ -84,8 +84,6 @@ export const points = css`
 
 export const clusterBackgroundCircle = css`
   label: cluster-background-circle;
-  stroke: #e0e0e0;
-  stroke-width: 1;
 `
 
 export const point = css`

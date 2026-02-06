@@ -1,4 +1,4 @@
-import { max } from 'd3-array'
+import { max, min } from 'd3-array'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
 
 // Utils
@@ -116,7 +116,6 @@ export function calculateClusterIndex<D extends GenericDataRecord> (
     radius: clusteringDistance,
     maxZoom: maxClusterZoomLevel,
     minZoom: 0,
-    minPoints: 2, // Minimum points to form a cluster
     map: (d): Supercluster.AnyProps => {
       const shape = getString(d, pointShape)
 
@@ -241,6 +240,8 @@ export function getClustersAndPoints<D extends GenericDataRecord> (
   return points as (ClusterFeature<TopoJSONMapClusterDatum<D>> | PointFeature<D>)[]
 }
 
+export const getNextZoomLevelOnClusterClick = (level: number): number => clamp(1 + level * 1.5, level, 12)
+
 export function shouldClusterExpand<D extends GenericDataRecord> (
   cluster: TopoJSONMapPoint<D>,
   zoomLevel: number,
@@ -258,4 +259,11 @@ export function shouldClusterExpand<D extends GenericDataRecord> (
         (zoomLevel >= midLevel && (clusterProps.pointCount < 20 || clusterExpansionZoomLevel >= maxClusterZoomLevel))
 }
 
-export const getNextZoomLevelOnClusterClick = (level: number): number => clamp(1 + level * 1.5, level, 12)
+export function getClusterRadius<D extends GenericDataRecord> (expandedCluster: { points: any[]; cluster: TopoJSONMapPoint<D> }): number {
+  const { points } = expandedCluster
+  const minX = min<number>(points.map((d: any) => d.dx - d.packedRadius))
+  const maxX = max<number>(points.map((d: any) => d.dx + d.packedRadius))
+  const minY = min<number>(points.map((d: any) => d.dy - d.packedRadius))
+  const maxY = max<number>(points.map((d: any) => d.dy + d.packedRadius))
+  return Math.sqrt((maxX - minX) ** 2 + (maxY - minY) ** 2) * 0.5
+}

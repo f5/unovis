@@ -97,7 +97,6 @@ export const component = (): React.ReactNode => {
         clusterRadius={pointRadius}
         clusterLabel={pointLabel}
         clusterExpandOnClick={true}
-        zoomExtent={[0.5, 12]}
       />
     </VisSingleContainer>
     <div style={{ position: 'absolute', top: 32, right: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>

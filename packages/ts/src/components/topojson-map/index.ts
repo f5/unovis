@@ -1,5 +1,5 @@
 import { Selection, select } from 'd3-selection'
-import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform, zoomTransform } from 'd3-zoom'
+import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom'
 import { timeout } from 'd3-timer'
 import { easeCubicInOut } from 'd3-ease'
 import { geoPath, GeoProjection, ExtendedFeatureCollection } from 'd3-geo'
@@ -47,7 +47,9 @@ import {
   calculateClusterIndex,
   getClustersAndPoints,
   geoJsonPointToScreenPoint,
+  getClusterRadius,
   shouldClusterExpand,
+  getNextZoomLevelOnClusterClick,
 } from './utils'
 import { updateDonut } from './modules/donut'
 
@@ -275,37 +277,29 @@ export class TopoJSONMap<
     const { config } = this
     const currentZoomLevel = this._currentZoomLevel || 1
 
+    // Always remove existing background circles first
+    this._clusterBackgroundGroup.selectAll('circle').remove()
+
     if (this._expandedCluster && config.clusterBackground) {
       const cluster = this._expandedCluster.cluster
       const pos = this._projection(cluster.geometry.coordinates as [number, number])
 
-      // Calculate background radius based on expanded points
-      const points = this._expandedCluster.points
-      const minX = Math.min(...points.map((p: any) => p.dx - p.radius))
-      const maxX = Math.max(...points.map((p: any) => p.dx + p.radius))
-      const minY = Math.min(...points.map((p: any) => p.dy - p.radius))
-      const maxY = Math.max(...points.map((p: any) => p.dy + p.radius))
-      const backgroundRadius = Math.sqrt((maxX - minX) ** 2 + (maxY - minY) ** 2) * 0.5 / currentZoomLevel
+      const backgroundRadius = getClusterRadius(this._expandedCluster)
+      // Divide by zoom level since the group transform will scale it back up
+      const adjustedRadius = backgroundRadius / currentZoomLevel
 
-      const background = this._clusterBackgroundGroup
-        .selectAll<SVGCircleElement, unknown>('circle')
-        .data([cluster])
-
-      const backgroundEnter = background.enter()
+      this._clusterBackgroundGroup
         .append('circle')
         .attr('class', s.clusterBackgroundCircle)
         .attr('cx', pos[0])
         .attr('cy', pos[1])
         .attr('r', 0)
-
-      smartTransition(backgroundEnter.merge(background), duration)
-        .attr('cx', pos[0])
-        .attr('cy', pos[1])
-        .attr('r', backgroundRadius + 5 / currentZoomLevel)
         .style('fill', 'white')
-        .style('opacity', 0.9)
-    } else {
-      this._clusterBackgroundGroup.selectAll('circle').remove()
+        .style('opacity', 0)
+        .transition()
+        .duration(duration)
+        .attr('r', adjustedRadius)
+        .style('opacity', 0.7)
     }
   }
 
@@ -360,14 +354,8 @@ export class TopoJSONMap<
     }
 
     // Get bounds for clustering - [westLng, southLat, eastLng, northLat]
-    let bounds: [number, number, number, number]
-    if (this._projection.invert) {
-      const sw = this._projection.invert([0, this._height]) // bottom-left corner
-      const ne = this._projection.invert([this._width, 0]) // top-right corner
-      bounds = [sw[0], sw[1], ne[0], ne[1]]
-    } else {
-      bounds = [-180, -90, 180, 90]
-    }
+    // For now, use full world bounds since calculating viewport bounds with zoom transforms is complex
+    const bounds: [number, number, number, number] = [-180, -90, 180, 90]
 
     // Use Math.round for zoom level to match Leaflet map clustering behavior
     const zoom = Math.max(0, Math.round(this._currentZoomLevel || 1))
@@ -404,17 +392,25 @@ export class TopoJSONMap<
     const pointData = this._getPointData()
     const currentZoomLevel = this._currentZoomLevel || 1
 
+    // Set z-index for expanded cluster points to ensure proper layering
+    if (this._expandedCluster && config.clusterBackground) {
+      pointData.forEach((d) => {
+        d._zIndex = (d as any).expandedClusterPoint ? 2 : 0
+      })
+    }
+
     const points = this._pointsGroup
       .selectAll<SVGGElement, TopoJSONMapPoint<PointDatum>>(`.${s.point}`)
-      .data(pointData, (d, i) => d.id.toString())
+      .data(pointData, (d, i) => d.id?.toString() ?? `point-${i}`)
 
     // Enter
     const pointsEnter = points.enter().append('g').attr('class', s.point)
       .attr('transform', d => {
         const pos = this._projection(d.geometry.coordinates as [number, number])
         const expandedPoint = d as any
-        const dx = expandedPoint.dx || 0
-        const dy = expandedPoint.dy || 0
+        // Divide by zoom level to compensate for the group's zoom transform
+        const dx = (expandedPoint.dx || 0) / currentZoomLevel
+        const dy = (expandedPoint.dy || 0) / currentZoomLevel
         return `translate(${pos[0] + dx},${pos[1] + dy})`
       })
       .style('opacity', 1e-6)
@@ -475,8 +471,9 @@ export class TopoJSONMap<
       .attr('transform', d => {
         const pos = this._projection(d.geometry.coordinates as [number, number])
         const expandedPoint = d as any
-        const dx = expandedPoint.dx || 0
-        const dy = expandedPoint.dy || 0
+        // Divide by zoom level to compensate for the group's zoom transform
+        const dx = (expandedPoint.dx || 0) / currentZoomLevel
+        const dy = (expandedPoint.dy || 0) / currentZoomLevel
         return `translate(${pos[0] + dx},${pos[1] + dy})`
       })
       .style('cursor', d => {
@@ -652,6 +649,13 @@ export class TopoJSONMap<
         return hasLabel ? null : 'hidden'
       })
 
+    // Sort elements by z-index to ensure expanded cluster points appear above everything else
+    if (this._expandedCluster && config.clusterBackground) {
+      this._pointsGroup
+        .selectAll<SVGGElement, TopoJSONMapPoint<PointDatum>>(`.${s.point}`)
+        .sort((a: TopoJSONMapPoint<PointDatum>, b: TopoJSONMapPoint<PointDatum>) => a._zIndex - b._zIndex)
+    }
+
     // Exit
     points.exit().remove()
 
@@ -739,14 +743,8 @@ export class TopoJSONMap<
     }
     const isMouseEvent = event.sourceEvent !== undefined
     const isExternalEvent = !event?.sourceEvent && !this._isResizing
-
     // Reset expanded cluster when manually zooming (but not during component-initiated zoom)
     if (isMouseEvent && !this._eventInitiatedByComponent) this._resetExpandedCluster()
-
-    // Reset the flag after handling the zoom
-    if (this._eventInitiatedByComponent && !isMouseEvent) {
-      this._eventInitiatedByComponent = false
-    }
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent))
@@ -774,6 +772,7 @@ export class TopoJSONMap<
     // Call render functions that depend on this._transform
     this._renderGroups(customDuration)
     this._renderLinks(customDuration)
+    this._renderClusterBackground(customDuration)
     this._renderPoints(customDuration)
   }
 
@@ -816,31 +815,20 @@ export class TopoJSONMap<
     if (expandedPoint.expandedClusterPoint) {
       this._resetExpandedCluster()
       // Force a full re-render by re-calculating clustering
+      this._renderClusterBackground(config.duration)
       this._renderPoints(config.duration)
       return
     }
 
     if (d.isCluster && (d.properties as TopoJSONMapClusterDatum<PointDatum>).cluster) {
-      if (config.clusterExpandOnClick) {
-        const { zoomExtent } = config
-        const minZoom = zoomExtent[0]
-        const maxZoom = zoomExtent[1]
-        const midLevel = minZoom + (maxZoom - minZoom) * 0.5
-        const maxLevel = maxZoom - 1
+      const zoomLevel = this._currentZoomLevel || 1
+      const coordinates = d.geometry.coordinates as [number, number]
 
-        if (shouldClusterExpand(d, this._currentZoomLevel || minZoom, midLevel, maxLevel)) {
-          this._expandCluster(d)
-        } else {
-          const clusterId = (d.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId as number
-          const expansionZoom = this._clusterIndex?.getClusterExpansionZoom(clusterId)
-
-          if (expansionZoom && expansionZoom <= config.zoomExtent[1]) {
-            this._zoomToLocation(d.geometry.coordinates as [number, number], expansionZoom)
-          } else {
-            // Always expand the cluster to show individual points
-            this._expandCluster(d)
-          }
-        }
+      if (config.clusterExpandOnClick && shouldClusterExpand(d, zoomLevel)) {
+        this._expandCluster(d)
+      } else {
+        const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel)
+        this._zoomToLocation(coordinates, newZoomLevel)
       }
     }
   }
@@ -855,12 +843,12 @@ export class TopoJSONMap<
     const points = clusterPoint.clusterIndex.getLeaves(clusterId, Infinity)
 
     // Calculate positions for expanded points using d3.packSiblings (same as leaflet map)
+    // Use getPointRadius with current zoom level to match Leaflet behavior
     const packPoints: {x: number; y: number; r: number }[] = points.map((point) => {
-      const r = getPointRadius(point as any, config.pointRadius, this._currentZoomLevel || 1)
       return {
-        x: 0,
-        y: 0,
-        r: r + padding, // Base radius for individual points
+        x: null,
+        y: null,
+        r: getPointRadius(point as any, config.pointRadius, this._currentZoomLevel || 1) + padding,
       }
     })
     packSiblings(packPoints)
@@ -890,7 +878,8 @@ export class TopoJSONMap<
         clusterColor: pointColor, // Preserve the cluster color
         dx: packPoints[i].x,
         dy: packPoints[i].y,
-      } as TopoJSONMapPoint<PointDatum> & { expandedClusterPoint: TopoJSONMapPoint<PointDatum>; dx: number; dy: number }
+        packedRadius: packPoints[i].r, // Store the packed radius for cluster background calculation
+      } as TopoJSONMapPoint<PointDatum> & { expandedClusterPoint: TopoJSONMapPoint<PointDatum>; dx: number; dy: number; packedRadius: number }
     })
 
     this._resetExpandedCluster()
@@ -899,11 +888,90 @@ export class TopoJSONMap<
       points: expandedPoints,
     }
 
-    // Re-render to show expanded points with smooth animation
+    // Re-render to show expanded points and cluster background with smooth animation
+    this._renderClusterBackground(config.duration / 2)
     this._renderPoints(config.duration / 2)
+
+    // Zoom to fit all expanded points
+    this._zoomToExpandedCluster()
 
     // Return the original point data for centroid calculation
     return points.map(p => p.properties as PointDatum)
+  }
+
+  private _zoomToExpandedCluster (): void {
+    if (!this._expandedCluster) return
+
+    const { config } = this
+    const { cluster, points } = this._expandedCluster
+    const currentZoomLevel = this._currentZoomLevel || 1
+
+    // Get cluster center position
+    const clusterPos = this._projection(cluster.geometry.coordinates as [number, number])
+
+    // Calculate bounds of expanded points in screen space
+    const expandedPositions = points.map((p: any) => {
+      const dx = p.dx / currentZoomLevel
+      const dy = p.dy / currentZoomLevel
+      const radius = p.packedRadius / currentZoomLevel
+      return {
+        x: clusterPos[0] + dx,
+        y: clusterPos[1] + dy,
+        radius,
+      }
+    })
+
+    const minX = Math.min(...expandedPositions.map(p => p.x - p.radius))
+    const maxX = Math.max(...expandedPositions.map(p => p.x + p.radius))
+    const minY = Math.min(...expandedPositions.map(p => p.y - p.radius))
+    const maxY = Math.max(...expandedPositions.map(p => p.y + p.radius))
+
+    const width = maxX - minX
+    const height = maxY - minY
+    const centerX = (minX + maxX) / 2
+    const centerY = (minY + maxY) / 2
+
+    // Add padding (20% on each side)
+    const padding = 0.2
+    const targetWidth = width * (1 + padding * 2)
+    const targetHeight = height * (1 + padding * 2)
+
+    // Calculate zoom level to fit the expanded cluster
+    const scaleX = this._width / targetWidth
+    const scaleY = this._height / targetHeight
+    const scale = Math.min(scaleX, scaleY)
+
+    // Clamp the zoom level
+    const newZoomLevel = clamp(currentZoomLevel * scale, config.zoomExtent[0], config.zoomExtent[1])
+    const k = this._initialScale * newZoomLevel
+
+    // Calculate translation to center the expanded cluster
+    const currentCenter = this._projection.translate()
+    const viewportCenterX = this._width / 2
+    const viewportCenterY = this._height / 2
+
+    const x = viewportCenterX + (currentCenter[0] - centerX) * (k / this._initialScale)
+    const y = viewportCenterY + (currentCenter[1] - centerY) * (k / this._initialScale)
+
+    const transform = zoomIdentity.translate(x, y).scale(k)
+
+    // Update internal state
+    this._currentZoomLevel = newZoomLevel
+    this._center = [x, y]
+
+    // Set flag to indicate this is a component-initiated zoom
+    this._eventInitiatedByComponent = true
+
+    // Apply the transform with smooth eased animation
+    this.g
+      .transition()
+      .duration(config.zoomDuration)
+      .ease(easeCubicInOut)
+      .call(this._zoomBehavior.transform, transform)
+      .on('end', () => {
+        // Reset the flag after transition completes
+        this._eventInitiatedByComponent = false
+      })
   }
 
   private _zoomToLocation (coordinates: [number, number], zoomLevel: number): void {
@@ -923,7 +991,6 @@ export class TopoJSONMap<
     const k = this._initialScale * clampedZoomLevel
 
     // Calculate translation to center the target point
-    // We need to account for the current projection center
     const currentCenter = this._projection.translate()
     const x = centerX + (currentCenter[0] - targetPoint[0]) * (k / this._initialScale)
     const y = centerY + (currentCenter[1] - targetPoint[1]) * (k / this._initialScale)
@@ -943,6 +1010,10 @@ export class TopoJSONMap<
       .duration(config.zoomDuration)
       .ease(easeCubicInOut)
       .call(this._zoomBehavior.transform, transform)
+      .on('end', () => {
+        // Reset the flag after transition completes
+        this._eventInitiatedByComponent = false
+      })
   }
 
   private _resetExpandedCluster (): void {
