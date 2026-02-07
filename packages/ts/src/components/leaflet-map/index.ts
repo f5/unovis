@@ -210,7 +210,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
       this.themeObserver = new MutationObserver((mutations) => {
         mutations.forEach(change => {
           if (change.attributeName === 'class') {
-            const isDarkTheme = isDarkThemeEnabled(change.target as HTMLElement))
+            const isDarkTheme = isDarkThemeEnabled(change.target as HTMLElement)
             if (this._isDarkThemeActive !== isDarkTheme) {
               this.setTheme(isDarkTheme ? this.config.styleDarkTheme : this.config.style)
               this._isDarkThemeActive = isDarkTheme
