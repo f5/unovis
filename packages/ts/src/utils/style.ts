@@ -10,8 +10,8 @@ export const isDarkThemeEnabled = (...targetElements: HTMLElement[]): boolean =>
   const elements = targetElements.length > 0 ? targetElements : [document.documentElement, document.body]
 
   return (
-    elements.some(element =>.getAttribute("data-theme") === "dark") ||
-    ["dark-theme", "theme-dark"].some(
+    elements.some(element => element.getAttribute('data-theme') === 'dark') ||
+    ['dark-theme', 'theme-dark'].some(
       (className) => elements.some(element =>
         element.classList.contains(className)
       )
