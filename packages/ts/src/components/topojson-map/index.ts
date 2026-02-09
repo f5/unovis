@@ -917,6 +917,8 @@ export class TopoJSONMap<
     if (this._firstRender) {
       // On first render, just update the zoom level, don't trigger animation
       this._currentZoomLevel = (event?.transform.k / this._initialScale) || 1
+      // Set CSS custom property for zoom level
+      this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
       return // To prevent double render because of binding zoom behaviour
     }
     const isMouseEvent = event.sourceEvent !== undefined
@@ -941,6 +943,8 @@ export class TopoJSONMap<
       this._center = [event.transform.x, event.transform.y]
     }
     this._currentZoomLevel = (event?.transform.k / this._initialScale) || 1
+    // Set CSS custom property for zoom level
+    this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
 
     // Fallback timeout in case zoom end event doesn't fire
     this._zoomEndTimeoutId = setTimeout(() => {
@@ -998,6 +1002,8 @@ export class TopoJSONMap<
   public setZoom (zoomLevel: number): void {
     const { config } = this
     this._currentZoomLevel = clamp(zoomLevel, config.zoomExtent[0], config.zoomExtent[1])
+    // Set CSS custom property for zoom level
+    this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
     this._transform = zoomIdentity
       .translate(this._center[0] * (1 - this._currentZoomLevel), this._center[1] * (1 - this._currentZoomLevel))
       .scale(this._currentZoomLevel)
@@ -1010,6 +1016,8 @@ export class TopoJSONMap<
   public fitView (): void {
     this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
     this._currentZoomLevel = (this._projection?.scale() / this._initialScale) || 1
+    // Set CSS custom property for zoom level
+    this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
     this._center = this._projection.translate()
     // We are using this._applyZoom() instead of directly calling this._render(config.zoomDuration) because
     // we've to "attach" new transform to the map group element. Otherwise zoomBehavior  will not know
