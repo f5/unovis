@@ -1,10 +1,10 @@
 @keyframes pulse {
   0% {
-    stroke-width: 5;
+    stroke-width: calc(5px / var(--vis-map-current-zoom-level, 1));
     stroke-opacity: 1;
   }
   100% {
-    stroke-width: 20;
+    stroke-width: calc(20px / var(--vis-map-current-zoom-level, 1));
     stroke-opacity: 0;
   }
 }
