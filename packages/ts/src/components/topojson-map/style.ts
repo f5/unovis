@@ -18,6 +18,9 @@ export const root = css`
 
 export const variables = injectGlobal`
   :root {
+    /* Read-only: Current zoom level. Do not override. */
+    /* --vis-map-current-zoom-level: 1; */
+    
     --vis-map-feature-color: #dce3eb;
     --vis-map-boundary-color: #ffffff;
 
