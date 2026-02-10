@@ -45,7 +45,7 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
+    "build": "pnpm check && vite build && rm -rf dist/.cache && cp LICENSE README.md package.json ./dist",
     "check": "vue-tsc --noEmit",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "publish:dist": "cd ./dist; npm publish",
@@ -75,6 +75,6 @@
     "vite-plugin-css-injected-by-js": "^3.3.0",
     "vite-plugin-dts": "^3.5.3",
     "vue": "^3.5.13",
-    "vue-tsc": "^1.8.10"
+    "vue-tsc": "^2.1.0"
   }
 }

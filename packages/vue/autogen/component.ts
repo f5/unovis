@@ -33,8 +33,9 @@ import { arePropsEqual, useForwardProps } from '../../utils/props'
 ${isStandAlone ? '' : `import { ${elementSuffix}AccessorKey } from '../../utils/context'\n`}
 ${isStandAlone ? '' : `const accessor = inject(${elementSuffix}AccessorKey)\n`}
 // data and required props ${isComplexPropComponent ? '\n// !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412' : ''}
-${isComplexPropComponent ? `interface Props extends /** @vue-ignore */ ${componentName}ConfigInterface${genericsStr} { }` : `type Props = ${componentName}ConfigInterface${genericsStr}`}
-const props = defineProps<Props & { data?: ${dataType} }>()
+${isComplexPropComponent
+    ? `const props = defineProps</** @vue-ignore */ ${componentName}ConfigInterface${genericsStr} & { data?: ${dataType} }>()`
+    : `type Props = ${componentName}ConfigInterface${genericsStr}\nconst props = defineProps<Props & { data?: ${dataType} }>()`}
 
 ${propDefs.length && !isStandAlone ? `${propDefs.join('\n')}` : isStandAlone ? 'const data = computed(() => props.data)' : ''}
 // config

@@ -75,6 +75,13 @@ export function getTypeName (type: ts.Node | undefined): string {
       const generics = (type as ts.TypeReferenceNode).typeArguments?.map(getTypeName).join(', ')
       return name + (generics ? `<${generics}>` : '')
     }
+    case (ts.SyntaxKind.TemplateLiteralType): {
+      const t = type as ts.TemplateLiteralTypeNode
+      const spans = t.templateSpans
+        .map(span => `\${${getTypeName(span.type)}}${span.literal.text}`)
+        .join('')
+      return `\`${t.head.text}${spans}\``
+    }
     case (ts.SyntaxKind.ArrayType): return `${getTypeName((type as ts.ArrayTypeNode).elementType)}[]`
     case (ts.SyntaxKind.TupleType): return `[${(type as ts.TupleTypeNode).elements.map(getTypeName).join(', ')}]`
     default: {
