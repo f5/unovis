@@ -53,4 +53,4 @@ for (const component of components) {
   console.log(`  ${pathComponent}`)
 }
 
-writeFileSync('src/components.ts', exports.join('\n'))
+writeFileSync('src/components.ts', `${exports.join('\n')}\n`)
