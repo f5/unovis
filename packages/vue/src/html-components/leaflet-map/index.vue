@@ -1,13 +1,15 @@
-<script setup lang="ts" generic="Datum extends GenericDataRecord">
+<script lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
 import { LeafletMap, LeafletMapConfigInterface, GenericDataRecord, MapLibreStyleSpecs } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
+interface Props<Datum extends GenericDataRecord> extends /** @vue-ignore */ LeafletMapConfigInterface<Datum> { }
+export const VisLeafletMapSelectors = LeafletMap.selectors
+</script>
 
+<script setup lang="ts" generic="Datum extends GenericDataRecord">
 
-// data and required props 
-type Props = LeafletMapConfigInterface<Datum>
-const props = defineProps<Props & { data?: Datum[] }>()
+const props = defineProps<Props<Datum> & { data?: Datum[] }>()
 
 const data = computed(() => props.data)
 // config
@@ -44,10 +46,6 @@ watch(data, () => {
 defineExpose({
   component
 })
-</script>
-
-<script lang="ts">
-export const VisLeafletMapSelectors = LeafletMap.selectors
 </script>
 
 <template>

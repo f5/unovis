@@ -20,21 +20,32 @@ export function getComponentCode (
     ? `elRef.value, ${renderIntoProvidedDomNode ? '{ ...config.value, renderIntoProvidedDomNode: true }' : 'config.value'}${dataType ? ', data.value' : ''}`
     : 'config.value'
 
-  // Vue 3.3.4 has issue resolving complex Typescript, in this case when the type has `WithOptional`.
-  // If the build is failing, add the respective component here.
-  const complexPropComponent = ['Timeline', 'Crosshair']
-  const isComplexPropComponent = complexPropComponent.includes(componentName)
+  // Additional imports needed for specific components
+  const componentSpecificImports: Record<string, string[]> = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    Timeline: ['import { XYComponentConfigInterface, StringAccessor } from "@unovis/ts"'],
+  }
 
-  return `<script setup lang="ts" ${genericsExtend}>
+  const genericsDecl = generics ? `<${generics.map(g => g.extends ? `${g.name} extends ${g.extends}` : g.name).join(', ')}>` : ''
+  const imports = [
+    ...importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`),
+    ...(componentSpecificImports[componentName] || []),
+    `import { onMounted, onUnmounted, computed, ref, watch, nextTick${isStandAlone ? '' : ', inject'} } from 'vue'`,
+    'import { arePropsEqual, useForwardProps } from \'../../utils/props\'',
+    isStandAlone ? '' : `import { ${elementSuffix}AccessorKey } from '../../utils/context'`,
+  ].filter(Boolean).join('\n')
+
+  // Use dual script block approach for all components to avoid Vue's TypeScript resolution issues
+  return `<script lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n  ')}${componentName === 'Timeline' ? '\nimport { XYComponentConfigInterface, StringAccessor } from "@unovis/ts"' : ''}
-import { onMounted, onUnmounted, computed, ref, watch, nextTick${isStandAlone ? '' : ', inject'} } from 'vue'
-import { arePropsEqual, useForwardProps } from '../../utils/props'
-${isStandAlone ? '' : `import { ${elementSuffix}AccessorKey } from '../../utils/context'\n`}
-${isStandAlone ? '' : `const accessor = inject(${elementSuffix}AccessorKey)\n`}
-// data and required props ${isComplexPropComponent ? '\n// !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412' : ''}
-${isComplexPropComponent ? `interface Props extends /** @vue-ignore */ ${componentName}ConfigInterface${genericsStr} { }` : `type Props = ${componentName}ConfigInterface${genericsStr}`}
-const props = defineProps<Props & { data?: ${dataType} }>()
+${imports}
+interface Props${genericsDecl} extends /** @vue-ignore */ ${componentName}ConfigInterface${genericsStr} { }
+export const Vis${componentName}Selectors = ${componentName}.selectors
+</script>
+
+<script setup lang="ts" ${genericsExtend}>
+${!isStandAlone ? `const accessor = inject(${elementSuffix}AccessorKey)\n` : ''}
+const props = defineProps<Props${genericsStr} & { data?: ${dataType} }>()
 
 ${propDefs.length && !isStandAlone ? `${propDefs.join('\n')}` : isStandAlone ? 'const data = computed(() => props.data)' : ''}
 // config
@@ -69,10 +80,6 @@ ${propDefs?.length ? `\nwatch(data, () => {
 defineExpose({
   component
 })
-</script>
-
-<script lang="ts">
-export const Vis${componentName}Selectors = ${componentName}.selectors
 </script>
 
 <template>

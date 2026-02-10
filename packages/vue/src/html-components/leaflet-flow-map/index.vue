@@ -1,13 +1,15 @@
-<script setup lang="ts" generic="PointDatum extends GenericDataRecord,FlowDatum extends GenericDataRecord">
+<script lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
 import { LeafletFlowMap, LeafletFlowMapConfigInterface, GenericDataRecord, MapLibreStyleSpecs } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
+interface Props<PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord> extends /** @vue-ignore */ LeafletFlowMapConfigInterface<PointDatum, FlowDatum> { }
+export const VisLeafletFlowMapSelectors = LeafletFlowMap.selectors
+</script>
 
+<script setup lang="ts" generic="PointDatum extends GenericDataRecord,FlowDatum extends GenericDataRecord">
 
-// data and required props 
-type Props = LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
-const props = defineProps<Props & { data?: { points: PointDatum[]; flows?: FlowDatum[] } }>()
+const props = defineProps<Props<PointDatum, FlowDatum> & { data?: { points: PointDatum[]; flows?: FlowDatum[] } }>()
 
 const data = computed(() => props.data)
 // config
@@ -44,10 +46,6 @@ watch(data, () => {
 defineExpose({
   component
 })
-</script>
-
-<script lang="ts">
-export const VisLeafletFlowMapSelectors = LeafletFlowMap.selectors
 </script>
 
 <template>
