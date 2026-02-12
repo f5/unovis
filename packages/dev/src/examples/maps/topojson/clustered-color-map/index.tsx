@@ -73,8 +73,8 @@ export const component = (): React.ReactNode => {
   }, [])
 
   const colorMap = {
-    normal: { color: '#4c7afc', className: 'normal' },
-    blocked: { color: '#f8442d', className: 'blocked' },
+    normal: { color: '#26BDA4', className: 'normal' },
+    blocked: { color: '#9876AA', className: 'blocked' },
   }
 
   const pointRadius = (d: DataRecord | any): number =>
