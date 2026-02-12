@@ -421,7 +421,7 @@ export class TopoJSONMap<
         .attr('cx', pos[0])
         .attr('cy', pos[1])
         .attr('r', 0)
-        .style('fill', 'white')
+        .style('fill', 'var(--vis-map-cluster-expanded-background-fill-color)')
         .style('opacity', 0)
         .style('cursor', 'pointer')
         .on('click', () => {
@@ -777,27 +777,22 @@ export class TopoJSONMap<
 
     smartTransition(pointLabelsMerged, duration)
       .style('fill', (d, i) => {
-        const labelColor = getColor(d.properties as PointDatum, config.pointLabelColor, i)
-        if (labelColor) return labelColor
-
-        // For expanded cluster points, use dark color (black) like Leaflet map
-        const expandedPoint = d as any
-        if (expandedPoint.expandedClusterPoint) {
-          return 'var(--vis-map-point-label-text-color-dark)'
-        }
-
-        // For points/clusters with donut data, determine color based on cluster background (white)
-        if (d.donutData.length > 0 && d.isCluster) {
+        if (d.donutData.length > 0) {
           // Cluster background is white, so use dark text
-          return 'var(--vis-map-point-label-text-color-dark)'
+          return d.isCluster || (d as any).expandedClusterPoint ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
+        } else {
+          if (config.pointLabelColor) {
+            const labelColor = getColor(d.properties as PointDatum, config.pointLabelColor, i)
+            if (labelColor) return labelColor
+          }
+
+          const pointColor = getColor(d.properties as any, config.pointColor, i)
+          const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
+          if (!hex) return null
+
+          const brightness = hexToBrightness(hex)
+          return brightness > config.pointLabelTextBrightnessRatio ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
         }
-
-        const pointColor = getColor(d.properties as any, config.pointColor, i)
-        const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
-        if (!hex) return null
-
-        const brightness = hexToBrightness(hex)
-        return brightness > config.pointLabelTextBrightnessRatio ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
       })
       .style('opacity', 1)
       .style('pointer-events', 'none')
