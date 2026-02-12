@@ -45,6 +45,7 @@ export const variables = injectGlobal`
     --vis-map-cluster-default-stroke-color: #B9BEC3;
     --vis-map-cluster-default-stroke-width: 1.5px;
     --vis-map-cluster-donut-fill-color: #959da3;
+    --vis-map-cluster-expanded-background-fill-color: #fff;
 
     /* Dark Theme */
     --vis-dark-map-feature-color: #5b5f6d;
@@ -58,6 +59,7 @@ export const variables = injectGlobal`
     --vis-dark-map-cluster-default-fill-color: #5b5f6d;
     --vis-dark-map-cluster-default-stroke-color: #B9BEC3;
     --vis-dark-map-cluster-donut-fill-color: #959da3;
+    --vis-dark-map-cluster-expanded-background-fill-color: #2a2a2a;
   }
 
   body.theme-dark ${`.${root}`} {
@@ -69,6 +71,10 @@ export const variables = injectGlobal`
     --vis-map-point-default-fill-color: var(--vis-dark-map-point-default-fill-color);
     --vis-map-point-default-stroke-color: var(--vis-dark-map-point-default-stroke-color);
     --vis-map-point-ring-fill-color: var(--vis-dark-map-point-ring-fill-color);
+    --vis-map-cluster-default-fill-color: var(--vis-dark-map-cluster-default-fill-color);
+    --vis-map-cluster-default-stroke-color: var(--vis-dark-map-cluster-default-stroke-color);
+    --vis-map-cluster-donut-fill-color: var(--vis-dark-map-cluster-donut-fill-color);
+    --vis-map-cluster-expanded-background-fill-color: var(--vis-dark-map-cluster-expanded-background-fill-color);
   }
 `
 
