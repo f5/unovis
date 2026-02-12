@@ -1,12 +1,14 @@
-<script setup lang="ts" >
+<script lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
 import { RollingPinLegend, RollingPinLegendConfigInterface, RollingPinLegendItem } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
+interface Props extends /** @vue-ignore */ RollingPinLegendConfigInterface { }
+export const VisRollingPinLegendSelectors = RollingPinLegend.selectors
+</script>
 
+<script setup lang="ts" >
 
-// data and required props 
-type Props = RollingPinLegendConfigInterface
 const props = defineProps<Props & { data?: null }>()
 
 const data = computed(() => props.data)
@@ -41,10 +43,6 @@ watch(config, (curr, prev) => {
 defineExpose({
   component
 })
-</script>
-
-<script lang="ts">
-export const VisRollingPinLegendSelectors = RollingPinLegend.selectors
 </script>
 
 <template>
