@@ -457,6 +457,24 @@ export class TopoJSONMap<
     edges.exit().remove()
   }
 
+  private _shouldFilterPointOrCluster (point: any, pointIdsToFilter: Set<string>): boolean {
+    const { config } = this
+
+    // If it's a cluster (potential subcluster), check if any of its leaves should be filtered
+    if (point.properties.cluster) {
+      const clusterId = point.properties.clusterId
+      const clusterLeaves = this._clusterIndex.getLeaves(clusterId, Infinity)
+      // Filter out this subcluster if any of its leaves are in the filter set
+      return clusterLeaves.some((leaf: any) =>
+        pointIdsToFilter.has(getString(leaf.properties as PointDatum, config.pointId))
+      )
+    }
+
+    // For individual points, filter if they're in the filter set
+    const pointId = getString(point.properties as PointDatum, config.pointId)
+    return pointIdsToFilter.has(pointId)
+  }
+
   private _getPointData (): TopoJSONMapPoint<PointDatum>[] {
     const { config, datamodel } = this
 
@@ -502,16 +520,15 @@ export class TopoJSONMap<
         return !isExpandedCluster
       })
 
-      // Remove any individual points that are part of the expanded cluster to avoid duplicates
+      // Remove any individual points and subclusters that are part of the expanded cluster to avoid duplicates
       const expandedPointIds = new Set(this._expandedCluster.points.map((p: any) => p.id))
-      geoJsonPoints = geoJsonPoints.filter((c: any) => {
-        // Keep all clusters and points that aren't part of the expanded set
-        return c.properties.cluster || !expandedPointIds.has(getString(c.properties as PointDatum, config.pointId))
-      })
+      geoJsonPoints = geoJsonPoints.filter((c: any) => !this._shouldFilterPointOrCluster(c, expandedPointIds))
 
       // Add points from the expanded cluster
       geoJsonPoints = geoJsonPoints.concat(this._expandedCluster.points as any)
-    } else if (this._collapsedCluster) {
+    }
+
+    if (this._collapsedCluster) {
       // When collapsed, restore the original cluster point instead of relying on clustering algorithm
       const collapsedClusterId = (this._collapsedCluster.properties as any).clusterId
 
@@ -525,13 +542,8 @@ export class TopoJSONMap<
         this._collapsedCluster = null
         this._collapsedClusterPointIds = null
       } else {
-        // Remove any individual points that were part of the collapsed cluster
-        geoJsonPoints = geoJsonPoints.filter((c: any) => {
-          if (c.properties.cluster) return true // Keep all other clusters
-          // Check if this individual point was part of the collapsed cluster
-          const pointId = getString(c.properties as PointDatum, config.pointId)
-          return !this._collapsedClusterPointIds.has(pointId)
-        })
+        // Remove any individual points and subclusters that were part of the collapsed cluster
+        geoJsonPoints = geoJsonPoints.filter((c: any) => !this._shouldFilterPointOrCluster(c, this._collapsedClusterPointIds))
 
         // Add the original cluster back
         geoJsonPoints.push(this._collapsedCluster as any)
@@ -1253,11 +1265,16 @@ export class TopoJSONMap<
   private _expandCluster (clusterPoint: TopoJSONMapPoint<PointDatum>): PointDatum[] | undefined {
     const { config } = this
 
-    if (!clusterPoint.clusterIndex) return undefined
+    if (!clusterPoint.clusterIndex) {
+      console.error('Cannot expand cluster - no clusterIndex!')
+      return undefined
+    }
 
-    // Clear any existing collapsed cluster when expanding a new one
-    this._collapsedCluster = null
-    this._collapsedClusterPointIds = null
+    // Note: _collapsedCluster.id is numeric (e.g., 331), but clusterPoint.id is "cluster-331"
+    if (this._collapsedCluster && `cluster-${this._collapsedCluster.id}` === clusterPoint.id) {
+      this._collapsedCluster = null
+      this._collapsedClusterPointIds = null
+    }
 
     const padding = 1
     const clusterId = (clusterPoint.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId as number
@@ -1452,9 +1469,14 @@ export class TopoJSONMap<
       const expandedPointIds = new Set(this._expandedCluster.points.map((p: any) => getString(p.properties as PointDatum, this.config.pointId)))
 
       // Convert the original cluster back to GeoJSON format for re-insertion
+      // Preserve critical fields: id (for cluster identification), clusterIndex (for re-expansion)
       const clusterGeoJson = {
         type: 'Feature' as const,
-        properties: originalCluster.properties,
+        id: (originalCluster.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId, // Use clusterId as the feature id
+        properties: {
+          ...originalCluster.properties,
+          clusterIndex: originalCluster.clusterIndex, // Preserve clusterIndex for re-expansion
+        },
         geometry: originalCluster.geometry,
       }
 
