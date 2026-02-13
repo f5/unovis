@@ -8,9 +8,9 @@ import { FitMode, TrimMode, TextAlign } from 'types/text'
 // We extend partial XY config interface because x and y properties are optional for Axis
 export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
   /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
-  position?: Position | string;
+  position?: Position | `${Position}`;
   /** Axis type: `AxisType.X` or `AxisType.Y` */
-  type?: AxisType | string;
+  type?: AxisType | `${AxisType}`;
   /** Extend the axis domain line to be full width or full height. Default: `true` */
   fullSize?: boolean;
   /** Axis label. Default: `undefined` */
@@ -20,9 +20,9 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   /** Distance between the axis and the label in pixels. Default: `8` */
   labelMargin?: number;
   /** Label text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
-  labelTextFitMode?: FitMode | string;
+  labelTextFitMode?: FitMode | `${FitMode}`;
   /** Label text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
-  labelTextTrimType?: TrimMode | string;
+  labelTextTrimType?: TrimMode | `${TrimMode}`;
   /** Font color of the axis label as CSS string. Default: `null` */
   labelColor?: string | null;
   /** Sets whether to draw the grid lines or not. Default: `true` */
@@ -46,7 +46,7 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
   numTicks?: number;
   /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
-  tickTextFitMode?: FitMode | string;
+  tickTextFitMode?: FitMode | `${FitMode}`;
   /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
   tickTextWidth?: number;
   /** Tick text wrapping separator. String or array of strings. Default: `undefined` */
@@ -54,11 +54,12 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   /** Force word break for ticks when they don't fit. Default: `false` */
   tickTextForceWordBreak?: boolean;
   /** Tick text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
-  tickTextTrimType?: TrimMode | string;
+  tickTextTrimType?: TrimMode | `${TrimMode}`;
   /** Font size of the tick text as CSS string. Default: `null` */
   tickTextFontSize?: string | null;
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
-  tickTextAlign?: TextAlign | string;
+  tickTextAlign?: TextAlign | `${TextAlign}` |
+  ((tickValue: number | Date, tickIndex: number, tickValues: number[] | Date[], tickPosition: [number, number], componentWidth: number, componentHeight: number) => TextAlign | `${TextAlign}`);
   /** Font color of the tick text as CSS string. Default: `null` */
   tickTextColor?: string | null;
   /** Text rotation angle for ticks. Default: `undefined` */

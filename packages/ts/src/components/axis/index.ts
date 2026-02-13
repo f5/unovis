@@ -15,9 +15,10 @@ import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAl
 // Utils
 import { smartTransition } from 'utils/d3'
 import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from 'utils/text'
-import { isEqual } from 'utils/data'
+import { isEqual, isFunction } from 'utils/data'
 import { rectIntersect } from 'utils/misc'
 import { getFontWidthToHeightRatio } from 'styles/index'
+import { getTransformValues } from 'utils/svg'
 
 // Local Types
 import { AxisType } from './types'
@@ -63,11 +64,12 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     this._renderAxis(axisRenderHelperGroup, 0)
 
+    // Align tick text
+    if (config.tickTextAlign) this._alignTickLabels(axisRenderHelperGroup)
+
     // Store axis raw BBox (without the label) for further label positioning (see _renderAxisLabel)
     this._axisRawBBox = axisRenderHelperGroup.node().getBBox()
 
-    // Align tick text
-    if (config.tickTextAlign) this._alignTickLabels()
     // Render label and store total axis size and required margins
     this._renderAxisLabel(axisRenderHelperGroup)
     this._axisSizeBBox = this._getAxisSize(axisRenderHelperGroup)
@@ -562,19 +564,25 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  private _alignTickLabels (): void {
+  private _alignTickLabels (axisGroup = this.axisGroup): void {
     const { config: { type, tickTextAlign, tickTextAngle, position } } = this
-    const tickText = this.g.selectAll('g.tick > text')
+    const tickGroups = axisGroup.selectAll<SVGGElement, number | Date>('g.tick')
+    const ticksData = tickGroups.data() as number[] | Date[]
 
-    const textAnchor = textAlignToAnchor(tickTextAlign as TextAlign)
-    const translateX = type === AxisType.X
-      ? 0
-      : this._getYTickTextTranslate(tickTextAlign as TextAlign, position as Position)
+    tickGroups.each((_, i, elements) => {
+      const tickGroupElement = elements[i] as SVGGElement
+      const tickTextElement = tickGroupElement.querySelector('text') as SVGTextElement
+      const transformValues = getTransformValues(tickGroupElement)
+      const tickPosition = [transformValues.translate.x, transformValues.translate.y] as [number, number]
+      const textAlign = (isFunction(tickTextAlign) ? tickTextAlign(ticksData[i], i, ticksData, tickPosition, this._width, this._height) : tickTextAlign) as TextAlign
+      const textAnchor = textAlignToAnchor(textAlign)
+      const translateX = type === AxisType.X ? 0 : this._getYTickTextTranslate(textAlign, position as Position)
 
-    const translateValue = tickTextAngle ? `translate(${translateX},0) rotate(${tickTextAngle})` : `translate(${translateX},0)`
-    tickText
-      .attr('transform', translateValue)
-      .attr('text-anchor', textAnchor)
+      const translateValue = tickTextAngle ? `translate(${translateX},0) rotate(${tickTextAngle})` : `translate(${translateX},0)`
+      select(tickTextElement)
+        .attr('transform', translateValue)
+        .attr('text-anchor', textAnchor)
+    })
   }
 
   private _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {
