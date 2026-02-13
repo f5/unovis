@@ -901,6 +901,8 @@ export class TopoJSONMap<
     const translate = this._center ?? this._projection.translate()
     const scale = this._initialScale * this._currentZoomLevel
     this.g.call(this._zoomBehavior.transform, zoomIdentity.translate(translate[0], translate[1]).scale(scale))
+    this._isZooming = true
+    this._onZoomEnd()
   }
 
   _onResize (): void {
@@ -954,18 +956,18 @@ export class TopoJSONMap<
     this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
 
     // Fallback timeout in case zoom end event doesn't fire
-    this._zoomEndTimeoutId = setTimeout(() => {
-      this._isZooming = false
-      this._runCollisionDetection()
-    }, 150)
+    this._onZoomEnd()
   }
 
   _onZoomEnd (): void {
     if (this._zoomEndTimeoutId) {
       clearTimeout(this._zoomEndTimeoutId)
     }
-    this._isZooming = false
-    this._runCollisionDetection()
+
+    this._zoomEndTimeoutId = setTimeout(() => {
+      this._isZooming = false
+      this._runCollisionDetection()
+    }, 150)
   }
 
   private _runCollisionDetection (): void {
@@ -999,10 +1001,12 @@ export class TopoJSONMap<
   }
 
   public zoomIn (increment = 0.5): void {
+    if (this._isZooming) return
     this.setZoom(this._currentZoomLevel + increment)
   }
 
   public zoomOut (increment = 0.5): void {
+    if (this._isZooming) return
     this.setZoom(this._currentZoomLevel - increment)
   }
 
