@@ -48,7 +48,7 @@ const plugins = [
 
 export default [
   {
-    input: 'src/index.ts',
+    input: ['src/index.ts', 'src/enums.ts'],
     external: regexesOfPackages,
     treeshake: false,
     output: {
@@ -62,6 +62,7 @@ export default [
   },
   {
     input: 'src/maps.ts',
+    external: regexesOfPackages,
     output: {
       dir: 'dist',
       format: 'esm',
