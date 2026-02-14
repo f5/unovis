@@ -2,7 +2,7 @@ import { D3BrushEvent } from 'd3-brush'
 import { D3DragEvent } from 'd3-drag'
 import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
 import { Selection } from 'd3-selection'
-import { ElkShape } from 'elkjs'
+import type { ElkShape } from 'elkjs'
 
 // Core
 import type { GraphDataModel } from 'data-models/graph'

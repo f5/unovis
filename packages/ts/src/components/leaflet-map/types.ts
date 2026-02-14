@@ -1,5 +1,6 @@
-import { LatLng } from 'leaflet'
-import Supercluster, { ClusterProperties, PointFeature } from 'supercluster'
+import type { LatLng } from 'leaflet'
+import type Supercluster from 'supercluster'
+import type { ClusterProperties, PointFeature } from 'supercluster'
 import { GenericDataRecord } from 'types/data'
 
 export enum LeafletMapRenderer {
