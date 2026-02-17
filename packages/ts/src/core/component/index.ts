@@ -140,6 +140,13 @@ export class ComponentCore<
     this._bindEvents(this.config.events, '.user')
   }
 
+  // Sometimes we don't want to pass the original data to the event handler.
+  // This method can be overridden by components to implement a custom mapping.
+  // See Stacked Bar for an example.
+  protected _mapEventDatum (datum: unknown): unknown {
+    return datum
+  }
+
   private _bindEvents (events = this.events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
@@ -149,7 +156,8 @@ export class ComponentCore<
           const els = selection.nodes()
           const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)
           const eventFunction = events[className][eventType as VisEventType]
-          return eventFunction?.(d, event, i, els)
+          const datum = this._mapEventDatum(d)
+          return eventFunction?.(datum, event, i, els)
         })
       })
     })

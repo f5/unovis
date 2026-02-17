@@ -270,6 +270,19 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     })
   }
 
+  // After performance optimizations in https://github.com/f5/unovis/pull/708
+  // there's a breaking change in the event data structure.
+  // This method is used to map the event data to the original data structure.
+  // Todo: This can be removed in Unovis 2.0, but the migration guide should contain a note about it.
+  protected _mapEventDatum (d: StackedBarDataRecord<Datum>): Datum {
+    const eventDatum = {
+      ...d,
+      ...d.datum,
+    }
+
+    return eventDatum
+  }
+
   getValueScaleExtent (scaleByVisibleData: boolean): number[] {
     const { datamodel } = this
     const yAccessors = this.getAccessors()
