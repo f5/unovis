@@ -135,7 +135,7 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Line start icon arrangement configuration. Controls how the icon is positioned relative to the line.
    * Accepts values from the Arrangement enum: `Arrangement.Start`, `Arrangement.Middle`, `Arrangement.End` or a string equivalent.
    * Default: `Arrangement.Inside` */
-  @Input() lineStartIconArrangement?: GenericAccessor<Arrangement | any, Datum>
+  @Input() lineStartIconArrangement?: GenericAccessor<Arrangement | `${Arrangement}`, Datum>
 
   /** Provide a href to an SVG defined in container's `svgDefs` to display an icon at the end of the line. Default: undefined */
   @Input() lineEndIcon?: StringAccessor<Datum>
@@ -149,7 +149,7 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Line end icon arrangement configuration. Controls how the icon is positioned relative to the line.
    * Accepts values from the Arrangement enum: `Arrangement.Start`, `Arrangement.Middle`, `Arrangement.End` or a string equivalent.
    * Default: `Arrangement.Inside` */
-  @Input() lineEndIconArrangement?: GenericAccessor<Arrangement | any, Datum>
+  @Input() lineEndIconArrangement?: GenericAccessor<Arrangement | `${Arrangement}`, Datum>
 
   /** Configurable Timeline item cursor when hovering over. Default: `undefined` */
   @Input() lineCursor?: StringAccessor<Datum>
@@ -197,7 +197,7 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   @Input() rowMaxLabelWidth?: number
 
   /** Text alignment for labels: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `TextAlign.Right` */
-  @Input() rowLabelTextAlign?: TextAlign | any
+  @Input() rowLabelTextAlign?: TextAlign | `${TextAlign}`
 
 
   @Input() arrows?: TimelineArrow[]

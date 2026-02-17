@@ -72,10 +72,10 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   }
 
   /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
-  @Input() position?: Position | string
+  @Input() position?: Position | `${Position}`
 
   /** Axis type: `AxisType.X` or `AxisType.Y` */
-  @Input() type?: AxisType | string
+  @Input() type?: AxisType | `${AxisType}`
 
   /** Extend the axis domain line to be full width or full height. Default: `true` */
   @Input() fullSize?: boolean
@@ -90,10 +90,10 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() labelMargin?: number
 
   /** Label text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
-  @Input() labelTextFitMode?: FitMode | string
+  @Input() labelTextFitMode?: FitMode | `${FitMode}`
 
   /** Label text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
-  @Input() labelTextTrimType?: TrimMode | string
+  @Input() labelTextTrimType?: TrimMode | `${TrimMode}`
 
   /** Font color of the axis label as CSS string. Default: `null` */
   @Input() labelColor?: string | null
@@ -128,7 +128,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() numTicks?: number
 
   /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
-  @Input() tickTextFitMode?: FitMode | string
+  @Input() tickTextFitMode?: FitMode | `${FitMode}`
 
   /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
   @Input() tickTextWidth?: number
@@ -140,13 +140,13 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() tickTextForceWordBreak?: boolean
 
   /** Tick text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
-  @Input() tickTextTrimType?: TrimMode | string
+  @Input() tickTextTrimType?: TrimMode | `${TrimMode}`
 
   /** Font size of the tick text as CSS string. Default: `null` */
   @Input() tickTextFontSize?: string | null
 
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
-  @Input() tickTextAlign?: TextAlign | string
+  @Input() tickTextAlign?: TextAlign | `${TextAlign}` | ((tickValue: number | Date, tickIndex: number, tickValues: number[] | Date[], tickPosition: [number, number], componentWidth: number, componentHeight: number) => TextAlign | `${TextAlign}`)
 
   /** Font color of the tick text as CSS string. Default: `null` */
   @Input() tickTextColor?: string | null
