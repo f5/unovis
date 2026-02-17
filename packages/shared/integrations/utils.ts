@@ -77,6 +77,14 @@ export function getTypeName (type: ts.Node | undefined): string {
     }
     case (ts.SyntaxKind.ArrayType): return `${getTypeName((type as ts.ArrayTypeNode).elementType)}[]`
     case (ts.SyntaxKind.TupleType): return `[${(type as ts.TupleTypeNode).elements.map(getTypeName).join(', ')}]`
+    case (ts.SyntaxKind.TemplateLiteralType): {
+      const t = type as ts.TemplateLiteralTypeNode
+      const head = t.head?.text ?? ''
+      const spans = t.templateSpans.map((span: ts.TemplateLiteralTypeSpan) =>
+        `\${${getTypeName(span.type)}}${span.literal?.text ?? ''}`
+      ).join('')
+      return `\`${head}${spans}\``
+    }
     default: {
       console.error('Couldn\'t extract type name. Consider updating the parser code. ', type)
       return 'any'
@@ -161,6 +169,11 @@ export function gatherTypeReferences (types: ts.Node[] | ts.NodeArray<ts.Node>, 
         const t = type as ts.MappedTypeNode
         gatherTypeReferences([(type as ts.MappedTypeNode).typeParameter], collected)
         gatherTypeReferences([(type as ts.MappedTypeNode).type], collected)
+        break
+      }
+      case (ts.SyntaxKind.TemplateLiteralType): {
+        const t = type as ts.TemplateLiteralTypeNode
+        t.templateSpans.forEach((span: ts.TemplateLiteralTypeSpan) => gatherTypeReferences([span.type], collected))
         break
       }
       default:
