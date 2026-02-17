@@ -69,7 +69,7 @@ Change the label color with the `labelColor` property.
 The spacing between the label and the axis itself can be set with the `labelMargin` property:
 <XYWrapperWithInput {...axisProps()} label="Label" inputType="range" inputProps={{ min: 0, max: 50, step: 1}} defaultValue={5} property="labelMargin"/>
 
-### Grid Line
+## Grid Line
 You can enable or disable the visibility of the _Axis_ grid line with the `gridLine` property.
 <XYWrapperWithInput
   {...axisProps()}
@@ -82,18 +82,6 @@ You can enable or disable the visibility of the _Axis_ grid line with the `gridL
 ### Axis Domain Line
 You can enable or disable the visibility of the axis domain line with the `domainLine` property.
 <XYWrapperWithInput {...axisProps()} label="Label" inputType="checkbox" defaultValue={true} property="domainLine"/>
-
-### Providing Data to _Axis_
-If you use the _Axis_ component alone, without other xy-components, you'll need to provide an `x` accessor or `y` accessors to populate the axis values.
-Consider the following example with a single axis and a data array with x values in the range `0 < x < 10`:
-
-<XYWrapper {...axisProps()} x={d => d.x} showContext="full"/>
-Another example:
-
-```ts
-const x = (d: DataRecord) => d.x * 100
-```
-<XYWrapper {...axisProps()} x={d => d.x * 100} excludeTabs/>
 
 ## Tick Configuration
 The _Axis_ component supports a wide variety of tick customization options
@@ -115,8 +103,9 @@ You can customize how ticks are formatted using the `tickFormat` property and a 
 The following example uses Javascript's built-in Date formatter function `toDateString()`.
 <XYWrapper {...axisProps()} data={generateTimeSeries(10)} x={d => d.timestamp} tickFormat={d=> new Date(d).toDateString()}/>
 
-### Label Alignment
-Change the tick's label alignment with respect to the tick marker using `tickTextAlign` property with a TextAlign value: `TextAlign.Left`, `TextAlign.Right` or `TextAlign.Center`.
+### Tick Label Alignment
+Change the tick's label alignment with respect to the tick marker using `tickTextAlign`. It accepts a constant `TextAlign` value (`TextAlign.Left`, `TextAlign.Right` or `TextAlign.Center`)
+or a function for per-tick control. The function receives `(tickValue, tickIndex, ticksValues, tickPosition, componentWidth, componentHeight)` and should return a `TextAlign` value.
 <XYWrapperWithInput
   {...axisProps()}
   inputType="select"
@@ -125,7 +114,7 @@ Change the tick's label alignment with respect to the tick marker using `tickTex
   options={['right', 'center', 'left']}
   property="tickTextAlign"/>
 
-### Label Rotation
+### Tick Label Rotation
 Change the tick's label angle using `tickTextAngle` property with a number value. Use this variable along with `tickTextAlign` to make sure the tick label displays as desired.
 <XYWrapperWithInput
   {...axisProps()}
@@ -137,7 +126,7 @@ Change the tick's label angle using `tickTextAngle` property with a number value
   options={[15, 30, 45]}
   property="tickTextAngle"/>
 
-### Label Width
+### Tick Label Width
 To limit the width of the tick labels (in pixels), you can use the `tickTextWidth` property.
 <XYWrapperWithInput
   {...axisProps()}
@@ -148,7 +137,7 @@ To limit the width of the tick labels (in pixels), you can use the `tickTextWidt
   hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
 />
 
-### Label Fit Mode
+### Tick Label Fit Mode
 _Axis_ accepts the following values for the `tickTextFitMode` property: `FitMode.Wrap` or `FitMode.Trim`. This determines how the axis will
 handle tick text overflow. The following example showcases the previous example using `"trim"` instead of `"wrap"`.
 <XYWrapperWithInput inputType="select"
@@ -159,7 +148,7 @@ handle tick text overflow. The following example showcases the previous example 
   options={['trim', 'wrap']}
   property="tickTextFitMode"/>
 
-### Label Trim Type
+### Tick Label Trim Type
 When a tick label becomes too long, and you want to trim it, you can customize the trimming method with the `tickTextTrimType` property.
 _Axis_ accepts a `TrimMode` or a string. For example, when we configure `tickTextTrimType` to `TrimMode.Start`, we can see the start of the label gets cut off instead of the middle.
 <XYWrapperWithInput inputType="select"
@@ -182,7 +171,7 @@ In addition, you can enable a forced word break for overflowing tick labels with
   defaultValue={true}
   property="tickTextForceWordBreak"/>
 
-### Text Separator
+### Tick Label Separator
 _Axis_ accepts a `string` or `string[]` value for `tickTextSeparator` property. This will allow tick labels to be separated by custom values in the case of overflow.
 Note: this only takes effect when `FitMode.Wrap` is enabled and `tickTextWidth` is defined.
 <XYWrapperWithInput
@@ -273,6 +262,16 @@ You can include a chart within your _XY Container_ alongside your axes like this
     ...multiProps().components,
     { name: "Line", key: 'components', props: {x: d=>d.x, y: d=>d.y }}
   ]}/>
+
+## Using Axis Alone
+If you use the _Axis_ component alone, without other xy-components, you can provide an `x` accessor or `y` accessors to populate the axis values.
+Consider the following example with a single axis and a data array with x values in the range `0 < x < 10`:
+<XYWrapper {...axisProps()} x={d => d.x} height={50}/>
+<br />
+
+Alternatively, you can set the `xDomain` or `yDomain` property on `XYContainer` to set the domain of the axis:
+
+<XYWrapper {...axisProps()}  showContext="full" containerProps={{ xDomain: [0, 15] }}/>
 
 ## Additional Styling: CSS Variables
 The _Axis_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
