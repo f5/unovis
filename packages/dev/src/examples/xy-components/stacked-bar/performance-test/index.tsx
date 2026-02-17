@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { VisXYContainer, VisStackedBar, VisAxis, VisCrosshair, VisTooltip } from '@unovis/react'
 
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { StackedBar } from '@unovis/ts'
 
 const NUM_ITEMS = 100
 const NUM_KEYS = 300
@@ -44,13 +45,25 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     []
   )
 
+  const handleItemClick = useCallback((d: SparseDataRecord) => {
+    // eslint-disable-next-line no-console
+    console.log('bar clicked', d)
+  }, [])
+
+  const events = useMemo(
+    () => ({
+      [StackedBar.selectors.bar]: { click: handleItemClick },
+    }),
+    [handleItemClick]
+  )
+
   return (
     <>
       <div style={{ marginBottom: 10 }}>
         <strong>Performance Test:</strong> {NUM_ITEMS} items × {NUM_KEYS} keys ({SPARSITY * 100}% sparse)
       </div>
       <VisXYContainer<SparseDataRecord> data={data} margin={{ top: 5, left: 5 }}>
-        <VisStackedBar x={d => d.x} y={accessors} duration={props.duration}/>
+        <VisStackedBar x={d => d.x} y={accessors} duration={props.duration} events={events}/>
         <VisAxis type='x' numTicks={10} duration={props.duration}/>
         <VisAxis type='y' duration={props.duration}/>
         <VisCrosshair template={(d: SparseDataRecord) => `x: ${d.x}`}/>
