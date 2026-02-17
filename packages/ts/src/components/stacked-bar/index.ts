@@ -127,17 +127,32 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const bars = barGroupsMerged
       .selectAll<SVGPathElement, StackedBarDataRecord<Datum>>(`.${s.bar}`)
       .data(
-        (d, j) => stacked
-          .map((s, i) => ({
-            datum: d,
-            index: j,
-            stacked: s[j],
-            stackIndex: i,
-            // Ending bar if the next stack is not the same as the current one
-            isEnding: (i === stacked.length - 1) ||
-              ((i <= stacked.length - 1) && stacked[i + 1][j][0] !== s[j][1]),
-          }))
-          .filter(d => d.stacked[0] !== d.stacked[1]), // Skip zero-height bars
+        (d, j) => {
+          type StackedBarRenderDatum = {
+            datum: Datum;
+            index: number;
+            stacked: [number, number];
+            stackIndex: number;
+            isEnding: boolean;
+          }
+
+          const groupData = stacked
+            .map((s, i) => ({
+              datum: d,
+              index: j,
+              stacked: s[j],
+              stackIndex: i,
+            }))
+            .filter(d => d.stacked[0] !== d.stacked[1]) as StackedBarRenderDatum[] // Skip zero-height bars
+
+          // Populate `isEnding`
+          // Ending bar if the next stack is not the same as the current one
+          groupData.forEach((d, i) => {
+            d.isEnding = (i === groupData.length - 1) ||
+                ((i <= groupData.length - 1) && groupData[i + 1].stacked[0] !== d.stacked[1])
+          })
+          return groupData
+        },
         d => d.stackIndex // Key function for proper transitions
       )
 
