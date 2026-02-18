@@ -51,7 +51,6 @@ import {
   getClustersAndPoints,
   geoJsonPointToScreenPoint,
   getClusterRadius,
-  shouldClusterExpand,
   getNextZoomLevelOnClusterClick,
 } from './utils'
 import { updateDonut } from './modules/donut'
@@ -1267,9 +1266,13 @@ export class TopoJSONMap<
       const zoomExtent = config.zoomExtent
       const zoomMax = zoomExtent?.[1] ?? 12
 
-      if (config.clusterExpandOnClick && shouldClusterExpand(d, zoomLevel)) {
+      if (config.clusterExpandOnClick) {
+        // Zoom to cluster and expand in one action
+        const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel, zoomMax)
         this._expandCluster(d)
+        this._zoomToLocation(coordinates, newZoomLevel)
       } else {
+        // Just zoom to cluster without expanding
         const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel, zoomMax)
         this._zoomToLocation(coordinates, newZoomLevel)
       }
