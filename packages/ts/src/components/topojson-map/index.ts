@@ -59,6 +59,11 @@ import { updateDonut } from './modules/donut'
 // Styles
 import * as s from './style'
 
+// Supercluster expects zoom levels 0-22 (like map tiles). zoomExtent[1] is a scale factor
+// for the map, so we cap the cluster maxZoom to avoid excessive quadtree depth and wrong
+// packing/expansion behavior when zoomExtent has large values (e.g. 1000).
+const SUPERCLUSTER_MAX_ZOOM = 22
+
 export class TopoJSONMap<
   AreaDatum,
   PointDatum = unknown,
@@ -154,8 +159,9 @@ export class TopoJSONMap<
         const lon = getNumber(d, config.longitude)
         return isNumber(lat) && isNumber(lon)
       })
-
-      this._clusterIndex = calculateClusterIndex(dataValid as any, this.config as any) as any
+      const zoomExtent = this.config.zoomExtent
+      const maxClusterZoomLevel = Array.isArray(zoomExtent) ? Math.min(zoomExtent[1], SUPERCLUSTER_MAX_ZOOM) : 16
+      this._clusterIndex = calculateClusterIndex(dataValid as any, this.config as any, maxClusterZoomLevel) as any
     } else {
       this._clusterIndex = null
     }
@@ -506,8 +512,10 @@ export class TopoJSONMap<
     // For now, use full world bounds since calculating viewport bounds with zoom transforms is complex
     const bounds: [number, number, number, number] = [-180, -90, 180, 90]
 
-    // Use Math.round for zoom level to match Leaflet map clustering behavior
-    const zoom = Math.max(0, Math.round(this._currentZoomLevel || 1))
+    // Use map zoom level directly for Supercluster, capped at SUPERCLUSTER_MAX_ZOOM.
+    // Supercluster expects zoom 0-22; beyond that, all points are unclustered anyway.
+    const mapZoom = this._currentZoomLevel || 1
+    const zoom = Math.max(0, Math.min(Math.round(mapZoom), SUPERCLUSTER_MAX_ZOOM))
     let geoJsonPoints = getClustersAndPoints(this._clusterIndex as any, bounds, zoom)
 
     // Handle expanded cluster points - replace the expanded cluster with individual points
@@ -1256,11 +1264,13 @@ export class TopoJSONMap<
     if (d.isCluster && (d.properties as TopoJSONMapClusterDatum<PointDatum>).cluster) {
       const zoomLevel = this._currentZoomLevel || 1
       const coordinates = d.geometry.coordinates as [number, number]
+      const zoomExtent = config.zoomExtent
+      const zoomMax = zoomExtent?.[1] ?? 12
 
       if (config.clusterExpandOnClick && shouldClusterExpand(d, zoomLevel)) {
         this._expandCluster(d)
       } else {
-        const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel)
+        const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel, zoomMax)
         this._zoomToLocation(coordinates, newZoomLevel)
       }
     }
@@ -1284,13 +1294,16 @@ export class TopoJSONMap<
     const clusterId = (clusterPoint.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId as number
     const points = clusterPoint.clusterIndex.getLeaves(clusterId, Infinity)
 
-    // Calculate positions for expanded points using d3.packSiblings (same as leaflet map)
-    // Use getPointRadius with current zoom level to match Leaflet behavior
+    // Determine packing zoom level. Cap at SUPERCLUSTER_MAX_ZOOM to avoid huge radii when
+    // zoomExtent[1] is large (e.g. 1000), which would cause incorrect expansion and weird animation.
+    const maxClusterZoomLevel = Array.isArray(config.zoomExtent) ? Math.min(config.zoomExtent[1], SUPERCLUSTER_MAX_ZOOM) : 16
+    const packingZoomLevel = Math.min(this._currentZoomLevel || 1, maxClusterZoomLevel)
+
     const packPoints: {x: number; y: number; r: number }[] = points.map((point) => {
       return {
         x: null,
         y: null,
-        r: getPointRadius(point as any, config.pointRadius, this._currentZoomLevel || 1) + padding,
+        r: getPointRadius(point as any, config.pointRadius, packingZoomLevel) + padding,
       }
     })
     packSiblings(packPoints)
@@ -1334,86 +1347,8 @@ export class TopoJSONMap<
     this._renderClusterBackground(config.duration / 2)
     this._renderPoints(config.duration / 2)
 
-    // Zoom to fit all expanded points
-    this._zoomToExpandedCluster()
-
     // Return the original point data for centroid calculation
     return points.map(p => p.properties as PointDatum)
-  }
-
-  private _zoomToExpandedCluster (): void {
-    if (!this._expandedCluster) return
-
-    const { config } = this
-    const { cluster, points } = this._expandedCluster
-    const currentZoomLevel = this._currentZoomLevel || 1
-
-    // Get cluster center position
-    const clusterPos = this._projection(cluster.geometry.coordinates as [number, number])
-
-    // Calculate bounds of expanded points in screen space
-    const expandedPositions = points.map((p: any) => {
-      const dx = p.dx / currentZoomLevel
-      const dy = p.dy / currentZoomLevel
-      const radius = p.packedRadius / currentZoomLevel
-      return {
-        x: clusterPos[0] + dx,
-        y: clusterPos[1] + dy,
-        radius,
-      }
-    })
-
-    const minX = Math.min(...expandedPositions.map(p => p.x - p.radius))
-    const maxX = Math.max(...expandedPositions.map(p => p.x + p.radius))
-    const minY = Math.min(...expandedPositions.map(p => p.y - p.radius))
-    const maxY = Math.max(...expandedPositions.map(p => p.y + p.radius))
-
-    const width = maxX - minX
-    const height = maxY - minY
-    const centerX = (minX + maxX) / 2
-    const centerY = (minY + maxY) / 2
-
-    // Add padding (20% on each side)
-    const padding = 0.2
-    const targetWidth = width * (1 + padding * 2)
-    const targetHeight = height * (1 + padding * 2)
-
-    // Calculate zoom level to fit the expanded cluster
-    const scaleX = this._width / targetWidth
-    const scaleY = this._height / targetHeight
-    const scale = Math.min(scaleX, scaleY)
-
-    // Clamp the zoom level
-    const newZoomLevel = clamp(currentZoomLevel * scale, config.zoomExtent[0], config.zoomExtent[1])
-    const k = this._initialScale * newZoomLevel
-
-    // Calculate translation to center the expanded cluster
-    const currentCenter = this._projection.translate()
-    const viewportCenterX = this._width / 2
-    const viewportCenterY = this._height / 2
-
-    const x = viewportCenterX + (currentCenter[0] - centerX) * (k / this._initialScale)
-    const y = viewportCenterY + (currentCenter[1] - centerY) * (k / this._initialScale)
-
-    const transform = zoomIdentity.translate(x, y).scale(k)
-
-    // Update internal state
-    this._currentZoomLevel = newZoomLevel
-    this._center = [x, y]
-
-    // Set flag to indicate this is a component-initiated zoom
-    this._eventInitiatedByComponent = true
-
-    // Apply the transform with smooth eased animation
-    this.g
-      .transition()
-      .duration(config.zoomDuration)
-      .ease(easeCubicInOut)
-      .call(this._zoomBehavior.transform, transform)
-      .on('end', () => {
-        // Reset the flag after transition completes
-        this._eventInitiatedByComponent = false
-      })
   }
 
   private _zoomToLocation (coordinates: [number, number], zoomLevel: number): void {
