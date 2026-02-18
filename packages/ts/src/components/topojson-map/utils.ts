@@ -318,7 +318,8 @@ export function getClustersAndPoints<D extends GenericDataRecord> (
   return points as (ClusterFeature<TopoJSONMapClusterDatum<D>> | PointFeature<D>)[]
 }
 
-export const getNextZoomLevelOnClusterClick = (level: number): number => clamp(1 + level * 1.5, level, 12)
+export const getNextZoomLevelOnClusterClick = (level: number, maxZoom = 12): number =>
+  clamp(1 + level * 1.5, level, maxZoom)
 
 export function shouldClusterExpand<D extends GenericDataRecord> (
   cluster: TopoJSONMapPoint<D>,
