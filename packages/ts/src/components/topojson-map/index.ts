@@ -99,6 +99,7 @@ export class TopoJSONMap<
 
   private _collapsedCluster: any = null
   private _collapsedClusterPointIds: Set<string> | null = null
+  private _prevZoomToLocation: { coordinates: [number, number]; zoomLevel: number } | undefined = undefined
 
   private _eventInitiatedByComponent = false
 
@@ -213,6 +214,21 @@ export class TopoJSONMap<
     // When zoom behaviour is active we assign the `draggable` class to show the grabbing cursor
     this.g.classed('draggable', !config.disableZoom)
     this._firstRender = false
+
+    // Apply zoomToLocation if it changed
+    if (config.zoomToLocation) {
+      const hasChanged = !this._prevZoomToLocation ||
+        this._prevZoomToLocation.coordinates[0] !== config.zoomToLocation.coordinates[0] ||
+        this._prevZoomToLocation.coordinates[1] !== config.zoomToLocation.coordinates[1] ||
+        this._prevZoomToLocation.zoomLevel !== config.zoomToLocation.zoomLevel
+
+      if (hasChanged) {
+        this._prevZoomToLocation = { ...config.zoomToLocation }
+        this._zoomToLocation(config.zoomToLocation.coordinates, config.zoomToLocation.zoomLevel)
+      }
+    } else {
+      this._prevZoomToLocation = undefined
+    }
 
     // Run collision detection after initial render
     if (!this._isZooming) {
@@ -416,7 +432,7 @@ export class TopoJSONMap<
       const cluster = this._expandedCluster.cluster
       const pos = this._projection(cluster.geometry.coordinates as [number, number])
 
-      const backgroundRadius = getClusterRadius(this._expandedCluster)
+      const backgroundRadius = getClusterRadius(this._expandedCluster as any)
       // Divide by zoom level since the group transform will scale it back up
       const adjustedRadius = backgroundRadius / currentZoomLevel
 
@@ -630,7 +646,7 @@ export class TopoJSONMap<
       .attr('class', s.pointPathRing)
       .attr('d', 'M0,0')
       .style('display', d => {
-        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape
+        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape
         return shape === TopoJSONMapPointShape.Ring ? null : 'none'
       })
 
@@ -1302,11 +1318,11 @@ export class TopoJSONMap<
     const maxClusterZoomLevel = Array.isArray(config.zoomExtent) ? Math.min(config.zoomExtent[1], SUPERCLUSTER_MAX_ZOOM) : 16
     const packingZoomLevel = Math.min(this._currentZoomLevel || 1, maxClusterZoomLevel)
 
-    const packPoints: {x: number; y: number; r: number }[] = points.map((point) => {
+    const packPoints: {x: number | null; y: number | null; r: number }[] = points.map((point) => {
       return {
-        x: null,
-        y: null,
-        r: getPointRadius(point as any, config.pointRadius, packingZoomLevel) + padding,
+        x: null as number | null,
+        y: null as number | null,
+        r: getPointRadius(point as any, config.pointRadius as any, packingZoomLevel) + padding,
       }
     })
     packSiblings(packPoints)
