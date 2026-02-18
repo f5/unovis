@@ -99,7 +99,7 @@ export class TopoJSONMap<
 
   private _collapsedCluster: any = null
   private _collapsedClusterPointIds: Set<string> | null = null
-  private _prevZoomToLocation: { coordinates: [number, number]; zoomLevel: number } | undefined = undefined
+  private _prevZoomToLocation: { coordinates: [number, number]; zoomLevel: number; expandCluster?: boolean } | undefined = undefined
 
   private _eventInitiatedByComponent = false
 
@@ -220,10 +220,20 @@ export class TopoJSONMap<
       const hasChanged = !this._prevZoomToLocation ||
         this._prevZoomToLocation.coordinates[0] !== config.zoomToLocation.coordinates[0] ||
         this._prevZoomToLocation.coordinates[1] !== config.zoomToLocation.coordinates[1] ||
-        this._prevZoomToLocation.zoomLevel !== config.zoomToLocation.zoomLevel
+        this._prevZoomToLocation.zoomLevel !== config.zoomToLocation.zoomLevel ||
+        this._prevZoomToLocation.expandCluster !== config.zoomToLocation.expandCluster
 
       if (hasChanged) {
         this._prevZoomToLocation = { ...config.zoomToLocation }
+
+        // If expandCluster is true, find and expand the cluster at/near the coordinates
+        if (config.zoomToLocation.expandCluster) {
+          const cluster = this._findClusterAtCoordinates(config.zoomToLocation.coordinates)
+          if (cluster) {
+            this._expandCluster(cluster)
+          }
+        }
+
         this._zoomToLocation(config.zoomToLocation.coordinates, config.zoomToLocation.zoomLevel)
       }
     } else {
@@ -672,8 +682,8 @@ export class TopoJSONMap<
       })
       .style('cursor', d => {
         const expandedPoint = d as any
-        // Expanded cluster points should be clickable to collapse
-        if (expandedPoint.expandedClusterPoint) return 'pointer'
+        // Expanded cluster points use default cursor (clicking them does nothing)
+        if (expandedPoint.expandedClusterPoint) return 'default'
         return d.isCluster ? 'pointer' : getString(d.properties as PointDatum, config.pointCursor)
       })
       .style('opacity', 1)
@@ -1269,10 +1279,10 @@ export class TopoJSONMap<
     const { config } = this
     event.stopPropagation()
 
-    // Handle clicking on expanded cluster points to collapse them
+    // Clicking on expanded cluster points does nothing - they stay expanded
+    // (clicking outside on the map background will collapse them)
     const expandedPoint = d as any
     if (expandedPoint.expandedClusterPoint) {
-      this._collapseExpandedCluster()
       return
     }
 
@@ -1293,6 +1303,31 @@ export class TopoJSONMap<
         this._zoomToLocation(coordinates, newZoomLevel)
       }
     }
+  }
+
+  private _findClusterAtCoordinates (coordinates: [number, number]): TopoJSONMapPoint<PointDatum> | undefined {
+    const pointData = this._getPointData()
+    const [targetLon, targetLat] = coordinates
+
+    // Find clusters and calculate their distance to the target coordinates
+    const clusters = pointData.filter(p => p.isCluster)
+    if (clusters.length === 0) return undefined
+
+    // Find the cluster closest to the target coordinates
+    let closestCluster: TopoJSONMapPoint<PointDatum> | undefined
+    let minDistance = Infinity
+
+    for (const cluster of clusters) {
+      const [lon, lat] = cluster.geometry.coordinates as [number, number]
+      const distance = Math.sqrt(Math.pow(lon - targetLon, 2) + Math.pow(lat - targetLat, 2))
+
+      if (distance < minDistance) {
+        minDistance = distance
+        closestCluster = cluster
+      }
+    }
+
+    return closestCluster
   }
 
   private _expandCluster (clusterPoint: TopoJSONMapPoint<PointDatum>): PointDatum[] | undefined {
