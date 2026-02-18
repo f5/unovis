@@ -302,7 +302,7 @@ export const totalEvents = data.points.reduce((sum, d) => sum + (d.normal || 0),
 export const component = (): React.ReactNode => {
   const mapRef = useRef<VisTopoJSONMapRef<any, DataRecord, any>>(null)
   const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null)
-  const [zoomToLocation, setZoomToLocation] = useState<{ coordinates: [number, number]; zoomLevel: number } | undefined>(undefined)
+  const [zoomToLocation, setZoomToLocation] = useState<{ coordinates: [number, number]; zoomLevel: number; expandCluster?: boolean } | undefined>(undefined)
 
   const onZoomIn = (): void => { mapRef.current?.component?.zoomIn(1) }
   const onZoomOut = (): void => { mapRef.current?.component?.zoomOut(1) }
@@ -321,7 +321,8 @@ export const component = (): React.ReactNode => {
     setTimeout(() => {
       setZoomToLocation({
         coordinates: [targetNode.longitude, targetNode.latitude],
-        zoomLevel: 50,
+        zoomLevel: 5,
+        expandCluster: true,
       })
     }, 0)
 
