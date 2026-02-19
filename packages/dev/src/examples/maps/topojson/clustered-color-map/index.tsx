@@ -16,9 +16,11 @@ export type DataRecord = {
   name: string;
   longitude: number;
   latitude: number;
-  normal: number | null | undefined;
-  blocked: number | null | undefined;
+  normal?: number | null | undefined;
+  blocked?: number | null | undefined;
   description?: string | null;
+  pointShape?: string;
+  color?: string;
 }
 
 export const data: { points: DataRecord[]; areas?: AreaDatum[] } = {
@@ -56,10 +58,10 @@ export const data: { points: DataRecord[]; areas?: AreaDatum[] } = {
     { latitude: 30.00407, longitude: -90.15977, name: 'usa-3', normal: 751, blocked: 3 },
     { latitude: 41.89261, longitude: -87.62556, name: 'usa-4', normal: 764, blocked: 3 },
     { latitude: 32.78868, longitude: -97.34767, name: 'usa-5', normal: 0, blocked: 530 },
-    { latitude: 36.10304, longitude: -115.17369, name: 'usa-6', normal: 609, blocked: 5 },
-    { latitude: 34.10182, longitude: -118.32421, name: 'usa-7', normal: 543, blocked: 0 },
-    { latitude: 37.44428, longitude: -122.17108, name: 'usa-8', normal: 1920, blocked: 0 },
-    { latitude: 47.61698, longitude: -122.33839, name: 'usa-9', normal: 513, blocked: 2 },
+    { latitude: 36.10304, longitude: -115.17369, name: 'usa-6', pointShape: 'square', color: 'red' },
+    { latitude: 34.10182, longitude: -118.32421, name: 'usa-7', pointShape: 'square', color: 'red' },
+    { latitude: 37.44428, longitude: -122.17108, name: 'usa-8', pointShape: 'square', color: 'red' },
+    { latitude: 47.61698, longitude: -122.33839, name: 'usa-9', pointShape: 'square', color: 'red' },
   ],
   areas: [
     { id: 'AW', name: 'Aruba' },
@@ -394,6 +396,7 @@ export const component = (): React.ReactNode => {
         clusterExpandOnClick={true}
         zoomExtent={[0.5, 1000]}
         zoomToLocation={zoomToLocation}
+        pointShape={d => d.pointShape}
       />
     </VisSingleContainer>
     <div style={{ position: 'absolute', top: 32, right: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
