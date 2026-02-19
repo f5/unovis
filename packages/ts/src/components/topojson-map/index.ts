@@ -111,7 +111,10 @@ export class TopoJSONMap<
   private _linksGroup = this.g.append('g').attr('class', s.links)
   private _clusterBackgroundGroup = this.g.append('g').attr('class', s.clusterBackground)
   private _pointsGroup = this.g.append('g').attr('class', s.points)
+  private _pointSelectionRing = this._pointsGroup.append('g').attr('class', s.pointSelectionRing)
+    .call(sel => sel.append('path').attr('class', s.pointSelection))
 
+  private _selectedPoint: TopoJSONMapPoint<PointDatum> | null = null
   private _flowParticlesGroup = this.g.append('g').attr('class', s.flowParticles)
   private _sourcePointsGroup = this.g.append('g').attr('class', s.sourcePoints)
   private _flowParticles: any[] = []
@@ -604,6 +607,7 @@ export class TopoJSONMap<
       .selectAll<SVGGElement, TopoJSONMapPoint<PointDatum>>(`.${s.point}`)
       .data(pointData, (d, i) => d.id?.toString() ?? `point-${i}`)
 
+
     // Enter
     const pointsEnter = points.enter().append('g').attr('class', s.point)
       .attr('transform', d => {
@@ -880,6 +884,32 @@ export class TopoJSONMap<
     this._pointsGroup.style('filter', (config.heatmapMode && this._currentZoomLevel < config.heatmapModeZoomLevelThreshold) ? 'url(#heatmapFilter)' : null)
     this._pointsGroup.selectAll(`.${s.pointLabel}`).style('display', (config.heatmapMode && (this._currentZoomLevel < config.heatmapModeZoomLevelThreshold)) ? 'none' : null)
     this._pointsGroup.selectAll(`.${s.pointBottomLabel}`).style('display', (config.heatmapMode && (this._currentZoomLevel < config.heatmapModeZoomLevelThreshold)) ? 'none' : null)
+
+    // Update selection ring
+    const pointSelection = this._pointSelectionRing.select(`.${s.pointSelection}`)
+    if (this._selectedPoint) {
+      const selectedPointId = getString(this._selectedPoint.properties as PointDatum, config.pointId)
+      const foundPoint = pointData.find(d =>
+        this._selectedPoint.isCluster
+          ? (d.id === this._selectedPoint.id)
+          : (selectedPointId && getString(d.properties as PointDatum, config.pointId) === selectedPointId)
+      )
+      const pos = this._projection((foundPoint ?? this._selectedPoint).geometry.coordinates as [number, number])
+      if (pos) {
+        const dx = ((foundPoint as any)?.dx || 0) / currentZoomLevel
+        const dy = ((foundPoint as any)?.dy || 0) / currentZoomLevel
+        this._pointSelectionRing.attr('transform', `translate(${pos[0] + dx},${pos[1] + dy})`)
+      }
+      pointSelection
+        .classed('active', Boolean(foundPoint))
+        .attr('d', foundPoint?.path || null)
+        .style('fill', 'transparent')
+        .style('stroke-width', 1)
+        .style('stroke', (foundPoint || this._selectedPoint)?.color)
+        .style('transform', `scale(${1.25 / currentZoomLevel})`)
+    } else {
+      pointSelection.classed('active', false)
+    }
   }
 
   _fitToPoints (points?: PointDatum[], pad = 0.1): void {
@@ -974,7 +1004,12 @@ export class TopoJSONMap<
     }
 
     // Reset expanded cluster when manually zooming (but not during component-initiated zoom)
-    if (isMouseEvent && !this._eventInitiatedByComponent) this._resetExpandedCluster()
+    if (isMouseEvent && !this._eventInitiatedByComponent) {
+      this._resetExpandedCluster()
+      // Also clear the collapsed cluster state so points can naturally re-cluster at the new zoom level
+      this._collapsedCluster = null
+      this._collapsedClusterPointIds = null
+    }
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent))
@@ -1401,6 +1436,9 @@ export class TopoJSONMap<
     this._renderClusterBackground(config.duration / 2)
     this._renderPoints(config.duration / 2)
 
+    // Re-bind user-defined events to include newly created expanded cluster points
+    this._setUpComponentEventsThrottled()
+
     // Return the original point data for centroid calculation
     return points.map(p => p.properties as PointDatum)
   }
@@ -1485,6 +1523,31 @@ export class TopoJSONMap<
       })
       this._expandedCluster = null
     }
+  }
+
+  /** Select a point by id */
+  public selectPointById (id: string): void {
+    const { config } = this
+    const pointData = this._getPointData()
+    const foundPoint = pointData.find(d => getString(d.properties as PointDatum, config.pointId) === id)
+
+    if (foundPoint) {
+      this._selectedPoint = foundPoint
+      this._renderPoints(config.duration)
+    } else {
+      console.warn(`Unovis | TopoJSON Map: Point with id ${id} not found`)
+    }
+  }
+
+  /** Get the id of the selected point */
+  public getSelectedPointId (): string | number | undefined {
+    return this._selectedPoint?.id
+  }
+
+  /** Unselect point */
+  public unselectPoint (): void {
+    this._selectedPoint = null
+    this._renderPoints(this.config.duration)
   }
 
   destroy (): void {
