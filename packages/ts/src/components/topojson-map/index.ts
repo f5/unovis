@@ -620,15 +620,15 @@ export class TopoJSONMap<
       })
       .style('opacity', 1e-6)
 
-    // Main shape (circle, square, triangle)
+    // Main shape (circle, square, triangle) - always draw path; fill/stroke hide when donut shown (match leaflet)
     pointsEnter.append('path')
       .attr('class', s.pointShape)
       .attr('d', d => {
         const radius = d.radius / currentZoomLevel
         const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
-        return d.donutData.length > 0 ? '' : getPointPathData({ x: 0, y: 0 }, radius, shape)
+        return getPointPathData({ x: 0, y: 0 }, radius, shape)
       })
-      .style('fill', (d, i) => {
+      .style('fill', (d) => {
         const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
         if (shape === TopoJSONMapPointShape.Ring) return 'none'
         return d.color
@@ -697,9 +697,12 @@ export class TopoJSONMap<
       this._onPointClick(d, event)
     })
 
-    // Update donut charts and cluster backgrounds
+    // Update donut charts and cluster backgrounds (match leaflet: radius 0 when shape is non-circular)
     pointsMerged.selectAll<SVGGElement, TopoJSONMapPoint<PointDatum>>(`.${s.pointDonut}, .${s.clusterDonut}`).each(function (d) {
       const group = select(this as SVGGElement)
+      const pointShape = getString(d.properties as PointDatum, config.pointShape)
+      const isRing = pointShape === TopoJSONMapPointShape.Ring
+      const isCircular = (pointShape === TopoJSONMapPointShape.Circle) || isRing || d.isCluster || !pointShape
 
       // Update or create background circle for clusters
       if (d.isCluster && d.donutData.length > 0) {
@@ -715,12 +718,10 @@ export class TopoJSONMap<
         }
       }
 
-      // Update donut/pie chart
+      // Update donut/pie chart: pass radius 0 when non-circular so donut is not drawn (shape takes priority)
       if (d.donutData.length > 0) {
-        const radius = d.radius / currentZoomLevel
-        // Clusters show as donut charts (with inner radius), individual points as pie charts (filled)
-        // Use thicker arc width to match Leaflet map style
-        const arcWidth = d.isCluster ? (2 / currentZoomLevel) : radius
+        const radius = (isCircular ? d.radius : 0) / currentZoomLevel
+        const arcWidth = d.isCluster ? (2 / currentZoomLevel) : (isCircular ? d.radius / currentZoomLevel : 0)
         const strokeWidth = 0.5 / currentZoomLevel
         updateDonut(group, d.donutData, radius, arcWidth, strokeWidth, 0.05)
       } else {
@@ -736,11 +737,11 @@ export class TopoJSONMap<
       .attr('d', d => {
         const radius = d.radius / currentZoomLevel
         const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
-        // Keep the full shape path for pointer events, but we'll hide it visually when there's donut data
         return getPointPathData({ x: 0, y: 0 }, radius, shape)
       })
       .style('fill', d => {
-        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const pointShape = getString(d.properties as PointDatum, config.pointShape)
+        const shape = pointShape as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
         const isRing = shape === TopoJSONMapPointShape.Ring
         const hasDonut = d.donutData.length > 0
         const expandedPoint = d as any
@@ -750,9 +751,9 @@ export class TopoJSONMap<
           return expandedPoint.clusterColor || expandedPoint.expandedClusterPoint.color
         }
 
-        // For clusters with donut, make background transparent but keep it clickable
+        if (isRing) return 'none'
+        // Match leaflet: cluster with donut uses transparent background; otherwise path uses d.color (colorMap or pointColor)
         if (hasDonut && d.isCluster) return 'transparent'
-        if (hasDonut || isRing) return 'none'
         return d.color
       })
       .style('stroke', d => {
@@ -1404,8 +1405,12 @@ export class TopoJSONMap<
       const shape = getString(originalData, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
       // Don't show pie charts for expanded cluster points (similar to Leaflet map)
       const donutData: TopoJSONMapPieDatum[] = []
-      // Use the cluster's exact color for all expanded points to maintain visual consistency
-      const pointColor = clusterPoint.color
+      // Use each point's own color (from colorMap or pointColor) so shapes keep their correct color when expanded
+      const explicitPointColor = getColor(originalData, config.pointColor as any)
+      const pointDonutData = getDonutData(originalData, config.colorMap)
+      const maxVal = pointDonutData.length ? Math.max(...pointDonutData.map(d => d.value)) : 0
+      const biggestDatum = pointDonutData.find(d => d.value === maxVal) || pointDonutData[0]
+      const pointColor = explicitPointColor ?? biggestDatum?.color ?? clusterPoint.color
 
       return {
         geometry: { type: 'Point' as const, coordinates: clusterPoint.geometry.coordinates },
@@ -1419,7 +1424,7 @@ export class TopoJSONMap<
         isCluster: false,
         _zIndex: 1,
         expandedClusterPoint: clusterPoint,
-        clusterColor: pointColor, // Preserve the cluster color
+        clusterColor: pointColor,
         dx: packPoints[i].x,
         dy: packPoints[i].y,
         packedRadius: packPoints[i].r, // Store the packed radius for cluster background calculation
