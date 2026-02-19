@@ -159,7 +159,6 @@ export function getDonutData<PointDatum> (
         className: config?.className,
       }
     })
-    .filter(item => item.value > 0)
 }
 
 export function toGeoJSONPoint<D extends GenericDataRecord> (
