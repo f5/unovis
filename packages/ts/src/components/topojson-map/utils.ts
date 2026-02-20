@@ -139,6 +139,95 @@ export function collideAreaLabels (
   selection.style('opacity', (d, i) => labelNodes[i]._labelVisible ? 1 : 0)
 }
 
+/** Get bounding rect of an SVG element in screen coordinates */
+function getScreenBBox (el: SVGGraphicsElement): Rect {
+  const bbox = el.getBBox()
+  const ctm = (el as SVGElement & { getScreenCTM?: () => SVGMatrix | null }).getScreenCTM?.()
+  if (!ctm || !el.ownerSVGElement) {
+    return { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height }
+  }
+  const pt = el.ownerSVGElement.createSVGPoint()
+  const corners = [
+    [bbox.x, bbox.y],
+    [bbox.x + bbox.width, bbox.y],
+    [bbox.x, bbox.y + bbox.height],
+    [bbox.x + bbox.width, bbox.y + bbox.height],
+  ]
+  const transformed = corners.map(([x, y]) => {
+    pt.x = x
+    pt.y = y
+    return pt.matrixTransform(ctm)
+  })
+  const xs = transformed.map(p => p.x)
+  const ys = transformed.map(p => p.y)
+  return {
+    x: Math.min(...xs),
+    y: Math.min(...ys),
+    width: Math.max(...xs) - Math.min(...xs),
+    height: Math.max(...ys) - Math.min(...ys),
+  }
+}
+
+// Extend SVGTextElement for point bottom label collision
+interface PointBottomLabelSVGTextElement extends SVGTextElement {
+  _labelVisible?: boolean;
+}
+
+export function collidePointBottomLabels<PointDatum> (
+  selection: Selection<SVGTextElement, TopoJSONMapPoint<PointDatum>, SVGGElement, unknown>
+): void {
+  if (selection.size() === 0) return
+
+  const labelNodes = selection.nodes() as PointBottomLabelSVGTextElement[]
+  const labelData = selection.data()
+
+  labelNodes.forEach((node, i) => {
+    const d = labelData[i]
+    node._labelVisible = !(d as any).expandedClusterPoint
+  })
+
+  labelNodes.forEach((node1, i) => {
+    if (!node1._labelVisible) return
+
+    const data1 = labelData[i]
+    let rect1: Rect
+    try {
+      rect1 = getScreenBBox(node1)
+    } catch {
+      return
+    }
+
+    for (let j = 0; j < labelNodes.length; j++) {
+      if (i === j) continue
+
+      const node2 = labelNodes[j]
+      if (!node2._labelVisible) continue
+
+      const data2 = labelData[j]
+      let rect2: Rect
+      try {
+        rect2 = getScreenBBox(node2)
+      } catch {
+        continue
+      }
+
+      const intersect = rectIntersect(rect1, rect2, 2)
+
+      if (intersect) {
+        if (data1.radius >= data2.radius) {
+          node2._labelVisible = false
+        } else {
+          node1._labelVisible = false
+          break
+        }
+      }
+    }
+  })
+
+  selection.attr('visibility', (d, i) => labelNodes[i]._labelVisible ? null : 'hidden')
+  selection.style('opacity', (d, i) => labelNodes[i]._labelVisible ? 1 : 0)
+}
+
 export function getDonutData<PointDatum> (
   d: PointDatum,
   colorMap: TopoJSONMapPointStyles<PointDatum> | undefined
