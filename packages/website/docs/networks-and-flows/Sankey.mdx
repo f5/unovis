@@ -93,12 +93,15 @@ proportionally to fit horizontally into its container; vertical scrolling will r
 ## Interactive Zoom and Pan
 Zooming scales the Sankey layout (not individual SVG elements), preserving stroke widths and label sizes. Mouse wheel zoom and drag panning are supported.
 
+When `XY` zoom mode is used, holding ⌘/Ctrl key will temporarily make zoom horizontal-only and holding Alt will temporarily make it vertical-only. Setting `disableZoomModifierKeys` to `true` disabled this behavior.
+
 - **enableZoom**: toggle interaction (default: `false`).
 - **zoomMode**: `SankeyZoomMode.XY | SankeyZoomMode.X | SankeyZoomMode.Y` (default: `SankeyZoomMode.Y`).
 - **zoomExtent**: allowed zoom range `[min, max]` (default: `[1, 5]`).
 - **zoomScale**: `[horizontal, vertical]` layout scale factors (programmatic control).
 - **zoomPan**: `[x, y]` pixel offsets (programmatic control).
 - **onZoom**: callback `(hScale, vScale, panX, panY, extent, event) => void`.
+- **disableZoomModifierKeys**: prevents ⌘/Ctrl and Alt modifiers from affecting effective zoom mode (default: `false`).
 
 Smart pan constraints prevent panning beyond diagram bounds.
 
