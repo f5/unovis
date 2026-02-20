@@ -385,7 +385,7 @@ export const component = (): React.ReactNode => {
         topojson={WorldMapTopoJSON}
         pointId={d => d.name}
         areaColor={() => 'var(--vis-map-feature-color)'}
-        areaLabel={(d: AreaDatum) => d?.name}
+        // areaLabel={(d: AreaDatum) => d?.name}
         pointRadius={pointRadius}
         pointLabel={pointLabel}
         colorMap={colorMap}
@@ -397,6 +397,12 @@ export const component = (): React.ReactNode => {
         zoomExtent={[0.5, 1000]}
         zoomToLocation={zoomToLocation}
         pointShape={d => d.pointShape}
+        pointBottomLabel={d => {
+          if (d?.cluster) {
+            return `${d?.clusterPoints?.length} points`
+          }
+          return d.name ?? ''
+        }}
       />
     </VisSingleContainer>
     <div style={{ position: 'absolute', top: 32, right: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>

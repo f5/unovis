@@ -46,6 +46,7 @@ import {
   getDonutData,
   getPointPathData,
   collideAreaLabels,
+  collidePointBottomLabels,
   getPointRadius,
   calculateClusterIndex,
   getClustersAndPoints,
@@ -1046,6 +1047,10 @@ export class TopoJSONMap<
       // Run collision detection for area labels
       const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, any>(`.${s.areaLabel}`)
       collideAreaLabels(areaLabels)
+
+      // Run collision detection for point bottom labels
+      const pointBottomLabels = this._pointsGroup.selectAll<SVGTextElement, TopoJSONMapPoint<PointDatum>>(`.${s.point} .${s.pointBottomLabel}`)
+      collidePointBottomLabels(pointBottomLabels)
     })
   }
 
