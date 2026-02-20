@@ -22,6 +22,12 @@ export interface TopoJSONMapConfigInterface<
   mapFitToPoints?: boolean;
   /** Initial zoom level. Default: `undefined` */
   zoomFactor?: number;
+  /** Zoom to a specific location. When set, the map will zoom to the specified coordinates at the given zoom level.
+   * Format: `{ coordinates: [longitude, latitude], zoomLevel: number, expandCluster?: boolean }`
+   * When `expandCluster` is true, the cluster at or nearest to the coordinates will be expanded.
+   * Default: `undefined`
+   */
+  zoomToLocation?: { coordinates: [number, number]; zoomLevel: number; expandCluster?: boolean };
   /** Disable pan / zoom interactions. Default: `false` */
   disableZoom?: boolean;
   /** Zoom extent. Default: `[0.5, 6]` */
@@ -182,6 +188,7 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   zoomDuration: 400,
   disableZoom: false,
   zoomFactor: undefined,
+  zoomToLocation: undefined,
 
   linkWidth: (d: unknown): number => (d as { width: number }).width ?? 1,
   linkColor: (d: unknown): string => (d as { color: string }).color ?? null,

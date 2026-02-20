@@ -195,6 +195,24 @@ export const clusterBackground = css`
   pointer-events: all;
 `
 
+export const pointSelectionRing = css`
+  label: point-selection-ring;
+  stroke: var(--vis-map-point-default-fill-color);
+`
+
+export const pointSelection = css`
+  label: point-selection;
+
+  opacity: 0;
+  transform: scale(1);
+
+  &.active {
+    transition: all 400ms cubic-bezier(0.230, 1.000, 0.320, 1.000);
+    opacity: 1;
+    transform: scale(1.25);
+  }
+`
+
 export const links = css`
   label: links;
 `

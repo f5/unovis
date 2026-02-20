@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { VisSingleContainer, VisTopoJSONMap, VisTopoJSONMapRef } from '@unovis/react'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
+import './style.module.css'
 
 export const title = 'Clustered Color Map'
 export const subTitle = 'Points with clustering and pie chart visualization'
@@ -15,9 +16,11 @@ export type DataRecord = {
   name: string;
   longitude: number;
   latitude: number;
-  normal: number | null | undefined;
-  blocked: number | null | undefined;
+  normal?: number | null | undefined;
+  blocked?: number | null | undefined;
   description?: string | null;
+  pointShape?: string;
+  color?: string;
 }
 
 export const data: { points: DataRecord[]; areas?: AreaDatum[] } = {
@@ -55,10 +58,10 @@ export const data: { points: DataRecord[]; areas?: AreaDatum[] } = {
     { latitude: 30.00407, longitude: -90.15977, name: 'usa-3', normal: 751, blocked: 3 },
     { latitude: 41.89261, longitude: -87.62556, name: 'usa-4', normal: 764, blocked: 3 },
     { latitude: 32.78868, longitude: -97.34767, name: 'usa-5', normal: 0, blocked: 530 },
-    { latitude: 36.10304, longitude: -115.17369, name: 'usa-6', normal: 609, blocked: 5 },
-    { latitude: 34.10182, longitude: -118.32421, name: 'usa-7', normal: 543, blocked: 0 },
-    { latitude: 37.44428, longitude: -122.17108, name: 'usa-8', normal: 1920, blocked: 0 },
-    { latitude: 47.61698, longitude: -122.33839, name: 'usa-9', normal: 513, blocked: 2 },
+    { latitude: 36.10304, longitude: -115.17369, name: 'usa-6', pointShape: 'square', color: 'red' },
+    { latitude: 34.10182, longitude: -118.32421, name: 'usa-7', pointShape: 'square', color: 'red' },
+    { latitude: 37.44428, longitude: -122.17108, name: 'usa-8', pointShape: 'square', color: 'red' },
+    { latitude: 47.61698, longitude: -122.33839, name: 'usa-9', pointShape: 'square', color: 'red' },
   ],
   areas: [
     { id: 'AW', name: 'Aruba' },
@@ -300,10 +303,62 @@ export const totalEvents = data.points.reduce((sum, d) => sum + (d.normal || 0),
 
 export const component = (): React.ReactNode => {
   const mapRef = useRef<VisTopoJSONMapRef<any, DataRecord, any>>(null)
+  const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null)
+  const [zoomToLocation, setZoomToLocation] = useState<{ coordinates: [number, number]; zoomLevel: number; expandCluster?: boolean } | undefined>(undefined)
 
   const onZoomIn = (): void => { mapRef.current?.component?.zoomIn(1) }
   const onZoomOut = (): void => { mapRef.current?.component?.zoomOut(1) }
-  const onFit = (): void => { mapRef.current?.component?.fitView() }
+  const onFit = (): void => {
+    mapRef.current?.component?.fitView()
+    setHighlightedNodeId(null) // Clear highlight when fitting view
+    setZoomToLocation(undefined)
+  }
+
+  const onZoomToNode = (): void => {
+    const targetNode = data.points.find(p => p.name === 'dc-us-east')
+    if (!targetNode) return
+
+    // Clear first, then set to ensure the change is detected every time
+    setZoomToLocation(undefined)
+    setTimeout(() => {
+      setZoomToLocation({
+        coordinates: [targetNode.longitude, targetNode.latitude],
+        zoomLevel: 5,
+        expandCluster: true,
+      })
+    }, 0)
+
+    // Highlight the node (clear first to ensure effect re-runs)
+    setHighlightedNodeId(null)
+    setTimeout(() => setHighlightedNodeId(targetNode.name), 0)
+  }
+
+  // Apply highlight class to the target node and keep it applied during re-renders
+  useEffect(() => {
+    if (!highlightedNodeId) return
+
+    const applyHighlight = (): void => {
+      const pointElement = document.querySelector(`[data-point-id="${highlightedNodeId}"]`)?.parentElement
+      if (pointElement && !pointElement.classList.contains('point-highlighted')) {
+        pointElement.classList.add('point-highlighted')
+      }
+    }
+
+    // Wait for zoom animation to complete, then apply highlight
+    const timeoutId = setTimeout(applyHighlight, 500)
+
+    // Keep checking and re-applying the highlight (handles map re-renders)
+    const intervalId = setInterval(applyHighlight, 100)
+
+    return () => {
+      clearTimeout(timeoutId)
+      clearInterval(intervalId)
+      // Remove highlight from all elements when clearing
+      document.querySelectorAll('.point-highlighted').forEach(el => {
+        el.classList.remove('point-highlighted')
+      })
+    }
+  }, [highlightedNodeId])
 
   // Fit the map to show all points on initial load
   useEffect(() => {
@@ -330,7 +385,7 @@ export const component = (): React.ReactNode => {
         topojson={WorldMapTopoJSON}
         pointId={d => d.name}
         areaColor={() => 'var(--vis-map-feature-color)'}
-        areaLabel={(d: AreaDatum) => d?.name}
+        // areaLabel={(d: AreaDatum) => d?.name}
         pointRadius={pointRadius}
         pointLabel={pointLabel}
         colorMap={colorMap}
@@ -339,12 +394,22 @@ export const component = (): React.ReactNode => {
         clusterRadius={pointRadius}
         clusterLabel={pointLabel}
         clusterExpandOnClick={true}
+        zoomExtent={[0.5, 1000]}
+        zoomToLocation={zoomToLocation}
+        pointShape={d => d.pointShape}
+        pointBottomLabel={d => {
+          if (d?.cluster) {
+            return `${d?.clusterPoints?.length} points`
+          }
+          return d.name ?? ''
+        }}
       />
     </VisSingleContainer>
     <div style={{ position: 'absolute', top: 32, right: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
       <button onClick={onZoomIn}>Zoom In</button>
       <button onClick={onZoomOut}>Zoom Out</button>
       <button onClick={onFit}>Fit View</button>
+      <button onClick={onZoomToNode}>Zoom to Node</button>
     </div>
   </>)
 }
