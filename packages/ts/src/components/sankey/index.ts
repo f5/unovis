@@ -400,8 +400,8 @@ export class Sankey<
       // If Cmd (metaKey) is pressed, only change horizontal scale.
       // If Alt/Option (altKey) is pressed, only change vertical scale.
       const deltaK = transform.k / this._prevZoomTransform.k
-      const isHorizontalOnlyKey = Boolean(sourceEvent?.metaKey)
-      const isVerticalOnlyKey = !isHorizontalOnlyKey && Boolean(sourceEvent?.altKey)
+      const isHorizontalOnlyKey = !config.disableZoomModifierKeys && Boolean(sourceEvent?.metaKey)
+      const isVerticalOnlyKey = !isHorizontalOnlyKey && !config.disableZoomModifierKeys && Boolean(sourceEvent?.altKey)
       const isHorizontalOnly = isHorizontalOnlyKey || zoomMode === SankeyZoomMode.X
       const isVerticalOnly = isVerticalOnlyKey || zoomMode === SankeyZoomMode.Y
 

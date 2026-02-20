@@ -40,6 +40,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   zoomExtent?: [number, number];
   /** Zoom interaction mode. Default: `SankeyZoomMode.XY` */
   zoomMode?: SankeyZoomMode | string;
+  /** Disable modifier keys. Has effect only for `SankeyZoomMode.XY` zoom mode. When `true`, zoom mode is not altered by modifier keys. Default: `false` */
+  disableZoomModifierKeys?: boolean;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
   exitTransitionType?: SankeyExitTransitionType;
   /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
@@ -176,6 +178,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   enableZoom: false,
   zoomExtent: [1, 5] as [number, number],
   zoomMode: SankeyZoomMode.Y,
+  disableZoomModifierKeys: false,
   exitTransitionType: SankeyExitTransitionType.Default,
   enterTransitionType: SankeyEnterTransitionType.Default,
   id: (d: SankeyInputNode, i: number) => (d as { _id: string })._id ?? `${i}`,
