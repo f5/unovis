@@ -689,7 +689,9 @@ export class TopoJSONMap<
       .style('cursor', d => {
         const expandedPoint = d as any
         // Expanded cluster points use default cursor (clicking them does nothing)
-        if (expandedPoint.expandedClusterPoint) return 'default'
+        if (expandedPoint.expandedClusterPoint) {
+          return getString(expandedPoint.properties as PointDatum, config.pointCursor) ?? 'default'
+        }
         return d.isCluster ? 'pointer' : getString(d.properties as PointDatum, config.pointCursor)
       })
       .style('opacity', 1)
@@ -831,7 +833,7 @@ export class TopoJSONMap<
       .style('fill', (d, i) => {
         if (d.donutData.length > 0) {
           // Cluster background is white, so use dark text
-          return d.isCluster || (d as any).expandedClusterPoint ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
+          return d.isCluster ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
         } else {
           if (config.pointLabelColor) {
             const labelColor = getColor(d.properties as PointDatum, config.pointLabelColor, i)
