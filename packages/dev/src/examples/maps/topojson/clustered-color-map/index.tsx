@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { VisSingleContainer, VisTopoJSONMap, VisTopoJSONMapRef } from '@unovis/react'
+import { TopoJSONMap } from '@unovis/ts'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
 import './style.module.css'
+
 
 export const title = 'Clustered Color Map'
 export const subTitle = 'Points with clustering and pie chart visualization'
@@ -397,11 +399,24 @@ export const component = (): React.ReactNode => {
         zoomExtent={[0.5, 1000]}
         zoomToLocation={zoomToLocation}
         pointShape={d => d.pointShape}
+        pointCursor='pointer'
         pointBottomLabel={d => {
           if (d?.cluster) {
             return `${d?.clusterPoints?.length} points`
           }
           return d.name ?? ''
+        }}
+        events={{
+          [TopoJSONMap.selectors.background]: {
+            click: (d) => {
+              console.warn('on background click', d)
+            },
+          },
+          [TopoJSONMap.selectors.feature]: {
+            click: (d) => {
+              console.warn('on feature click', d)
+            },
+          },
         }}
       />
     </VisSingleContainer>

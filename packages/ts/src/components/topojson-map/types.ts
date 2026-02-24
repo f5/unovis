@@ -43,12 +43,12 @@ export type MapData<AreaDatum, PointDatum = unknown, LinkDatum = unknown> = {
   links?: LinkDatum[] ;
 }
 
-export declare enum MapPointLabelPosition {
+export enum MapPointLabelPosition {
   Center = 'center',
   Bottom = 'bottom',
 }
 
-export declare enum TopoJSONMapPointShape {
+export enum TopoJSONMapPointShape {
   Square = 'square',
   Circle = 'circle',
   Triangle = 'triangle',
