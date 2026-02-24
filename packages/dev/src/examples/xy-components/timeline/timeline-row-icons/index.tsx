@@ -11,10 +11,11 @@ import icon from './icon.svg?raw'
 export const title = 'Row Icons'
 export const subTitle = 'Before text labels'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
+  const labels = ['English', 'Mandarin', 'Spanish', 'Hindi', 'Arabic', 'French', 'Portuguese']
   const data = generateTimeSeries(7, 20, 10).map((d, i) => ({
     ...d,
-    type: `Row ${i}`,
+    type: labels[i],
     lineWidth: 5 + Math.random() * 15,
   }))
   type Datum = typeof data[number]
@@ -33,6 +34,8 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
         lineWidth={(d) => d.lineWidth}
         lineCap
         rowLabelTextAlign={TextAlign.Left}
+        rowMaxLabelWidth={45}
+        rowLabelMargin={10}
         duration={props.duration}
         rowIcon={() => ({ href: '#chevron_down', size: 20, color: 'rgb(38, 86, 201)' })}
         showRowLabels
@@ -40,7 +43,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
       <VisAxis
         type='x'
         numTicks={3}
-        tickFormat={(x: number) => new Date(x).toDateString()}
+        tickFormat={(tick: number | Date) => new Date(tick).toDateString()}
         duration={props.duration}
       />
     </VisXYContainer>
