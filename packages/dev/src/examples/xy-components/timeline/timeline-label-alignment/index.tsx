@@ -34,7 +34,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
         showRowLabels
         rowLabelTextAlign={TextAlign.Left}
         duration={props.duration}
-        rowLabelStyle={rowLabel => rowLabel.label === 'Row 24'
+        rowLabelStyle={rowLabel => rowLabel.label === 'Row 1'
           ? ({ fill: 'rgb(237, 116, 128)', cursor: 'pointer', 'text-decoration': 'underline', transform: 'translateX(5px)' })
           : undefined
         }
