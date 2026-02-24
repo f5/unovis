@@ -16,7 +16,7 @@ import { arrowPolylinePath } from 'utils/path'
 import { guid } from 'utils/misc'
 
 // Types
-import { TextAlign, Spacing, Arrangement } from 'types'
+import { TextAlign, TrimMode, Spacing, Arrangement } from 'types'
 
 // Config
 import { TimelineDefaultConfig, TimelineConfigInterface } from './config'
@@ -67,7 +67,6 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _scrollBarMargin = 5
   private _maxScroll = 0
   private _scrollbarHeight = 0
-  private _labelMargin = 5
   private _labelWidth = 0 // Will be overridden in `get bleed ()`
   private _rowIconBleed: [number, number] = [0, 0]
   private _lineBleed: [number, number] = [0, 0]
@@ -131,19 +130,21 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // We calculate the longest label width to set the bleed values accordingly
     if (config.showRowLabels ?? config.showLabels) {
-      if (config.rowLabelWidth ?? config.labelWidth) this._labelWidth = (config.rowLabelWidth ?? config.labelWidth) + this._labelMargin
-      else {
+      if (config.rowLabelWidth ?? config.labelWidth) {
+        // We add a little of extra space to take into account the fact that `trimSVGText` is not always precise
+        const tolerance = 1.1
+        this._labelWidth = tolerance * (config.rowLabelWidth ?? config.labelWidth) + config.rowLabelMargin
+      } else {
         const longestLabel = rowLabels.reduce((longestLabel, l) => longestLabel.formattedLabel.length > l.formattedLabel.length ? longestLabel : l, rowLabels[0])
         const label = this._labelsGroup.append('text')
           .attr('class', s.label)
           .text(longestLabel?.formattedLabel || '')
-          .call(trimSVGText, config.rowMaxLabelWidth ?? config.maxLabelWidth)
+          .call(trimSVGText, config.rowMaxLabelWidth ?? config.maxLabelWidth, config.rowLabelTrimMode as TrimMode)
 
         const labelWidth = label.node().getBBox().width
         label.remove()
 
-        const tolerance = 1.15 // Some characters are wider than others so we add a little of extra space to take that into account
-        this._labelWidth = labelWidth ? tolerance * labelWidth + this._labelMargin : 0
+        this._labelWidth = labelWidth ? labelWidth + config.rowLabelMargin : 0
       }
     }
 
@@ -256,7 +257,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     const labelOffset = config.rowLabelTextAlign === TextAlign.Center ? this._labelWidth / 2
       : config.rowLabelTextAlign === TextAlign.Left ? this._labelWidth
-        : this._labelMargin
+        : config.rowLabelMargin
 
     const xStart = xRange[0] - this._rowIconBleed[0] - this._lineBleed[0]
     const labelXStart = xStart - labelOffset
@@ -270,7 +271,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .text(l => l.formattedLabel)
       .each((label, i, els) => {
         const labelSelection = select(els[i])
-        trimSVGText(labelSelection, (config.rowLabelWidth ?? config.labelWidth) || (config.rowMaxLabelWidth ?? config.maxLabelWidth))
+        trimSVGText(labelSelection, (config.rowLabelWidth ?? config.labelWidth) || (config.rowMaxLabelWidth ?? config.maxLabelWidth), config.rowLabelTrimMode as TrimMode)
 
         // Apply custom label style if it has been provided
         const customStyle = getValue(label, config.rowLabelStyle)
@@ -445,10 +446,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._updateScrollPosition(0)
 
     // Clip path
+    // Arrowheads can get cut off when they are too close to the edges, so we extend the clip path to account for them.
+    // TODO: In rare scenarios this can have unwanted side effects, so we might need to create a dedicated clip path for arrows.
+    const maxArrowHeadWidth = max(arrowsData ?? [], a => a.arrowHeadWidth ?? TIMELINE_DEFAULT_ARROW_HEAD_WIDTH) ?? 0
     const clipPathRect = this._clipPath.select('rect')
     smartTransition(clipPathRect, clipPathRect.attr('width') ? duration : 0)
-      .attr('x', xStart)
-      .attr('width', timelineWidth)
+      .attr('x', xStart - maxArrowHeadWidth / 2)
+      .attr('width', timelineWidth + maxArrowHeadWidth)
       .attr('height', this._height)
   }
 
