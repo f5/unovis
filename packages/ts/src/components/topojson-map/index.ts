@@ -378,8 +378,9 @@ export class TopoJSONMap<
     // Prepare candidate labels with optimized filtering and calculations
     const candidateLabels = featureData
       .map(feature => {
-        // Get label text from user-provided area data only
-        const labelText = feature.data ? getString(feature.data, config.areaLabel) : null
+        // Use area data if present, otherwise fall back to GeoJSON properties
+        const areaDatum = feature.data || feature.properties
+        const labelText = areaDatum ? getString(areaDatum as AreaDatum, config.areaLabel) : null
         if (!labelText) return null
 
         const centroid = this._path.centroid(feature)
