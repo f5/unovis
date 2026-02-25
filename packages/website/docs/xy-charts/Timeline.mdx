@@ -18,6 +18,8 @@ export const timelineProps = (n = 5, rows=n) => ({
   height: 150,
   dataType: 'TimeDataRecord',
   data: generateTimeSeries(n, rows),
+  lineDuration: d => d.length,
+  lineRow: d => d.type,
   x: d => d.timestamp,
 })
 
@@ -47,13 +49,20 @@ type TimeDataRecord = {
 
 By default, if the records in your data array contain `length` and `type` properties (as shown above),
 _Timeline_ will only need the `x` accessor provided to display the data.
-Otherwise, you can explicitly define accessor functions for `length` and `type`.
+Otherwise, you can explicitly define accessor functions for `lineDuration` and `lineRow`.
+
+The `type` and `length` properties are deprecated in favor of `lineRow` and `lineDuration`, respectively.
 
 :::
 
-## Labels
-Enable the `showLabels` property to display row types along the **vertical** axis. You can alter the
-appearance of these labels with the `labelWidth` and `maxLabelWidth` properties.
+## Row Labels
+Enable the `showRowLabels` property to display row types along the **vertical** axis. You can control
+the label width with `rowLabelWidth` (fixed) and `rowMaxLabelWidth` (maximum) properties.
+
+:::note
+The `showLabels`, `labelWidth`, and `maxLabelWidth` properties are deprecated. Use `showRowLabels`,
+`rowLabelWidth`, and `rowMaxLabelWidth` instead.
+:::
 
 Like other XY components, labeling data along the **horizontal** axis can be accomplished
 by adding an _Axis_ component to your container. See following example which displays labeled
@@ -62,7 +71,7 @@ _Timeline_ alongside a labeled _X Axis_:
 <XYWrapper {...timelineProps()}
   components={[xAxis]}
   declarations={{ tickFormat: 'Intl.DateTimeFormat().format'}}
-  showLabels
+  showRowLabels
   showContext="container"/>
 
 <br/>
@@ -73,6 +82,63 @@ Since *Timeline* groups vertical data in an ordinal fashion, adding a Y axis her
 
 :::
 
+### Label Text Align
+Use the `rowLabelTextAlign` property to control the horizontal alignment of row labels:
+`TextAlign.Left`, `TextAlign.Center`, or `TextAlign.Right` (default).
+
+<XYWrapper {...timelineProps(20, 5)} showRowLabels rowLabelTextAlign="left" hideTabLabels/>
+
+### Label Width
+Set a fixed label width with `rowLabelWidth` or a maximum width with `rowMaxLabelWidth`.
+Labels longer than the specified value will be trimmed.
+
+<XYWrapperWithInput {...timelineProps(20, 5)} showRowLabels property="rowLabelWidth" inputType="range" defaultValue={60}/>
+
+### Label Trim Mode
+When labels exceed the available width, they'll be trimmed. Use the `rowLabelTrimMode` property to control
+where the trimming occurs: `TrimMode.Start`, `TrimMode.Middle` (default), or `TrimMode.End`.
+
+<XYWrapper {...timelineProps(20, 5)} showRowLabels rowLabelWidth={70} rowLabelTrimMode="end" hideTabLabels/>
+
+### Label Margin
+Use the `rowLabelMargin` property to set the spacing (in pixels) between the row labels and the timeline content.
+
+You can also provide a `[left, right]` tuple to control spacing on both sides of the label independently:
+- The first value sets the left margin (space from the container edge or row icon to the label)
+- The second value sets the right margin (space between the label and the timeline content)
+
+```ts
+rowLabelMargin: [10, 5] // 10px left, 5px right
+```
+
+<XYWrapperWithInput {...timelineProps(20, 5)} showRowLabels property="rowLabelMargin" inputType="range" defaultValue={5}/>
+
+### Label Style
+Use `rowLabelStyle` to apply custom CSS styles to row labels. It accepts an object with CSS property-value pairs
+or an accessor function for per-label styling.
+
+```ts
+rowLabelStyle: { 'font-weight': 'bold', 'fill': '#333' }
+```
+
+### Label Formatter
+Use `rowLabelFormatter` to customize the displayed label text. It receives the row key, the row's data items, and the row index.
+
+```ts
+rowLabelFormatter: (key: string, items: Datum[], i: number) => `${key} (${items.length})`
+```
+
+### Icon
+Use the `rowIcon` property to display an icon before each row label. The function receives the row key, items, and index,
+and should return a `TimelineRowIcon` object or `undefined`.
+
+```ts
+type TimelineRowIcon = {
+  href: string;  // SVG icon href (defined in container's svgDefs)
+  size: number;
+  color: string;
+}
+```
 
 ## Row Configuration
 ### Alternating row colors
@@ -105,8 +171,77 @@ actual position. When set to `false`, small segments will be aligned to the left
 You can also change the line thickness with the `lineWidth` property, which determines how much
 vertical space each _Timeline_ item occupies.
 
-### Example: Custom timeline lines
-<XYWrapperWithInput {...timelineProps(3)} height={320} rowHeight={100} property="lineWidth" inputType="range" defaultValue={10}/>
+<XYWrapperWithInput {...timelineProps(3)} height={320} rowHeight={50} property="lineWidth" inputType="range" defaultValue={10}/>
+
+### Line Cursor
+Use the `lineCursor` property to set a custom CSS cursor when hovering over a timeline line.
+
+:::note
+The `cursor` property is deprecated. Use `lineCursor` instead.
+:::
+
+### Line Icons
+You can display icons at the start and/or end of each timeline line using SVG symbols defined in the
+container's `svgDefs`.
+
+| Property | Description |
+|---|---|
+| `lineStartIcon` / `lineEndIcon` | SVG icon href accessor |
+| `lineStartIconColor` / `lineEndIconColor` | Icon color accessor |
+| `lineStartIconSize` / `lineEndIconSize` | Icon size accessor |
+| `lineStartIconArrangement` / `lineEndIconArrangement` | Icon positioning relative to the line: `Arrangement.Inside` (default), `Arrangement.Outside`, `Arrangement.Start`, `Arrangement.Middle`, or `Arrangement.End` |
+
+## Arrows
+Use the `arrows` property to draw connecting arrows between timeline lines. Each arrow is defined as a `TimelineArrow` object:
+
+```ts
+type TimelineArrow = {
+  id?: string;
+  xSource?: number;            // X position of arrow start (defaults to source line's end)
+  xTarget?: number;            // X position of arrow end (defaults to target line's start)
+  xSourceOffsetPx?: number;    // Horizontal offset of the source in pixels
+  xTargetOffsetPx?: number;    // Horizontal offset of the target in pixels
+  lineSourceId: string;        // Id of the source line element
+  lineTargetId: string;        // Id of the target line element
+  lineSourceMarginPx?: number; // Margin between source line and arrow in pixels
+  lineTargetMarginPx?: number; // Margin between target line and arrow in pixels
+  arrowHeadLength?: number;    // Arrowhead length in pixels (default: 8)
+  arrowHeadWidth?: number;     // Arrowhead width in pixels (default: 6)
+}
+```
+
+The `lineSourceId` and `lineTargetId` correspond to the values returned by the `id` accessor on your data items.
+
+export const arrowData = Array(7).fill(0).map((_, i) => ({
+  id: `item-${i}`,
+  timestamp: Date.now() + i * 1000 * 60 * 60 * 24 + Math.random() * 1000 * 60 * 60 * 12,
+  length: 1000 * 60 * 60 * 24,
+  type: `Task ${i + 1}`,
+}))
+
+export const arrowItems = arrowData.slice(0, -1).map((d, i) => ({
+  id: `arrow-${i}`,
+  xSource: d.timestamp + d.length,
+  lineSourceId: d.id,
+  lineTargetId: arrowData[i + 1].id,
+  lineSourceMarginPx: 2,
+  lineTargetMarginPx: 2,
+}))
+
+<XYWrapper
+  name="Timeline"
+  data={arrowData}
+  dataType="TimeDataRecord"
+  height={255}
+  x={d => d.timestamp}
+  id={d => d.id}
+  lineCap
+  rowHeight={35}
+  showRowLabels
+  arrows={arrowItems}
+  declarations={{ arrows: `[{ lineSourceId: 'item-0', lineTargetId: 'item-1', xSource: ... }, ...]` }}
+  showContext="minimal"
+/>
 
 ## Events
 ### Scrolling
@@ -137,7 +272,7 @@ export function ScrollExample() {
 <ScrollExample/>
 
 ### Custom cursor for hover events
-You can set custom cursor when hovering over a line. However, it'll only be active if you've defined events for `[Timeline.selectors.line]`:
+You can set a custom cursor when hovering over a line using the `lineCursor` property. It'll only be active if you've defined events for `[Timeline.selectors.line]`:
 <BrowserOnly>
 {() => {
   const { Timeline } = require('@unovis/ts')
@@ -157,7 +292,7 @@ You can set custom cursor when hovering over a line. However, it'll only be acti
             click: (d) => { console.log(d) }
         },
       }}
-      cursor="cell"
+      lineCursor="cell"
     />
   }
 }

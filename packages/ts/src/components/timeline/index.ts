@@ -16,7 +16,7 @@ import { arrowPolylinePath } from 'utils/path'
 import { guid } from 'utils/misc'
 
 // Types
-import { TextAlign, Spacing, Arrangement } from 'types'
+import { TextAlign, TrimMode, Spacing, Arrangement } from 'types'
 
 // Config
 import { TimelineDefaultConfig, TimelineConfigInterface } from './config'
@@ -67,9 +67,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _scrollBarMargin = 5
   private _maxScroll = 0
   private _scrollbarHeight = 0
-  private _labelMargin = 5
   private _labelWidth = 0 // Will be overridden in `get bleed ()`
-  private _rowIconBleed: [number, number] = [0, 0]
+  private _lineIconBleed: [number, number] = [0, 0]
   private _lineBleed: [number, number] = [0, 0]
 
   /** We define a dedicated clipping path for this component because it needs to behave
@@ -126,24 +125,26 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const { config, datamodel: { data } } = this
     const rowLabels = this._getRowLabels(data)
     const rowHeight = config.rowHeight || (this._height / (rowLabels.length || 1))
-    const hasIcons = rowLabels.some(l => l.iconHref)
-    const maxIconSize = max(rowLabels.map(l => l.iconSize || 0))
+    const hasRowIcons = rowLabels.some(l => l.iconHref)
+    const maxRowIconSize = max(rowLabels.map(l => l.iconSize || 0))
 
     // We calculate the longest label width to set the bleed values accordingly
     if (config.showRowLabels ?? config.showLabels) {
-      if (config.rowLabelWidth ?? config.labelWidth) this._labelWidth = (config.rowLabelWidth ?? config.labelWidth) + this._labelMargin
-      else {
-        const longestLabel = rowLabels.reduce((longestLabel, l) => longestLabel.formattedLabel.length > l.formattedLabel.length ? longestLabel : l, rowLabels[0])
-        const label = this._labelsGroup.append('text')
+      const [marginLeft, marginRight] = this._getRowLabelMargin()
+      if (config.rowLabelWidth ?? config.labelWidth) {
+        // We add a little of extra space to take into account the fact that `trimSVGText` is not always precise
+        const tolerance = 1.1
+        this._labelWidth = tolerance * (config.rowLabelWidth ?? config.labelWidth) + marginLeft + marginRight
+      } else {
+        const labels = rowLabels.map(l => this._labelsGroup.append('text')
           .attr('class', s.label)
-          .text(longestLabel?.formattedLabel || '')
-          .call(trimSVGText, config.rowMaxLabelWidth ?? config.maxLabelWidth)
+          .text(l.formattedLabel || '')
+          .call(trimSVGText, config.rowMaxLabelWidth ?? config.maxLabelWidth, config.rowLabelTrimMode as TrimMode))
 
-        const labelWidth = label.node().getBBox().width
-        label.remove()
+        const labelWidth = max(labels.map(l => l.node().getBBox().width)) || 0
+        labels.forEach(l => l.remove())
 
-        const tolerance = 1.15 // Some characters are wider than others so we add a little of extra space to take that into account
-        this._labelWidth = labelWidth ? tolerance * labelWidth + this._labelMargin : 0
+        this._labelWidth = labelWidth ? labelWidth + marginLeft + marginRight : 0
       }
     }
 
@@ -182,22 +183,22 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._lineBleed = lineBleed
 
     // Icon bleed
-    const iconBleed = [0, 0] as [number, number]
+    const lineIconBleed = [0, 0] as [number, number]
     if (config.lineStartIcon) {
-      iconBleed[0] = max(data, (d, i) => getIconBleed(d, i, config.lineStartIcon, config.lineStartIconSize, config.lineStartIconArrangement, rowHeight)) || 0
+      lineIconBleed[0] = max(data, (d, i) => getIconBleed(d, i, config.lineStartIcon, config.lineStartIconSize, config.lineStartIconArrangement, rowHeight)) || 0
     }
 
     if (config.lineEndIcon) {
-      iconBleed[1] = max(data, (d, i) => getIconBleed(d, i, config.lineEndIcon, config.lineEndIconSize, config.lineEndIconArrangement, rowHeight)) || 0
+      lineIconBleed[1] = max(data, (d, i) => getIconBleed(d, i, config.lineEndIcon, config.lineEndIconSize, config.lineEndIconArrangement, rowHeight)) || 0
     }
 
-    this._rowIconBleed = iconBleed
+    this._lineIconBleed = lineIconBleed
 
     return {
       top: 0,
       bottom: 0,
-      left: this._labelWidth + iconBleed[0] + (hasIcons ? maxIconSize : 0) + lineBleed[0],
-      right: this._scrollBarWidth + this._scrollBarMargin + iconBleed[1] + lineBleed[1],
+      left: this._labelWidth + lineIconBleed[0] + (hasRowIcons ? maxRowIconSize : 0) + lineBleed[0],
+      right: this._scrollBarWidth + this._scrollBarMargin + lineIconBleed[1] + lineBleed[1],
     }
   }
 
@@ -235,6 +236,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .attr('width', l => l.iconSize)
       .attr('height', l => l.iconSize)
       .attr('y', l => yStart + (yOrdinalScale(l.label) + 0.5) * rowHeight - l.iconSize / 2)
+      .style('color', l => l.iconColor)
       .style('opacity', 0)
 
     smartTransition(rowIconsEnter.merge(rowIcons), duration)
@@ -254,11 +256,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const labels = this._labelsGroup.selectAll<SVGTextElement, TimelineRowLabel<Datum>>(`.${s.label}`)
       .data((config.showRowLabels ?? config.showLabels) ? rowLabels : [], l => l?.label)
 
+    const [labelMarginLeft, labelMarginRight] = this._getRowLabelMargin()
     const labelOffset = config.rowLabelTextAlign === TextAlign.Center ? this._labelWidth / 2
-      : config.rowLabelTextAlign === TextAlign.Left ? this._labelWidth
-        : this._labelMargin
+      : config.rowLabelTextAlign === TextAlign.Left ? this._labelWidth - labelMarginLeft
+        : labelMarginRight
 
-    const xStart = xRange[0] - this._rowIconBleed[0] - this._lineBleed[0]
+    const xStart = xRange[0] - this._lineBleed[0] - this._lineIconBleed[0]
     const labelXStart = xStart - labelOffset
     const labelsEnter = labels.enter().append('text')
       .attr('class', s.label)
@@ -270,7 +273,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .text(l => l.formattedLabel)
       .each((label, i, els) => {
         const labelSelection = select(els[i])
-        trimSVGText(labelSelection, (config.rowLabelWidth ?? config.labelWidth) || (config.rowMaxLabelWidth ?? config.maxLabelWidth))
+        const maxLabelWidth = (config.rowLabelWidth ?? config.labelWidth) || (config.rowMaxLabelWidth ?? config.maxLabelWidth)
+        trimSVGText(labelSelection, maxLabelWidth, config.rowLabelTrimMode as TrimMode)
 
         // Apply custom label style if it has been provided
         const customStyle = getValue(label, config.rowLabelStyle)
@@ -292,7 +296,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .remove()
 
     // Row background rects
-    const timelineWidth = xRange[1] - xRange[0] + this._rowIconBleed[0] + this._rowIconBleed[1] + this._lineBleed[0] + this._lineBleed[1]
+    const timelineWidth = xRange[1] - xRange[0] + this._lineIconBleed[0] + this._lineIconBleed[1] + this._lineBleed[0] + this._lineBleed[1]
     const numRows = Math.max(Math.floor(yHeight / rowHeight), numRowLabels)
     const recordTypes = Array(numRows).fill(null).map((_, i) => rowLabels[i])
     const rects = this._rowsGroup.selectAll<SVGRectElement, number>(`.${s.row}`)
@@ -445,11 +449,19 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._updateScrollPosition(0)
 
     // Clip path
+    // Arrowheads can get cut off when they are too close to the edges, so we extend the clip path to account for them.
+    // TODO: In rare scenarios this can have unwanted side effects, so we might need to create a dedicated clip path for arrows.
+    const maxArrowHeadWidth = max(arrowsData ?? [], a => a.arrowHeadWidth ?? TIMELINE_DEFAULT_ARROW_HEAD_WIDTH) ?? 0
     const clipPathRect = this._clipPath.select('rect')
     smartTransition(clipPathRect, clipPathRect.attr('width') ? duration : 0)
-      .attr('x', xStart)
-      .attr('width', timelineWidth)
+      .attr('x', xStart - maxArrowHeadWidth / 2)
+      .attr('width', timelineWidth + maxArrowHeadWidth)
       .attr('height', this._height)
+  }
+
+  private _getRowLabelMargin (): [number, number] {
+    const m = this.config.rowLabelMargin
+    return Array.isArray(m) ? m : [m, m]
   }
 
   private _getLineLength (d: Datum, i: number): number {
