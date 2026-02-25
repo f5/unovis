@@ -14,6 +14,7 @@ export const globalStyles = injectGlobal`
 
     --vis-timeline-label-font-size: 12px;
     --vis-timeline-label-color: #6C778C;
+    --vis-timeline-user-select: none;
 
     --vis-timeline-arrow-color: #6C778C;
     --vis-timeline-arrow-stroke-width: 1.5;
@@ -136,7 +137,7 @@ export const label = css`
   font-size: var(--vis-timeline-label-font-size);
   fill: var(--vis-timeline-label-color);
   text-anchor: end;
-  user-select: none;
+  user-select: var(--vis-timeline-user-select);
 `
 
 export const rowIcons = css`
