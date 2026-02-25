@@ -86,8 +86,8 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   rowLabelTextAlign?: TextAlign | `${TextAlign}`;
   /** Row label trim mode when width is limited: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
   rowLabelTrimMode?: TrimMode | `${TrimMode}`;
-  /** Row label margin in pixels. Default: `5` */
-  rowLabelMargin?: number;
+  /** Row label margin in pixels. Can be a single number or a `[left, right]` tuple. Default: `[0, 5]` */
+  rowLabelMargin?: number | [number, number];
 
   // Arrows
   arrows?: TimelineArrow[];
@@ -150,7 +150,7 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   rowMaxLabelWidth: undefined,
   rowLabelTextAlign: TextAlign.Right,
   rowLabelTrimMode: TrimMode.Middle,
-  rowLabelMargin: 5,
+  rowLabelMargin: [0, 5],
 
   // Arrows
   arrows: undefined,
