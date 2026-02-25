@@ -1090,7 +1090,16 @@ export class TopoJSONMap<
 
   public setZoom (zoomLevel: number): void {
     const { config } = this
-    this._currentZoomLevel = clamp(zoomLevel, config.zoomExtent[0], config.zoomExtent[1])
+    const newZoomLevel = clamp(zoomLevel, config.zoomExtent[0], config.zoomExtent[1])
+    const currentK = this._initialScale * this._currentZoomLevel
+    const newK = this._initialScale * newZoomLevel
+    // Update _center so the viewport center stays fixed when zooming (avoids drift after pan)
+    if (currentK > 0 && isFinite(currentK) && isFinite(newK)) {
+      const ratio = newK / currentK
+      this._center[0] = (this._width / 2 - this.bleed.left) * (1 - ratio) + this._center[0] * ratio
+      this._center[1] = (this._height / 2 - this.bleed.top) * (1 - ratio) + this._center[1] * ratio
+    }
+    this._currentZoomLevel = newZoomLevel
     // Set CSS custom property for zoom level
     this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
     this._transform = zoomIdentity
