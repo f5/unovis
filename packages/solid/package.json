@@ -33,7 +33,8 @@
     "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "publish:dist": "cd ./dist; npm publish",
     "generate": "tsx autogen/index.ts && pnpm run lint --fix",
-    "gallery": "vite"
+    "gallery": "vite",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.4",
