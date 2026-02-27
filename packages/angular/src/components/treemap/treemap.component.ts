@@ -10,6 +10,9 @@ import {
   StringAccessor,
   TreemapNode,
   ColorAccessor,
+  TreemapTileFunction,
+  TreemapDatum,
+  HierarchyNodeWithValue,
   FitMode,
   TrimMode,
 } from '@unovis/ts'
@@ -91,6 +94,12 @@ export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>
   /** Color accessor function for tiles. Default: `undefined` */
   @Input() tileColor?: ColorAccessor<TreemapNode<Datum>>
 
+  /** D3 tile function (e.g. `treemapSquarify`, `treemapDice` from `d3-hierarchy`). Default: `undefined`. */
+  @Input() tileFunction?: TreemapTileFunction<TreemapDatum<Datum>>
+
+  /** Comparator for sorting hierarchy nodes before layout. Receives two `HierarchyNode`s. Default: `undefined`. */
+  @Input() timeSort?: ((a: HierarchyNodeWithValue<Datum>, b: HierarchyNodeWithValue<Datum>) => number) | null
+
   /** Padding passed to D3 treemap layout. Default: `2` */
   @Input() tilePadding?: number
 
@@ -167,8 +176,8 @@ export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>
   }
 
   private getConfig (): TreemapConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, layers, numberFormat, tileLabel, tileColor, tilePadding, tilePaddingTop, tileShowHtmlTooltip, labelInternalNodes, labelOffsetX, labelOffsetY, labelFit, labelTrimMode, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel } = this
-    const config = { duration, events, attributes, id, value, layers, numberFormat, tileLabel, tileColor, tilePadding, tilePaddingTop, tileShowHtmlTooltip, labelInternalNodes, labelOffsetX, labelOffsetY, labelFit, labelTrimMode, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel }
+    const { duration, events, attributes, id, value, layers, numberFormat, tileLabel, tileColor, tileFunction, timeSort, tilePadding, tilePaddingTop, tileShowHtmlTooltip, labelInternalNodes, labelOffsetX, labelOffsetY, labelFit, labelTrimMode, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel } = this
+    const config = { duration, events, attributes, id, value, layers, numberFormat, tileLabel, tileColor, tileFunction, timeSort, tilePadding, tilePaddingTop, tileShowHtmlTooltip, labelInternalNodes, labelOffsetX, labelOffsetY, labelFit, labelTrimMode, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel }
     const keys = Object.keys(config) as (keyof TreemapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

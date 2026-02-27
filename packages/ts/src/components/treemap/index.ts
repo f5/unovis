@@ -24,7 +24,7 @@ import { FitMode } from 'types/text'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
 
 // Local Types
-import { TreemapDatum, TreemapNode } from './types'
+import { HierarchyNodeWithValue, TreemapDatum, TreemapNode } from './types'
 
 // Styles
 import * as s from './style'
@@ -80,42 +80,43 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       }
     })
 
-    const treemapLayout = treemap()
-      .size([_width, _height])
-      .round(true)
-      .padding(config.tilePadding)
+    // Process the hierarchy into the type we need
+    const hierarchyWithPopulatedData = rootNode as HierarchyNodeWithValue<Datum>
+    hierarchyWithPopulatedData.each(d => {
+      const node = d as unknown as TreemapNode<Datum>
+      const n = d as unknown as HierarchyNode<[string, number[]]>
 
-    // Apply padding to the top of each tile,
-    // but not for the root node.
-    if (this.config.tilePaddingTop !== undefined) {
-      treemapLayout.paddingTop(d => d.parent ? config.tilePaddingTop : 0)
-    }
-
-    // Compute the treemap layout
-    const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
-
-    // Process the resulting hierarchy into the type we need
-    let nodeId = 0
-    treemapData.each(node => {
-      const n = node as unknown as HierarchyNode<[string, number[]]>
-      // Generate unique IDs for each node
-      node._id = `node-${nodeId++}`
-
+      const isLeafNode = !n.children
       const treemapDatum: TreemapDatum<Datum> = {
         key: n.data[0],
+        isLeaf: isLeafNode,
       }
 
-      // Populate the index and datum for leaf nodes
-      const isLeafNode = !n.children
       if (isLeafNode) {
         treemapDatum.index = n.data[1][0]
         treemapDatum.datum = data[treemapDatum.index]
       }
 
       node.data = treemapDatum
+      node._id = `node-${node.data.key}-${node.depth}`
       node.topLevelParent = this._getTopLevelParent(node)
     })
 
+    if (config.timeSort && config.timeSort === null) hierarchyWithPopulatedData.sort(config.timeSort)
+
+    const treemapLayout = treemap<TreemapDatum<Datum>>()
+      .size([_width, _height])
+      .round(true)
+      .padding(config.tilePadding)
+
+    if (config.tileFunction) treemapLayout.tile(config.tileFunction)
+
+    if (this.config.tilePaddingTop !== undefined) {
+      treemapLayout.paddingTop(d => d.parent ? config.tilePaddingTop : 0)
+    }
+
+    // Compute the treemap layout
+    const treemapData = treemapLayout(hierarchyWithPopulatedData as HierarchyNode<TreemapDatum<Datum>>) as TreemapNode<Datum>
     const descendants = treemapData.descendants()
 
     // Set up the brightness increase scale based on depth
