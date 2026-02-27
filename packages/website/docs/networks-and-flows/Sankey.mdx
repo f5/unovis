@@ -32,6 +32,15 @@ export const SankeyDoc = (props) => (
   <DocWrapper {...sankeyProps()} {...props}/>
 )
 
+export const sankeyCollapseProps = {
+  data: sankeyData(100, [[1,2], [3,4], [5,6]], 4, ['D', 'F']),
+  enableNodeCollapse: true,
+  collapseAnimationDuration: 500,
+  disabledField: "disabled",
+  label: d => d.label || d.id,
+  nodePadding: 15,
+}
+
 ## Basic Configuration
 _Sankey_ is a popular kind of flow diagram that visualizes flows between multiple nodes. To define a Sankey diagram
 you'll need to have data about its nodes and flows between them.
@@ -243,6 +252,31 @@ Use **selectedNodeIds: string[]** to programmatically set selected nodes. Select
   selectedNodeIds={['A','C']}
   showContext="minimal"
 />
+### Pre-collapsed Nodes
+You can specify nodes to have a collapsed state by using the `disabledField` property. Any nodes with this field set to `true` will be pre-collapsed when the diagram loads:
+
+```ts
+// In your data
+const nodes = [
+  { id: 'A', label: 'Active Node' },
+  { id: 'B', label: 'Pre-collapsed Node', disabled: true }, // This node starts collapsed
+]
+
+// In your configuration
+{
+  enableNodeCollapse: true,
+  disabledField: 'disabled', // Field name that indicates pre-collapsed nodes
+}
+```
+
+When a node is collapsed:
+- Only the links **directly connected** to that node are hidden
+- All other nodes (including children and descendants) remain visible in their original positions
+- The collapsed node itself remains visible and clickable
+
+This approach differs from traditional tree-like collapse where entire subtrees disappear.
+
+<SankeyDoc {...sankeyCollapseProps} showContext='full'/>
 
 ## Sorting
 By default, _Sankey_ will sort the links based on their `value` in descending order from top to bottom.
