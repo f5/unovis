@@ -1,7 +1,9 @@
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { FitMode, TrimMode } from 'types/text'
-import { TreemapNode } from './types'
+
+// Local Types
+import { HierarchyNodeWithValue, TreemapDatum, TreemapNode, TreemapTileFunction } from './types'
 
 export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface {
   id?: ((d: Datum, i: number) => string | number);
@@ -23,6 +25,12 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Color accessor function for tiles. Default: `undefined` */
   tileColor?: ColorAccessor<TreemapNode<Datum>>;
+
+  /** D3 tile function (e.g. `treemapSquarify`, `treemapDice` from `d3-hierarchy`). Default: `undefined`. */
+  tileFunction?: TreemapTileFunction<TreemapDatum<Datum>>;
+
+  /** Comparator for sorting hierarchy nodes before layout. Receives two `HierarchyNode`s. Default: `undefined`. */
+  timeSort?: ((a: HierarchyNodeWithValue<Datum>, b: HierarchyNodeWithValue<Datum>) => number) | null;
 
   /** Padding passed to D3 treemap layout. Default: `2` */
   tilePadding?: number;
@@ -89,6 +97,8 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   value: undefined,
   tileColor: undefined,
   layers: [],
+  tileFunction: undefined,
+  timeSort: undefined,
   tilePadding: 2,
   tilePaddingTop: undefined,
   tileShowHtmlTooltip: true,
