@@ -2,7 +2,9 @@
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Types
-import { ColorAccessor, NumericAccessor } from 'types/accessor'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { DonutSegmentLabelPosition } from './types'
+
 
 export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
@@ -48,6 +50,18 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
 
   /** Central label and sub-label vertical offset in pixels. Default: `undefined` */
   centralLabelOffsetY?: number;
+
+  /** Show labels for individual segments. Default: `true` */
+  showSegmentLabels?: boolean;
+
+  /** Segment label accessor function. Default `undefined` */
+  segmentLabel?: StringAccessor<Datum>;
+
+  /** segement label position, 'inside' or 'outside'. Default: `inside` */
+  segmentLabelPosition?: DonutSegmentLabelPosition;
+
+  /** Radial offset in pixels for outside labels (from outer radius). Default : `12` */
+  segmentLabelOffset?: number;
 }
 
 export const DonutDefaultConfig: DonutConfigInterface<unknown> = {
@@ -65,9 +79,13 @@ export const DonutDefaultConfig: DonutConfigInterface<unknown> = {
   centralSubLabel: undefined,
   centralSubLabelWrap: true,
   showEmptySegments: false,
+  showSegmentLabels: true,
+  segmentLabel: undefined,
   emptySegmentAngle: 0.5 * Math.PI / 180,
   showBackground: true,
   backgroundAngleRange: undefined,
   centralLabelOffsetX: undefined,
   centralLabelOffsetY: undefined,
+  segmentLabelPosition: DonutSegmentLabelPosition.Inside,
+  segmentLabelOffset: 10,
 }

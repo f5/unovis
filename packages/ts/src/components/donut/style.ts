@@ -7,6 +7,7 @@ export const root = css`
 export const variables = injectGlobal`
   :root {
     --vis-donut-central-label-font-size: 16px;
+    --vis-donut-label-font-size: 12px;
     --vis-donut-central-label-text-color: #5b5f6d;
     // Undefined by default to allow proper fallback to var(--vis-font-family)
     /* --vis-donut-central-label-font-family: */
@@ -68,4 +69,16 @@ export const centralSubLabel = css`
   font-family: var(--vis-donut-central-sub-label-font-family, var(--vis-font-family));
   font-weight: var(--vis-donut-central-sub-label-font-weight);
   fill: var(--vis-donut-central-sub-label-text-color);
+`
+
+export const segmentLabel = css`
+  label: segment-label;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  user-select: none;
+  font-size: var(--vis-donut-label-font-size);
+`
+
+export const annotationLane = css`
+  label: annotation-lane;
 `
