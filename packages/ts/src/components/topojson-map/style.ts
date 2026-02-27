@@ -1,4 +1,6 @@
 import { css, injectGlobal } from '@emotion/css'
+import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
+
 export const pointPathRing = css`
   label: point-path-ring;
   fill: var(--vis-map-point-ring-fill-color);
@@ -126,9 +128,14 @@ export const pointShape = css`
 
   stroke-opacity: 0.4;
   pointer-events: fill;
+  transition: .3s transform;
 
   &:active {
     cursor: default;
+  }
+
+  &:hover {
+    transform: scale(1.1);
   }
 `
 
@@ -163,12 +170,16 @@ export const pointBottomLabel = css`
 // Can be used to apply custom styles to pie chart segments
 export const pointDonut = css`
   label: point-donut;
+  transition: .3s transform;
 
   path {
     stroke-opacity: 0.8;
   }
+  
+  &:hover {
+    transform: scale(1.1);
+  }
 `
-
 export const clusterDonut = css`
   label: cluster-donut;
   transform: scale(1);
@@ -180,11 +191,7 @@ export const clusterDonut = css`
 
   &:hover {
     transform: scale(1.1);
-    
-    path {
-      stroke: white;
-      stroke-width: 2;
-    }
+    filter: drop-shadow(0 0 2px var(--vis-map-cluster-default-stroke-color)) drop-shadow(0 0 4px var(--vis-map-cluster-default-stroke-color));
   }
 `
 
