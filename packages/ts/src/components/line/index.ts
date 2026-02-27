@@ -7,7 +7,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getNumber, getString, getValue, isArray, isNumber } from 'utils/data'
+import { getNumber, getString, getValue, isArray, isNumber, getStackedData, getStackedExtent, filterDataByRange } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -42,6 +42,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
   constructor (config?: LineConfigInterface<Datum>) {
     super()
     if (config) this.setConfig(config)
+    this.stacked = config?.stacked ?? false
   }
 
   get bleed (): Spacing {
@@ -80,19 +81,21 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     const lineDataX = data.map((d, i) => this.xScale(getNumber(d, config.x, i)))
-    const lineData: LineData[] = yAccessors.map(a => {
+    const stackedData = config.stacked ? getStackedData(data, 0, yAccessors) : undefined
+    const lineData: LineData[] = yAccessors.map((a, seriesIndex) => {
       const ld: LineDatum[] = data.map((d, i) => {
         const rawValue = getNumber(d, a, i)
 
         // If `rawValue` is not numerical or if it's not finite (`NaN`, `undefined`, ...), we replace it with `config.fallbackValue`
         const value = (isNumber(rawValue) || (rawValue === null)) && isFinite(rawValue) ? rawValue : config.fallbackValue
+        const yValue = config.stacked ? stackedData[seriesIndex][i][1] : (value ?? 0)
         const defined = config.interpolateMissingData
           ? (isNumber(rawValue) || (rawValue === null)) && isFinite(rawValue)
           : isFinite(value)
 
         return {
           x: lineDataX[i],
-          y: this.yScale(value ?? 0),
+          y: this.yScale(yValue),
           defined,
           value,
         }
@@ -201,6 +204,19 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
     smartTransition(lines.exit(), duration)
       .style('opacity', 0)
       .remove()
+  }
+
+  getYDataExtent (scaleByVisibleData: boolean): number[] {
+    const { config, datamodel } = this
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+
+    if (config.stacked) {
+      const xDomain = this.xScale.domain() as [number, number]
+      const data = scaleByVisibleData ? filterDataByRange(datamodel.data, xDomain, config.x, true) : datamodel.data
+      return getStackedExtent(data, ...yAccessors)
+    }
+
+    return super.getYDataExtent(scaleByVisibleData)
   }
 
   private _emptyPath (): string {
