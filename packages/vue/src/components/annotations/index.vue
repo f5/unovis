@@ -1,14 +1,16 @@
-<script setup lang="ts" >
+<script lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
 import { Annotations, AnnotationsConfigInterface, AnnotationItem } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 import { annotationsAccessorKey } from '../../utils/context'
+interface Props extends /** @vue-ignore */ AnnotationsConfigInterface { }
+export const VisAnnotationsSelectors = Annotations.selectors
+</script>
 
+<script setup lang="ts" >
 const accessor = inject(annotationsAccessorKey)
 
-// data and required props 
-type Props = AnnotationsConfigInterface
 const props = defineProps<Props & { data?: null }>()
 
 
@@ -42,10 +44,6 @@ watch(config, (curr, prev) => {
 defineExpose({
   component
 })
-</script>
-
-<script lang="ts">
-export const VisAnnotationsSelectors = Annotations.selectors
 </script>
 
 <template>

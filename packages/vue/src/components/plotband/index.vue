@@ -1,15 +1,17 @@
-<script setup lang="ts" generic="Datum">
+<script lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
 import { Plotband, PlotbandConfigInterface } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 import { componentAccessorKey } from '../../utils/context'
+interface Props<Datum> extends /** @vue-ignore */ PlotbandConfigInterface<Datum> { }
+export const VisPlotbandSelectors = Plotband.selectors
+</script>
 
+<script setup lang="ts" generic="Datum">
 const accessor = inject(componentAccessorKey)
 
-// data and required props 
-type Props = PlotbandConfigInterface<Datum>
-const props = defineProps<Props & { data?: null }>()
+const props = defineProps<Props<Datum> & { data?: null }>()
 
 
 // config
@@ -42,10 +44,6 @@ watch(config, (curr, prev) => {
 defineExpose({
   component
 })
-</script>
-
-<script lang="ts">
-export const VisPlotbandSelectors = Plotband.selectors
 </script>
 
 <template>
