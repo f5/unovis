@@ -84,6 +84,23 @@ By default, setting the desired the range relies on moving both start and end _B
 `handleWidth` sets the width in pixels of the _Brush_'s handle:
 <XYWrapperWithInput {...brushProps()} property="handleWidth" inputType="range" defaultValue={20}/>
 
+### Brush Height Extend
+`brushHeightExtend` extends the brush height by the specified number of pixels. This can be useful when you have
+thick lines at the bottom of the chart and want to ensure they stay fully covered by the brush.
+<XYWrapperWithInput {...brushProps()}
+    components={[
+      axis('x'),
+      { name: 'Line',props: { x: d => d.x, y: (d, i) => i < 15 ? 0 : 15, lineWidth: 8}, key: "components" },
+      ]
+    }
+    selection={[3,6]}
+    containerProps={{ clipPathExtend: 4 }}
+    property="brushHeightExtend"
+    inputType="range"
+    inputProps={{ min: 0, max: 5 }}
+    defaultValue={4}
+/>
+
 ### Selection
 You can change the appearance of the selection by changing the corresponding CSS variables.
 For example, here's how you can modify the appearance of the selected and unselected areas:

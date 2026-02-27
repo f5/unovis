@@ -32,6 +32,9 @@ export interface BrushConfigInterface<Datum> extends Partial<XYComponentConfigIn
   handlePosition?: Arrangement.Inside | Arrangement.Outside | string;
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   selectionMinLength?: number;
+  /** Extend the brush height by the specified number of pixels. This can be convenient when you have thick lines
+   * at the bottom of the chart and you want to ensure they stay fully covered by the brush. Default: `0` */
+  brushHeightExtend?: number;
 }
 
 export const BrushDefaultConfig: BrushConfigInterface<unknown> = {
@@ -49,4 +52,5 @@ export const BrushDefaultConfig: BrushConfigInterface<unknown> = {
   draggable: false,
   handlePosition: Arrangement.Inside,
   selectionMinLength: undefined,
+  brushHeightExtend: 0,
 }
