@@ -858,22 +858,26 @@ export class TopoJSONMap<
         return hasLabel ? null : 'hidden'
       })
 
-    // Point Bottom Labels (hidden when point is inside expanded cluster)
-    const pointBottomLabelsMerged = pointsMerged.select(`.${s.pointBottomLabel}`)
-    pointBottomLabelsMerged
+    // Point & cluster bottom labels (hidden when point is inside expanded cluster)
+    const bottomLabelsMerged = pointsMerged.select(`.${s.pointBottomLabel}`)
+    bottomLabelsMerged
       .attr('visibility', d => (d as any).expandedClusterPoint ? 'hidden' : null)
       .text(d => {
-        const bottomLabelText = getString(d.properties as PointDatum, config.pointBottomLabel) ?? ''
+        const bottomLabelText = d.isCluster
+          ? (getString(d.properties as TopoJSONMapClusterDatum<PointDatum>, config.clusterBottomLabel) ?? '')
+          : (getString(d.properties as PointDatum, config.pointBottomLabel) ?? '')
         return trimStringMiddle(bottomLabelText, 15)
       })
       .attr('y', d => {
-        const pointRadius = getNumber(d.properties as PointDatum, config.pointRadius) / this._currentZoomLevel
-        return pointRadius + (20 / this._currentZoomLevel) // offset below the point, scaled with zoom
+        const radius = d.isCluster
+          ? (d.radius / this._currentZoomLevel)
+          : (getNumber(d.properties as PointDatum, config.pointRadius) / this._currentZoomLevel)
+        return radius + (10 / this._currentZoomLevel) // offset below the point/cluster, scaled with zoom
       })
       .attr('dy', '0.32em')
       .style('font-size', `calc(var(--vis-map-point-bottom-label-font-size, 10px) / ${this._currentZoomLevel})`)
 
-    smartTransition(pointBottomLabelsMerged, duration)
+    smartTransition(bottomLabelsMerged, duration)
       .style('opacity', d => (d as any).expandedClusterPoint ? 0 : 1)
 
     // Sort elements by z-index to ensure expanded cluster points appear above everything else
