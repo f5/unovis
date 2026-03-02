@@ -929,40 +929,43 @@ export class TopoJSONMap<
 
     this.fitView()
 
-    const featureCollection: ExtendedFeatureCollection = {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'MultiPoint',
-          coordinates: pointData.map(p => {
-            return [
-              getNumber(p, d => getNumber(d, config.longitude)),
-              getNumber(p, d => getNumber(d, config.latitude)),
-            ]
-          }),
-        },
-      }],
-    }
+    const coordinates = pointData.map(p => [
+      getNumber(p, d => getNumber(d, config.longitude)),
+      getNumber(p, d => getNumber(d, config.latitude)),
+    ] as [number, number])
 
-    this._projection.fitExtent([
-      [this._width * pad, this._height * pad],
-      [this._width * (1 - pad), this._height * (1 - pad)],
-    ], featureCollection)
+    if (coordinates.length === 1) {
+      // Single point has zero-area bounds and breaks fitExtent; center the projection on the point
+      this._projection.center(coordinates[0])
+      this._projection.translate([this._width / 2, this._height / 2])
+    } else {
+      const featureCollection: ExtendedFeatureCollection = {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'MultiPoint', coordinates },
+        }],
+      }
 
-    const maxScale = config.zoomExtent[1] * this._initialScale
-    const fittedScale = this._projection.scale()
+      this._projection.fitExtent([
+        [this._width * pad, this._height * pad],
+        [this._width * (1 - pad), this._height * (1 - pad)],
+      ], featureCollection)
 
-    if (fittedScale > maxScale) {
-      const fittedTranslate = this._projection.translate()
-      const scaleRatio = maxScale / fittedScale
+      const maxScale = config.zoomExtent[1] * this._initialScale
+      const fittedScale = this._projection.scale()
 
-      this._projection.scale(maxScale)
-      this._projection.translate([
-        this._width / 2 - (this._width / 2 - fittedTranslate[0]) * scaleRatio,
-        this._height / 2 - (this._height / 2 - fittedTranslate[1]) * scaleRatio,
-      ])
+      if (fittedScale > maxScale) {
+        const fittedTranslate = this._projection.translate()
+        const scaleRatio = maxScale / fittedScale
+
+        this._projection.scale(maxScale)
+        this._projection.translate([
+          this._width / 2 - (this._width / 2 - fittedTranslate[0]) * scaleRatio,
+          this._height / 2 - (this._height / 2 - fittedTranslate[1]) * scaleRatio,
+        ])
+      }
     }
 
     // If we don't update the center, the next zoom will be centered around the previous value
