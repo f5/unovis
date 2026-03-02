@@ -401,10 +401,10 @@ export const component = (): React.ReactNode => {
         pointShape={d => d.pointShape}
         pointCursor='pointer'
         pointBottomLabel={d => {
-          if (d?.cluster) {
-            return `${d?.clusterPoints?.length} points`
-          }
           return d.name ?? ''
+        }}
+        clusterBottomLabel={d => {
+          return `${d?.pointCount} cluster points`
         }}
         events={{
           [TopoJSONMap.selectors.background]: {
