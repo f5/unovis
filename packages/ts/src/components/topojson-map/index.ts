@@ -17,10 +17,10 @@ import { smartTransition } from 'utils/d3'
 import { getColor, hexToBrightness } from 'utils/color'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { trimStringMiddle } from 'utils/text'
-import Supercluster from 'supercluster'
-
 // Types
 import { MapLink } from 'types/map'
+import Supercluster from 'supercluster'
+
 
 // Local Types
 import {
@@ -425,7 +425,7 @@ export class TopoJSONMap<
     labelsMerged
       .text(d => d.labelText)
       .attr('transform', d => `translate(${d.centroid[0]},${d.centroid[1]})`)
-      .style('font-size', `calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel})`)
+      .style('font-size', `calc(var(${s.variables.mapPointLabelFontSize}) / ${this._currentZoomLevel})`)
       .style('text-anchor', 'middle')
       .style('dominant-baseline', 'middle')
 
@@ -462,7 +462,7 @@ export class TopoJSONMap<
         .attr('cx', pos[0])
         .attr('cy', pos[1])
         .attr('r', 0)
-        .style('fill', 'var(--vis-map-cluster-expanded-background-fill-color)')
+        .style('fill', `var(${s.variables.mapClusterExpandedBackgroundFillColor})`)
         .style('opacity', 0)
         .style('cursor', 'pointer')
         .on('click', () => {
@@ -803,7 +803,7 @@ export class TopoJSONMap<
       })
       .style('font-size', d => {
         if (config.pointLabelPosition === MapPointLabelPosition.Bottom) {
-          return `calc(var(--vis-map-point-label-font-size) / ${currentZoomLevel})`
+          return `calc(var(${s.variables.mapPointLabelFontSize}) / ${currentZoomLevel})`
         }
         const radius = d.isCluster
           ? (d.radius / currentZoomLevel)
@@ -838,7 +838,9 @@ export class TopoJSONMap<
       .style('fill', (d, i) => {
         if (d.donutData.length > 0) {
           // Cluster background is white, so use dark text
-          return d.isCluster ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
+          return d.isCluster
+            ? `var(${s.variables.mapPointLabelTextColorDark})`
+            : `var(${s.variables.mapPointLabelTextColorLight})`
         } else {
           if (config.pointLabelColor) {
             const labelColor = getColor(d.properties as PointDatum, config.pointLabelColor, i)
@@ -850,7 +852,9 @@ export class TopoJSONMap<
           if (!hex) return null
 
           const brightness = hexToBrightness(hex)
-          return brightness > config.pointLabelTextBrightnessRatio ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
+          return brightness > config.pointLabelTextBrightnessRatio
+            ? `var(${s.variables.mapPointLabelTextColorDark})`
+            : `var(${s.variables.mapPointLabelTextColorLight})`
         }
       })
       .style('opacity', 1)
@@ -880,7 +884,7 @@ export class TopoJSONMap<
         return radius + (10 / this._currentZoomLevel) // offset below the point/cluster, scaled with zoom
       })
       .attr('dy', '0.32em')
-      .style('font-size', `calc(var(--vis-map-point-bottom-label-font-size, 10px) / ${this._currentZoomLevel})`)
+      .style('font-size', `calc(var(${s.variables.mapPointBottomLabelFontSize}) / ${this._currentZoomLevel})`)
 
     smartTransition(bottomLabelsMerged, duration)
       .style('opacity', d => (d as any).expandedClusterPoint ? 0 : 1)

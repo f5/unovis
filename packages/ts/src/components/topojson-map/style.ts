@@ -1,10 +1,56 @@
-import { css, injectGlobal } from '@emotion/css'
+import { css } from '@emotion/css'
 import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
-export const pointPathRing = css`
-  label: point-path-ring;
-  fill: var(--vis-map-point-ring-fill-color);
-`
+const cssVarDefaults = {
+  // Base map colors
+  '--vis-map-feature-color': '#dce3eb',
+  '--vis-map-boundary-color': '#ffffff',
+
+  // Point label
+  '--vis-map-point-label-text-color-dark': '#5b5f6d',
+  '--vis-map-point-label-text-color-light': '#fff',
+  '--vis-map-point-label-font-family': undefined as undefined,
+  '--vis-map-point-label-font-weight': '600',
+  '--vis-map-point-label-font-size': '12px',
+
+  // Area label
+  '--vis-map-area-label-text-color': '#5b5f6d',
+  '--vis-map-area-label-font-weight': '600',
+  '--vis-map-area-label-font-size': '12px',
+  '--vis-map-area-label-font-family': undefined as undefined,
+
+  // Bottom label
+  '--vis-map-point-bottom-label-text-color': '#5b5f6d',
+  '--vis-map-point-bottom-label-font-size': '10px',
+
+  // Point styles
+  '--vis-map-point-default-fill-color': '#B9BEC3',
+  '--vis-map-point-ring-fill-color': '#ffffff',
+  '--vis-map-point-default-stroke-color': '#959da3',
+  '--vis-map-point-default-stroke-width': '0px',
+
+  // Cluster styles
+  '--vis-map-cluster-default-fill-color': '#fff',
+  '--vis-map-cluster-default-stroke-color': '#B9BEC3',
+  '--vis-map-cluster-default-stroke-width': '1.5px',
+  '--vis-map-cluster-donut-fill-color': '#959da3',
+  '--vis-map-cluster-expanded-background-fill-color': '#fff',
+
+  // Dark theme defaults (overridable by host)
+  '--vis-dark-map-feature-color': '#5b5f6d',
+  '--vis-dark-map-boundary-color': '#2a2a2a',
+  '--vis-dark-map-point-label-text-color-dark': '#fff',
+  '--vis-dark-map-point-label-text-color-light': '#5b5f6d',
+  '--vis-dark-map-area-label-text-color': '#fff',
+  '--vis-dark-map-point-bottom-label-text-color': '#fff',
+  '--vis-dark-map-point-default-fill-color': '#B9BEC3',
+  '--vis-dark-map-point-default-stroke-color': '#959da3',
+  '--vis-dark-map-point-ring-fill-color': '#5b5f6d',
+  '--vis-dark-map-cluster-default-fill-color': '#5b5f6d',
+  '--vis-dark-map-cluster-default-stroke-color': '#B9BEC3',
+  '--vis-dark-map-cluster-donut-fill-color': '#959da3',
+  '--vis-dark-map-cluster-expanded-background-fill-color': '#2a2a2a',
+} as const
 
 export const root = css`
   label: topojson-map-component;
@@ -18,66 +64,12 @@ export const root = css`
   }
 `
 
-export const variables = injectGlobal`
-  :root {
-    /* Read-only: Current zoom level. Do not override. */
-    /* --vis-map-current-zoom-level: 1; */
-    
-    --vis-map-feature-color: #dce3eb;
-    --vis-map-boundary-color: #ffffff;
+export const variables = getCssVarNames(cssVarDefaults)
+injectGlobalCssVariables(cssVarDefaults, root)
 
-    --vis-map-point-label-text-color-dark: #5b5f6d;
-    --vis-map-point-label-text-color-light: #fff;
-
-    // Undefined by default to allow proper fallback to var(--vis-font-family)
-    /* --vis-map-point-label-font-family: */
-    --vis-map-point-label-font-weight: 600;
-    --vis-map-point-label-font-size: 12px;
-
-    --vis-map-area-label-text-color: #5b5f6d;
-    --vis-map-area-label-font-weight: 600;
-    --vis-map-area-label-font-size: 12px;
-
-    --vis-map-point-default-fill-color: #B9BEC3;
-    --vis-map-point-ring-fill-color: #ffffff;
-    --vis-map-point-default-stroke-color: #959da3;
-    --vis-map-point-default-stroke-width: 0px;
-
-    --vis-map-cluster-default-fill-color: #fff;
-    --vis-map-cluster-default-stroke-color: #B9BEC3;
-    --vis-map-cluster-default-stroke-width: 1.5px;
-    --vis-map-cluster-donut-fill-color: #959da3;
-    --vis-map-cluster-expanded-background-fill-color: #fff;
-
-    /* Dark Theme */
-    --vis-dark-map-feature-color: #5b5f6d;
-    --vis-dark-map-boundary-color: #2a2a2a;
-    --vis-dark-map-point-label-text-color-dark: #fff;
-    --vis-dark-map-point-label-text-color-light:#5b5f6d;
-    --vis-dark-map-area-label-text-color: #fff;
-    --vis-dark-map-point-default-fill-color: #B9BEC3;
-    --vis-dark-map-point-default-stroke-color: #959da3;
-    --vis-dark-map-point-ring-fill-color: #5b5f6d;
-    --vis-dark-map-cluster-default-fill-color: #5b5f6d;
-    --vis-dark-map-cluster-default-stroke-color: #B9BEC3;
-    --vis-dark-map-cluster-donut-fill-color: #959da3;
-    --vis-dark-map-cluster-expanded-background-fill-color: #2a2a2a;
-  }
-
-  body.theme-dark ${`.${root}`} {
-    --vis-map-feature-color: var(--vis-dark-map-feature-color);
-    --vis-map-boundary-color: var(--vis-dark-map-boundary-color);
-    --vis-map-point-label-text-color-dark: var(--vis-dark-map-point-label-text-color-dark);
-    --vis-map-point-label-text-color-light: var(--vis-dark-map-point-label-text-color-light);
-    --vis-map-area-label-text-color: var(--vis-dark-map-area-label-text-color);
-    --vis-map-point-default-fill-color: var(--vis-dark-map-point-default-fill-color);
-    --vis-map-point-default-stroke-color: var(--vis-dark-map-point-default-stroke-color);
-    --vis-map-point-ring-fill-color: var(--vis-dark-map-point-ring-fill-color);
-    --vis-map-cluster-default-fill-color: var(--vis-dark-map-cluster-default-fill-color);
-    --vis-map-cluster-default-stroke-color: var(--vis-dark-map-cluster-default-stroke-color);
-    --vis-map-cluster-donut-fill-color: var(--vis-dark-map-cluster-donut-fill-color);
-    --vis-map-cluster-expanded-background-fill-color: var(--vis-dark-map-cluster-expanded-background-fill-color);
-  }
+export const pointPathRing = css`
+  label: point-path-ring;
+  fill: var(${variables.mapPointRingFillColor});
 `
 
 export const features = css`
@@ -86,8 +78,8 @@ export const features = css`
 
 export const feature = css`
   label: feature;
-  fill: var(--vis-map-feature-color);
-  stroke: var(--vis-map-boundary-color);
+  fill: var(${variables.mapFeatureColor});
+  stroke: var(${variables.mapBoundaryColor});
   stroke-opacity: 0.5;
 `
 
@@ -98,10 +90,10 @@ export const areaLabel = css`
   cursor: default;
   pointer-events: none;
 
-  font-size: var(--vis-map-area-label-font-size);
-  font-family: var(--vis-map-area-label-font-family, var(--vis-font-family));
-  font-weight: var(--vis-map-area-label-font-weight);
-  fill: var(--vis-map-area-label-text-color);
+  font-size: var(${variables.mapAreaLabelFontSize});
+  font-family: var(${variables.mapAreaLabelFontFamily}, var(--vis-font-family));
+  font-weight: var(${variables.mapAreaLabelFontWeight});
+  fill: var(${variables.mapAreaLabelTextColor});
 `
 
 export const background = css`
@@ -146,11 +138,11 @@ export const pointLabel = css`
   cursor: default;
   pointer-events:none;
 
-  font-size: var(--vis-map-point-label-font-size);
-  font-family: var(--vis-map-point-label-font-family, var(--vis-font-family));
-  font-weight: var(--vis-map-point-label-font-weight);
-  fill: var(--vis-map-point-default-fill-color);
-  stroke-width: var(--vis-map-point-default-stroke-width);
+  font-size: var(${variables.mapPointLabelFontSize});
+  font-family: var(${variables.mapPointLabelFontFamily}, var(--vis-font-family));
+  font-weight: var(${variables.mapPointLabelFontWeight});
+  fill: var(${variables.mapPointDefaultFillColor});
+  stroke-width: var(${variables.mapPointDefaultStrokeWidth});
 `
 
 export const pointBottomLabel = css`
@@ -160,10 +152,10 @@ export const pointBottomLabel = css`
   cursor: default;
   pointer-events:none;
 
-  font-size: var(--vis-map-point-bottom-label-font-size, 10px);
-  font-family: var(--vis-map-point-label-font-family, var(--vis-font-family));
+  font-size: var(${variables.mapPointBottomLabelFontSize});
+  font-family: var(${variables.mapPointLabelFontFamily}, var(--vis-font-family));
   font-weight: 600;
-  fill: var(--vis-map-point-bottom-label-text-color, #5b5f6d);
+  fill: var(${variables.mapPointBottomLabelTextColor});
 `
 
 // Style class exported for custom CSS targeting of donut chart paths
@@ -197,14 +189,14 @@ export const clusterDonut = css`
 
 export const clusterBackground = css`
   label: cluster-background;
-  fill: var(--vis-map-cluster-default-fill-color);
+  fill: var(${variables.mapClusterDefaultFillColor});
   stroke: none;
   pointer-events: all;
 `
 
 export const pointSelectionRing = css`
   label: point-selection-ring;
-  stroke: var(--vis-map-point-default-fill-color);
+  stroke: var(${variables.mapPointDefaultFillColor});
 `
 
 export const pointSelection = css`
