@@ -302,16 +302,21 @@ export class TopoJSONMap<
     if (this._firstRender) {
       // Rendering the map for the first time.
       this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
-      this._initialScale = this._projection.scale()
-      this._center = this._projection.translate()
 
       if (config.mapFitToPoints) {
+        // Re-fit projection to points instead of full topojson
         this._fitToPoints()
       }
 
+      // After initial fit (to features or points), treat the current projection
+      // scale as the baseline for zoom level 1.
+      this._initialScale = this._projection.scale()
+      this._center = this._projection.translate()
+
       const zoomExtent = config.zoomExtent
       this._zoomBehavior.scaleExtent([zoomExtent[0] * this._initialScale, zoomExtent[1] * this._initialScale])
-      this.setZoom(config.zoomFactor || 1)
+      this._currentZoomLevel = config.zoomFactor || 1
+      this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
 
       if (!config.disableZoom) {
         this.g.call(this._zoomBehavior)
@@ -927,8 +932,6 @@ export class TopoJSONMap<
     const pointData = points || datamodel.points
     if (pointData.length === 0) return
 
-    this.fitView()
-
     const coordinates = pointData.map(p => [
       getNumber(p, d => getNumber(d, config.longitude)),
       getNumber(p, d => getNumber(d, config.latitude)),
@@ -968,9 +971,7 @@ export class TopoJSONMap<
       }
     }
 
-    // If we don't update the center, the next zoom will be centered around the previous value
     this._center = this._projection.translate()
-    this._applyZoom()
   }
 
   _applyZoom (): void {
@@ -1119,15 +1120,29 @@ export class TopoJSONMap<
   }
 
   public fitView (): void {
-    this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
-    this._currentZoomLevel = (this._projection?.scale() / this._initialScale) || 1
-    // Set CSS custom property for zoom level
-    this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
-    this._center = this._projection.translate()
-    // We are using this._applyZoom() instead of directly calling this._render(config.zoomDuration) because
-    // we've to "attach" new transform to the map group element. Otherwise zoomBehavior  will not know
-    // that the zoom state has changed
-    this._applyZoom()
+    const { config } = this
+
+    if (config.mapFitToPoints) {
+      // When mapFitToPoints is enabled, fitView should refit the projection to the points
+      // and reset the zoom level relative to that fitted scale.
+      this._fitToPoints()
+      // Treat the newly fitted scale as the baseline and reset zoom to 1
+      this._initialScale = this._projection.scale()
+      this._currentZoomLevel = 1
+      this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', '1')
+      this._center = this._projection.translate()
+      this._applyZoom()
+    } else {
+      this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
+      this._currentZoomLevel = (this._projection?.scale() / this._initialScale) || 1
+      // Set CSS custom property for zoom level
+      this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
+      this._center = this._projection.translate()
+      // We are using this._applyZoom() instead of directly calling this._render(config.zoomDuration) because
+      // we've to "attach" new transform to the map group element. Otherwise zoomBehavior  will not know
+      // that the zoom state has changed
+      this._applyZoom()
+    }
   }
 
   private _initFlowFeatures (): void {
