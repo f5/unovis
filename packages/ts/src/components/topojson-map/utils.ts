@@ -240,7 +240,7 @@ export function getDonutData<PointDatum> (
     .map(key => {
       const keyTyped = key as keyof PointDatum
       const config = colorMap[keyTyped]
-      const value = Number((d as any)[key]) || 0
+      const value = Number((d as GenericDataRecord)[key]) || 0
       return {
         name: key,
         value,
@@ -250,7 +250,7 @@ export function getDonutData<PointDatum> (
     })
 }
 
-export function toGeoJSONPoint<D extends GenericDataRecord> (
+export function toGeoJSONPoint<D> (
   d: D,
   i: number,
   pointLatitude: NumericAccessor<D>,
@@ -272,7 +272,7 @@ export function toGeoJSONPoint<D extends GenericDataRecord> (
   }
 }
 
-export function calculateClusterIndex<D extends GenericDataRecord> (
+export function calculateClusterIndex<D> (
   data: D[],
   config: TopoJSONMapConfigInterface<any, D, any>,
   maxClusterZoomLevel = 24
@@ -286,8 +286,9 @@ export function calculateClusterIndex<D extends GenericDataRecord> (
       const shape = getString(d, pointShape)
 
       const clusterPoint = { shape } as Supercluster.AnyProps
+      const dRecord = d as GenericDataRecord
       for (const key of Object.keys(colorMap || {})) {
-        clusterPoint[key] = d[key] || 0
+        clusterPoint[key] = dRecord[key] || 0
       }
 
       return clusterPoint
@@ -303,7 +304,15 @@ export function calculateClusterIndex<D extends GenericDataRecord> (
   }).load(data.map((d, i) => toGeoJSONPoint(d, i, latitude, longitude)))
 }
 
-export function getPointRadius<D extends GenericDataRecord> (
+/** Supercluster cluster props use snake_case internally */
+/* eslint-disable @typescript-eslint/naming-convention -- matches supercluster API */
+interface SuperclusterClusterProps {
+  point_count?: number;
+  pointCount?: number;
+}
+/* eslint-enable @typescript-eslint/naming-convention */
+
+export function getPointRadius<D> (
   geoPoint: ClusterFeature<TopoJSONMapClusterDatum<D>> | PointFeature<TopoJSONMapPointDatum<D>>,
   pointRadius: NumericAccessor<D>,
   zoomLevel: number
@@ -314,15 +323,17 @@ export function getPointRadius<D extends GenericDataRecord> (
     : getNumber(geoPoint.properties as D, pointRadius)
 
   const isCluster = (geoPoint as ClusterFeature<TopoJSONMapClusterDatum<D>>).properties.cluster
+  const clusterProps = (isCluster ? geoPoint.properties : null) as SuperclusterClusterProps | null
+  const pointCount = clusterProps?.point_count ?? (geoPoint as ClusterFeature<TopoJSONMapClusterDatum<D>>).properties.pointCount ?? 1
   return (isCluster && isDynamic)
     ? Math.max(
-      Math.pow((geoPoint as any).properties.point_count || (geoPoint as ClusterFeature<TopoJSONMapClusterDatum<D>>).properties.pointCount || 1, 0.35) * radius,
+      Math.pow(pointCount, 0.35) * radius,
       radius * 1.1
     )
     : radius
 }
 
-export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
+export function geoJsonPointToScreenPoint<D> (
   geoPoint: ClusterFeature<TopoJSONMapClusterDatum<D>> | PointFeature<TopoJSONMapPointDatum<D>>,
   i: number,
   projection: (coordinates: [number, number]) => [number, number],
@@ -353,7 +364,7 @@ export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
     : (getString(geoPoint.properties as D, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle)
   const isRing = shape === TopoJSONMapPointShape.Ring
 
-  const donutData = getDonutData(geoPoint.properties, config.colorMap)
+  const donutData = getDonutData(geoPoint.properties as D, config.colorMap)
   const maxValue = max(donutData, d => d.value)
   const maxValueIndex = donutData.map(d => d.value).indexOf(maxValue || 0)
   const biggestDatum = donutData[maxValueIndex ?? 0]
@@ -382,7 +393,16 @@ export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
   return screenPoint
 }
 
-export function getClustersAndPoints<D extends GenericDataRecord> (
+/** Supercluster exposes snake_case on cluster properties */
+/* eslint-disable @typescript-eslint/naming-convention -- matches supercluster API */
+interface SuperclusterClusterProperties {
+  cluster_id?: number;
+  point_count?: number;
+  point_count_abbreviated?: string;
+}
+/* eslint-enable @typescript-eslint/naming-convention */
+
+export function getClustersAndPoints<D> (
   clusterIndex: Supercluster<D>,
   bounds: [number, number, number, number],
   zoom: number
@@ -393,8 +413,7 @@ export function getClustersAndPoints<D extends GenericDataRecord> (
     const point = p as ClusterFeature<TopoJSONMapClusterDatum<D>>
     const isCluster = point.properties.cluster
     if (isCluster) {
-      // Supercluster uses snake_case internally, so we need to map to camelCase
-      const superclusterProps = point.properties as any
+      const superclusterProps = point.properties as unknown as SuperclusterClusterProperties
       point.properties.clusterId = superclusterProps.cluster_id
       point.properties.pointCount = superclusterProps.point_count
       point.properties.pointCountAbbreviated = superclusterProps.point_count_abbreviated
@@ -409,7 +428,7 @@ export function getClustersAndPoints<D extends GenericDataRecord> (
 export const getNextZoomLevelOnClusterClick = (level: number, maxZoom = 12): number =>
   clamp(1 + level * 1.5, level, maxZoom)
 
-export function shouldClusterExpand<D extends GenericDataRecord> (
+export function shouldClusterExpand<D> (
   cluster: TopoJSONMapPoint<D>,
   zoomLevel: number,
   midLevel = 4,
@@ -426,11 +445,13 @@ export function shouldClusterExpand<D extends GenericDataRecord> (
         (zoomLevel >= midLevel && (clusterProps.pointCount < 20 || clusterExpansionZoomLevel >= maxClusterZoomLevel))
 }
 
-export function getClusterRadius<D extends GenericDataRecord> (expandedCluster: { points: any[]; cluster: TopoJSONMapPoint<D> }): number {
+export interface PackedPoint { dx: number; dy: number; packedRadius: number }
+
+export function getClusterRadius<D> (expandedCluster: { points: PackedPoint[]; cluster: TopoJSONMapPoint<D> }): number {
   const { points } = expandedCluster
-  const minX = min<number>(points.map((d: any) => d.dx - d.packedRadius))
-  const maxX = max<number>(points.map((d: any) => d.dx + d.packedRadius))
-  const minY = min<number>(points.map((d: any) => d.dy - d.packedRadius))
-  const maxY = max<number>(points.map((d: any) => d.dy + d.packedRadius))
+  const minX = min(points.map(d => d.dx - d.packedRadius))
+  const maxX = max(points.map(d => d.dx + d.packedRadius))
+  const minY = min(points.map(d => d.dy - d.packedRadius))
+  const maxY = max(points.map(d => d.dy + d.packedRadius))
   return Math.sqrt((maxX - minX) ** 2 + (maxY - minY) ** 2) * 0.5
 }

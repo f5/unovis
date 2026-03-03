@@ -88,6 +88,16 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   /** Initial zoom level. Default: `undefined` */
   @Input() zoomFactor?: number
 
+  /** Zoom to a specific location. When set, the map will zoom to the specified coordinates at the given zoom level.
+   * Format: `{ coordinates: [longitude, latitude], zoomLevel: number, expandCluster?: boolean }`
+   * When `expandCluster` is true, the cluster at or nearest to the coordinates will be expanded.
+   * Default: `undefined` */
+  @Input() zoomToLocation?: {
+    coordinates: [number, number];
+    zoomLevel: number;
+    expandCluster?: boolean;
+  }
+
   /** Disable pan / zoom interactions. Default: `false` */
   @Input() disableZoom?: boolean
 
@@ -294,8 +304,8 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   }
 
   private getConfig (): TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {
-    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, enableFlowAnimation, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave, areaId, areaColor, areaCursor, areaLabel, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelColor, pointLabelPosition, pointBottomLabel, pointLabelTextBrightnessRatio, pointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, clustering, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold, colorMap } = this
-    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, enableFlowAnimation, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave, areaId, areaColor, areaCursor, areaLabel, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelColor, pointLabelPosition, pointBottomLabel, pointLabelTextBrightnessRatio, pointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, clustering, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold, colorMap }
+    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, zoomToLocation, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, enableFlowAnimation, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave, areaId, areaColor, areaCursor, areaLabel, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelColor, pointLabelPosition, pointBottomLabel, pointLabelTextBrightnessRatio, pointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, clustering, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold, colorMap } = this
+    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, zoomToLocation, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, enableFlowAnimation, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave, areaId, areaColor, areaCursor, areaLabel, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelColor, pointLabelPosition, pointBottomLabel, pointLabelTextBrightnessRatio, pointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, clustering, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold, colorMap }
     const keys = Object.keys(config) as (keyof TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
