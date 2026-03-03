@@ -19,8 +19,8 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { trimStringMiddle } from 'utils/text'
 // Types
 import { MapLink } from 'types/map'
-import Supercluster from 'supercluster'
-
+import { GenericDataRecord } from 'types/data'
+import Supercluster, { PointFeature, ClusterFeature } from 'supercluster'
 
 // Local Types
 import {
@@ -51,10 +51,14 @@ import {
   calculateClusterIndex,
   getClustersAndPoints,
   geoJsonPointToScreenPoint,
-  getClusterRadius,
   getNextZoomLevelOnClusterClick,
+  getClusterRadius,
+  PackedPoint,
 } from './utils'
 import { updateDonut } from './modules/donut'
+import { renderBackground } from './modules/background'
+import { updateSelectionRing } from './modules/selectionRing'
+import { initFlowFeatures, updateFlowParticles, FlowInitContext, FlowUpdateContext } from './modules/flow'
 
 // Styles
 import * as s from './style'
@@ -66,8 +70,8 @@ const SUPERCLUSTER_MAX_ZOOM = 22
 
 export class TopoJSONMap<
   AreaDatum,
-  PointDatum = unknown,
-  LinkDatum = unknown,
+  PointDatum = GenericDataRecord,
+  LinkDatum = GenericDataRecord,
 > extends ComponentCore<
   MapData<AreaDatum, PointDatum, LinkDatum>,
   TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>
@@ -165,7 +169,7 @@ export class TopoJSONMap<
       })
       const zoomExtent = this.config.zoomExtent
       const maxClusterZoomLevel = Array.isArray(zoomExtent) ? Math.min(zoomExtent[1], SUPERCLUSTER_MAX_ZOOM) : 16
-      this._clusterIndex = calculateClusterIndex(dataValid as any, this.config as any, maxClusterZoomLevel) as any
+      this._clusterIndex = calculateClusterIndex(dataValid, this.config, maxClusterZoomLevel)
     } else {
       this._clusterIndex = null
     }
@@ -251,15 +255,10 @@ export class TopoJSONMap<
   }
 
   _renderBackground (): void {
-    this._backgroundRect
-      .attr('width', '100%')
-      .attr('height', '100%')
-      .attr('transform', `translate(${-this.bleed.left}, ${-this.bleed.top})`)
-      .style('cursor', 'default')
-      .on('click', () => {
-        // Collapse expanded cluster when clicking on background
-        this._collapseExpandedCluster()
-      })
+    renderBackground(this._backgroundRect, {
+      bleed: { left: this.bleed.left, top: this.bleed.top },
+      onClick: () => this._collapseExpandedCluster(),
+    })
   }
 
   _renderGroups (duration: number): void {
@@ -452,7 +451,7 @@ export class TopoJSONMap<
       const cluster = this._expandedCluster.cluster
       const pos = this._projection(cluster.geometry.coordinates as [number, number])
 
-      const backgroundRadius = getClusterRadius(this._expandedCluster as any)
+      const backgroundRadius = getClusterRadius(this._expandedCluster as { points: PackedPoint[]; cluster: TopoJSONMapPoint<PointDatum> })
       // Divide by zoom level since the group transform will scale it back up
       const adjustedRadius = backgroundRadius / currentZoomLevel
 
@@ -551,7 +550,7 @@ export class TopoJSONMap<
     // Supercluster expects zoom 0-22; beyond that, all points are unclustered anyway.
     const mapZoom = this._currentZoomLevel || 1
     const zoom = Math.max(0, Math.min(Math.round(mapZoom), SUPERCLUSTER_MAX_ZOOM))
-    let geoJsonPoints = getClustersAndPoints(this._clusterIndex as any, bounds, zoom)
+    let geoJsonPoints = getClustersAndPoints(this._clusterIndex!, bounds, zoom)
 
     // Handle expanded cluster points - replace the expanded cluster with individual points
     if (this._expandedCluster) {
@@ -594,8 +593,14 @@ export class TopoJSONMap<
     }
 
     return geoJsonPoints.map((geoPoint, i) =>
-      geoJsonPointToScreenPoint(geoPoint as any, i, this._projection, this.config as any, this._currentZoomLevel || 1)
-    ) as any
+      geoJsonPointToScreenPoint(
+        geoPoint as ClusterFeature<TopoJSONMapClusterDatum<PointDatum>> | PointFeature<TopoJSONMapPointDatum<PointDatum>>,
+        i,
+        this._projection,
+        this.config,
+        this._currentZoomLevel || 1
+      )
+    )
   }
 
   _renderPoints (duration: number): void {
@@ -905,30 +910,14 @@ export class TopoJSONMap<
     this._pointsGroup.selectAll(`.${s.pointBottomLabel}`).style('display', (config.heatmapMode && (this._currentZoomLevel < config.heatmapModeZoomLevelThreshold)) ? 'none' : null)
 
     // Update selection ring
-    const pointSelection = this._pointSelectionRing.select(`.${s.pointSelection}`)
-    if (this._selectedPoint) {
-      const selectedPointId = getString(this._selectedPoint.properties as PointDatum, config.pointId)
-      const foundPoint = pointData.find(d =>
-        this._selectedPoint.isCluster
-          ? (d.id === this._selectedPoint.id)
-          : (selectedPointId && getString(d.properties as PointDatum, config.pointId) === selectedPointId)
-      )
-      const pos = this._projection((foundPoint ?? this._selectedPoint).geometry.coordinates as [number, number])
-      if (pos) {
-        const dx = ((foundPoint as any)?.dx || 0) / currentZoomLevel
-        const dy = ((foundPoint as any)?.dy || 0) / currentZoomLevel
-        this._pointSelectionRing.attr('transform', `translate(${pos[0] + dx},${pos[1] + dy})`)
-      }
-      pointSelection
-        .classed('active', Boolean(foundPoint))
-        .attr('d', foundPoint?.path || null)
-        .style('fill', 'transparent')
-        .style('stroke-width', 1)
-        .style('stroke', (foundPoint || this._selectedPoint)?.color)
-        .style('transform', `scale(${1.25 / currentZoomLevel})`)
-    } else {
-      pointSelection.classed('active', false)
-    }
+    updateSelectionRing<PointDatum>(
+      this._pointSelectionRing,
+      this._selectedPoint,
+      pointData,
+      this.config,
+      this._projection,
+      currentZoomLevel
+    )
   }
 
   _fitToPoints (points?: PointDatum[], pad = 0.1): void {
@@ -1150,103 +1139,9 @@ export class TopoJSONMap<
   }
 
   private _initFlowFeatures (): void {
-    const { config, datamodel } = this
-    // Use raw links data instead of processed links to avoid point lookup issues for flows
-    const rawLinks = datamodel.data?.links || []
-
-    // Clear existing flow data
-    this._flowParticles = []
-    this._sourcePoints = []
-
-    if (!rawLinks || rawLinks.length === 0) return
-
-    // Create source points and flow particles for each link
-    rawLinks.forEach((link, i) => {
-      // Try to get coordinates from flow-specific accessors first, then fall back to link endpoints
-      let sourceLon: number, sourceLat: number, targetLon: number, targetLat: number
-
-      if (config.sourceLongitude && config.sourceLatitude) {
-        sourceLon = getNumber(link, config.sourceLongitude)
-        sourceLat = getNumber(link, config.sourceLatitude)
-      } else {
-        // Fall back to using linkSource point coordinates
-        const sourcePoint = config.linkSource?.(link)
-        if (typeof sourcePoint === 'object' && sourcePoint !== null) {
-          sourceLon = getNumber(sourcePoint as PointDatum, config.longitude)
-          sourceLat = getNumber(sourcePoint as PointDatum, config.latitude)
-        } else {
-          return // Skip if can't resolve source coordinates
-        }
-      }
-
-      if (config.targetLongitude && config.targetLatitude) {
-        targetLon = getNumber(link, config.targetLongitude)
-        targetLat = getNumber(link, config.targetLatitude)
-      } else {
-        // Fall back to using linkTarget point coordinates
-        const targetPoint = config.linkTarget?.(link)
-        if (typeof targetPoint === 'object' && targetPoint !== null) {
-          targetLon = getNumber(targetPoint as PointDatum, config.longitude)
-          targetLat = getNumber(targetPoint as PointDatum, config.latitude)
-        } else {
-          return // Skip if can't resolve target coordinates
-        }
-      }
-
-      if (!isNumber(sourceLon) || !isNumber(sourceLat) || !isNumber(targetLon) || !isNumber(targetLat)) {
-        return
-      }
-      // Create source point
-      const sourcePos = this._projection([sourceLon, sourceLat])
-      if (sourcePos) {
-        const sourcePoint = {
-          lat: sourceLat,
-          lon: sourceLon,
-          x: sourcePos[0],
-          y: sourcePos[1],
-          radius: getNumber(link, config.sourcePointRadius),
-          color: getColor(link, config.sourcePointColor, i),
-          flowData: link,
-        }
-        this._sourcePoints.push(sourcePoint)
-      }
-
-      // Use the same arc as _renderLinks for flow animation
-      const sourceProj = this._projection([sourceLon, sourceLat])
-      const targetProj = this._projection([targetLon, targetLat])
-      if (!sourceProj || !targetProj) return
-
-      // Generate SVG arc path string using the same arc() function
-      const arcPath = arc(sourceProj, targetProj)
-      // Create a temporary SVG path element for sampling
-      const tempPath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-      tempPath.setAttribute('d', arcPath)
-      const pathLength = tempPath.getTotalLength()
-
-      const dist = Math.sqrt((targetLat - sourceLat) ** 2 + (targetLon - sourceLon) ** 2)
-      const numParticles = Math.max(1, Math.round(dist * getNumber(link, config.flowParticleDensity)))
-      const velocity = getNumber(link, config.flowParticleSpeed)
-      const radius = getNumber(link, config.flowParticleRadius)
-      const color = getColor(link, config.flowParticleColor, i)
-
-      for (let j = 0; j < numParticles; j += 1) {
-        const progress = j / numParticles
-        const pt = tempPath.getPointAtLength(progress * pathLength)
-        const particle: FlowParticle = {
-          x: pt.x,
-          y: pt.y,
-          velocity,
-          radius,
-          color,
-          progress,
-          arcPath,
-          pathLength,
-          id: `${getString(link, config.linkId, i) || i}-${j}`,
-          flowData: undefined,
-        }
-        this._flowParticles.push(particle)
-      }
-    })
+    initFlowFeatures<PointDatum, LinkDatum>(
+      this as unknown as FlowInitContext<PointDatum, LinkDatum>
+    )
   }
 
   private _renderSourcePoints (duration: number): void {
@@ -1328,31 +1223,11 @@ export class TopoJSONMap<
   }
 
   private _updateFlowParticles (): void {
-    if (this._flowParticles.length === 0) return
-
-    const zoomLevel = this._currentZoomLevel || 1
-
-    this._flowParticles.forEach(particle => {
-      // Move particle along the arc path using progress
-      particle.progress += particle.velocity * 0.01
-      if (particle.progress > 1) particle.progress = 0
-
-      // Use the stored SVG path and pathLength
-      if (particle.arcPath && typeof particle.pathLength === 'number') {
-        const tempPath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        tempPath.setAttribute('d', particle.arcPath)
-        const pt = tempPath.getPointAtLength(particle.progress * particle.pathLength)
-        particle.x = pt.x
-        particle.y = pt.y
-      }
-    })
-
-    // Update DOM elements directly without data rebinding (for performance)
-    this._flowParticlesGroup
-      .selectAll<SVGCircleElement, any>(`.${s.flowParticle}`)
-      .attr('cx', (d, i) => this._flowParticles[i]?.x || 0)
-      .attr('cy', (d, i) => this._flowParticles[i]?.y || 0)
-      .attr('r', (d, i) => (this._flowParticles[i]?.radius || 1) / zoomLevel)
+    updateFlowParticles({
+      _flowParticles: this._flowParticles as FlowParticle[],
+      _currentZoomLevel: this._currentZoomLevel,
+      _flowParticlesGroup: this._flowParticlesGroup,
+    } as FlowUpdateContext)
   }
 
   private _onPointClick (d: TopoJSONMapPoint<PointDatum>, event: MouseEvent): void {
@@ -1437,7 +1312,7 @@ export class TopoJSONMap<
       return {
         x: null as number | null,
         y: null as number | null,
-        r: getPointRadius(point as any, config.pointRadius as any, packingZoomLevel) + padding,
+        r: getPointRadius(point as PointFeature<TopoJSONMapPointDatum<PointDatum>>, config.pointRadius, packingZoomLevel) + padding,
       }
     })
     packSiblings(packPoints)
@@ -1450,7 +1325,7 @@ export class TopoJSONMap<
       // Don't show pie charts for expanded cluster points (similar to Leaflet map)
       const donutData: TopoJSONMapPieDatum[] = []
       // Use each point's own color (from colorMap or pointColor) so shapes keep their correct color when expanded
-      const explicitPointColor = getColor(originalData, config.pointColor as any)
+      const explicitPointColor = getColor(originalData, config.pointColor)
       const pointDonutData = getDonutData(originalData, config.colorMap)
       const maxVal = pointDonutData.length ? Math.max(...pointDonutData.map(d => d.value)) : 0
       const biggestDatum = pointDonutData.find(d => d.value === maxVal) || pointDonutData[0]
