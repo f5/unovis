@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { VisSingleContainer, VisTopoJSONMap } from '@unovis/react'
+import React, { useEffect, useState, useRef } from 'react'
+import { VisSingleContainer, VisTopoJSONMap, VisTopoJSONMapRef } from '@unovis/react'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
 
 export const title = 'MapFitToPoints'
@@ -18,12 +18,18 @@ export const component = (): React.ReactNode => {
   ]
   const [data, setData] = useState<{ points: typeof points[0][] }>({ points: [] })
   const [numPoints, setNumPoints] = useState(5)
+  const mapRef = useRef<VisTopoJSONMapRef<any, typeof points[0], any> | null>(null)
+
+  const onZoomIn = (): void => { mapRef.current?.component?.zoomIn(1) }
+  const onZoomOut = (): void => { mapRef.current?.component?.zoomOut(1) }
+  const onFit = (): void => { mapRef.current?.component?.fitView() }
+
   useEffect(() => {
     setData({ points: points.slice(0, numPoints) })
   }, [numPoints])
 
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
       <label>
         <input
           type='range'
@@ -37,6 +43,7 @@ export const component = (): React.ReactNode => {
       </label>
       <VisSingleContainer data={data} height={'90vh'}>
         <VisTopoJSONMap
+          ref={mapRef}
           topojson={WorldMapTopoJSON}
           duration={0}
           mapFitToPoints={true}
@@ -44,6 +51,11 @@ export const component = (): React.ReactNode => {
           pointLabel={d => d.id}
         />
       </VisSingleContainer>
+      <div style={{ position: 'absolute', top: 32, right: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <button onClick={onZoomIn}>Zoom In</button>
+        <button onClick={onZoomOut}>Zoom Out</button>
+        <button onClick={onFit}>Fit View</button>
+      </div>
     </div>
   )
 }
