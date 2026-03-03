@@ -6,7 +6,6 @@ import { geoPath, GeoProjection, ExtendedFeatureCollection } from 'd3-geo'
 import { color } from 'd3-color'
 import { packSiblings } from 'd3-hierarchy'
 import { feature } from 'topojson-client'
-import Supercluster from 'supercluster'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -18,6 +17,7 @@ import { smartTransition } from 'utils/d3'
 import { getColor, hexToBrightness } from 'utils/color'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { trimStringMiddle } from 'utils/text'
+import Supercluster from 'supercluster'
 
 // Types
 import { MapLink } from 'types/map'
