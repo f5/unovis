@@ -254,7 +254,7 @@ export const component = (): React.ReactNode => {
       <VisSingleContainer data={data} height={'90vh'}>
         <VisTopoJSONMap
           topojson={WorldMapTopoJSON}
-          duration={0}
+          duration={600}
           areaLabel={(d: AreaDatum) => d?.name}
           events={{
             [TopoJSONMap.selectors.feature]: {
