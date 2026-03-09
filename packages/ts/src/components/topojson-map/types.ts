@@ -1,4 +1,4 @@
-import { Feature, Geometry } from 'geojson'
+import { Feature, Geometry, Point } from 'geojson'
 import Supercluster from 'supercluster'
 import {
   GeoProjection,
@@ -116,6 +116,18 @@ export type TopoJSONMapPoint<D> = {
   clusterIndex?: Supercluster<D>;
   _zIndex: number;
 }
+
+export type ExpandedClusterPoint<PointDatum> = TopoJSONMapPoint<PointDatum> & {
+  expandedClusterPoint?: TopoJSONMapPoint<PointDatum>;
+  clusterColor?: string;
+  dx?: number;
+  dy?: number;
+  packedRadius?: number;
+}
+
+export type CollapsedClusterFeature<PointDatum> = Feature<Point, TopoJSONMapClusterDatum<PointDatum>>
+
+export type PointOrClusterProperties<PointDatum> = PointDatum | TopoJSONMapClusterDatum<PointDatum>
 
 export enum MapProjectionKind {
   // Projections form `d3-geo`

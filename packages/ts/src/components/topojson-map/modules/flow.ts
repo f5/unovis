@@ -12,15 +12,15 @@ import { arc } from '../utils'
 
 import * as s from '../style'
 
-export interface FlowInitContext<PointDatum, LinkDatum> {
-  config: TopoJSONMapConfigInterface<any, PointDatum, LinkDatum>;
-  datamodel: MapGraphDataModel<any, PointDatum, LinkDatum>;
+export interface FlowInitContext<AreaDatum, PointDatum, LinkDatum> {
+  config: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>;
+  datamodel: MapGraphDataModel<AreaDatum, PointDatum, LinkDatum>;
   _projection: GeoProjection;
   _flowParticles: FlowParticle[];
   _sourcePoints: Array<{ x: number; y: number; radius: number; color: string; flowData: LinkDatum }>;
 }
 
-export function initFlowFeatures<PointDatum, LinkDatum> (ctx: FlowInitContext<PointDatum, LinkDatum>): void {
+export function initFlowFeatures<AreaDatum, PointDatum, LinkDatum> (ctx: FlowInitContext<AreaDatum, PointDatum, LinkDatum>): void {
   const { config, datamodel } = ctx
   // Use raw links data instead of processed links to avoid point lookup issues for flows
   const rawLinks = datamodel.data?.links || []

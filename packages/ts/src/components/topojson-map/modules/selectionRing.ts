@@ -9,11 +9,11 @@ import { TopoJSONMapConfigInterface } from '../config'
 // Styles
 import * as s from '../style'
 
-export function updateSelectionRing<PointDatum> (
+export function updateSelectionRing<AreaDatum, PointDatum, LinkDatum> (
   pointSelectionRing: Selection<SVGGElement, unknown, null, undefined>,
   selectedPoint: TopoJSONMapPoint<PointDatum> | null,
   pointData: TopoJSONMapPoint<PointDatum>[],
-  config: TopoJSONMapConfigInterface<any, PointDatum, any>,
+  config: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>,
   projection: GeoProjection,
   currentZoomLevel: number
 ): void {
