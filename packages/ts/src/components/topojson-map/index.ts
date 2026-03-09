@@ -21,6 +21,7 @@ import { trimStringMiddle } from 'utils/text'
 import { MapLink } from 'types/map'
 import { GenericDataRecord } from 'types/data'
 import Supercluster, { PointFeature, ClusterFeature } from 'supercluster'
+import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
 import {
@@ -34,6 +35,9 @@ import {
   TopoJSONMapClusterDatum,
   TopoJSONMapPointDatum,
   TopoJSONMapPieDatum,
+  ExpandedClusterPoint,
+  CollapsedClusterFeature,
+  PointOrClusterProperties,
 } from './types'
 
 // Config
@@ -99,10 +103,10 @@ export class TopoJSONMap<
   private _clusterIndex: Supercluster<PointDatum> | null = null
   private _expandedCluster: {
     cluster: TopoJSONMapPoint<PointDatum>;
-    points: any[];
+    points: ExpandedClusterPoint<PointDatum>[];
   } | null = null
 
-  private _collapsedCluster: any = null
+  private _collapsedCluster: CollapsedClusterFeature<PointDatum> | null = null
   private _collapsedClusterPointIds: Set<string> | null = null
   private _prevZoomToLocation: { coordinates: [number, number]; zoomLevel: number; expandCluster?: boolean } | undefined = undefined
 
@@ -122,8 +126,8 @@ export class TopoJSONMap<
   private _selectedPoint: TopoJSONMapPoint<PointDatum> | null = null
   private _flowParticlesGroup = this.g.append('g').attr('class', s.flowParticles)
   private _sourcePointsGroup = this.g.append('g').attr('class', s.sourcePoints)
-  private _flowParticles: any[] = []
-  private _sourcePoints: any[] = []
+  private _flowParticles: FlowParticle[] = []
+  private _sourcePoints: { x: number; y: number; radius: number; color: string; flowData: LinkDatum }[] = []
   private _animationId: number | null = null
 
   events = {
@@ -497,15 +501,15 @@ export class TopoJSONMap<
     edges.exit().remove()
   }
 
-  private _shouldFilterPointOrCluster (point: any, pointIdsToFilter: Set<string>): boolean {
+  private _shouldFilterPointOrCluster (point: TopoJSONMapPoint<PointDatum>, pointIdsToFilter: Set<string>): boolean {
     const { config } = this
 
     // If it's a cluster (potential subcluster), check if any of its leaves should be filtered
-    if (point.properties.cluster) {
-      const clusterId = point.properties.clusterId
+    if ((point.properties as TopoJSONMapClusterDatum<PointDatum>).cluster) {
+      const clusterId = (point.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId
       const clusterLeaves = this._clusterIndex.getLeaves(clusterId, Infinity)
       // Filter out this subcluster if any of its leaves are in the filter set
-      return clusterLeaves.some((leaf: any) =>
+      return clusterLeaves.some((leaf: PointFeature<PointDatum>) =>
         pointIdsToFilter.has(getString(leaf.properties as PointDatum, config.pointId))
       )
     }
@@ -554,30 +558,41 @@ export class TopoJSONMap<
 
     // Handle expanded cluster points - replace the expanded cluster with individual points
     if (this._expandedCluster) {
-      const expandedClusterId = (this._expandedCluster.cluster.properties as any).clusterId
+      const expandedClusterId = (this._expandedCluster.cluster.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId
 
       // Remove the expanded cluster if it still exists at this zoom level
-      geoJsonPoints = geoJsonPoints.filter((c: any) => {
-        const isExpandedCluster = c.properties.cluster && c.properties.clusterId === expandedClusterId
+      geoJsonPoints = geoJsonPoints.filter((c) => {
+        const props = c.properties as TopoJSONMapClusterDatum<PointDatum>
+        const isExpandedCluster = props.cluster && props.clusterId === expandedClusterId
         return !isExpandedCluster
       })
 
       // Remove any individual points and subclusters that are part of the expanded cluster to avoid duplicates
-      const expandedPointIds = new Set(this._expandedCluster.points.map((p: any) => p.id))
-      geoJsonPoints = geoJsonPoints.filter((c: any) => !this._shouldFilterPointOrCluster(c, expandedPointIds))
+      const expandedPointIds = new Set(this._expandedCluster.points.map(p => p.id.toString()))
+      geoJsonPoints = geoJsonPoints.filter(c => !this._shouldFilterPointOrCluster(
+        geoJsonPointToScreenPoint(
+          c as ClusterFeature<TopoJSONMapClusterDatum<PointDatum>> | PointFeature<TopoJSONMapPointDatum<PointDatum>>,
+          0,
+          this._projection,
+          this.config,
+          this._currentZoomLevel || 1
+        ),
+        expandedPointIds
+      ))
 
       // Add points from the expanded cluster
-      geoJsonPoints = geoJsonPoints.concat(this._expandedCluster.points as any)
+      geoJsonPoints = geoJsonPoints.concat(this._expandedCluster.points as unknown as Array<ClusterFeature<TopoJSONMapClusterDatum<PointDatum>> | PointFeature<PointDatum>>)
     }
 
     if (this._collapsedCluster) {
       // When collapsed, restore the original cluster point instead of relying on clustering algorithm
-      const collapsedClusterId = (this._collapsedCluster.properties as any).clusterId
+      const collapsedClusterId = this._collapsedCluster.properties.clusterId
 
       // Check if the clustering algorithm has recreated a similar cluster at this zoom level
-      const hasNaturalCluster = geoJsonPoints.some((c: any) =>
-        c.properties.cluster && c.properties.clusterId === collapsedClusterId
-      )
+      const hasNaturalCluster = geoJsonPoints.some(c => {
+        const props = c.properties as TopoJSONMapClusterDatum<PointDatum>
+        return props.cluster && props.clusterId === collapsedClusterId
+      })
 
       if (hasNaturalCluster) {
         // Natural cluster exists, we can safely clear the collapsed cluster
@@ -585,10 +600,19 @@ export class TopoJSONMap<
         this._collapsedClusterPointIds = null
       } else {
         // Remove any individual points and subclusters that were part of the collapsed cluster
-        geoJsonPoints = geoJsonPoints.filter((c: any) => !this._shouldFilterPointOrCluster(c, this._collapsedClusterPointIds))
+        geoJsonPoints = geoJsonPoints.filter(c => !this._shouldFilterPointOrCluster(
+          geoJsonPointToScreenPoint(
+            c as ClusterFeature<TopoJSONMapClusterDatum<PointDatum>> | PointFeature<TopoJSONMapPointDatum<PointDatum>>,
+            0,
+            this._projection,
+            this.config,
+            this._currentZoomLevel || 1
+          ),
+          this._collapsedClusterPointIds
+        ))
 
         // Add the original cluster back
-        geoJsonPoints.push(this._collapsedCluster as any)
+        geoJsonPoints.push(this._collapsedCluster as unknown as ClusterFeature<TopoJSONMapClusterDatum<PointDatum>>)
       }
     }
 
@@ -611,7 +635,8 @@ export class TopoJSONMap<
     // Set z-index for expanded cluster points to ensure proper layering
     if (this._expandedCluster && config.clusterBackground) {
       pointData.forEach((d) => {
-        d._zIndex = (d as any).expandedClusterPoint ? 2 : 0
+        const expandedPoint = d as ExpandedClusterPoint<PointDatum>
+        expandedPoint._zIndex = expandedPoint.expandedClusterPoint ? 2 : 0
       })
     }
 
@@ -624,10 +649,10 @@ export class TopoJSONMap<
     const pointsEnter = points.enter().append('g').attr('class', s.point)
       .attr('transform', d => {
         const pos = this._projection(d.geometry.coordinates as [number, number])
-        const expandedPoint = d as any
+        const expandedPoint = d as ExpandedClusterPoint<PointDatum>
         // Divide by zoom level to compensate for the group's zoom transform
-        const dx = (expandedPoint.dx || 0) / currentZoomLevel
-        const dy = (expandedPoint.dy || 0) / currentZoomLevel
+        const dx = (expandedPoint.dx ?? 0) / currentZoomLevel
+        const dy = (expandedPoint.dy ?? 0) / currentZoomLevel
         return `translate(${pos[0] + dx},${pos[1] + dy})`
       })
       .style('opacity', 1e-6)
@@ -690,14 +715,14 @@ export class TopoJSONMap<
     smartTransition(pointsMerged, duration)
       .attr('transform', d => {
         const pos = this._projection(d.geometry.coordinates as [number, number])
-        const expandedPoint = d as any
+        const expandedPoint = d as ExpandedClusterPoint<PointDatum>
         // Divide by zoom level to compensate for the group's zoom transform
-        const dx = (expandedPoint.dx || 0) / currentZoomLevel
-        const dy = (expandedPoint.dy || 0) / currentZoomLevel
+        const dx = (expandedPoint.dx ?? 0) / currentZoomLevel
+        const dy = (expandedPoint.dy ?? 0) / currentZoomLevel
         return `translate(${pos[0] + dx},${pos[1] + dy})`
       })
       .style('cursor', d => {
-        const expandedPoint = d as any
+        const expandedPoint = d as ExpandedClusterPoint<PointDatum>
         // Expanded cluster points use default cursor (clicking them does nothing)
         if (expandedPoint.expandedClusterPoint) {
           return getString(expandedPoint.properties as PointDatum, config.pointCursor) ?? 'default'
@@ -758,7 +783,7 @@ export class TopoJSONMap<
         const shape = pointShape as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
         const isRing = shape === TopoJSONMapPointShape.Ring
         const hasDonut = d.donutData.length > 0
-        const expandedPoint = d as any
+        const expandedPoint = d as ExpandedClusterPoint<PointDatum>
 
         // For expanded cluster points, use the preserved cluster color
         if (expandedPoint.expandedClusterPoint) {
@@ -771,7 +796,7 @@ export class TopoJSONMap<
         return d.color
       })
       .style('stroke', d => {
-        const expandedPoint = d as any
+        const expandedPoint = d as ExpandedClusterPoint<PointDatum>
         // For expanded cluster points, use the preserved cluster color
         if (expandedPoint.expandedClusterPoint) {
           return expandedPoint.clusterColor || expandedPoint.expandedClusterPoint.color
@@ -804,7 +829,7 @@ export class TopoJSONMap<
         if (d.isCluster) {
           return getString(d.properties as TopoJSONMapClusterDatum<PointDatum>, config.clusterLabel) ?? ''
         }
-        return getString(d.properties as any, config.pointLabel) ?? ''
+        return getString(d.properties as PointOrClusterProperties<PointDatum>, config.pointLabel as StringAccessor<PointOrClusterProperties<PointDatum>>) ?? ''
       })
       .style('font-size', d => {
         if (config.pointLabelPosition === MapPointLabelPosition.Bottom) {
@@ -812,10 +837,17 @@ export class TopoJSONMap<
         }
         const radius = d.isCluster
           ? (d.radius / currentZoomLevel)
-          : getNumber(d.properties as any, config.pointRadius, 0) / currentZoomLevel
+          : getNumber(
+            d.properties as PointOrClusterProperties<PointDatum>,
+            config.pointRadius as NumericAccessor<PointOrClusterProperties<PointDatum>>,
+            0
+          ) / currentZoomLevel
         const pointLabelText = d.isCluster
           ? (getString(d.properties as TopoJSONMapClusterDatum<PointDatum>, config.clusterLabel) || '')
-          : (getString(d.properties as any, config.pointLabel) || '')
+          : (getString(
+            d.properties as PointOrClusterProperties<PointDatum>,
+            config.pointLabel as StringAccessor<PointOrClusterProperties<PointDatum>>
+          ) || '')
         const textLength = pointLabelText.length
         // Use the same formula as Leaflet map for consistent font sizing
         const fontSize = radius / Math.pow(textLength, 0.4)
@@ -830,7 +862,11 @@ export class TopoJSONMap<
 
         const radius = d.isCluster
           ? (d.radius / currentZoomLevel)
-          : getNumber(d.properties as any, config.pointRadius, 0) / currentZoomLevel
+          : getNumber(
+            d.properties as PointOrClusterProperties<PointDatum>,
+            config.pointRadius as NumericAccessor<PointOrClusterProperties<PointDatum>>,
+            0
+          ) / currentZoomLevel
         return radius
       })
       .attr('dy', d => {
@@ -852,7 +888,11 @@ export class TopoJSONMap<
             if (labelColor) return labelColor
           }
 
-          const pointColor = getColor(d.properties as any, config.pointColor, i)
+          const pointColor = getColor(
+            d.properties as PointOrClusterProperties<PointDatum>,
+            config.pointColor as ColorAccessor<PointOrClusterProperties<PointDatum>>,
+            i
+          )
           const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
           if (!hex) return null
 
@@ -868,14 +908,17 @@ export class TopoJSONMap<
         // Show labels for clusters, individual points with pie charts, and when pointLabel is defined
         const hasLabel = d.isCluster
           ? !!getString(d.properties as TopoJSONMapClusterDatum<PointDatum>, config.clusterLabel)
-          : !!getString(d.properties as any, config.pointLabel)
+          : !!getString(
+            d.properties as PointOrClusterProperties<PointDatum>,
+            config.pointLabel as StringAccessor<PointOrClusterProperties<PointDatum>>
+          )
         return hasLabel ? null : 'hidden'
       })
 
     // Point & cluster bottom labels (hidden when point is inside expanded cluster)
     const bottomLabelsMerged = pointsMerged.select(`.${s.pointBottomLabel}`)
     bottomLabelsMerged
-      .attr('visibility', d => (d as any).expandedClusterPoint ? 'hidden' : null)
+      .attr('visibility', d => (d as ExpandedClusterPoint<PointDatum>).expandedClusterPoint ? 'hidden' : null)
       .text(d => {
         const bottomLabelText = d.isCluster
           ? (getString(d.properties as TopoJSONMapClusterDatum<PointDatum>, config.clusterBottomLabel) ?? '')
@@ -892,7 +935,7 @@ export class TopoJSONMap<
       .style('font-size', `calc(var(${s.variables.mapPointBottomLabelFontSize}) / ${this._currentZoomLevel})`)
 
     smartTransition(bottomLabelsMerged, duration)
-      .style('opacity', d => (d as any).expandedClusterPoint ? 0 : 1)
+      .style('opacity', d => (d as ExpandedClusterPoint<PointDatum>).expandedClusterPoint ? 0 : 1)
 
     // Sort elements by z-index to ensure expanded cluster points appear above everything else
     if (this._expandedCluster && config.clusterBackground) {
@@ -910,7 +953,7 @@ export class TopoJSONMap<
     this._pointsGroup.selectAll(`.${s.pointBottomLabel}`).style('display', (config.heatmapMode && (this._currentZoomLevel < config.heatmapModeZoomLevelThreshold)) ? 'none' : null)
 
     // Update selection ring
-    updateSelectionRing<PointDatum>(
+    updateSelectionRing<AreaDatum, PointDatum, LinkDatum>(
       this._pointSelectionRing,
       this._selectedPoint,
       pointData,
@@ -992,7 +1035,7 @@ export class TopoJSONMap<
     this._prevHeight = this._height
   }
 
-  _onZoom (event: D3ZoomEvent<any, any>): void {
+  _onZoom (event: D3ZoomEvent<SVGGElement, unknown>): void {
     if (this._firstRender) {
       // On first render, just update the zoom level, don't trigger animation
       this._currentZoomLevel = (event?.transform.k / this._initialScale) || 1
@@ -1049,7 +1092,7 @@ export class TopoJSONMap<
     window.cancelAnimationFrame(this._collisionDetectionAnimFrameId)
     this._collisionDetectionAnimFrameId = window.requestAnimationFrame(() => {
       // Run collision detection for area labels
-      const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, any>(`.${s.areaLabel}`)
+      const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, unknown>(`.${s.areaLabel}`)
       collideAreaLabels(areaLabels)
 
       // Run collision detection for point bottom labels
@@ -1139,8 +1182,8 @@ export class TopoJSONMap<
   }
 
   private _initFlowFeatures (): void {
-    initFlowFeatures<PointDatum, LinkDatum>(
-      this as unknown as FlowInitContext<PointDatum, LinkDatum>
+    initFlowFeatures<AreaDatum, PointDatum, LinkDatum>(
+      this as unknown as FlowInitContext<AreaDatum, PointDatum, LinkDatum>
     )
   }
 
@@ -1148,7 +1191,7 @@ export class TopoJSONMap<
     const { config } = this
 
     const sourcePoints = this._sourcePointsGroup
-      .selectAll<SVGCircleElement, any>(`.${s.sourcePoint}`)
+      .selectAll<SVGCircleElement, { x: number; y: number; radius: number; color: string; flowData: LinkDatum }>(`.${s.sourcePoint}`)
       .data(this._sourcePoints, (d, i) => `${d.flowData}-${i}`)
 
     const sourcePointsEnter = sourcePoints.enter()
@@ -1236,7 +1279,7 @@ export class TopoJSONMap<
 
     // Clicking on expanded cluster points does nothing - they stay expanded
     // (clicking outside on the map background will collapse them)
-    const expandedPoint = d as any
+    const expandedPoint = d as ExpandedClusterPoint<PointDatum>
     if (expandedPoint.expandedClusterPoint) {
       return
     }
@@ -1421,7 +1464,7 @@ export class TopoJSONMap<
     if (this._expandedCluster) {
       // Store the original cluster to restore it
       const originalCluster = this._expandedCluster.cluster
-      const expandedPointIds = new Set(this._expandedCluster.points.map((p: any) => getString(p.properties as PointDatum, this.config.pointId)))
+      const expandedPointIds = new Set(this._expandedCluster.points.map((p: TopoJSONMapPoint<PointDatum>) => getString(p.properties as PointDatum, this.config.pointId)))
 
       // Convert the original cluster back to GeoJSON format for re-insertion
       // Preserve critical fields: id (for cluster identification), clusterIndex (for re-expansion)
@@ -1439,11 +1482,12 @@ export class TopoJSONMap<
       this._collapsedClusterPointIds = expandedPointIds
 
       // Clean up all references to prevent memory leaks
-      this._expandedCluster.points?.forEach((d: any) => {
-        delete d.expandedClusterPoint
-        delete d.clusterColor
-        delete d.dx
-        delete d.dy
+      this._expandedCluster.points?.forEach((d) => {
+        const expandedPoint = d as ExpandedClusterPoint<PointDatum>
+        delete expandedPoint.expandedClusterPoint
+        delete expandedPoint.clusterColor
+        delete expandedPoint.dx
+        delete expandedPoint.dy
       })
       this._expandedCluster = null
     }
