@@ -359,10 +359,13 @@ export class TopoJSONMap<
     const featuresEnter = features.enter().append('path').attr('class', s.feature)
     const featuresMerged = featuresEnter.merge(features)
 
+    // Animate geometry changes, but apply fill immediately to avoid "delay then jump"
     smartTransition(featuresMerged, duration)
       .attr('d', this._path)
-      .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
       .style('cursor', d => d.data ? getString(d.data, config.areaCursor) : null)
+
+    // Set fill directly so color updates are instantaneous instead of snapping at the end of a transition
+    featuresMerged.style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
 
     // Add click handler to collapse expanded cluster when clicking on map features
     featuresMerged.on('click', () => {
@@ -1091,13 +1094,14 @@ export class TopoJSONMap<
   private _runCollisionDetection (): void {
     window.cancelAnimationFrame(this._collisionDetectionAnimFrameId)
     this._collisionDetectionAnimFrameId = window.requestAnimationFrame(() => {
+      const duration = this.config.duration
       // Run collision detection for area labels
       const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, unknown>(`.${s.areaLabel}`)
-      collideAreaLabels(areaLabels)
+      collideAreaLabels(areaLabels, duration)
 
       // Run collision detection for point bottom labels
       const pointBottomLabels = this._pointsGroup.selectAll<SVGTextElement, TopoJSONMapPoint<PointDatum>>(`.${s.point} .${s.pointBottomLabel}`)
-      collidePointBottomLabels(pointBottomLabels)
+      collidePointBottomLabels(pointBottomLabels, duration)
     })
   }
 

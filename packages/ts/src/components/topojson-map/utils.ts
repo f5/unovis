@@ -8,6 +8,7 @@ import { getNumber, getString, clamp } from 'utils/data'
 import { getColor } from 'utils/color'
 import { estimateStringPixelLength } from 'utils/text'
 import { rectIntersect } from 'utils/misc'
+import { smartTransition } from 'utils/d3'
 
 // Types
 import { NumericAccessor, ColorAccessor } from 'types/accessor'
@@ -74,7 +75,8 @@ interface LabelSVGTextElement extends SVGTextElement {
 }
 
 export function collideAreaLabels (
-  selection: Selection<SVGTextElement, any, SVGGElement, unknown>
+  selection: Selection<SVGTextElement, any, SVGGElement, unknown>,
+  duration: number
 ): void {
   if (selection.size() === 0) return
 
@@ -136,7 +138,8 @@ export function collideAreaLabels (
     }
   })
 
-  selection.style('opacity', (d, i) => labelNodes[i]._labelVisible ? 1 : 0)
+  smartTransition<SVGTextElement, any, SVGGElement, unknown>(selection, duration)
+    .style('opacity', (_d, i) => labelNodes[i]._labelVisible ? 1 : 0)
 }
 
 /** Get bounding rect of an SVG element in screen coordinates */
@@ -174,7 +177,8 @@ interface PointBottomLabelSVGTextElement extends SVGTextElement {
 }
 
 export function collidePointBottomLabels<PointDatum> (
-  selection: Selection<SVGTextElement, TopoJSONMapPoint<PointDatum>, SVGGElement, unknown>
+  selection: Selection<SVGTextElement, TopoJSONMapPoint<PointDatum>, SVGGElement, unknown>,
+  duration: number
 ): void {
   if (selection.size() === 0) return
 
@@ -224,8 +228,9 @@ export function collidePointBottomLabels<PointDatum> (
     }
   })
 
-  selection.attr('visibility', (d, i) => labelNodes[i]._labelVisible ? null : 'hidden')
-  selection.style('opacity', (d, i) => labelNodes[i]._labelVisible ? 1 : 0)
+  smartTransition<SVGTextElement, TopoJSONMapPoint<PointDatum>, SVGGElement, unknown>(selection, duration)
+    .attr('visibility', (_d, i) => labelNodes[i]._labelVisible ? null : 'hidden')
+    .style('opacity', (_d, i) => labelNodes[i]._labelVisible ? 1 : 0)
 }
 
 export function getDonutData<PointDatum> (
