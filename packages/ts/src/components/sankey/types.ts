@@ -100,3 +100,8 @@ export enum SankeyZoomMode {
   X = 'x',
   Y = 'y',
 }
+
+export enum SankeyZoomOrigin {
+  TopLeft = 'top-left',
+  Center = 'center',
+}
