@@ -42,7 +42,7 @@ for (const component of components) {
 
   exec(`mkdir ${pathComponentBase}`, () => {
     writeFileSync(pathComponent, componentCode)
-    exec(`npx eslint ${pathComponent} --fix`)
+    exec(`pnpm exec eslint ${pathComponent} --fix`)
   })
 
   exports.push(`export { default as Vis${component.name} } from './${path}/${file}'`)

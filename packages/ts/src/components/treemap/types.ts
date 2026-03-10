@@ -16,6 +16,8 @@ export type TreemapDatum<Datum> = {
 }
 
 export interface TreemapNode<Datum> extends HierarchyRectangularNode<TreemapDatum<Datum>> {
+  topLevelParent: TreemapNode<Datum>; // Reference to the top-level parent node (depth === 1). Convenient for external color routines.
+
   _id: string;
   _fill?: string;
   _fillOpacity?: number | null;

@@ -1,7 +1,7 @@
 {
   "name": "@unovis/vue",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, and vanilla TypeScript or JavaScript",
-  "version": "1.6.2",
+  "version": "1.6.4",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
@@ -53,15 +53,17 @@
     "gallery": "vite"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.2",
+    "@unovis/ts": "1.6.4",
     "vue": "^3"
   },
   "devDependencies": {
+    "@unovis/ts": "workspace:*",
     "@unovis/shared": "workspace:*",
     "@antfu/eslint-config": "^3.9.1",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.4.0",
+    "buffer-from": "^1.1.2",
     "de-indent": "^1.0.2",
     "jju": "^1.4.0",
     "rollup": "^2.61.1",

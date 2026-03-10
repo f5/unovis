@@ -160,8 +160,8 @@ const config = {
       announcementBar: {
         id: 'version-1.6-announcement',
         content:
-          '🎉 New Components: Treemap, Plotline, Plotband & Rolling Pin Legend; Enhanced Timeline and more in <a rel="noopener noreferrer" href="/releases/1.6">Unovis 1.6</a>',
-        backgroundColor: '#FF6B7E',
+          '⚠️ Important: Angular version support changes in <a rel="noopener noreferrer" href="/releases/1.7-angular">Unovis 1.7</a>',
+        backgroundColor: '#A6CC74',
         textColor: '#fff',
         isCloseable: false,
       },

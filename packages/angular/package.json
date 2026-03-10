@@ -1,7 +1,7 @@
 {
   "name": "@unovis/angular",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
-  "version": "1.6.2",
+  "version": "1.6.4",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
@@ -45,7 +45,7 @@
     "tslib": "^2.3.1"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.2",
+    "@unovis/ts": "1.6.4",
     "@angular/common": "19 - 21",
     "@angular/compiler": "19 - 21",
     "@angular/core": "19 - 21",

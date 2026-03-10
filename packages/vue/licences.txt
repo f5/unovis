@@ -5,6 +5,7 @@ name                            license period  license type  installed version 
 @rollup/plugin-node-resolve     perpetual       MIT           13.3.0             Rich Harris <richard.a.harris@gmail.com>
 @vitejs/plugin-vue              perpetual       MIT           5.2.4              Evan You
 @vue/tsconfig                   perpetual       MIT           0.4.0              Haoqun Jiang <npm@haoqun.me>
+buffer-from                     perpetual       MIT           1.1.2              n/a
 de-indent                       perpetual       MIT           1.0.2              Evan You
 jju                             perpetual       MIT           1.4.0              Alex Kocharin alex@kocharin.ru
 rollup                          perpetual       MIT           2.79.2             Rich Harris

@@ -22,7 +22,7 @@
     "baseUrl": "./",
     "paths": {
       "@unovis/react": ["src/"],
-      "@unovis/react/*": ["src/*"],
+      "@unovis/react/*": ["src/*"]
     },
     "removeComments": true,
     "strict": true,

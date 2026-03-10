@@ -5,6 +5,7 @@ name                               license period  license type  installed versi
 @types/node                        perpetual       MIT           16.18.126          n/a
 @types/d3-dispatch                 perpetual       MIT           3.0.6              n/a
 @zerollup/ts-transform-paths       perpetual       MIT           1.7.18             Stefan Zerkalica zerkalica@gmail.com
+buffer-from                        perpetual       MIT           1.1.2              n/a
 react                              perpetual       MIT           18.3.1             n/a
 react-dom                          perpetual       MIT           18.3.1             n/a
 rimraf                             perpetual       ISC           3.0.2              Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)

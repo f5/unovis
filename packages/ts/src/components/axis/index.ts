@@ -316,7 +316,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       }
 
       const textBlock: UnovisText = { text, ...this._tickTextStyleCached }
-      renderTextToSvgTextElement(textElement, textBlock, textOptions, 'central')
+      const dominantBaseline = config.type === AxisType.X ? 'central' : 'hanging'
+      renderTextToSvgTextElement(textElement, textBlock, textOptions, dominantBaseline)
     })
 
     selection
