@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { VisSingleContainer, VisTopoJSONMap, VisTopoJSONMapRef } from '@unovis/react'
-import { TopoJSONMap } from '@unovis/ts'
+import { TopoJSONMap, TopoJSONMapPoint } from '@unovis/ts'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
 import './style.module.css'
+import { MapPointDataRecord } from '../../leaflet/leaflet-map-colorMap/data'
 
 
 export const title = 'Clustered Color Map'
@@ -306,6 +307,7 @@ export const totalEvents = data.points.reduce((sum, d) => sum + (d.normal || 0),
 export const component = (): React.ReactNode => {
   const mapRef = useRef<VisTopoJSONMapRef<any, DataRecord, any>>(null)
   const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null)
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   const [zoomToLocation, setZoomToLocation] = useState<{ coordinates: [number, number]; zoomLevel: number; expandCluster?: boolean } | undefined>(undefined)
 
   const onZoomIn = (): void => { mapRef.current?.component?.zoomIn(1) }
@@ -313,6 +315,8 @@ export const component = (): React.ReactNode => {
   const onFit = (): void => {
     mapRef.current?.component?.fitView()
     setHighlightedNodeId(null) // Clear highlight when fitting view
+    setSelectedNodeId(null)
+    mapRef.current?.component?.unselectPoint()
     setZoomToLocation(undefined)
   }
 
@@ -408,19 +412,45 @@ export const component = (): React.ReactNode => {
         }}
         events={{
           [TopoJSONMap.selectors.background]: {
-            click: (d) => {
-              console.warn('on background click', d)
+            click: () => {
+              setSelectedNodeId(null)
+              mapRef.current?.component?.unselectPoint()
             },
           },
           [TopoJSONMap.selectors.feature]: {
-            click: (d) => {
+            click: (d: unknown) => {
               console.warn('on feature click', d)
             },
+          },
+          [TopoJSONMap.selectors.point]: {
+            click: (d: TopoJSONMapPoint<DataRecord>) => {
+              if (d.isCluster) {
+                setSelectedNodeId(null)
+                mapRef.current?.component?.unselectPoint()
+                return
+              }
+              const id = (d.properties as DataRecord)?.name
+              if (id != null) {
+                setSelectedNodeId(id)
+                mapRef.current?.component?.selectPointById(id)
+              }
+            },
+          },
+        }}
+        attributes={{
+          [TopoJSONMap.selectors.point]: {
+            cluster: (p: TopoJSONMapPoint<MapPointDataRecord>) => p.isCluster,
+            visTopoJSONMapPointE2eTestId: (p: TopoJSONMapPoint<MapPointDataRecord>) => `topojson-point-${p.properties?.name}`,
           },
         }}
       />
     </VisSingleContainer>
     <div style={{ position: 'absolute', top: 32, right: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {selectedNodeId != null && (
+        <div style={{ padding: '6px 10px', background: 'var(--vis-map-point-ring-fill-color)', borderRadius: 4, fontSize: 12 }}>
+          Selected: <strong>{selectedNodeId}</strong>
+        </div>
+      )}
       <button onClick={onZoomIn}>Zoom In</button>
       <button onClick={onZoomOut}>Zoom Out</button>
       <button onClick={onFit}>Fit View</button>

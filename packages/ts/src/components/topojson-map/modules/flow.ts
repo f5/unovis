@@ -1,4 +1,3 @@
-import { Selection } from 'd3-selection'
 import { GeoProjection } from 'd3-geo'
 
 // Utils
@@ -6,7 +5,7 @@ import { getNumber, getString, isNumber } from 'utils/data'
 import { getColor } from 'utils/color'
 import { MapGraphDataModel } from 'data-models/map-graph'
 // Local types & config
-import { FlowParticle } from '../types'
+import { FlowParticle, FlowUpdateContext } from '../types'
 import { TopoJSONMapConfigInterface } from '../config'
 import { arc } from '../utils'
 
@@ -122,12 +121,6 @@ export function initFlowFeatures<AreaDatum, PointDatum, LinkDatum> (ctx: FlowIni
       ctx._flowParticles.push(particle)
     }
   })
-}
-
-export interface FlowUpdateContext {
-  _flowParticles: FlowParticle[];
-  _currentZoomLevel: number | undefined;
-  _flowParticlesGroup: Selection<SVGGElement, unknown, null, undefined>;
 }
 
 export function updateFlowParticles (ctx: FlowUpdateContext): void {

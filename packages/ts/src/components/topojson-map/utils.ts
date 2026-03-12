@@ -20,6 +20,7 @@ import * as s from './style'
 
 // Local Types
 import {
+  AreaLabelDatum,
   TopoJSONMapPieDatum,
   TopoJSONMapPointStyles,
   TopoJSONMapPointShape,
@@ -75,7 +76,7 @@ interface LabelSVGTextElement extends SVGTextElement {
 }
 
 export function collideAreaLabels (
-  selection: Selection<SVGTextElement, any, SVGGElement, unknown>,
+  selection: Selection<SVGTextElement, AreaLabelDatum, SVGGElement, unknown>,
   duration: number
 ): void {
   if (selection.size() === 0) return
@@ -279,7 +280,7 @@ export function toGeoJSONPoint<D> (
 
 export function calculateClusterIndex<D> (
   data: D[],
-  config: TopoJSONMapConfigInterface<any, D, any>,
+  config: TopoJSONMapConfigInterface<unknown, D, unknown>,
   maxClusterZoomLevel = 24
 ): Supercluster<D> {
   const { colorMap, pointShape, latitude, longitude, clusteringDistance } = config
@@ -342,7 +343,7 @@ export function geoJsonPointToScreenPoint<D> (
   geoPoint: ClusterFeature<TopoJSONMapClusterDatum<D>> | PointFeature<TopoJSONMapPointDatum<D>>,
   i: number,
   projection: (coordinates: [number, number]) => [number, number],
-  config: TopoJSONMapConfigInterface<any, D, any>,
+  config: TopoJSONMapConfigInterface<unknown, D, unknown>,
   zoomLevel: number
 ): TopoJSONMapPoint<D> {
   const isCluster = (geoPoint.properties as TopoJSONMapClusterDatum<D>).cluster
