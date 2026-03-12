@@ -18,6 +18,7 @@ import {
   geoTransverseMercator,
   geoNaturalEarth1,
 } from 'd3-geo'
+import type { Selection } from 'd3-selection'
 
 import {
   geoBromley,
@@ -73,12 +74,24 @@ export interface FlowParticle {
   pathLength?: number;
 }
 
+export type FlowUpdateContext = {
+  _flowParticles: FlowParticle[];
+  _currentZoomLevel: number | undefined;
+  _flowParticlesGroup: Selection<SVGGElement, unknown, null, undefined>;
+}
+
 
 export type TopoJSONMapPieDatum = {
   value: number;
   name: string;
   color: string;
   className?: string;
+}
+
+export type AreaLabelDatum = {
+  centroid: [number, number];
+  labelText?: string;
+  area: number;
 }
 
 export interface TopoJSONMapPointStyle {

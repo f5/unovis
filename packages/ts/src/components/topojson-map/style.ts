@@ -1,7 +1,7 @@
 import { css } from '@emotion/css'
 import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
-const cssVarDefaults = {
+export const cssVarDefaults = {
   // Base map colors
   '--vis-map-feature-color': '#dce3eb',
   '--vis-map-boundary-color': '#ffffff',
@@ -22,6 +22,7 @@ const cssVarDefaults = {
   // Bottom label
   '--vis-map-point-bottom-label-text-color': '#5b5f6d',
   '--vis-map-point-bottom-label-font-size': '10px',
+  '--vis-map-point-bottom-label-font-weight': '600',
 
   // Point styles
   '--vis-map-point-default-fill-color': '#B9BEC3',
@@ -154,7 +155,7 @@ export const pointBottomLabel = css`
 
   font-size: var(${variables.mapPointBottomLabelFontSize});
   font-family: var(${variables.mapPointLabelFontFamily}, var(--vis-font-family));
-  font-weight: 600;
+  font-weight: var(${variables.mapPointBottomLabelFontWeight}, 600);
   fill: var(${variables.mapPointBottomLabelTextColor});
 `
 
@@ -183,7 +184,7 @@ export const clusterDonut = css`
 
   &:hover {
     transform: scale(1.1);
-    filter: drop-shadow(0 0 2px var(--vis-map-cluster-default-stroke-color)) drop-shadow(0 0 4px var(--vis-map-cluster-default-stroke-color));
+    filter: drop-shadow(0 0 2px var(${variables.mapClusterDefaultStrokeColor})) drop-shadow(0 0 4px var(${variables.mapClusterDefaultStrokeColor}));
   }
 `
 

@@ -259,10 +259,12 @@ export class TopoJSONMap<
   }
 
   _renderBackground (): void {
-    renderBackground(this._backgroundRect, {
-      bleed: { left: this.bleed.left, top: this.bleed.top },
-      onClick: () => this._collapseExpandedCluster(),
-    })
+    renderBackground(
+      this._backgroundRect,
+      this.bleed.left,
+      this.bleed.top,
+      () => this._collapseExpandedCluster()
+    )
   }
 
   _renderGroups (duration: number): void {
@@ -964,6 +966,10 @@ export class TopoJSONMap<
       this._projection,
       currentZoomLevel
     )
+
+    // Set up events and custom attributes for rendered points (match LeafletMap behavior)
+    this._setUpComponentEventsThrottled()
+    this._setCustomAttributesThrottled()
   }
 
   _fitToPoints (points?: PointDatum[], pad = 0.1): void {
@@ -1409,6 +1415,7 @@ export class TopoJSONMap<
 
     // Re-bind user-defined events to include newly created expanded cluster points
     this._setUpComponentEventsThrottled()
+    this._setCustomAttributesThrottled()
 
     // Return the original point data for centroid calculation
     return points.map(p => p.properties as PointDatum)
