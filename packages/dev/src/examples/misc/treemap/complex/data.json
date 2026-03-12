@@ -1,0 +1,319 @@
+[
+    {
+        "eventType": "workflows.prepared_workflow_job",
+        "eventName": "A workflow job was started. Includes the list of secrets that were provided to the job. This event is not available in the web interface but is available only via the REST API audit log streaming or JSON/CSV exports",
+        "numEvents": 445469
+    },
+    {
+        "eventType": "git.clone",
+        "eventName": "A repository was cloned",
+        "numEvents": 211979
+    },
+    {
+        "eventType": "token.auth.activity",
+        "eventName": "Token activity",
+        "numEvents": 158588
+    },
+    {
+        "eventType": "Non-interactive sign-in",
+        "eventName": "Sign-in activity",
+        "numEvents": 49405
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.configmaps.get",
+        "numEvents": 24501
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.pods.watch",
+        "numEvents": 16178
+    },
+    {
+        "eventType": "Update",
+        "eventName": "GroupLifecyclePolicies_Get",
+        "numEvents": 13031
+    },
+    {
+        "eventType": "ts_api_token_viewed",
+        "eventName": "Viewed API token",
+        "numEvents": 11800
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.authorization.v1.subjectaccessreviews.create",
+        "numEvents": 10312
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.configmaps.list",
+        "numEvents": 6887
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.discovery.v1.endpointslices.watch",
+        "numEvents": 5849
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.certificates.v1.certificatesigningrequests.watch",
+        "numEvents": 4991
+    },
+    {
+        "eventType": "git.push",
+        "eventName": "Changes were pushed to a repository",
+        "numEvents": 4941
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.certificates.v1.certificatesigningrequests.list",
+        "numEvents": 4911
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.storage.v1.csidrivers.watch",
+        "numEvents": 4652
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "com.google.cloud.security.v1.gkeclustertrustbundles.watch",
+        "numEvents": 4534
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.storage.v1.csinodes.update",
+        "numEvents": 4523
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.cilium.v2alpha1.ciliumendpointslices.watch",
+        "numEvents": 4445
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.apiextensions.v1.customresourcedefinitions.list",
+        "numEvents": 3486
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.storage.v1.csinodes.create",
+        "numEvents": 3256
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.cilium.v2alpha1.ciliumendpointslices.list",
+        "numEvents": 3256
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.gke.networking.v1alpha1.networkloggings.list",
+        "numEvents": 3237
+    },
+    {
+        "eventType": "drive.access.download",
+        "eventName": "Drive Access Download",
+        "numEvents": 2458
+    },
+    {
+        "eventType": "user.session.start",
+        "eventName": "User login to Okta",
+        "numEvents": 2162
+    },
+    {
+        "eventType": "app.oauth2.token.grant.id_token",
+        "eventName": "OIDC id token is granted",
+        "numEvents": 2009
+    },
+    {
+        "eventType": "pull_request.create",
+        "eventName": "A pull request was created",
+        "numEvents": 1881
+    },
+    {
+        "eventType": "cloudasset.googleapis.com",
+        "eventName": "google.cloud.asset.v1.AssetService.QueryAssets",
+        "numEvents": 1799
+    },
+    {
+        "eventType": "Interactive sign-in",
+        "eventName": "Sign-in activity",
+        "numEvents": 1757
+    },
+
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.configmaps.get",
+        "numEvents": 24501
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.pods.watch",
+        "numEvents": 16178
+    },
+    {
+        "eventType": "Update",
+        "eventName": "GroupLifecyclePolicies_Get",
+        "numEvents": 13031
+    },
+    {
+        "eventType": "ts_api_token_viewed",
+        "eventName": "Viewed API token",
+        "numEvents": 11800
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.authorization.v1.subjectaccessreviews.create",
+        "numEvents": 10312
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.configmaps.list",
+        "numEvents": 6887
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.discovery.v1.endpointslices.watch",
+        "numEvents": 5849
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.certificates.v1.certificatesigningrequests.watch",
+        "numEvents": 4991
+    },
+    {
+        "eventType": "git.push",
+        "eventName": "Changes were pushed to a repository",
+        "numEvents": 4941
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.certificates.v1.certificatesigningrequests.list",
+        "numEvents": 4911
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.storage.v1.csidrivers.watch",
+        "numEvents": 4652
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "com.google.cloud.security.v1.gkeclustertrustbundles.watch",
+        "numEvents": 4534
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.storage.v1.csinodes.update",
+        "numEvents": 4523
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.cilium.v2alpha1.ciliumendpointslices.watch",
+        "numEvents": 4445
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.apiextensions.v1.customresourcedefinitions.list",
+        "numEvents": 3486
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.storage.v1.csinodes.create",
+        "numEvents": 3256
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.cilium.v2alpha1.ciliumendpointslices.list",
+        "numEvents": 3256
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.gke.networking.v1alpha1.networkloggings.list",
+        "numEvents": 3237
+    },
+    {
+        "eventType": "drive.access.download",
+        "eventName": "Drive Access Download",
+        "numEvents": 2458
+    },
+    {
+        "eventType": "user.session.start",
+        "eventName": "User login to Okta",
+        "numEvents": 2162
+    },
+    {
+        "eventType": "app.oauth2.token.grant.id_token",
+        "eventName": "OIDC id token is granted",
+        "numEvents": 2009
+    },
+    {
+        "eventType": "pull_request.create",
+        "eventName": "A pull request was created",
+        "numEvents": 1881
+    },
+    {
+        "eventType": "cloudasset.googleapis.com",
+        "eventName": "google.cloud.asset.v1.AssetService.QueryAssets",
+        "numEvents": 1799
+    },
+    {
+        "eventType": "Interactive sign-in",
+        "eventName": "Sign-in activity",
+        "numEvents": 1757
+    },
+    {
+        "eventType": "application.ApplicationServiceWatch",
+        "eventName": "Watch",
+        "numEvents": 1440
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.pods.create",
+        "numEvents": 1309
+    },
+    {
+        "eventType": "drive.access.view",
+        "eventName": "Drive Access viewed",
+        "numEvents": 1277
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.endpoints.get",
+        "numEvents": 1064
+    },
+    {
+        "eventType": "AnonymousLinkUsed",
+        "eventName": "An anonymous user accessed a resource by using an anonymous link. The user's identity might be unknown, but you can get other details such as the user's IP address",
+        "numEvents": 977
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.configmaps.patch",
+        "numEvents": 858
+    },
+    {
+        "eventType": "pull_request_review_comment.create",
+        "eventName": "A review comment was added to a pull request",
+        "numEvents": 664
+    },
+    {
+        "eventType": "system.import.user.complete",
+        "eventName": "Import of user completed",
+        "numEvents": 597
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.apps.v1.daemonsets.watch",
+        "numEvents": 582
+    },
+    {
+        "eventType": "k8s.io",
+        "eventName": "io.k8s.core.v1.nodes.patch",
+        "numEvents": 575
+    },
+    {
+        "eventType": "drive.access.sync_item_content",
+        "eventName": "Drive Access Sync Item Content",
+        "numEvents": 557
+    }
+    
+]
