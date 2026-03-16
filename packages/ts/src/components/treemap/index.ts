@@ -80,42 +80,50 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       }
     })
 
-    const treemapLayout = treemap()
-      .size([_width, _height])
-      .round(true)
-      .padding(config.tilePadding)
+    // Process the hierarchy into the type we need
+    // The original type of `rootNode` is HierarchyNode<InternMap<string, number[]>>, but we're replacing its data manually with `TreemapDatum`.
+    // Strictly speaking, the real data type at this stage is `HierarchyNode<Datum> & { readonly value: number }`,
+    // but we're assigning the `TreemapNode` type (which extends HierarchyRectangularNode<TreemapDatum<Datum>>) in advance to avoid unnecessary complexity
+    const hierarchyWithPopulatedData = rootNode as unknown as TreemapNode<Datum>
+    hierarchyWithPopulatedData.each((d, i) => {
+      const node = d as unknown as TreemapNode<Datum>
+      const n = d as unknown as HierarchyNode<[string, number[]]>
 
-    // Apply padding to the top of each tile,
-    // but not for the root node.
-    if (this.config.tilePaddingTop !== undefined) {
-      treemapLayout.paddingTop(d => d.parent ? config.tilePaddingTop : 0)
-    }
-
-    // Compute the treemap layout
-    const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
-
-    // Process the resulting hierarchy into the type we need
-    let nodeId = 0
-    treemapData.each(node => {
-      const n = node as unknown as HierarchyNode<[string, number[]]>
-      // Generate unique IDs for each node
-      node._id = `node-${nodeId++}`
-
+      const isLeafNode = !n.children
       const treemapDatum: TreemapDatum<Datum> = {
         key: n.data[0],
+        isLeaf: isLeafNode,
       }
 
-      // Populate the index and datum for leaf nodes
-      const isLeafNode = !n.children
       if (isLeafNode) {
         treemapDatum.index = n.data[1][0]
         treemapDatum.datum = data[treemapDatum.index]
       }
 
       node.data = treemapDatum
+      node._id = `node-${i}` // This id is used for the clipPath assignment and need to be unique and HTML id compliant
       node.topLevelParent = this._getTopLevelParent(node)
     })
 
+    // Sort the hierarchy
+    // The `tileSort` function in the config accepts two `TreemapNode` arguments, but the corresponding data fields
+    // will be populated at the next steps. This shouldn't cause any issues,
+    // for our end users, but if it does, we can manage types more strictly.
+    if (config.tileSort || config.tileSort === null) hierarchyWithPopulatedData.sort(config.tileSort)
+
+    const treemapLayout = treemap<TreemapDatum<Datum>>()
+      .size([_width, _height])
+      .round(true)
+      .padding(config.tilePadding)
+
+    if (config.tileFunction) treemapLayout.tile(config.tileFunction)
+
+    if (this.config.tilePaddingTop !== undefined) {
+      treemapLayout.paddingTop(d => d.parent ? config.tilePaddingTop : 0)
+    }
+
+    // Compute the treemap layout
+    const treemapData = treemapLayout(hierarchyWithPopulatedData) as TreemapNode<Datum>
     const descendants = treemapData.descendants()
 
     // Set up the brightness increase scale based on depth

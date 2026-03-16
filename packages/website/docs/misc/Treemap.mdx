@@ -205,6 +205,27 @@ Add extra space at the top of parent tiles to accommodate labels with `tilePaddi
   tilePaddingTop={20}
 />
 
+### Tiling Method
+By default, _Treemap_ uses D3's built-in squarified tiling algorithm. You can override it by passing any
+D3 tile function (or a custom one) to the `tileFunction` property. Common choices from `d3-hierarchy` include
+`treemapSquarify`, `treemapBinary`, `treemapDice`, `treemapSlice`, and `treemapSliceDice`.
+
+```ts
+import { treemapBinary } from 'd3-hierarchy'
+
+tileFunction = treemapBinary
+```
+
+
+### Sorting
+Control the order in which hierarchy nodes are laid out by providing a comparator function to the `sort`
+property. The function receives two `HierarchyNode` objects and should return a negative, zero, or positive
+number. Set `tileSort` to `null` to preserve the input order.
+
+```ts
+tileSort = (a, b) => b.value - a.value
+```
+
 ## CSS Variables
 
 _Treemap_ supports the following CSS variables:
