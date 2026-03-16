@@ -45,6 +45,9 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     [Timeline.selectors.label]: {
       wheel: this._onMouseWheel.bind(this),
     },
+    [Timeline.selectors.labelBackground]: {
+      wheel: this._onMouseWheel.bind(this),
+    },
     [Timeline.selectors.rows]: {
       wheel: this._onMouseWheel.bind(this),
     },
@@ -263,6 +266,27 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     const xStart = xRange[0] - this._lineBleed[0] - this._lineIconBleed[0]
     const labelXStart = xStart - labelOffset
+
+    // Invisible background rects covering the full label column width for pointer events
+    const labelBackgrounds = this._labelsGroup
+      .selectAll<SVGRectElement, TimelineRowLabel<Datum>>(`.${s.labelBackground}`)
+      .data((config.showRowLabels ?? config.showLabels) ? rowLabels : [], l => l?.label)
+
+    const labelBackgroundsEnter = labelBackgrounds.enter().append('rect')
+      .attr('class', s.labelBackground)
+      .attr('x', xStart - this._labelWidth)
+      .attr('y', l => yStart + yOrdinalScale(l.label) * rowHeight)
+      .attr('width', this._labelWidth)
+      .attr('height', rowHeight)
+
+    labelBackgroundsEnter.merge(labelBackgrounds)
+      .attr('x', xStart - this._labelWidth)
+      .attr('y', l => yStart + yOrdinalScale(l.label) * rowHeight)
+      .attr('width', this._labelWidth)
+      .attr('height', rowHeight)
+
+    labelBackgrounds.exit().remove()
+
     const labelsEnter = labels.enter().append('text')
       .attr('class', s.label)
       .attr('x', labelXStart)
