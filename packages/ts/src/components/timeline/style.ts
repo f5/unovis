@@ -14,7 +14,8 @@ export const globalStyles = injectGlobal`
 
     --vis-timeline-label-font-size: 12px;
     --vis-timeline-label-color: #6C778C;
-    --vis-timeline-user-select: none;
+    --vis-timeline-label-user-select: none;
+    --vis-timeline-label-pointer-events: all;
 
     --vis-timeline-arrow-color: #6C778C;
     --vis-timeline-arrow-stroke-width: 1.5;
@@ -137,7 +138,14 @@ export const label = css`
   font-size: var(--vis-timeline-label-font-size);
   fill: var(--vis-timeline-label-color);
   text-anchor: end;
-  user-select: var(--vis-timeline-user-select);
+  user-select: var(--vis-timeline-label-user-select);
+  pointer-events: var(--vis-timeline-label-pointer-events);
+`
+
+export const labelBackground = css`
+  label: label-background;
+  fill: transparent;
+  pointer-events: all;
 `
 
 export const rowIcons = css`
