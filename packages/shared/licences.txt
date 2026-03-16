@@ -1,9 +1,9 @@
 name                       license period  license type  installed version  author
 ----                       --------------  ------------  -----------------  ------
-@angular/core              perpetual       MIT           19.2.18            angular
-@angular/common            perpetual       MIT           19.2.18            angular
-@angular/platform-browser  perpetual       MIT           19.2.18            angular
-@unovis/angular            perpetual       Apache-2.0    1.6.2              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+@angular/core              perpetual       MIT           19.2.19            angular
+@angular/common            perpetual       MIT           19.2.19            angular
+@angular/platform-browser  perpetual       MIT           19.2.19            angular
+@unovis/angular            perpetual       Apache-2.0    1.6.4              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
 @types/d3-scale            perpetual       MIT           4.0.9              n/a
 @types/d3-selection        perpetual       MIT           3.0.11             n/a
 tslib                      perpetual       0BSD          2.8.1              Microsoft Corp.

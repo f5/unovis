@@ -39,7 +39,6 @@
     "@angular/core": "^19.2.18",
     "@angular/common": "^19.2.18",
     "@angular/platform-browser": "^19.2.18",
-    "@unovis/angular": "workspace:*",
     "@types/d3-scale": "^4.0.8",
     "@types/d3-selection": "^3.0.10",
     "tslib": "^2.3.1",
