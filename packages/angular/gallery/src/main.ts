@@ -57,6 +57,7 @@ import { PlotbandPlotlineModule } from '@unovis/shared/examples/plotband-plotlin
 
 @Component({
   selector: 'app-component',
+  standalone: false,
   template: `
     <!-- Area -->
     <stacked-area-chart></stacked-area-chart>
@@ -122,7 +123,7 @@ export class AppComponent {
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterPlotModule, SizedScatterPlotModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, StackedAreaWithAttributesModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
-    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule, PlotbandPlotlineModule, PatchyLineChartModule
+    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule, PlotbandPlotlineModule, PatchyLineChartModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

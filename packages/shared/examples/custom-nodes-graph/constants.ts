@@ -451,7 +451,7 @@ export const nodeUpdateCustomRenderFunction = <
     .attr('cy', watchlistPos[1])
     .attr('visibility', watchlistVisibility)
 
-  const alertsData = Object.entries(d.numFindings ?? {}).filter(([_, v]) => v > 0)
+  const alertsData = Object.entries(d.numFindings ?? {}).filter(([_, v]) => (v as number) > 0) as [string, number][]
   const alerts = g.selectAll<SVGGElement, [string, number]>(`.${nodeFinding}`).data(alertsData)
 
   const alertsEnter = alerts.enter().append('g').attr('class', nodeFinding)
@@ -482,7 +482,7 @@ export const nodeUpdateCustomRenderFunction = <
       const angle = -Math.PI / 1.33 - index * 2.66 * Math.atan2(DEFAULT_CIRCLE_LABEL_SIZE, r)
       return `translate(${r * Math.cos(angle)}, ${r * Math.sin(angle)})`
     })
-    .select('text').text(([, count]) => count)
+    .select('text').text(([, count]: [string, number]) => count)
 
   const enrichmentsData = (d.status ?? []) as CustomGraphNodeStatus[]
   const enrichments = g

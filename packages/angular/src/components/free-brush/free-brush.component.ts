@@ -9,6 +9,7 @@ import { VisXYComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisFreeBrushComponent }],
+  standalone: false,
 })
 export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */

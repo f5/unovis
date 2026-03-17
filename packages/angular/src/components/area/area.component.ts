@@ -20,6 +20,7 @@ import { VisXYComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisAreaComponent }],
+  standalone: false,
 })
 export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */

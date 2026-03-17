@@ -28,6 +28,7 @@ import { VisCoreComponent } from '../../core'
   styles: ['.leaflet-map-container { width: 100%; height: 100%; position: relative }'],
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisLeafletMapComponent }],
+  standalone: false,
 })
 export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements LeafletMapConfigInterface<Datum>, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef

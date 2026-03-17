@@ -18,6 +18,7 @@ import { nodeTypeColorMap, CustomGraphNodeType, CustomGraphLink, CustomGraphNode
   selector: 'custom-nodes-graph',
   templateUrl: './custom-nodes-graph.component.html',
   styleUrls: ['./styles.css'],
+  standalone: false,
 })
 export class CustomNodesGraphComponent {
   @ViewChild('graphRef', { static: false }) graphRef!: VisGraphComponent<CustomGraphNode, CustomGraphLink>

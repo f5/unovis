@@ -23,6 +23,7 @@ import { VisCoreComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisTreemapComponent }],
+  standalone: false,
 })
 export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */

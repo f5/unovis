@@ -5,6 +5,7 @@ import { data, labels, EducationDatum } from './data'
 @Component({
   selector: 'horizontal-stacked-bar-chart',
   templateUrl: './horizontal-stacked-bar-chart.component.html',
+  standalone: false,
 })
 export class StackedBarChartComponent {
   dataKeys = Object.keys(labels)

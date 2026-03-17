@@ -111,10 +111,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "gallery:build:production"
+              "buildTarget": "gallery:build:production"
             },
             "development": {
-              "browserTarget": "gallery:build:development"
+              "buildTarget": "gallery:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -122,11 +122,10 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "gallery:build"
+            "buildTarget": "gallery:build"
           }
         }
       }
     }
-  },
-  "defaultProject": "lib"
+  }
 }

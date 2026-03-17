@@ -53,6 +53,7 @@ stats.html
 licences.temp
 vulnerability-report.json
 vulnerability-report.html
+.angular
 
 # System Files
 .DS_Store

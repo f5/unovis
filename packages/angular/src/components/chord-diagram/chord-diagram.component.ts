@@ -23,6 +23,7 @@ import { VisCoreComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisChordDiagramComponent }],
+  standalone: false,
 })
 export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordInputLink> implements ChordDiagramConfigInterface<N, L>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */

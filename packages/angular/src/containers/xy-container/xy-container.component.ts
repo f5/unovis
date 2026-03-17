@@ -24,6 +24,7 @@ import { VisAnnotationsComponent } from '../../components/annotations/annotation
     <ng-content></ng-content>
   </div>`,
   styles: ['.unovis-xy-container { width: 100%; height: 100%; position: relative; }'],
+  standalone: false,
 })
 export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterContentInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef

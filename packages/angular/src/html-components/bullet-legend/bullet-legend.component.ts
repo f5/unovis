@@ -16,6 +16,7 @@ import { VisGenericComponent } from '../../core'
   styles: ['.bullet-legend-container {  }'],
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisGenericComponent, useExisting: VisBulletLegendComponent }],
+  standalone: false,
 })
 export class VisBulletLegendComponent implements BulletLegendConfigInterface, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef

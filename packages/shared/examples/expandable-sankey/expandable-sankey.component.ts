@@ -7,6 +7,7 @@ import { sankeyData, root, Node, Link } from './data'
 @Component({
   selector: 'expandable-sankey',
   templateUrl: './expandable-sankey.component.html',
+  standalone: false,
 })
 export class ExpandableSankeyComponent {
   @ViewChild('vis') vis: VisSingleContainerComponent<{ nodes: Node[]; links: Link[] }>

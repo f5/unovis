@@ -9,6 +9,7 @@ import { VisGenericComponent } from '../../core'
   styles: ['.flow-legend-container {  }'],
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisGenericComponent, useExisting: VisFlowLegendComponent }],
+  standalone: false,
 })
 export class VisFlowLegendComponent implements FlowLegendConfigInterface, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef

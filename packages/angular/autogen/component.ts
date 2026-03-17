@@ -60,6 +60,7 @@ import { ${provide} } from '../../core'
   ${decoratorProps},
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: ${provide}, useExisting: Vis${componentName}Component }],
+  standalone: false,
 })
 export class Vis${componentName}Component${genericsDefStr} implements ${componentName}ConfigInterface${genericsStr}, AfterViewInit {
   ${isStandAlone ? '@ViewChild(\'container\', { static: false }) containerRef: ElementRef' : ''}

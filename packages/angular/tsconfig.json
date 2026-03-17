@@ -25,10 +25,10 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2017",
+    "target": "ES2022",
     "module": "esnext",
     "lib": [
-      "es2019",
+      "ES2022",
       "dom"
     ],
     "plugins": [
