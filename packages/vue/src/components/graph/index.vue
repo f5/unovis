@@ -1,15 +1,17 @@
-<script setup lang="ts" generic="N extends GraphInputNode,L extends GraphInputLink">
+<script lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
 import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 import { componentAccessorKey } from '../../utils/context'
+interface Props<N extends GraphInputNode, L extends GraphInputLink> extends /** @vue-ignore */ GraphConfigInterface<N, L> { }
+export const VisGraphSelectors = Graph.selectors
+</script>
 
+<script setup lang="ts" generic="N extends GraphInputNode,L extends GraphInputLink">
 const accessor = inject(componentAccessorKey)
 
-// data and required props 
-type Props = GraphConfigInterface<N, L>
-const props = defineProps<Props & { data?: { nodes: N[]; links?: L[] } }>()
+const props = defineProps<Props<N, L> & { data?: { nodes: N[]; links?: L[] } }>()
 
 const data = computed(() => accessor.data.value ?? props.data)
 // config
@@ -45,10 +47,6 @@ watch(data, () => {
 defineExpose({
   component
 })
-</script>
-
-<script lang="ts">
-export const VisGraphSelectors = Graph.selectors
 </script>
 
 <template>
