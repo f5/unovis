@@ -1,0 +1,7 @@
+.graph {
+  --vis-graph-node-label-font-size: 8pt;
+  --vis-graph-node-label-text-color: #717179;
+
+  --vis-graph-node-sublabel-font-size: 9pt;
+  --vis-graph-node-sublabel-text-color: #000000;
+}
