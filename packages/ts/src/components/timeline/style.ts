@@ -26,6 +26,8 @@ export const globalStyles = injectGlobal`
     --vis-timeline-line-hover-stroke-width: 0;
     --vis-timeline-line-hover-stroke-color: #6C778C;
 
+    --vis-timeline-row-icon-cursor: default;
+
     // The line stroke color variable is not defined by default
     // to allow it to fallback to the corresponding row background color
     /* --vis-timeline-line-stroke-color: none; */
@@ -154,4 +156,5 @@ export const rowIcons = css`
 
 export const rowIcon = css`
   label: row-icon;
+  cursor: var(--vis-timeline-row-icon-cursor);
 `
