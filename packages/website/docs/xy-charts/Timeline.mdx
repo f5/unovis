@@ -7,6 +7,7 @@ import BrowserOnly from "@docusaurus/core/lib/client/exports/BrowserOnly"
 import { XYWrapper, XYWrapperWithInput, axis } from '../wrappers/xy-wrapper'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { generateTimeSeries } from '../utils/data'
+import { Timeline } from '@unovis/ts'
 
 export const xAxis = ({
   ...axis('x'),
@@ -318,34 +319,13 @@ const events = {
 ## CSS Variables
 The _Timeline_ component supports additional styling via CSS variables:
 
-
 <details open>
-  <summary>All supported CSS variables</summary>
-  <CodeBlock language="css">{
-`--vis-timeline-row-even-fill-color: #FFFFFF;
---vis-timeline-row-odd-fill-color: #F7FAFC;
---vis-timeline-row-background-opacity: 1;
---vis-timeline-scrollbar-background-color: #E6E9F3;
---vis-timeline-scrollbar-color: #9EA7B8;
- 
---vis-timeline-label-font-size: 12px;
---vis-timeline-label-color: #6C778C;
- 
---vis-timeline-cursor: default;
---vis-timeline-line-color: var(--vis-color-main);
---vis-timeline-line-stroke-width: 0;
- 
-/* The line stroke color variable is not defined by default */
-/* to allow it to fallback to the corresponding row background color */
-/* --vis-timeline-line-stroke-color: none; */
- 
-/* Dark Theme */
---vis-dark-timeline-row-even-fill-color: #292B34;
---vis-dark-timeline-row-odd-fill-color: #333742;
---vis-dark-timeline-scrollbar-background-color: #292B34;
---vis-dark-timeline-scrollbar-color: #6C778C;
---vis-dark-timeline-label-color: #EFF5F8;`}
-  </CodeBlock>
+  <summary>All supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+{`${
+  Object.entries(Timeline.selectors.cssVarDefaults)
+  .map(([key, value]) => `${key}: ${value};`).join('\n')}
+`}</CodeBlock>
 </details>
 
 ## Component Props
