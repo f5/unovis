@@ -207,7 +207,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     smartTransition(circlesEnter.merge(circles), duration, easeLinear)
       .attr('cx', xClamped)
       .attr('cy', d => d.y)
-      .attr('r', 4)
+      .attr('r', config.circleRadius)
       .style('opacity', d => d.opacity)
       .style('fill', d => d.color)
       .style('stroke', d => d.strokeColor)
