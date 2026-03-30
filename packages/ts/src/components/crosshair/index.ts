@@ -13,6 +13,7 @@ import { getColor } from 'utils/color'
 // Types
 import { Position } from 'types/position'
 import { FindNearestDirection } from 'types/data'
+import { Spacing } from 'types/spacing'
 
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'
@@ -86,6 +87,15 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     this.g.style('opacity', 0)
     this.line = this.g.append('line')
       .attr('class', s.line)
+  }
+
+  get bleed (): Spacing {
+    const { config: { circleRadius } } = this
+
+    // We leave the bottom bleed empty because usually the crosshair is used along with the X axis,
+    // so we don't need extra space at the bottom. For inverted charts, the users will need to specify
+    // the container margins themselves to avoid the crosshair circles from being cut off.
+    return { top: circleRadius, left: circleRadius, right: circleRadius }
   }
 
   setContainer (containerSvg: Selection<SVGSVGElement, unknown, SVGSVGElement, unknown>): void {
@@ -207,7 +217,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     smartTransition(circlesEnter.merge(circles), duration, easeLinear)
       .attr('cx', xClamped)
       .attr('cy', d => d.y)
-      .attr('r', 4)
+      .attr('r', config.circleRadius)
       .style('opacity', d => d.opacity)
       .style('fill', d => d.color)
       .style('stroke', d => d.strokeColor)
