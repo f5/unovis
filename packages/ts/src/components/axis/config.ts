@@ -70,6 +70,9 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextHideOverlapping?: boolean;
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   tickPadding?: number;
+  /** The size of the tick marks in pixels. Accepts a single number (applies to both inner and outer ticks)
+   * or a tuple `[innerTickSize, outerTickSize]`. Default: `6` */
+  tickSize?: number | [number, number];
 }
 
 export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
@@ -102,5 +105,6 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickValues: undefined,
   fullSize: true,
   tickPadding: 8,
+  tickSize: 6,
   tickTextHideOverlapping: undefined,
 }
