@@ -159,44 +159,41 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     this._resolveTickLabelOverlap(selection)
   }
 
-  private _buildAxis (): D3Axis<any> {
-    const { config: { type, position, tickPadding } } = this
+  private _getAxisGen (): D3Axis<NumberValue | Date> {
+    const { config } = this
 
-    const ticks = this._getNumTicks()
-    switch (type) {
+    switch (config.type) {
       case AxisType.X:
-        switch (position) {
-          case Position.Top: return axisTop(this.xScale).ticks(ticks).tickPadding(tickPadding)
-          case Position.Bottom: default: return axisBottom(this.xScale).ticks(ticks).tickPadding(tickPadding)
+        switch (config.position) {
+          case Position.Top: return axisTop(this.xScale)
+          case Position.Bottom: default: return axisBottom(this.xScale)
         }
       case AxisType.Y:
-        switch (position) {
-          case Position.Right: return axisRight(this.yScale).ticks(ticks).tickPadding(tickPadding)
-          case Position.Left: default: return axisLeft(this.yScale).ticks(ticks).tickPadding(tickPadding)
+        switch (config.position) {
+          case Position.Right: return axisRight(this.yScale)
+          case Position.Left: default: return axisLeft(this.yScale)
         }
     }
+  }
+
+  private _buildAxis (): D3Axis<NumberValue | Date> {
+    const { config: { tickPadding, tickSize } } = this
+
+    const tickSizeInner = Array.isArray(tickSize) ? tickSize[0] : tickSize
+    const tickSizeOuter = Array.isArray(tickSize) ? tickSize[1] : tickSize
+    const ticks = this._getNumTicks()
+    const axisGen = this._getAxisGen()
+    axisGen.ticks(ticks).tickPadding(tickPadding).tickSizeInner(tickSizeInner).tickSizeOuter(tickSizeOuter)
+
+    return axisGen
   }
 
   private _buildGrid (): D3Axis<NumberValue | Date> {
     const { config } = this
 
-    let gridGen: D3Axis<NumberValue | Date>
-    switch (config.type) {
-      case AxisType.X:
-        switch (config.position) {
-          case Position.Top: { gridGen = axisTop(this.xScale); break }
-          case Position.Bottom: default: { gridGen = axisBottom(this.xScale); break }
-        }
-        gridGen.tickSize(-this._height)
-        break
-      case AxisType.Y:
-        switch (config.position) {
-          case Position.Right: { gridGen = axisRight(this.yScale); break }
-          case Position.Left: default: { gridGen = axisLeft(this.yScale); break }
-        }
-        gridGen.tickSize(-this._width)
-    }
+    const gridGen = this._getAxisGen()
     gridGen
+      .tickSize(config.type === AxisType.X ? -this._height : -this._width)
       .tickSizeOuter(0)
       .tickFormat(() => '')
 
