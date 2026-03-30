@@ -6,11 +6,12 @@ import BrowserOnly from '@docusaurus/BrowserOnly'
 import CodeBlock from '@theme/CodeBlock'
 
 import { CSSVariables } from '../components/css-variables'
-import { data, generateScatterDataRecords, generateTimeSeries } from '../utils/data.ts'
+import { data, generateScatterDataRecords, generateTimeSeries, generateDataRecords } from '../utils/data.ts'
 import { DocWrapper } from '../wrappers'
 import { XYWrapper, axis } from '../wrappers/xy-wrapper'
 import { sankeyProps as sankeyProps } from '../networks-and-flows/Sankey.mdx'
 import { donutProps as donutProps } from '../misc/Donut.mdx'
+import { FrameworkTabs } from '../components/framework-tabs.tsx'
 
 import './styles.css'
 
@@ -293,7 +294,7 @@ You can customize these patterns by assigning any combination of the following v
 [`marker`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker) elements
 - Variables with the prefix `--vis-pattern-dasharray` to a valid value for the
 [stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) property. The default palette looks like:
-  
+
 <body class='theme-patterns' style={{ marginBottom: '20px'}}>
   <XYWrapper
     name='Line'
@@ -307,7 +308,7 @@ You can customize these patterns by assigning any combination of the following v
   />
 </body>
 
-  
+
 <details>
 <summary>Default CSS Variables:</summary>
 
@@ -357,7 +358,7 @@ as its fill. You can tweak the variables accordingly to create the desired effec
 
   /* Area */
   --vis-area-stroke-width: 1px;
-  --vis-area-stroke: var(--stroke);
+  --vis-area-stroke-color: var(--stroke);
   --vis-dark-area-stroke: var(--stroke-dark);
 
   /* Donut */
@@ -365,7 +366,7 @@ as its fill. You can tweak the variables accordingly to create the desired effec
 
   /* StackedBar */
   --vis-stacked-bar-stroke-width: 1px;
-  --vis-stacked-bar-stroke: var(--stroke);
+  --vis-stacked-bar-stroke-color: var(--stroke);
   --vis-dark-stacked-bar-stroke: var(--stroke-dark);
 
   /* Timeline */
@@ -383,3 +384,47 @@ as its fill. You can tweak the variables accordingly to create the desired effec
   <h4>Timeline</h4>
   <XYWrapper name='Timeline' data={generateTimeSeries(50, 6)} height={200} x={d => d.timestamp} length={d => d.length * 10} type={d => d.type} lineCap excludeTabs/>
 </div>
+
+## Gradient Fills with SVG defs
+Use the `svgDefs` property on the container to inject custom SVG definitions — gradients, patterns, clip paths — that any component can reference by `id`.
+
+Start by building your defs string, then pass the string to `svgDefs` on the container and reference each gradient by id in the `color` array.
+The example below defines one vertical `<linearGradient>` per series.
+
+export const seriesColors = ['#3b82f6', '#ef4444', '#f59e0b']
+export const gradientDefs = seriesColors.map((color, i) => `
+  <linearGradient id="area-grad-${i}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="${color}" stop-opacity="0.4" />
+    <stop offset="100%" stop-color="${color}" stop-opacity="0.02" />
+  </linearGradient>`).join('')
+
+
+<XYWrapper
+  name="Area"
+  data={generateDataRecords(20)}
+  x={d => d.x}
+  y={[d => d.y, d => d.y1, d => d.y2]}
+  color={seriesColors.map((_, i) => `url(#area-grad-${i})`)}
+  declarations={{ svgDefs: `\`${gradientDefs}\n  \`` }}
+  showContext="full"
+  line={true}
+  lineWidth={1}
+  lineColor={seriesColors}
+  showAxes
+  height={200}
+  containerProps={{ svgDefs: gradientDefs }}
+/>
+
+export const inlineSvg = `<svg style="position:absolute;width:0;height:0">\n  <defs>${gradientDefs}\n  </defs>\n</svg>`
+
+:::note
+
+Alternatively, you can place the defs in a hidden `<svg>` element anywhere on the same page, and the `url(#id)` references will still resolve.
+
+<FrameworkTabs
+  angular={{html: `<vis-area ... [color]="gradientColors"></vis-area>\n${inlineSvg}`}}
+  react={`<VisArea ... color={gradientColors}/>\n${inlineSvg}`}
+  typescript={`const chart = new Area({ color: gradientColors, ... })\ndocument.body.insertAdjacentHTML('beforeend', \`${inlineSvg}\`)`}/>
+
+:::
+
