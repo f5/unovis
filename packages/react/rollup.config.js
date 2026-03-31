@@ -37,6 +37,9 @@ export default {
     typescript({
       typescript: require('typescript'),
       tsconfig: './tsconfig.lib.json',
+      include: ['**/*.ts', '**/*.tsx'],
+      exclude: ['**/*.d.ts'],
+      clean: true,
       transformers: [(service) => transformPaths(service.getProgram())],
     }),
     renameNodeModules(),

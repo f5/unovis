@@ -38,6 +38,10 @@ const plugins = [
   json(),
   typescript({
     typescript: require('typescript'),
+    tsconfig: './tsconfig.json',
+    include: ['**/*.ts', '**/*.tsx'],
+    exclude: ['**/*.d.ts'],
+    clean: true,
     transformers: [(service) => transformPaths(service.getProgram())],
     check: false, // Todo remove it once we fix all type checks
     abortOnError: false,
