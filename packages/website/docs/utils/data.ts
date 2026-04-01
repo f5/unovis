@@ -65,6 +65,7 @@ type NodeDatum = {
   id: string;
   label?: string;
   value?: number;
+  disabled?: boolean; // For collapse functionality
 }
 
 type LinkDatum = {
@@ -110,18 +111,23 @@ function generateLinks (n: number, count: number): number[] {
   return [val, ...generateLinks(n - val, count - 1)]
 }
 
-export const sankeyData = (src: number, edges: [[number, number]], subDataCount = 4): NodeLinkData => {
+export const sankeyData = (src: number, edges: [[number, number]], subDataCount = 4, disabledNodes?: string[]): NodeLinkData => {
   const nodes = [{ id: 'A', val: src, x: 0 }]
   const links = []
   for (let i = 0; i < edges.length; i++) {
     const vals = generateLinks(nodes[i].val, edges[i].length)
     for (let j = 0; j < edges[i].length; j++) {
       if (edges[i][j] >= nodes.length) {
-        nodes.push({
-          id: String.fromCharCode(65 + nodes.length),
+        const nodeId = String.fromCharCode(65 + nodes.length)
+        const node: any = {
+          id: nodeId,
           val: vals[j],
           x: Math.floor(Math.random() * subDataCount),
-        })
+        }
+        if (disabledNodes?.includes(nodeId)) {
+          node.disabled = true
+        }
+        nodes.push(node)
       }
       links.push({ source: nodes[i].id, target: nodes[edges[i][j]].id, value: vals[j] })
     }

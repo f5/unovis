@@ -82,6 +82,7 @@ export class Sankey<
     [Sankey.selectors.node]: {
       mouseenter: this._onNodeRectMouseOver.bind(this),
       mouseleave: this._onNodeRectMouseOut.bind(this),
+      click: this._onNodeClick.bind(this),
     },
     [Sankey.selectors.link]: {
       mouseenter: this._onLinkMouseOver.bind(this),
@@ -175,6 +176,9 @@ export class Sankey<
   setData (data: { nodes: N[]; links?: L[] }): void {
     super.setData(data)
 
+    // Pre-collapse nodes based on disabledField
+    this._applyInitialCollapseState()
+
     // Pre-calculate component size for Sizing.EXTEND
     if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
     this._bleedCached = null
@@ -197,6 +201,8 @@ export class Sankey<
     } else if (this.prevConfig.zoomPan !== undefined) {
       this._pan = [0, 0]
     }
+    // Apply initial collapse state if disabledField is set
+    this._applyInitialCollapseState()
 
     // Pre-calculate component size for Sizing.EXTEND
     if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
@@ -713,6 +719,34 @@ export class Sankey<
     }
   }
 
+  /**
+   * Sets the collapse state of a node and triggers re-rendering.
+   */
+  private _setNodeCollapseState (node: SankeyNode<N, L>, collapsed: boolean): void {
+    const { config } = this
+
+    // Clear any active highlights before changing state
+    this.disableHighlight()
+
+    node._state = node._state || {}
+    node._state.collapsed = collapsed
+    this._render(config.collapseAnimationDuration)
+  }
+
+  /**
+   * Toggles the collapse state of a node.
+   * Collapses a node by hiding only the links directly connected to it.
+   * All other nodes (including children and descendants) remain visible in their original positions.
+   * Only the immediate incoming and outgoing links of the collapsed node are hidden.
+   *
+   * Expands a previously collapsed node by showing its directly connected links.
+   * @param node The node to toggle
+   */
+  toggleNodeCollapse (node: SankeyNode<N, L>): void {
+    const isCurrentlyCollapsed = node._state?.collapsed ?? false
+    this._setNodeCollapseState(node, !isCurrentlyCollapsed)
+  }
+
   private _hasLinks (): boolean {
     const { datamodel } = this
     return datamodel.links.length > 0
@@ -725,6 +759,30 @@ export class Sankey<
     const firstLayerNode = nodes.find(d => d.layer === 0)
     const nextLayerNode = nodes.find(d => d.layer === firstLayerNode.layer + 1)
     return nextLayerNode ? nextLayerNode.x0 - (firstLayerNode.x0 + config.nodeWidth) : this._width - firstLayerNode.x1
+  }
+  
+  /**
+   * Applies initial collapse state to nodes based on the disabledField configuration.
+   * If disabledField is set (e.g., "disabled"), nodes with that field set to true
+   * will be pre-collapsed when the component loads.
+   */
+  private _applyInitialCollapseState (): void {
+    const { config, datamodel } = this
+
+    if (!config.disabledField) return
+
+    // Check each node for the disabled field and set initial collapse state
+    for (const node of datamodel.nodes) {
+      const inputData = node as unknown as N
+      const isDisabled = inputData && typeof inputData === 'object' &&
+                        config.disabledField in inputData &&
+                        (inputData as any)[config.disabledField] === true
+
+      if (isDisabled) {
+        node._state = node._state || {}
+        node._state.collapsed = true
+      }
+    }
   }
 
   private _onNodeMouseOver (d: SankeyNode<N, L>, event: MouseEvent): void {
@@ -760,5 +818,12 @@ export class Sankey<
 
   private _onLinkMouseOut (): void {
     this.disableHighlight()
+  }
+
+  private _onNodeClick (d: SankeyNode<N, L>, event: MouseEvent): void {
+    const { config } = this
+    if (config.enableNodeCollapse) {
+      this.toggleNodeCollapse(d)
+    }
   }
 }
