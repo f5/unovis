@@ -5,14 +5,15 @@ export const root = css`
   label: axis-component;
 `
 
-export const cssVarDefaults = {
-  // Undefined by default to allow proper fallback to var(--vis-font-family)
-  /* --vis-axis-font-family: */
+export const cssVarDefaults: Record<string, string | undefined> = {
+  '--vis-axis-font-family': undefined, // Undefined by default to allow proper fallback to var(--vis-font-family)
   '--vis-axis-tick-color': '#e8e9ef',
-  /* --vis-axis-domain-color: // Undefined by default to allow fallback to var(--vis-axis-tick-color) */
+  '--vis-axis-domain-color': undefined, // Undefined by default to allow fallback to var(--vis-axis-tick-color)
   '--vis-axis-grid-color': '#e8e9ef',
   '--vis-axis-grid-line-width': '1px',
   '--vis-axis-grid-line-dasharray': 'none',
+  '--vis-axis-grid-opacity': '1',
+  '--vis-axis-grid-transition': 'none',
 
   '--vis-axis-label-font-size': '14px',
   '--vis-axis-label-color': '#6c778c',
@@ -27,10 +28,10 @@ export const cssVarDefaults = {
   '--vis-axis-tick-line-width': '1px',
   '--vis-axis-tick-label-hide-transition': 'opacity 400ms ease-in-out',
 
-  /* --vis-axis-domain-line-width: // Undefined by default to allow fallback to var(--vis-axis-grid-line-width) */
+  '--vis-axis-domain-line-width': undefined, // Undefined by default to allow fallback to var(--vis-axis-grid-line-width)
 
   '--vis-dark-axis-tick-color': '#6c778c',
-  /* --vis-dark-axis-domain-color: // Undefined by default to allow fallback to var(--vis-dark-axis-tick-color) */
+  '--vis-dark-axis-domain-color': undefined, // Undefined by default to allow fallback to var(--vis-dark-axis-tick-color)
   '--vis-dark-axis-tick-label-color': '#e8e9ef',
   '--vis-dark-axis-grid-color': '#6c778c',
   '--vis-dark-axis-label-color': '#fefefe',
@@ -82,6 +83,8 @@ export const grid = css`
     stroke: var(--vis-axis-grid-color);
     stroke-width: var(--vis-axis-grid-line-width);
     stroke-dasharray: var(--vis-axis-grid-line-dasharray);
+    opacity: var(--vis-axis-grid-opacity);
+    transition: var(--vis-axis-grid-transition);
   }
 `
 
