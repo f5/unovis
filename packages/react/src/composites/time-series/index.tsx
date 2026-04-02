@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react'
-import { Spacing, TextAlign, Scale } from '@unovis/ts'
+import { Spacing } from '@unovis/ts/types/spacing'
+import { TextAlign } from '@unovis/ts/types/text'
+import { Scale } from '@unovis/ts/types/scale'
 import { VisXYContainer } from '@unovis/react/containers/xy-container'
 import { VisArea } from '@unovis/react/components/area'
 import { VisAxis } from '@unovis/react/components/axis'
