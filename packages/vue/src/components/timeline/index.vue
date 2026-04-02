@@ -1,18 +1,16 @@
-<script lang="ts">
+<script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
 import { Timeline, TimelineConfigInterface, NumericAccessor } from '@unovis/ts'
 import { XYComponentConfigInterface, StringAccessor } from "@unovis/ts"
 import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 import { componentAccessorKey } from '../../utils/context'
-interface Props<Datum> extends /** @vue-ignore */ TimelineConfigInterface<Datum> { }
-export const VisTimelineSelectors = Timeline.selectors
-</script>
 
-<script setup lang="ts" generic="Datum">
 const accessor = inject(componentAccessorKey)
 
-const props = defineProps<Props<Datum> & { data?: Datum[] }>()
+// data and required props 
+// !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412
+const props = defineProps</** @vue-ignore */ TimelineConfigInterface<Datum> & { data?: Datum[] }>()
 
 const data = computed(() => accessor.data.value ?? props.data)
 // config
@@ -48,6 +46,10 @@ watch(data, () => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisTimelineSelectors = Timeline.selectors
 </script>
 
 <template>

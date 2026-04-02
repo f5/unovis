@@ -1,0 +1,14 @@
+@keyframes pulse {
+  0% {
+    stroke-width: calc(5px / var(--vis-map-current-zoom-level, 1));
+    stroke-opacity: 1;
+  }
+  100% {
+    stroke-width: calc(20px / var(--vis-map-current-zoom-level, 1));
+    stroke-opacity: 0;
+  }
+}
+
+.mmap [class*="point-shape"] {
+  animation: pulse 1.5s ease-in-out infinite;
+}

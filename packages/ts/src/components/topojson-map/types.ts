@@ -1,4 +1,5 @@
-import { Feature, Geometry } from 'geojson'
+import { Feature, Geometry, Point } from 'geojson'
+import Supercluster from 'supercluster'
 import {
   GeoProjection,
   geoMercator,
@@ -17,6 +18,7 @@ import {
   geoTransverseMercator,
   geoNaturalEarth1,
 } from 'd3-geo'
+import type { Selection } from 'd3-selection'
 
 import {
   geoBromley,
@@ -47,7 +49,98 @@ export enum MapPointLabelPosition {
   Bottom = 'bottom',
 }
 
+export enum TopoJSONMapPointShape {
+  Square = 'square',
+  Circle = 'circle',
+  Triangle = 'triangle',
+  Ring = 'ring',
+}
+
 export type MapFeature<D> = Feature<Geometry> & { data: D }
+export interface FlowParticle {
+  velocity: number;
+  // Screen properties
+  x: number;
+  y: number;
+  radius?: number;
+  color?: string;
+  // Flow data reference
+  flowData: any;
+  // Animation state
+  progress: number; // 0 to 1, how far along the path
+  // Unique identifier for data binding
+  id: string;
+  arcPath?: string;
+  pathLength?: number;
+}
+
+export type FlowUpdateContext = {
+  _flowParticles: FlowParticle[];
+  _currentZoomLevel: number | undefined;
+  _flowParticlesGroup: Selection<SVGGElement, unknown, null, undefined>;
+}
+
+
+export type TopoJSONMapPieDatum = {
+  value: number;
+  name: string;
+  color: string;
+  className?: string;
+}
+
+export type AreaLabelDatum = {
+  centroid: [number, number];
+  labelText?: string;
+  area: number;
+}
+
+export interface TopoJSONMapPointStyle {
+  color: string;
+  className?: string;
+}
+
+export type TopoJSONMapPointStyles<D> = { [key in keyof D]?: TopoJSONMapPointStyle }
+
+export type TopoJSONMapPointDatum<D> = D & {
+  id: string | number;
+  shape: TopoJSONMapPointShape;
+  _index: number;
+}
+
+export type TopoJSONMapClusterDatum<D> = Partial<D> & {
+  cluster?: boolean;
+  clusterId?: number;
+  pointCount?: number;
+  pointCountAbbreviated?: string;
+  clusterPoints?: D[];
+  clusterIndex?: Supercluster<D>;
+}
+
+export type TopoJSONMapPoint<D> = {
+  geometry: GeoJSON.Point;
+  bbox: { x1: number; x2: number; y1: number; y2: number };
+  radius: number;
+  path: string;
+  color: string;
+  id: number | string;
+  properties: TopoJSONMapPointDatum<D> | TopoJSONMapClusterDatum<D>;
+  donutData: TopoJSONMapPieDatum[];
+  isCluster: boolean;
+  clusterIndex?: Supercluster<D>;
+  _zIndex: number;
+}
+
+export type ExpandedClusterPoint<PointDatum> = TopoJSONMapPoint<PointDatum> & {
+  expandedClusterPoint?: TopoJSONMapPoint<PointDatum>;
+  clusterColor?: string;
+  dx?: number;
+  dy?: number;
+  packedRadius?: number;
+}
+
+export type CollapsedClusterFeature<PointDatum> = Feature<Point, TopoJSONMapClusterDatum<PointDatum>>
+
+export type PointOrClusterProperties<PointDatum> = PointDatum | TopoJSONMapClusterDatum<PointDatum>
 
 export enum MapProjectionKind {
   // Projections form `d3-geo`

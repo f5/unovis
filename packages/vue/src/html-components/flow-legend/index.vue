@@ -1,14 +1,12 @@
-<script lang="ts">
+<script setup lang="ts" >
 // !!! This code was automatically generated. You should not change it !!!
 import { FlowLegend, FlowLegendConfigInterface } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
-interface Props extends /** @vue-ignore */ FlowLegendConfigInterface { }
-export const VisFlowLegendSelectors = FlowLegend.selectors
-</script>
 
-<script setup lang="ts" >
 
+// data and required props 
+type Props = FlowLegendConfigInterface
 const props = defineProps<Props & { data?: null }>()
 
 const data = computed(() => props.data)
@@ -43,6 +41,10 @@ watch(config, (curr, prev) => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisFlowLegendSelectors = FlowLegend.selectors
 </script>
 
 <template>

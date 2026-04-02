@@ -1,17 +1,15 @@
-<script lang="ts">
+<script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
 import { NestedDonut, NestedDonutConfigInterface, StringAccessor } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 import { componentAccessorKey } from '../../utils/context'
-interface Props<Datum> extends /** @vue-ignore */ NestedDonutConfigInterface<Datum> { }
-export const VisNestedDonutSelectors = NestedDonut.selectors
-</script>
 
-<script setup lang="ts" generic="Datum">
 const accessor = inject(componentAccessorKey)
 
-const props = defineProps<Props<Datum> & { data?: Datum[] }>()
+// data and required props 
+type Props = NestedDonutConfigInterface<Datum>
+const props = defineProps<Props & { data?: Datum[] }>()
 
 const data = computed(() => accessor.data.value ?? props.data)
 // config
@@ -47,6 +45,10 @@ watch(data, () => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisNestedDonutSelectors = NestedDonut.selectors
 </script>
 
 <template>

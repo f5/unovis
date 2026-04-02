@@ -1,0 +1,18 @@
+@keyframes pulse {
+  0% {
+    stroke-width: 5;
+    opacity: 1;
+  }
+  100% {
+    stroke-width: 20;
+    opacity: 0;
+  }
+}
+
+.cmap [class*="point-shape"] {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.cmap {
+  --vis-map-point-ring-fill-color: #ff0000;
+}

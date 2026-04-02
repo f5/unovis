@@ -1,17 +1,15 @@
-<script lang="ts">
+<script setup lang="ts" generic="AreaDatum,PointDatum,LinkDatum">
 // !!! This code was automatically generated. You should not change it !!!
 import { TopoJSONMap, TopoJSONMapConfigInterface } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 import { componentAccessorKey } from '../../utils/context'
-interface Props<AreaDatum, PointDatum, LinkDatum> extends /** @vue-ignore */ TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> { }
-export const VisTopoJSONMapSelectors = TopoJSONMap.selectors
-</script>
 
-<script setup lang="ts" generic="AreaDatum,PointDatum,LinkDatum">
 const accessor = inject(componentAccessorKey)
 
-const props = defineProps<Props<AreaDatum, PointDatum, LinkDatum> & { data?: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]} }>()
+// data and required props 
+type Props = TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>
+const props = defineProps<Props & { data?: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]} }>()
 
 const data = computed(() => accessor.data.value ?? props.data)
 // config
@@ -47,6 +45,10 @@ watch(data, () => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisTopoJSONMapSelectors = TopoJSONMap.selectors
 </script>
 
 <template>

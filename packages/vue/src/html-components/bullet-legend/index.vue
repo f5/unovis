@@ -1,14 +1,12 @@
-<script lang="ts">
+<script setup lang="ts" >
 // !!! This code was automatically generated. You should not change it !!!
 import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
-interface Props extends /** @vue-ignore */ BulletLegendConfigInterface { }
-export const VisBulletLegendSelectors = BulletLegend.selectors
-</script>
 
-<script setup lang="ts" >
 
+// data and required props 
+type Props = BulletLegendConfigInterface
 const props = defineProps<Props & { data?: null }>()
 
 const data = computed(() => props.data)
@@ -43,6 +41,10 @@ watch(config, (curr, prev) => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisBulletLegendSelectors = BulletLegend.selectors
 </script>
 
 <template>
