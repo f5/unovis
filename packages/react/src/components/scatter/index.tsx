@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Scatter, ScatterConfigInterface } from '@unovis/ts'
+import { Scatter } from '@unovis/ts/components/scatter'
+import { ScatterConfigInterface } from '@unovis/ts/components/scatter/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

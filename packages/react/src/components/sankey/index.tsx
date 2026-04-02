@@ -1,6 +1,8 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@unovis/ts'
+import { Sankey } from '@unovis/ts/components/sankey'
+import { SankeyConfigInterface } from '@unovis/ts/components/sankey/config'
+import { SankeyInputNode, SankeyInputLink } from '@unovis/ts/components/sankey/types'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

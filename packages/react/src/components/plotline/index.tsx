@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Plotline, PlotlineConfigInterface } from '@unovis/ts'
+import { Plotline } from '@unovis/ts/components/plotline'
+import { PlotlineConfigInterface } from '@unovis/ts/components/plotline/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

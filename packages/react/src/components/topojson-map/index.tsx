@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { TopoJSONMap, TopoJSONMapConfigInterface } from '@unovis/ts'
+import { TopoJSONMap } from '@unovis/ts/components/topojson-map'
+import { TopoJSONMapConfigInterface } from '@unovis/ts/components/topojson-map/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

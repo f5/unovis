@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { RollingPinLegend, RollingPinLegendConfigInterface } from '@unovis/ts'
+import { RollingPinLegend } from '@unovis/ts/components/rolling-pin-legend'
+import { RollingPinLegendConfigInterface } from '@unovis/ts/components/rolling-pin-legend/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
