@@ -36,6 +36,13 @@ export default {
     typescript({
       typescript: require('typescript'),
       tsconfig: 'tsconfig.json',
+      include: [
+        'src/**/*.ts',
+        '../shared/examples/**/*.ts',
+      ],
+      tsconfigOverride: {
+        include: ['src/**/*', '../shared/examples/**/*'],
+      },
       abortOnError: false,
       transformers: [(service) => transformPaths(service.getProgram())],
     }),
