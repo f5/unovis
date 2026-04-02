@@ -17,8 +17,8 @@ const skipProperties = ['width', 'height']
 const components = getComponentList() as ReactComponentInput[]
 
 for (const component of components) {
-  const { generics, statements } = getConfigSummary(component, skipProperties)
-  const importStatements = getImportStatements(component.name, statements, [], generics)
+  const { generics, statements, importSourceMap } = getConfigSummary(component, skipProperties)
+  const importStatements = getImportStatements(component.name, statements, [], generics, [], importSourceMap)
 
   const componentCode = getComponentCode(
     component.name,
