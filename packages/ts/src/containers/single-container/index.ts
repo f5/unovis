@@ -152,7 +152,19 @@ export class SingleContainer<Data> extends ContainerCore {
     // Schedule the actual rendering in the next frame
     cancelAnimationFrame(this._renderAnimationFrameId)
     this._renderAnimationFrameId = requestAnimationFrame(() => {
-      this._preRender()
+      if (config.sizing !== Sizing.Extend && config.sizing !== Sizing.FitWidth) {
+        const svgWidth = parseInt(this.svg.attr('width'))
+        const svgHeight = parseInt(this.svg.attr('height'))
+        const availableWidth = svgWidth - config.margin.left - config.margin.right
+        const availableHeight = svgHeight - config.margin.top - config.margin.bottom
+
+        this.component.setSize(availableWidth, availableHeight, svgWidth, svgHeight)
+        if (this.config.annotations) {
+          this.config.annotations.setSize(availableWidth, availableHeight, svgWidth, svgHeight)
+        }
+      } else {
+        this._preRender()
+      }
       this._render(duration)
     })
   }
