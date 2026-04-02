@@ -100,7 +100,11 @@ The _Axis_ component supports a wide variety of tick customization options
 
 ### Tick Line
 You can remove tick labels from your axis by setting the `tickLine` property to false:
-<XYWrapperWithInput {...axisProps()} inputType="checkbox" defaultValue={false} property="tickLine"/>
+<XYWrapperWithInput {...axisProps()} height={50} inputType="checkbox" defaultValue={false} property="tickLine"/>
+
+### Tick Size
+Control the length of the tick marks (in pixels) with the `tickSize` property. It accepts a single number, which applies to both inner and outer ticks, or a `[innerTickSize, outerTickSize]` tuple to set them independently. The default value is `6`.
+<XYWrapperWithInput {...axisProps()} height={50} hiddenProps={{duration: 0, gridLine: false}} inputType="range" inputProps={{ min: 0, max: 20 }} defaultValue={6} property="tickSize"/>
 
 ### Tick Label Font Size
 To change the font size for the tick labels, you provide the `tickTextFontSize` property with a CSS string.
