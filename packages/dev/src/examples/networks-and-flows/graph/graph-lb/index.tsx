@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
@@ -341,6 +341,8 @@ function buildLbFlowGraph (raw: LbRaw): { nodes: LbFlowNode[]; links: LbFlowLink
 const data = buildLbFlowGraph(lbJson as LbRaw)
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const svgDefs = `
     ${personIcon}
     ${roleIcon}
@@ -348,32 +350,62 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     ${bucketIcon}
   `
 
+  const handleDownloadSvg = (): void => {
+    if (!containerRef.current) return
+
+    const svgElement = containerRef.current.querySelector('svg') as SVGSVGElement
+    if (!svgElement) {
+      console.warn('SVG element not found')
+      return
+    }
+
+    // Clone the SVG to preserve all styles and definitions
+    const svgClone = svgElement.cloneNode(true) as SVGSVGElement
+
+    // Serialize to string
+    const svgString = new XMLSerializer().serializeToString(svgClone)
+
+    // Create blob and download
+    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'load-balancer-flow.svg'
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className={s.graph}>
-      <VisSingleContainer svgDefs={svgDefs} height={600}>
-        <VisGraph<LbFlowNode, LbFlowLink>
-          data={data}
-          nodeIcon={(n) => n.icon}
-          nodeIconSize={18}
-          nodeStroke={'none'}
-          nodeFill={n => n.fillColor}
-          nodeLabel={n => n.label}
-          nodeSubLabel={n => n.sublabel}
-          layoutType='dagre'
-          dagreLayoutSettings={{
-            rankdir: 'LR',
-            ranksep: 140,
-            nodesep: 32,
-          }}
-          linkBandWidth={6}
-          linkFlow={true}
-          linkCurvature={1}
-          linkArrow={'single'}
-          linkLabel={(l) => l.label}
-          linkFlowParticleSize={4}
-          duration={props.duration}
-        />
-      </VisSingleContainer>
+      <button onClick={handleDownloadSvg} style={{ marginBottom: '12px', padding: '8px 16px', cursor: 'pointer' }}>
+        Download SVG
+      </button>
+      <div ref={containerRef}>
+        <VisSingleContainer svgDefs={svgDefs} height={600}>
+          <VisGraph<LbFlowNode, LbFlowLink>
+            data={data}
+            nodeIcon={(n) => n.icon}
+            nodeIconSize={18}
+            nodeStroke={'none'}
+            nodeFill={n => n.fillColor}
+            nodeLabel={n => n.label}
+            nodeSubLabel={n => n.sublabel}
+            layoutType='dagre'
+            dagreLayoutSettings={{
+              rankdir: 'LR',
+              ranksep: 140,
+              nodesep: 32,
+            }}
+            linkBandWidth={6}
+            linkFlow={true}
+            linkCurvature={1}
+            linkArrow={'single'}
+            linkLabel={(l) => l.label}
+            linkFlowParticleSize={4}
+            duration={props.duration}
+          />
+        </VisSingleContainer>
+      </div>
     </div>
   )
 }
