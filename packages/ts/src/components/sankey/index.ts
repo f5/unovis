@@ -25,7 +25,7 @@ import { SankeyDefaultConfig, SankeyConfigInterface } from './config'
 import * as s from './style'
 
 // Local Types
-import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode, SankeyZoomMode } from './types'
+import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode, SankeyZoomMode, SankeyZoomOrigin } from './types'
 
 // Modules
 import { createLinks, removeLinks, updateLinks } from './modules/link'
@@ -313,10 +313,11 @@ export class Sankey<
     return [constrainedX, constrainedY]
   }
 
-  public setZoomScale (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration): void {
+  public setZoomScale (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration, zoomOrigin: SankeyZoomOrigin = SankeyZoomOrigin.TopLeft): void {
     // If zoomScale is controlled by config, do nothing
     if (this.config.zoomScale !== undefined) return
-    const zoomScaleChange: [number, number] = [horizontalScale / this._zoomScale[0], verticalScale / this._zoomScale[1]]
+    const [hCurrent, vCurrent] = this._zoomScale
+    const zoomScaleChange: [number, number] = [horizontalScale / hCurrent, verticalScale / vCurrent]
 
     const [extMin, extMax] = this.config.zoomExtent
     if (isNumber(horizontalScale)) this._zoomScale[0] = Math.min(extMax, Math.max(extMin, horizontalScale))
@@ -330,6 +331,14 @@ export class Sankey<
     const currentTransform = zoomIdentity.scale(effectiveScale)
     this._gNode.__zoom = currentTransform
     this._prevZoomTransform.k = effectiveScale
+
+    if (zoomOrigin === SankeyZoomOrigin.Center) {
+      const cx = this.getWidth() / 2
+      const cy = this.getHeight() / 2
+
+      this._pan[0] = cx - (cx - this._pan[0]) * (this._zoomScale[0] / hCurrent)
+      this._pan[1] = cy - (cy - this._pan[1]) * (this._zoomScale[1] / vCurrent)
+    }
 
     // Constrain pan
     this._pan = this._getConstrainedPan(this._pan, zoomScaleChange)

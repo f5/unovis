@@ -8,6 +8,7 @@ import {
   SankeyNodeAlign,
   SankeySubLabelPlacement,
   SankeyZoomMode,
+  SankeyZoomOrigin,
   Sizing,
   VerticalAlign,
 } from '@unovis/ts'
@@ -34,6 +35,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   // State for config properties
   const [zoomMode, setZoomMode] = useState<SankeyZoomMode>(SankeyZoomMode.Y)
+  const [zoomOrigin, setZoomOrigin] = useState<SankeyZoomOrigin>(SankeyZoomOrigin.Center)
   const [zoomExtent] = useState<[number, number]>([1, 5])
   const [configZoomScale, setConfigZoomScale] = useState<[number, number] | undefined>(undefined)
   const [configZoomPan, setConfigZoomPan] = useState<[number, number] | undefined>(undefined)
@@ -50,9 +52,9 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     if (!c) return
 
     const [h, v] = getCurrentScales()
-    const nextH = h
-    const nextV = v * factor
-    c.setZoomScale(nextH, nextV)
+    const nextH = zoomMode !== SankeyZoomMode.Y ? h * factor : h
+    const nextV = zoomMode !== SankeyZoomMode.X ? v * factor : v
+    c.setZoomScale(nextH, nextV, 600, zoomOrigin)
   }
 
   const onFit = (): void => {
@@ -65,6 +67,10 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     const currentIndex = modes.indexOf(zoomMode)
     const nextMode = modes[(currentIndex + 1) % modes.length]
     setZoomMode(nextMode)
+  }
+
+  const toggleZoomOrigin = (): void => {
+    setZoomOrigin(zoomOrigin === SankeyZoomOrigin.TopLeft ? SankeyZoomOrigin.Center : SankeyZoomOrigin.TopLeft)
   }
 
   const setConfigScale = (h: number, v: number): void => {
@@ -177,6 +183,12 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         <div className={s.buttonRow}>
           <span className={s.label}>Mode: {zoomMode}</span>
           <button onClick={toggleZoomMode}>Toggle Mode</button>
+        </div>
+
+        {/* Zoom Origin */}
+        <div className={s.buttonRow}>
+          <span className={s.label}>Zoom Origin: {zoomOrigin}</span>
+          <button onClick={toggleZoomOrigin}>Toggle Origin</button>
         </div>
 
         {/* Config Scale */}
