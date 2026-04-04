@@ -1,52 +1,46 @@
-import { css, injectGlobal } from '@emotion/css'
+import { css } from '@emotion/css'
+import type { UnovisCssVariablesDefinition } from 'types/style'
+import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
 export const root = css`
   label: timeline-component;
 `
 
-export const globalStyles = injectGlobal`
-  :root {
-    --vis-timeline-row-even-fill-color: #FFFFFF;
-    --vis-timeline-row-odd-fill-color: #F7FAFC;
-    --vis-timeline-row-background-opacity: 1;
-    --vis-timeline-scrollbar-background-color: #E6E9F3;
-    --vis-timeline-scrollbar-color: #9EA7B8;
+export const cssVarDefaults: UnovisCssVariablesDefinition = {
+  '--vis-timeline-row-even-fill-color': '#FFFFFF',
+  '--vis-timeline-row-odd-fill-color': '#F7FAFC',
+  '--vis-timeline-row-background-opacity': '1',
+  '--vis-timeline-scrollbar-background-color': '#E6E9F3',
+  '--vis-timeline-scrollbar-color': '#9EA7B8',
 
-    --vis-timeline-label-font-size: 12px;
-    --vis-timeline-label-color: #6C778C;
+  '--vis-timeline-label-font-size': '12px',
+  '--vis-timeline-label-color': '#6C778C',
+  '--vis-timeline-label-user-select': 'none',
+  '--vis-timeline-label-pointer-events': 'all',
 
-    --vis-timeline-arrow-color: #6C778C;
-    --vis-timeline-arrow-stroke-width: 1.5;
+  '--vis-timeline-arrow-color': '#6C778C',
+  '--vis-timeline-arrow-stroke-width': '1.5',
 
-    --vis-timeline-cursor: default;
-    --vis-timeline-line-color: var(--vis-color-main);
-    --vis-timeline-line-stroke-width: 0;
-    --vis-timeline-line-hover-stroke-width: 0;
-    --vis-timeline-line-hover-stroke-color: #6C778C;
+  '--vis-timeline-cursor': 'default',
+  '--vis-timeline-line-color': 'var(--vis-color-main)',
+  '--vis-timeline-line-stroke-color': undefined,
+  '--vis-timeline-line-stroke-width': '0',
+  '--vis-timeline-line-hover-stroke-width': '0',
+  '--vis-timeline-line-hover-stroke-color': '#6C778C',
 
-    // The line stroke color variable is not defined by default
-    // to allow it to fallback to the corresponding row background color
-    /* --vis-timeline-line-stroke-color: none; */
+  '--vis-timeline-row-icon-cursor': 'default',
 
-    --vis-dark-timeline-row-even-fill-color: #292B34;
-    --vis-dark-timeline-row-odd-fill-color: #333742;
-    --vis-dark-timeline-scrollbar-background-color: #292B34;
-    --vis-dark-timeline-scrollbar-color: #6C778C;
-    --vis-dark-timeline-label-color: #EFF5F8;
-    --vis-dark-timeline-arrow-color: #EFF5F8;
-    --vis-dark-timeline-line-hover-stroke-color: #EFF5F8;
-  }
+  '--vis-dark-timeline-row-even-fill-color': '#292B34',
+  '--vis-dark-timeline-row-odd-fill-color': '#333742',
+  '--vis-dark-timeline-scrollbar-background-color': '#292B34',
+  '--vis-dark-timeline-scrollbar-color': '#6C778C',
+  '--vis-dark-timeline-label-color': '#EFF5F8',
+  '--vis-dark-timeline-arrow-color': '#EFF5F8',
+  '--vis-dark-timeline-line-hover-stroke-color': '#EFF5F8',
+}
 
-  body.theme-dark ${`.${root}`} {
-    --vis-timeline-row-even-fill-color: var(--vis-dark-timeline-row-even-fill-color);
-    --vis-timeline-row-odd-fill-color: var(--vis-dark-timeline-row-odd-fill-color);
-    --vis-timeline-scrollbar-background-color: var(--vis-dark-timeline-scrollbar-background-color);
-    --vis-timeline-scrollbar-color: var(--vis-dark-timeline-scrollbar-color);
-    --vis-timeline-label-color: var(--vis-dark-timeline-label-color);
-    --vis-timeline-arrow-color: var(--vis-dark-timeline-arrow-color);
-    --vis-timeline-line-hover-stroke-color: var(--vis-dark-timeline-line-hover-stroke-color);
-  }
-`
+export const variables = getCssVarNames(cssVarDefaults)
+injectGlobalCssVariables(cssVarDefaults, root)
 
 export const background = css`
   label: background;
@@ -136,7 +130,14 @@ export const label = css`
   font-size: var(--vis-timeline-label-font-size);
   fill: var(--vis-timeline-label-color);
   text-anchor: end;
-  user-select: none;
+  user-select: var(--vis-timeline-label-user-select);
+  pointer-events: var(--vis-timeline-label-pointer-events);
+`
+
+export const labelBackground = css`
+  label: label-background;
+  fill: transparent;
+  pointer-events: all;
 `
 
 export const rowIcons = css`
@@ -145,4 +146,5 @@ export const rowIcons = css`
 
 export const rowIcon = css`
   label: row-icon;
+  cursor: var(--vis-timeline-row-icon-cursor);
 `

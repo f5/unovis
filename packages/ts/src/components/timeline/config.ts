@@ -3,7 +3,7 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-co
 // Types
 import { WithOptional } from 'types/misc'
 import { ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
-import { TextAlign } from 'types/text'
+import { TextAlign, TrimMode } from 'types/text'
 import { Arrangement } from 'types/position'
 
 // Local Types
@@ -84,6 +84,10 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   rowMaxLabelWidth?: number;
   /** Text alignment for labels: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `TextAlign.Right` */
   rowLabelTextAlign?: TextAlign | `${TextAlign}`;
+  /** Row label trim mode when width is limited: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
+  rowLabelTrimMode?: TrimMode | `${TrimMode}`;
+  /** Row label margin in pixels. Can be a single number or a `[left, right]` tuple. Default: `[0, 5]` */
+  rowLabelMargin?: number | [number, number];
 
   // Arrows
   arrows?: TimelineArrow[];
@@ -145,6 +149,8 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   rowLabelWidth: undefined,
   rowMaxLabelWidth: undefined,
   rowLabelTextAlign: TextAlign.Right,
+  rowLabelTrimMode: TrimMode.Middle,
+  rowLabelMargin: [0, 5],
 
   // Arrows
   arrows: undefined,

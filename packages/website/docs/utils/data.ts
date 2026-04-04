@@ -29,13 +29,21 @@ export function generateDataRecords (n = 10): DataRecord[] {
 
 export const data = generateDataRecords(10)
 
+const timelineLabels = [
+  'Design Review', 'Backend API', 'User Research', 'Data Migration',
+  'Sprint Planning', 'QA Testing', 'Code Review', 'Deployment',
+  'Feature Launch', 'Bug Triage', 'Performance Audit', 'Documentation',
+  'Client Onboarding', 'Security Patch', 'Infrastructure', 'Analytics',
+  'Release Candidate', 'Stakeholder Demo', 'Accessibility', 'Monitoring',
+]
+
 export function generateTimeSeries (n = 10, types = n): TimeDataRecord[] {
-  const groups = Array(types).fill(0).map((_, i) => String.fromCharCode(i + 65))
+  const groups = Array(types).fill(0).map((_, i) => timelineLabels[i % timelineLabels.length])
   return Array(n).fill(0).map((_, i: number) => ({
     timestamp: Date.now() + i * 1000 * 60 * 60 * 24,
     value: i / 10 + Math.sin(i / 5) + Math.cos(i / 3),
     length: Math.round(1000 * 60 * 60 * 24) * Math.random(),
-    type: i > groups.length ? sample(groups) : groups[i],
+    type: i >= groups.length ? sample(groups) : groups[i],
   }))
 }
 

@@ -8,6 +8,7 @@ import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOpti
 // Utils
 import { flatten, isArray, merge } from 'utils/data'
 import { getTextAnchorFromTextAlign } from 'types/svg'
+import { toPx } from 'utils/to-px'
 
 // Styles
 import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT, UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT } from 'styles/index'
@@ -171,6 +172,9 @@ export function wrapSVGText (
   })
 }
 
+// TODO: When we calculate `maxCharacters` we don't take into account that the ellipsis character is wider than the regular characters,
+// which sometimes leads to labels getting cut off.  We should rethink the tolerance value and maybe subtract a few characters from `maxCharacters`,
+// but this can be a breaking change and should be done carefully testing all components that use `trimSVGText`
 /**
  * Trims an SVG text element based on the specified max width, trim type, and other options.
  * @param {Selection<SVGTextElement, any, SVGElement, any>} svgTextSelection - The D3 selection of the SVG text element to be trimmed.
@@ -186,7 +190,7 @@ export function trimSVGText (
   maxWidth = 50,
   trimType = TrimMode.Middle,
   fastMode = true,
-  fontSize = +window.getComputedStyle(svgTextSelection.node())?.fontSize || 0,
+  fontSize = toPx(window.getComputedStyle(svgTextSelection.node())?.fontSize || UNOVIS_TEXT_DEFAULT.fontSize),
   fontWidthToHeightRatio = getFontWidthToHeightRatio()
 ): boolean {
   const text = svgTextSelection.text() || ''
