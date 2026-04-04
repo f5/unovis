@@ -22,6 +22,11 @@ export interface TimeDataRecord {
   type?: string;
 }
 
+export type TimeSeriesDataRecord = {
+  time: number;
+  values: number[];
+}
+
 export type NodeDatum = GenericDataRecord & {
   id: string;
   group?: string;
@@ -50,6 +55,14 @@ export function generateXYDataRecords (n = 10): XYDataRecord[] {
     y: 5 + 5 * randomNumberGenerator(),
     y1: 1 + 3 * randomNumberGenerator(),
     y2: 2 * randomNumberGenerator(),
+  }))
+}
+
+export function generateTimeSeriesDataRecords (numSeries = 5, n = 25, interval = 1000 * 60 * 60): TimeSeriesDataRecord[] {
+  const startTime = Date.now() - (n - 1) * interval
+  return Array(n).fill(0).map((_, i) => ({
+    time: startTime + i * interval,
+    values: Array(numSeries).fill(0).map((_, j) => j + 5 * randomNumberGenerator()),
   }))
 }
 
