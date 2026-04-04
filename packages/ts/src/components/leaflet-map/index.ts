@@ -2,7 +2,7 @@ import { select, Selection } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import type L from 'leaflet'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
-import { StyleSpecification } from 'maplibre-gl'
+import type { StyleSpecification } from 'maplibre-gl'
 
 // Core
 import { ComponentCore } from 'core/component'
