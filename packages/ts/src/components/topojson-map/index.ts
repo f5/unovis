@@ -1037,6 +1037,11 @@ export class TopoJSONMap<
       this._projection.translate()[0] * this._center[0] / prevTranslate[0],
       this._projection.translate()[1] * this._center[1] / prevTranslate[1],
     ]
+
+    // Update zoom scale extent to match the new initial scale after resize
+    const zoomExtent = this.config.zoomExtent
+    this._zoomBehavior.scaleExtent([zoomExtent[0] * this._initialScale, zoomExtent[1] * this._initialScale])
+
     this._applyZoom()
 
     this._isResizing = false
@@ -1052,7 +1057,7 @@ export class TopoJSONMap<
       this.g.node()?.parentElement?.style.setProperty('--vis-map-current-zoom-level', String(this._currentZoomLevel))
       return // To prevent double render because of binding zoom behaviour
     }
-    const isMouseEvent = event.sourceEvent !== undefined
+    const isMouseEvent = !!event.sourceEvent
     const isExternalEvent = !event?.sourceEvent && !this._isResizing
 
     this._isZooming = true
@@ -1134,11 +1139,13 @@ export class TopoJSONMap<
 
   public zoomIn (increment = 0.5): void {
     if (this._isZooming) return
+    this._resetExpandedCluster()
     this.setZoom(this._currentZoomLevel + increment)
   }
 
   public zoomOut (increment = 0.5): void {
     if (this._isZooming) return
+    this._resetExpandedCluster()
     this.setZoom(this._currentZoomLevel - increment)
   }
 
@@ -1167,6 +1174,8 @@ export class TopoJSONMap<
 
   public fitView (): void {
     const { config } = this
+
+    this._resetExpandedCluster()
 
     if (config.mapFitToPoints) {
       // When mapFitToPoints is enabled, fitView should refit the projection to the points
