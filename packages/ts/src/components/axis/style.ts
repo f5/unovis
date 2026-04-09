@@ -9,6 +9,7 @@ export const cssVarDefaults: Record<string, string | undefined> = {
   '--vis-axis-font-family': undefined, // Undefined by default to allow proper fallback to var(--vis-font-family)
   '--vis-axis-tick-color': '#e8e9ef',
   '--vis-axis-domain-color': undefined, // Undefined by default to allow fallback to var(--vis-axis-tick-color)
+  '--vis-axis-domain-line-dasharray': undefined, // Undefined by default to allow fallback to var(--vis-axis-grid-line-dasharray)
   '--vis-axis-grid-color': '#e8e9ef',
   '--vis-axis-grid-line-width': '1px',
   '--vis-axis-grid-line-dasharray': 'none',
@@ -54,9 +55,9 @@ export const axis = css`
   user-select: none;
 
   .domain {
-    stroke: var(--vis-axis-domain-color, var(--vis-axis-tick-color));
-    stroke-width: var(--vis-axis-domain-line-width, var(--vis-axis-grid-line-width));
-    stroke-dasharray: var(--vis-axis-domain-line-dasharray, var(--vis-axis-grid-line-dasharray));
+    stroke: var(${variables.axisDomainColor}, var(${variables.axisTickColor}));
+    stroke-width: var(${variables.axisDomainLineWidth}, var(${variables.axisGridLineWidth}));
+    stroke-dasharray: var(${variables.axisDomainLineDasharray}, var(${variables.axisGridLineDasharray}));
   }
 
   &${`.${hideTickLine}`} {
@@ -80,11 +81,11 @@ export const grid = css`
   }
 
   line {
-    stroke: var(--vis-axis-grid-color);
-    stroke-width: var(--vis-axis-grid-line-width);
-    stroke-dasharray: var(--vis-axis-grid-line-dasharray);
-    opacity: var(--vis-axis-grid-opacity);
-    transition: var(--vis-axis-grid-transition);
+    stroke: var(${variables.axisGridColor});
+    stroke-width: var(${variables.axisGridLineWidth});
+    stroke-dasharray: var(${variables.axisGridLineDasharray});
+    opacity: var(${variables.axisGridOpacity});
+    transition: var(${variables.axisGridTransition});
   }
 `
 
@@ -92,19 +93,19 @@ export const tick = css`
   label: tick;
 
   stroke: none;
-  font-size: var(--vis-axis-tick-label-font-size);
-  font-weight: var(--vis-axis-tick-label-weight);
+  font-size: var(${variables.axisTickLabelFontSize});
+  font-weight: var(${variables.axisTickLabelWeight});
 
   line {
-    stroke: var(--vis-axis-tick-color);
-    stroke-width: var(--vis-axis-tick-line-width);
+    stroke: var(${variables.axisTickColor});
+    stroke-width: var(${variables.axisTickLineWidth});
   }
 
   text {
-    fill: var(--vis-axis-tick-label-color);
-    cursor: var(--vis-axis-tick-label-cursor);
-    font-family: var(--vis-axis-font-family, var(--vis-font-family));
-    text-decoration: var(--vis-axis-tick-label-text-decoration);
+    fill: var(${variables.axisTickLabelColor});
+    cursor: var(${variables.axisTickLabelCursor});
+    font-family: var(${variables.axisFontFamily}, var(--vis-font-family));
+    text-decoration: var(${variables.axisTickLabelTextDecoration});
     stroke: none;
   }
 `
@@ -115,10 +116,10 @@ export const tickTextExiting = css`
 
 export const label = css`
   label: label;
-  fill: var(--vis-axis-label-color);
-  font-size: var(--vis-axis-label-font-size);
-  font-weight: var(--vis-axis-label-weight);
-  font-family: var(--vis-axis-font-family, var(--vis-font-family));
+  fill: var(${variables.axisLabelColor});
+  font-size: var(${variables.axisLabelFontSize});
+  font-weight: var(${variables.axisLabelWeight});
+  font-family: var(${variables.axisFontFamily}, var(--vis-font-family));
   text-anchor: middle;
 `
 
@@ -129,5 +130,5 @@ export const tickLabel = css`
 export const tickLabelHideable = css`
   label: tick-label-hideable;
   opacity: 0;
-  transition: var(--vis-axis-tick-label-hide-transition);
+  transition: var(${variables.axisTickLabelHideTransition});
 `
