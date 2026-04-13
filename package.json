@@ -79,6 +79,7 @@
       "seroval": ">=1.4.1",
       "loader-utils@>=2.0.0 <2.0.4": ">=2.0.4 <3.0.0",
       "minimatch@<3.0.5": ">=3.0.5",
+      "minimatch@9": "^9.0.7",
       "braces@<3.0.3": ">=3.0.3",
       "micromatch@<4.0.8": ">=4.0.8",
       "http-proxy-middleware@<2.0.7": ">=2.0.7",
@@ -91,7 +92,11 @@
       "lodash-es@>=4.0.0 <=4.17.22": ">=4.17.23",
       "tar@<7.5.7": ">=7.5.11",
       "@isaacs/brace-expansion@<=5.0.0": ">=5.0.1",
-      "serialize-javascript@<=7.0.2": ">=7.0.3"
+      "serialize-javascript@<=7.0.2": ">=7.0.3",
+      "node-forge": "^1.4.0",
+      "path-to-regexp": "^0.1.13",
+      "picomatch": "^2.3.2",
+      "socket.io-parse": "^4.2.6"
     }
   }
 }
