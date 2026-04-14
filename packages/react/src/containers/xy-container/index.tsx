@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType, Annotations } from '@unovis/ts'
+import { XYContainer } from '@unovis/ts/containers/xy-container'
+import { XYContainerConfigInterface } from '@unovis/ts/containers/xy-container/config'
+import { XYComponentCore } from '@unovis/ts/core/xy-component'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { Crosshair } from '@unovis/ts/components/crosshair'
+import { Axis } from '@unovis/ts/components/axis'
+import { AxisType } from '@unovis/ts/components/axis/types'
+import { Annotations } from '@unovis/ts/components/annotations'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

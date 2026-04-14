@@ -1,6 +1,8 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { LeafletFlowMap, LeafletFlowMapConfigInterface, GenericDataRecord } from '@unovis/ts'
+import { LeafletFlowMap } from '@unovis/ts/components/leaflet-flow-map'
+import { LeafletFlowMapConfigInterface } from '@unovis/ts/components/leaflet-flow-map/config'
+import { GenericDataRecord } from '@unovis/ts/types/data'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

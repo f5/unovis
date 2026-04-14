@@ -1,5 +1,5 @@
 import { Children, ReactElement, ReactNode } from 'react'
-import { isEqual } from '@unovis/ts'
+import { isEqual } from '@unovis/ts/utils/data'
 
 export function arePropsEqual<PropTypes extends { children?: ReactNode }> (prevProps: PropTypes, nextProps: PropTypes): boolean {
   if (typeof prevProps.children !== typeof nextProps.children) return false

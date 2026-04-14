@@ -30,13 +30,26 @@
   "module": "./index.js",
   "typings": "./index.d.ts",
   "type": "module",
+  "typesVersions": {
+    "*": {
+      "components/*": ["dist/components/*"],
+      "containers/*": ["dist/containers/*"],
+      "core/*": ["dist/core/*"],
+      "types/*": ["dist/types/*"],
+      "utils/*": ["dist/utils/*"],
+      "styles/*": ["dist/styles/*"],
+      "data-models/*": ["dist/data-models/*"],
+      "data/*": ["dist/data/*"]
+    }
+  },
   "sideEffects": [
     "styles/index.js",
     "dist/styles/index.js"
   ],
   "scripts": {
-    "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./dist\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
-    "forcebuild": "rimraf dist; rollup -c; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
+    "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./dist\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi; npm run build:package-json",
+    "forcebuild": "rimraf dist; rollup -c; rm -rf dist/.cache; cp LICENSE README.md ./dist; npm run build:package-json",
+    "build:package-json": "node -e \"const p=JSON.parse(require('fs').readFileSync('package.json','utf8')); delete p.typesVersions; require('fs').writeFileSync('./dist/package.json', JSON.stringify(p, null, 2))\"",
     "publish:dist": "cd ./dist; npm publish"
   },
   "devDependencies": {

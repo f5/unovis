@@ -1,6 +1,8 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { ChordDiagram, ChordDiagramConfigInterface, ChordInputNode, ChordInputLink } from '@unovis/ts'
+import { ChordDiagram } from '@unovis/ts/components/chord-diagram'
+import { ChordDiagramConfigInterface } from '@unovis/ts/components/chord-diagram/config'
+import { ChordInputNode, ChordInputLink } from '@unovis/ts/components/chord-diagram/types'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

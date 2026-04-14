@@ -203,6 +203,12 @@ const config = {
       configureWebpack () {
         return {
           // cache: false, // Disable cache to prevent issues with building after updating Unovis packages
+          resolve: {
+            alias: {
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              '@unovis/ts': require('path').resolve(__dirname, '../../packages/ts/dist'),
+            },
+          },
           module: {
             rules: [
               {
