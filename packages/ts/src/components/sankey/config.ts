@@ -53,6 +53,16 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Sankey algorithm iterations. Default: `32` */
   iterations?: number;
 
+  // Collapse/Expand
+  /** Enable node collapse functionality. When enabled, clicking on nodes will toggle their collapse state. Default: `false` */
+  enableNodeCollapse?: boolean;
+  /** Node collapse animation duration, ms. Default: `300` */
+  collapseAnimationDuration?: number;
+  /** Field name in the node data that indicates if a node should be pre-collapsed.
+   *  For example, if set to "disabled", nodes with `disabled: true` will start collapsed.
+   *  Default: `undefined` */
+  disabledField?: string;
+
   // Sorting
   /** Sankey node sorting function. Default: `undefined`.
    *  Node sorting is applied to nodes in one layer (column). Layer by layer.
@@ -183,6 +193,9 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   highlightDuration: 300,
   highlightDelay: 1000,
   iterations: 32,
+  enableNodeCollapse: false,
+  collapseAnimationDuration: 300,
+  disabledField: undefined,
   nodeSort: undefined,
   nodeWidth: 25,
   nodeAlign: SankeyNodeAlign.Justify,
