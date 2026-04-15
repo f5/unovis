@@ -19,6 +19,8 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   strokeColor?: ColorAccessor<Datum>;
   /** Optional stroke width for crosshair circles. Default: `undefined` */
   strokeWidth?: NumericAccessor<Datum>;
+  /** Radius of crosshair circles in pixels. Default: `3` */
+  circleRadius?: number;
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   yStacked?: NumericAccessor<Datum>[];
   /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */
@@ -78,6 +80,7 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   color: undefined,
   strokeColor: undefined,
   strokeWidth: undefined,
+  circleRadius: 4,
   onCrosshairMove: undefined,
   forceShowAt: undefined,
   skipRangeCheck: false,

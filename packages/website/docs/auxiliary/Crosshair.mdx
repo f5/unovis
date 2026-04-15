@@ -52,6 +52,10 @@ Provide a `string` or color accessor function to the `color` attribute to custom
 Provide values or accessor functions to the `strokeColor` and `strokeWidth` attributes to customize the crosshair's circle stroke color and width:
 <XYWrapper {...crosshairProps()} color='none' strokeColor={(d, i) => ['red', 'green', 'blue'][i]} strokeWidth={(d, i) => [1, 2, 3][i]} showContext="minimal"/>
 
+## Circle Radius
+Use the `circleRadius` attribute to set the radius of the crosshair circles in pixels. Default value is `4`.
+<XYWrapperWithInput {...crosshairProps()} property="circleRadius" defaultValue={4} inputType="range" inputProps={{ min: 0, max: 8 }} />
+
 ## Adding a Tooltip
 You can render text content for your _Crosshair_ component by providing it with a `template` property and a _Tooltip_ component within the same container.
 
