@@ -83,6 +83,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
   _render (customDuration?: number): void {
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const colorOptions = { colorFn: this._colorFunction }
 
     const yAccessors = this.getAccessors()
     const stacked = getStackedData(this._barData, 0, yAccessors, this._prevNegative)
@@ -162,13 +163,13 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
       .attr('d', d => this._getBarPath(d, true))
-      .style('fill', d => getColor(d.datum, config.color, d.stackIndex))
+      .style('fill', d => getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))
 
     const barsMerged = barsEnter.merge(bars)
 
     smartTransition(barsMerged, duration)
       .attr('d', d => this._getBarPath(d))
-      .style('fill', d => getColor(d.datum, config.color, d.stackIndex))
+      .style('fill', d => getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))
       .style('cursor', d => getString(d.datum, config.cursor, d.stackIndex))
 
     smartTransition(bars.exit(), duration)

@@ -150,7 +150,7 @@ export function getSideLabelTextColor (label: GraphCircleLabel, context: SVGElem
 }
 
 export function getNodeColor<T> (d: T, colorAccessor: ColorAccessor<T>, index: number): string {
-  return getColor(d, colorAccessor, index, true) ?? null
+  return getColor(d, colorAccessor, index, undefined, { dontFallbackToCssVar: true }) ?? null
 }
 
 export function getNodeIconColor<T> (d: T, colorAccessor: ColorAccessor<T>, index: number, context: SVGElement): string {

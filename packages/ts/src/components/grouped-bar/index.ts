@@ -86,6 +86,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
     const duration = isNumber(customDuration)
       ? customDuration
       : config.duration
+    const colorOptions = { colorFn: this._colorFunction }
     const groupWidth = this._getGroupWidth()
 
     const yAccessors = this.getAccessors()
@@ -150,7 +151,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         const height = 0
         return this._getBarPath(x, y, width, height, false, valueAxisDirection)
       })
-      .style('fill', (d, i) => getColor(d, config.color, i))
+      .style('fill', (d, i) => getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
 
     const barsMerged = barsEnter.merge(bars)
     smartTransition(barsMerged, duration)
@@ -172,7 +173,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         }
         return this._getBarPath(x, y, width, height, isNegative, valueAxisDirection)
       })
-      .style('fill', (d, i) => getColor(d, config.color, i))
+      .style('fill', (d, i) => getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
       .style('cursor', (d, i) => getString(d, config.cursor, i))
 
     smartTransition(bars.exit(), duration).remove()
