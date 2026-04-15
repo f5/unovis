@@ -162,7 +162,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     // Set the fill color for the non-first level tiles
     nonFirstLevelTiles.forEach((d, i) => {
-      const providedColor = getColor(d, config.tileColor, i, true)
+      const providedColor = getColor(d, config.tileColor, i, undefined, { dontFallbackToCssVar: true })
       if (providedColor) {
         d._fill = providedColor
         return

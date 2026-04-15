@@ -9,6 +9,7 @@ export interface BulletLegendItemInterface {
   inactive?: boolean;
   hidden?: boolean;
   pointer?: boolean;
+  colorKey?: string;
 }
 
 export const BulletShape = {

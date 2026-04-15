@@ -75,6 +75,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     super._render(customDuration)
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const colorOptions = { colorFn: this._colorFunction }
 
     const curveGen = Curve[config.curveType as CurveType]
     this._areaGen = area<AreaDatum>()
@@ -143,14 +144,14 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
       .attr('class', s.area)
       .attr('d', d => this._areaGen(d) || this._emptyPath())
       .style('opacity', 0)
-      .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
+      .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
       .style('opacity', (d, i) => {
         const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
         return isDefined ? getNumber(data, config.opacity, areaMaxIdx - i) : 0
       })
-      .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
+      .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
       .style('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))
 
     if (duration) {
@@ -173,6 +174,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
 
   _renderLines (duration: number, stackedData: AreaDatum[][]): void {
     const { config, datamodel: { data } } = this
+    const colorOptions = { colorFn: this._colorFunction }
     const areaMaxIdx = stackedData.length - 1
     const stackedDataReversed = [...stackedData].reverse()
     const colorAccessor = config.lineColor ?? config.color
@@ -183,12 +185,12 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     const areas = this.g.selectAll(`.${s.area}`).nodes()
     const linesEnter = lines.enter().insert('path', (d, i) => areas[i + 1])
       .attr('class', s.areaLinePath)
-      .attr('stroke', (d, i) => getColor(data, colorAccessor, areaMaxIdx - i))
+      .attr('stroke', (d, i) => getColor(data, colorAccessor, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
       .attr('stroke-width', config.lineWidth)
       .attr('stroke-opacity', 0)
 
     const linesMerged = smartTransition(linesEnter.merge(lines), duration)
-      .attr('stroke', (d, i) => getColor(data, colorAccessor, areaMaxIdx - i))
+      .attr('stroke', (d, i) => getColor(data, colorAccessor, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
       .attr('stroke-width', config.lineWidth)
       .attr('stroke-opacity', 1)
       .attr('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))

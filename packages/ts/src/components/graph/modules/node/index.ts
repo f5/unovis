@@ -227,7 +227,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       .call(updateShape, nodeShape, nodeSize, d._index)
       .attr('stroke-width', getNumber(d, nodeStrokeWidth, d._index) ?? 0)
       .style('fill', getNodeColor(d, nodeFill, d._index))
-      .style('stroke', getColor(d, nodeStroke, d._index, true) ?? null)
+      .style('stroke', getColor(d, nodeStroke, d._index, undefined, { dontFallbackToCssVar: true }) ?? null)
 
     const nodeBBox = (node.node() as SVGGraphicsElement).getBBox()
 

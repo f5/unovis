@@ -220,6 +220,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .domain(rowLabels.map(l => l.label))
 
     const lineDataPrepared = this._prepareLinesData(data, yOrdinalScale, rowHeight)
+    const colorOptions = { colorFn: this._colorFunction }
 
     // Invisible Background rect to track events
     this._background
@@ -363,7 +364,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     linesEnter.append('rect')
       .attr('class', s.line)
-      .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i))))
+      .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i)), undefined, colorOptions))
       .call(this._renderLines.bind(this), rowHeight)
 
     linesEnter.append('use').attr('class', s.lineStartIcon)
@@ -377,7 +378,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const lineRectElementsSelection = linesMerged.selectAll<SVGRectElement, Datum & TimelineLineRenderState>(`.${s.line}`)
       .data(d => [d])
     smartTransition(lineRectElementsSelection, duration)
-      .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i))))
+      .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i)), undefined, colorOptions))
       .style('cursor', (d, i) => getString(d, config.lineCursor ?? config.cursor, i))
       .call(this._renderLines.bind(this), rowHeight)
 

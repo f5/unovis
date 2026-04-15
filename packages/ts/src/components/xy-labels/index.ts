@@ -61,10 +61,10 @@ export class XYLabels<Datum> extends XYComponentCore<Datum, XYLabelsConfigInterf
     const xRange = this.xScale.range() as [number, number]
     const yRange = this.yScale.range() as [number, number]
 
-    const labels = datamodel.data?.reduce<XYLabel<Datum>[]>((acc, d) => {
+    const labels = datamodel.data?.reduce<XYLabel<Datum>[]>((acc, d, i) => {
       const xPositioning = getValue<Datum, XYLabelPositioning>(d, config.xPositioning)
       const yPositioning = getValue<Datum, XYLabelPositioning>(d, config.yPositioning)
-      const props = getLabelRenderProps(d, this.element, config, this.xScale, this.yScale)
+      const props = getLabelRenderProps(d, this.element, config, this.xScale, this.yScale, i, this._colorFunction)
 
       if (
         ((xPositioning !== XYLabelPositioning.DataSpace) || isNumberWithinRange(props.x, xRange)) &&
@@ -102,7 +102,7 @@ export class XYLabels<Datum> extends XYComponentCore<Datum, XYLabelsConfigInterf
     }
 
     const clusters = Array.from(clusterMap.values()).map(records => ({
-      _screen: getLabelRenderProps(records, this.element, this.config, this.xScale, this.yScale),
+      _screen: getLabelRenderProps(records, this.element, this.config, this.xScale, this.yScale, undefined, this._colorFunction),
       records,
     }))
 

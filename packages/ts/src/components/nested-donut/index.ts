@@ -222,7 +222,7 @@ NestedDonutConfigInterface<Datum>
           child.x1 = positions[i].endAngle
 
           // Default to parent's fill if segmentColor accessor is not provided
-          const color = getColor(child, config.segmentColor, positions[i].index, child.depth !== 1)
+          const color = getColor(child, config.segmentColor, positions[i].index, undefined, { dontFallbackToCssVar: child.depth !== 1 })
           child._state = {
             fill: color ?? node._state.fill,
             fillOpacity: color === null ? opacity(positions[i].index) : null,

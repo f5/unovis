@@ -52,6 +52,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     baseline: undefined,
   }
 
+  private _colorKeys: string[] = []
+  public set colorKeys (colorKeys: string[]) { this._colorKeys = colorKeys }
+  public get colorKeys (): string[] { return this.config.colorKeys ?? this._colorKeys }
+
   public set accessors (accessors: CrosshairAccessors<Datum>) { this._accessors = accessors }
   public get accessors (): CrosshairAccessors<Datum> {
     const { config } = this
@@ -353,6 +357,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
   private getCircleData (datum: Datum, datumIndex: number): CrosshairCircle[] {
     const { config } = this
+    const colorOptions = { colorFn: this._colorFunction }
+    const colorKeys = this.colorKeys
 
     if (config.snapToData && datum) {
       const yAccessors = this.accessors.y ?? []
@@ -363,8 +369,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
           id: `stacked-${index}`,
           y: this.yScale(value + baselineValue),
           opacity: isNumber(getNumber(datum, yStackedAccessors[index], index)) ? 1 : 0,
-          color: getColor(datum, config.color, index),
-          strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, index) : undefined,
+          color: getColor(datum, config.color, index, colorKeys?.[index], colorOptions),
+          strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, index, colorKeys?.[index], colorOptions) : undefined,
           strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, index) : undefined,
         }))
 
@@ -375,8 +381,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
             id: `regular-${index}`,
             y: this.yScale(value),
             opacity: isNumber(value) ? 1 : 0,
-            color: getColor(datum, config.color, stackedValues.length + index),
-            strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, index) : undefined,
+            color: getColor(datum, config.color, stackedValues.length + index, colorKeys?.[stackedValues.length + index], colorOptions),
+            strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, index, colorKeys?.[index], colorOptions) : undefined,
             strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, index) : undefined,
           }
         })

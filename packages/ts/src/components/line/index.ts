@@ -70,6 +70,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
     super._render(customDuration)
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const colorOptions = { colorFn: this._colorFunction }
 
     this.curve = Curve[config.curveType]
     this.lineGen = line<{ x: number; y: number; defined: boolean }>()
@@ -139,7 +140,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
     linesEnter
       .append('path')
       .attr('class', s.linePath)
-      .attr('stroke', (d, i) => getColor(data, config.color, i))
+      .attr('stroke', (d, i) => getColor(data, config.color, i, config.colorKeys?.[i], colorOptions))
       .attr('stroke-opacity', 0)
       .attr('stroke-width', config.lineWidth)
 
@@ -164,7 +165,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       const isLineVisible = d.visible
       const dashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
       const transition = smartTransition(linePath, duration)
-        .attr('stroke', getColor(data, config.color, i))
+        .attr('stroke', getColor(data, config.color, i, config.colorKeys?.[i], colorOptions))
         .attr('stroke-width', config.lineWidth)
         .attr('stroke-opacity', isLineVisible ? 1 : 0)
         .style('stroke-dasharray', dashArray?.join(' ') ?? null) // We use `.style` because there's also a default CSS-variable for stroke-dasharray
@@ -188,7 +189,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       if (hasUndefinedSegments && config.interpolateMissingData) {
         smartTransition(lineGaps, duration)
           .attr('d', this.lineGen(d.gaps))
-          .attr('stroke', getColor(data, config.color, i))
+          .attr('stroke', getColor(data, config.color, i, config.colorKeys?.[i], colorOptions))
           .attr('stroke-width', config.lineWidth - 1)
           .style('opacity', 1)
       } else {

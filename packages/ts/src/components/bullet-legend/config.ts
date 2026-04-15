@@ -1,5 +1,5 @@
 // Local Types
-import { GenericAccessor } from 'types/accessor'
+import { ColorFunction, GenericAccessor } from 'types/accessor'
 import { BulletLegendItemInterface, BulletShape, BulletLegendOrientation } from './types'
 
 export interface BulletLegendConfigInterface {
@@ -12,6 +12,7 @@ export interface BulletLegendConfigInterface {
    *   inactive?: boolean;
    *   hidden?: boolean;
    *   pointer?: boolean;
+   *   colorKey?: string;
    * }
    * ```
   * Default: `[]` */
@@ -36,6 +37,8 @@ export interface BulletLegendConfigInterface {
   /** If set to true, the legend will be rendered directly into the HTML element provided to the constructor
    * without creating additional `div` element. Default: `false` */
   renderIntoProvidedDomNode?: boolean;
+  /** Color function. Default: `undefined` */
+  color?: ColorFunction;
 }
 
 export const BulletLegendDefaultConfig: BulletLegendConfigInterface = {

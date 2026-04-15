@@ -9,6 +9,7 @@ import { getColor, hexToBrightness } from 'utils/color'
 import { getNumber, getString, getValue } from 'utils/data'
 
 // Types
+import { ColorFunction } from 'types/accessor'
 import { ContinuousScale } from 'types/scale'
 
 // Config
@@ -106,8 +107,11 @@ export function getLabelRenderProps<Datum> (
   el: SVGGraphicsElement,
   config: XYLabelsConfigInterface<Datum>,
   xScale: ContinuousScale,
-  yScale: ContinuousScale
+  yScale: ContinuousScale,
+  index?: number,
+  colorFunction?: ColorFunction
 ): XYLabelRenderProps {
+  const colorOptions = { colorFn: colorFunction }
   const isCluster = Array.isArray(data)
   const fontSize = isCluster
     ? (getNumber(data as XYLabel<Datum>[], config.clusterFontSize) ?? getCSSVariableValueInPixels('var(--vis-xy-label-cluster-font-size)', el))
@@ -131,8 +135,8 @@ export function getLabelRenderProps<Datum> (
     y,
     fontSize,
     labelText,
-    labelColor: isCluster ? getColor(data as XYLabel<Datum>[], config.clusterLabelColor) : getColor(data as Datum, config.color),
-    backgroundColor: isCluster ? getColor(data as XYLabel<Datum>[], config.clusterBackgroundColor) : getColor(data as Datum, config.backgroundColor),
+    labelColor: isCluster ? getColor(data as XYLabel<Datum>[], config.clusterLabelColor) : getColor(data as Datum, config.color, index, config.colorKeys?.[index], colorOptions),
+    backgroundColor: isCluster ? getColor(data as XYLabel<Datum>[], config.clusterBackgroundColor) : getColor(data as Datum, config.backgroundColor, index, config.colorKeys?.[index], colorOptions),
     cursor: isCluster ? getString(data as XYLabel<Datum>[], config.clusterCursor) : getString(data as Datum, config.cursor),
     width: backgroundWidth,
     height: backgroundHeight,

@@ -2,7 +2,7 @@ import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
 
 // Types
-import { ColorAccessor } from 'types/accessor'
+import { ColorAccessor, ColorFunction } from 'types/accessor'
 import { Symbol, SymbolType } from 'types/symbol'
 
 // Utils
@@ -52,11 +52,13 @@ export function createBullets (
 export function updateBullets (
   container: Selection<SVGElement, BulletLegendItemInterface, HTMLElement, unknown>,
   config: BulletLegendConfigInterface,
-  colorAccessor: ColorAccessor<BulletLegendItemInterface>
+  colorAccessor: ColorAccessor<BulletLegendItemInterface>,
+  colorFunction?: ColorFunction
 ): void {
+  const colorOptions = { colorFn: colorFunction }
   container.each((d, i, els) => {
     const shape = getString(d, config.bulletShape, i) as BulletShape
-    const colors = ensureArray(d.color ?? getColor(d, colorAccessor, i))
+    const colors = ensureArray(d.color ?? getColor(d, colorAccessor, i, d.colorKey, colorOptions))
     const numBullets = colors.length
     const bulletWidth = BULLET_SIZE
     const defaultBulletSize = toPx(config.bulletSize) || getCSSVariableValueInPixels('var(--vis-legend-bullet-size)', els[i])

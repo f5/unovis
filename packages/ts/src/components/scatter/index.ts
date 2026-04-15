@@ -189,6 +189,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     const maxSizeXDomain = (this.xScale.invert(maxSizePx) as number) - (this.xScale.invert(0) as number)
     const maxSizeYDomain = Math.abs((this.yScale.invert(maxSizePx) as number) - (this.yScale.invert(0) as number))
 
+    const colorOptions = { colorFn: this._colorFunction }
+    const colorOptionsNoFallback = { ...colorOptions, dontFallbackToCssVar: true }
     return yAccessors.map((y, j) => {
       return data?.reduce<ScatterPoint<Datum>[]>((acc, d, i) => {
         const xValue = getNumber(d, config.x, i)
@@ -212,12 +214,12 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
               xValue: xValue,
               yValue: yValue,
               sizePx: pointSizeScaled,
-              color: getColor(d, config.color, j),
-              strokeColor: getColor(d, config.strokeColor, j, true),
+              color: getColor(d, config.color, j, config.colorKeys?.[j], colorOptions),
+              strokeColor: getColor(d, config.strokeColor, j, config.colorKeys?.[j], colorOptionsNoFallback),
               strokeWidthPx: getNumber(d, config.strokeWidth, j),
               shape: getString(d, config.shape, j) as SymbolType,
               label: getString(d, config.label, j),
-              labelColor: getColor(d, config.labelColor, j, true),
+              labelColor: getColor(d, config.labelColor, j, config.colorKeys?.[j], colorOptionsNoFallback),
               labelPosition: getValue(d, config.labelPosition, i) as Position,
               cursor: getString(d, config.cursor, j),
               groupIndex: j,
