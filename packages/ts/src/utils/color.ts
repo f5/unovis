@@ -1,26 +1,56 @@
 import { color, hcl } from 'd3-color'
+import { scaleOrdinal } from 'd3-scale'
 
 // Core
-import { getCSSColorVariable } from 'styles/colors'
+import { colors, getCSSColorVariable } from 'styles/colors'
 
 // Utils
-import { ColorAccessor, StringAccessor } from 'types/accessor'
-import { getString, isNumber } from 'utils/data'
+import { ColorAccessor, ColorFunction } from 'types/accessor'
+import { isFunction, isNumber } from 'utils/data'
 import { isStringCSSVariable, getCSSVariableValue } from 'utils/misc'
 
 type RGBColor = { r: number; g: number; b: number }
 
-/** Retrieves color from the data if provided, fallbacks to CSS variables if the index was passed */
+// Default color scale that uses CSS variables for the colors
+// The scale is available to the users to override the default colors and domain.
+export const UnovisColorScale = scaleOrdinal<string | number, string>()
+  .range(Array.from({ length: colors.length }, (_, i) => `var(${getCSSColorVariable(i)})`))
+  .domain(Array.from({ length: colors.length }, (_, i) => i))
+
+/** Retrieves color from the data if provided; fallbacks to CSS variables if the index was passed */
 export function getColor<T> (
   d: T,
-  accessor: ColorAccessor<T>,
+  accessorOrValue: ColorAccessor<T>,
   index?: number,
-  dontFallbackToCssVar?: boolean
+  key?: string,
+  options?: {
+    dontFallbackToCssVar?: boolean;
+    colorFn?: ColorFunction;
+  }
 ): string | null {
-  if (Array.isArray(accessor) && isFinite(index)) return accessor[index % accessor.length]
+  // If accessor is an array and index is provided, return the value at the index
+  if (Array.isArray(accessorOrValue) && isFinite(index)) return accessorOrValue[index % accessorOrValue.length]
 
-  const value = getString(d, accessor as StringAccessor<T>, index)
-  return (value || ((isNumber(index) && !dontFallbackToCssVar) ? `var(${getCSSColorVariable(index)})` : null))
+  // If accessor is a function, call it and return the result
+  let value: string | null | undefined
+  if (isFunction(accessorOrValue)) {
+    value = accessorOrValue(d, index, key) as (string | null | undefined)
+  } else {
+    value = accessorOrValue as string | null | undefined
+  }
+  if (value) return value
+
+  // If key is provided, return the color for the key
+  const colorScale = options?.colorFn ?? UnovisColorScale
+  if (key) {
+    return colorScale(key as string)
+  }
+
+  // If index is a number and `dontFallbackToCssVar` is `false`, return the color for the index
+  if (isNumber(index) && !options?.dontFallbackToCssVar) return colorScale(index % colors.length)
+
+  // If all else fails, return null
+  return null
 }
 
 export function hexToRgb (hex: string): RGBColor {
