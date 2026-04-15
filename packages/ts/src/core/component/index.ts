@@ -11,6 +11,7 @@ import { guid } from 'utils/misc'
 // Types
 import { ComponentType, Sizing } from 'types/component'
 import { Spacing } from 'types/spacing'
+import { ColorFunction } from 'types/accessor'
 
 // Local Types
 import { VisEventCallback, VisEventType } from './types'
@@ -49,12 +50,19 @@ export class ComponentCore<
   protected _containerHeight: number | undefined = undefined
   /** Container margin in pixels. This property is set automatically by the container. */
   protected _containerMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
+  /** Color scale for the component. This property is set automatically by the container. */
+  protected _colorFunction: ColorFunction | undefined = undefined
 
   _setUpComponentEventsThrottled = throttle(this._setUpComponentEvents, 500)
 
   /** Set the container margin. Called automatically by containers. */
   setContainerMargin (margin: Spacing): void {
     this._containerMargin = margin
+  }
+
+  /** Set the color scale for the component. Called automatically by containers. */
+  setColorFunction (colorFunction: ColorFunction): void {
+    this._colorFunction = colorFunction
   }
 
   _setCustomAttributesThrottled = throttle(this._setCustomAttributes, 500)
