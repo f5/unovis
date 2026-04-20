@@ -199,6 +199,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
       return data?.reduce<ScatterPoint<Datum>[]>((acc, d, i) => {
         const xValue = getNumber(d, config.x, i)
         const yValue = getNumber(d, y, j)
+        if (xValue == null || yValue == null) return acc
+
         const pointSize = getNumber(d, config.size, i)
         const pointSizeScaled = config.sizeRange ? this._sizeScale(pointSize) : pointSize
         const pointSizeXDomain = (this.xScale.invert(pointSizeScaled) as number) - (this.xScale.invert(0) as number)
