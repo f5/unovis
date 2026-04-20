@@ -1033,14 +1033,25 @@ export class TopoJSONMap<
 
     this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
     this._initialScale = this._projection.scale()
-    this._center = [
-      this._projection.translate()[0] * this._center[0] / prevTranslate[0],
-      this._projection.translate()[1] * this._center[1] / prevTranslate[1],
-    ]
 
-    // Update zoom scale extent to match the new initial scale after resize
-    const zoomExtent = this.config.zoomExtent
-    this._zoomBehavior.scaleExtent([zoomExtent[0] * this._initialScale, zoomExtent[1] * this._initialScale])
+    // If a point is selected, center the view on it after resize
+    if (this._selectedPoint) {
+      const coords = this._selectedPoint.geometry.coordinates as [number, number]
+      const pos = this._projection(coords)
+      const projTranslate = this._projection.translate()
+      if (pos) {
+        const k = this._currentZoomLevel
+        this._center = [
+          this._width / 2 - (pos[0] - projTranslate[0]) * k,
+          this._height / 2 - (pos[1] - projTranslate[1]) * k,
+        ]
+      }
+    } else {
+      this._center = [
+        this._projection.translate()[0] * this._center[0] / prevTranslate[0],
+        this._projection.translate()[1] * this._center[1] / prevTranslate[1],
+      ]
+    }
 
     this._applyZoom()
 
@@ -1059,6 +1070,7 @@ export class TopoJSONMap<
     }
     const isMouseEvent = !!event.sourceEvent
     const isExternalEvent = !event?.sourceEvent && !this._isResizing
+    const isResizeEvent = this._isResizing && !event?.sourceEvent
 
     this._isZooming = true
 
@@ -1076,7 +1088,7 @@ export class TopoJSONMap<
     }
 
     window.cancelAnimationFrame(this._animFrameId)
-    this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent))
+    this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent, isResizeEvent))
 
     if (isMouseEvent) {
       // Update the center coordinate so that the next call to _applyZoom()
@@ -1116,7 +1128,7 @@ export class TopoJSONMap<
     })
   }
 
-  _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean, isExternalEvent: boolean): void {
+  _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean, isExternalEvent: boolean, isResizeEvent = false): void {
     const scale = transform.k / this._initialScale || 1
     const center = this._projection.translate()
 
@@ -1124,7 +1136,7 @@ export class TopoJSONMap<
       .translate(transform.x - center[0] * scale, transform.y - center[1] * scale)
       .scale(scale)
 
-    const customDuration = isExternalEvent
+    const customDuration = (isExternalEvent || isResizeEvent)
       ? this.config.zoomDuration
       : (isMouseEvent ? 0 : null)
 

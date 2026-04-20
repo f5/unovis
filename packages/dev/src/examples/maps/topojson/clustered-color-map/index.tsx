@@ -307,6 +307,7 @@ export const totalEvents = data.points.reduce((sum, d) => sum + (d.normal || 0),
 export const component = (): React.ReactNode => {
   const mapRef = useRef<VisTopoJSONMapRef<any, DataRecord, any>>(null)
   const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null)
+  const [chartWidth, setChartWidth] = useState('1300px')
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   const [zoomToLocation, setZoomToLocation] = useState<{ coordinates: [number, number]; zoomLevel: number; expandCluster?: boolean } | undefined>(undefined)
 
@@ -385,7 +386,7 @@ export const component = (): React.ReactNode => {
     `${(((d.blocked || 0) + (d.normal || 0)) / 1000).toFixed(1)}K`
 
   return (<>
-    <VisSingleContainer data={data} height={'90vh'}>
+    <VisSingleContainer data={data} height={'90vh'} width={chartWidth}>
       <VisTopoJSONMap<any, DataRecord, any>
         ref={mapRef}
         topojson={WorldMapTopoJSON}
@@ -415,11 +416,15 @@ export const component = (): React.ReactNode => {
             click: () => {
               setSelectedNodeId(null)
               mapRef.current?.component?.unselectPoint()
+              setChartWidth('1500px')
+              onFit()
             },
           },
           [TopoJSONMap.selectors.feature]: {
             click: (d: unknown) => {
               console.warn('on feature click', d)
+              setChartWidth('1500px')
+              onFit()
             },
           },
           [TopoJSONMap.selectors.point]: {
@@ -434,6 +439,7 @@ export const component = (): React.ReactNode => {
                 setSelectedNodeId(id)
                 mapRef.current?.component?.selectPointById(id)
               }
+              setChartWidth('1000px')
             },
           },
         }}
