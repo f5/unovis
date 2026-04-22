@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Timeline, TimelineConfigInterface } from '@unovis/ts'
+import { Timeline } from '@unovis/ts/components/timeline'
+import { TimelineConfigInterface } from '@unovis/ts/components/timeline/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

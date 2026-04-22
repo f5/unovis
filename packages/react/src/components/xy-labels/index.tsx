@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { XYLabels, XYLabelsConfigInterface } from '@unovis/ts'
+import { XYLabels } from '@unovis/ts/components/xy-labels'
+import { XYLabelsConfigInterface } from '@unovis/ts/components/xy-labels/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
