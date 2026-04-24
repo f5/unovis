@@ -12,9 +12,15 @@
   --color-black: #222;
 }
 
+html,
+body {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
   color: var(--color-black);
+  background-color: #fff;
 }
 
 body.theme-dark {
@@ -40,4 +46,28 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
   display: flex;
   flex-direction: row;
   padding: 8px 8px 8px 8px;
+}
+
+.content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Toolbar stays fixed height; routed view fills remaining space and scrolls internally */
+.content > *:first-child {
+  flex-shrink: 0;
+}
+
+.content > *:last-child {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }

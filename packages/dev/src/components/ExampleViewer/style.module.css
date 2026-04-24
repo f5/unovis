@@ -1,9 +1,11 @@
 .exampleViewer {
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
   min-width: 0;
-  min-height: 100%;
-  overflow: auto;
+  min-height: 0;
   position: relative;
+  overflow: hidden;
 }
 
 .nothingSelected {
@@ -15,3 +17,69 @@
   font-size: 12pt;
   color: var(--color-black);
 }
+
+.exampleWrapper {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.panelGroup {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.codeViewer {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0;
+  padding: 5px;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 3px;
+}
+
+body.theme-dark .codeViewer {
+  background: #22262a;
+}
+
+.example {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  position: relative;
+  padding-right: 5px;
+}
+
+.spHeight {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.codeViewer :global(.sp-wrapper),
+.codeViewer :global(.sp-layout) {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+}
+
+/* CodeMirror 6: keep editor within the panel and scroll inside the scroller */
+.codeViewer :global(.cm-editor) {
+  height: 100%;
+  max-height: 100%;
+}
+
+.codeViewer :global(.cm-scroller) {
+  overflow: auto !important;
+}
+
+body.theme-dark .spHeight {
+  --sp-colors-surface1: #22262a !important;
+  --sp-colors-surface2: #5c5c5c55 !important;
+}
+
