@@ -27,18 +27,28 @@ for (let i = 0; i < args.length; i++) {
   }
 }
 
+// Filename helpers
+const sanitizeForFileName = s =>
+  (s || 'unknown').replace(/[^a-zA-Z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'unknown'
+
+const formatDateForFileName = ts => {
+  const d = new Date(ts)
+  const pad = n => String(n).padStart(2, '0')
+  return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' +
+    pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds())
+}
+
 // Run pnpm audit and get results
 let auditData;
 
 try {
-  console.log('Running pnpm audit...\n');
+  console.log('pnpm audit has started...');
   try {
     const output = execSync('pnpm audit --json', { 
       encoding: 'utf8',
       maxBuffer: 10 * 1024 * 1024, // 10MB buffer
-      cwd: __dirname
+      cwd: path.join(__dirname, '..')
     });
-    auditData = JSON.parse(output);
   } catch (error) {
     // pnpm audit exits with code 1 when vulnerabilities are found
     // but still outputs JSON, so we can use the output
@@ -106,7 +116,8 @@ try {
       patchedVersions: advisory.patched_versions,
       recommendation: advisory.recommendation,
       cves: advisory.cves || [],
-      url: advisory.url
+      url: advisory.url,
+      cvssScore: advisory.cvss && advisory.cvss.score > 0 ? advisory.cvss.score : null,
     });
   });
   
@@ -265,82 +276,40 @@ try {
     }
   }
   
-  // Print summary
-  console.log('\n' + '='.repeat(80));
-  console.log('VULNERABILITY SUMMARY BY WORKSPACE');
-  console.log('='.repeat(80));
-  console.log(`\nTotal Workspaces Analyzed: ${workspaceResults.length}`);
-  
-  if (filterWorkspace) {
-    console.log(`Filtering by workspace: ${filteredResults[0].workspace}`);
-  }
-  
-  if (auditData.metadata && auditData.metadata.vulnerabilities) {
-    console.log('\nOverall Vulnerabilities:');
-    const overall = auditData.metadata.vulnerabilities;
-    console.log(`  Critical: ${overall.critical || 0}`);
-    console.log(`  High: ${overall.high || 0}`);
-    console.log(`  Moderate: ${overall.moderate || 0}`);
-    console.log(`  Low: ${overall.low || 0}`);
-    console.log(`  Info: ${overall.info || 0}`);
-    console.log(`  Total: ${(overall.critical || 0) + (overall.high || 0) + (overall.moderate || 0) + (overall.low || 0) + (overall.info || 0)}`);
-  }
-  
-  console.log('\n' + '='.repeat(80));
-  
-  // Print detailed summary for each workspace
-  filteredResults.forEach((result, index) => {
-    console.log(`\n[${index + 1}] Workspace: ${result.workspace}`);
-    console.log('-'.repeat(80));
-    console.log(`Total Vulnerabilities: ${result.totalVulnerabilities}`);
-    console.log(`Affected Modules: ${result.uniqueModules.length} (${result.uniqueModules.join(', ')})`);
-    console.log('\nSeverity Breakdown:');
-    console.log(`  Critical: ${result.severityCounts.critical}`);
-    console.log(`  High: ${result.severityCounts.high}`);
-    console.log(`  Moderate: ${result.severityCounts.moderate}`);
-    console.log(`  Low: ${result.severityCounts.low}`);
-    console.log(`  Info: ${result.severityCounts.info}`);
-    
-    if (result.vulnerabilities.length > 0) {
-      console.log('\nVulnerability Details:');
-      result.vulnerabilities.forEach((vuln, i) => {
-        console.log(`\n${drawGridBox(
-          vuln.severity,
-          vuln.title,
-          vuln.module,
-          vuln.vulnerableVersions,
-          vuln.patchedVersions,
-          vuln.paths || [],
-          vuln.url,
-          vuln.cves
-        )}`);
-      });
-    }
-  });
-  
-  console.log('\n' + '='.repeat(80));
-  console.log('END OF REPORT');
-  console.log('='.repeat(80) + '\n');
-  
-  // Optionally write to a file
-  const reportPath = path.join(__dirname, 'vulnerability-report.json');
+  // Capture git branch and package version for the report header
+  let gitBranch = 'unknown';
+  try { gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim(); } catch (_) {}
+  let pkgVersion = 'unknown';
+  try { pkgVersion = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8')).version || 'unknown'; } catch (_) {}
+
+  // Count total workspaces defined in pnpm-workspace.yaml (not just ones with vulnerabilities)
+  let totalWorkspaces = 0;
+  try {
+    const wsYaml = fs.readFileSync(path.join(__dirname, '..', 'pnpm-workspace.yaml'), 'utf8');
+    totalWorkspaces = wsYaml.split('\n').filter(l => /^\s+-\s+/.test(l)).length;
+  } catch (_) {}
+
   const reportData = {
     generatedAt: new Date().toISOString(),
     filteredWorkspace: filterWorkspace,
     workspaces: filterWorkspace ? filteredResults : workspaceResults,
-    overallMetadata: auditData.metadata
+    totalWorkspaces,
+    overallMetadata: auditData.metadata,
+    branch: gitBranch,
+    version: pkgVersion
   };
-  fs.writeFileSync(reportPath, JSON.stringify(reportData, null, 2));
-  
-  console.log(`\n✓ Detailed report saved to: ${reportPath}\n`);
-  
-  // Generate HTML report
-  const htmlReportPath = path.join(__dirname, 'vulnerability-report.html');
+
+  // Generate HTML report — dynamic filename: vulnerability-report-<branch>-<YYYYMMDD-HHMMSS>.html
+  const reportFileName = `vulnerability-report-${sanitizeForFileName(gitBranch)}-${formatDateForFileName(Date.now())}.html`;
+  const htmlReportPath = path.join(__dirname, reportFileName);
   const htmlContent = generateHtmlReport(reportData);
   fs.writeFileSync(htmlReportPath, htmlContent);
-  
-  console.log(`✓ HTML report saved to: ${htmlReportPath}\n`);
-  
+
+  const overall = auditData.metadata?.vulnerabilities || {};
+  const pnpmTotal = (overall.critical || 0) + (overall.high || 0) + (overall.moderate || 0) + (overall.low || 0) + (overall.info || 0);
+  const displayedTotal = reportData.workspaces.reduce((s, ws) => s + ws.totalVulnerabilities, 0);
+  console.log(`Scan complete — pnpm reported ${pnpmTotal} vulnerabilities; report surfaces ${displayedTotal} unique entries across ${reportData.workspaces.length} workspace(s). HTML saved to: ${htmlReportPath}`);
+
   // Start server if --serve flag is provided
   if (openServer) {
     startServer(htmlReportPath, serverPort);
@@ -400,8 +369,11 @@ async function startServer(htmlFilePath, preferredPort = 9030) {
     process.exit(1);
   }
   
+  const reportBaseName = path.basename(htmlFilePath);
+
   const server = http.createServer((req, res) => {
-    if (req.url === '/' || req.url === '/vulnerability-report.html') {
+    const { pathname } = new URL(req.url, 'http://x');
+    if (pathname === '/' || pathname === `/${reportBaseName}`) {
       fs.readFile(htmlFilePath, (err, data) => {
         if (err) {
           res.writeHead(500, { 'Content-Type': 'text/plain' });
@@ -416,28 +388,41 @@ async function startServer(htmlFilePath, preferredPort = 9030) {
       res.end('Not found');
     }
   });
-  
+
   server.listen(port, () => {
-    console.log(`\n🚀 Server started at http://localhost:${port}`);
-    console.log(`📊 View your vulnerability report at: http://localhost:${port}/vulnerability-report.html\n`);
-    console.log('Press Ctrl+C to stop the server\n');
-    
-    // Auto-open browser (macOS, Linux, Windows)
-    const open = (url) => {
-      const { exec } = require('child_process');
-      const command = process.platform === 'darwin' ? 'open' : 
-                      process.platform === 'win32' ? 'start' : 'xdg-open';
-      exec(`${command} ${url}`);
+    const url = `http://localhost:${port}`;
+    console.log(`\n🚀 Server started at ${url}`);
+    console.log(`📊 Vulnerability report: ${url}/${reportBaseName}\n`);
+
+    // Auto-open browser (macOS and Linux only)
+    const open = (u) => {
+      const { execFile } = require('child_process');
+      if (process.platform === 'darwin') {
+        execFile('open', [u]);
+      } else if (process.platform === 'linux') {
+        execFile('xdg-open', [u]);
+      }
     };
-    
+
+    setTimeout(() => open(`${url}/${reportBaseName}`), 500);
+
+    // Auto-close after giving the browser time to load the page
     setTimeout(() => {
-      open(`http://localhost:${port}/vulnerability-report.html`);
-    }, 500);
+      console.log('  Report served. Shutting down server.\n');
+      server.close(() => process.exit(0));
+      setTimeout(() => process.exit(0), 2000);
+    }, 5000);
   });
 }
 
 // Function to generate HTML report
 function generateHtmlReport(reportData) {
+  const safeReportDataJSON = JSON.stringify(reportData)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029')
   const htmlTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -453,7 +438,7 @@ function generateHtmlReport(reportData) {
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #F2F2F2;
             min-height: 100vh;
             padding: 20px;
         }
@@ -462,27 +447,83 @@ function generateHtmlReport(reportData) {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
 
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 40px;
+            padding: 18px 40px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 1.8em;
+            margin-bottom: 4px;
             font-weight: 700;
         }
 
+        .header .header-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .header .header-badge {
+            font-size: 0.8em;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            padding: 2px 8px;
+            opacity: 0.95;
+        }
+
         .header .timestamp {
-            font-size: 0.9em;
-            opacity: 0.9;
+            font-size: 0.8em;
+            opacity: 0.85;
+        }
+
+        .meta-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8em;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            padding: 2px 8px;
+            opacity: 0.95;
+            color: white;
+        }
+
+        .meta-stat strong {
+            font-weight: 700;
+        }
+
+        .audit-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 0;
+            font-size: 0.78em;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .audit-note .audit-note-icon {
+            flex-shrink: 0;
+            font-size: 0.95em;
+            opacity: 0.65;
+            margin-top: 1px;
+        }
+
+        .audit-note strong {
+            font-weight: 600;
+            color: #4a5568;
         }
 
         .summary {
@@ -508,7 +549,7 @@ function generateHtmlReport(reportData) {
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #D8D8D8;
             text-align: center;
         }
 
@@ -605,7 +646,7 @@ function generateHtmlReport(reportData) {
             border-radius: 6px;
             font-size: 0.9em;
             color: #4a5568;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #D8D8D8;
         }
 
         .stat-badge strong {
@@ -628,6 +669,24 @@ function generateHtmlReport(reportData) {
             padding: 12px 20px;
             border-radius: 8px;
             font-weight: 600;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: opacity 0.15s, box-shadow 0.15s, border-color 0.15s;
+            user-select: none;
+        }
+
+        .severity-count:hover {
+            opacity: 0.85;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .severity-count.active {
+            border-color: #2d3748;
+            box-shadow: 0 0 0 3px rgba(45, 55, 72, 0.2);
+        }
+
+        .severity-count.dimmed {
+            opacity: 0.35;
         }
 
         .vulnerabilities-list {
@@ -644,8 +703,7 @@ function generateHtmlReport(reportData) {
         }
 
         .vulnerability-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         }
 
         .vuln-header {
@@ -696,13 +754,29 @@ function generateHtmlReport(reportData) {
         }
 
         .cve-badge {
-            background: #4a5568;
+            background: #1A1A2E;
             color: white;
             padding: 4px 10px;
             border-radius: 4px;
             font-size: 0.8em;
             font-family: 'Courier New', monospace;
         }
+
+        .cvss-score {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .cvss-critical { background: #fed7d7; color: #822727; }
+        .cvss-high     { background: #feebc8; color: #7c2d12; }
+        .cvss-medium   { background: #fefcbf; color: #744210; }
+        .cvss-low      { background: #c6f6d5; color: #22543d; }
+        .cvss-none     { background: #e2e8f0; color: #4a5568; }
 
         .paths-count {
             font-size: 0.85em;
@@ -764,7 +838,7 @@ function generateHtmlReport(reportData) {
             padding: 8px;
             margin: 4px 0;
             background: white;
-            border-left: 3px solid #667eea;
+            border-left: 3px solid #E4002B;
             border-radius: 4px;
             word-break: break-all;
         }
@@ -775,7 +849,7 @@ function generateHtmlReport(reportData) {
         }
 
         .url-link {
-            color: #667eea;
+            color: #E4002B;
             text-decoration: none;
             font-size: 0.85em;
             display: inline-block;
@@ -795,8 +869,8 @@ function generateHtmlReport(reportData) {
             display: none;
         }
 
-        .workspace.collapsed .toggle-icon {
-            transform: rotate(-90deg);
+        .workspace:not(.collapsed) .toggle-icon {
+            transform: rotate(180deg);
         }
 
         .modules-list {
@@ -805,9 +879,151 @@ function generateHtmlReport(reportData) {
             margin-top: 10px;
         }
 
+        .search-bar {
+            padding: 20px 40px 14px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .search-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .expand-collapse-btn {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-width: 130px;
+            padding: 10px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            color: #4a5568;
+            font-size: 0.88em;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: border-color 0.2s, background 0.2s, color 0.2s;
+        }
+
+        .expand-collapse-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: rgba(102,126,234,0.05);
+        }
+
+        .summary-card.filter-card {
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s, outline 0.15s;
+            user-select: none;
+        }
+
+        .summary-card.filter-card:hover {
+            box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+        }
+
+        .summary-card.filter-card.active {
+            outline: 3px solid #667eea;
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.18);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 44px 12px 40px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: white;
+            color: #2d3748;
+        }
+
+        .search-input::-webkit-search-cancel-button,
+        .search-input::-webkit-search-decoration {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .search-input:focus {
+            border-color: #E4002B;
+            box-shadow: 0 0 0 3px rgba(228, 0, 43, 0.12);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            pointer-events: none;
+            font-size: 1em;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #a0aec0;
+            font-size: 1.1em;
+            display: none;
+            padding: 4px 6px;
+            border-radius: 4px;
+            line-height: 1;
+        }
+
+        .search-clear:hover {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .search-clear.visible {
+            display: block;
+        }
+
+        .search-results-count {
+            font-size: 0.82em;
+            color: #718096;
+            margin-top: 8px;
+            min-height: 1.2em;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 48px 20px;
+            color: #a0aec0;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        .no-results p {
+            font-size: 1em;
+            margin-bottom: 6px;
+        }
+
+        .no-results small {
+            font-size: 0.85em;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
-                font-size: 1.8em;
+                font-size: 1.4em;
             }
 
             .content {
@@ -827,6 +1043,10 @@ function generateHtmlReport(reportData) {
                 gap: 8px;
                 align-items: flex-end;
             }
+
+            .search-bar {
+                padding: 16px 20px;
+            }
         }
     </style>
 </head>
@@ -834,75 +1054,145 @@ function generateHtmlReport(reportData) {
     <div class="container">
         <div class="header">
             <h1>Unovis Security Vulnerability Report</h1>
-            <div class="timestamp" id="timestamp"></div>
+            <div class="header-meta">
+                <span class="header-badge" id="branchBadge"></span>
+                <span class="header-badge" id="versionBadge"></span>
+                <div class="meta-stat">&#128230; <strong id="metaWorkspaces">0</strong>&nbsp;workspaces analysed</div>
+                <div class="meta-stat">&#128220; <strong id="metaDependencies">0</strong>&nbsp;total dependencies</div>
+                <span class="timestamp" id="timestamp"></span>
+            </div>
         </div>
 
         <div class="summary">
             <h2>Overall Summary</h2>
             <div class="summary-grid">
-                <div class="summary-card">
-                    <div class="label">Total Workspaces</div>
-                    <div class="value" id="totalWorkspaces">0</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Total Dependencies</div>
-                    <div class="value" id="totalDependencies">0</div>
-                </div>
-                <div class="summary-card">
+                <div class="summary-card filter-card" data-severity="all" role="button" aria-pressed="true" title="Show all">
                     <div class="label">Total Vulnerabilities</div>
                     <div class="value" style="color: #e53e3e;" id="totalCount">0</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card filter-card" data-severity="critical" role="button" aria-pressed="false" title="Filter by Critical">
                     <div class="label">Critical</div>
                     <div class="value" style="color: #e53e3e;" id="criticalCount">0</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card filter-card" data-severity="high" role="button" aria-pressed="false" title="Filter by High">
                     <div class="label">High</div>
                     <div class="value" style="color: #dd6b20;" id="highCount">0</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card filter-card" data-severity="moderate" role="button" aria-pressed="false" title="Filter by Moderate">
                     <div class="label">Moderate</div>
                     <div class="value" style="color: #d69e2e;" id="moderateCount">0</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card filter-card" data-severity="low" role="button" aria-pressed="false" title="Filter by Low">
                     <div class="label">Low</div>
                     <div class="value" style="color: #38a169;" id="lowCount">0</div>
                 </div>
             </div>
+            <div class="audit-note">
+                <span class="audit-note-icon">&#9432;</span>
+                <span id="auditNoteText">pnpm audit reported vulnerabilities across all packages. This report groups them per workspace, deduplicating shared dependencies &mdash; counts reflect unique vulnerabilities per workspace, not the raw pnpm total.</span>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <div class="search-bar-row">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">&#128269;</span>
+                    <input
+                        type="search"
+                        id="searchInput"
+                        class="search-input"
+                        placeholder="Search by title, package, CVE, or workspace&hellip;"
+                        autocomplete="off"
+                        aria-label="Search vulnerabilities"
+                    >
+                    <button class="search-clear" id="searchClear" aria-label="Clear search">&#x2715;</button>
+                </div>
+                <button class="expand-collapse-btn" id="expandCollapseBtn" onclick="toggleAllWorkspaces()" title="Expand / Collapse all workspaces">
+                    <span id="expandCollapseIcon">&#9650;</span>
+                    <span id="expandCollapseLabel">Collapse All</span>
+                </button>
+            </div>
+            <div class="search-results-count" id="searchResultsCount" aria-live="polite"></div>
         </div>
 
         <div class="content" id="workspacesContainer">
             <!-- Workspaces will be inserted here -->
         </div>
+        <div id="noResults" class="no-results" role="status" aria-live="polite">
+            <p>No vulnerabilities match your search.</p>
+            <small>Try a different keyword, package name, severity, or workspace.</small>
+        </div>
     </div>
 
     <script>
         // Load the JSON data
-        const reportData = ${JSON.stringify(reportData)};
+        const reportData = ${safeReportDataJSON};
 
         // Initialize the report
         function initializeReport() {
-            // Set timestamp
-            document.getElementById('timestamp').textContent = 
+            // Set timestamp and header meta
+            document.getElementById('timestamp').textContent =
                 \`Generated: \${new Date(reportData.generatedAt).toLocaleString()}\`;
+            document.getElementById('branchBadge').textContent = \`Branch: \${reportData.branch || 'unknown'}\`;
+            document.getElementById('versionBadge').textContent = \`v\${reportData.version || 'unknown'}\`;
 
-            // Set overall summary
-            document.getElementById('totalWorkspaces').textContent = reportData.workspaces.length;
-            document.getElementById('totalDependencies').textContent = 
-                reportData.overallMetadata?.totalDependencies || 0;
-            
-            const overallVulns = reportData.overallMetadata?.vulnerabilities || {};
-            const totalVulns = (overallVulns.critical || 0) + (overallVulns.high || 0) + 
-                              (overallVulns.moderate || 0) + (overallVulns.low || 0) + (overallVulns.info || 0);
-            
+            // Meta bar — use total workspace count from pnpm-workspace.yaml, not just vulnerable ones
+            const totalWs = reportData.totalWorkspaces || reportData.workspaces.length;
+            const affectedWs = reportData.workspaces.length;
+            document.getElementById('metaWorkspaces').textContent =
+                affectedWs < totalWs
+                    ? \`\${totalWs} (\${affectedWs} affected)\`
+                    : String(totalWs);
+            const totalDeps = reportData.overallMetadata?.totalDependencies || 0;
+            document.getElementById('metaDependencies').textContent = totalDeps.toLocaleString();
+
+            // Compute severity counts from the same workspace data that drives the rendered cards
+            // (overallMetadata.vulnerabilities can diverge from what's actually displayed)
+            const renderedCounts = { critical: 0, high: 0, moderate: 0, low: 0, info: 0 };
+            reportData.workspaces.forEach(ws => {
+                Object.keys(renderedCounts).forEach(k => {
+                    renderedCounts[k] += ws.severityCounts?.[k] || 0;
+                });
+            });
+            const totalVulns = Object.values(renderedCounts).reduce((s, v) => s + v, 0);
+
+            // Update audit note with pnpm raw total vs displayed
+            const pnpmVulns = reportData.overallMetadata?.vulnerabilities || {};
+            const pnpmTotal = (pnpmVulns.critical || 0) + (pnpmVulns.high || 0) +
+                              (pnpmVulns.moderate || 0) + (pnpmVulns.low || 0) + (pnpmVulns.info || 0);
+            const severityColors = {
+                critical: { bg: '#fed7d7', color: '#822727' },
+                high:     { bg: '#feebc8', color: '#7c2d12' },
+                moderate: { bg: '#fefcbf', color: '#744210' },
+                low:      { bg: '#c6f6d5', color: '#22543d' },
+                info:     { bg: '#bee3f8', color: '#2c5282' },
+            };
+            const severityPills = ['critical','high','moderate','low','info']
+                .filter(k => (pnpmVulns[k] || 0) > 0)
+                .map(k => {
+                    const { bg, color } = severityColors[k];
+                    return \`<span style="background:\${bg};color:\${color};border-radius:4px;padding:1px 7px;font-weight:600;font-size:0.95em;">\${k}: \${pnpmVulns[k]}</span>\`;
+                }).join(' ');
+            document.getElementById('auditNoteText').innerHTML =
+                \`pnpm audit reported <strong>\${pnpmTotal}</strong> vulnerabilit\${pnpmTotal === 1 ? 'y' : 'ies'} \u2014 \${severityPills} \u2014 across all packages; this report surfaces <strong>\${totalVulns}</strong> unique \${totalVulns === 1 ? 'entry' : 'entries'} after grouping by workspace.\`;
+
             document.getElementById('totalCount').textContent = totalVulns;
-            document.getElementById('criticalCount').textContent = overallVulns.critical || 0;
-            document.getElementById('highCount').textContent = overallVulns.high || 0;
-            document.getElementById('moderateCount').textContent = overallVulns.moderate || 0;
-            document.getElementById('lowCount').textContent = overallVulns.low || 0;
+            document.getElementById('criticalCount').textContent = renderedCounts.critical;
+            document.getElementById('highCount').textContent = renderedCounts.high;
+            document.getElementById('moderateCount').textContent = renderedCounts.moderate;
+            document.getElementById('lowCount').textContent = renderedCounts.low;
 
             // Render workspaces
             renderWorkspaces();
+            initializeSearch();
+        }
+
+        function getCvssClass(score) {
+            if (score >= 9.0) return 'cvss-critical';
+            if (score >= 7.0) return 'cvss-high';
+            if (score >= 4.0) return 'cvss-medium';
+            if (score > 0)    return 'cvss-low';
+            return 'cvss-none';
         }
 
         function getSeverityClass(severity) {
@@ -916,6 +1206,8 @@ function generateHtmlReport(reportData) {
                 const workspaceDiv = document.createElement('div');
                 workspaceDiv.className = 'workspace';
                 workspaceDiv.id = \`workspace-\${index}\`;
+                workspaceDiv.dataset.workspace = workspace.workspace;
+                workspaceDiv.dataset.severityCounts = JSON.stringify(workspace.severityCounts);
 
                 const severityCounts = workspace.severityCounts;
                 const totalVulns = workspace.totalVulnerabilities;
@@ -923,9 +1215,9 @@ function generateHtmlReport(reportData) {
                 workspaceDiv.innerHTML = \`
                     <div class="workspace-header" onclick="toggleWorkspace(\${index})">
                         <div>
-                            <div class="workspace-title">\${workspace.workspace}</div>
+                            <div class="workspace-title">\${escHtml(workspace.workspace)}</div>
                             <div class="modules-list">
-                                <strong>Affected Modules:</strong> \${workspace.uniqueModules.join(', ')}
+                                <strong>Affected Modules:</strong> \${escHtml(workspace.uniqueModules.join(', '))}
                             </div>
                         </div>
                         <div class="workspace-stats">
@@ -965,35 +1257,36 @@ function generateHtmlReport(reportData) {
                         </div>
                         <div class="vulnerabilities-list">
                             \${workspace.vulnerabilities.map(vuln => \`
-                                <div class="vulnerability-card">
+                                <div class="vulnerability-card" data-severity="\${escAttr(vuln.severity)}" data-search-text="\${escAttr([vuln.title, vuln.module, vuln.severity, ...(vuln.cves || []), workspace.workspace].join(' ').toLowerCase())}">
                                     <div class="vuln-header">
-                                        <div class="vuln-title">\${vuln.title}</div>
-                                        <span class="severity-badge \${getSeverityClass(vuln.severity)}">
-                                            \${vuln.severity}
-                                        </span>
+                                        <div class="vuln-title">\${escHtml(vuln.title)}</div>
+                                        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;margin-left:12px;">
+                                            \${vuln.cvssScore !== null && vuln.cvssScore !== undefined ? \`<span class="cvss-score \${getCvssClass(vuln.cvssScore)}" title="CVSS Score">CVSS \${vuln.cvssScore}</span>\` : ''}
+                                            <span class="severity-badge \${getSeverityClass(vuln.severity)}">\${vuln.severity}</span>
+                                        </div>
                                     </div>
                                     <div class="vuln-details">
                                         <div class="detail-item">
                                             <div class="detail-label">Package</div>
-                                            <div class="detail-value">\${vuln.module}</div>
+                                            <div class="detail-value">\${escHtml(vuln.module)}</div>
                                         </div>
                                         <div class="detail-item">
                                             <div class="detail-label">Vulnerable Versions</div>
-                                            <div class="detail-value">\${vuln.vulnerableVersions}</div>
+                                            <div class="detail-value">\${escHtml(vuln.vulnerableVersions)}</div>
                                         </div>
                                         <div class="detail-item">
                                             <div class="detail-label">Patched Versions</div>
-                                            <div class="detail-value">\${vuln.patchedVersions}</div>
+                                            <div class="detail-value">\${escHtml(vuln.patchedVersions)}</div>
                                         </div>
                                         <div class="detail-item">
                                             <div class="detail-label">Recommendation</div>
-                                            <div class="detail-value">\${vuln.recommendation}</div>
+                                            <div class="detail-value">\${escHtml(vuln.recommendation)}</div>
                                         </div>
                                     </div>
                                     \${vuln.cves && vuln.cves.length > 0 ? \`
                                         <div class="cve-list">
                                             \${vuln.cves.map(cve => \`
-                                                <span class="cve-badge">\${cve}</span>
+                                                <span class="cve-badge">\${escHtml(cve)}</span>
                                             \`).join('')}
                                         </div>
                                     \` : ''}
@@ -1006,13 +1299,13 @@ function generateHtmlReport(reportData) {
                                             <div class="paths-list">
                                                 \${vuln.paths.map(path => \`
                                                     <div class="path-item">
-                                                        \${path.replace(/>/g, '<span class="path-separator">→</span>')}
+                                                        \${escHtml(path).replace(/&gt;/g, '<span class="path-separator">→</span>')}
                                                     </div>
                                                 \`).join('')}
                                             </div>
                                         </div>
                                     \` : ''}
-                                    <a href="\${vuln.url}" target="_blank" class="url-link">
+                                    <a href="\${vuln.url && (vuln.url.startsWith('https://') || vuln.url.startsWith('http://')) ? escAttr(vuln.url) : '#'}" target="_blank" rel="noopener noreferrer" class="url-link">
                                         More information →
                                     </a>
                                 </div>
@@ -1025,9 +1318,137 @@ function generateHtmlReport(reportData) {
             });
         }
 
+        function escHtml(s) {
+            return String(s || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function escAttr(s) {
+            return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+        }
+
+        function initializeSearch() {
+            const input = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('searchClear');
+            const noResults = document.getElementById('noResults');
+            const resultsCount = document.getElementById('searchResultsCount');
+
+            let activeSeverity = 'all';
+
+            function applyFilter() {
+                const query = input.value.trim().toLowerCase();
+                const workspaceDivs = document.querySelectorAll('.workspace');
+                let totalVisible = 0;
+
+                workspaceDivs.forEach(wDiv => {
+                    const cards = wDiv.querySelectorAll('.vulnerability-card');
+                    let workspaceVisible = 0;
+
+                    cards.forEach(card => {
+                        const textMatch = !query || (card.dataset.searchText || '').includes(query);
+                        const severityMatch = activeSeverity === 'all' || card.dataset.severity === activeSeverity;
+                        const visible = textMatch && severityMatch;
+                        card.style.display = visible ? '' : 'none';
+                        if (visible) workspaceVisible++;
+                    });
+
+                    const hasFilter = query.length > 0 || activeSeverity !== 'all';
+                    if (hasFilter && workspaceVisible === 0) {
+                        wDiv.style.display = 'none';
+                    } else {
+                        wDiv.style.display = '';
+                        if (hasFilter) wDiv.classList.remove('collapsed');
+                        totalVisible += workspaceVisible;
+                    }
+                });
+
+                clearBtn.classList.toggle('visible', query.length > 0);
+                const hasFilter = query.length > 0 || activeSeverity !== 'all';
+                noResults.classList.toggle('show', totalVisible === 0 && hasFilter);
+
+                if (!hasFilter) {
+                    resultsCount.textContent = '';
+                } else {
+                    // Count only cards that match the active severity filter (the eligible pool)
+                    const totalCards = activeSeverity === 'all'
+                        ? document.querySelectorAll('.vulnerability-card').length
+                        : document.querySelectorAll(\`.vulnerability-card[data-severity="\${activeSeverity}"]\`).length;
+                    resultsCount.textContent = \`Showing \${totalVisible} of \${totalCards} vulnerabilit\${totalCards === 1 ? 'y' : 'ies'}\`;
+                }
+            }
+
+            function updateSeverityButtons(selected) {
+                document.querySelectorAll('.summary-card.filter-card').forEach(card => {
+                    const isActive = card.dataset.severity === selected;
+                    card.classList.toggle('active', isActive);
+                    card.setAttribute('aria-pressed', String(isActive));
+                });
+            }
+
+            // Mark 'all' card active initially
+            updateSeverityButtons('all');
+
+            document.addEventListener('click', e => {
+                const card = e.target.closest('.summary-card.filter-card');
+                if (!card) return;
+                const sev = card.dataset.severity;
+                if (!sev) return;
+                activeSeverity = (activeSeverity === sev && sev !== 'all') ? 'all' : sev;
+                updateSeverityButtons(activeSeverity);
+                applyFilter();
+            });
+
+            input.addEventListener('input', applyFilter);
+
+            clearBtn.addEventListener('click', () => {
+                input.value = '';
+                applyFilter();
+                input.focus();
+            });
+
+            document.addEventListener('keydown', e => {
+                if (e.key === '/' && document.activeElement !== input) {
+                    e.preventDefault();
+                    input.focus();
+                    input.select();
+                }
+                if (e.key === 'Escape') {
+                    input.value = '';
+                    activeSeverity = 'all';
+                    updateSeverityButtons('all');
+                    applyFilter();
+                }
+            });
+        }
+
+        function syncExpandCollapseBtn() {
+            var allWorkspaces = document.querySelectorAll('.workspace');
+            var icon  = document.getElementById('expandCollapseIcon');
+            var label = document.getElementById('expandCollapseLabel');
+            if (!icon || !label) return;
+            var anyExpanded = Array.from(allWorkspaces).some(function(w) { return !w.classList.contains('collapsed'); });
+            icon.textContent  = anyExpanded ? '\u25B2' : '\u25BC';
+            label.textContent = anyExpanded ? 'Collapse All' : 'Expand All';
+        }
+
         function toggleWorkspace(index) {
-            const workspace = document.getElementById(\`workspace-\${index}\`);
+            var workspace = document.getElementById(\`workspace-\${index}\`);
             workspace.classList.toggle('collapsed');
+            syncExpandCollapseBtn();
+        }
+
+        function toggleAllWorkspaces() {
+            var allWorkspaces = document.querySelectorAll('.workspace');
+            var anyExpanded = Array.from(allWorkspaces).some(function(w) { return !w.classList.contains('collapsed'); });
+            allWorkspaces.forEach(function(w) {
+                if (anyExpanded) w.classList.add('collapsed');
+                else w.classList.remove('collapsed');
+            });
+            syncExpandCollapseBtn();
         }
 
         function togglePaths(event, button) {

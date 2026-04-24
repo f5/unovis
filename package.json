@@ -49,7 +49,8 @@
     "postinstall": "sh postinstall.sh",
     "gather-licenses": "for p in packages/*; do echo \"  📄 Checking licenses for $p\"; pnpm license-report --package=$p/package.json --config lic-report-config.json --output=table | grep -v -E '@unovis/ts|@unovis/react' > $p/licences.temp; mv -f $p/licences.temp $p/licences.txt; done",
     "update-version": "sh update-version.sh",
-    "audit-report": "node audit-report.js -s"
+    "audit-report": "node scripts/audit-report.js -s",
+    "cmds-report": "node scripts/commands-report.js"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
