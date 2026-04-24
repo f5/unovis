@@ -13,6 +13,35 @@
   background-color: #f4f4f4;
 }
 
+.navItemActive {
+  background-color: #e8e8e8;
+}
+
+.navItemActive:hover {
+  background-color: #e0e0e0;
+}
+
+body.theme-dark .navItem:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+body.theme-dark .navItemActive {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 3px 0 0 0 var(--vis-color0, #3b82f6);
+}
+
+body.theme-dark .navItemActive:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+body.theme-dark .navItemActive .navItemTitle {
+  color: #f2f2f2;
+}
+
+body.theme-dark .navItemActive .navItemSubTitle {
+  color: #a8a8a8;
+}
+
 .navItemTitle {
   font-weight: 400;
   font-size: 10pt;

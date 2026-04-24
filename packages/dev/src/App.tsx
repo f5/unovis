@@ -8,6 +8,9 @@ import { ThemeSelector } from '@src/components/ThemeSelector'
 // Examples
 import { examples } from '@src/examples'
 
+// App Context
+import { AppProvider } from '@src/AppContext'
+
 // Styles
 import s from './App.module.css'
 
@@ -18,11 +21,15 @@ require('@unovis/ts/styles')
 
 const App = (): React.ReactNode => {
   return (
-    <div className={s.root}>
-      <ThemeSelector/>
-      <NavigationSideBar exampleGroups={examples} />
-      <Outlet />
-    </div>
+    <AppProvider>
+      <div className={s.root}>
+        <NavigationSideBar exampleGroups={examples} />
+        <div className={s.content}>
+          <ThemeSelector/>
+          <Outlet />
+        </div>
+      </div>
+    </AppProvider>
   )
 }
 

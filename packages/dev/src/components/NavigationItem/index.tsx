@@ -8,15 +8,21 @@ export type NavigationItemProps = {
   title: string;
   group: string;
   subTitle?: string;
+  isActive?: boolean;
+  preservedSearch?: string;
 }
 
-export function NavigationItem (props: NavigationItemProps): React.ReactNode {
+export const NavigationItem = React.forwardRef<HTMLDivElement, NavigationItemProps>(function navigationItem (props, ref) {
+  const to = {
+    pathname: `examples/${props.group}/${props.title}`,
+    search: props.preservedSearch || undefined,
+  }
   return (
-    <div className={s.navItem}>
-      <Link to={`examples/${props.group}/${props.title}`}>
+    <div ref={ref} className={`${s.navItem}${props.isActive ? ` ${s.navItemActive}` : ''}`}>
+      <Link to={to}>
         <div className={s.navItemTitle}>{props.title}</div>
         <div className={s.navItemSubTitle}> {props.subTitle}</div>
       </Link>
     </div>
   )
-}
+})
