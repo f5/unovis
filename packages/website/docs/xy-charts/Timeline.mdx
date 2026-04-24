@@ -151,6 +151,9 @@ background color across all rows, disable the `alternatingRowColors` property:
 Use the `rowHeight` property to adjust the size of each row.
 <XYWrapper {...timelineProps(20, 5)} rowHeight={50} hideTabLabels/>
 
+### Filling empty vertical space
+When the timeline container is taller than the combined height of all rows, `rowFillEmptySpace` (default: `true`) stretches row layout so the rows use the extra space. Set it to `false` if you prefer rows to stay compact at the top and leave the remainder of the container empty.
+
 ## Line Configuration
 ### Line Cap
 By default, lines have squared ends. You can give your lines a rounded appearance by setting `lineCap` property to `true`.
