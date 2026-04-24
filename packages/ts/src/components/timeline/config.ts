@@ -84,6 +84,8 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   rowMaxLabelWidth?: number;
   /** Text alignment for labels: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `TextAlign.Right` */
   rowLabelTextAlign?: TextAlign | `${TextAlign}`;
+  /** When component height is larger than the height of all rows, render rows to fill empty space */
+  rowFillEmptySpace?: boolean;
 
   // Arrows
   arrows?: TimelineArrow[];
@@ -145,6 +147,7 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   rowLabelWidth: undefined,
   rowMaxLabelWidth: undefined,
   rowLabelTextAlign: TextAlign.Right,
+  rowFillEmptySpace: true,
 
   // Arrows
   arrows: undefined,

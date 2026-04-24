@@ -293,7 +293,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // Row background rects
     const timelineWidth = xRange[1] - xRange[0] + this._rowIconBleed[0] + this._rowIconBleed[1] + this._lineBleed[0] + this._lineBleed[1]
-    const numRows = Math.max(Math.floor(yHeight / rowHeight), numRowLabels)
+    const numRows = config.rowFillEmptySpace ? Math.max(Math.floor(yHeight / rowHeight), numRowLabels) : numRowLabels
     const recordTypes = Array(numRows).fill(null).map((_, i) => rowLabels[i])
     const rects = this._rowsGroup.selectAll<SVGRectElement, number>(`.${s.row}`)
       .data(recordTypes)
