@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 
 export const globalStyles = injectGlobal`
@@ -11,7 +12,7 @@ export const globalStyles = injectGlobal`
     --vis-dark-plotband-label-color: #e5e9f7;
   }
 
-  body.theme-dark {
+  ${darkThemeCssSelectors} {
     --vis-plotband-color: var(--vis-dark-plotband-color);
     --vis-plotband-label-color: var(--vis-dark-tooltip-text-color);
   }
