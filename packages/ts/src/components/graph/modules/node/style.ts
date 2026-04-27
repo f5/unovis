@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const nodes = css`
   label: nodes;
@@ -72,12 +73,12 @@ export const variables = injectGlobal`
     --vis-graph-brushed-node-stroke-color: var(--vis-color-main);
     --vis-graph-brushed-node-label-text-color: var(--vis-color-main);
     --vis-graph-brushed-node-icon-fill-color: var(--vis-color-main);
-    
+
     /* Misc */
     --vis-graph-node-dominant-baseline: middle;
   }
 
-  body.theme-dark ${`.${nodes}`} {
+  ${darkThemeCssSelectors} ${`.${nodes}`} {
     --vis-graph-node-stroke-color: var(--vis-dark-graph-node-stroke-color);
     --vis-graph-node-fill-color: var(--vis-dark-graph-node-fill-color);
     --vis-graph-node-gauge-color: var(--vis-dark-graph-node-gauge-color);

@@ -1,7 +1,7 @@
 import type { Selection } from 'd3-selection'
 import { css } from '@emotion/css'
 import { group, max, mean, min } from 'd3-array'
-import { getNumber, getColor, getString, getTransformValues, Graph, trimString } from '@unovis/ts'
+import { darkThemeCssSelectors, getNumber, getColor, getString, getTransformValues, Graph, trimString } from '@unovis/ts'
 import type { GraphConfigInterface, GraphNode, StringAccessor } from '@unovis/ts'
 import {
   DEFAULT_CIRCLE_LABEL_SIZE,
@@ -54,7 +54,7 @@ export const customNodesGraph = css`
   }
 
   /* Dark theme overrides */
-  body.theme-dark & {
+  ${darkThemeCssSelectors} & {
     --unovis-background-primary: #1a1a1a;
     --unovis-background-secondary: #2d2d2d;
     --unovis-text-primary: #ffffff;
@@ -168,7 +168,7 @@ export const globalControlsContainer = css`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   /* Dark theme overrides */
-  body.theme-dark & {
+  ${darkThemeCssSelectors} & {
     background: #2d2d2d;
     color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);

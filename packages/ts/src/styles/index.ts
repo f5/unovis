@@ -1,5 +1,6 @@
 import { injectGlobal } from '@emotion/css'
 import { getCSSVariableValue } from 'utils/misc'
+import { darkThemeCssSelectors } from 'utils/style'
 import { UnovisText } from 'types/text'
 import { colors, colorsDark, getCSSColorVariable, getLighterColor, getDarkerColor } from './colors'
 import { fills, lines, getPatternVariable } from './patterns'
@@ -39,7 +40,7 @@ export const variables = injectGlobal`
       --vis-pattern-dasharray${i}: ${p.dashArray?.join(' ')};
     `)}
 
-    body.theme-dark {
+    ${darkThemeCssSelectors} {
       ${colors.map((c, i) => `${getCSSColorVariable(i)}: var(--vis-dark-color${i});`)}
     }
 
