@@ -39,8 +39,21 @@ export const cssVarDefaults: UnovisCssVariablesDefinition = {
   '--vis-dark-timeline-line-hover-stroke-color': '#EFF5F8',
 }
 
+<<<<<<< HEAD
 export const variables = getCssVarNames(cssVarDefaults)
 injectGlobalCssVariables(cssVarDefaults, root)
+=======
+  ${darkThemeCssSelectors} ${`.${root}`} {
+    --vis-timeline-row-even-fill-color: var(--vis-dark-timeline-row-even-fill-color);
+    --vis-timeline-row-odd-fill-color: var(--vis-dark-timeline-row-odd-fill-color);
+    --vis-timeline-scrollbar-background-color: var(--vis-dark-timeline-scrollbar-background-color);
+    --vis-timeline-scrollbar-color: var(--vis-dark-timeline-scrollbar-color);
+    --vis-timeline-label-color: var(--vis-dark-timeline-label-color);
+    --vis-timeline-arrow-color: var(--vis-dark-timeline-arrow-color);
+    --vis-timeline-line-hover-stroke-color: var(--vis-dark-timeline-line-hover-stroke-color);
+  }
+`
+>>>>>>> 5465df17 (chore: replace all root theme-dark with selectors)
 
 export const background = css`
   label: background;

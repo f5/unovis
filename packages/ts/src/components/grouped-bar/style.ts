@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const root = css`
   label: grouped-bar-component;
@@ -18,7 +19,7 @@ export const globalStyles = injectGlobal`
     --vis-dark-grouped-bar-stroke-color: none;
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-grouped-bar-stroke-color: var(--vis-dark-grouped-bar-stroke-color);
   }
 `
