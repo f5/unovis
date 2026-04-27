@@ -19,6 +19,9 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (<>
     <div className={s.map}>
+      <button className={s.toggleButton} onClick={() => document.documentElement.classList.toggle('dark-theme')}>
+        Toggle documentElement
+      </button>
       <VisLeafletMap<MapPointDatum>
         ref={mapRef}
         data={cities}
