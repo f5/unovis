@@ -36,6 +36,7 @@ onUnmounted(() => {
 watch(config, (curr, prev) => {
   if (!arePropsEqual(curr, prev)) {
     component.value?.setConfig(config.value)
+    component.value?.render()
   }
 })
 
