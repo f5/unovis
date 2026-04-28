@@ -48,7 +48,7 @@
     "install:clean": "rm -rf packages/*/node_modules packages/*/dist packages/*/dist-demo packages/*/.docusaurus node_modules; pnpm install",
     "postinstall": "sh postinstall.sh",
     "gather-licenses": "for p in packages/*; do echo \"  📄 Checking licenses for $p\"; pnpm license-report --package=$p/package.json --config lic-report-config.json --output=table | grep -v -E '@unovis/ts|@unovis/react' > $p/licences.temp; mv -f $p/licences.temp $p/licences.txt; done",
-    "update-version": "sh update-version.sh",
+    "update-version": "bumpp",
     "audit-report": "node scripts/audit-report.js -s",
     "cmds-report": "node scripts/commands-report.js"
   },
@@ -58,6 +58,7 @@
     "@types/node": "^16.11.14",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
+    "bumpp": "^11.0.1",
     "eslint": "^8.26.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-import-resolver-typescript": "^2.7.1",
