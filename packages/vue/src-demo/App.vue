@@ -36,7 +36,9 @@ const imports = [
   defineAsyncComponent(() => import('@unovis/shared/examples/basic-donut-chart/basic-donut-chart.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/shaped-scatter-plot/shaped-scatter-plot.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/basic-annotations/basic-annotations.vue')),
-  defineAsyncComponent(() => import('@unovis/shared/examples/plotband-plotline/plotband-plotline.vue')),
+  defineAsyncComponent(() => import('@unovis/shared/examples/plotlines-playground/plotlines-playground.vue')),
+  defineAsyncComponent(() => import('@unovis/shared/examples/plotbands-playground/plotbands-playground.vue')),
+  defineAsyncComponent(() => import('@unovis/shared/examples/synced-auto-position/synced-auto-position.vue')),
 ]
 </script>
 
