@@ -117,7 +117,8 @@ export const examples: ExampleCollection[] = [
       require('./synced-crosshairs').default,
       require('./brush-grouped-bar').default,
       require('./free-brush-scatters').default,
-      require('./plotband-plotline').default,
+      require('./plotlines-playground').default,
+      require('./plotbands-playground').default,
     ],
   },
   /* {} */
