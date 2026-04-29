@@ -7,6 +7,9 @@ import { smartTransition } from 'utils/d3'
 import { XYComponentCore } from 'core/xy-component'
 import { AxisType } from 'components/axis/types'
 
+// Types
+import { PlotLabelLayout, PlotLabelLayoutInfo, LabelOverflow } from 'types/plot-label'
+
 // Config
 import { LINE_STYLE, VERTICAL_X, HORIZONTAL_X, VERTICAL_Y, HORIZONTAL_Y } from './constants'
 import { PlotlineDefaultConfig, PlotlineConfigInterface } from './config'
@@ -15,12 +18,27 @@ import { PlotlineLabelPosition, PlotlineLabelOrientation, PlotlineLabelLayout, P
 // Styles
 import * as s from './style'
 
+// Used as the candidate order (preferred anchor first, then walk this list).
+const PLOTLINE_CLOCKWISE: readonly PlotlineLabelPosition[] = [
+  PlotlineLabelPosition.TopLeft,
+  PlotlineLabelPosition.Top,
+  PlotlineLabelPosition.TopRight,
+  PlotlineLabelPosition.Right,
+  PlotlineLabelPosition.BottomRight,
+  PlotlineLabelPosition.Bottom,
+  PlotlineLabelPosition.BottomLeft,
+  PlotlineLabelPosition.Left,
+] as const
+
 export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = PlotlineDefaultConfig as PlotlineConfigInterface<Datum>
   value: number | null | undefined
   plotline: Selection<SVGLineElement, unknown, null, undefined>
   label: Selection<SVGTextElement, unknown, null, undefined>
+  // Cached so `getLabelLayoutInfo()` can recompute layouts for alternative
+  // anchors without re-deriving the line endpoints.
+  private _labelLayoutBounds: { width: number; height: number } | undefined
 
   constructor (config: PlotlineConfigInterface<Datum>) {
     super()
@@ -82,6 +100,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       .attr('y2', y2)
 
     if (config.labelText) {
+      this._labelLayoutBounds = { width: x2, height: y2 }
       const labelProps = this.computeLabel(
         config.axis,
         x2,
@@ -103,6 +122,10 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       smartTransition(this.label, config.duration)
         .attr('x', labelProps.x)
         .attr('y', labelProps.y)
+    } else {
+      // Wipe stale text from a prior render where labelText was set.
+      this._labelLayoutBounds = undefined
+      this.label.text('')
     }
 
     smartTransition(this.plotline.exit())
@@ -138,6 +161,49 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       ...layout,
       rotation,
       transform,
+    }
+  }
+
+  // Read by `XYContainer` to coordinate auto label positioning across
+  // Plotline + Plotband siblings.
+  public getLabelLayoutInfo (): PlotLabelLayoutInfo | null {
+    const { config } = this
+    if (!config.labelText || !this._labelLayoutBounds) return null
+
+    const labelEl = this.label.node()
+    const preferred = config.labelPosition ?? PlotlineLabelPosition.TopRight
+    const preferredIdx = PLOTLINE_CLOCKWISE.indexOf(preferred)
+    const candidates = preferredIdx >= 0
+      ? [...PLOTLINE_CLOCKWISE.slice(preferredIdx), ...PLOTLINE_CLOCKWISE.slice(0, preferredIdx)]
+      : [preferred, ...PLOTLINE_CLOCKWISE]
+
+    const bounds = this._labelLayoutBounds
+    const computeLayout = (anchor: string): PlotLabelLayout => {
+      const layout = this.computeLabel(
+        config.axis,
+        bounds.width,
+        bounds.height,
+        anchor as PlotlineLabelPosition,
+        config.labelOffsetX,
+        config.labelOffsetY,
+        config.labelOrientation
+      )
+      return {
+        x: layout.x,
+        y: layout.y,
+        transform: layout.transform,
+        textAnchor: layout.textAnchor,
+        dominantBaseline: layout.dominantBaseline,
+      }
+    }
+
+    return {
+      labelEl,
+      preferredAnchor: preferred,
+      candidates,
+      participatesInAuto: !!config.labelAutoPosition,
+      overflow: config.labelOverflow ?? LabelOverflow.Smart,
+      computeLayout,
     }
   }
 }
