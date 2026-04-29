@@ -1,0 +1,15 @@
+<vis-xy-container [data]="data" [height]="400" [margin]="margin" [yDomain]="yDomain">
+    <vis-line [x]="x" [y]="y"></vis-line>
+    <vis-axis type="x"></vis-axis>
+    <vis-axis type="y"></vis-axis>
+    <vis-plotline
+        *ngFor="let t of thresholds"
+        [value]="t.value"
+        [labelText]="t.label"
+        labelPosition="top-right"
+        [labelAutoPosition]="true"
+        [labelOverflow]="smart"
+        color="#666"
+        lineStyle="dash"
+    ></vis-plotline>
+</vis-xy-container>
