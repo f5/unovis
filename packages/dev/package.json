@@ -9,7 +9,8 @@
     "dev": "webpack-dev-server --host 0.0.0.0",
     "serve": "serve dist -s -p 9501",
     "check": "tsc --noEmit",
-    "test": "percy exec -- cypress run"
+    "test": "percy exec -- cypress run",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "devDependencies": {
     "@percy/cli": "^1.29.1",
