@@ -4,15 +4,6 @@
   "packageManager": "pnpm@10.23.0",
   "license": "Apache-2.0",
   "private": true,
-  "workspaces": [
-    "packages/ts",
-    "packages/angular",
-    "packages/react",
-    "packages/svelte",
-    "packages/vue",
-    "packages/solid",
-    "packages/shared"
-  ],
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
