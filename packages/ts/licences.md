@@ -41,7 +41,7 @@
 | @types/d3-transition              | perpetual      | MIT          | 3.0.9             | n/a                                                               |
 | @types/d3-path                    | perpetual      | MIT          | 3.1.1             | n/a                                                               |
 | @types/d3-geo                     | perpetual      | MIT          | 3.1.0             | n/a                                                               |
-| @types/dagre                      | perpetual      | MIT          | 0.7.53            | n/a                                                               |
+| @types/dagre                      | perpetual      | MIT          | 0.7.54            | n/a                                                               |
 | @types/geojson                    | perpetual      | MIT          | 7946.0.16         | n/a                                                               |
 | @types/leaflet                    | perpetual      | MIT          | 1.7.6             | n/a                                                               |
 | @types/supercluster               | perpetual      | MIT          | 5.0.3             | n/a                                                               |
@@ -69,7 +69,7 @@
 | @rollup/plugin-json               | perpetual      | MIT          | 4.1.0             | rollup                                                            |
 | @zerollup/ts-transform-paths      | perpetual      | MIT          | 1.7.18            | Stefan Zerkalica zerkalica@gmail.com                              |
 | rimraf                            | perpetual      | ISC          | 3.0.2             | Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)               |
-| rollup                            | perpetual      | MIT          | 2.79.2            | Rich Harris                                                       |
+| rollup                            | perpetual      | MIT          | 2.80.0            | Rich Harris                                                       |
 | rollup-plugin-commonjs            | perpetual      | MIT          | 10.1.0            | Rich Harris                                                       |
 | rollup-plugin-node-resolve        | perpetual      | MIT          | 5.2.0             | Rich Harris <richard.a.harris@gmail.com>                          |
 | rollup-plugin-postcss             | perpetual      | MIT          | 4.0.2             | EGOIST <0x142857@gmail.com>                                       |

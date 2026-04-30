@@ -7,7 +7,7 @@
 | @zerollup/ts-transform-paths | perpetual      | MIT          | 1.7.18            | Stefan Zerkalica zerkalica@gmail.com           |
 | buffer-from                  | perpetual      | MIT          | 1.1.2             | n/a                                            |
 | eslint-plugin-svelte         | perpetual      | MIT          | 2.46.1            | Yosuke Ota (https://github.com/ota-meshi)      |
-| rollup                       | perpetual      | MIT          | 2.79.2            | Rich Harris                                    |
+| rollup                       | perpetual      | MIT          | 2.80.0            | Rich Harris                                    |
 | rollup-plugin-copy           | perpetual      | MIT          | 3.5.0             | Vlad Shcherbin <vlad.shcherbin@gmail.com>      |
 | rollup-plugin-livereload     | perpetual      | MIT          | 2.0.5             | Thomas Ghysels <info@thomasg.be>               |
 | rollup-plugin-serve          | perpetual      | MIT          | 2.0.3             | Thomas Ghysels <info@thomasg.be>               |

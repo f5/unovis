@@ -7,15 +7,15 @@
 | buffer-from                    | perpetual      | MIT          | 1.1.2             | n/a                                                               |
 | de-indent                      | perpetual      | MIT          | 1.0.2             | Evan You                                                          |
 | jju                            | perpetual      | MIT          | 1.4.0             | Alex Kocharin alex@kocharin.ru                                    |
-| rollup                         | perpetual      | MIT          | 2.79.2            | Rich Harris                                                       |
+| rollup                         | perpetual      | MIT          | 2.80.0            | Rich Harris                                                       |
 | rollup-plugin-commonjs         | perpetual      | MIT          | 10.1.0            | Rich Harris                                                       |
 | rollup-plugin-typescript2      | perpetual      | MIT          | 0.31.2            | @ezolenko                                                         |
 | tslib                          | perpetual      | 0BSD         | 2.8.1             | Microsoft Corp.                                                   |
 | typescript                     | perpetual      | Apache-2.0   | 5.6.3             | Microsoft Corp.                                                   |
-| vite                           | perpetual      | MIT          | 6.2.4             | Evan You                                                          |
+| vite                           | perpetual      | MIT          | 6.4.1             | Evan You                                                          |
 | vite-plugin-css-injected-by-js | perpetual      | MIT          | 3.5.2             | Marco Prontera                                                    |
 | vite-plugin-dts                | perpetual      | MIT          | 3.9.1             | qmhc                                                              |
-| vue                            | perpetual      | MIT          | 3.5.27            | Evan You                                                          |
+| vue                            | perpetual      | MIT          | 3.5.30            | Evan You                                                          |
 | vue-tsc                        | perpetual      | MIT          | 2.2.12            | n/a                                                               |
-| vue                            | perpetual      | MIT          | 3.5.27            | Evan You                                                          |
+| vue                            | perpetual      | MIT          | 3.5.30            | Evan You                                                          |
 

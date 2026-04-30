@@ -1,7 +1,7 @@
 | Name                                      | License period | License type | Installed version | Author                                                   |
 | :---------------------------------------- | :------------- | :----------- | :---------------- | :------------------------------------------------------- |
-| @docsearch/core                           | perpetual      | MIT          | 4.5.3             | Algolia, Inc. https://www.algolia.com                    |
-| @docsearch/react                          | perpetual      | MIT          | 4.5.3             | Algolia, Inc. https://www.algolia.com                    |
+| @docsearch/core                           | perpetual      | MIT          | 4.6.0             | Algolia, Inc. https://www.algolia.com                    |
+| @docsearch/react                          | perpetual      | MIT          | 4.6.0             | Algolia, Inc. https://www.algolia.com                    |
 | @docusaurus/core                          | perpetual      | MIT          | 3.9.2             | n/a                                                      |
 | @docusaurus/plugin-debug                  | perpetual      | MIT          | 3.9.2             | n/a                                                      |
 | @docusaurus/plugin-sitemap                | perpetual      | MIT          | 3.9.2             | n/a                                                      |
@@ -12,7 +12,7 @@
 | @stackblitz/sdk                           | perpetual      | MIT          | 1.8.0             | Eric Simons                                              |
 | clsx                                      | perpetual      | MIT          | 1.2.1             | Luke Edwards luke.edwards05@gmail.com https://lukeed.com |
 | docusaurus-plugin-react-docgen-typescript | perpetual      | MIT          | 0.1.0             | Dennis Thompson                                          |
-| nodemon                                   | perpetual      | MIT          | 3.1.11            | Remy Sharp https://github.com/remy                       |
+| nodemon                                   | perpetual      | MIT          | 3.1.14            | Remy Sharp https://github.com/remy                       |
 | prism-react-renderer                      | perpetual      | MIT          | 1.3.5             | n/a                                                      |
 | react-docgen-typescript                   | perpetual      | MIT          | 2.4.0             | n/a                                                      |
 | react-markdown                            | perpetual      | MIT          | 10.1.0            | Espen Hovlandsdal <espen@hovlandsdal.com>                |

@@ -1,13 +1,13 @@
 | Name                | License period | License type | Installed version | Author                                          |
 | :------------------ | :------------- | :----------- | :---------------- | :---------------------------------------------- |
 | eslint-plugin-solid | perpetual      | MIT          | 0.14.5            | Josh Wilson <joshwilsonvu@gmail.com>            |
-| rollup              | perpetual      | MIT          | 4.55.3            | Rich Harris                                     |
-| solid-js            | perpetual      | MIT          | 1.9.10            | Ryan Carniato                                   |
+| rollup              | perpetual      | MIT          | 4.59.0            | Rich Harris                                     |
+| solid-js            | perpetual      | MIT          | 1.9.11            | Ryan Carniato                                   |
 | tslib               | perpetual      | 0BSD         | 2.8.1             | Microsoft Corp.                                 |
 | tsx                 | perpetual      | MIT          | 4.21.0            | Hiroki Osame hiroki.osame@gmail.com             |
 | typescript          | perpetual      | Apache-2.0   | 5.6.3             | Microsoft Corp.                                 |
-| vite                | perpetual      | MIT          | 6.2.4             | Evan You                                        |
+| vite                | perpetual      | MIT          | 6.4.1             | Evan You                                        |
 | vite-plugin-dts     | perpetual      | MIT          | 3.9.1             | qmhc                                            |
 | vite-plugin-solid   | perpetual      | MIT          | 2.11.10           | Alexandre Mouton-Brady <amoutonbrady@gmail.com> |
-| solid-js            | perpetual      | MIT          | 1.9.10            | Ryan Carniato                                   |
+| solid-js            | perpetual      | MIT          | 1.9.11            | Ryan Carniato                                   |
 

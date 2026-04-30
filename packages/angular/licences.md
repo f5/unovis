@@ -28,7 +28,7 @@
 | karma-jasmine                     | perpetual      | MIT          | 4.0.2             | Vojta Jina <vojta.jina@gmail.com>       |
 | karma-jasmine-html-reporter       | perpetual      | MIT          | 1.7.0             |                                         |
 | ng-packagr                        | perpetual      | MIT          | 12.2.7            | David Herges <david@spektrakel.de>      |
-| rollup                            | perpetual      | MIT          | 2.79.2            | Rich Harris                             |
+| rollup                            | perpetual      | MIT          | 2.80.0            | Rich Harris                             |
 | rollup-plugin-typescript2         | perpetual      | MIT          | 0.31.2            | @ezolenko                               |
 | typescript                        | perpetual      | Apache-2.0   | 4.2.4             | Microsoft Corp.                         |
 | webpack                           | perpetual      | MIT          | 5.76.0            | Tobias Koppers @sokra                   |
