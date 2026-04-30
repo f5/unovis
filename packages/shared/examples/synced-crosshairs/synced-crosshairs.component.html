@@ -1,0 +1,35 @@
+<div style="margin-bottom: 10px; font-size: 14px; color: #666">
+  Crosshair forced to show at position: {{ forcePosition }}
+</div>
+
+<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px">
+  <button *ngFor="let v of presets" type="button" (click)="setForcePosition(v)">{{ v }}</button>
+  <button type="button" (click)="setForcePosition(undefined)">clear</button>
+  <input
+    type="range"
+    min="0"
+    max="150"
+    step="1"
+    [value]="forcePosition ?? 0"
+    style="flex: 1"
+    (input)="onRangeInput($event)"
+  />
+</div>
+
+<vis-xy-container [data]="data" [margin]="{ top: 5, left: 5 }">
+  <vis-area [x]="x" [y]="accessors"></vis-area>
+  <vis-axis type="x"></vis-axis>
+  <vis-axis type="y"></vis-axis>
+  <vis-crosshair [template]="template" [forceShowAt]="forcePosition" [onCrosshairMove]="onCrosshairMove"></vis-crosshair>
+  <vis-tooltip></vis-tooltip>
+</vis-xy-container>
+
+<vis-xy-container yDirection="south" [data]="data" [margin]="{ top: 5, left: 5 }" [xDomain]="[0, 100]">
+  <vis-line [x]="x" [y]="accessors"></vis-line>
+  <vis-axis type="x"></vis-axis>
+  <vis-axis type="y"></vis-axis>
+  <vis-crosshair [template]="template" [forceShowAt]="forcePosition" [onCrosshairMove]="onCrosshairMove"></vis-crosshair>
+  <vis-tooltip></vis-tooltip>
+</vis-xy-container>
+
+<div style="height: 800px; width: 100%"></div>
