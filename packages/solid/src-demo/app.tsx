@@ -46,7 +46,9 @@ const examples = [
   lazy(() => import('@unovis/shared/examples/crosshair-stacked-bar/crosshair-stacked-bar-solid')),
   lazy(() => import('@unovis/shared/examples/brush-grouped-bar/brush-grouped-bar-solid')),
   lazy(() => import('@unovis/shared/examples/free-brush-scatters/free-brush-scatters-solid')),
-  lazy(() => import('@unovis/shared/examples/plotband-plotline/plotband-plotline-solid')),
+  lazy(() => import('@unovis/shared/examples/plotlines-playground/plotlines-playground-solid')),
+  lazy(() => import('@unovis/shared/examples/plotbands-playground/plotbands-playground-solid')),
+  lazy(() => import('@unovis/shared/examples/synced-auto-position/synced-auto-position-solid')),
 ]
 
 const App = () => {

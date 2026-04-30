@@ -53,7 +53,9 @@ import { CrosshairStackedBarModule } from '@unovis/shared/examples/crosshair-sta
 import { BrushGroupedBarModule } from '@unovis/shared/examples/brush-grouped-bar/brush-grouped-bar.module'
 import { FreeBrushScattersModule } from '@unovis/shared/examples/free-brush-scatters/free-brush-scatters.module'
 import { BaselineAreaChartModule } from '@unovis/shared/examples/baseline-area-chart/baseline-area-chart.module'
-import { PlotbandPlotlineModule } from '@unovis/shared/examples/plotband-plotline/plotband-plotline.module'
+import { PlotlinesPlaygroundModule } from '@unovis/shared/examples/plotlines-playground/plotlines-playground.module'
+import { PlotbandsPlaygroundModule } from '@unovis/shared/examples/plotbands-playground/plotbands-playground.module'
+import { SyncedAutoPositionModule } from '@unovis/shared/examples/synced-auto-position/synced-auto-position.module'
 
 @Component({
   selector: 'app-component',
@@ -106,7 +108,9 @@ import { PlotbandPlotlineModule } from '@unovis/shared/examples/plotband-plotlin
     <crosshair-stacked-bar></crosshair-stacked-bar>
     <brush-grouped-bar></brush-grouped-bar>
     <free-brush-scatters ></free-brush-scatters>
-    <plotband-plotline ></plotband-plotline>
+    <plotlines-playground></plotlines-playground>
+    <plotbands-playground></plotbands-playground>
+    <synced-auto-position></synced-auto-position>
   `,
 })
 export class AppComponent {
@@ -122,7 +126,7 @@ export class AppComponent {
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterPlotModule, SizedScatterPlotModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, StackedAreaWithAttributesModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
-    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule, PlotbandPlotlineModule, PatchyLineChartModule
+    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule, PlotlinesPlaygroundModule, PlotbandsPlaygroundModule, PatchyLineChartModule, SyncedAutoPositionModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

@@ -22,6 +22,58 @@ export const plotlineProps = (n=10, staticValue = false) => ({
   ...staticValue === false ? { value: 5 } : {}
 })
 
+export const extraPlotline = (value, label) => ({
+  name: 'Plotline',
+  props: { value, labelText: label, labelPosition: 'top-right', labelAutoPosition: true, color: '#666', lineStyle: 'dash' },
+  key: 'components',
+})
+
+export const autoPositionProps = {
+  ...plotlineProps(undefined, true),
+  height: 200,
+  value: 5.5,
+  labelText: '95th: 4.66 Mb/s',
+  labelPosition: 'top-right',
+  containerProps: { yDomain: [0, 10], margin: { top: 10, right: 180, bottom: 30, left: 40 } },
+  components: [
+    { name: 'Line', props: { x: d => d.x, y: d => d.y }, key: 'components' },
+    extraPlotline(5.6, '95th: 808.67 kb/s'),
+    extraPlotline(5.7, '95th: 81.34 kb/s'),
+    extraPlotline(5.8, '99th: 22.10 Mb/s'),
+    extraPlotline(5.9, '99.9th: 35.60 Mb/s'),
+  ],
+}
+
+export const overflowExtra = (value, label, overflow) => ({
+  name: 'Plotline',
+  props: { value, labelText: label, labelPosition: 'top-right', labelAutoPosition: true, labelOverflow: overflow, color: '#666', lineStyle: 'dash' },
+  key: 'components',
+})
+
+export const overflowProps = {
+  ...plotlineProps(undefined, true),
+  height: 200,
+  value: 5.50,
+  labelText: 'MAIN LINE',
+  labelColor: '#d62728',
+  color: '#d62728',
+  lineWidth: 2,
+  labelPosition: 'top-right',
+  labelAutoPosition: true,
+  containerProps: { yDomain: [0, 10], margin: { top: 10, right: 180, bottom: 30, left: 40 } },
+  components: [
+    { name: 'Line', props: { x: d => d.x, y: d => d.y }, key: 'components' },
+    extraPlotline(5.50, 'extra A'),
+    extraPlotline(5.50, 'extra B'),
+    extraPlotline(5.50, 'extra C'),
+    extraPlotline(5.50, 'extra D'),
+    extraPlotline(5.50, 'extra E'),
+    extraPlotline(5.50, 'extra F'),
+    extraPlotline(5.50, 'extra G'),
+    extraPlotline(5.50, 'extra H'),
+  ],
+}
+
 A _Plotline_ is used to highlight a specific region along the X or Y axis in a chart. It is only compatible with the _XY container_.
 
 ## Basic configuration
@@ -255,6 +307,42 @@ Default: `12`
   labelText="Small label 🤏"
   inputProps={{ min: 5, max: 26, step: 1 }}
   defaultValue={16}
+/>
+
+### Auto Position
+
+When several `Plotline`s share an axis with values close together, their labels can collapse onto the same screen region and become unreadable. Setting `labelAutoPosition` to `true` opts the label into the chart-wide collision resolver: the configured `labelPosition` becomes the *preferred* anchor, and the resolver may swap to another in-bounds, non-colliding candidate when needed.
+
+Default: `false`
+
+The example below renders five plotlines clustered close together. Toggle `labelAutoPosition` to see the resolver swap each label to a non-colliding anchor.
+
+<XYWrapperWithInput
+  {...autoPositionProps}
+  inputType="checkbox"
+  property="labelAutoPosition"
+  defaultValue={true}
+/>
+
+### Label Overflow
+
+When `labelAutoPosition` is `true` and **no** candidate anchor passes both bounds and collision checks, the resolver falls back per `labelOverflow`:
+
+* `smart` *(default)* – pick the in-bounds candidate with the smallest total intersect area. Label stays visible, may slightly overlap.
+* `hide` – set the label opacity to `0`. DOM is preserved (so transitions back work when labels rearrange), but the text is not visible.
+* `stack` – keep the label at its preferred anchor — today's behavior, deliberately exposed as an opt-out.
+
+Default: `smart`
+
+The example below packs nine plotlines against a single y-value (one more than the eight-anchor budget), forcing the **MAIN LINE** label to overflow. Switch `labelOverflow` to see it move to a min-overlap anchor (*smart*), disappear (*hide*), or stay at its preferred anchor stacked over the others (*stack*).
+
+<XYWrapperWithInput
+  {...overflowProps}
+  showContext="minimal"
+  inputType="select"
+  property="labelOverflow"
+  options={["smart", "hide", "stack"]}
+  defaultValue="smart"
 />
 
 ### Label Color

@@ -33,7 +33,9 @@
     () => import('@unovis/shared/examples/sunburst-nested-donut/sunburst-nested-donut.svelte'),
     () => import('@unovis/shared/examples/basic-donut-chart/basic-donut-chart.svelte'),
     () => import('@unovis/shared/examples/shaped-scatter-plot/shaped-scatter-plot.svelte'),
-    () => import('@unovis/shared/examples/plotband-plotline/plotband-plotline.svelte'),
+    () => import('@unovis/shared/examples/plotlines-playground/plotlines-playground.svelte'),
+    () => import('@unovis/shared/examples/plotbands-playground/plotbands-playground.svelte'),
+    () => import('@unovis/shared/examples/synced-auto-position/synced-auto-position.svelte'),
   ]
 </script>
 
