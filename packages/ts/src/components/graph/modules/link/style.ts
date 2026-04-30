@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const links = css`
   label: links;
@@ -29,7 +30,7 @@ export const variables = injectGlobal`
     --vis-graph-link-dominant-baseline: middle;
   }
 
-  body.theme-dark ${`.${links}`} {
+  ${darkThemeCssSelectors} ${`.${links}`} {
     --vis-graph-link-stroke-color: var(--vis-dark-graph-link-stroke-color);
     --vis-graph-link-label-stroke-color: var(--vis-dark-graph-link-label-stroke-color);
     --vis-graph-link-label-text-color: var(--vis-dark-graph-link-label-text-color);
@@ -97,7 +98,7 @@ export const linkBand = css`
 
 export const flowGroup = css`
   label: flow-group;
-  
+
   pointer-events: none;
 `
 

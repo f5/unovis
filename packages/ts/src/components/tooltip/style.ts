@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { darkThemeCssSelectors } from 'utils/style'
 
 export const root = css`
   label: tooltip;
@@ -43,14 +44,14 @@ export const variables = injectGlobal`
     --vis-dark-tooltip-shadow-color: rgba(0,0,0, 0.95);
   }
 
-  body.theme-dark ${`.${root}`} {
+  ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-tooltip-background-color: var(--vis-dark-tooltip-background-color);
     --vis-tooltip-text-color: var(--vis-dark-tooltip-text-color);
     --vis-tooltip-border-color: var(--vis-dark-tooltip-border-color);
     --vis-tooltip-shadow-color: var(--vis-dark-tooltip-shadow-color);
   }
 
-  body.theme-dark {
+  ${darkThemeCssSelectors} {
     --vis-tooltip-background-color: rgba(30,30,30, 0.95);
     --vis-tooltip-text-color: #e5e9f7;
     --vis-tooltip-border-color: var(--vis-color-grey);
