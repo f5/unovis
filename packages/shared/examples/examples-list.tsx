@@ -99,6 +99,7 @@ export const examples: ExampleCollection[] = [
     examples: [
       require('./basic-annotations').default,
       require('./crosshair-stacked-bar').default,
+      require('./synced-crosshairs').default,
       require('./brush-grouped-bar').default,
       require('./free-brush-scatters').default,
       require('./plotband-plotline').default,

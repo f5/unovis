@@ -27,6 +27,7 @@
     () => import('@unovis/shared/examples/parallel-graph/parallel-graph.svelte'),
     () => import('@unovis/shared/examples/data-gap-line-chart/data-gap-line-chart.svelte'),
     () => import('@unovis/shared/examples/crosshair-stacked-bar/crosshair-stacked-bar.svelte'),
+    () => import('@unovis/shared/examples/synced-crosshairs/synced-crosshairs.svelte'),
     () => import('@unovis/shared/examples/elk-layered-graph/elk-layered-graph.svelte'),
     () => import('@unovis/shared/examples/custom-nodes-graph/custom-nodes-graph.svelte'),
     () => import('@unovis/shared/examples/hierarchical-chord-diagram/hierarchical-chord-diagram.svelte'),
