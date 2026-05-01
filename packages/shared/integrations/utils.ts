@@ -195,28 +195,36 @@ export function getImportStatements (
   statements: ts.Statement[],
   configInterfaceMembers: ts.TypeElement[],
   generics: GenericParameter[] = [],
-  additionalComponentTypes: string[] = []
+  additionalComponentTypes: string[] = [],
+  importSourceMap?: Record<string, string>
 ): { source: string; elements: string[] }[] {
-  const importSources = {}
+  const importSources: Record<string, string> = {}
 
   // We assume that all extend types in generics come from unovis/ts
   const genericExtends = generics.map(g => g.extends).filter(g => g)
   const genericDefaults = generics.map(g => g.default).filter(g => g)
   const componentTypes = [componentName, `${componentName}ConfigInterface`, ...additionalComponentTypes]
   for (const typeName of [...componentTypes, ...genericExtends, ...genericDefaults]) {
-    importSources[typeName] = '@unovis/ts'
+    importSources[typeName] = importSourceMap?.[typeName] ?? '@unovis/ts'
   }
 
-  const importDeclarations: any[] = statements.filter(node => node.kind === ts.SyntaxKind.ImportDeclaration)
+  const importDeclarations = statements.filter((node): node is ts.ImportDeclaration => node.kind === ts.SyntaxKind.ImportDeclaration)
   for (const importDec of importDeclarations) {
-    for (const importEl of importDec.importClause.namedBindings.elements) {
-      let importSource: string = importDec.moduleSpecifier.text
-      if (!importSource || importSource.startsWith('./') || importSource.startsWith('core/') ||
-        importSource.startsWith('types/') || importSource.startsWith('utils/') || importSource.startsWith('components/') ||
-        importSource.startsWith('styles/') || importSource.startsWith('data-models/') || importSource.startsWith('data/')
-      ) importSource = '@unovis/ts'
+    const namedBindings = importDec.importClause?.namedBindings
+    if (!namedBindings || !ts.isNamedImports(namedBindings)) continue
+    for (const importEl of namedBindings.elements) {
+      const typeName = importEl.name.escapedText as string
+      if (importSourceMap?.[typeName]) {
+        importSources[typeName] = importSourceMap[typeName]
+      } else {
+        let importSource: string = (importDec.moduleSpecifier as ts.StringLiteral).text
+        if (!importSource || importSource.startsWith('./') || importSource.startsWith('core/') ||
+          importSource.startsWith('types/') || importSource.startsWith('utils/') || importSource.startsWith('components/') ||
+          importSource.startsWith('styles/') || importSource.startsWith('data-models/') || importSource.startsWith('data/')
+        ) importSource = '@unovis/ts'
 
-      importSources[importEl.name.escapedText] = importSource
+        importSources[typeName] = importSource
+      }
     }
   }
 
@@ -262,12 +270,13 @@ export function getConfigSummary (
   keepOnlyRequiredProperties = true,
   unovisBasePath = '../ts/src',
   configFileName = '/config.ts'
-): { configProperties: ConfigProperty[]; configInterfaceMembers: ts.TypeElement[]; generics: GenericParameter[]; statements: ts.Statement[] } {
+): { configProperties: ConfigProperty[]; configInterfaceMembers: ts.TypeElement[]; generics: GenericParameter[]; statements: ts.Statement[]; importSourceMap: Record<string, string> } {
   const requiredProps = new Map<string, string[]>() // maps interface to required props
   const configPropertiesMap = new Map<string, ConfigProperty>() // The map of all config properties
   let statements: ts.Statement[] = [] // Statements and ...
   let configInterfaceMembers: ts.TypeElement[] = [] // config interface members to resolve imports of custom types
   let generics: GenericParameter[] | undefined = [] // Generics
+  const importSourceMap: Record<string, string> = {} // Maps type names to their granular @unovis/ts/... import paths
 
   for (const [i, path] of component.sources.entries()) {
     const fullPath = `${unovisBasePath}${path}${configFileName}`
@@ -318,6 +327,32 @@ export function getConfigSummary (
       })
     }
 
+    // Build import source map with resolved paths
+    const importDeclarations: any[] = sourceStatements.filter(node => node.kind === ts.SyntaxKind.ImportDeclaration)
+    for (const importDec of importDeclarations) {
+      if (!importDec.importClause?.namedBindings?.elements) continue
+      let importSource: string = importDec.moduleSpecifier.text
+      if (importSource.startsWith('./') || importSource.startsWith('../')) {
+        importSource = `@unovis/ts${path}/${importSource.replace(/^\.\//, '')}`
+      } else if (
+        importSource.startsWith('core/') || importSource.startsWith('types/') ||
+        importSource.startsWith('utils/') || importSource.startsWith('components/') ||
+        importSource.startsWith('styles/') || importSource.startsWith('data-models/') ||
+        importSource.startsWith('data/')
+      ) {
+        importSource = `@unovis/ts/${importSource}`
+      }
+      for (const importEl of importDec.importClause.namedBindings.elements) {
+        importSourceMap[importEl.name.escapedText] = importSource
+      }
+    }
+
+    // Map the component class and config interface to their source path
+    if (i === component.sources.length - 1) {
+      importSourceMap[component.name] = `@unovis/ts${path}`
+      importSourceMap[`${component.name}ConfigInterface`] = `@unovis/ts${path}/config`
+    }
+
     statements = [...statements, ...sourceStatements]
     if (i === component.sources.length - 1) {
       generics = configInterface.typeParameters?.map((t: ts.TypeParameterDeclaration) => {
@@ -338,5 +373,6 @@ export function getConfigSummary (
     configInterfaceMembers,
     generics,
     statements,
+    importSourceMap,
   }
 }

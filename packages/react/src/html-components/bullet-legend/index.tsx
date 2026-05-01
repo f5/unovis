@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { BulletLegend, BulletLegendConfigInterface } from '@unovis/ts'
+import { BulletLegend } from '@unovis/ts/components/bullet-legend'
+import { BulletLegendConfigInterface } from '@unovis/ts/components/bullet-legend/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
