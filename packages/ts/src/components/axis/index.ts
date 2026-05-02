@@ -18,7 +18,6 @@ import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText
 import { isEqual, isFunction } from 'utils/data'
 import { rectIntersect } from 'utils/misc'
 import { getFontWidthToHeightRatio } from 'styles/index'
-import { getTransformValues } from 'utils/svg'
 
 // Local Types
 import { AxisType } from './types'
@@ -270,6 +269,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       .filter(tickValue => tickValues.some((t: number | Date) => isEqual(tickValue, t))) // We use isEqual to compare Dates
       .classed(s.tickLabel, true)
       .classed(s.tickLabelHideable, Boolean(config.tickTextHideOverlapping))
+      .classed(s.tickTextExiting, false)
       .style('fill', config.tickTextColor) as Selection<SVGTextElement, number, SVGGElement, unknown> | Selection<SVGTextElement, Date, SVGGElement, unknown>
 
     // Marking exiting elements
@@ -566,15 +566,18 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
   private _alignTickLabels (axisGroup = this.axisGroup): void {
     const { config: { type, tickTextAlign, tickTextAngle, position } } = this
-    const tickGroups = axisGroup.selectAll<SVGGElement, number | Date>('g.tick')
-    const ticksData = tickGroups.data() as number[] | Date[]
+    const activeTickTexts = axisGroup.selectAll<SVGTextElement, number | Date>(`g.tick > text:not(.${s.tickTextExiting})`)
+    const ticksData = activeTickTexts.data() as number[] | Date[]
 
-    tickGroups.each((_, i, elements) => {
-      const tickGroupElement = elements[i] as SVGGElement
-      const tickTextElement = tickGroupElement.querySelector('text') as SVGTextElement
-      const transformValues = getTransformValues(tickGroupElement)
-      const tickPosition = [transformValues.translate.x, transformValues.translate.y] as [number, number]
-      const textAlign = (isFunction(tickTextAlign) ? tickTextAlign(ticksData[i], i, ticksData, tickPosition, this._width, this._height) : tickTextAlign) as TextAlign
+    activeTickTexts.each((_, i, elements) => {
+      const tickTextElement = elements[i] as SVGTextElement
+      const tickDatum = ticksData[i]
+      // Compute the tick's target position from the scale rather than reading the DOM transform,
+      // which would return an interpolated value during a transition.
+      const tickPosition: [number, number] = type === AxisType.X
+        ? [this.xScale(tickDatum as never), 0]
+        : [0, this.yScale(tickDatum as never)]
+      const textAlign = (isFunction(tickTextAlign) ? tickTextAlign(tickDatum, i, ticksData, tickPosition, this._width, this._height) : tickTextAlign) as TextAlign
       const textAnchor = textAlignToAnchor(textAlign)
       const translateX = type === AxisType.X ? 0 : this._getYTickTextTranslate(textAlign, position as Position)
 
