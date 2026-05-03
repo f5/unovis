@@ -1,7 +1,17 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, SimpleChanges, ContentChild } from '@angular/core'
+import { Component, ViewChild, ElementRef, AfterViewInit, EventEmitter, Input, OnDestroy, Output, SimpleChanges, ContentChild } from '@angular/core'
 
 // Vis
-import { ColorFunction, ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Spacing, Annotations, Sizing } from '@unovis/ts'
+import {
+  ColorFunction,
+  ComponentCore,
+  SingleContainer,
+  SingleContainerConfigInterface,
+  SingleContainerRenderPayload,
+  Tooltip,
+  Spacing,
+  Annotations,
+  Sizing,
+} from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 import { VisAnnotationsComponent } from '../../components/annotations/annotations.component'
@@ -54,7 +64,26 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   /** Data to be passed to the component. Default: `undefined`. */
   @Input() data?: Data
 
+  /** Emitted once after the chart's first render completes. */
+  @Output() load = new EventEmitter<SingleContainerRenderPayload>()
+  /** Emitted after every render of the chart, including the first. */
+  @Output() render = new EventEmitter<SingleContainerRenderPayload>()
+  /** Emitted after every render except the first. */
+  @Output() redraw = new EventEmitter<SingleContainerRenderPayload>()
+
   chart: SingleContainer<Data>
+  private _hasLoaded = false
+
+  private _onRenderComplete: SingleContainerConfigInterface<Data>['onRenderComplete'] = (svg, margin, containerWidth, containerHeight, componentWidth, componentHeight) => {
+    const payload: SingleContainerRenderPayload = { svg, margin, containerWidth, containerHeight, componentWidth, componentHeight }
+    this.render.emit(payload)
+    if (this._hasLoaded) {
+      this.redraw.emit(payload)
+    } else {
+      this._hasLoaded = true
+      this.load.emit(payload)
+    }
+  }
 
   ngAfterViewInit (): void {
     this.chart = new SingleContainer<Data>(this.containerRef.nativeElement, this.getConfig(), this.data)
@@ -80,7 +109,7 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
     const tooltip = this.tooltipComponent?.component as Tooltip
     const annotations = this.annotationsComponent?.component as Annotations
 
-    return { width, height, duration, margin, component, tooltip, ariaLabel, annotations, svgDefs, sizing, colorFunction }
+    return { width, height, duration, margin, component, tooltip, ariaLabel, annotations, svgDefs, sizing, colorFunction, onRenderComplete: this._onRenderComplete }
   }
 
   ngOnDestroy (): void {

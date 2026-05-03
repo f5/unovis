@@ -1,10 +1,30 @@
 <script lang="ts">
-  import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
-  import { onMount, setContext } from 'svelte'
+  import { XYContainer, XYComponentCore, XYContainerConfigInterface, XYContainerRenderPayload, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
+  import { createEventDispatcher, onMount, setContext } from 'svelte'
 
   type Datum = $$Generic
   interface $$Props extends XYContainerConfigInterface<Datum> {
     data?: Datum[];
+  }
+
+  const dispatch = createEventDispatcher<{
+    load: XYContainerRenderPayload;
+    render: XYContainerRenderPayload;
+    redraw: XYContainerRenderPayload;
+  }>()
+
+  let hasLoaded = false
+  const handleRenderComplete: XYContainerConfigInterface<Datum>['onRenderComplete'] = (svg, margin, bleed, containerWidth, containerHeight, componentWidth, componentHeight) => {
+    const userCallback = $$restProps.onRenderComplete as XYContainerConfigInterface<Datum>['onRenderComplete']
+    userCallback?.(svg, margin, bleed, containerWidth, containerHeight, componentWidth, componentHeight)
+    const payload: XYContainerRenderPayload = { svg, margin, bleed, containerWidth, containerHeight, componentWidth, componentHeight }
+    dispatch('render', payload)
+    if (hasLoaded) {
+      dispatch('redraw', payload)
+    } else {
+      hasLoaded = true
+      dispatch('load', payload)
+    }
   }
 
   // Props
@@ -40,17 +60,16 @@
   $: chart?.setData(data, true)
 
   let animationFrame = 0
-  const updateContainer = async () => {
-    // due to the order of events when a component is removed update container can be called
-    // while a component is being destroyed. This can lead to an error because we trigger an update
-    // with a destroyed component.
+  const updateContainer = () => {
+    // Filter destroyed components — removal order can leave stale refs that crash on update.
     config.components = config.components?.filter((e) => !e.isDestroyed())
 
-    // we can't use animation frames in a non-browser environment
+    // No rAF in SSR.
     if (typeof requestAnimationFrame === 'undefined') {
       chart?.updateContainer({
         ...config,
         ...($$restProps as XYContainerConfigInterface<Datum>),
+        onRenderComplete: handleRenderComplete,
       })
 
       return
@@ -60,26 +79,22 @@
       cancelAnimationFrame(animationFrame)
     }
 
-    // this prevent multiple renders from happening in a single frame
-    // when a component is first rendered the components will be pushed 1 by 1
-    // so we don't want to rerender every time a component is added
+    // Coalesce sibling component pushes into a single frame.
     animationFrame = requestAnimationFrame(() => {
       chart?.updateContainer({
         ...config,
         ...($$restProps as XYContainerConfigInterface<Datum>),
+        onRenderComplete: handleRenderComplete,
       })
       animationFrame = 0
     })
   }
 
-  $: {
-    config
-    $$restProps
-    updateContainer()
-  }
+  // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-floating-promises
+  $: { config; $$restProps; updateContainer() }
 
   onMount(() => {
-    chart = new XYContainer(ref, config, data)
+    chart = new XYContainer(ref, { ...config, onRenderComplete: handleRenderComplete }, data)
     return () => chart.destroy()
   })
 
