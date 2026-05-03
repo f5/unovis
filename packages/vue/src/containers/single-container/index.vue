@@ -1,10 +1,16 @@
 <script setup lang="ts" generic="T">
-import { SingleContainer, ComponentCore, SingleContainerConfigInterface, Tooltip, Annotations } from '@unovis/ts'
+import { SingleContainer, ComponentCore, SingleContainerConfigInterface, SingleContainerRenderPayload, Tooltip, Annotations } from '@unovis/ts'
 import { onUnmounted, ref, shallowRef, provide, watch, toRefs, watchEffect, shallowReactive, toRaw } from 'vue'
 import { annotationsAccessorKey, componentAccessorKey, tooltipAccessorKey,  } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"
 
 const props = defineProps<SingleContainerConfigInterface<T> & { data?: T }>()
+const emit = defineEmits<{
+  load: [payload: SingleContainerRenderPayload];
+  render: [payload: SingleContainerRenderPayload];
+  redraw: [payload: SingleContainerRenderPayload];
+}>()
+
 const { data } = toRefs(props)
 const parsedProps = useForwardProps(props)
 
@@ -19,10 +25,23 @@ const config = shallowReactive({
 }) as SingleContainerConfigInterface<T>
 const elRef = ref<HTMLDivElement>()
 
+let hasLoaded = false
+const handleRenderComplete: SingleContainerConfigInterface<T>['onRenderComplete'] = (svg, margin, containerWidth, containerHeight, componentWidth, componentHeight) => {
+  parsedProps.value.onRenderComplete?.(svg, margin, containerWidth, containerHeight, componentWidth, componentHeight)
+  const payload: SingleContainerRenderPayload = { svg, margin, containerWidth, containerHeight, componentWidth, componentHeight }
+  emit('render', payload)
+  if (hasLoaded) {
+    emit('redraw', payload)
+  } else {
+    hasLoaded = true
+    emit('load', payload)
+  }
+}
+
 const initChart = () => {
   if (chart.value) return
   if (elRef.value && config.component)
-    chart.value = new SingleContainer(elRef.value, { ...toRaw(config) }, data.value)
+    chart.value = new SingleContainer(elRef.value, { ...toRaw(config), onRenderComplete: handleRenderComplete }, data.value)
 }
 
 // Child components call this after updating their data or config, so the chart re-renders.
@@ -32,7 +51,7 @@ const dirty = () => { chart.value?.render() }
 watchEffect(() => {
   initChart()
   // Spreading `config` (shallow-reactive) tracks child component registrations
-  chart.value?.updateContainer({ ...toRaw(parsedProps.value), ...config })
+  chart.value?.updateContainer({ ...toRaw(parsedProps.value), ...config, onRenderComplete: handleRenderComplete })
 })
 
 watch(data, () => {

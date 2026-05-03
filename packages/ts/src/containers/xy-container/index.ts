@@ -301,7 +301,22 @@ export class XYContainer<Datum> extends ContainerCore {
     config.annotations?.render()
 
     this._firstRender = false
-    config.onRenderComplete?.(this.svg.node(), margin, this._componentsBleed, this.containerWidth, this.containerHeight, this.width, this.height)
+    config.onRenderComplete?.(
+      this.svg.node(),
+      margin,
+      this._getBleed(this.components),
+      this.containerWidth,
+      this.containerHeight,
+      this.width,
+      this.height
+    )
+  }
+
+  private _updateScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
+    const c = clean(components || this.components)
+    this._setScales(...c)
+    this._updateScalesDomain(...c)
+    this._updateScalesRange(...c)
   }
 
   private _setScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
