@@ -13,6 +13,16 @@ import { ContinuousScale } from '@/types/scale'
 import { Direction } from '@/types/direction'
 import { Spacing } from '@/types/spacing'
 
+export type XYContainerRenderPayload = {
+  svg: SVGSVGElement;
+  margin: Spacing;
+  bleed: Spacing;
+  containerWidth: number;
+  containerHeight: number;
+  componentWidth: number;
+  componentHeight: number;
+}
+
 export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
   /** An array of visualization components. Default: `[]` */
   components?: XYComponentCore<Datum>[];
