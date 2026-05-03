@@ -1,12 +1,32 @@
 <script lang="ts">
-  import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Annotations } from '@unovis/ts'
+  import { ComponentCore, SingleContainer, SingleContainerConfigInterface, SingleContainerRenderPayload, Tooltip, Annotations } from '@unovis/ts'
   import { arePropsEqual } from '../../utils/props'
-  import { onDestroy, setContext } from 'svelte'
+  import { createEventDispatcher, onDestroy, setContext } from 'svelte'
 
   // Generics
   type Data = $$Generic
   interface $$Props extends SingleContainerConfigInterface<Data> {
     data?: Data;
+  }
+
+  const dispatch = createEventDispatcher<{
+    load: SingleContainerRenderPayload;
+    render: SingleContainerRenderPayload;
+    redraw: SingleContainerRenderPayload;
+  }>()
+
+  let hasLoaded = false
+  const handleRenderComplete: SingleContainerConfigInterface<Data>['onRenderComplete'] = (svg, margin, containerWidth, containerHeight, componentWidth, componentHeight) => {
+    const userCallback = $$restProps.onRenderComplete as SingleContainerConfigInterface<Data>['onRenderComplete']
+    userCallback?.(svg, margin, containerWidth, containerHeight, componentWidth, componentHeight)
+    const payload: SingleContainerRenderPayload = { svg, margin, containerWidth, containerHeight, componentWidth, componentHeight }
+    dispatch('render', payload)
+    if (hasLoaded) {
+      dispatch('redraw', payload)
+    } else {
+      hasLoaded = true
+      dispatch('load', payload)
+    }
   }
 
   // Internal variables
@@ -36,7 +56,7 @@
   export { className as class }
   let config: SingleContainerConfigInterface<Data>
   $: props = $$restProps as SingleContainerConfigInterface<Data>
-  $: config = { component, tooltip, annotations, ...props }
+  $: config = { component, tooltip, annotations, ...props, onRenderComplete: handleRenderComplete }
 
   // Helpers
   function initChart () {
