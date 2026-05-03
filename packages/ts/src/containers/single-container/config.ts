@@ -7,6 +7,15 @@ import { Annotations } from '@/components/annotations'
 // Types
 import { Spacing } from '@/types/spacing'
 
+export type SingleContainerRenderPayload = {
+  svg: SVGSVGElement;
+  margin: Spacing;
+  containerWidth: number;
+  containerHeight: number;
+  componentWidth: number;
+  componentHeight: number;
+}
+
 export interface SingleContainerConfigInterface<Datum> extends ContainerConfigInterface {
   /** Visualization component. Default: `undefined` */
   component?: ComponentCore<Datum>;

@@ -1,10 +1,16 @@
 <script setup lang="ts" generic="T">
-import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
+import { XYContainer, XYComponentCore, XYContainerConfigInterface, XYContainerRenderPayload, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
 import { onUnmounted, ref, provide, watch, toRefs, reactive, watchEffect, toRaw } from 'vue'
 import { componentAccessorKey, tooltipAccessorKey, axisAccessorKey, crosshairAccessorKey, annotationsAccessorKey } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"
 
 const props = defineProps<XYContainerConfigInterface<T> & { data?: T[] }>()
+const emit = defineEmits<{
+  load: [payload: XYContainerRenderPayload];
+  render: [payload: XYContainerRenderPayload];
+  redraw: [payload: XYContainerRenderPayload];
+}>()
+
 const { data } = toRefs(props)
 const parsedProps = useForwardProps(props)
 
@@ -19,19 +25,32 @@ const config = reactive({
 }) as XYContainerConfigInterface<T>
 const elRef = ref<HTMLDivElement>()
 
+let hasLoaded = false
+const handleRenderComplete: XYContainerConfigInterface<T>['onRenderComplete'] = (svg, margin, bleed, containerWidth, containerHeight, componentWidth, componentHeight) => {
+  parsedProps.value.onRenderComplete?.(svg, margin, bleed, containerWidth, containerHeight, componentWidth, componentHeight)
+  const payload: XYContainerRenderPayload = { svg, margin, bleed, containerWidth, containerHeight, componentWidth, componentHeight }
+  emit('render', payload)
+  if (hasLoaded) {
+    emit('redraw', payload)
+  } else {
+    hasLoaded = true
+    emit('load', payload)
+  }
+}
+
 const initChart = () => {
   if (chart.value || !elRef.value) return
   // config holds only child-registration slots — if all are empty, no slot has registered yet
   const hasContent = Object.values(config).some(v => Array.isArray(v) ? v.length : v)
   if (!hasContent) return
-  chart.value = new XYContainer(elRef.value, { ...toRaw(config) }, data.value)
+  chart.value = new XYContainer(elRef.value, { ...toRaw(config), onRenderComplete: handleRenderComplete }, data.value)
 }
 
 watchEffect(() => {
   initChart()
   // touch deep changes in components config to track them
   const t = config.components.map(i => i.config)
-  chart.value?.updateContainer({ ...toRaw(parsedProps.value), ...toRaw(config) })
+  chart.value?.updateContainer({ ...toRaw(parsedProps.value), ...toRaw(config), onRenderComplete: handleRenderComplete })
 })
 
 watch(data, () => {
