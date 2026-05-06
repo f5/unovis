@@ -102,6 +102,10 @@ const config = {
                 label: 'Gallery',
                 to: '/gallery',
               },
+              {
+                label: 'More Examples',
+                href: 'https://unovis.dev/examples',
+              },
             ],
           },
           {
@@ -114,10 +118,6 @@ const config = {
               {
                 label: 'GitHub Discussions',
                 href: 'https://github.com/f5/unovis/discussions',
-              },
-              {
-                label: 'StackOverflow',
-                href: 'https://stackoverflow.com/questions/tagged/unovis',
               },
               {
                 label: 'Twitter',
@@ -161,8 +161,8 @@ const config = {
         id: 'version-1.6-announcement',
         content:
           '⚠️ Important: Angular version support changes in <a rel="noopener noreferrer" href="/releases/1.7-angular">Unovis 1.7</a>',
-        backgroundColor: '#A6CC74',
-        textColor: '#fff',
+        backgroundColor: '#f4f6fc',
+        textColor: '#161328',
         isCloseable: false,
       },
     }),

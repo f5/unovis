@@ -32,6 +32,9 @@ export default function Home (): JSX.Element {
           </div>
         </div>
         )}
+        <div className={s.banner}>
+          🤔 Can't find the example you're looking for? Check out our gallery of React examples that we use for Unovis development at <Link to="https://unovis.dev/examples">unovis.dev/examples</Link>.
+        </div>
       </div>
     </Layout>
   )
