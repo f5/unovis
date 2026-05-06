@@ -4,7 +4,6 @@
   import { XYDataRecord, generateXYDataRecords } from './data'
 
   const margin = { left: 100, right: 100, top: 40, bottom: 60 }
-  const style: React.CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '40vh' }
   const chartX = d => d.x
   const chartAY = (d: XYDataRecord, i: number) => i * (d.y || 0)
   const chartBY = (d: XYDataRecord) => 20 + 10 * (d.y2 || 0)
@@ -43,6 +42,9 @@
   >
     <VisLine x={chartX} y={chartBY} color={'#FF6B7E'} />
     <VisAxis
+      type='y'
+      position={'right'}
+      tickFormat={chartBYTicks}
       gridLine={false}
       tickTextColor={'#FF6B7E'}
       labelColor={'#FF6B7E'}

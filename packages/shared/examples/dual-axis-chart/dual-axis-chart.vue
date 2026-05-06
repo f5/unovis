@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue'
 import { VisXYContainer, VisArea, VisAxis, VisLine } from '@unovis/vue'
 import { XYDataRecord, generateXYDataRecords } from './data'
 const margin = { left: 100, right: 100, top: 40, bottom: 60 }
-const style: React.CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '40vh' }
+const style: CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '40vh' }
 
 const chartX = d => d.x
 const chartAY = (d: XYDataRecord, i: number) => i * (d.y || 0)
