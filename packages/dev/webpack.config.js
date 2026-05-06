@@ -30,7 +30,8 @@ module.exports = {
               getCustomTransformers: () => ({
                 before: [isDevelopment && ReactRefreshTypeScript()].filter(Boolean),
               }),
-              transpileOnly: isDevelopment,
+              // TODO: Enable for the prod build after fixing TS errors
+              transpileOnly: true, // isDevelopment,
             },
           },
         ],

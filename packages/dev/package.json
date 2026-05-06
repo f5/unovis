@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "webpack",
+    "build": "NODE_ENV=production webpack",
     "dev": "webpack-dev-server --host 0.0.0.0",
     "serve": "serve dist -s -p 9501",
     "check": "tsc --noEmit",
