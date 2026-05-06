@@ -15,8 +15,8 @@ const nodeFill = (n: NodeDatum) => n.color
 </script>
 
 <template>
-  <VisSingleContainer :data="data" height="60vh">
-    <VisGraph :layoutType="GraphLayoutType.Force" :nodeSize="40" :forceLayoutSettings="forceLayoutSettings"
-      :linkLabel="linkLabel" :nodeFill="nodeFill" :nodeLabel="nodeLabel" />
+  <VisSingleContainer :data height="60vh">
+    <VisGraph :layoutType="GraphLayoutType.Force" :nodeSize="40" :forceLayoutSettings
+      :linkLabel :nodeFill :nodeLabel />
   </VisSingleContainer>
 </template>

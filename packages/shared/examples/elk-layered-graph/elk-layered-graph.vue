@@ -22,7 +22,7 @@ const layoutElkNodeGroups = [
 
 <template>
   <div class="chart">
-    <VisSingleContainer :data="data" height="60vh">
+    <VisSingleContainer :data height="60vh">
       <VisGraph v-bind="{
         nodeShape,
         nodeStrokeWidth,

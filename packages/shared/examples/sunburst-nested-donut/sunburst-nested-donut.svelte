@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisSingleContainer, VisNestedDonut } from '@unovis/svelte'
   import { NestedDonutSegment } from '@unovis/ts'
   import { colors, data, Datum } from './data'
@@ -13,10 +13,10 @@
   const segmentColor = (d: NestedDonutSegment<Datum>) => colors.get(d.data.key)
 </script>
 
-<div class='sunburst'>
-  <VisSingleContainer data={data} >
+<div class="sunburst">
+  <VisSingleContainer {data} >
     <VisNestedDonut
-      direction='outwards'
+      direction="outwards"
       hideOverflowingSegmentLabels={false}
       layerSettings={{ width: '6vmin' }}
       {layers}

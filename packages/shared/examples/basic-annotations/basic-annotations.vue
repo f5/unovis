@@ -94,7 +94,7 @@ const priceTickFormat = (y: number) => `$${y}`
 </script>
 
 <template>
-  <VisXYContainer :data="data" :xScale="xScale" :yScale="yScale" :yDomain="[0.05, 100000]" :height="600">
+  <VisXYContainer :data :xScale :yScale :yDomain="[0.05, 100000]" :height="600">
     <VisLine :x="date" :y="price" />
     <VisStackedBar color="#aaa3" :x="date" :y="volume" />
     <VisAxis type="x" :numTicks="5" :tickFormat="yearTickFormat" />

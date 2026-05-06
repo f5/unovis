@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { Area } from '@unovis/ts'
   import { VisXYContainer, VisBulletLegend, VisAxis, VisArea } from '@unovis/svelte'
   import { data, countries, FoodExportData, bulletLegends } from './data'
@@ -20,8 +20,8 @@
 <VisXYContainer {data} height={500}>
   <VisBulletLegend items={Object.values(bulletLegends)}/>
   <VisArea {x} {y} {attributes}/>
-  <VisAxis type='x' label='Year' numTicks={10} gridLine={false} domainLine={false}/>
-  <VisAxis type='y' label='Food Exports(% of merchandise exports)' numTicks={10}/>
+  <VisAxis type="x" label="Year" numTicks={10} gridLine={false} domainLine={false}/>
+  <VisAxis type="y" label="Food Exports(% of merchandise exports)" numTicks={10}/>
 </VisXYContainer>
 
 <style>

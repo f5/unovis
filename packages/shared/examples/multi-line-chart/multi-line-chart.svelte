@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { Scale } from '@unovis/ts'
   import { VisXYContainer, VisLine, VisAxis, VisBulletLegend } from '@unovis/svelte'
   import { data, labels, CityTemps } from './data'
@@ -14,7 +14,7 @@
 </script>
 
 <VisBulletLegend {items}/>
-<VisXYContainer data={data} height={300} {xScale}>
+<VisXYContainer {data} height={300} {xScale}>
   <VisLine {x} {y}/>
   <VisAxis type="x" label="Date" numTicks={6} tickFormat={(value) => Intl.DateTimeFormat().format(value)}/>
   <VisAxis type="y" label="Temperature (celsius)"/>

@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   // eslint-disable svelte/no-at-html-tags
   import { Position } from '@unovis/ts'
   import { VisAxis, VisCrosshair, VisStackedBar, VisTooltip, VisXYContainer } from '@unovis/svelte'

@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { FreeBrushMode, Scale, Position } from '@unovis/ts'
   import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend, VisFreeBrush } from '@unovis/svelte'
   import { palette, data, DataRecord } from './data'
@@ -29,19 +29,19 @@
 <div class="scatter-with-minimap">
   <div>
     <VisXYContainer
-      data={data}
+      {data}
       xDomain={selection?.[0]}
       yDomain={selection?.[1]}
       height={'55vh'}
       scaleByDomain={true}
     >
       <VisScatter {...scatterProps} sizeRange={[20, 80]} labelPosition={Position.Bottom} />
-      <VisAxis type='x' label='Median Salary ($)' tickFormat={formatNumber} gridLine={false}/>
-      <VisAxis type='y' label='Employment Rate' tickPadding={0} gridLine={false}/>
+      <VisAxis type="x" label="Median Salary ($)" tickFormat={formatNumber} gridLine={false}/>
+      <VisAxis type="y" label="Employment Rate" tickPadding={0} gridLine={false}/>
     </VisXYContainer>
   </div>
   <div class="minimap">
-    <VisXYContainer data={data} height={125}>
+    <VisXYContainer {data} height={125}>
       <VisScatter {...scatterProps} sizeRange={[3, 10]} label={undefined}/>
       <VisFreeBrush
         selectionMinLength={[0, 0]}

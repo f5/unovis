@@ -7,8 +7,8 @@ const subLabel = (d: NodeDatum) => `£${d.value.toFixed(2)}`
 </script>
 
 <template>
-  <VisSingleContainer :data="data" :height="400">
+  <VisSingleContainer :data :height="400">
     <VisSankey :labelFit="FitMode.Wrap" labelForceWordBreak="false" :labelMaxWidth="150" :nodePadding="20"
-      :subLabel="subLabel" />
+      :subLabel />
   </VisSingleContainer>
 </template>

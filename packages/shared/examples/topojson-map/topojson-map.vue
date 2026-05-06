@@ -32,7 +32,7 @@ const gradientSteps = Array(range).fill(1)
 <template>
   <div class="topojson-map">
     <!-- year slider -->
-    <header class='year-slider'>
+    <header class="year-slider">
       <h2>Life expectancy by Country, <em>{{ year }}</em></h2>
       <input type="range" v-model="year" :min="yearRange[0]" :max="yearRange[1]" />
     </header>
@@ -43,8 +43,8 @@ const gradientSteps = Array(range).fill(1)
     </VisSingleContainer>
     <!-- gradient legend-->
     <VisXYContainer :data="[{}]" :height="70" :width="500">
-      <VisStackedBar :x="0" :y="gradientSteps" :color="color" :orientation="Orientation.Horizontal" />
-      <VisAxis type="x" position="top" :numTicks="range / 5" label='Life Expectancy (years)' />
+      <VisStackedBar :x="0" :y="gradientSteps" :color :orientation="Orientation.Horizontal" />
+      <VisAxis type="x" position="top" :numTicks="range / 5" label="Life Expectancy (years)" />
     </VisXYContainer>
   </div>
 </template>

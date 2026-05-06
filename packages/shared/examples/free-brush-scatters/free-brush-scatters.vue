@@ -30,18 +30,18 @@ const scatterProps = {
   <VisBulletLegend :items="legendItems" />
   <div class="scatter-with-minimap">
     <div>
-      <VisXYContainer :data="data" :xDomain="selection?.[0]" :yDomain="selection?.[1]" height="55vh"
+      <VisXYContainer :data :xDomain="selection?.[0]" :yDomain="selection?.[1]" height="55vh"
         :scaleByDomain="true">
         <VisScatter v-bind="scatterProps" :sizeRange="[20, 80]" :labelPosition="Position.Bottom" />
-        <VisAxis type='x' label='Median Salary ($)' :tickFormat="formatNumber" :gridLine="false" />
-        <VisAxis type='y' label='Employment Rate' :tickPadding="0" :gridLine="false" />
+        <VisAxis type="x" label="Median Salary ($)" :tickFormat="formatNumber" :gridLine="false" />
+        <VisAxis type="y" label="Employment Rate" :tickPadding="0" :gridLine="false" />
       </VisXYContainer>
     </div>
     <div class="minimap">
-      <VisXYContainer :data="data" :height="125">
+      <VisXYContainer :data :height="125">
         <VisScatter v-bind="scatterProps" :sizeRange="[3, 10]" :label="undefined" />
         <VisFreeBrush :selectionMinLength="[0, 0]" :autoHide="false" :x="scatterProps.x" :y="scatterProps.y"
-          :onBrushEnd="onBrushEnd" :mode="FreeBrushMode.XY" />
+          :onBrushEnd :mode="FreeBrushMode.XY" />
       </VisXYContainer>
     </div>
   </div>

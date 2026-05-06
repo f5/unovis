@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisXYContainer, VisGroupedBar, VisAxis, VisBulletLegend } from '@unovis/svelte'
   import { data, colors, capitalize, ElectionDatum } from './data'
 

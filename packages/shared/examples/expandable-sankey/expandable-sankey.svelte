@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { FitMode, Sankey, SankeyLink, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@unovis/ts'
   import { VisSingleContainer, VisSankey } from '@unovis/svelte'
   import { sankeyData, root, Node, Link } from './data'

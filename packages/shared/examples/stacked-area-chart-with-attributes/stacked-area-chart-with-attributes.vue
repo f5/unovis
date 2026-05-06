@@ -19,10 +19,10 @@ const attributes = {
 </script>
 
 <template>
-  <VisXYContainer :data="data" :height="500">
+  <VisXYContainer :data :height="500">
     <VisBulletLegend :items="Object.values(bulletLegends)" />
-    <VisArea :x="x" :y="y" :attributes="attributes"/>
-    <VisAxis type='x' label='Year' :numTicks="10" :gridLine="false" :domainLine="false" />
-    <VisAxis type='y' label='Food Exports(% of merchandise exports)' :numTicks="10" />
+    <VisArea :x :y :attributes/>
+    <VisAxis type="x" label="Year" :numTicks="10" :gridLine="false" :domainLine="false" />
+    <VisAxis type="y" label="Food Exports(% of merchandise exports)" :numTicks="10" />
   </VisXYContainer>
 </template>

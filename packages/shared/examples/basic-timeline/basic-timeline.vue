@@ -25,11 +25,11 @@ const triggers = { [Timeline.selectors.label]: getTooltipText }
 </script>
 
 <template>
-  <VisXYContainer :data="data" :height="500">
+  <VisXYContainer :data :height="500">
     <h3>A Timeline of Abandoned Google Products, 1997 - 2022</h3>
     <VisBulletLegend :items="legendItems" />
-    <VisTimeline :x="x" :length="length" :type="type" :color="color" :labelWidth="labelWidth" :showLabels="true" />
-    <VisTooltip :triggers="triggers" />
+    <VisTimeline :x :length :type :color :labelWidth :showLabels="true" />
+    <VisTooltip :triggers />
     <VisAxis type="x" :tickFormat="dateFormatter" :numTicks="10" />
   </VisXYContainer>
 </template>

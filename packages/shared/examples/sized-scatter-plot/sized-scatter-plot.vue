@@ -25,11 +25,11 @@ const triggers = {
 <template>
   <h2>American College Graduates, 2010-2012</h2>
   <VisBulletLegend :items="legendItems" />
-  <VisXYContainer :data="data" :height="600" :scaleByDomain="true">
-    <VisScatter :x="x" :y="y" :color="color" :size="size" :label="label" :labelPosition="Position.Bottom"
+  <VisXYContainer :data :height="600" :scaleByDomain="true">
+    <VisScatter :x :y :color :size :label :labelPosition="Position.Bottom"
       :sizeRange="[10, 50]" cursor="pointer" />
-    <VisAxis type='x' label='Median Salary ($)' :tickFormat="formatNumber" />
-    <VisAxis excludeFromDomainCalculation type='y' label='Employment Rate' :tickPadding="0" />
-    <VisTooltip :triggers="triggers" />
+    <VisAxis type="x" label="Median Salary ($)" :tickFormat="formatNumber" />
+    <VisAxis excludeFromDomainCalculation type="y" label="Employment Rate" :tickPadding="0" />
+    <VisTooltip :triggers />
   </VisXYContainer>
 </template>

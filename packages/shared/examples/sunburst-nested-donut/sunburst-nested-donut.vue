@@ -14,9 +14,9 @@ const segmentColor = (d: NestedDonutSegment<Datum>) => colors.get(d.data.key)
 </script>
 
 <template>
-  <VisSingleContainer :data="data" class="sunburst">
+  <VisSingleContainer :data class="sunburst">
     <VisNestedDonut direction="outwards" :hideOverflowingSegmentLabels="false" :layerSettings="{ width: '6vmin' }"
-      :layers="layers" :segmentColor="segmentColor" />
+      :layers :segmentColor />
   </VisSingleContainer>
 </template>
 

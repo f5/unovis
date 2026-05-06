@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { Orientation, Scale, TopoJSONMap } from '@unovis/ts'
   import { WorldMapTopoJSON } from '@unovis/ts/maps'
   import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@unovis/svelte'
@@ -31,7 +31,7 @@
 
 <div class="topojson-map">
   <!-- year slider -->
-  <header class='year-slider'>
+  <header class="year-slider">
     <h2>Life expectancy by Country, <em>{year}</em></h2>
     <input type="range" bind:value={year} min={yearRange[0]} max={yearRange[1]}/>
   </header>
@@ -46,7 +46,7 @@
     <VisAxis
       type="x"
       position="top"
-      label='Life Expectancy (years)'
+      label="Life Expectancy (years)"
       numTicks={gradientSteps.length / 5}
       {tickFormat}
     />

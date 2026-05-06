@@ -19,16 +19,16 @@ const items = computed(() => candidates.map(c => ({ ...c, inactive: curr.value !
 
 <template>
   <div class="step-area-chart">
-    <div class='panel'>
+    <div class="panel">
       <VisBulletLegend :items="Object.keys(data[0][curr]).map(d => ({ name: d }))" />
-      <div class='legendSwitch'>
-        <VisBulletLegend labelClassName='legendLabel' :items="items" @legend-item-click="onLegendItemClick" />
+      <div class="legendSwitch">
+        <VisBulletLegend labelClassName="legendLabel" :items @legend-item-click="onLegendItemClick" />
       </div>
     </div>
-    <VisXYContainer :data="data" :height="400" :yDomain="[0, 42]">
-      <VisArea :x="x" :y="y" curveType='stepAfter' />
-      <VisAxis type='x' label='Year' />
-      <VisAxis type='y' label='Number of Mentions' />
+    <VisXYContainer :data :height="400" :yDomain="[0, 42]">
+      <VisArea :x :y curveType="stepAfter" />
+      <VisAxis type="x" label="Year" />
+      <VisAxis type="y" label="Number of Mentions" />
     </VisXYContainer>
   </div>
 </template>

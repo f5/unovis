@@ -15,10 +15,10 @@
       </label>
     </div>
     <div>
-      <VisXYContainer :data="data" :xDomain="[1990, 2024]" width="100%">
+      <VisXYContainer :data :xDomain="[1990, 2024]" width="100%">
         <VisLine
           :curveType="CurveType.Linear"
-          :fallbackValue="fallbackValue"
+          :fallbackValue
           :interpolateMissingData="interpolation"
           :x="xCallback"
           :y="countriesYMemo"

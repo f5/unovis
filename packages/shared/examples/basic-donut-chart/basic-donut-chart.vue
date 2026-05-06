@@ -13,7 +13,7 @@ const legendItems = Object.entries(data).map(([_, data]) => ({
   <VisSingleContainer :height="400">
   <VisDonut
     :value="d => d.value"
-    :data="data"
+    :data
     :showEmptySegments="true"
     :padAngle="0.01"
     :arcWidth="100"

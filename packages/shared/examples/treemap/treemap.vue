@@ -39,7 +39,7 @@ function getTooltipContent(node: any): string {
       :triggers="{ [Treemap.selectors.tile]: getTooltipContent }"
     />
     <VisTreemap
-      :data="data"
+      :data
       :numberFormat="populationFormat"
       :value="(d: DataRecord) => d.billions"
       :layers="[(d: DataRecord) => d.category, (d: DataRecord) => d.name]"

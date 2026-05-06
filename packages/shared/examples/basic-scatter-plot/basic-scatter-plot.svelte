@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import type { NumericAccessor, StringAccessor } from '@unovis/ts'
   import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend } from '@unovis/svelte'
   import { data, DataRecord } from './data'
@@ -16,8 +16,8 @@
 </script>
 
 <VisBulletLegend items={legendItems}/>
-<VisXYContainer data={data} height={'60vh'}>
-  <VisScatter x={x} y={y} size={8} color={color}/>
-  <VisAxis type='x' label={'Beak Length (mm)'} />
-  <VisAxis type='y' label={'Flipper Length (mm)'}/>
+<VisXYContainer {data} height={'60vh'}>
+  <VisScatter {x} {y} size={8} {color}/>
+  <VisAxis type="x" label={'Beak Length (mm)'} />
+  <VisAxis type="y" label={'Flipper Length (mm)'}/>
 </VisXYContainer>

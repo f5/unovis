@@ -5,7 +5,7 @@ import { data } from './data'
 
 <template>
   <VisXYContainer :height="600">
-    <VisLine :data="data" :x="d => d.x" :y="d => d.y" />
+    <VisLine :data :x="d => d.x" :y="d => d.y" />
     <VisAxis type="x" />
     <VisAxis type="y" />
   </VisXYContainer>

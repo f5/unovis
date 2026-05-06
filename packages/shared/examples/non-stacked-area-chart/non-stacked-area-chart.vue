@@ -14,11 +14,11 @@ const yTicks = Intl.NumberFormat(navigator.language, { notation: 'compact' }).fo
 </script>
 
 <template>
-  <VisXYContainer :data="data" :height="400">
+  <VisXYContainer :data :height="400">
     <VisBulletLegend :items="Object.values(countries)" />
-    <VisArea :x="x" v-bind="accessors(Country.UnitedStates)" :opacity="0.7" :curveType="CurveType.Basis" />
-    <VisArea :x="x" v-bind="accessors(Country.India)" :opacity="0.7" :curveType="CurveType.Basis" />
-    <VisAxis type='x' :tickFormat="xTicks" />
-    <VisAxis type='y' :tickFormat="yTicks" />
+    <VisArea :x v-bind="accessors(Country.UnitedStates)" :opacity="0.7" :curveType="CurveType.Basis" />
+    <VisArea :x v-bind="accessors(Country.India)" :opacity="0.7" :curveType="CurveType.Basis" />
+    <VisAxis type="x" :tickFormat="xTicks" />
+    <VisAxis type="y" :tickFormat="yTicks" />
   </VisXYContainer>
 </template>

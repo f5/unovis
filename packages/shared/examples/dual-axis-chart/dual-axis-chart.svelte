@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 
   import { VisXYContainer, VisArea, VisAxis, VisLine } from '@unovis/svelte'
   import { XYDataRecord, generateXYDataRecords } from './data'
@@ -17,38 +17,38 @@
   <VisXYContainer
     data={generateXYDataRecords(150)}
     autoMargin={false}
-    margin={margin}
-    width= {'100%'}
-    height= {'40vh'}
+    {margin}
+    width="100%"
+    height="40vh"
   >
     <VisArea x={chartX} y={chartAY} opacity={0.9} />
-    <VisAxis type='x' numTicks={3} tickFormat={xTicks} label='Time'/>
-    <VisAxis type='y'
+    <VisAxis type="x" numTicks={3} tickFormat={xTicks} label="Time"/>
+    <VisAxis type="y"
       tickFormat={chartAYTicks}
       tickTextWidth={60}
-      tickTextColor={'#4D8CFD'}
-      labelColor={'#4D8CFD'}
-      label='Traffic'
+      tickTextColor="#4D8CFD"
+      labelColor="#4D8CFD"
+      label="Traffic"
     />
   </VisXYContainer>
   <VisXYContainer
     data={generateXYDataRecords(150)}
     yDomain={[0, 150]}
-    margin={margin}
+    {margin}
     autoMargin={false}
-    width= {'100%'}
-    height= {'40vh'}
-    class={'chartContainer'}
+    width="100%"
+    height="40vh"
+    class="chartContainer"
   >
-    <VisLine x={chartX} y={chartBY} color={'#FF6B7E'} />
+    <VisLine x={chartX} y={chartBY} color="#FF6B7E" />
     <VisAxis
-      type='y'
-      position={'right'}
+      type="y"
+      position="right"
       tickFormat={chartBYTicks}
       gridLine={false}
-      tickTextColor={'#FF6B7E'}
-      labelColor={'#FF6B7E'}
-      label='Signal Strength'
+      tickTextColor="#FF6B7E"
+      labelColor="#FF6B7E"
+      label="Signal Strength"
     />
   </VisXYContainer>
 </div>

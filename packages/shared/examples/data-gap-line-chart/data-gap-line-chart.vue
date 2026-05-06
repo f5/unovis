@@ -32,13 +32,13 @@ function onLegendItemClick(_, i: number): void {
 
 <template>
   <div class="fallbackValueSwitch"> Select a fallback value for missing data points:
-    <VisBulletLegend :items="items" :onLegendItemClick="onLegendItemClick" />
+    <VisBulletLegend :items :onLegendItemClick />
   </div>
   <VisXYContainer :duration="0" :height="300" :xDomain="[1961, 2022]" :yDomain="[0, 650]">
-    <VisLine :data="data" :x="x" :y="y" :fallbackValue="fallbackValue" />
+    <VisLine :data :x :y :fallbackValue />
     <VisXYLabels :style="{ backgroundColor: 'none' }" v-bind="labelConfig" />
-    <VisAxis type='x' :numTicks="10" />
-    <VisAxis type='y' label='National Cereal Production, tons' :tickFormat="d => `${d}${d ? 'M' : ''}`"
+    <VisAxis type="x" :numTicks="10" />
+    <VisAxis type="y" label="National Cereal Production, tons" :tickFormat="d => `${d}${d ? 'M' : ''}`"
       :tickValues="[0, 200, 400, fallbackValue, 600]" />
   </VisXYContainer>
 </template>

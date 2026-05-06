@@ -31,10 +31,10 @@ function tooltipTemplate(d: EducationDatum): string {
   <h3>Highest Degree Earned across Country Populations as of 2020</h3>
   <VisBulletLegend :items="chartLabels.map(d => ({ name: d.legend }))" />
   <VisXYContainer :height="isSmallScreen ? 600 : 800" :yDirection="Direction.South">
-    <VisStackedBar :data="data" :x="x" :y="y" :orientation="Orientation.Horizontal" />
+    <VisStackedBar :data :x :y :orientation="Orientation.Horizontal" />
     <VisTooltip :triggers="{ [StackedBar.selectors.bar]: tooltipTemplate }" />
     <VisAxis type="x" label="% of population aged 25 or above" />
     <VisAxis type="y" :tickTextWidth="isSmallScreen ? 75 : null" :tickTextFitMode="FitMode.Trim"
-      :label="isSmallScreen ? null : 'Country'" :numTicks="data.length" :tickFormat="tickFormat" />
+      :label="isSmallScreen ? null : 'Country'" :numTicks="data.length" :tickFormat />
   </VisXYContainer>
 </template>

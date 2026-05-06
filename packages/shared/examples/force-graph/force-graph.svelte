@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisSingleContainer, VisGraph } from '@unovis/svelte'
   import { GraphForceLayoutSettings, GraphLayoutType } from '@unovis/ts'
   import { data, LinkDatum, NodeDatum } from './data'

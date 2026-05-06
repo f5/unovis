@@ -37,7 +37,7 @@ const tooltipContainer = typeof document !== 'undefined' ? document.body : undef
       />
     </div>
 
-    <VisXYContainer :data="data" :margin="{ top: 5, left: 5 }">
+    <VisXYContainer :data :margin="{ top: 5, left: 5 }">
       <VisArea :x="(d: XYDataRecord) => d.x" :y="accessors" />
       <VisAxis type="x" />
       <VisAxis type="y" />
@@ -47,7 +47,7 @@ const tooltipContainer = typeof document !== 'undefined' ? document.body : undef
 
     <VisXYContainer
       y-direction="south"
-      :data="data"
+      :data
       :margin="{ top: 5, left: 5 }"
       :x-domain="[0, 100]"
     >

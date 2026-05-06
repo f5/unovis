@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { Timeline } from '@unovis/ts'
   import { VisXYContainer, VisBulletLegend, VisTooltip, VisTimeline, VisAxis } from '@unovis/svelte'
   import { colorMap, data, DataRecord, ProductType } from './data'
@@ -24,10 +24,10 @@
   const triggers = { [Timeline.selectors.label]: getTooltipText }
 </script>
 
-<VisXYContainer data={data} height={500}>
+<VisXYContainer {data} height={500}>
   <h3>A Timeline of Abandoned Google Products, 1997 - 2022</h3>
   <VisBulletLegend items={legendItems}/>
   <VisTimeline {x} {length} {type} {color} {labelWidth} showLabels={true}/>
-  <VisTooltip triggers={triggers}/>
+  <VisTooltip {triggers}/>
   <VisAxis type="x" tickFormat={dateFormatter} numTicks={10}/>
 </VisXYContainer>
