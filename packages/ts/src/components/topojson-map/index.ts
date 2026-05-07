@@ -119,13 +119,14 @@ export class TopoJSONMap<
   private _areaLabelsGroup = this.g.append('g').attr('class', s.areaLabel)
   private _linksGroup = this.g.append('g').attr('class', s.links)
   private _clusterBackgroundGroup = this.g.append('g').attr('class', s.clusterBackground)
+  private _flowParticlesGroup = this.g.append('g').attr('class', s.flowParticles)
+  // Points after links + flow groups so map nodes paint above link arcs and flow particles
   private _pointsGroup = this.g.append('g').attr('class', s.points)
   private _pointSelectionRing = this._pointsGroup.append('g').attr('class', s.pointSelectionRing)
     .call(sel => sel.append('path').attr('class', s.pointSelection))
 
-  private _selectedPoint: TopoJSONMapPoint<PointDatum> | null = null
-  private _flowParticlesGroup = this.g.append('g').attr('class', s.flowParticles)
   private _sourcePointsGroup = this.g.append('g').attr('class', s.sourcePoints)
+  private _selectedPoint: TopoJSONMapPoint<PointDatum> | null = null
   private _flowParticles: FlowParticle[] = []
   private _sourcePoints: { x: number; y: number; radius: number; color: string; flowData: LinkDatum }[] = []
   private _animationId: number | null = null
