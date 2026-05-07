@@ -1022,6 +1022,11 @@ export class TopoJSONMap<
   _applyZoom (): void {
     const translate = this._center ?? this._projection.translate()
     const scale = this._initialScale * this._currentZoomLevel
+
+    // Set an explicit pixel extent so D3 never falls back to defaultExtent2,
+    // which reads SVGLength.baseVal.value and throws on SVGs with % dimensions.
+    this._zoomBehavior.extent([[0, 0], [this._width, this._height]])
+
     this.g.call(this._zoomBehavior.transform, zoomIdentity.translate(translate[0], translate[1]).scale(scale))
     this._isZooming = true
     this._onZoomEnd()
