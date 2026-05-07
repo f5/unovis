@@ -975,12 +975,25 @@ export class TopoJSONMap<
   _fitToPoints (points?: PointDatum[], pad = 0.1): void {
     const { config, datamodel } = this
     const pointData = points || datamodel.points
-    if (pointData.length === 0) return
+    if (pointData.length === 0 && !(datamodel.data?.links?.length)) return
 
     const coordinates = pointData.map(p => [
       getNumber(p, d => getNumber(d, config.longitude)),
       getNumber(p, d => getNumber(d, config.latitude)),
-    ] as [number, number])
+    ] as [number, number]).filter(([lon, lat]) => isNumber(lon) && isNumber(lat))
+
+    const rawLinks = datamodel.data?.links ?? []
+    for (let i = 0; i < rawLinks.length; i += 1) {
+      const link = rawLinks[i]
+      const slon = getNumber(link, config.sourceLongitude, i)
+      const slat = getNumber(link, config.sourceLatitude, i)
+      const tlon = getNumber(link, config.targetLongitude, i)
+      const tlat = getNumber(link, config.targetLatitude, i)
+      if (isNumber(slon) && isNumber(slat)) coordinates.push([slon, slat])
+      if (isNumber(tlon) && isNumber(tlat)) coordinates.push([tlon, tlat])
+    }
+
+    if (coordinates.length === 0) return
 
     if (coordinates.length === 1) {
       // Single point has zero-area bounds and breaks fitExtent; center the projection on the point
