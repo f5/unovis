@@ -1,7 +1,7 @@
-import { isNumber, isUndefined, cloneDeep, isFunction, without, isString, isObject, isEqual } from 'utils/data'
+import { isNumber, isUndefined, cloneDeep, isFunction, without, isString, isObject, isEqual } from '@/utils/data'
 
 // Types
-import { GraphInputLink, GraphInputNode, GraphLinkCore, GraphNodeCore } from 'types/graph'
+import { GraphInputLink, GraphInputNode, GraphLinkCore, GraphNodeCore } from '@/types/graph'
 
 // Core Data Model
 import { CoreDataModel } from './core'

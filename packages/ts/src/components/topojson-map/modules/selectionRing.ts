@@ -2,7 +2,7 @@ import { Selection } from 'd3-selection'
 import { GeoProjection } from 'd3-geo'
 
 // Types
-import { getString } from 'utils/data'
+import { getString } from '@/utils/data'
 import { TopoJSONMapPoint } from '../types'
 import { TopoJSONMapConfigInterface } from '../config'
 

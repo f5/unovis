@@ -2,18 +2,18 @@ import { Selection, pointer } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
-import { Tooltip } from 'components/tooltip'
+import { XYComponentCore } from '@/core/xy-component'
+import { Tooltip } from '@/components/tooltip'
 
 // Utils
-import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, isFunction } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
+import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, isFunction } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
 
 // Types
-import { Position } from 'types/position'
-import { FindNearestDirection } from 'types/data'
-import { Spacing } from 'types/spacing'
+import { Position } from '@/types/position'
+import { FindNearestDirection } from '@/types/data'
+import { Spacing } from '@/types/spacing'
 
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'

@@ -1,5 +1,5 @@
 import { css } from '@emotion/css'
-import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
+import { getCssVarNames, injectGlobalCssVariables } from '@/utils/style'
 
 export const root = css`
   display: flex;

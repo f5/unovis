@@ -1,11 +1,11 @@
 import { Selection } from 'd3-selection'
 
 // Utils
-import { smartTransition } from 'utils/d3'
+import { smartTransition } from '@/utils/d3'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
-import { AxisType } from 'components/axis/types'
+import { XYComponentCore } from '@/core/xy-component'
+import { AxisType } from '@/components/axis/types'
 
 // Config
 import { LINE_STYLE, VERTICAL_X, HORIZONTAL_X, VERTICAL_Y, HORIZONTAL_Y } from './constants'

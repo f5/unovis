@@ -3,15 +3,15 @@ import { sum } from 'd3-array'
 import striptags from 'striptags'
 
 // Types
-import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from 'types/text'
+import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from '@/types/text'
 
 // Utils
-import { flatten, isArray, merge } from 'utils/data'
-import { getTextAnchorFromTextAlign } from 'types/svg'
-import { toPx } from 'utils/to-px'
+import { flatten, isArray, merge } from '@/utils/data'
+import { getTextAnchorFromTextAlign } from '@/types/svg'
+import { toPx } from '@/utils/to-px'
 
 // Styles
-import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT, UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT } from 'styles/index'
+import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT, UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT } from '@/styles/index'
 
 export const textAlignToAnchor = (textAlign: TextAlign): string | null => {
   switch (textAlign) {

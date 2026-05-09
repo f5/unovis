@@ -3,16 +3,16 @@ import { color } from 'd3-color'
 import type L from 'leaflet'
 
 // Types
-import { Rect } from 'types/misc'
-import { GenericDataRecord } from 'types/data'
+import { Rect } from '@/types/misc'
+import { GenericDataRecord } from '@/types/data'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { estimateTextSize, trimStringMiddle } from 'utils/text'
-import { clamp, getString } from 'utils/data'
-import { getCSSVariableValueInPixels, rectIntersect } from 'utils/misc'
-import { hexToBrightness } from 'utils/color'
-import { cssvar } from 'utils/style'
+import { smartTransition } from '@/utils/d3'
+import { estimateTextSize, trimStringMiddle } from '@/utils/text'
+import { clamp, getString } from '@/utils/data'
+import { getCSSVariableValueInPixels, rectIntersect } from '@/utils/misc'
+import { hexToBrightness } from '@/utils/color'
+import { cssvar } from '@/utils/style'
 import { getPointPos } from './utils'
 
 

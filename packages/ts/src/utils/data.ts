@@ -2,8 +2,8 @@ import { max, min, mean, bisectLeft, bisectRight } from 'd3-array'
 import { throttle as _throttle } from 'throttle-debounce'
 
 // Types
-import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor, GenericAccessor } from 'types/accessor'
-import { FindNearestDirection, StackValuesRecord } from 'types/data'
+import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor, GenericAccessor } from '@/types/accessor'
+import { FindNearestDirection, StackValuesRecord } from '@/types/data'
 
 export const isNumber = <T>(a: T): a is T extends number ? T : never => typeof a === 'number'
 // eslint-disable-next-line @typescript-eslint/ban-types

@@ -1,14 +1,14 @@
 import { select, Selection } from 'd3-selection'
 
 // Core
-import { ComponentCore } from 'core/component'
+import { ComponentCore } from '@/core/component'
 
 // Utils
-import { isNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { renderTextIntoFrame } from 'utils/text'
-import { parseUnit } from 'utils/misc'
-import { UNOVIS_TEXT_DEFAULT } from 'styles'
+import { isNumber } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { renderTextIntoFrame } from '@/utils/text'
+import { parseUnit } from '@/utils/misc'
+import { UNOVIS_TEXT_DEFAULT } from '@/styles'
 
 // Local Types
 import { AnnotationItem, AnnotationSubject } from './types'

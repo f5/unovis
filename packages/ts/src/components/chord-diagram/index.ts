@@ -5,16 +5,16 @@ import { scalePow, ScalePower } from 'd3-scale'
 import { arc } from 'd3-shape'
 
 // Core
-import { ComponentCore } from 'core/component'
-import { GraphData, GraphDataModel } from 'data-models/graph'
+import { ComponentCore } from '@/core/component'
+import { GraphData, GraphDataModel } from '@/data-models/graph'
 
 // Utils
-import { getNumber, isNumber, getString, getValue } from 'utils/data'
-import { estimateStringPixelLength } from 'utils/text'
-import { getCSSVariableValueInPixels } from 'utils/misc'
+import { getNumber, isNumber, getString, getValue } from '@/utils/data'
+import { estimateStringPixelLength } from '@/utils/text'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
 
 // Types
-import { Spacing } from 'types/spacing'
+import { Spacing } from '@/types/spacing'
 
 // Local Types
 import { ChordInputNode, ChordInputLink, ChordDiagramData, ChordNode, ChordRibbon, ChordLabelAlignment, ChordLeafNode } from './types'

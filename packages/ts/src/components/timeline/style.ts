@@ -1,6 +1,6 @@
 import { css } from '@emotion/css'
-import type { UnovisCssVariablesDefinition } from 'types/style'
-import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
+import type { UnovisCssVariablesDefinition } from '@/types/style'
+import { getCssVarNames, injectGlobalCssVariables } from '@/utils/style'
 
 export const root = css`
   label: timeline-component;

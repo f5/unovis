@@ -6,12 +6,7 @@
     "outDir": "./dist",
     "declaration": true,
     "paths": {
-      "types/*": ["./types/*"],
-      "utils/*": ["./utils/*"],
-      "core/*": ["./core/*"],
-      "components/*": ["./components/*"],
-      "styles/*": ["./styles/*"],
-      "data-models/*": ["./data-models/*"]
+      "@/*": ["./*"]
     },
     "noImplicitAny": true,
     "alwaysStrict": true,

@@ -3,13 +3,13 @@ import { mean } from 'd3-array'
 import { color } from 'd3-color'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { getCSSVariableValueInPixels, getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
-import { getColor, hexToBrightness } from 'utils/color'
-import { getNumber, getString, getValue } from 'utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getCSSVariableValueInPixels, getCSSVariableValue, isStringCSSVariable } from '@/utils/misc'
+import { getColor, hexToBrightness } from '@/utils/color'
+import { getNumber, getString, getValue } from '@/utils/data'
 
 // Types
-import { ContinuousScale } from 'types/scale'
+import { ContinuousScale } from '@/types/scale'
 
 // Config
 import { XYLabelsConfigInterface } from '../config'
