@@ -1,9 +1,9 @@
 import React from 'react'
 import { VisXYContainer, VisScatter, VisAxis, VisLine } from '@unovis/react'
+import type { WithOptional } from '@unovis/ts'
 
 import { XYDataRecord } from '@src/utils/data'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-import type { WithOptional } from '@unovis/ts/lib/types/misc'
 
 export const title = 'Scatter with Line'
 export const subTitle = 'And undefined segments'

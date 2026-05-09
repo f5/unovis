@@ -13,6 +13,7 @@ export * from 'types/spacing'
 export * from 'types/graph'
 export * from 'types/data'
 export * from 'types/direction'
+export * from 'types/misc'
 
 // Component Types
 export * from 'core/component/types'
