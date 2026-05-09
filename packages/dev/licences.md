@@ -5,11 +5,11 @@
 | react                                | perpetual      | MIT          | 19.2.4            | n/a                                                                |
 | react-dom                            | perpetual      | MIT          | 19.2.4            | n/a                                                                |
 | react-router-dom                     | perpetual      | MIT          | 6.30.3            | Remix Software <hello@remix.run>                                   |
-| seedrandom                           | perpetual      | MIT          | 3.0.5             | David Bau                                                          |
 | serve                                | perpetual      | MIT          | 14.2.6            | n/a                                                                |
 | @emotion/css                         | perpetual      | MIT          | 11.13.5           | Kye Hohenberger                                                    |
 | d3-array                             | perpetual      | ISC          | 3.2.4             | Mike Bostock http://bost.ocks.org/mike                             |
 | d3-format                            | perpetual      | ISC          | 3.1.2             | Mike Bostock http://bost.ocks.org/mike                             |
+| d3-random                            | perpetual      | ISC          | 3.0.1             | Mike Bostock http://bost.ocks.org/mike                             |
 | @percy/cli                           | perpetual      | MIT          | 1.31.9            | n/a                                                                |
 | @percy/cypress                       | perpetual      | MIT          | 3.1.7             | Perceptual Inc.                                                    |
 | @pmmmwh/react-refresh-webpack-plugin | perpetual      | MIT          | 0.5.17            | Michael Mok                                                        |

@@ -44,10 +44,10 @@
     "react-dom": "^19",
     "react-resizable-panels": "^2.1.4",
     "react-router-dom": "^6.4.5",
-    "seedrandom": "^3.0.5",
     "serve": "^14.2.3",
     "@emotion/css": "^11.13.0",
     "d3-array": "^3.2.0",
-    "d3-format": "^3.1.0"
+    "d3-format": "^3.1.0",
+    "d3-random": "~3"
   }
 }
