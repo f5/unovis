@@ -48,7 +48,7 @@
     "solid-js": "^1.9.3",
     "tslib": "^2.8.1",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.3",
+    "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plugin-dts": "^3.5.3",
     "vite-plugin-solid": "^2.10.2"
