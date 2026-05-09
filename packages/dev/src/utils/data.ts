@@ -1,8 +1,8 @@
-import * as Seedramdon from 'seedrandom'
+import { randomLcg } from 'd3-random'
 import { GenericDataRecord } from '@unovis/ts'
 import { sample } from './array'
 
-export const randomNumberGenerator = new Seedramdon('unovis')
+export const randomNumberGenerator = randomLcg(0.42)
 
 export type XYDataRecord = {
   x: number;
