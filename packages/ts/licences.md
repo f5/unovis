@@ -74,7 +74,7 @@
 | rollup-plugin-postcss             | perpetual      | MIT          | 4.0.2             | EGOIST <0x142857@gmail.com>                                       |
 | rollup-plugin-rename-node-modules | perpetual      | MIT          | 1.3.1             | Lazyuki                                                           |
 | rollup-plugin-terser              | perpetual      | MIT          | 7.0.2             | Bogdan Chadkin <trysound@yandex.ru>                               |
-| rollup-plugin-typescript2         | perpetual      | MIT          | 0.31.2            | @ezolenko                                                         |
+| rollup-plugin-typescript2         | perpetual      | MIT          | 0.37.0            | @ezolenko                                                         |
 | rollup-plugin-visualizer          | perpetual      | MIT          | 4.2.2             | Denis Bardadym <bardadymchik@gmail.com>                           |
 | typescript                        | perpetual      | Apache-2.0   | 4.2.4             | Microsoft Corp.                                                   |
 
