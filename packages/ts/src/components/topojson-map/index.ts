@@ -1266,6 +1266,8 @@ export class TopoJSONMap<
       })
 
     smartTransition(sourcePointsEnter.merge(sourcePoints), duration)
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
       .attr('r', d => d.radius / this._currentZoomLevel)
       .style('opacity', 1)
 
