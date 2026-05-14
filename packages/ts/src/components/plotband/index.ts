@@ -7,6 +7,9 @@ import { smartTransition } from 'utils/d3'
 import { XYComponentCore } from 'core/xy-component'
 import { AxisType } from 'components/axis/types'
 
+// Types
+import { PlotLabelLayout, PlotLabelLayoutInfo, LabelOverflow } from 'types/plot-label'
+
 // Config
 import { VERTICAL_X, HORIZONTAL_X, VERTICAL_Y, HORIZONTAL_Y } from './constants'
 import { PlotbandDefaultConfig, PlotbandConfigInterface } from './config'
@@ -15,6 +18,27 @@ import { PlotbandLabelOrientation, PlotbandLabelPosition, PlotbandLabelLayout } 
 // Styles
 import * as s from './style'
 
+// Outside ring clockwise, then inside ring clockwise. Used as the candidate
+// order (preferred anchor first, then walk this list).
+const PLOTBAND_CLOCKWISE: readonly PlotbandLabelPosition[] = [
+  PlotbandLabelPosition.TopLeftOutside,
+  PlotbandLabelPosition.TopOutside,
+  PlotbandLabelPosition.TopRightOutside,
+  PlotbandLabelPosition.RightOutside,
+  PlotbandLabelPosition.BottomRightOutside,
+  PlotbandLabelPosition.BottomOutside,
+  PlotbandLabelPosition.BottomLeftOutside,
+  PlotbandLabelPosition.LeftOutside,
+  PlotbandLabelPosition.TopLeftInside,
+  PlotbandLabelPosition.TopInside,
+  PlotbandLabelPosition.TopRightInside,
+  PlotbandLabelPosition.RightInside,
+  PlotbandLabelPosition.BottomRightInside,
+  PlotbandLabelPosition.BottomInside,
+  PlotbandLabelPosition.BottomLeftInside,
+  PlotbandLabelPosition.LeftInside,
+] as const
+
 export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = PlotbandDefaultConfig as PlotbandConfigInterface<Datum>
@@ -22,6 +46,9 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
   to: number | null | undefined
   plotband: Selection<SVGRectElement, unknown, null, undefined>
   label: Selection<SVGTextElement, unknown, null, undefined>
+  // Cached so `getLabelLayoutInfo()` can recompute layouts for alternative
+  // anchors without re-deriving the band rect.
+  private _labelLayoutBounds: { startX: number; startY: number; width: number; height: number } | undefined
 
   constructor (config: PlotbandConfigInterface<Datum>) {
     super()
@@ -74,6 +101,7 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
       .attr('height', height)
 
     if (config.labelText) {
+      this._labelLayoutBounds = { startX: x, startY: y, width, height }
       const labelProps = this.computeLabel(
         config.axis,
         x,
@@ -87,6 +115,7 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
       )
 
       this.label
+        .text(config.labelText)
         .attr('dominant-baseline', labelProps.dominantBaseline)
         .attr('transform', labelProps.transform)
         .style('text-anchor', labelProps.textAnchor)
@@ -94,9 +123,12 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
         .style('font-size', config.labelSize ? `${config.labelSize}px` : undefined)
 
       smartTransition(this.label, config.duration)
-        .text(config.labelText)
         .attr('x', labelProps.x)
         .attr('y', labelProps.y)
+    } else {
+      // Wipe stale text from a prior render where labelText was set.
+      this._labelLayoutBounds = undefined
+      this.label.text('')
     }
 
     smartTransition(this.plotband.exit())
@@ -131,5 +163,50 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
     const transform = rotation !== 0 ? `rotate(${rotation}, ${x}, ${y})` : ''
 
     return { x, y, rotation, textAnchor, transform, dominantBaseline }
+  }
+
+  // Read by `XYContainer` to coordinate auto label positioning across
+  // Plotline + Plotband siblings.
+  public getLabelLayoutInfo (): PlotLabelLayoutInfo | null {
+    const { config } = this
+    if (!config.labelText || !this._labelLayoutBounds) return null
+
+    const labelEl = this.label.node()
+    const preferred = config.labelPosition ?? PlotbandLabelPosition.TopLeftOutside
+    const preferredIdx = PLOTBAND_CLOCKWISE.indexOf(preferred)
+    const candidates = preferredIdx >= 0
+      ? [...PLOTBAND_CLOCKWISE.slice(preferredIdx), ...PLOTBAND_CLOCKWISE.slice(0, preferredIdx)]
+      : [preferred, ...PLOTBAND_CLOCKWISE]
+
+    const bounds = this._labelLayoutBounds
+    const computeLayout = (anchor: string): PlotLabelLayout => {
+      const layout = this.computeLabel(
+        config.axis,
+        bounds.startX,
+        bounds.startY,
+        bounds.width,
+        bounds.height,
+        anchor as PlotbandLabelPosition,
+        config.labelOffsetX,
+        config.labelOffsetY,
+        config.labelOrientation
+      )
+      return {
+        x: layout.x,
+        y: layout.y,
+        transform: layout.transform,
+        textAnchor: layout.textAnchor,
+        dominantBaseline: layout.dominantBaseline,
+      }
+    }
+
+    return {
+      labelEl,
+      preferredAnchor: preferred,
+      candidates,
+      participatesInAuto: !!config.labelAutoPosition,
+      overflow: config.labelOverflow ?? LabelOverflow.Smart,
+      computeLayout,
+    }
   }
 }

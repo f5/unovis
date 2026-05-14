@@ -24,6 +24,9 @@
   },
   "exclude": [
     "index.ts",
-    "maps.ts"
+    "maps.ts",
+    "test-setup.ts",
+    "vitest.config.ts",
+    "src/**/*.test.ts"
   ]
 }

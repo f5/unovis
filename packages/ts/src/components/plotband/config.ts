@@ -3,6 +3,7 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-co
 
 // Types
 import { AxisType } from 'components/axis/types'
+import { LabelOverflow } from 'types/plot-label'
 import { PlotbandLabelOrientation, PlotbandLabelPosition } from './types'
 
 export interface PlotbandConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
@@ -70,6 +71,23 @@ export interface PlotbandConfigInterface<Datum> extends Partial<XYComponentConfi
    * @default 12
    */
   labelSize?: number;
+
+  /**
+   * Opt-in: when `true`, `labelPosition` becomes the *preferred* anchor.
+   * The container resolver may swap to another anchor if the preferred one
+   * collides with another plot label or falls outside the chart bounds.
+   *
+   * @default false
+   */
+  labelAutoPosition?: boolean;
+
+  /**
+   * Strategy when no candidate anchor passes bounds + collision.
+   * Only meaningful when `labelAutoPosition` is `true`.
+   *
+   * @default LabelOverflow.Smart
+   */
+  labelOverflow?: LabelOverflow;
 }
 
 export const PlotbandDefaultConfig: PlotbandConfigInterface<unknown> = {
@@ -83,4 +101,6 @@ export const PlotbandDefaultConfig: PlotbandConfigInterface<unknown> = {
   labelOffsetX: 14,
   labelOffsetY: 14,
   labelOrientation: PlotbandLabelOrientation.Horizontal,
+  labelAutoPosition: false,
+  labelOverflow: LabelOverflow.Smart,
 }
