@@ -1,13 +1,13 @@
 name: Release
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 on:
   push:
     tags:
-      - 'v*'
+      - '[0-9]*'
 
 concurrency:
   group: release-${{ github.ref }}
@@ -34,11 +34,17 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           TAG="${GITHUB_REF_NAME}"
-          if [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          if [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             pnpm publish:all
-          elif [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-beta(\.[0-9]+)?$ ]]; then
+          elif [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ ]]; then
             pnpm publish:all:beta
           else
-            echo "Unrecognized tag format: $TAG. Expected vX.Y.Z or vX.Y.Z-beta[.N]." >&2
+            echo "Unrecognized tag format: $TAG. Expected X.Y.Z or X.Y.Z-beta.N." >&2
             exit 1
           fi
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-beta') }}
