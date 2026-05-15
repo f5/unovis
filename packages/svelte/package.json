@@ -26,23 +26,25 @@
     "Surya Hanumandla <s.hanumandla@f5.com>"
   ],
   "license": "Apache-2.0",
-  "main": "./index.js",
-  "types": "./index.d.ts",
-  "svelte": "./index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "svelte": "./dist/index.js",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "svelte": "./index.js"
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
     }
   },
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "pnpm run check && pnpm svelte-package; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
+    "build": "pnpm run check && pnpm svelte-package; rm -f dist/package.json dist/LICENSE dist/README.md; rm -rf dist/.cache",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "gallery": "rm -rf dist-gallery; rollup -c gallery.rollup.config.js --watch",
-    "publish:dist": "cd ./dist; npm publish",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
