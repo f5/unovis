@@ -21,6 +21,7 @@ export * from './components/annotations'
 export * from './components/plotband'
 export * from './components/treemap'
 export * from './components/plotline'
+export * from './components/radial-bar'
 
 // HTML Components
 export * from './html-components/bullet-legend'

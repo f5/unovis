@@ -25,6 +25,7 @@ export function getComponentList (
     { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
     { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], dataType: '{ nodes: N[]; links?: L[] }', angularProvide: 'VisCoreComponent' },
     { name: 'NestedDonut', sources: [coreComponentConfigPath, '/components/nested-donut'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
+    { name: 'RadialBar', sources: [coreComponentConfigPath, '/components/radial-bar'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
     { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], dataType: '{ nodes: N[]; links?: L[] }', angularProvide: 'VisCoreComponent' },
     { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: '{areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]}', angularProvide: 'VisCoreComponent' },
     { name: 'Treemap', sources: [coreComponentConfigPath, '/components/treemap'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
