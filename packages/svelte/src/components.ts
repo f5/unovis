@@ -15,6 +15,7 @@ export { default as VisChordDiagram } from './components/chord-diagram/chord-dia
 export { default as VisDonut } from './components/donut/donut.svelte'
 export { default as VisGraph } from './components/graph/graph.svelte'
 export { default as VisNestedDonut } from './components/nested-donut/nested-donut.svelte'
+export { default as VisRadialBar } from './components/radial-bar/radial-bar.svelte'
 export { default as VisSankey } from './components/sankey/sankey.svelte'
 export { default as VisTopoJSONMap } from './components/topojson-map/topojson-map.svelte'
 export { default as VisTreemap } from './components/treemap/treemap.svelte'
