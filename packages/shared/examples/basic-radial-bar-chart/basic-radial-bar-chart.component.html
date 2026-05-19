@@ -1,0 +1,14 @@
+<vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+<vis-single-container [height]="400">
+  <vis-radial-bar
+    [value]="value"
+    [data]="data"
+    [maxValue]="maxValue"
+    [trackWidth]="18"
+    [trackPadding]="4"
+    [cornerRadius]="9"
+    [centralLabel]="centralLabel"
+    centralSubLabel="daily goals"
+  />
+  <vis-tooltip [triggers]="triggers"></vis-tooltip>
+</vis-single-container>
