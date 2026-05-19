@@ -15,6 +15,7 @@ export * from "./components/chord-diagram";
 export * from "./components/donut";
 export * from "./components/graph";
 export * from "./components/nested-donut";
+export * from "./components/radial-bar";
 export * from "./components/sankey";
 export * from "./components/topojson-map";
 export * from "./components/treemap";
