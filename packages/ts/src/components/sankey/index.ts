@@ -258,7 +258,7 @@ export class Sankey<
     const nodeSelection = this._nodesGroup.selectAll<SVGGElement, SankeyNode<N, L>>(`.${s.nodeGroup}`)
       .data(nodes, (d, i) => config.id(d, i) ?? i)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.nodeGroup)
-    const sankeyWidth = (this.sizing === Sizing.Fit ? this._width : this._extendedWidth) * this._zoomScale[0]
+    const sankeyWidth = this._getScaledWidth()
     nodeSelectionEnter.call(createNodes, this.config, sankeyWidth, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, sankeyWidth, bleed, this._hasLinks(), duration, nodeSpacing)
     nodeSelection.exit<SankeyNode<N, L>>()
@@ -736,11 +736,15 @@ export class Sankey<
     return nextLayerNode ? nextLayerNode.x0 - (firstLayerNode.x0 + config.nodeWidth) : this._width - firstLayerNode.x1
   }
 
+  private _getScaledWidth (): number {
+    return (this.sizing === Sizing.Fit ? this._width : this._extendedWidth) * this._zoomScale[0]
+  }
+
   private _onNodeMouseOver (d: SankeyNode<N, L>, event: MouseEvent): void {
     const { datamodel } = this
     const bleed = this._bleedCached ?? this.bleed
     const nodeSelection = select<SVGGElement, SankeyNode<N, L>>(event.currentTarget as SVGGElement)
-    const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
+    const sankeyWidth = this._getScaledWidth()
     onNodeMouseOver(d, datamodel.nodes, nodeSelection, this.config, sankeyWidth, this._getLayerSpacing(this.datamodel.nodes), bleed)
   }
 
@@ -748,7 +752,7 @@ export class Sankey<
     const { datamodel } = this
     const bleed = this._bleedCached ?? this.bleed
     const nodeSelection = select<SVGGElement, SankeyNode<N, L>>(event.currentTarget as SVGGElement)
-    const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
+    const sankeyWidth = this._getScaledWidth()
     onNodeMouseOut(d, datamodel.nodes, nodeSelection, this.config, sankeyWidth, this._getLayerSpacing(this.datamodel.nodes), bleed)
   }
 
