@@ -11,7 +11,7 @@ import type { TimelineArrow, TimelineLineRenderState, TimelineRowIcon, TimelineR
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   // Items (Lines)
-  /** @deprecated This property has been renamed to `key` */
+  /** @deprecated This property has been renamed to `lineRow` */
   type?: StringAccessor<Datum>;
   /** @deprecated This property has been renamed to `lineDuration` */
   length?: NumericAccessor<Datum>;
