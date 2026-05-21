@@ -26,7 +26,9 @@ export const timelineProps = (n = 5, rows=n) => ({
 
 export const emptyProps = {
   ...timelineProps(),
-  data: Array(4).fill(0).map((_, i) => ({ type: 'a', timestamp: i * 10, length: i % 2 === 1 ? 8 : 0 })),
+  data: Array(4).fill(0).map((_, i) => ({ name: 'a', timestamp: i * 10, duration: i % 2 === 1 ? 8 : 0 })),
+  lineRow: d => d.name,
+  lineDuration: d => d.duration,
   height: 50,
 }
 
@@ -36,23 +38,22 @@ The minimal _Timeline_ configuration looks like:
 
 <XYWrapper {...timelineProps(6)} showContext="full"/>
 
-where `TimeDataRecord` has at least the following properties:
+where each record should provide at least the following information:
 
 ```ts
 type TimeDataRecord = {
   timestamp: Date; // Position on the X axis. Can be `number` or `Date`
-  length: number; // Length of the line in X axis values, i.e. milliseconds if you use `Date`
-  type: string; // The row it will be displayed in
+  duration: number; // Length of the line in X axis values, i.e. milliseconds if you use `Date`
+  name: string; // The row it will be displayed in
 }
 ```
 
+Wire these up via the `lineDuration` and `lineRow` accessors (along with `x` for the timestamp).
+
 :::note
 
-By default, if the records in your data array contain `length` and `type` properties (as shown above),
-_Timeline_ will only need the `x` accessor provided to display the data.
-Otherwise, you can explicitly define accessor functions for `lineDuration` and `lineRow`.
-
-The `type` and `length` properties are deprecated in favor of `lineRow` and `lineDuration`, respectively.
+The legacy `type` and `length` properties on the _Timeline_ component are deprecated.
+Use `lineRow` and `lineDuration` instead.
 
 :::
 
@@ -219,13 +220,13 @@ The `lineSourceId` and `lineTargetId` correspond to the values returned by the `
 export const arrowData = Array(7).fill(0).map((_, i) => ({
   id: `item-${i}`,
   timestamp: Date.now() + i * 1000 * 60 * 60 * 24 + Math.random() * 1000 * 60 * 60 * 12,
-  length: 1000 * 60 * 60 * 24,
-  type: `Task ${i + 1}`,
+  duration: 1000 * 60 * 60 * 24,
+  name: `Task ${i + 1}`,
 }))
 
 export const arrowItems = arrowData.slice(0, -1).map((d, i) => ({
   id: `arrow-${i}`,
-  xSource: d.timestamp + d.length,
+  xSource: d.timestamp + d.duration,
   lineSourceId: d.id,
   lineTargetId: arrowData[i + 1].id,
   lineSourceMarginPx: 2,
@@ -239,6 +240,8 @@ export const arrowItems = arrowData.slice(0, -1).map((d, i) => ({
   height={255}
   x={d => d.timestamp}
   id={d => d.id}
+  lineRow={d => d.name}
+  lineDuration={d => d.duration}
   lineCap
   rowHeight={35}
   showRowLabels
