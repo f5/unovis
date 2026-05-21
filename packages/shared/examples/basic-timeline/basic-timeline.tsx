@@ -25,11 +25,11 @@ export default function BasicTimeline (): JSX.Element {
       <VisBulletLegend items={legendItems}/>
       <VisTimeline
         x={useCallback((d: DataRecord) => d.startDate, [])}
-        length={useCallback((d: DataRecord) => d.endDate - d.startDate, [])}
-        type={useCallback((d: DataRecord) => d.name, [])}
+        lineDuration={useCallback((d: DataRecord) => d.endDate - d.startDate, [])}
+        lineRow={useCallback((d: DataRecord) => d.name, [])}
         color={useCallback((d: DataRecord) => colorMap[d.type], [])}
-        maxLabelWidth={labelWidth}
-        showLabels={true}
+        rowMaxLabelWidth={labelWidth}
+        showRowLabels={true}
       />
       <VisTooltip triggers={{
         [Timeline.selectors.label]: getTooltipText,

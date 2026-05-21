@@ -16,8 +16,8 @@
   }
 
   const x = (d: DataRecord) => d.startDate
-  const length = (d: DataRecord) => d.endDate - d.startDate
-  const type = (d: DataRecord) => d.name
+  const lineDuration = (d: DataRecord) => d.endDate - d.startDate
+  const lineRow = (d: DataRecord) => d.name
   const color = (d: DataRecord) => colorMap[d.type]
 
   const legendItems = Object.keys(ProductType).map((name, i) => ({ name, color: colorMap[name] }))
@@ -27,7 +27,7 @@
 <VisXYContainer {data} height={500}>
   <h3>A Timeline of Abandoned Google Products, 1997 - 2022</h3>
   <VisBulletLegend items={legendItems}/>
-  <VisTimeline {x} {length} {type} {color} {labelWidth} showLabels={true}/>
+  <VisTimeline {x} {lineDuration} {lineRow} {color} rowLabelWidth={labelWidth} showRowLabels={true}/>
   <VisTooltip {triggers}/>
   <VisAxis type="x" tickFormat={dateFormatter} numTicks={10}/>
 </VisXYContainer>

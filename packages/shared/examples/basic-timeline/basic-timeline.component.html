@@ -3,11 +3,11 @@
     <vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
     <vis-timeline
         [x]="x"
-        [length]="length"
-        [type]="type"
+        [lineDuration]="lineDuration"
+        [lineRow]="lineRow"
         [color]="color"
-        [labelWidth]="labelWidth"
-        [showLabels]="true">
+        [rowLabelWidth]="labelWidth"
+        [showRowLabels]="true">
     </vis-timeline>
     <vis-tooltip [triggers]="triggers"></vis-tooltip>
     <vis-axis type="x" [tickFormat]="dateFormatter" [numTicks]="10"></vis-axis>
