@@ -196,7 +196,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   const labelPadding = labelShowBackground ? SANKEY_LABEL_BLOCK_PADDING : 0
   const isSublabelInline = config.subLabelPlacement === SankeySubLabelPlacement.Inline
   const separator = config.labelForceWordBreak ? '' : config.labelTextSeparator
-  const fastEstimatesMode = true // Fast but inaccurate
+  const fastEstimatesMode = false // Fast but inaccurate
   const fontWidthToHeightRatio = 0.52
   const dy = 0.32
   const labelOrientation = getLabelOrientation(d, width, config.labelPosition)
