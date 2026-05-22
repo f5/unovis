@@ -123,6 +123,14 @@ export class Graph<
   private _brushBehavior: BrushBehavior<unknown>
   private _groupDragInit: [number, number]
 
+  // Node expand / collapse state
+  /** The full dataset passed to setData (before expand/collapse filtering) */
+  private _fullData: GraphInputData<N, L> | undefined
+  /** Set of node ids (string) that are currently collapsed */
+  private _collapsedNodeIds: Set<string> = new Set()
+  /** Incremented every time datamodel.data is replaced; used to detect stale layout .then() callbacks */
+  private _dataVersion = 0
+
   // A map for storing link total path lengths to optimize rendering performance
   private _linkPathLengthMap: Map<string, number> = new Map()
   private _linkFlowFrameElapsed = 0
@@ -187,8 +195,12 @@ export class Graph<
     const { config } = this
     if (!config.shouldDataUpdate(this.datamodel.data, data, this.datamodel)) return
 
+    this._fullData = data
+    const visibleData = config.nodeExpandable ? this._computeVisibleData(data) : data
+
     this.datamodel.nodeSort = config.nodeSort
-    this.datamodel.data = data
+    this.datamodel.data = visibleData
+    this._dataVersion++
     this._shouldRecalculateLayout = true
     if (config.layoutAutofit) this._shouldFitLayout = true
     this._shouldSetPanels = true
@@ -209,6 +221,92 @@ export class Graph<
 
     if (this._shouldFitLayout) this._isAutoFitDisabled = false
     this._shouldSetPanels = true
+  }
+
+  /** Compute the visible subset of `data` based on `_collapsedNodeIds` */
+  private _computeVisibleData (data: GraphInputData<N, L>): GraphInputData<N, L> {
+    const { config } = this
+    if (!config.nodeExpandable || !config.nodeChildren) return data
+
+    const allNodes = data.nodes
+    const allLinks = data.links ?? []
+
+    // Build a map of id → node for quick lookup (use the node's id property)
+    const nodeById = new Map<number | string, N>()
+    for (const n of allNodes) {
+      if (n.id !== undefined) nodeById.set(n.id, n)
+    }
+
+    // Collect ids to hide (all descendants of collapsed nodes)
+    const hiddenIds = this._getHiddenNodeIds(allNodes, nodeById)
+    const visibleIdSet = new Set(allNodes.filter(n => !hiddenIds.has(n.id)).map(n => n.id))
+
+    const visibleNodes = allNodes.filter(n => !hiddenIds.has(n.id))
+
+    // Helper: resolve a link endpoint (number index, string id, or node object) to the node's id
+    const resolveId = (endpoint: number | string | GraphInputNode): number | string | undefined => {
+      if (typeof endpoint === 'object') return (endpoint as GraphInputNode).id
+      if (typeof endpoint === 'number') return allNodes[endpoint]?.id
+      return endpoint
+    }
+
+    const visibleLinks = allLinks.filter(l => {
+      const srcId = resolveId(l.source as number | string | GraphInputNode)
+      const tgtId = resolveId(l.target as number | string | GraphInputNode)
+      return visibleIdSet.has(srcId) && visibleIdSet.has(tgtId)
+    })
+
+    return { nodes: visibleNodes, links: visibleLinks }
+  }
+
+  private _getHiddenNodeIds (allNodes: N[], nodeById: Map<number | string, N>): Set<number | string | undefined> {
+    const { config } = this
+    const hidden = new Set<number | string | undefined>()
+
+    const hide = (id: number | string | undefined): void => {
+      if (id === undefined || hidden.has(id)) return
+      hidden.add(id)
+      const node = nodeById.get(id)
+      if (node) {
+        const children = getBoolean(node, config.nodeExpandable, 0)
+          ? (isFunction(config.nodeChildren) ? config.nodeChildren(node, 0) : config.nodeChildren ?? [])
+          : []
+        for (const childId of children) hide(childId)
+      }
+    }
+
+    for (const id of this._collapsedNodeIds) {
+      const node = nodeById.get(id)
+      if (node && getBoolean(node, config.nodeExpandable, 0) && config.nodeChildren) {
+        const nodeChildIds = isFunction(config.nodeChildren) ? config.nodeChildren(node, 0) : config.nodeChildren ?? []
+        for (const childId of nodeChildIds ?? []) hide(childId)
+      }
+    }
+
+    return hidden
+  }
+
+  private _applyExpandCollapse (): void {
+    const { config } = this
+    if (!config.nodeExpandable || !this._fullData) return
+
+    const visibleData = this._computeVisibleData(this._fullData)
+    this.datamodel.nodeSort = config.nodeSort
+    this.datamodel.data = visibleData
+    this._dataVersion++
+    // Clear any fixed (dragged) positions so the fresh layout output is used
+    for (const node of this.datamodel.nodes) {
+      delete node._state.fx
+      delete node._state.fy
+    }
+    this._shouldRecalculateLayout = true
+    if (config.layoutAutofit) this._shouldFitLayout = true
+    this._shouldSetPanels = true
+    // Only call _render() if the component has been sized. When called before the first
+    // container render (e.g. from a useEffect on mount), _width is 0 and layout functions
+    // produce NaN coordinates (Infinity * 0). The flags above ensure the next
+    // container-triggered render will recalculate and draw with correct dimensions.
+    if (this._width > 0) this._render()
   }
 
   get bleed (): Spacing {
@@ -276,10 +374,12 @@ export class Graph<
         ? zoomEventFilter
         : (e: PointerEvent) => (!e.ctrlKey || e.type === 'wheel') && !e.button && !e.shiftKey) // Default filter
 
+    const renderDataVersion = this._dataVersion
     this._layoutCalculationPromise.then(() => {
       // If the component has been destroyed while the layout calculation
-      // was in progress, we cancel the render
-      if (this.isDestroyed()) return
+      // was in progress, or data has been replaced (e.g. React re-render
+      // fired between layout resolving and this callback), cancel the render
+      if (this.isDestroyed() || this._dataVersion !== renderDataVersion) return
 
       this._initPanelsData()
 
@@ -670,6 +770,10 @@ export class Graph<
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private _onNodeClick (d: GraphNode<N, L>): void {
+    const { config } = this
+    if (config.nodeExpandable && getBoolean(d, config.nodeExpandable, d._index)) {
+      this.toggleNodeExpand(d._id)
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -1128,6 +1232,63 @@ export class Graph<
   /** Set the node state by id */
   public setNodeStateById (nodeId: string, state: GraphNode<N, L>['_state']): void {
     this.datamodel.setNodeStateById(nodeId, state)
+  }
+
+  /** Toggle the expanded/collapsed state of a node by its id.
+   * Only works when `nodeExpandable` and `nodeChildren` config options are set. */
+  public toggleNodeExpand (nodeId: number | string): void {
+    const { config } = this
+    const id = String(nodeId)
+    const wasCollapsed = this._collapsedNodeIds.has(id)
+    if (wasCollapsed) {
+      this._collapsedNodeIds.delete(id)
+    } else {
+      this._collapsedNodeIds.add(id)
+    }
+    const expanded = wasCollapsed // after toggle
+    // Find the node in the full data to fire the callback
+    const node = this._fullData?.nodes.find(n => String(n.id) === id)
+    if (node) config.onNodeExpand?.(node as unknown as GraphNode<N, L>, expanded)
+    this._applyExpandCollapse()
+  }
+
+  /** Expand a node by its id. No-op if already expanded. */
+  public expandNode (nodeId: number | string): void {
+    const id = String(nodeId)
+    if (!this._collapsedNodeIds.has(id)) return
+    this._collapsedNodeIds.delete(id)
+    const node = this._fullData?.nodes.find(n => String(n.id) === id)
+    if (node) this.config.onNodeExpand?.(node as unknown as GraphNode<N, L>, true)
+    this._applyExpandCollapse()
+  }
+
+  /** Collapse a node by its id. No-op if already collapsed. */
+  public collapseNode (nodeId: number | string): void {
+    const { config } = this
+    const id = String(nodeId)
+    if (this._collapsedNodeIds.has(id)) return
+    this._collapsedNodeIds.add(id)
+    const node = this._fullData?.nodes.find(n => String(n.id) === id)
+    if (node) config.onNodeExpand?.(node as unknown as GraphNode<N, L>, false)
+    this._applyExpandCollapse()
+  }
+
+  /** Returns whether a node is currently collapsed. */
+  public isNodeCollapsed (nodeId: number | string): boolean {
+    return this._collapsedNodeIds.has(String(nodeId))
+  }
+
+  /** Set the complete set of collapsed node ids in one shot.
+   * All currently collapsed nodes not in the new set are expanded; all ids in the new set are
+   * collapsed. A single layout recalculation is triggered at the end, avoiding the race condition
+   * that occurs when `collapseNode`/`expandNode` are called in a loop.
+   * `nodeCollapsible` is still respected for the collapse direction.
+   */
+  public setCollapsedNodes (nodeIds: (number | string)[]): void {
+    this._collapsedNodeIds = new Set(nodeIds.map(id => String(id)))
+    this._isAutoFitDisabled = false
+    this._shouldFitLayout = true
+    this._applyExpandCollapse()
   }
 
   /** Call a partial render to update the positions of the nodes and their links.

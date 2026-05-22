@@ -1,7 +1,103 @@
 .graph {
-  --vis-graph-node-label-font-size: 8pt;
+  --vis-graph-node-label-font-family: Inter, sans-serif;
+  --vis-graph-node-label-font-size: 12px !important;
   --vis-graph-node-label-text-color: #717179;
+  --vis-graph-node-label-background: transparent !important;
 
   --vis-graph-node-sublabel-font-size: 9pt;
   --vis-graph-node-sublabel-text-color: #000000;
+
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  padding-bottom: 8px;
+}
+
+.graphContainer {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.nodePopup {
+  position: absolute;
+  z-index: 100;
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  min-width: 280px;
+  max-width: 420px;
+  pointer-events: all;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.nodePopupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #f8f9fb;
+  border-bottom: 1px solid #e4e7ec;
+  border-radius: 10px 10px 0 0;
+}
+
+.nodePopupTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.nodePopupClose {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #667085;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.nodePopupClose:hover {
+  background: #e4e7ec;
+}
+
+.nodePopupBody {
+  padding: 12px 14px;
+}
+
+.nodePopupTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.nodePopupTable tr + tr td {
+  border-top: 1px solid #f2f4f7;
+}
+
+.nodePopupKey {
+  font-weight: 600;
+  color: #667085;
+  white-space: nowrap;
+  padding: 5px 12px 5px 0;
+  vertical-align: top;
+}
+
+.nodePopupVal {
+  color: #1a1a2e;
+  padding: 5px 0;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.nodePopupSwatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  vertical-align: middle;
+  margin-right: 6px;
 }
