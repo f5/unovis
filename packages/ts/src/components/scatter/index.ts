@@ -147,21 +147,13 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     removePoints(points.exit<ScatterPoint<Datum>>(), this.xScale, this.yScale, duration)
 
     // Take care of overlapping labels
-    if (this._hasLabels()) {
-      this._resolveLabelOverlap()
-    }
-  }
-
-  private _hasLabels (): boolean {
-    // If label config is not defined, no labels will be shown
-    if (!this.config.label) return false
-
-    // Check if any point in the flattened data has a label
-    const pointDataFlat: ScatterPoint<Datum>[] = flatten(this._pointData)
-    return pointDataFlat.some(d => d._point.label)
+    this._resolveLabelOverlap()
   }
 
   private _resolveLabelOverlap (): void {
+    // If label config is not defined, no labels will be shown
+    if (!this.config.label) return
+
     if (!this.config.labelHideOverlapping) {
       const label = this._points.selectAll<SVGTextElement, ScatterPoint<Datum>>('text')
       label.attr('opacity', null)
@@ -170,7 +162,9 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
 
     cancelAnimationFrame(this._collideLabelsAnimFrameId)
     this._collideLabelsAnimFrameId = requestAnimationFrame(() => {
-      collideLabels(this._points, this.config, this.xScale, this.yScale)
+      // Filter out points that don't have a label
+      const pointsSelectionWithLabels = this._points.filter(d => !!d._point.label)
+      collideLabels(pointsSelectionWithLabels, this.config, this.xScale, this.yScale)
     })
   }
 
