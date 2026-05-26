@@ -224,7 +224,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .style('stroke', d => d.strokeColor)
       .style('stroke-width', d => d.strokeWidth)
 
-    circles.exit().remove()
+    smartTransition(circles.exit(), duration, easeLinear)
+      .attr('r', 0)
+      .style('opacity', 0)
+      .remove()
+      .on('interrupt', function () { this.remove() })
   }
 
   hide (sourceEvent?: MouseEvent | WheelEvent): void {
@@ -308,6 +312,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       const baselineValue = getNumber(datum, this.accessors.baseline, datumIndex) || 0
       const stackedValues: CrosshairCircle[] = getStackedValues(datum, datumIndex, ...yStackedAccessors)
         .map((value, index) => ({
+          id: `stacked-${index}`,
           y: this.yScale(value + baselineValue),
           opacity: isNumber(getNumber(datum, yStackedAccessors[index], index)) ? 1 : 0,
           color: getColor(datum, config.color, index),
@@ -319,6 +324,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         .map((a, index) => {
           const value = getNumber(datum, a, datumIndex)
           return {
+            id: `regular-${index}`,
             y: this.yScale(value),
             opacity: isNumber(value) ? 1 : 0,
             color: getColor(datum, config.color, stackedValues.length + index),
@@ -327,7 +333,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
           }
         })
 
-      return stackedValues.concat(regularValues)
+      return stackedValues.concat(regularValues).filter(d => isNumber(d.y))
     }
 
     return []
