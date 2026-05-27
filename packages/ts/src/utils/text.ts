@@ -8,6 +8,7 @@ import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOpti
 // Utils
 import { flatten, isArray, merge } from 'utils/data'
 import { getTextAnchorFromTextAlign } from 'types/svg'
+import { estimateStringPixelLength, getCachedComputedTextLength, getPreciseStringLengthPx } from 'utils/text-measure'
 import { toPx } from 'utils/to-px'
 
 // Styles
@@ -158,7 +159,7 @@ export function wrapSVGText (
 
     const tspanText = `${tspanContent}${word}`
     tspan.text(tspanText)
-    const tspanWidth = tspan.node().getComputedTextLength()
+    const tspanWidth = getCachedComputedTextLength(tspan.node())
     if (tspanWidth > width) {
       tspan.text(tspanContent.trim())
 
@@ -172,15 +173,12 @@ export function wrapSVGText (
   })
 }
 
-// TODO: When we calculate `maxCharacters` we don't take into account that the ellipsis character is wider than the regular characters,
-// which sometimes leads to labels getting cut off.  We should rethink the tolerance value and maybe subtract a few characters from `maxCharacters`,
-// but this can be a breaking change and should be done carefully testing all components that use `trimSVGText`
 /**
  * Trims an SVG text element based on the specified max width, trim type, and other options.
  * @param {Selection<SVGTextElement, any, SVGElement, any>} svgTextSelection - The D3 selection of the SVG text element to be trimmed.
  * @param {number} [maxWidth=50] - The maximum width of the text element.
  * @param {TrimMode} [trimType=TrimMode.Middle] - The type of trim (start, middle, or end).
- * @param {boolean} [fastMode=true] - Whether to use a fast estimation method for text length calculation.
+ * @param {boolean} [fastMode=false] - Whether to use a fast estimation method for text length calculation.
  * @param {number} [fontSize=0] - The font size of the text.
  * @param {number} [fontWidthToHeightRatio=getFontWidthToHeightRatio()] - The font width to height ratio.
  * @returns {boolean} True if the text was trimmed, false otherwise.
@@ -189,62 +187,50 @@ export function trimSVGText (
   svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>,
   maxWidth = 50,
   trimType = TrimMode.Middle,
-  fastMode = true,
+  fastMode = false,
   fontSize = toPx(window.getComputedStyle(svgTextSelection.node())?.fontSize || UNOVIS_TEXT_DEFAULT.fontSize),
   fontWidthToHeightRatio = getFontWidthToHeightRatio()
 ): boolean {
   const text = svgTextSelection.text() || ''
   const textLength = text.length
+  if (!textLength) return false
 
-  const textWidth = fastMode ? fontSize * textLength * fontWidthToHeightRatio : svgTextSelection.node().getComputedTextLength()
-  const tolerance = 1.1
-  const maxCharacters = Math.ceil(textLength * maxWidth / (tolerance * textWidth))
-  if (maxCharacters < textLength) {
-    svgTextSelection.text(trimString(text, maxCharacters, trimType))
-    return true
+  if (fastMode) {
+    // Fast path: estimate width from a uniform per-character width. Cheap but
+    // approximate — it ignores per-glyph width and the appended ellipsis, so the
+    // result can slightly overflow `maxWidth`.
+    const textWidth = estimateStringPixelLength(text, fontSize, fontWidthToHeightRatio)
+    const tolerance = 1.1
+    const maxCharacters = Math.ceil(textLength * maxWidth / (tolerance * textWidth))
+    if (maxCharacters < textLength) {
+      svgTextSelection.text(trimString(text, maxCharacters, trimType))
+      return true
+    }
+    return false
   }
 
-  return false
+  // Accurate path: measure the real rendered width and shrink until the trimmed
+  // text (ellipsis included) actually fits. Binary search keeps this to ~log2(n)
+  // measurements, and measurement is canvas-backed so each is cheap.
+  const node = svgTextSelection.node()
+  if (getCachedComputedTextLength(node) <= maxWidth) return false
+
+  let minCharacters = 0
+  let maxCharacters = textLength
+  let bestFitCharacters = 0
+  while (minCharacters <= maxCharacters) {
+    const candidateCharacters = (minCharacters + maxCharacters) >> 1
+    svgTextSelection.text(trimString(text, candidateCharacters, trimType))
+    if (getCachedComputedTextLength(node) <= maxWidth) {
+      bestFitCharacters = candidateCharacters
+      minCharacters = candidateCharacters + 1
+    } else maxCharacters = candidateCharacters - 1
+  }
+
+  svgTextSelection.text(trimString(text, bestFitCharacters, trimType))
+  return true
 }
 
-/**
- * Estimates the length of a string in pixels.
- * @param {string} str - The string to be measured.
- * @param {number} fontSize - The font size of the string.
- * @param {number} [fontWidthToHeightRatio=getFontWidthToHeightRatio()] - The font width to height ratio.
- * @returns {number} The estimated length of the string in pixels.
- */
-export function estimateStringPixelLength (
-  str: string,
-  fontSize: number,
-  fontWidthToHeightRatio = getFontWidthToHeightRatio()
-): number {
-  return str.length * fontSize * fontWidthToHeightRatio || 0
-}
-
-/**
- * Calculates the precise length of a string in pixels.
- * @param {string} str - The string to be measured.
- * @param {string} [fontFamily] - The font family of the string.
- * @param {(string | number)} [fontSize] - The font size of the string.
- * @returns {number} The precise length of the string in pixels.
- */
-export function getPreciseStringLengthPx (str: string, fontFamily: string, fontSize: string | number): number {
-  const svgNS = 'http://www.w3.org/2000/svg'
-  const svg = document.createElementNS(svgNS, 'svg')
-  const text = document.createElementNS(svgNS, 'text')
-
-  text.textContent = str
-  text.setAttribute('font-size', `${fontSize}`)
-  text.setAttribute('font-family', fontFamily)
-
-  svg.appendChild(text)
-  document.body.appendChild(svg)
-  const length = text.getComputedTextLength()
-  document.body.removeChild(svg)
-
-  return length
-}
 
 /**
  * Estimates the dimensions of an SVG text element.
@@ -253,7 +239,7 @@ export function getPreciseStringLengthPx (str: string, fontFamily: string, fontS
  * @param {Selection<SVGTextElement, any, SVGElement, any>} svgTextSelection - The D3 selection of the SVG text element.
  * @param {number} fontSize - The font size.
  * @param {number} [dy=0.32] - The line height scaling factor.
- * @param {boolean} [fastMode=true] - Whether to use a fast estimation method or a more accurate one.
+ * @param {boolean} [fastMode=false] - Whether to use a fast estimation method or a more accurate one.
  * @param {number} [fontWidthToHeightRatio] - The font width-to-height ratio.
  * @returns {{width: number, height: number}} - The estimated dimensions of the text element.
  */
@@ -261,7 +247,7 @@ export function estimateTextSize (
   svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>,
   fontSize: number,
   dy = 0.32,
-  fastMode = true,
+  fastMode = false,
   fontWidthToHeightRatio?: number
 ): { width: number; height: number } {
   fontWidthToHeightRatio = fontWidthToHeightRatio || getFontWidthToHeightRatio()
@@ -272,12 +258,12 @@ export function estimateTextSize (
 
   let width = 0
   if (tspanSelection.empty()) {
-    const textLength = svgTextSelection.text().length
-    width = fastMode ? fontSize * textLength * fontWidthToHeightRatio : svgTextSelection.node().getComputedTextLength()
+    const text = svgTextSelection.text()
+    width = fastMode ? estimateStringPixelLength(text, fontSize, fontWidthToHeightRatio) : getCachedComputedTextLength(svgTextSelection.node())
   } else {
     for (const tspan of tspanSelection.nodes()) {
-      const tspanTextLength = (tspan as SVGTSpanElement).textContent.length
-      const w = fastMode ? fontSize * tspanTextLength * fontWidthToHeightRatio : (tspan as SVGTSpanElement).getComputedTextLength()
+      const tspanText = (tspan as SVGTSpanElement).textContent
+      const w = fastMode ? estimateStringPixelLength(tspanText, fontSize, fontWidthToHeightRatio) : getCachedComputedTextLength(tspan as SVGTSpanElement)
       if (w > width) width = w
     }
   }
