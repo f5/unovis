@@ -1,6 +1,5 @@
 import { Selection } from 'd3-selection'
 import { sum } from 'd3-array'
-import striptags from 'striptags'
 
 // Types
 import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from 'types/text'
@@ -429,46 +428,52 @@ export function getWrappedText (
 }
 
 
+const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
+
 /**
- * Renders a text or array of texts to SVG tspan strings.
+ * Builds SVG <tspan> elements for the given wrapped text blocks.
+ * Constructs the DOM directly (instead of serializing to a string and re-parsing),
+ * which avoids the cost of `DOMParser.parseFromString` and string sanitization.
  *
  * @param {UnovisWrappedText[]} blocks - The wrapped text blocks.
  * @param {number} [x=0] - The x-coordinate for the tspan elements.
  * @param {number} [y] - The y-coordinate for the tspan elements.
- * @returns {string[]} - The SVG tspan strings.
+ * @returns {SVGTSpanElement[]} - One outer <tspan> element per block.
  */
-function renderTextToTspanStrings (
+function renderTextToTspanElements (
   blocks: UnovisWrappedText[],
   x = 0,
   y?: number,
   dominantBaseline?: string
-): string[] {
+): SVGTSpanElement[] {
   return blocks.map((b, i) => {
     const prevBlock = i > 0 ? blocks[i - 1] : undefined
     const prevBlockMarginBottomEm = prevBlock ? prevBlock.marginBottom / prevBlock.fontSize : 0
     const marginTopEm = b.marginTop / b.fontSize
     const marginEm = Math.max(prevBlockMarginBottomEm, marginTopEm)
-    const attributes = {
-      fontSize: b.fontSize,
-      fontFamily: b.fontFamily,
-      fontWeight: b.fontWeight,
-      fill: b.color,
-      y: (i === 0) && y,
-    }
 
-    const attributesString = Object.entries(attributes)
-      .filter(([_, value]) => value)
-      .map(([key, value]) => `${kebabCase(key)}="${escapeStringKeepHash(value.toString())}"`)
-      .join(' ')
+    const blockTspan = document.createElementNS(SVG_NAMESPACE, 'tspan')
+    if (b.fontSize) blockTspan.setAttribute('font-size', `${b.fontSize}`)
+    if (b.fontFamily) blockTspan.setAttribute('font-family', `${b.fontFamily}`)
+    if (b.fontWeight) blockTspan.setAttribute('font-weight', `${b.fontWeight}`)
+    if (b.color) blockTspan.setAttribute('fill', `${b.color}`)
+    if (i === 0 && y) blockTspan.setAttribute('y', `${y}`)
 
-    return `<tspan xmlns="http://www.w3.org/2000/svg" ${attributesString}>${b._lines.map((line, k) => {
+    b._lines.forEach((line, k) => {
       let dy: number
       if (i === 0 && k === 0) dy = marginEm
       else if (k === 0) dy = marginEm + b.lineHeight
       else dy = b.lineHeight
 
-      return `<tspan x="${x}" dy="${dy}em" dominant-baseline="${dominantBaseline ?? 'auto'}">${line.length ? line : ' '}</tspan>`
-    }).join('')}</tspan>`
+      const lineTspan = document.createElementNS(SVG_NAMESPACE, 'tspan')
+      lineTspan.setAttribute('x', `${x}`)
+      lineTspan.setAttribute('dy', `${dy}em`)
+      lineTspan.setAttribute('dominant-baseline', dominantBaseline ?? 'auto')
+      lineTspan.textContent = line.length ? line : ' '
+      blockTspan.appendChild(lineTspan)
+    })
+
+    return blockTspan
   })
 }
 
@@ -526,14 +531,10 @@ export function renderTextToSvgTextElement (
     textElement.removeAttribute('transform')
   }
 
-  const parser = new DOMParser()
   textElement.textContent = ''
-  wrappedText.forEach(block => {
-    const svgCode = renderTextToTspanStrings([block], x, y, dominantBaseline).join('')
-    const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
-    const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
-    textElement.appendChild(parsedSvgCode)
-  })
+  for (const tspan of renderTextToTspanElements(wrappedText, x, y, dominantBaseline)) {
+    textElement.appendChild(tspan)
+  }
 }
 
 /**
@@ -565,24 +566,16 @@ export function renderTextIntoFrame (
     : frameOptions.verticalAlign === VerticalAlign.Bottom ? dh : 0
 
 
-  const translate = (frameOptions.x || frameOptions.y)
-    ? `transform="translate(${frameOptions.x ?? 0},${frameOptions.y ?? 0})"`
-    : ''
-
-  const svgCode =
-  `<text
-    xmlns="http://www.w3.org/2000/svg"
-    text-anchor="${getTextAnchorFromTextAlign(frameOptions.textAlign)}"
-    ${translate}
-  >
-    ${renderTextToTspanStrings(wrappedText, x, y, 'hanging').join('')}
-  </text>`
-
-  const parser = new DOMParser()
-  const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
-  const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
+  const textEl = document.createElementNS(SVG_NAMESPACE, 'text')
+  textEl.setAttribute('text-anchor', getTextAnchorFromTextAlign(frameOptions.textAlign))
+  if (frameOptions.x || frameOptions.y) {
+    textEl.setAttribute('transform', `translate(${frameOptions.x ?? 0},${frameOptions.y ?? 0})`)
+  }
+  for (const tspan of renderTextToTspanElements(wrappedText, x, y, 'hanging')) {
+    textEl.appendChild(tspan)
+  }
 
   group.textContent = ''
-  group.appendChild(parsedSvgCode)
+  group.appendChild(textEl)
 }
 
