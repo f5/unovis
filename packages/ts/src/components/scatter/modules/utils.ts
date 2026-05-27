@@ -3,7 +3,7 @@ import { Position } from 'types/position'
 
 // Utils
 import { rectIntersect } from 'utils/misc'
-import { estimateStringPixelLength } from 'utils/text'
+import { estimateStringPixelLength, getCachedFontSizePx } from 'utils/text-measure'
 import { getValue } from 'utils/data'
 
 // Types
@@ -97,7 +97,7 @@ export function collideLabels<Datum> (
     if (!group1Node._labelVisible || isLabelPositionCenter(label1Position as Position)) return
 
     const label1 = select<SVGGElement, ScatterPoint<Datum>>(group1Node).select<SVGTextElement>('text')
-    const label1FontSize = Number.parseFloat(window.getComputedStyle(label1.node())?.fontSize)
+    const label1FontSize = getCachedFontSizePx(label1.node())
 
     // Calculate bounding rect of point's label
     const label1BoundingRect = getEstimatedLabelBBox(datum1, label1Position as Position, xScale, yScale, label1FontSize)
@@ -124,7 +124,7 @@ export function collideLabels<Datum> (
       // If there's no intersection, check for collision with the second point's label
       const label2Visible = group2Node._labelVisible
       if (!intersect && label2Visible) {
-        const label2FontSize = Number.parseFloat(window.getComputedStyle(label2.node())?.fontSize)
+        const label2FontSize = getCachedFontSizePx(label2.node())
         const label2Position = getValue(datum2, config.labelPosition, datum2._point.pointIndex)
         const label2BoundingRect = getEstimatedLabelBBox(datum2, label2Position as Position, xScale, yScale, label2FontSize)
 
