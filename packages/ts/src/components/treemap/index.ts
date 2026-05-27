@@ -15,6 +15,7 @@ import { getColor, brighter, getHexValue, isColorDark } from 'utils/color'
 import { getString, getNumber, isNumber, isFunction } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { trimSVGText, wrapSVGText } from 'utils/text'
+import { getCachedFontSizePx } from 'utils/text-measure'
 import { cssvar } from 'utils/style'
 
 // Types
@@ -281,12 +282,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
       const text = select(el)
       const maxLabelWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
-      const fontSize = parseFloat(text.property('font-size-px')) || parseFloat(window.getComputedStyle(el).fontSize)
 
       if (config.labelFit === FitMode.Wrap && isLeafNode) {
         wrapSVGText(text, maxLabelWidth)
       } else {
-        trimSVGText(text, maxLabelWidth, config.labelTrimMode, true, fontSize)
+        trimSVGText(text, maxLabelWidth, config.labelTrimMode)
       }
     })
 

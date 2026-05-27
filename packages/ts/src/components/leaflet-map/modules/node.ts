@@ -153,7 +153,7 @@ export function collideLabels<D extends GenericDataRecord> (
     // Calculate bounding rect of point's bottom label
     const bottomLabelFontSizePx = getCSSVariableValueInPixels(cssvar(s.variables.mapPointBottomLabelFontSize), selection.node())
     const p1Pos = getPointPos(datum1, leafletMap)
-    const label1Size = estimateTextSize(label1, bottomLabelFontSizePx, 0.32, true, 0.6)
+    const label1Size = estimateTextSize(label1, bottomLabelFontSizePx, 0.32)
     const label1BoundingRect: Rect = {
       x: p1Pos.x - label1Size.width / 2,
       y: p1Pos.y - label1Size.height / 2 + datum1.radius + BOTTOM_LABEL_TOP_MARGIN,
@@ -182,7 +182,7 @@ export function collideLabels<D extends GenericDataRecord> (
       // If there's not intersection, check a collision with the second point's label
       const label2Visible = group2LabelElement.labelVisible
       if (!intersect && label2Visible) {
-        const label2Size = estimateTextSize(label2, bottomLabelFontSizePx, 0.32, true, 0.6)
+        const label2Size = estimateTextSize(label2, bottomLabelFontSizePx, 0.32)
         intersect = rectIntersect(label1BoundingRect, {
           x: p2Pos.x - label2Size.width / 2,
           y: p2Pos.y + datum2.radius + BOTTOM_LABEL_TOP_MARGIN - label2Size.height / 2,
