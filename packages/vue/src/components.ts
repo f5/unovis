@@ -15,6 +15,7 @@ export { default as VisChordDiagram, VisChordDiagramSelectors } from './componen
 export { default as VisDonut, VisDonutSelectors } from './components/donut/index.vue'
 export { default as VisGraph, VisGraphSelectors } from './components/graph/index.vue'
 export { default as VisNestedDonut, VisNestedDonutSelectors } from './components/nested-donut/index.vue'
+export { default as VisRadialBar, VisRadialBarSelectors } from './components/radial-bar/index.vue'
 export { default as VisSankey, VisSankeySelectors } from './components/sankey/index.vue'
 export { default as VisTopoJSONMap, VisTopoJSONMapSelectors } from './components/topojson-map/index.vue'
 export { default as VisTreemap, VisTreemapSelectors } from './components/treemap/index.vue'

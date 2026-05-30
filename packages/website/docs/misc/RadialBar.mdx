@@ -1,0 +1,130 @@
+---
+description: Learn how to configure a Radial Bar chart
+---
+
+import CodeBlock from '@theme/CodeBlock'
+import { PropsTable } from '@site/src/components/PropsTable'
+import { DocWrapper, InputWrapper } from '../wrappers'
+import { RadialBar } from '@unovis/ts'
+
+export const radialBarProps = (n = 3) => ({
+  name: "RadialBar",
+  height: 240,
+  containerName: "SingleContainer",
+  configKey: "component",
+  value: d => d,
+  dataType: "number",
+  data: Array(n).fill(0).map((_, i) => 0.4 + 0.2 * i),
+})
+
+## Basic Configuration
+The _Radial Bar_ chart draws one circular **track** per data record and fills each track with a colored **bar** proportional
+to its value. The minimum configuration looks like:
+<DocWrapper {...radialBarProps()} showContext="full"/>
+
+## Max Value
+Each bar fills `value / maxValue * (angleRange[1] - angleRange[0])`. When `maxValue` is `undefined` (the default), the maximum is derived from the data.
+Pass a number to use one max for all rings, or a per-datum accessor when each ring should scale against its own target:
+
+```ts
+// Auto-derive max from data (default)
+maxValue={undefined}
+
+// Single shared max
+maxValue={100}
+
+// Per-ring target
+maxValue={d => d.target}
+```
+
+<DocWrapper {...radialBarProps()} maxValue={1}/>
+
+## Labels
+You can place text in the center of the chart with the `centralLabel` and `centralSubLabel` properties — the same
+API as the [Donut chart](./Donut.mdx). The sub-label wraps onto multiple lines automatically (toggle with
+`centralSubLabelWrap`).
+<DocWrapper {...radialBarProps()} centralLabel="8" centralSubLabel="open · in progress"/>
+
+### Label Position
+The labels are centered as a single block — the geometric midpoint of the top label plus the (potentially wrapped) sub-label is placed at the chart center, regardless of the font-size ratio between the two.
+
+Use `centralLabelOffsetX` / `centralLabelOffsetY` to nudge the block (negative values move up/left, positive move down/right):
+<DocWrapper {...radialBarProps()}
+  centralLabel="Offset"
+  centralSubLabel="Moved up"
+  centralLabelOffsetY={-15}
+/>
+
+## Angle Range
+By default a _Radial Bar_ spans the full `[0, 2π]` circle. Pass a `[start, end]` tuple in radians to render a
+partial range — useful for semicircular or gauge-style charts.
+
+For partial arcs the chart's origin lands on the bbox edge of the visible arc, so you may want to combine `centralLabelOffsetY` with the `--vis-radial-bar-central-label-text-anchor` / `--vis-radial-bar-central-sub-label-text-anchor` CSS variables (`start` / `middle` / `end`) to align the labels toward the side the arc opens to.
+<DocWrapper {...radialBarProps()} angleRange={[-Math.PI / 2, Math.PI / 2]} centralLabel="Gauge" centralLabelOffsetY={-15}/>
+
+## Stacking Order
+By default `data[0]` is the **outermost** ring and subsequent data render inward. Set `reverseOrder` to `true`
+to flip the order:
+<DocWrapper {...radialBarProps(4)} reverseOrder={true}/>
+
+
+## Sorting
+Provide a `sortFunction` to control the ring order independently of how the data was provided:
+<DocWrapper {...radialBarProps()} sortFunction={(a, b) => a - b} data={[0.4, 0.8, 0.6]}/>
+
+## Size
+### Radius
+`radius` sets the outermost ring's outer radius (in pixels). When `undefined`, the chart fills the available space.
+<InputWrapper {...radialBarProps()} property="radius" defaultValue={80} inputType="range" inputProps={{ min: 10, max: 120 }}/>
+
+### Track Width
+`trackWidth` is the width of each ring in pixels.
+<InputWrapper {...radialBarProps()} property="trackWidth" defaultValue={16} inputType="range" inputProps={{ min: 1, max: 40 }}/>
+
+### Track Padding
+`trackPadding` is the gap between rings in pixels.
+<InputWrapper {...radialBarProps()} property="trackPadding" defaultValue={4} inputType="range" inputProps={{ min: 0, max: 20 }}/>
+
+## Bar Appearance
+### Custom Color
+Customize the colors with a `color` accessor:
+<DocWrapper {...radialBarProps()} color={(d, i) => ['#4D8CFD', '#F4B83E', '#A6CC74'][i]} showContext="minimal"/>
+
+### Corner Radius
+Rounded caps are off by default. Increase `cornerRadius` for activity-ring style rounded ends:
+<InputWrapper {...radialBarProps()} trackWidth={20} property="cornerRadius" defaultValue={10} inputType="range" inputProps={{ min: 0, max: 20 }}/>
+
+## Background
+By default each ring has a faded background that shows the 100% track. Disable globally with `showBackground={false}`,
+or override the angular range with `backgroundAngleRange`.
+<InputWrapper {...radialBarProps()} property="showBackground" inputType="checkbox" defaultValue={true}/>
+
+The background color is configured via the `--vis-radial-bar-background-color` and
+`--vis-dark-radial-bar-background-color` CSS variables.
+
+## Events
+The following selectors are available for events:
+```ts
+import { RadialBar } from '@unovis/ts'
+...
+events = {
+    [RadialBar.selectors.bar]: { },
+    [RadialBar.selectors.background]: { },
+    [RadialBar.selectors.centralLabel]: { },
+    [RadialBar.selectors.centralSubLabel]: { },
+}
+```
+<DocWrapper {...radialBarProps()} excludeGraph events={{}}/>
+
+## CSS Variables
+<details open>
+  <summary>All supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+{`${
+  Object.entries(RadialBar.selectors.cssVarDefaults)
+  .map(([key, value]) => `${key}: ${value};`).join('\n')}
+`}</CodeBlock>
+</details>
+
+## Component Props
+<PropsTable name="VisRadialBar"/>

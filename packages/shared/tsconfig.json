@@ -8,6 +8,19 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": false,
-    "paths": {},
+    "paths": {
+      "@unovis/ts": ["packages/ts/src"],
+      "@unovis/ts/*": ["packages/ts/src/*"],
+      "@unovis/react": ["packages/react/src"],
+      "@unovis/react/*": ["packages/react/src/*"],
+      "@unovis/svelte": ["packages/svelte/src"],
+      "@unovis/svelte/*": ["packages/svelte/src/*"],
+      "@unovis/solid": ["packages/solid/src"],
+      "@unovis/solid/*": ["packages/solid/src/*"],
+      "@unovis/vue": ["packages/vue/src"],
+      "@unovis/vue/*": ["packages/vue/src/*"],
+      "@unovis/angular": ["packages/angular/src/public-api"],
+      "@unovis/angular/*": ["packages/angular/src/*"]
+    },
   }
 }

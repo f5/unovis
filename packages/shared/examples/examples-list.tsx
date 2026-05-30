@@ -74,6 +74,7 @@ export const examples: ExampleCollection[] = [
     description: '',
     examples: [
       require('./basic-donut-chart').default,
+      require('./basic-radial-bar-chart').default,
       require('./hierarchical-chord-diagram').default,
       require('./sunburst-nested-donut').default,
     ],
