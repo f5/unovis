@@ -1,6 +1,7 @@
 import React from 'react'
 import { VisSingleContainer, VisDonut } from '@unovis/react'
 import { DONUT_HALF_ANGLE_RANGE_TOP } from '@unovis/ts'
+import { DonutSegmentLabelPosition } from '@unovis/ts/components/donut/types'
 
 export const title = 'Half Donut: Labels'
 export const subTitle = 'Testing the label offsets'
@@ -19,6 +20,10 @@ export const component = (): React.ReactNode => {
         centralLabel='Central Label'
         centralSubLabel='Central Sub Label'
         centralLabelOffsetY={-24}
+        showSegmentLabels={true}
+        segmentLabelOffset={25}
+        segmentLabel={d => `${d}`}
+        segmentLabelPosition={DonutSegmentLabelPosition.Outside}
       />
     </VisSingleContainer>
   )

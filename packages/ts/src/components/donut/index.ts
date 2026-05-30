@@ -14,7 +14,7 @@ import { wrapSVGText } from 'utils/text'
 import { Spacing } from 'types/spacing'
 
 // Local Types
-import { DonutArcDatum, DonutArcAnimState, DonutDatum } from './types'
+import { DonutArcDatum, DonutArcAnimState, DonutDatum, DonutSegmentLabelPosition } from './types'
 
 // Config
 import { DonutDefaultConfig, DonutConfigInterface } from './config'
@@ -93,7 +93,23 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     const width = this._width * (isHorizontalHalfDonut ? 2 : 1)
     const height = this._height * (isVerticalHalfDonut ? 2 : 1)
 
-    const outerRadius = config.radius || Math.min(width - bleed.left - bleed.right, height - bleed.top - bleed.bottom) / 2
+    // Base radius before outside label adjustment
+    const baseRadius = config.radius ||
+      Math.min(
+        width - bleed.left - bleed.right,
+        height - bleed.top - bleed.bottom
+      ) / 2
+
+    // If labels are outside, shrink donut so labels fit inside original component box
+    let outerRadius = baseRadius
+    if (config.showSegmentLabels && config.segmentLabelPosition === DonutSegmentLabelPosition.Outside) {
+      const labelOffset = config.segmentLabelOffset ?? 12
+      const outsideBuffer =
+        // Optional extra buffer config; fallback to 8
+        (config as any).segmentLabelOutsideBuffer ?? 8
+      outerRadius = Math.max(1, baseRadius - labelOffset - outsideBuffer)
+    }
+
     const innerRadius = config.arcWidth === 0 ? 0 : clamp(outerRadius - config.arcWidth, 0, outerRadius - 1)
 
     const translateY = this._height / 2 + (isHalfDonutTop ? outerRadius / 2 : isHalfDonutBottom ? -outerRadius / 2 : 0)
@@ -149,6 +165,43 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     arcsSelection.exit<DonutArcDatum<Datum>>()
       .attr('class', s.segmentExit)
       .call(removeArc, duration)
+
+    if (config.showSegmentLabels) {
+      const labels = this.arcGroup
+        .selectAll<SVGTextElement, DonutArcDatum<Datum>>(`.${s.segmentLabel}`)
+        .data(arcData, d => config.id(d.data, d.index))
+
+      const labelsEnter = labels.enter().append('text')
+        .attr('class', s.segmentLabel)
+        .attr('dy', '0.35em')
+        .attr('text-anchor', 'middle')
+
+      const labelsGroup = labels.merge(labelsEnter)
+      labelsGroup
+        .attr('transform', d => {
+          const midAngle = (d.startAngle + d.endAngle) / 2
+          if (config.segmentLabelPosition === DonutSegmentLabelPosition.Outside) {
+            const offset = config.segmentLabelOffset ?? 12
+            const r = outerRadius + offset
+            const x = Math.sin(midAngle) * r
+            const y = -Math.cos(midAngle) * r
+            return `translate(${x},${y})`
+          }
+          const [cx, cy] = this.arcGen.centroid(d)
+          return `translate(${cx},${cy})`
+        })
+        .text(d => typeof config.segmentLabel === 'function'
+          ? config.segmentLabel(d.data, d.index)
+          : `${d.data || ''}`)
+        .style('display', d => {
+        // Hide if arc too small for inside labels; outside labels always shown
+          if (config.segmentLabelPosition === DonutSegmentLabelPosition.Outside) return null
+          return (d.endAngle - d.startAngle > 0.2 ? null : 'none')
+        })
+      labels.exit().remove()
+    } else {
+      this.arcGroup.selectAll(`.${s.segmentLabel}`).remove()
+    }
 
     // Label
     const labelTextAnchor = isHalfDonutRight ? 'start' : isHalfDonutLeft ? 'end' : 'middle'

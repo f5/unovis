@@ -15,3 +15,8 @@ export interface DonutArcDatum<Datum> extends PieArcDatum<Datum> {
 }
 
 export type DonutArcAnimState = { startAngle: number; endAngle: number; innerRadius: number; outerRadius: number; padAngle?: number }
+
+export enum DonutSegmentLabelPosition {
+  Inside = 'inside',
+  Outside = 'outside',
+}
