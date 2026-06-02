@@ -64,6 +64,12 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
    *  This is useful for testing, especially when you only triggers mousemove event but does not have real mouse event.
    */
   skipRangeCheck?: boolean;
+  /** Minimum fraction (`0` to `1`) of the container's area that must be visible in the
+   * viewport for the Crosshair (and its Tooltip) to be displayed. This prevents the
+   * Crosshair from showing when the chart is mostly scrolled out of view. Charts that are
+   * wider or taller than the viewport may never reach the default ratio, so lower this
+   * value (or set it to `0` to always show the Crosshair) for large charts. Default: `0.35` */
+  visibilityThreshold?: number;
 }
 
 export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
@@ -84,5 +90,6 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   onCrosshairMove: undefined,
   forceShowAt: undefined,
   skipRangeCheck: false,
+  visibilityThreshold: 0.35,
 }
 
