@@ -44,6 +44,10 @@ You can disable this feature using the `hideWhenFarFromPointer` attribute.
 Use the `hideWhenFarFromPointerDistance` attribute with a length (in pixels) that represents the minimum horizontal distance the cursor must be from a datapoint before hiding.
 <XYWrapperWithInput {...crosshairProps("StackedBar", { barWidth: 10})} data={generateDataRecords(10).filter(d => d.x % 2 == 0)} property="hideWhenFarFromPointerDistance" defaultValue={50} inputType="range"/>
 
+#### `visibilityThreshold`
+The _Crosshair_ is only displayed when at least a fraction of its container is visible in the viewport, which prevents it (and its tooltip) from appearing when the chart is mostly scrolled out of view. Charts that are wider or taller than the viewport may never reach the default ratio of `0.35`, so you can lower `visibilityThreshold`, or set it to `0` to always show the _Crosshair_ regardless of how much of the container is on screen.
+<XYWrapperWithInput {...crosshairProps("StackedBar", { barWidth: 10})} property="visibilityThreshold" defaultValue={0.35} inputType="range" inputProps={{ min: 0, max: 1, step: 0.05 }}/>
+
 ## Custom Color
 Provide a `string` or color accessor function to the `color` attribute to customize the crosshair's point color:
 <XYWrapper {...crosshairProps()} color={(d, i) => ['red', 'green', 'blue'][i]} showContext="minimal"/>

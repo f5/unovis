@@ -76,8 +76,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     const containerArea = containerRect.width * containerRect.height
     const visibleArea = visibleWidth * visibleHeight
 
-    // Container must be at least 35% visible
-    return containerArea > 0 && (visibleArea / containerArea) >= 0.35
+    // Container must be at least `visibilityThreshold` (default 35%) visible
+    return containerArea > 0 && (visibleArea / containerArea) >= this.config.visibilityThreshold
   }
 
   constructor (config?: CrosshairConfigInterface<Datum>) {
