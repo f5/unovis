@@ -32,25 +32,42 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
+    "dev": "vite",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
-    "@unovis/ts": "workspace:*"
+    "@unovis/ts": "workspace:*",
+    "@unovis/react": "workspace:*",
+    "@unovis/vue": "workspace:*",
+    "@unovis/solid": "workspace:*",
+    "@unovis/svelte": "workspace:*"
   },
   "devDependencies": {
     "@angular/core": "^12.0.3",
     "@angular/common": "^12.0.3",
     "@angular/platform-browser": "^12.0.3",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
     "@types/d3-scale": "^4.0.8",
     "@types/d3-selection": "^3.0.10",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-vue": "^5.2.3",
     "tslib": "^2.3.1",
     "d3-format": "^3.1.0",
     "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
+    "react": "^18",
+    "react-dom": "^18",
     "solid-js": "^1.9.3",
+    "svelte": "^4.2.19",
+    "svelte-preprocess": "^4.10.7",
     "typescript": "~4.2.4",
     "d3-array": "3.2.4",
-    "@emotion/css": "^11.7.1"
+    "@emotion/css": "^11.7.1",
+    "vite": "catalog:",
+    "vite-plugin-solid": "^2.10.2",
+    "vue": "^3.5.13"
   },
   "dependencies": {}
 }

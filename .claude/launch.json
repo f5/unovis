@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "packages/dev",
+      "port": 9500
+    },
+    {
+      "name": "dev:gallery",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "dev:gallery"],
+      "port": 9600
+    }
+  ]
+}
