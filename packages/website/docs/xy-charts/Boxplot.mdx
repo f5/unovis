@@ -1,0 +1,118 @@
+---
+sidebar_label: Boxplot
+title: Boxplot
+description: Learn how to configure a Boxplot chart
+---
+
+import CodeBlock from '@theme/CodeBlock'
+import { PropsTable } from '@site/src/components/PropsTable'
+import { XYWrapper, XYWrapperWithInput } from '../wrappers/xy-wrapper'
+import { Boxplot } from '@unovis/ts'
+
+export const generateBoxplotData = (n = 5) => Array(n).fill(0).map((_, i) => {
+  const median = 4 + 4 * Math.random()
+  const q1 = median - (1 + 2 * Math.random())
+  const q3 = median + (1 + 2 * Math.random())
+  const min = q1 - (1 + 2 * Math.random())
+  const max = q3 + (1 + 2 * Math.random())
+  return { x: i, median, quartiles: [q1, q3], whiskers: [min, max] }
+})
+
+export const boxplotProps = (n = 5) => ({
+  name: "Boxplot",
+  data: generateBoxplotData(n),
+  x: d => d.x,
+  median: d => d.median,
+  quartiles: d => d.quartiles,
+  whiskers: d => d.whiskers,
+});
+
+## Basic Configuration
+The _Boxplot_ component has been designed to work together with _XY Container_. Unlike most _XY_ components,
+_Boxplot_ doesn't use a single `y` accessor. Instead it has three grouped accessors that map directly to the
+visual elements of a box-and-whisker plot:
+
+- `median` — a single number, the median line inside the box;
+- `quartiles` — a `[q1, q3]` tuple, the bottom and top of the box;
+- `whiskers` — a `[min, max]` tuple, the lower and upper whisker ends.
+
+Grouping the quartiles and whiskers (instead of using separate scalar accessors) guarantees that a box always has
+both of its edges, so it can never be rendered half-drawn.
+
+<XYWrapper {...boxplotProps()} showContext="full"/>
+
+## Using a Subset of the Accessors
+Because each accessor is wired to its visual element independently, you can provide only the ones you need.
+
+### Quartiles only
+Pass just `quartiles` to render bare boxes, without a median line or whiskers.
+<XYWrapper excludeTabs name="Boxplot" data={generateBoxplotData()} x={d => d.x} quartiles={d => d.quartiles} showContext="minimal" showAxes/>
+
+### Median only
+Pass just `median` to render median ticks, without boxes or whiskers.
+<XYWrapper excludeTabs name="Boxplot" data={generateBoxplotData()} x={d => d.x} median={d => d.median} showContext="minimal" showAxes/>
+
+## Color
+Set the fill color of the boxes by assigning the `color` property to a color string or a color accessor function.
+When `color` is not set, all boxes share the `--vis-boxplot-fill-color` CSS variable.
+
+<XYWrapper excludeTabs {...boxplotProps()} showContext="minimal" showAxes color="#8777d9"/>
+
+## Rounded Corners
+You can apply rounded corners to the box using the `roundedCorners` property, which accepts either a `number`
+(in pixels) or a `boolean` argument.
+<XYWrapperWithInput
+    {...boxplotProps()}
+    property="roundedCorners"
+    inputType="range"
+    inputProps={{ min: 0, max: 10, step: 1 }}
+    defaultValue={5}
+/>
+
+## Box Sizing
+### Box Width
+By default, the width of the boxes is calculated automatically from the spacing between neighbouring boxes. But you
+can also strictly set the box's width in pixels using the `barWidth` property:
+<XYWrapperWithInput {...boxplotProps()} property="barWidth" inputType="number" defaultValue={20}/>
+
+### Limiting Dynamic Box Width
+When you don't know the number of boxes in advance, and you're relying on automatic width calculation, you might
+want to limit the maximum box width using the `barMaxWidth` property.
+
+### Handling Missing Data with `dataStep`
+The automatic width calculation infers the step between boxes from the data. When your data has missing points,
+the step can't be inferred reliably, which can make the boxes too wide. In that case set the expected step in X
+units explicitly via the `dataStep` property.
+
+### Box Padding
+Another way to control the box's width is by changing the `barPadding` property, which specifies how much of the
+available sector should be empty, in the range of [0,1).
+<XYWrapperWithInput {...boxplotProps()} property="barPadding" inputType="range" inputProps={{ min: 0, max: 1, step: 0.1 }} defaultValue={0.5}/>
+
+## Events
+```ts
+import { Boxplot } from '@unovis/ts'
+...
+events = {
+    [Boxplot.selectors.box]: {
+        click: (d: DataRecord) => {},
+    },
+}
+```
+<XYWrapper {...boxplotProps()} excludeGraph events={{}}/>
+
+## CSS Variables
+The _Boxplot_ component supports additional styling via CSS variables that you can define for your visualization
+container.
+
+<details open>
+  <summary>Supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+{`${
+  Object.entries(Boxplot.selectors.cssVarDefaults)
+  .map(([key, value]) => `${key}: ${value};`).join('\n')}
+`}</CodeBlock>
+</details>
+
+## Component Props
+<PropsTable name="VisBoxplot"></PropsTable>
