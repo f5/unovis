@@ -34,6 +34,13 @@ export const examples: ExampleCollection[] = [
     ],
   },
   {
+    title: 'Boxplot',
+    description: '',
+    examples: [
+      require('./basic-boxplot').default,
+    ],
+  },
+  {
     title: 'Scatter Plots',
     description: '',
     examples: [
