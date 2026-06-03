@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "cd packages/dev && pnpm dev",
+    "dev:gallery": "pnpm --filter @unovis/shared dev",
     "website": "cd packages/website && pnpm start",
     "build": "pnpm build:ts && pnpm build:react && pnpm build:angular && pnpm build:svelte && pnpm build:vue && pnpm build:solid && pnpm build:website",
     "build:ts": "cd packages/ts && pnpm build",
