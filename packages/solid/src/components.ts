@@ -1,5 +1,6 @@
 export * from "./components/area";
 export * from "./components/axis";
+export * from "./components/boxplot";
 export * from "./components/brush";
 export * from "./components/crosshair";
 export * from "./components/free-brush";

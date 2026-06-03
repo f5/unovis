@@ -1,5 +1,6 @@
 export { default as VisArea } from './components/area/area.svelte'
 export { default as VisAxis } from './components/axis/axis.svelte'
+export { default as VisBoxplot } from './components/boxplot/boxplot.svelte'
 export { default as VisBrush } from './components/brush/brush.svelte'
 export { default as VisCrosshair } from './components/crosshair/crosshair.svelte'
 export { default as VisFreeBrush } from './components/free-brush/free-brush.svelte'
