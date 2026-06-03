@@ -2,6 +2,7 @@
 export * from './components/line'
 export * from './components/area'
 export * from './components/axis'
+export * from './components/boxplot'
 export * from './components/brush/'
 export * from './components/chord-diagram'
 export * from './components/crosshair'
