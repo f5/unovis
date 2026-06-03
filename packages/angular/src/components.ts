@@ -11,6 +11,9 @@ export { VisAnnotationsModule } from './components/annotations/annotations.modul
 export { VisAxisComponent } from './components/axis/axis.component'
 export { VisAxisModule } from './components/axis/axis.module'
 
+export { VisBoxplotComponent } from './components/boxplot/boxplot.component'
+export { VisBoxplotModule } from './components/boxplot/boxplot.module'
+
 export { VisBrushComponent } from './components/brush/brush.component'
 export { VisBrushModule } from './components/brush/brush.module'
 

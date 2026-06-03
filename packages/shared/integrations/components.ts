@@ -8,6 +8,7 @@ export function getComponentList (
     // XY Components
     { name: 'Area', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/area'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Axis', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/axis'], dataType: 'Datum[]', angularProvide: 'VisXYComponent', elementSuffix: 'axis' },
+    { name: 'Boxplot', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/boxplot'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Brush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/brush'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Crosshair', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/crosshair'], dataType: 'Datum[]', angularProvide: 'VisXYComponent', elementSuffix: 'crosshair' },
     { name: 'FreeBrush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/free-brush'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
