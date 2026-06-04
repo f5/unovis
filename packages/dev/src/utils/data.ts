@@ -15,6 +15,13 @@ export type StackedDataRecord = {
   x: number;
   ys: number[];
 }
+
+export type BoxplotDataRecord = {
+  x: number;
+  median: number;
+  quartiles: [number, number];
+  whiskers: [number, number];
+}
 export interface TimeDataRecord {
   timestamp: number;
   value: number;
@@ -56,6 +63,17 @@ export function generateXYDataRecords (n = 10): XYDataRecord[] {
     y1: 1 + 3 * randomNumberGenerator(),
     y2: 2 * randomNumberGenerator(),
   }))
+}
+
+export function generateBoxplotDataRecords (n = 10): BoxplotDataRecord[] {
+  return Array(n).fill(0).map((_, i) => {
+    const median = 4 + 4 * randomNumberGenerator()
+    const q1 = median - (1 + 2 * randomNumberGenerator())
+    const q3 = median + (1 + 2 * randomNumberGenerator())
+    const min = q1 - (1 + 3 * randomNumberGenerator())
+    const max = q3 + (1 + 3 * randomNumberGenerator())
+    return { x: i, median, quartiles: [q1, q3], whiskers: [min, max] }
+  })
 }
 
 export function generateTimeSeriesDataRecords (numSeries = 5, n = 25, interval = 1000 * 60 * 60): TimeSeriesDataRecord[] {
