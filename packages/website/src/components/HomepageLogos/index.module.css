@@ -11,11 +11,15 @@
 }
 
 .logo {
-  height: 10em;
-  /*width: 100%;*/
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 2% 5%;
 }
 
-.logo > img {
-  height: 100%;
+.logoImage {
+  display: block;
+  height: var(--logo-height, 70px);
+  width: auto;
+  object-fit: contain;
 }
