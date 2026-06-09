@@ -35,12 +35,6 @@ const chart = new SingleContainer(container, {
   component: new Treemap<DataRecord>({
     value: (d: DataRecord) => d.billions,
     layers: [(d: DataRecord) => d.category, (d: DataRecord) => d.name],
-    tileColor: (node: TreemapNode<DataRecord>) => {
-      const datum = node.data.datum as DataRecord | undefined
-      const category = datum ? datum.category : node.data.key
-      const entry = categoryColorMap.find(g => g.key === category)
-      return entry ? entry.value : '#008877'
-    },
     tileLabel: (node: TreemapNode<DataRecord>) => {
       const datum = node.data.datum as DataRecord | undefined
       return datum ? `${datum.name}: $${populationFormat(datum.billions)}` : String(node.data.key || '')

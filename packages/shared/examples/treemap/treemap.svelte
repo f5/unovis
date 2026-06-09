@@ -47,12 +47,6 @@
     enableTileLabelFontSizeVariation={true}
     showTileClickAffordance={true}
     labelInternalNodes={true}
-    tileColor={node => {
-      const datum = node.data.datum
-      const category = datum ? datum.category : node.data.key
-      const entry = categoryColorMap.find(g => g.key === category)
-      return entry ? entry.value : '#008877'
-    }}
   />
 </VisSingleContainer>
 

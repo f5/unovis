@@ -50,12 +50,6 @@ function getTooltipContent(node: any): string {
       :enableTileLabelFontSizeVariation="true"
       :showTileClickAffordance="true"
       :labelInternalNodes="true"
-      :tileColor="(node: any) => {
-        const datum = node.data.datum as DataRecord | undefined
-        const category = datum ? datum.category : node.data.key
-        const entry = categoryColorMap.find(g => g.key === category)
-        return entry ? entry.value : '#008877'
-      }"
     />
   </VisSingleContainer>
 </template>
