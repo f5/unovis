@@ -428,3 +428,44 @@ Alternatively, you can place the defs in a hidden `<svg>` element anywhere on th
 
 :::
 
+## SVG Filters (glow, bevel, 3D)
+The same `svgDefs` property can hold custom SVG `<filter>` definitions for advanced visual effects —
+glow, bevel, inner shadow, or neon styling — that aren't possible with plain CSS. Combine it with the
+`attributes` config, available on every component, to apply a `filter` to the rendered shapes by their
+selector.
+
+Because the filter is built on `SourceGraphic`, it acts as a pure rendering overlay: it enhances what's
+already drawn without touching the chart's colors.
+
+```tsx
+import { StackedBar } from '@unovis/ts'
+
+// A bevel filter (inner shadow + top highlight), clipped to each shape.
+const svgDefs = `
+  <filter id="bevel" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+    <feOffset in="blur" dx="0" dy="2" result="offsetBlur"/>
+    <feComposite in="SourceAlpha" in2="offsetBlur" operator="out" result="innerShadowMask"/>
+    <feFlood flood-color="black" flood-opacity="0.4" result="shadowColor"/>
+    <feComposite in="shadowColor" in2="innerShadowMask" operator="in" result="shadow"/>
+    <feMerge result="merged">
+      <feMergeNode in="SourceGraphic"/>
+      <feMergeNode in="shadow"/>
+    </feMerge>
+    <feComposite in="merged" in2="SourceGraphic" operator="in"/>
+  </filter>`
+
+<VisXYContainer data={data} svgDefs={svgDefs}>
+  <VisStackedBar
+    x={d => d.x}
+    y={accessors}
+    attributes={{ [StackedBar.selectors.bar]: { filter: 'url(#bevel)' } }}
+  />
+</VisXYContainer>
+```
+
+The `filter` is set per shape (`.bar`, `.point`, `.line`, `.area`, `.segmentArc`, …) rather than on a
+wrapping group, so effects like inner shadow and bevel that rely on each shape's own `SourceGraphic`
+render correctly. See the **Visual Effects (SVG Filters)** gallery example for glow and bevel applied to
+bars, lines, and scatter points.
+
