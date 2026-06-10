@@ -36,11 +36,7 @@
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
-    "@unovis/ts": "workspace:*",
-    "@unovis/react": "workspace:*",
-    "@unovis/vue": "workspace:*",
-    "@unovis/solid": "workspace:*",
-    "@unovis/svelte": "workspace:*"
+    "@unovis/ts": "workspace:*"
   },
   "devDependencies": {
     "@angular/core": "^12.0.3",
