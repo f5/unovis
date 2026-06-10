@@ -1,5 +1,6 @@
 export { default as VisArea, VisAreaSelectors } from './components/area/index.vue'
 export { default as VisAxis, VisAxisSelectors } from './components/axis/index.vue'
+export { default as VisBoxplot, VisBoxplotSelectors } from './components/boxplot/index.vue'
 export { default as VisBrush, VisBrushSelectors } from './components/brush/index.vue'
 export { default as VisCrosshair, VisCrosshairSelectors } from './components/crosshair/index.vue'
 export { default as VisFreeBrush, VisFreeBrushSelectors } from './components/free-brush/index.vue'
