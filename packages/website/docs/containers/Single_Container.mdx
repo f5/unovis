@@ -130,5 +130,43 @@ Sankey</a> supports the `sizing` option. By default, all components will fit to 
 You can use the `svgDefs` property to define custom fill patterns for your components.
 See our <a href="/docs/guides/tips-and-tricks#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
 
+## Events
+The Vue, Svelte, and Angular wrappers emit lifecycle events whenever the chart renders.
+The payload is the same `SingleContainerRenderPayload` for all three:
+
+```ts
+type SingleContainerRenderPayload = {
+  svg: SVGSVGElement;
+  margin: Spacing;
+  containerWidth: number;
+  containerHeight: number;
+  componentWidth: number;
+  componentHeight: number;
+}
+```
+
+| Event    | When it fires                                       |
+| -------- | --------------------------------------------------- |
+| `load`   | Once, after the chart's first render completes.     |
+| `render` | After every render, including the first.            |
+| `redraw` | After every render except the first.                |
+
+```vue
+<!-- Vue -->
+<VisSingleContainer :data @load="onLoad" @render="onRender" @redraw="onRedraw" />
+```
+
+```svelte
+<!-- Svelte -->
+<VisSingleContainer {data} on:load={onLoad} on:render={onRender} on:redraw={onRedraw} />
+```
+
+```html
+<!-- Angular -->
+<vis-single-container [data]="data" (load)="onLoad($event)" (render)="onRender($event)" (redraw)="onRedraw($event)" />
+```
+
+For React and Solid, use the `onRenderComplete` config callback. It receives the same fields as positional args: `(svgNode, margin, containerWidth, containerHeight, componentWidth, componentHeight)`.
+
 ## Component Props
 <PropsTable name="VisSingleContainer"/>

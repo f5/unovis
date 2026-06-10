@@ -224,5 +224,44 @@ You can set `yDirection` to change the direction of data along the Y axis. Suppo
 You can use the `svgDefs` property to define custom fill patterns for your components.
 See our <a href="/docs/guides/tips-and-tricks#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
 
+## Events
+The Vue, Svelte, and Angular wrappers emit lifecycle events whenever the chart renders.
+The payload is the same `XYContainerRenderPayload` for all three:
+
+```ts
+type XYContainerRenderPayload = {
+  svg: SVGSVGElement;
+  margin: Spacing;
+  bleed: Spacing;
+  containerWidth: number;
+  containerHeight: number;
+  componentWidth: number;
+  componentHeight: number;
+}
+```
+
+| Event    | When it fires                                       |
+| -------- | --------------------------------------------------- |
+| `load`   | Once, after the chart's first render completes.     |
+| `render` | After every render, including the first.            |
+| `redraw` | After every render except the first.                |
+
+```vue
+<!-- Vue -->
+<VisXYContainer :data @load="onLoad" @render="onRender" @redraw="onRedraw" />
+```
+
+```svelte
+<!-- Svelte -->
+<VisXYContainer {data} on:load={onLoad} on:render={onRender} on:redraw={onRedraw} />
+```
+
+```html
+<!-- Angular -->
+<vis-xy-container [data]="data" (load)="onLoad($event)" (render)="onRender($event)" (redraw)="onRedraw($event)" />
+```
+
+For React and Solid, use the `onRenderComplete` config callback. It receives the same fields as positional args: `(svgNode, margin, bleed, containerWidth, containerHeight, componentWidth, componentHeight)`.
+
 ## Component Props
 <PropsTable name="VisXYContainer"/>
