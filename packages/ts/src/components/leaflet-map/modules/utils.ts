@@ -3,14 +3,14 @@ import { min, max } from 'd3-array'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
 
 // Utils
-import { clamp, getString, getNumber } from 'utils/data'
-import { getColor } from 'utils/color'
-import { polygon, circlePath } from 'utils/path'
-import { getHTMLTransform } from 'utils/html'
+import { clamp, getString, getNumber } from '@/utils/data'
+import { getColor } from '@/utils/color'
+import { polygon, circlePath } from '@/utils/path'
+import { getHTMLTransform } from '@/utils/html'
 
 // Types
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { GenericDataRecord } from 'types/data'
+import { ColorAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { GenericDataRecord } from '@/types/data'
 
 // Local Types
 import {

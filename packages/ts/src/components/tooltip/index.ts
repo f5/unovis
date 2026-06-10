@@ -1,13 +1,13 @@
 import { select, Selection, pointer } from 'd3-selection'
 
 // Core
-import { ComponentCore } from 'core/component'
+import { ComponentCore } from '@/core/component'
 
 // Types
-import { Position } from 'types/position'
+import { Position } from '@/types/position'
 
 // Utils
-import { merge, throttle } from 'utils/data'
+import { merge, throttle } from '@/utils/data'
 
 // Config
 import { TooltipDefaultConfig, TooltipConfigInterface } from './config'

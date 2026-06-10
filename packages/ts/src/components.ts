@@ -1,8 +1,8 @@
 // Core
-export { ComponentCore } from 'core/component'
-export type { ComponentConfigInterface } from 'core/component/config'
-export { XYComponentCore } from 'core/xy-component'
-export type { XYComponentConfigInterface } from 'core/xy-component/config'
+export { ComponentCore } from '@/core/component'
+export type { ComponentConfigInterface } from '@/core/component/config'
+export { XYComponentCore } from '@/core/xy-component'
+export type { XYComponentConfigInterface } from '@/core/xy-component/config'
 
 // Components
 export { Tooltip } from './components/tooltip'

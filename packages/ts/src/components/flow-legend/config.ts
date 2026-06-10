@@ -1,5 +1,5 @@
 // Types
-import { Spacing } from 'types/spacing'
+import { Spacing } from '@/types/spacing'
 
 export interface FlowLegendConfigInterface {
   /** Margin around the legend. Default: `undefined` */

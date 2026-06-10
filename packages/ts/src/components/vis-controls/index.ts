@@ -1,7 +1,7 @@
 import { Selection, select } from 'd3-selection'
 
 // Utils
-import { merge } from 'utils/data'
+import { merge } from '@/utils/data'
 
 // Local Types
 import { VisControlItemInterface, VisControlsOrientation } from './types'

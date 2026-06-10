@@ -1,8 +1,8 @@
 import { D3BrushEvent } from 'd3-brush'
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { Arrangement } from 'types/position'
+import { Arrangement } from '@/types/position'
 
 // We extend partial XY config interface because x and y properties are optional for Brush
 export interface BrushConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {

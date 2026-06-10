@@ -1,5 +1,5 @@
-import { LengthUnit } from 'types/misc'
-import { UnovisText, UnovisTextOptions } from 'types/text'
+import { LengthUnit } from '@/types/misc'
+import { UnovisText, UnovisTextOptions } from '@/types/text'
 
 
 export type AnnotationItem = Omit<UnovisTextOptions, 'x'|'y'|'width'> & {

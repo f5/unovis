@@ -4,18 +4,18 @@ import { CurveFactoryLineOnly, Line as LineGenInterface, line } from 'd3-shape'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { getNumber, getString, getValue, isArray, isNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
+import { getNumber, getString, getValue, isArray, isNumber } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
-import { Curve, CurveType } from 'types/curve'
-import { Direction } from 'types/direction'
+import { NumericAccessor } from '@/types/accessor'
+import { Spacing } from '@/types/spacing'
+import { Curve, CurveType } from '@/types/curve'
+import { Direction } from '@/types/direction'
 
 // Local Types
 import { LineData, LineDatum } from './types'

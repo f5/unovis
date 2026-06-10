@@ -5,19 +5,19 @@ import { Selection } from 'd3-selection'
 import { ElkShape } from 'elkjs'
 
 // Core
-import type { GraphDataModel } from 'data-models/graph'
+import type { GraphDataModel } from '@/data-models/graph'
 
 // Utils
-import { isEqual } from 'utils/data'
+import { isEqual } from '@/utils/data'
 
 // Config
-import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
-import { TrimMode } from 'types/text'
-import { Spacing } from 'types/spacing'
-import { GraphInputLink, GraphInputNode, GraphInputData } from 'types/graph'
-import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
+import { TrimMode } from '@/types/text'
+import { Spacing } from '@/types/spacing'
+import { GraphInputLink, GraphInputNode, GraphInputData } from '@/types/graph'
+import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from '@/types/accessor'
 
 // Local Types
 import {

@@ -1,7 +1,7 @@
 import { css, injectGlobal } from '@emotion/css'
 
 // Utils
-import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
+import { getCssVarNames, injectGlobalCssVariables } from '@/utils/style'
 
 // Inject Leaflet global style
 // eslint-disable-next-line
