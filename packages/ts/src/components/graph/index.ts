@@ -195,8 +195,10 @@ export class Graph<
 
   setData (data: GraphInputData<N, L>): void {
     const { config } = this
-    const prevData = this._fullData ?? this.datamodel.data
-    if (!config.shouldDataUpdate(prevData, data, this.datamodel)) return
+    // Skip repeated data refs after expand/collapse.
+    if (data === this._fullData) return
+
+    if (!config.shouldDataUpdate(this.datamodel.data, data, this.datamodel)) return
 
     this._fullData = data
     const visibleData = config.nodeExpandable ? this._computeVisibleData(data) : data
