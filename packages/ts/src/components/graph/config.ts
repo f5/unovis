@@ -262,6 +262,12 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   selectedNodeId?: number | string;
   /** Set selected nodes by unique id. Default: `undefined` */
   selectedNodeIds?: number[] | string[];
+  /** Node expandable accessor function or constant value. Default: `undefined` */
+  nodeExpandable?: BooleanAccessor<N>;
+  /** Direct child node ids for an expandable node. Default: `undefined` */
+  nodeChildren?: GenericAccessor<(number | string)[], N>;
+  /** Callback fired on node expand or collapse. Default: `undefined` */
+  onNodeExpand?: (node: GraphNode<N, L>, expanded: boolean) => void;
 
   /** Panels configuration. An array of `GraphPanelConfig` objects. Default: `[]` */
   panels?: GraphPanelConfig[] | undefined;
@@ -404,6 +410,10 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
 
   selectedNodeId: undefined,
   selectedNodeIds: undefined,
+
+  nodeExpandable: undefined,
+  nodeChildren: undefined,
+  onNodeExpand: undefined,
 
   panels: undefined,
 
