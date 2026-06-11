@@ -123,16 +123,6 @@ export class Graph<
   private _brushBehavior: BrushBehavior<unknown>
   private _groupDragInit: [number, number]
 
-  // Expand/collapse state
-  private _fullData: GraphInputData<N, L> | undefined
-  private _collapsedNodeIds: Set<string> = new Set()
-  private _dataVersion = 0
-  private _lastExpandCollapseTime = 0
-  private _isExpandCollapseInProgress = false
-  private _expandCollapseRenderVersion = -1
-  /** Post-transition visibility timer */
-  private _expandCollapseVisibilityCheckTimer: number | undefined
-
   // A map for storing link total path lengths to optimize rendering performance
   private _linkPathLengthMap: Map<string, number> = new Map()
   private _linkFlowFrameElapsed = 0
@@ -195,17 +185,10 @@ export class Graph<
 
   setData (data: GraphInputData<N, L>): void {
     const { config } = this
-    // Skip repeated data refs after expand/collapse.
-    if (data === this._fullData) return
-
     if (!config.shouldDataUpdate(this.datamodel.data, data, this.datamodel)) return
 
-    this._fullData = data
-    const visibleData = config.nodeExpandable ? this._computeVisibleData(data) : data
-
     this.datamodel.nodeSort = config.nodeSort
-    this.datamodel.data = visibleData
-    this._dataVersion++
+    this.datamodel.data = data
     this._shouldRecalculateLayout = true
     if (config.layoutAutofit) this._shouldFitLayout = true
     this._shouldSetPanels = true
@@ -226,149 +209,6 @@ export class Graph<
 
     if (this._shouldFitLayout) this._isAutoFitDisabled = false
     this._shouldSetPanels = true
-  }
-
-  private _computeVisibleData (data: GraphInputData<N, L>): GraphInputData<N, L> {
-    const { config } = this
-    if (!config.nodeExpandable || !config.nodeChildren) return data
-
-    const allNodes = data.nodes
-    const allLinks = data.links ?? []
-
-    // Build an id -> node map.
-    const nodeById = new Map<number | string, N>()
-    for (const n of allNodes) {
-      if (n.id !== undefined) nodeById.set(n.id, n)
-    }
-
-    const { visibleIdSet, visibleChildLinkSet, childIdsByParentId } = this._getVisibleNodeIds(allNodes, nodeById)
-    const visibleNodes = allNodes.filter(n => n.id !== undefined && visibleIdSet.has(n.id))
-
-    // Resolve a link endpoint to a node id.
-    const resolveId = (endpoint: number | string | GraphInputNode): number | string | undefined => {
-      if (typeof endpoint === 'object') return (endpoint as GraphInputNode).id
-      if (typeof endpoint === 'number') return allNodes[endpoint]?.id
-      return endpoint
-    }
-
-    const visibleLinks = allLinks.filter(l => {
-      const srcId = resolveId(l.source as number | string | GraphInputNode)
-      const tgtId = resolveId(l.target as number | string | GraphInputNode)
-      if (srcId === undefined || tgtId === undefined || !visibleIdSet.has(srcId) || !visibleIdSet.has(tgtId)) return false
-
-      const isParentChildLink = (childIdsByParentId.get(srcId)?.includes(tgtId)) || (childIdsByParentId.get(tgtId)?.includes(srcId))
-      if (!isParentChildLink) return true
-
-      return visibleChildLinkSet.has(this._getExpandCollapseLinkKey(srcId, tgtId)) ||
-        visibleChildLinkSet.has(this._getExpandCollapseLinkKey(tgtId, srcId))
-    })
-
-    return { nodes: visibleNodes, links: visibleLinks }
-  }
-
-  private _getVisibleNodeIds (
-    allNodes: N[],
-    nodeById: Map<number | string, N>
-  ): {
-      visibleIdSet: Set<number | string>;
-      visibleChildLinkSet: Set<string>;
-      childIdsByParentId: Map<number | string, (number | string)[]>;
-    } {
-    const { config } = this
-    const visible = new Set<number | string>()
-    const visibleChildLinkSet = new Set<string>()
-    const hasParent = new Set<number | string>()
-    const childIdsByParentId = new Map<number | string, Array<number | string>>()
-
-    for (const node of allNodes) {
-      if (node.id === undefined) continue
-      const children = (isFunction(config.nodeChildren) ? config.nodeChildren(node, 0) : config.nodeChildren) ?? []
-      childIdsByParentId.set(node.id, children)
-      for (const childId of children) hasParent.add(childId)
-    }
-
-    const queue: (number | string)[] = []
-
-    for (const node of allNodes) {
-      if (node.id === undefined) continue
-      if (!hasParent.has(node.id)) {
-        visible.add(node.id)
-        queue.push(node.id)
-      }
-    }
-
-    // Fallback for cyclic-only graphs.
-    if (!queue.length) {
-      for (const node of allNodes) {
-        if (node.id === undefined) continue
-        visible.add(node.id)
-        queue.push(node.id)
-      }
-    }
-
-    while (queue.length) {
-      const parentId = queue.shift() as number | string
-      const parentNode = nodeById.get(parentId)
-      if (!parentNode) continue
-
-      const isParentExpandable = getBoolean(parentNode, config.nodeExpandable, 0)
-      const isParentCollapsed = this._collapsedNodeIds.has(String(parentId))
-      if (isParentExpandable && isParentCollapsed) continue
-
-      const children = childIdsByParentId.get(parentId) ?? []
-      for (const childId of children) {
-        if (!nodeById.has(childId)) continue
-        visibleChildLinkSet.add(this._getExpandCollapseLinkKey(parentId, childId))
-        if (!visible.has(childId)) {
-          visible.add(childId)
-          queue.push(childId)
-        }
-      }
-    }
-
-    return {
-      visibleIdSet: visible,
-      visibleChildLinkSet,
-      childIdsByParentId,
-    }
-  }
-
-  private _getExpandCollapseLinkKey (sourceId: number | string, targetId: number | string): string {
-    return `${typeof sourceId}:${String(sourceId)}->${typeof targetId}:${String(targetId)}`
-  }
-
-  private _applyExpandCollapse (): void {
-    const { config } = this
-    if (!config.nodeExpandable || !this._fullData) return
-
-    const visibleData = this._computeVisibleData(this._fullData)
-    this.datamodel.nodeSort = config.nodeSort
-    this.datamodel.data = visibleData
-    this._dataVersion++
-    this._lastExpandCollapseTime = Date.now()
-    // Clear dragged positions before layout.
-    for (const node of this.datamodel.nodes) {
-      delete node._state.fx
-      delete node._state.fy
-    }
-    this._shouldRecalculateLayout = true
-    // Use one controlled fit for this cycle.
-    if (config.layoutAutofit) this._shouldFitLayout = false
-    this._isAutoFitDisabled = false
-    this._shouldSetPanels = true
-
-    // Do not lock interaction before the first size pass.
-    if (this._width <= 0) {
-      this._isExpandCollapseInProgress = false
-      this._expandCollapseRenderVersion = -1
-      return
-    }
-
-    this._isExpandCollapseInProgress = true
-    this._expandCollapseRenderVersion = this._dataVersion
-    this._render()
-    // Keep viewport and node transitions aligned.
-    this.fitView(this.config.duration)
   }
 
   get bleed (): Spacing {
@@ -436,10 +276,10 @@ export class Graph<
         ? zoomEventFilter
         : (e: PointerEvent) => (!e.ctrlKey || e.type === 'wheel') && !e.button && !e.shiftKey) // Default filter
 
-    const renderDataVersion = this._dataVersion
     this._layoutCalculationPromise.then(() => {
-      // Cancel if destroyed or data changed.
-      if (this.isDestroyed() || this._dataVersion !== renderDataVersion) return
+      // If the component has been destroyed while the layout calculation
+      // was in progress, we cancel the render
+      if (this.isDestroyed()) return
 
       this._initPanelsData()
 
@@ -486,49 +326,8 @@ export class Graph<
 
       // On render complete callback
       this.config.onRenderComplete?.(this.g, datamodel.nodes, datamodel.links, this.config, animDuration, this._scale, this._containerWidth, this._containerHeight)
-      if (renderDataVersion === this._expandCollapseRenderVersion) {
-        if (this._expandCollapseVisibilityCheckTimer) {
-          window.clearTimeout(this._expandCollapseVisibilityCheckTimer)
-          this._expandCollapseVisibilityCheckTimer = undefined
-        }
-
-        const delay = Math.max(animDuration, 0) + 50
-        this._expandCollapseVisibilityCheckTimer = window.setTimeout(() => {
-          this._expandCollapseVisibilityCheckTimer = undefined
-          if (this.isDestroyed()) return
-          this._ensureGraphVisibleInViewport()
-          this._isExpandCollapseInProgress = false
-        }, delay)
-      }
       this._isFirstRender = false
     })
-  }
-
-  private _ensureGraphVisibleInViewport (): void {
-    if (this.isDestroyed()) return
-    const { datamodel, config: { nodeSize } } = this
-    if (!datamodel.nodes?.length) return
-
-    const maxNodeSize = getMaxNodeSize(datamodel.nodes, nodeSize)
-    const xExtent = [
-      min(datamodel.nodes, d => getX(d) - maxNodeSize / 2 - (max((d._panels || []).map(p => p._padding.left)) || 0)),
-      max(datamodel.nodes, d => getX(d) + maxNodeSize / 2 + (max((d._panels || []).map(p => p._padding.right)) || 0)),
-    ]
-    const yExtent = [
-      min(datamodel.nodes, d => getY(d) - maxNodeSize / 2 - (max((d._panels || []).map(p => p._padding.top)) || 0)),
-      max(datamodel.nodes, d => getY(d) + maxNodeSize / 2 + (max((d._panels || []).map(p => p._padding.bottom)) || 0)),
-    ]
-
-    if (xExtent.some(item => item === undefined) || yExtent.some(item => item === undefined)) return
-
-    const transform = zoomTransform(this.g.node())
-    const left = transform.applyX(xExtent[0] as number)
-    const right = transform.applyX(xExtent[1] as number)
-    const top = transform.applyY(yExtent[0] as number)
-    const bottom = transform.applyY(yExtent[1] as number)
-
-    const isFullyOffscreen = right < 0 || left > this._width || bottom < 0 || top > this._height
-    if (isFullyOffscreen) this.fitView(0)
   }
 
   private _drawNodes (duration: number): void {
@@ -871,16 +670,6 @@ export class Graph<
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private _onNodeClick (d: GraphNode<N, L>): void {
-    const { config } = this
-    if (config.nodeExpandable && getBoolean(d, config.nodeExpandable, d._index)) {
-      // Ignore clicks during an active expand/collapse render.
-      if (this._isExpandCollapseInProgress) return
-
-      // Ignore the second click in a double-click.
-      const clickCooldown = 300
-      if (Date.now() - this._lastExpandCollapseTime < clickCooldown) return
-      this.toggleNodeExpand(d._id)
-    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -1339,52 +1128,6 @@ export class Graph<
   /** Set the node state by id */
   public setNodeStateById (nodeId: string, state: GraphNode<N, L>['_state']): void {
     this.datamodel.setNodeStateById(nodeId, state)
-  }
-
-  public toggleNodeExpand (nodeId: number | string): void {
-    const { config } = this
-    const id = String(nodeId)
-    const wasCollapsed = this._collapsedNodeIds.has(id)
-    if (wasCollapsed) {
-      this._collapsedNodeIds.delete(id)
-    } else {
-      this._collapsedNodeIds.add(id)
-    }
-    const expanded = wasCollapsed // after toggle
-    // Use the full-data node for the callback.
-    const node = this._fullData?.nodes.find(n => String(n.id) === id)
-    if (node) config.onNodeExpand?.(node as unknown as GraphNode<N, L>, expanded)
-    this._applyExpandCollapse()
-  }
-
-  public expandNode (nodeId: number | string): void {
-    const id = String(nodeId)
-    if (!this._collapsedNodeIds.has(id)) return
-    this._collapsedNodeIds.delete(id)
-    const node = this._fullData?.nodes.find(n => String(n.id) === id)
-    if (node) this.config.onNodeExpand?.(node as unknown as GraphNode<N, L>, true)
-    this._applyExpandCollapse()
-  }
-
-  public collapseNode (nodeId: number | string): void {
-    const { config } = this
-    const id = String(nodeId)
-    if (this._collapsedNodeIds.has(id)) return
-    this._collapsedNodeIds.add(id)
-    const node = this._fullData?.nodes.find(n => String(n.id) === id)
-    if (node) config.onNodeExpand?.(node as unknown as GraphNode<N, L>, false)
-    this._applyExpandCollapse()
-  }
-
-  public isNodeCollapsed (nodeId: number | string): boolean {
-    return this._collapsedNodeIds.has(String(nodeId))
-  }
-
-  public setCollapsedNodes (nodeIds: (number | string)[]): void {
-    this._collapsedNodeIds = new Set(nodeIds.map(id => String(id)))
-    this._isAutoFitDisabled = false
-    this._shouldFitLayout = true
-    this._applyExpandCollapse()
   }
 
   /** Call a partial render to update the positions of the nodes and their links.
