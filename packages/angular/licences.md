@@ -20,6 +20,9 @@
 | @types/topojson                   | perpetual      | MIT          | 3.2.6             | n/a                                     |
 | @types/topojson-specification     | perpetual      | MIT          | 1.0.5             | n/a                                     |
 | d3-selection                      | perpetual      | ISC          | 3.0.0             | Mike Bostock https://bost.ocks.org/mike |
+| d3-brush                          | perpetual      | ISC          | 3.0.0             | Mike Bostock https://bost.ocks.org/mike |
+| d3-drag                           | perpetual      | ISC          | 3.0.0             | Mike Bostock https://bost.ocks.org/mike |
+| d3-zoom                           | perpetual      | ISC          | 3.0.0             | Mike Bostock https://bost.ocks.org/mike |
 | elkjs                             | perpetual      | EPL-2.0      | 0.10.2            | Ulf Rüegg uruurumail@gmail.com          |
 | jasmine-core                      | perpetual      | MIT          | 3.7.1             | n/a                                     |
 | karma                             | perpetual      | MIT          | 6.3.20            | Vojta Jína <vojta.jina@gmail.com>       |
