@@ -75,3 +75,8 @@ export type UnovisTextOptions = {
 export type UnovisTextFrameOptions = UnovisTextOptions & {
   height?: number;
 }
+
+export type UnovisFontInfo = {
+  font: string;
+  fontSizePx: number;
+}

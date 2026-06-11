@@ -10,7 +10,7 @@ import { GraphData, GraphDataModel } from 'data-models/graph'
 
 // Utils
 import { getNumber, isNumber, getString, getValue } from 'utils/data'
-import { estimateStringPixelLength } from 'utils/text'
+import { estimateStringPixelLength } from 'utils/text-measure'
 import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Types

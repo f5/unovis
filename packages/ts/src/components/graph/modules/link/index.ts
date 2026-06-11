@@ -6,7 +6,7 @@ import { Transition } from 'd3-transition'
 import { throttle, getValue, getNumber, getBoolean, ensureArray } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getCSSVariableValueInPixels } from 'utils/misc'
-import { estimateStringPixelLength } from 'utils/text'
+import { estimateStringPixelLength } from 'utils/text-measure'
 import { toPx } from 'utils/to-px'
 
 // Types

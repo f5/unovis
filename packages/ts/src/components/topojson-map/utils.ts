@@ -6,7 +6,7 @@ import { Selection } from 'd3-selection'
 // Utils
 import { getNumber, getString, clamp } from 'utils/data'
 import { getColor } from 'utils/color'
-import { estimateStringPixelLength } from 'utils/text'
+import { estimateStringPixelLength, getCachedFontSizePx } from 'utils/text-measure'
 import { rectIntersect } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
@@ -89,13 +89,7 @@ export function collideAreaLabels (
     node._labelVisible = true
   })
 
-  // Get actual font size
-  let actualFontSize = 12
-  if (labelNodes.length > 0) {
-    const computedStyle = getComputedStyle(labelNodes[0])
-    const fontSize = computedStyle.fontSize
-    if (fontSize) actualFontSize = parseFloat(fontSize)
-  }
+  const actualFontSize = labelNodes.length > 0 ? getCachedFontSizePx(labelNodes[0]) : 12
 
   const getBBox = (labelData: any): Rect => {
     const [x, y] = labelData.centroid

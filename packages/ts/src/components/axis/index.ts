@@ -15,6 +15,7 @@ import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAl
 // Utils
 import { smartTransition } from 'utils/d3'
 import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from 'utils/text'
+import { getCachedComputedTextLength } from 'utils/text-measure'
 import { isEqual, isFunction } from 'utils/data'
 import { rectIntersect } from 'utils/misc'
 import { getFontWidthToHeightRatio } from 'styles/index'
@@ -313,7 +314,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
       if (config.tickTextFitMode === FitMode.Trim) {
         const textElementSelection = select<SVGTextElement, string>(textElement).text(text)
-        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode, true, this._tickTextStyleCached.fontSize, 0.58)
+        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode)
         text = select<SVGTextElement, string>(textElement).text()
       }
 
@@ -471,7 +472,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     if (labelTextFitMode === FitMode.Wrap) {
       // For Y-axis, use the chart height as the maximum width before rotation
       const maxWidth = type === AxisType.Y ? this._height : this._width
-      const currentTextWidth = textElement.node().getComputedTextLength()
+      const currentTextWidth = getCachedComputedTextLength(textElement.node())
 
       if (currentTextWidth > maxWidth) {
         wrapSVGText(textElement, maxWidth)
@@ -488,16 +489,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       labelHeight = labelBBox.height
     } else {
       const trimWidth = type === AxisType.X ? labelWidth : labelHeight
-      const styleDeclaration = getComputedStyle(textElement.node())
-      const fontSize = Number.parseFloat(styleDeclaration.fontSize)
-      // Use the default fontWidthToHeightRatio
-      trimSVGText(
-        textElement,
-        trimWidth,
-        this.config.labelTextTrimType as TrimMode,
-        true,
-        fontSize
-      )
+      trimSVGText(textElement, trimWidth, this.config.labelTextTrimType as TrimMode)
+
       const trimmedBBox = textElement.node().getBBox()
       labelWidth = trimmedBBox.width
       labelHeight = trimmedBBox.height

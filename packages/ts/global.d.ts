@@ -9,6 +9,7 @@ declare global {
     var UNOVIS_FONT_W2H_RATIO_DEFAULT: number
     var UNOVIS_TEXT_SEPARATOR_DEFAULT: string[]
     var UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT: string
+    var UNOVIS_TEXT_DEFAULT_FONT_SIZE: number
     var UNOVIS_TEXT_DEFAULT: {
       text: string;
       fontSize: number;
