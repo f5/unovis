@@ -2,6 +2,7 @@ import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { generateDataRecords } from '../utils/data'
 import { XYWrapperWithInput, XYWrapper } from '../wrappers'
+import { Crosshair } from '@unovis/ts'
 
 export const crosshairProps = (chart="Line", components, n=5) => ({
   name: "Crosshair",
@@ -13,9 +14,15 @@ export const crosshairProps = (chart="Line", components, n=5) => ({
   components: [{ name: chart, props: { x: d=>d.x, y: [d=>d.y, d=>d.y1, d=>d.y2], ...components}, key: "components" }]
 })
 
+export const snapModeData = Array.from({ length: 10 }, (_, i) => ({
+  x: Math.floor(i % 12) * 8 + ((i * 17) % 40) / 10,
+  y: (i * 37) % 100,
+}))
+
 ## Basic Configuration
 The _Crosshair_ component is a special tooltip designed to work in an _XYContainer_.
 When a user is interacting with the _XYContainer_ and a crosshair is provided, the _Crosshair_ will appear as a vertical line and render circles on the corresponding `y` values in the dataset.
+You can optionally enable a horizontal line with `showHorizontalLine` (see below).
 
 <XYWrapper {...crosshairProps('Line', {}, 10)} showContext="full"/>
 
@@ -35,18 +42,48 @@ const yStacked: ((d: DataRecord) => number)[] = [d => d.y, d => d.y1, d => d.y2]
 ```
 <XYWrapper {...crosshairProps("StackedBar", { barWith: 50})} height={200} x={d => d.x + 0.5} yStacked={[d=>d.y, d=>d.y1, d=>d.y2]}/>
 
+## Snap Mode
+When `snapToData` is enabled (the default), the `snapMode` property controls how the nearest datum is selected:
+
+- `CrosshairSnapMode.X` (default): snap along the X axis only. Best for time series, line, and area charts where the crosshair tracks the X position.
+- `CrosshairSnapMode.XY`: snap to the datum closest to the pointer in both X and Y (measured in pixel space). Best for _Scatter_ charts where many points can share similar X values.
+
+When `snapMode` is `CrosshairSnapMode.XY`, `hideWhenFarFromPointerDistance` uses the full 2D distance to the snapped point (so a point that is close in X but far in Y still counts as far away).
+If `forceShowAt` is set, snapping falls back to `CrosshairSnapMode.X` because no pointer Y position is available.
+
+
+<XYWrapper
+  {...crosshairProps("Scatter", { y: d => d.y, size: 10 }, 400)}
+  data={snapModeData}
+  height={300}
+  snapMode="xy"
+  showHorizontalLine={true}
+  template={d => `x: ${d.x.toFixed(1)}, y: ${d.y.toFixed(1)}`}
+  components={crosshairProps("Scatter", { y: d => d.y, size: 10 }, 400).components.concat({
+    name: "Tooltip",
+    key: "tooltip",
+    props: {},
+  })}
+/>
+
 ## Show/Hide Behavior
 By default, the _Crosshair_ component will render if the cursor is within a certain distance in pixels from a valid `x` value.
 You can disable this feature using the `hideWhenFarFromPointer` attribute.
 <XYWrapperWithInput {...crosshairProps("StackedBar", { barWidth: 10})} property="hideWhenFarFromPointer" defaultValue={true} inputType="checkbox"/>
 
 #### `hideWhenFarFromPointerDistance`
-Use the `hideWhenFarFromPointerDistance` attribute with a length (in pixels) that represents the minimum horizontal distance the cursor must be from a datapoint before hiding.
+Use the `hideWhenFarFromPointerDistance` attribute with a length (in pixels) that represents how far the cursor can be from the snapped datum before hiding.
+With the default `snapMode` of `CrosshairSnapMode.X`, this is the horizontal distance to the crosshair line; with `CrosshairSnapMode.XY`, it is the full 2D distance to the snapped point.
 <XYWrapperWithInput {...crosshairProps("StackedBar", { barWidth: 10})} data={generateDataRecords(10).filter(d => d.x % 2 == 0)} property="hideWhenFarFromPointerDistance" defaultValue={50} inputType="range"/>
 
 #### `visibilityThreshold`
 The _Crosshair_ is only displayed when at least a fraction of its container is visible in the viewport, which prevents it (and its tooltip) from appearing when the chart is mostly scrolled out of view. Charts that are wider or taller than the viewport may never reach the default ratio of `0.35`, so you can lower `visibilityThreshold`, or set it to `0` to always show the _Crosshair_ regardless of how much of the container is on screen.
 <XYWrapperWithInput {...crosshairProps("StackedBar", { barWidth: 10})} property="visibilityThreshold" defaultValue={0.35} inputType="range" inputProps={{ min: 0, max: 1, step: 0.05 }}/>
+
+## Horizontal Line
+Set `showHorizontalLine` to `true` to render a horizontal line in addition to the vertical crosshair.
+The line is placed at the Y position of the crosshair circle closest to the pointer (i.e. the snapped data point), or follows the pointer when there are no circles to snap to (for example, when `snapToData` is `false`).
+<XYWrapperWithInput {...crosshairProps('Line', {}, 10)} property="showHorizontalLine" defaultValue={false} inputType="checkbox"/>
 
 ## Custom Color
 Provide a `string` or color accessor function to the `color` attribute to customize the crosshair's point color:
@@ -79,19 +116,19 @@ The _Crosshair_ component supports additional styling via CSS variables that you
 ```css title="styles.css"
 .visualization-container-div {
   --vis-crosshair-line-stroke-color: #f88080;
+  --vis-crosshair-line-stroke-dasharray: 8 4;
   --vis-crosshair-circle-stroke-color: #000000;
 }
 ```
 <XYWrapper {...crosshairProps()} excludeTabs className="custom-crosshair"/>
 
 <details open>
-  <summary open>All supported CSS variables and their default values</summary>
-  <CodeBlock language="css">{
-`--vis-crosshair-line-stroke-color: #888;
---vis-crosshair-line-stroke-width: 1px;
---vis-crosshair-circle-stroke-color: #fff;
---vis-crosshair-circle-stroke-width: 1px;`
-}</CodeBlock>
+  <summary>All supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+{`${
+  Object.entries(Crosshair.selectors.cssVarDefaults)
+  .map(([key, value]) => `${key}: ${value};`).join('\n')}
+`}</CodeBlock>
 </details>
 
 ## Component Props
