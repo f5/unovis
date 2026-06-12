@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { SymbolType } from 'types/symbol'
+import { FillPatternType, LinePatternType } from 'styles/patterns'
 
 export interface BulletLegendItemInterface {
   name: string | number;
@@ -10,6 +11,8 @@ export interface BulletLegendItemInterface {
   hidden?: boolean;
   pointer?: boolean;
   colorKey?: string;
+  /** Pattern to render on the bullet. Matches a component's `pattern` accessor. Default: `undefined` */
+  pattern?: FillPatternType | LinePatternType;
 }
 
 export const BulletShape = {

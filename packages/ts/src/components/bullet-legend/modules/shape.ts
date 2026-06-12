@@ -7,6 +7,7 @@ import { Symbol, SymbolType } from 'types/symbol'
 
 // Utils
 import { getColor } from 'utils/color'
+import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
 import { ensureArray, getString } from 'utils/data'
 import { getCSSVariableValueInPixels } from 'utils/misc'
 import { toPx } from 'utils/to-px'
@@ -73,10 +74,13 @@ export function updateBullets (
     selection.selectAll('path').remove()
 
     const opacity = d.inactive ? 'var(--vis-legend-bullet-inactive-opacity)' : 1
+    const linePattern = getLinePatternValue(getPattern(d, d.pattern, i))
+    const fillPattern = getFillPatternValue(getPattern(d, d.pattern, i))
 
     // Create a path for each color
     colors.forEach((color, colorIndex) => {
       const bulletPath = selection.append('path')
+        .attr(UNOVIS_PATTERN_INDEX_ATTR, i)
 
       if (shape === BulletShape.Line) {
         const x1 = colorIndex * (bulletWidth + spacing)
@@ -89,6 +93,9 @@ export function updateBullets (
           .style('stroke-width', '3px')
           .style('fill', null)
           .style('fill-opacity', null)
+          .style('color', color) // The pattern marker uses `currentColor`, so it matches the bullet color
+          .style('marker', linePattern?.marker ?? null)
+          .style('stroke-dasharray', linePattern?.dashArray ?? null)
           .style('marker-start', 'none')
           .style('marker-end', 'none')
       } else {
@@ -119,6 +126,7 @@ export function updateBullets (
           .style('opacity', null)
           .style('fill', color)
           .style('fill-opacity', opacity)
+          .style('mask', fillPattern)
       }
     })
   })
