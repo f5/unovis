@@ -3,10 +3,13 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-co
 // Types
 import { CurveType } from 'types/curve'
 import { ColorAccessor, GenericAccessor, StringAccessor } from 'types/accessor'
+import { LinePatternType } from 'styles/patterns'
 
 export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Line color accessor function. The whole data array will be passed as the first argument. Default: `undefined` */
   color?: ColorAccessor<Datum[]>;
+  /** Line pattern accessor. Resolves to a `LinePatternType`. The whole data array is passed as the first argument. Default: `undefined` */
+  pattern?: GenericAccessor<LinePatternType, Datum[]>;
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   curveType?: CurveType;
   /** Line width in pixels. Default: `2` */

@@ -7,6 +7,7 @@ import { XYComponentCore } from 'core/xy-component'
 // Utils
 import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
+import { getPattern, getFillPatternValue } from 'utils/pattern'
 import { smartTransition } from 'utils/d3'
 import { getCSSVariableValueInPixels } from 'utils/misc'
 
@@ -215,6 +216,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
               yValue: yValue,
               sizePx: pointSizeScaled,
               color: getColor(d, config.color, j, config.colorKeys?.[j], colorOptions),
+              mask: getFillPatternValue(getPattern(d, config.pattern, j)),
               strokeColor: getColor(d, config.strokeColor, j, config.colorKeys?.[j], colorOptionsNoFallback),
               strokeWidthPx: getNumber(d, config.strokeWidth, j),
               shape: getString(d, config.shape, j) as SymbolType,

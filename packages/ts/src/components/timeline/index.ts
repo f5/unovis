@@ -11,6 +11,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValue, groupBy, isPlainObject, isFunction } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
 import { textAlignToAnchor, trimSVGText } from 'utils/text'
 import { arrowPolylinePath } from 'utils/path'
 import { guid } from 'utils/misc'
@@ -364,7 +365,9 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     linesEnter.append('rect')
       .attr('class', s.line)
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => yOrdinalScale(this._getRecordKey(d, i)))
       .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i)), undefined, colorOptions))
+      .style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, yOrdinalScale(this._getRecordKey(d, i)))))
       .call(this._renderLines.bind(this), rowHeight)
 
     linesEnter.append('use').attr('class', s.lineStartIcon)
@@ -379,6 +382,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .data(d => [d])
     smartTransition(lineRectElementsSelection, duration)
       .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i)), undefined, colorOptions))
+      .style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, yOrdinalScale(this._getRecordKey(d, i)))))
       .style('cursor', (d, i) => getString(d, config.lineCursor ?? config.cursor, i))
       .call(this._renderLines.bind(this), rowHeight)
 

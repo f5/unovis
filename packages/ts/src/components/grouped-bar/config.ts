@@ -1,12 +1,15 @@
 import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 
 // Types
-import { ColorAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, GenericAccessor, StringAccessor } from 'types/accessor'
+import { FillPatternType } from 'styles/patterns'
 import { Orientation } from 'types/position'
 
 export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Bar color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum>;
+  /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  pattern?: GenericAccessor<FillPatternType, Datum>;
   /** Force set the group width in pixels. Default: `undefined` */
   groupWidth?: number;
   /** Maximum group width for dynamic sizing. Limits the groupWidth property from the top. Default: `undefined` */
@@ -32,6 +35,7 @@ export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInter
 export const GroupedBarDefaultConfig: GroupedBarConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
   color: undefined,
+  pattern: undefined,
   groupMaxWidth: undefined,
   groupWidth: undefined,
   dataStep: undefined,

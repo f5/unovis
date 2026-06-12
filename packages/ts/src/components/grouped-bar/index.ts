@@ -9,6 +9,7 @@ import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpt
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
 
 // Types
 import { NumericAccessor } from 'types/accessor'
@@ -151,9 +152,12 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         const height = 0
         return this._getBarPath(x, y, width, height, false, valueAxisDirection)
       })
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => i)
       .style('fill', (d, i) => getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
+      .style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, i)))
 
     const barsMerged = barsEnter.merge(bars)
+    barsMerged.style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, i)))
     smartTransition(barsMerged, duration)
       .attr('d', (d, j) => {
         const x = innerBandScale(j)
