@@ -37,6 +37,7 @@ export { Treemap } from './components/treemap'
 
 // Constants
 export * from './components/donut/constants'
+export * from './components/crosshair/constants'
 
 // Config Interfaces
 export type { LineConfigInterface } from './components/line/config'

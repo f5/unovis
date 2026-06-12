@@ -6,7 +6,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { Tooltip } from 'components/tooltip'
 
 // Utils
-import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, isFunction } from 'utils/data'
+import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, getNearest2D, isFunction } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -17,6 +17,7 @@ import { Spacing } from 'types/spacing'
 
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'
+import { CrosshairSnapMode } from './constants'
 
 // Config
 import { CrosshairDefaultConfig, CrosshairConfigInterface } from './config'
@@ -124,6 +125,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     // It can be from a mouse interaction or from a `forceShowAt` setting
     let nearestDatum: Datum | undefined
     let nearestDatumIndex: number | undefined
+    // Squared pixel distance from the pointer to the snapped datum (only set in `CrosshairSnapMode.XY` mode).
+    // Feeds the `nearestDistance` calculation below.
+    let nearestDistanceSq: number | undefined
     if (config.snapToData) {
       if (!this.accessors.y && !this.accessors.yStacked && datamodel.data?.length) {
         console.warn('Unovis | Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
@@ -135,8 +139,21 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         console.warn('Unovis | Crosshair: No data to snap to. Make sure the data has been passed to the container or to the crosshair itself')
       }
 
-      nearestDatum = getNearest(datamodel.data, xValue, this.accessors.x)
-      nearestDatumIndex = datamodel.data.indexOf(nearestDatum)
+      // In `CrosshairSnapMode.XY` mode we snap to the data point closest to the pointer in both X and Y (pixel space).
+      // This requires a real pointer position, so we fall back to X-only snapping when `forceShowAt` is set
+      // or there's no pointer Y available yet.
+      const useXYMode = config.snapMode === CrosshairSnapMode.XY && !isForceShowAtDefined && this._yPx !== undefined
+      if (useXYMode) {
+        const nearest = getNearest2D(datamodel.data, [this._xPx, this._yPx], this.xScale, this.yScale, this.accessors.x, this.accessors.y, this.accessors.yStacked, this.accessors.baseline)
+        if (nearest) {
+          nearestDatum = nearest.datum
+          nearestDatumIndex = nearest.index
+          nearestDistanceSq = nearest.distanceSq
+        }
+      } else {
+        nearestDatum = getNearest(datamodel.data, xValue, this.accessors.x)
+        nearestDatumIndex = datamodel.data.indexOf(nearestDatum)
+      }
     }
 
     const xRange = this.xScale.range()
@@ -149,8 +166,13 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     const isCrosshairWithinYRange = (this._yPx >= Math.min(yRange[0], yRange[1])) && (this._yPx <= Math.max(yRange[0], yRange[1]))
     let shouldShow = config.skipRangeCheck ? !!this._xPx : (this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange)
 
+    // Distance in pixels between the pointer and the snapped datum: the full 2D distance in
+    // `CrosshairSnapMode.XY` mode (so a point that's close in X but far in Y still counts as far),
+    // or the horizontal distance to the crosshair line otherwise
+    const nearestDistance = nearestDistanceSq !== undefined ? Math.sqrt(nearestDistanceSq) : Math.abs(xClamped - (+xPx))
+
     // If the crosshair is far from the mouse pointer (usually when `snapToData` is `true` and data resolution is low), hide it
-    if (config.hideWhenFarFromPointer && ((Math.abs(xClamped - (+xPx)) >= config.hideWhenFarFromPointerDistance))) {
+    if (config.hideWhenFarFromPointer && (nearestDistance >= config.hideWhenFarFromPointerDistance)) {
       shouldShow = false
     }
 
