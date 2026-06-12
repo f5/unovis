@@ -6,6 +6,7 @@ import { Symbol, SymbolType } from 'types/symbol'
 
 // Utils
 import { smartTransition } from 'utils/d3'
+import { UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
 
@@ -27,7 +28,10 @@ export function createPoints<Datum> (
   yScale: ContinuousScale
 ): void {
   selection.attr('transform', d => `translate(${d._point.xValue},${d._point.yValue})`)
-  selection.append('path').style('fill', d => d._point.color)
+  selection.append('path')
+    .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d._point.groupIndex)
+    .style('fill', d => d._point.color)
+    .style('mask', d => d._point.mask)
   selection.append('text')
     .style('pointer-events', 'none')
 
@@ -62,6 +66,7 @@ export function updatePoints<Datum> (
 
     smartTransition(path, duration)
       .style('fill', pointColor)
+      .style('mask', d._point.mask)
       .style('stroke', pointStrokeColor)
       .style('stroke-width', `${pointStrokeWidth}px`)
 

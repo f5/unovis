@@ -8,6 +8,7 @@ import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getString, getNumb
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
 
 // Types
 import { ContinuousScale } from 'types/scale'
@@ -163,10 +164,13 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
       .attr('d', d => this._getBarPath(d, true))
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d.stackIndex)
       .style('fill', d => getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))
+      .style('mask', d => getFillPatternValue(getPattern(d.datum, config.pattern, d.stackIndex)))
 
     const barsMerged = barsEnter.merge(bars)
 
+    barsMerged.style('mask', d => getFillPatternValue(getPattern(d.datum, config.pattern, d.stackIndex)))
     smartTransition(barsMerged, duration)
       .attr('d', d => this._getBarPath(d))
       .style('fill', d => getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))

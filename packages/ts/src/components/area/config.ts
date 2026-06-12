@@ -3,10 +3,13 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-co
 // Types
 import { CurveType } from 'types/curve'
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { FillPatternType, LinePatternType } from 'styles/patterns'
 
 export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Area color accessor function. The whole data array will be passed as the first argument. Default: `undefined` */
   color?: ColorAccessor<Datum[]>;
+  /** Area fill pattern accessor. Resolves to a `FillPatternType`. The whole data array is passed as the first argument. Default: `undefined` */
+  pattern?: GenericAccessor<FillPatternType, Datum[]>;
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   curveType?: CurveType | string;
   /** Baseline value or accessor function. Default: `undefined` */
@@ -23,6 +26,8 @@ export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<D
   lineWidth?: number;
   /** Line dash array, see SVG's stroke-dasharray. Default: `undefined` */
   lineDashArray?: GenericAccessor<number[], Datum[]>;
+  /** Pattern accessor for the area's outline. Resolves to a `LinePatternType`. The whole data array is passed as the first argument. Default: `undefined` */
+  linePattern?: GenericAccessor<LinePatternType, Datum[]>;
   /** If an area is smaller than 1px, extend it to have 1px height. Default: `false`
    * @deprecated Use minHeight instead
    */

@@ -10,6 +10,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange, getValue, clamp } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
 
 // Types
 import { Curve, CurveType } from 'types/curve'
@@ -143,8 +144,10 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     const areasEnter = areas.enter().append('path')
       .attr('class', s.area)
       .attr('d', d => this._areaGen(d) || this._emptyPath())
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => areaMaxIdx - i)
       .style('opacity', 0)
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
+      .style('mask', (d, i) => getFillPatternValue(getPattern(data, config.pattern, areaMaxIdx - i)))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
       .style('opacity', (d, i) => {
@@ -152,6 +155,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
         return isDefined ? getNumber(data, config.opacity, areaMaxIdx - i) : 0
       })
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
+      .style('mask', (d, i) => getFillPatternValue(getPattern(data, config.pattern, areaMaxIdx - i)))
       .style('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))
 
     if (duration) {
@@ -183,18 +187,31 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
       .data(stackedDataReversed)
 
     const areas = this.g.selectAll(`.${s.area}`).nodes()
+
+    const getLineColor = (i: number): string => getColor(data, colorAccessor, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions)
+    const getLinePattern = (i: number): { marker: string | null; dashArray: string | null } | null =>
+      getLinePatternValue(getPattern(data, config.linePattern, areaMaxIdx - i))
+    // Explicit `lineDashArray` takes precedence over the resolved pattern's dash array
+    const getLineDashArray = (i: number): string | null =>
+      getValue<Datum[], number[]>(data, config.lineDashArray, i)?.join(' ') ?? getLinePattern(i)?.dashArray ?? null
+
     const linesEnter = lines.enter().insert('path', (d, i) => areas[i + 1])
       .attr('class', s.areaLinePath)
-      .attr('stroke', (d, i) => getColor(data, colorAccessor, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => areaMaxIdx - i)
+      .attr('stroke', (d, i) => getLineColor(i))
       .attr('stroke-width', config.lineWidth)
       .attr('stroke-opacity', 0)
+      .style('color', (d, i) => getLineColor(i)) // The pattern marker uses `currentColor`, so it matches the line color
+      .style('marker', (d, i) => getLinePattern(i)?.marker ?? null)
 
     const linesMerged = smartTransition(linesEnter.merge(lines), duration)
-      .attr('stroke', (d, i) => getColor(data, colorAccessor, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
+      .attr('stroke', (d, i) => getLineColor(i))
       .attr('stroke-width', config.lineWidth)
       .attr('stroke-opacity', 1)
       .attr('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))
-      .style('stroke-dasharray', (d, i) => getValue<Datum[], number[]>(data, config.lineDashArray, i)?.join(' ') ?? null)
+      .style('color', (d, i) => getLineColor(i))
+      .style('marker', (d, i) => getLinePattern(i)?.marker ?? null)
+      .style('stroke-dasharray', (d, i) => getLineDashArray(i))
 
     const curveGen = Curve[config.curveType as CurveType]
     this._lineGen = line<AreaDatum>()

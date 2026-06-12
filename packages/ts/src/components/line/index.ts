@@ -10,6 +10,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { getNumber, getString, getValue, isArray, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { getPattern, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
 
 // Types
 import { NumericAccessor } from 'types/accessor'
@@ -140,6 +141,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
     linesEnter
       .append('path')
       .attr('class', s.linePath)
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => i)
       .attr('stroke', (d, i) => getColor(data, config.color, i, config.colorKeys?.[i], colorOptions))
       .attr('stroke-opacity', 0)
       .attr('stroke-width', config.lineWidth)
@@ -163,12 +165,19 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       const lineGaps = group.select(`.${s.interpolatedPath}`)
 
       const isLineVisible = d.visible
-      const dashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
+      const lineColor = getColor(data, config.color, i, config.colorKeys?.[i], colorOptions)
+      const linePattern = getLinePatternValue(getPattern(data, config.pattern, i))
+      // Explicit `lineDashArray` takes precedence over the resolved pattern's dash array
+      const explicitDashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
+      const dashArray = explicitDashArray?.join(' ') ?? linePattern?.dashArray ?? null
+      linePath
+        .style('color', lineColor) // The pattern marker uses `currentColor`, so it matches the line color
+        .style('marker', linePattern?.marker ?? null)
       const transition = smartTransition(linePath, duration)
-        .attr('stroke', getColor(data, config.color, i, config.colorKeys?.[i], colorOptions))
+        .attr('stroke', lineColor)
         .attr('stroke-width', config.lineWidth)
         .attr('stroke-opacity', isLineVisible ? 1 : 0)
-        .style('stroke-dasharray', dashArray?.join(' ') ?? null) // We use `.style` because there's also a default CSS-variable for stroke-dasharray
+        .style('stroke-dasharray', dashArray) // We use `.style` because there's also a default CSS-variable for stroke-dasharray
 
       const hasUndefinedSegments = d.values.some(d => !d.defined)
       const svgPathD = this.lineGen(d.values)

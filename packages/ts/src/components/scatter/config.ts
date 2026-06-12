@@ -5,11 +5,14 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-co
 import { Scale, ContinuousScale } from 'types/scale'
 import { SymbolType } from 'types/symbol'
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { FillPatternType } from 'styles/patterns'
 import { Position } from 'types/position'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Point color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum>;
+  /** Point fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  pattern?: GenericAccessor<FillPatternType, Datum>;
   /**
    * Size of the scatter plot marker (e.g. diameter if `SymbolType.Circle` is used for `shape`) in pixels.
    * Can be a constant value or an accessor function. But if `sizeRange` is set, then the values will be treated
@@ -46,6 +49,7 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
 export const ScatterDefaultConfig: ScatterConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
   color: (d: unknown): string => (d as { color: string }).color,
+  pattern: undefined,
   size: 10,
   sizeScale: Scale.scaleSqrt(),
   sizeRange: undefined,
