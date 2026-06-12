@@ -2,7 +2,8 @@
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Types
-import { ColorAccessor, NumericAccessor } from 'types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor } from 'types/accessor'
+import { FillPatternType } from 'styles/patterns'
 
 export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
@@ -19,6 +20,9 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   cornerRadius?: number;
   /** Color accessor function. Default: `undefined` */
   color?: ColorAccessor<Datum>;
+  /** Fill pattern accessor. Resolves to a `FillPatternType`.
+   * When unset and `theme-patterns` is active, a default pattern is applied by segment index. Default: `undefined` */
+  pattern?: GenericAccessor<FillPatternType, Datum>;
   /** Explicitly set the donut outer radius. Default: `undefined` */
   radius?: number;
   /** Arc width in pixels. Set to `0` if you want to have a pie chart. Default: `20` */
@@ -59,6 +63,7 @@ export const DonutDefaultConfig: DonutConfigInterface<unknown> = {
   sortFunction: undefined,
   cornerRadius: 0,
   color: undefined,
+  pattern: undefined,
   radius: undefined,
   arcWidth: 20,
   centralLabel: undefined,

@@ -3,6 +3,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component
 
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { FillPatternType } from 'styles/patterns'
 import { NestedDonutDirection, NestedDonutLayerSettings, NestedDonutSegment } from './types'
 
 export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterface {
@@ -57,6 +58,8 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   hideOverflowingSegmentLabels?: boolean;
   /** Color accessor function for segments. Default: `undefined` */
   segmentColor?: ColorAccessor<NestedDonutSegment<Datum>>;
+  /** Fill pattern accessor for segments. Resolves to a `FillPatternType`. Default: `undefined` */
+  segmentPattern?: GenericAccessor<FillPatternType, NestedDonutSegment<Datum>>;
   /** Segment label accessor function. Default `undefined` */
   segmentLabel?: StringAccessor<NestedDonutSegment<Datum>>;
   /** Color accessor function for segment labels */
@@ -84,6 +87,7 @@ export const NestedDonutDefaultConfig: NestedDonutConfigInterface<unknown> = {
   layerPadding: 0,
   layerSettings: undefined,
   segmentColor: undefined,
+  segmentPattern: undefined,
   segmentLabel: undefined,
   segmentLabelColor: undefined,
   showBackground: false,

@@ -3,6 +3,7 @@ import { max } from 'd3-array'
 
 // Utils
 import { getColor } from 'utils/color'
+import { getPattern, getFillPatternValue } from 'utils/pattern'
 import { getString, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
@@ -54,6 +55,7 @@ export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink
     .attr('width', config.nodeWidth)
     .attr('height', d => d.y1 - d.y0)
     .style('fill', node => getColor(node, config.nodeColor))
+    .style('mask', node => getFillPatternValue(getPattern(node, config.nodePattern)))
 
   // Labels
   const labelGroup = sel.append('g').attr('class', s.labelGroup)
@@ -144,6 +146,7 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
     .attr('height', (d: SankeyNode<N, L>) => d.y1 - d.y0)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.nodeCursor))
     .style('fill', (d: SankeyNode<N, L>) => getColor(d, config.nodeColor))
+    .style('mask', (d: SankeyNode<N, L>) => getFillPatternValue(getPattern(d, config.nodePattern)))
 
   // Label Rendering
   const maxLayer = max(sel.data(), d => d.layer)
