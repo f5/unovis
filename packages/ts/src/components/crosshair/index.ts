@@ -1,12 +1,13 @@
 import { Selection, pointer } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
+import { least } from 'd3-array'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
 import { Tooltip } from 'components/tooltip'
 
 // Utils
-import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, isFunction } from 'utils/data'
+import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, getNearest2D, isFunction } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -17,6 +18,7 @@ import { Spacing } from 'types/spacing'
 
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'
+import { CrosshairSnapMode } from './constants'
 
 // Config
 import { CrosshairDefaultConfig, CrosshairConfigInterface } from './config'
@@ -32,6 +34,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   public config: CrosshairConfigInterface<Datum> = this._defaultConfig
   container: Selection<SVGSVGElement, any, SVGSVGElement, any>
   line: Selection<SVGLineElement, any, SVGElement, any>
+  lineHorizontal: Selection<SVGLineElement, any, SVGElement, any>
   private _xPx: number | undefined = undefined
   private _yPx: number | undefined = undefined
   private _mouseEvent: MouseEvent | undefined = undefined
@@ -87,6 +90,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     this.g.style('opacity', 0)
     this.line = this.g.append('line')
       .attr('class', s.line)
+    this.lineHorizontal = this.g.append('line')
+      .attr('class', s.lineHorizontal)
+      .style('display', 'none')
   }
 
   get bleed (): Spacing {
@@ -124,6 +130,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     // It can be from a mouse interaction or from a `forceShowAt` setting
     let nearestDatum: Datum | undefined
     let nearestDatumIndex: number | undefined
+    // Squared pixel distance from the pointer to the snapped datum (only set in `CrosshairSnapMode.XY` mode).
+    // Feeds the `nearestDistance` calculation below.
+    let nearestDistanceSq: number | undefined
     if (config.snapToData) {
       if (!this.accessors.y && !this.accessors.yStacked && datamodel.data?.length) {
         console.warn('Unovis | Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
@@ -135,8 +144,21 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         console.warn('Unovis | Crosshair: No data to snap to. Make sure the data has been passed to the container or to the crosshair itself')
       }
 
-      nearestDatum = getNearest(datamodel.data, xValue, this.accessors.x)
-      nearestDatumIndex = datamodel.data.indexOf(nearestDatum)
+      // In `CrosshairSnapMode.XY` mode we snap to the data point closest to the pointer in both X and Y (pixel space).
+      // This requires a real pointer position, so we fall back to X-only snapping when `forceShowAt` is set
+      // or there's no pointer Y available yet.
+      const useXYMode = config.snapMode === CrosshairSnapMode.XY && !isForceShowAtDefined && this._yPx !== undefined
+      if (useXYMode) {
+        const nearest = getNearest2D(datamodel.data, [this._xPx, this._yPx], this.xScale, this.yScale, this.accessors.x, this.accessors.y, this.accessors.yStacked, this.accessors.baseline)
+        if (nearest) {
+          nearestDatum = nearest.datum
+          nearestDatumIndex = nearest.index
+          nearestDistanceSq = nearest.distanceSq
+        }
+      } else {
+        nearestDatum = getNearest(datamodel.data, xValue, this.accessors.x)
+        nearestDatumIndex = datamodel.data.indexOf(nearestDatum)
+      }
     }
 
     const xRange = this.xScale.range()
@@ -149,8 +171,13 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     const isCrosshairWithinYRange = (this._yPx >= Math.min(yRange[0], yRange[1])) && (this._yPx <= Math.max(yRange[0], yRange[1]))
     let shouldShow = config.skipRangeCheck ? !!this._xPx : (this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange)
 
+    // Distance in pixels between the pointer and the snapped datum: the full 2D distance in
+    // `CrosshairSnapMode.XY` mode (so a point that's close in X but far in Y still counts as far),
+    // or the horizontal distance to the crosshair line otherwise
+    const nearestDistance = nearestDistanceSq !== undefined ? Math.sqrt(nearestDistanceSq) : Math.abs(xClamped - (+xPx))
+
     // If the crosshair is far from the mouse pointer (usually when `snapToData` is `true` and data resolution is low), hide it
-    if (config.hideWhenFarFromPointer && ((Math.abs(xClamped - (+xPx)) >= config.hideWhenFarFromPointerDistance))) {
+    if (config.hideWhenFarFromPointer && (nearestDistance >= config.hideWhenFarFromPointerDistance)) {
       shouldShow = false
     }
 
@@ -189,6 +216,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     // This looks off, so we stop further rendering when the `xPx` value is not finite.
     if (!isFinite(xPx)) return
 
+    const circleData = isFunction(config.getCircles)
+      ? config.getCircles(xValue, datamodel.data, this.yScale, leftNearestDatumIndex)
+      : this.getCircleData(nearestDatum, nearestDatumIndex)
+
     this.line
       .attr('y1', 0)
       .attr('y2', this._height)
@@ -197,9 +228,17 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .attr('x1', xClamped)
       .attr('x2', xClamped)
 
-    const circleData = isFunction(config.getCircles)
-      ? config.getCircles(xValue, datamodel.data, this.yScale, leftNearestDatumIndex)
-      : this.getCircleData(nearestDatum, nearestDatumIndex)
+    const lineHorizontalY = config.showHorizontalLine ? this.getLineHorizontalY(circleData) : undefined
+    this.lineHorizontal
+      .style('display', lineHorizontalY === undefined ? 'none' : null)
+      .attr('x1', 0)
+      .attr('x2', this._width)
+
+    if (lineHorizontalY !== undefined) {
+      smartTransition(this.lineHorizontal, duration, easeLinear)
+        .attr('y1', lineHorizontalY)
+        .attr('y2', lineHorizontalY)
+    }
 
     const circles = this.g
       .selectAll<SVGCircleElement, CrosshairCircle>('circle')
@@ -301,6 +340,15 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   // We don't want Crosshair to be be taken in to account in domain calculations
   getYDataExtent (): number[] {
     return [undefined, undefined]
+  }
+
+  /** Y position of the horizontal crosshair line: the circle closest to the pointer (i.e. the snapped data point),
+   * or the pointer position itself when there are no circles to snap to. `undefined` when there's nothing to draw */
+  private getLineHorizontalY (circles: CrosshairCircle[]): number | undefined {
+    const yPx = this._yPx
+    const circleYs = circles.filter(c => c.opacity !== 0 && isFinite(c.y)).map(c => c.y)
+    const y = (yPx === undefined ? circleYs[0] : least(circleYs, cy => Math.abs(cy - yPx))) ?? yPx
+    return isFinite(y) ? clamp(Math.round(y), 0, this._height) : undefined
   }
 
   private getCircleData (datum: Datum, datumIndex: number): CrosshairCircle[] {

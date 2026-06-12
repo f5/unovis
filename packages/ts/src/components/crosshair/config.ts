@@ -6,6 +6,7 @@ import { NumericAccessor, ColorAccessor } from 'types/accessor'
 import { ContinuousScale } from 'types/scale'
 import { WithOptional } from 'types/misc'
 import { CrosshairCircle } from './types'
+import { CrosshairSnapMode } from './constants'
 
 // We extend partial XY config interface because x and y properties are optional for Crosshair
 export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'x' | 'y'> {
@@ -21,6 +22,10 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   strokeWidth?: NumericAccessor<Datum>;
   /** Radius of crosshair circles in pixels. Default: `3` */
   circleRadius?: number;
+  /** When `true`, the Crosshair also renders a horizontal line. The line is placed at the Y position of the
+   * crosshair circle closest to the mouse pointer (i.e. the snapped data point), or follows the pointer
+   * when there are no circles to snap to (e.g. when `snapToData` is `false`). Default: `false` */
+  showHorizontalLine?: boolean;
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   yStacked?: NumericAccessor<Datum>[];
   /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */
@@ -42,6 +47,16 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
    * Default: `true`
   */
   snapToData?: boolean;
+  /** When `snapToData` is enabled, controls how the nearest datum is found:
+   * - `CrosshairSnapMode.XY`: snap to the datum closest to the mouse pointer in both X and Y (measured in pixel space).
+   *   This is the right choice for Scatter charts where many points can share similar X values.
+   * - `CrosshairSnapMode.X`: snap to the datum closest along the X axis only. Best for time series / line / area
+   *   charts where the crosshair is a vertical line tracking the X position.
+   *
+   * Has no effect when `forceShowAt` is set (no pointer Y is available — it falls back to `CrosshairSnapMode.X`).
+   * Default: `CrosshairSnapMode.X`
+  */
+  snapMode?: CrosshairSnapMode | `${CrosshairSnapMode}`;
   /** Custom function for setting up the crosshair circles, usually needed when `snapToData` is set to `false`.
    * The function receives the horizontal position of the crosshair (in the data space, not in pixels), the data array,
    * the `yScale` instance to help you calculate the correct vertical position of the circles, and the nearest datum index.
@@ -82,11 +97,13 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   hideWhenFarFromPointer: true,
   hideWhenFarFromPointerDistance: 100,
   snapToData: true,
+  snapMode: CrosshairSnapMode.X,
   getCircles: undefined,
   color: undefined,
   strokeColor: undefined,
   strokeWidth: undefined,
   circleRadius: 4,
+  showHorizontalLine: false,
   onCrosshairMove: undefined,
   forceShowAt: undefined,
   skipRangeCheck: false,

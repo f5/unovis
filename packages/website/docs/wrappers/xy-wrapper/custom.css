@@ -39,6 +39,7 @@
 
 .custom-crosshair {
   --vis-crosshair-line-stroke-color: #f88080;
+  --vis-crosshair-line-stroke-dasharray: 8 4;
   --vis-crosshair-circle-stroke-color: #000000;
 }
 
