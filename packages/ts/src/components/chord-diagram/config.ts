@@ -3,6 +3,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component
 
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { FillPatternType } from 'styles/patterns'
 
 // Local Types
 import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordLinkDatum, ChordNodeDatum } from './types'
@@ -18,6 +19,8 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
   highlightedLinkIds?: (number | string)[];
   /** Link color accessor function. Default: `var(--vis-chord-diagram-link-fill-color)` */
   linkColor?: ColorAccessor<ChordLinkDatum<N, L>>;
+  /** Link fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  linkPattern?: GenericAccessor<FillPatternType, ChordLinkDatum<N, L>>;
   /** Link value accessor function. Default: `l => l.value` */
   linkValue?: NumericAccessor<ChordLinkDatum<N, L>>;
   /** Array of node hierarchy levels. Data records are supposed to have corresponding properties, e.g. ['level1', 'level2']. Default: `[]` */
@@ -26,6 +29,8 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
   nodeWidth?: number;
   /** Node color accessor function ot constant value. Default: `d => d.color` */
   nodeColor?: ColorAccessor<ChordNodeDatum<N>>;
+  /** Node fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  nodePattern?: GenericAccessor<FillPatternType, ChordNodeDatum<N>>;
   /** Node label accessor function. Default: `d => d.label ?? d.key` */
   nodeLabel?: StringAccessor<ChordNodeDatum<N>>;
   /** Node label color accessor function. Default: `undefined` */
@@ -44,10 +49,12 @@ export const ChordDiagramDefaultConfig: ChordDiagramConfigInterface<ChordInputNo
   highlightedNodeId: undefined,
   highlightedLinkIds: [],
   linkColor: undefined,
+  linkPattern: undefined,
   linkValue: (d: ChordInputNode): number => (d as { value: number }).value,
   nodeLevels: [],
   nodeWidth: 15,
   nodeColor: (d: unknown): string => (d as { color: string }).color,
+  nodePattern: undefined,
   nodeLabel: (d: unknown): string => (d as { label: string }).label ?? (d as { key: string }).key,
   nodeLabelColor: undefined,
   nodeLabelAlignment: ChordLabelAlignment.Along,
