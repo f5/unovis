@@ -32,6 +32,13 @@ function generateScatterData (seed = 42): ScatterRecord[] {
 const tooltipTemplate = (d: ScatterRecord): string =>
   `x: ${d.x.toFixed(1)}, y: ${d.y.toFixed(1)}`
 
+const chartStyle = {
+  flex: '1 1 360px',
+  minWidth: 320,
+  '--vis-crosshair-line-stroke-color': '#aaa',
+  '--vis-crosshair-line-stroke-dasharray': '8 4',
+} as React.CSSProperties
+
 export const title = 'Scatter Crosshair Snap (X vs XY)'
 export const subTitle = `${NUM_POINTS.toLocaleString()} clustered points`
 
@@ -40,23 +47,23 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (
     <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-      <div style={{ flex: '1 1 360px', minWidth: 320 }}>
+      <div style={chartStyle}>
         <strong>CrosshairSnapMode.X</strong> (default — snaps along X only)
         <VisXYContainer<ScatterRecord> data={data} margin={{ top: 5, left: 5 }} height={400}>
           <VisScatter<ScatterRecord> x={d => d.x} y={d => d.y} size={5} duration={props.duration}/>
           <VisAxis type='x' duration={props.duration}/>
           <VisAxis type='y' duration={props.duration}/>
-          <VisCrosshair<ScatterRecord> snapMode={CrosshairSnapMode.X} template={tooltipTemplate}/>
+          <VisCrosshair<ScatterRecord> snapMode={CrosshairSnapMode.X} showHorizontalLine={true} template={tooltipTemplate}/>
           <VisTooltip/>
         </VisXYContainer>
       </div>
-      <div style={{ flex: '1 1 360px', minWidth: 320 }}>
+      <div style={chartStyle}>
         <strong>CrosshairSnapMode.XY</strong> (snaps to the closest point in X and Y)
         <VisXYContainer<ScatterRecord> data={data} margin={{ top: 5, left: 5 }} height={400}>
           <VisScatter<ScatterRecord> x={d => d.x} y={d => d.y} size={5} duration={props.duration}/>
           <VisAxis type='x' duration={props.duration}/>
           <VisAxis type='y' duration={props.duration}/>
-          <VisCrosshair<ScatterRecord> snapMode={CrosshairSnapMode.XY} template={tooltipTemplate}/>
+          <VisCrosshair<ScatterRecord> snapMode={CrosshairSnapMode.XY} showHorizontalLine={true} template={tooltipTemplate}/>
           <VisTooltip/>
         </VisXYContainer>
       </div>
