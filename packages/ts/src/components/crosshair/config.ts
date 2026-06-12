@@ -22,6 +22,10 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   strokeWidth?: NumericAccessor<Datum>;
   /** Radius of crosshair circles in pixels. Default: `3` */
   circleRadius?: number;
+  /** When `true`, the Crosshair also renders a horizontal line. The line is placed at the Y position of the
+   * crosshair circle closest to the mouse pointer (i.e. the snapped data point), or follows the pointer
+   * when there are no circles to snap to (e.g. when `snapToData` is `false`). Default: `false` */
+  showHorizontalLine?: boolean;
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   yStacked?: NumericAccessor<Datum>[];
   /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */
@@ -99,6 +103,7 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   strokeColor: undefined,
   strokeWidth: undefined,
   circleRadius: 4,
+  showHorizontalLine: false,
   onCrosshairMove: undefined,
   forceShowAt: undefined,
   skipRangeCheck: false,
