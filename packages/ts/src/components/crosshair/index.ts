@@ -1,5 +1,6 @@
 import { Selection, pointer } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
+import { least } from 'd3-array'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -33,6 +34,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   public config: CrosshairConfigInterface<Datum> = this._defaultConfig
   container: Selection<SVGSVGElement, any, SVGSVGElement, any>
   line: Selection<SVGLineElement, any, SVGElement, any>
+  lineHorizontal: Selection<SVGLineElement, any, SVGElement, any>
   private _xPx: number | undefined = undefined
   private _yPx: number | undefined = undefined
   private _mouseEvent: MouseEvent | undefined = undefined
@@ -88,6 +90,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     this.g.style('opacity', 0)
     this.line = this.g.append('line')
       .attr('class', s.line)
+    this.lineHorizontal = this.g.append('line')
+      .attr('class', s.lineHorizontal)
+      .style('display', 'none')
   }
 
   get bleed (): Spacing {
@@ -211,6 +216,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     // This looks off, so we stop further rendering when the `xPx` value is not finite.
     if (!isFinite(xPx)) return
 
+    const circleData = isFunction(config.getCircles)
+      ? config.getCircles(xValue, datamodel.data, this.yScale, leftNearestDatumIndex)
+      : this.getCircleData(nearestDatum, nearestDatumIndex)
+
     this.line
       .attr('y1', 0)
       .attr('y2', this._height)
@@ -219,9 +228,17 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .attr('x1', xClamped)
       .attr('x2', xClamped)
 
-    const circleData = isFunction(config.getCircles)
-      ? config.getCircles(xValue, datamodel.data, this.yScale, leftNearestDatumIndex)
-      : this.getCircleData(nearestDatum, nearestDatumIndex)
+    const lineHorizontalY = config.showHorizontalLine ? this.getLineHorizontalY(circleData) : undefined
+    this.lineHorizontal
+      .style('display', lineHorizontalY === undefined ? 'none' : null)
+      .attr('x1', 0)
+      .attr('x2', this._width)
+
+    if (lineHorizontalY !== undefined) {
+      smartTransition(this.lineHorizontal, duration, easeLinear)
+        .attr('y1', lineHorizontalY)
+        .attr('y2', lineHorizontalY)
+    }
 
     const circles = this.g
       .selectAll<SVGCircleElement, CrosshairCircle>('circle')
@@ -323,6 +340,15 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   // We don't want Crosshair to be be taken in to account in domain calculations
   getYDataExtent (): number[] {
     return [undefined, undefined]
+  }
+
+  /** Y position of the horizontal crosshair line: the circle closest to the pointer (i.e. the snapped data point),
+   * or the pointer position itself when there are no circles to snap to. `undefined` when there's nothing to draw */
+  private getLineHorizontalY (circles: CrosshairCircle[]): number | undefined {
+    const yPx = this._yPx
+    const circleYs = circles.filter(c => c.opacity !== 0 && isFinite(c.y)).map(c => c.y)
+    const y = (yPx === undefined ? circleYs[0] : least(circleYs, cy => Math.abs(cy - yPx))) ?? yPx
+    return isFinite(y) ? clamp(Math.round(y), 0, this._height) : undefined
   }
 
   private getCircleData (datum: Datum, datumIndex: number): CrosshairCircle[] {
