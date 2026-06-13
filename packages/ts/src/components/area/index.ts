@@ -189,8 +189,8 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     const areas = this.g.selectAll(`.${s.area}`).nodes()
 
     const getLineColor = (i: number): string => getColor(data, colorAccessor, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions)
-    const getLinePattern = (i: number): { marker: string | null; dashArray: string | null } | null =>
-      getLinePatternValue(getPattern(data, config.linePattern, areaMaxIdx - i))
+    const getLinePattern = (i: number, el?: SVGPathElement | null): { marker: string | null; dashArray: string | null } | null =>
+      getLinePatternValue(getPattern(data, config.linePattern, areaMaxIdx - i), getLineColor(i), el)
     // Explicit `lineDashArray` takes precedence over the resolved pattern's dash array
     const getLineDashArray = (i: number): string | null =>
       getValue<Datum[], number[]>(data, config.lineDashArray, i)?.join(' ') ?? getLinePattern(i)?.dashArray ?? null
@@ -201,16 +201,14 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
       .attr('stroke', (d, i) => getLineColor(i))
       .attr('stroke-width', config.lineWidth)
       .attr('stroke-opacity', 0)
-      .style('color', (d, i) => getLineColor(i)) // The pattern marker uses `currentColor`, so it matches the line color
-      .style('marker', (d, i) => getLinePattern(i)?.marker ?? null)
+      .style('marker', function (d, i) { return getLinePattern(i, this)?.marker ?? null })
 
     const linesMerged = smartTransition(linesEnter.merge(lines), duration)
       .attr('stroke', (d, i) => getLineColor(i))
       .attr('stroke-width', config.lineWidth)
       .attr('stroke-opacity', 1)
       .attr('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))
-      .style('color', (d, i) => getLineColor(i))
-      .style('marker', (d, i) => getLinePattern(i)?.marker ?? null)
+      .style('marker', (d, i, nodes) => getLinePattern(i, nodes[i])?.marker ?? null)
       .style('stroke-dasharray', (d, i) => getLineDashArray(i))
 
     const curveGen = Curve[config.curveType as CurveType]

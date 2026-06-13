@@ -1,3 +1,5 @@
+import { getCSSColorVariable } from './colors'
+
 export type PatternDef = {
   id: string;
   width?: number;
@@ -69,6 +71,11 @@ export function getMarkerPatternId (id: string): string {
   return `vis-pattern-marker-${id}`
 }
 
+/** DOM id of the `context-stroke` marker variant, which inherits the referencing path's color. */
+export function getContextMarkerPatternId (id: string): string {
+  return `vis-pattern-marker-ctx-${id}`
+}
+
 /** Looks up a built-in pattern by id, returning its `FillPattern` or `LinePattern` definition, or `null`. */
 export function getPatternById (id: string): FillPattern | LinePattern | null {
   return fillById.get(id) ?? lineById.get(id) ?? null
@@ -83,9 +90,10 @@ const maskDef = (p: FillPattern): string =>
     <rect x="-50%" y="-50%" width="200%" height="200%" fill="url(#vis-pattern-tile-${p.id})"/>
   </mask>`
 
-const markerDef = (p: LinePattern): string =>
+// Index-colored marker used by the `theme-patterns` CSS fallback, where the series index maps to a fixed color.
+const markerDef = (p: LinePattern, i: number): string =>
   `<marker id="${getMarkerPatternId(p.id)}"
-    fill="currentColor"
+    fill="var(${getCSSColorVariable(i)})"
     markerUnits="userSpaceOnUse"
     refX="5"
     refY="5"
@@ -94,9 +102,36 @@ const markerDef = (p: LinePattern): string =>
     ${p.marker}
   </marker>`
 
+// `context-stroke` marker that inherits the referencing path's color (modern browsers; see `utils/pattern.ts`).
+const contextMarkerDef = (p: LinePattern): string =>
+  `<marker id="${getContextMarkerPatternId(p.id)}"
+    fill="context-stroke"
+    markerUnits="userSpaceOnUse"
+    refX="5"
+    refY="5"
+    markerWidth="${PATTERN_SIZE_PX}"
+    markerHeight="${PATTERN_SIZE_PX}">
+    ${p.marker}
+  </marker>`
+
+/** Creates a `<marker>` element with an explicit fill color (fallback for browsers without `context-stroke`). */
+export function createColoredMarkerElement (p: LinePattern, id: string, fill: string): SVGMarkerElement {
+  const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker')
+  marker.setAttribute('id', id)
+  marker.setAttribute('fill', fill)
+  marker.setAttribute('markerUnits', 'userSpaceOnUse')
+  marker.setAttribute('refX', '5')
+  marker.setAttribute('refY', '5')
+  marker.setAttribute('markerWidth', String(PATTERN_SIZE_PX))
+  marker.setAttribute('markerHeight', String(PATTERN_SIZE_PX))
+  marker.innerHTML = p.marker
+  return marker
+}
+
 // Injecting SVG defs as a single SVG element on the page
 function injectSVGDefs (): void {
-  const svgDefs = fills.map(maskDef).concat(lines.map(markerDef)).join('')
+  const markerDefs = lines.map((p, i) => markerDef(p, i)).concat(lines.map(contextMarkerDef))
+  const svgDefs = fills.map(maskDef).concat(markerDefs).join('')
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('height', '100%')
   svg.setAttribute('width', '100%')
