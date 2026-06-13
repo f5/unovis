@@ -166,12 +166,11 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
 
       const isLineVisible = d.visible
       const lineColor = getColor(data, config.color, i, config.colorKeys?.[i], colorOptions)
-      const linePattern = getLinePatternValue(getPattern(data, config.pattern, i))
+      const linePattern = getLinePatternValue(getPattern(data, config.pattern, i), lineColor, linePath.node())
       // Explicit `lineDashArray` takes precedence over the resolved pattern's dash array
       const explicitDashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
       const dashArray = explicitDashArray?.join(' ') ?? linePattern?.dashArray ?? null
       linePath
-        .style('color', lineColor) // The pattern marker uses `currentColor`, so it matches the line color
         .style('marker', linePattern?.marker ?? null)
       const transition = smartTransition(linePath, duration)
         .attr('stroke', lineColor)

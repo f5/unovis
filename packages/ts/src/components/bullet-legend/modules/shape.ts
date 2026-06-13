@@ -74,13 +74,15 @@ export function updateBullets (
     selection.selectAll('path').remove()
 
     const opacity = d.inactive ? 'var(--vis-legend-bullet-inactive-opacity)' : 1
-    const linePattern = getLinePatternValue(getPattern(d, d.pattern, i))
-    const fillPattern = getFillPatternValue(getPattern(d, d.pattern, i))
+    const pattern = getPattern(d, d.pattern, i)
+    const fillPattern = getFillPatternValue(pattern)
+    const svgNode = selection.node()
 
     // Create a path for each color
     colors.forEach((color, colorIndex) => {
       const bulletPath = selection.append('path')
         .attr(UNOVIS_PATTERN_INDEX_ATTR, i)
+      const linePattern = getLinePatternValue(pattern, color, svgNode)
 
       if (shape === BulletShape.Line) {
         const x1 = colorIndex * (bulletWidth + spacing)
@@ -93,7 +95,6 @@ export function updateBullets (
           .style('stroke-width', '3px')
           .style('fill', null)
           .style('fill-opacity', null)
-          .style('color', color) // The pattern marker uses `currentColor`, so it matches the bullet color
           .style('marker', linePattern?.marker ?? null)
           .style('stroke-dasharray', linePattern?.dashArray ?? null)
           .style('marker-start', 'none')
