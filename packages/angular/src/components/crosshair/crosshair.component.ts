@@ -84,6 +84,11 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** Optional color array or color accessor function for crosshair circles. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum>
 
+  /** Array of data color keys. Use to map data keys to colors.
+   * Expected to the same length as the `y` accessors array.
+   * Default: `undefined` */
+  @Input() colorKeys?: string[]
+
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
@@ -201,8 +206,8 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

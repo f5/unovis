@@ -1,10 +1,7 @@
 import { injectGlobal } from '@emotion/css'
 import { getCSSVariableValue } from 'utils/misc'
-<<<<<<< HEAD
 import { darkThemeCssSelectors } from 'utils/theme'
-=======
 import { UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
->>>>>>> aae5ca68 (Core | Styles | Utils: Add pattern accessor infrastructure and theme-patterns index attribute)
 import { UnovisText } from 'types/text'
 import { colors, colorsDark, getCSSColorVariable, getLighterColor, getDarkerColor } from './colors'
 import { fills, lines, getPatternVariable } from './patterns'

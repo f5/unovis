@@ -9,6 +9,8 @@ import {
   NumericAccessor,
   ColorAccessor,
   ContinuousScale,
+  GenericAccessor,
+  FillPatternType,
   StringAccessor,
   Orientation,
 } from '@unovis/ts'
@@ -83,6 +85,11 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
   /** Bar color accessor function. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum>
 
+  /** Array of data color keys. Use to map data keys to colors.
+   * Expected to the same length as the `y` accessors array.
+   * Default: `undefined` */
+  @Input() colorKeys?: string[]
+
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
@@ -98,6 +105,9 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
    * the scales of the chart.
    * Default: `false` */
   @Input() excludeFromDomainCalculation?: boolean
+
+  /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  @Input() pattern?: GenericAccessor<FillPatternType, Datum>
 
   /** Force set the group width in pixels. Default: `undefined` */
   @Input() groupWidth?: number
@@ -148,8 +158,8 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
   }
 
   private getConfig (): GroupedBarConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor, orientation } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor, orientation }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor, orientation } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor, orientation }
     const keys = Object.keys(config) as (keyof GroupedBarConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

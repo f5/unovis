@@ -9,9 +9,11 @@ import {
   NumericAccessor,
   ColorAccessor,
   ContinuousScale,
+  GenericAccessor,
+  FillPatternType,
   CurveType,
   StringAccessor,
-  GenericAccessor,
+  LinePatternType,
 } from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
@@ -84,6 +86,11 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   /** Area color accessor function. The whole data array will be passed as the first argument. Default: `undefined` */
   @Input() color?: ColorAccessor<Datum[]>
 
+  /** Array of data color keys. Use to map data keys to colors.
+   * Expected to the same length as the `y` accessors array.
+   * Default: `undefined` */
+  @Input() colorKeys?: string[]
+
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
@@ -99,6 +106,9 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
    * the scales of the chart.
    * Default: `false` */
   @Input() excludeFromDomainCalculation?: boolean
+
+  /** Area fill pattern accessor. Resolves to a `FillPatternType`. The whole data array is passed as the first argument. Default: `undefined` */
+  @Input() pattern?: GenericAccessor<FillPatternType, Datum[]>
 
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   @Input() curveType?: CurveType | string
@@ -123,6 +133,9 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
 
   /** Line dash array, see SVG's stroke-dasharray. Default: `undefined` */
   @Input() lineDashArray?: GenericAccessor<number[], Datum[]>
+
+  /** Pattern accessor for the area's outline. Resolves to a `LinePatternType`. The whole data array is passed as the first argument. Default: `undefined` */
+  @Input() linePattern?: GenericAccessor<LinePatternType, Datum[]>
 
   /** If an area is smaller than 1px, extend it to have 1px height. Default: `false` */
   @Input() minHeight1Px?: boolean
@@ -156,8 +169,8 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   }
 
   private getConfig (): AreaConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, baseline, opacity, cursor, line, lineColor, lineWidth, lineDashArray, minHeight1Px, minHeight, stackMinHeight } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, baseline, opacity, cursor, line, lineColor, lineWidth, lineDashArray, minHeight1Px, minHeight, stackMinHeight }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, curveType, baseline, opacity, cursor, line, lineColor, lineWidth, lineDashArray, linePattern, minHeight1Px, minHeight, stackMinHeight } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, curveType, baseline, opacity, cursor, line, lineColor, lineWidth, lineDashArray, linePattern, minHeight1Px, minHeight, stackMinHeight }
     const keys = Object.keys(config) as (keyof AreaConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
