@@ -300,15 +300,15 @@ const color = (key) => colorMap[key] ?? '#cccccc'
 Pass the **same** `color` function to every container and legend, and give each component a `colorKeys`
 array aligned with its `y` accessors:
 
-```tsx
-import { VisXYContainer, VisGroupedBar, VisArea, VisAxis, VisBulletLegend } from '@unovis/react'
+<FrameworkTabs
+  react={`import { VisXYContainer, VisGroupedBar, VisArea, VisAxis, VisBulletLegend } from '@unovis/react'
 import { Scale } from '@unovis/ts'
 
 const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a', '#f4b83e'])
 const keys = ['aws', 'azure', 'github']
 const y = keys.map(k => (d) => d[k])
 
-// Legend, charts, and tooltips all share `color` + the keys
+// Legend, charts, and tooltips all share the same color function and keys
 <VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} color={color} />
 
 <VisXYContainer data={data} color={color}>
@@ -319,8 +319,117 @@ const y = keys.map(k => (d) => d[k])
 <VisXYContainer data={data} color={color}>
   <VisArea x={d => d.x} y={y} colorKeys={keys} />
   <VisAxis type="x" />
+</VisXYContainer>`}
+  angular={{
+    ts: `import { Scale } from '@unovis/ts'
+
+// In your component class:
+color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a', '#f4b83e'])
+keys = ['aws', 'azure', 'github']
+x = (d) => d.x
+y = this.keys.map(k => (d) => d[k])
+items = this.keys.map(name => ({ name, colorKey: name }))`,
+    html: `<vis-bullet-legend [items]="items" [color]="color"></vis-bullet-legend>
+
+<vis-xy-container [data]="data" [color]="color">
+  <vis-grouped-bar [x]="x" [y]="y" [colorKeys]="keys"></vis-grouped-bar>
+  <vis-axis type="x"></vis-axis>
+</vis-xy-container>
+
+<vis-xy-container [data]="data" [color]="color">
+  <vis-area [x]="x" [y]="y" [colorKeys]="keys"></vis-area>
+  <vis-axis type="x"></vis-axis>
+</vis-xy-container>`,
+  }}
+  svelte={`<script>
+  import { VisXYContainer, VisGroupedBar, VisArea, VisAxis, VisBulletLegend } from '@unovis/svelte'
+  import { Scale } from '@unovis/ts'
+
+  const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a', '#f4b83e'])
+  const keys = ['aws', 'azure', 'github']
+  const x = (d) => d.x
+  const y = keys.map(k => (d) => d[k])
+  const items = keys.map(name => ({ name, colorKey: name }))
+</script>
+
+<VisBulletLegend {items} {color} />
+
+<VisXYContainer {data} {color}>
+  <VisGroupedBar {x} {y} colorKeys={keys} />
+  <VisAxis type="x" />
 </VisXYContainer>
-```
+
+<VisXYContainer {data} {color}>
+  <VisArea {x} {y} colorKeys={keys} />
+  <VisAxis type="x" />
+</VisXYContainer>`}
+  vue={`<script setup lang="ts">
+import { VisXYContainer, VisGroupedBar, VisArea, VisAxis, VisBulletLegend } from '@unovis/vue'
+import { Scale } from '@unovis/ts'
+
+const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a', '#f4b83e'])
+const keys = ['aws', 'azure', 'github']
+const x = (d) => d.x
+const y = keys.map(k => (d) => d[k])
+const items = keys.map(name => ({ name, colorKey: name }))
+</script>
+
+<template>
+  <VisBulletLegend :items="items" :color="color" />
+
+  <VisXYContainer :data="data" :color="color">
+    <VisGroupedBar :x="x" :y="y" :colorKeys="keys" />
+    <VisAxis type="x" />
+  </VisXYContainer>
+
+  <VisXYContainer :data="data" :color="color">
+    <VisArea :x="x" :y="y" :colorKeys="keys" />
+    <VisAxis type="x" />
+  </VisXYContainer>
+</template>`}
+  solid={`import { VisXYContainer, VisGroupedBar, VisArea, VisAxis, VisBulletLegend } from '@unovis/solid'
+import { Scale } from '@unovis/ts'
+
+const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a', '#f4b83e'])
+const keys = ['aws', 'azure', 'github']
+const y = keys.map(k => (d) => d[k])
+
+// Legend, charts, and tooltips all share the same color function and keys
+<VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} color={color} />
+
+<VisXYContainer data={data} color={color}>
+  <VisGroupedBar x={d => d.x} y={y} colorKeys={keys} />
+  <VisAxis type="x" />
+</VisXYContainer>
+
+<VisXYContainer data={data} color={color}>
+  <VisArea x={d => d.x} y={y} colorKeys={keys} />
+  <VisAxis type="x" />
+</VisXYContainer>`}
+  typescript={`import { XYContainer, GroupedBar, Area, Axis, BulletLegend, Scale } from '@unovis/ts'
+
+const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a', '#f4b83e'])
+const keys = ['aws', 'azure', 'github']
+const y = keys.map(k => (d) => d[k])
+
+// Legend, charts, and tooltips all share the same color function and keys
+const legend = new BulletLegend(legendNode, {
+  items: keys.map(name => ({ name, colorKey: name })),
+  color,
+})
+
+const groupedBar = new XYContainer(node1, {
+  color,
+  components: [new GroupedBar({ x: d => d.x, y, colorKeys: keys })],
+  xAxis: new Axis({ type: 'x' }),
+}, data)
+
+const area = new XYContainer(node2, {
+  color,
+  components: [new Area({ x: d => d.x, y, colorKeys: keys })],
+  xAxis: new Axis({ type: 'x' }),
+}, data)`}
+/>
 
 A few things to keep in mind:
 - `BulletLegend` items carry their key in `colorKey`; pass the same `color` function so the bullets match the charts.
