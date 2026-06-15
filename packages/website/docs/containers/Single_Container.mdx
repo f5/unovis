@@ -7,7 +7,7 @@ description: Learn how to use Single Container
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { sankeyData } from '../utils/data'
-import { DocWrapper } from '../wrappers'
+import { DocWrapper, DynamicWrapper } from '../wrappers'
 import './styles.css'
 
 export const singleContainerProps = (n=10) => ({
@@ -154,6 +154,48 @@ Unlike [XY Container](XY_Container#color), the container-level `color` _function
 components. Single-component visualizations such as _Donut_, _Sankey_, and _ChordDiagram_ take their color
 from the component's own `color` accessor.
 :::
+
+
+## Tooltip
+Pair the container with a [Tooltip](/docs/auxiliary/Tooltip) to show details on hover. Provide a `triggers`
+map that pairs a component's selector with a template function — as in the
+[Basic Configuration](#basic-configuration) example above:
+
+```ts
+import { Donut } from '@unovis/ts'
+
+const triggers = { [Donut.selectors.segment]: d => `Value: ${d.data}` }
+```
+
+See the [Tooltip](/docs/auxiliary/Tooltip) docs for positioning, show/hide delays, and custom rendering.
+
+## Annotations
+Use [Annotations](/docs/auxiliary/Annotations) to overlay text labels and callouts — it works in a
+_Single Container_ too. Pass an `items` array positioned with data coordinates or `'%'` strings:
+
+<DocWrapper
+  {...singleContainerProps()}
+  height={220}
+  components={[
+    { name: 'Donut', props: { value: d => d }, key: 'component' },
+    { name: 'Annotations', props: { items: [
+      { x: '65%', y: '6%', content: { text: 'Breakdown by segment', fontSize: 16 } },
+      { x: '12%', y: '50%', content: 'Interesting slice', subject: { x: '36%', y: '50%' } },
+    ] }, key: 'annotations' },
+  ]}
+/>
+
+See the [Annotations](/docs/auxiliary/Annotations) docs for the full set of `AnnotationItem` options.
+
+## Accessibility
+Pass a descriptive `ariaLabel` to set an `aria-label` on the chart's container `div`, giving screen-reader
+users a text summary of the visualization:
+
+```tsx
+<VisSingleContainer data={data} ariaLabel="Sales distribution by product category">
+  {/* … */}
+</VisSingleContainer>
+```
 
 ## SVG Defs
 You can use the `svgDefs` property to inject custom SVG definitions — gradients, patterns, clip paths, and
