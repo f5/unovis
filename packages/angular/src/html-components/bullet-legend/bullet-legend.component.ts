@@ -7,6 +7,7 @@ import {
   GenericAccessor,
   BulletShape,
   BulletLegendOrientation,
+  ColorFunction,
 } from '@unovis/ts'
 import { VisGenericComponent } from '../../core'
 
@@ -29,6 +30,7 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
    *  inactive?: boolean;
    *  hidden?: boolean;
    *  pointer?: boolean;
+   *  colorKey?: string;
    * }
    * ```
    * Default: `[]` */
@@ -59,6 +61,9 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
    * start on a new line. Default: `BulletLegendOrientation.Horizontal` */
   @Input() orientation?: BulletLegendOrientation | string
 
+  /** Color function. Default: `undefined` */
+  @Input() color?: ColorFunction
+
   component: BulletLegend | undefined
 
   ngAfterViewInit (): void {
@@ -70,8 +75,8 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   }
 
   private getConfig (): BulletLegendConfigInterface {
-    const { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation } = this
-    const config = { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation }
+    const { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation, color } = this
+    const config = { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation, color }
     const keys = Object.keys(config) as (keyof BulletLegendConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
