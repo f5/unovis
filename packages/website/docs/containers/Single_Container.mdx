@@ -126,9 +126,47 @@ The `sizing` property determines whether components should fit into the containe
 or the container should expand to fit to the component's size. Currently, only <a href="/docs/networks-and-flows/Sankey#component-sizing">
 Sankey</a> supports the `sizing` option. By default, all components will fit to the size of _Single Container_.
 
+## Color
+Each component in a _Single Container_ is colored through its own `color` accessor. By default, segments and
+elements cycle through the shared _Unovis_ palette (`--vis-color0`, `--vis-color1`, …); pass a `color`
+accessor — a constant, an array of colors, or a function of the datum — to override it. For example, a
+_Donut_ colored from a custom palette by segment:
+
+<BrowserOnly>
+{() => {
+  const palette = ['#4d8cfd', '#ff6b7e', '#00c19a', '#f4b83e', '#a78bfa']
+  return (
+    <DocWrapper {...singleContainerProps()}
+      height={160}
+      components={[{ name: 'Donut', props: { value: d => d, color: (d, i) => palette[i % palette.length] }, key: 'component' }]}
+    />
+  )
+}}
+</BrowserOnly>
+
+To change the default palette or keep colors consistent across charts, see
+[Color Palette](/docs/guides/theming#color-palette) and
+[Synchronizing Colors Across Charts](/docs/guides/theming#synchronizing-colors-across-charts) in the
+_Theming_ guide — re-ranging `UnovisColorScale` there recolors these components' default palette too.
+
+:::note
+Unlike [XY Container](XY_Container#color), the container-level `color` _function_ is consumed by XY
+components. Single-component visualizations such as _Donut_, _Sankey_, and _ChordDiagram_ take their color
+from the component's own `color` accessor.
+:::
+
 ## SVG Defs
-You can use the `svgDefs` property to define custom fill patterns for your components.
-See our <a href="/docs/guides/tips-and-tricks#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
+You can use the `svgDefs` property to inject custom SVG definitions — gradients, patterns, clip paths, and
+filters — that your component can reference by `id`. See our
+<a href="/docs/guides/tips-and-tricks#custom-fills-with-svg-defs">Tips and Tricks</a>, or the
+[Gradient Fills](/docs/guides/theming#gradient-fills-with-svg-defs) and
+[SVG Filters](/docs/guides/theming#svg-filters-glow-bevel-3d) sections of the _Theming_ guide, for details.
+
+:::tip
+For ready-made stripe, dot, and hatch fills you don't need custom defs — _Donut_, _NestedDonut_, _Sankey_, and
+_ChordDiagram_ all accept a `pattern` accessor, and the `theme-patterns` class applies a default pattern set
+automatically. See [Patterns](/docs/guides/theming#patterns) in the _Theming_ guide.
+:::
 
 ## Component Props
 <PropsTable name="VisSingleContainer"/>

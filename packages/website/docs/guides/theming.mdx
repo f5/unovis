@@ -251,14 +251,225 @@ globalThis.UNOVIS_COLORS = [...]
 This needs to be done before the library is imported, i.e. in your top level JS file or HTML.
 :::
 
-## Applying Patterns
+## Synchronizing Colors Across Charts
+By default, every component assigns colors to its series _by index_: the first series uses `--vis-color0`,
+the second `--vis-color1`, and so on (see [Color Palette](#color-palette)). That's fine for a single chart,
+but as soon as a dashboard has several charts that share categories, the same category tends to land at a
+different index in each chart — and therefore gets a different color. **Color synchronization** fixes this by
+mapping a stable _color key_ to a color through a shared _color function_, so a category keeps the same color
+across every chart, legend, and tooltip.
+
+There are three pieces:
+
+- **`colorKeys`** — a component property: an array of string keys, one per `y` accessor, that labels each
+series (e.g. `['aws', 'azure', 'github']`).
+- **`color`** — a _color function_ of type `(key: string | number) => string`. It is accepted by the
+**container** (where it applies to every component inside) and by **`BulletLegend`**. Given a key, it returns a color.
+- **`UnovisColorScale`** — the default color function, used when you don't provide your own.
+
+### How a color is resolved
+For each element, _Unovis_ resolves the color in this order:
+
+1. The component's own `color` accessor, if it returns a value — a per‑datum override that always wins.
+2. Otherwise, if the series has a `colorKey`, the color function is called with that **key**.
+3. Otherwise, the color function is called with the series **index**.
+4. If nothing matches, the element gets no explicit color.
+
+So `colorKeys` together with a shared `color` function means _same key → same color_, regardless of the chart
+type or the order in which series appear.
+
+### Defining a color function
+A color function is just `(key) => color`. There are two common ways to build one.
+
+**A D3 ordinal scale** assigns colors from a range to keys in first‑seen order:
+```ts
+import { Scale } from '@unovis/ts'
+
+const color = Scale.scaleOrdinal()
+  .range(['#ff8cfd', '#126b7e', '#ff5450', '#23cc00', '#0000ff'])
+```
+
+**An explicit color map** gives you full control over which key maps to which color, with a fallback for
+unknown keys:
+```ts
+const colorMap = { aws: '#f0a8b4', google: '#7eb8d4', github: '#b89ef0' }
+const color = (key) => colorMap[key] ?? '#cccccc'
+```
+
+### Putting it together
+Pass the **same** `color` function to every container and legend, and give each component a `colorKeys`
+array aligned with its `y` accessors:
+
+```tsx
+import { VisXYContainer, VisGroupedBar, VisArea, VisAxis, VisBulletLegend } from '@unovis/react'
+import { Scale } from '@unovis/ts'
+
+const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a', '#f4b83e'])
+const keys = ['aws', 'azure', 'github']
+const y = keys.map(k => (d) => d[k])
+
+// Legend, charts, and tooltips all share `color` + the keys
+<VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} color={color} />
+
+<VisXYContainer data={data} color={color}>
+  <VisGroupedBar x={d => d.x} y={y} colorKeys={keys} />
+  <VisAxis type="x" />
+</VisXYContainer>
+
+<VisXYContainer data={data} color={color}>
+  <VisArea x={d => d.x} y={y} colorKeys={keys} />
+  <VisAxis type="x" />
+</VisXYContainer>
+```
+
+A few things to keep in mind:
+- `BulletLegend` items carry their key in `colorKey`; pass the same `color` function so the bullets match the charts.
+- The crosshair tooltip picks up `colorKeys` from the components automatically, so its markers stay in sync too.
+- Keep `colorKeys` the same length as the `y` accessor array.
+
+The example below uses one shared ordinal scale. The second chart lists its series in a **different order**
+and the legend, bars, and area all agree on the color of every category:
+
+<BrowserOnly>
+{() => {
+  const { VisXYContainer, VisGroupedBar, VisArea, VisAxis, VisBulletLegend } = require('@unovis/react')
+  const { Scale } = require('@unovis/ts')
+  const data = Array(12).fill(0).map((_, x) => ({
+    x,
+    aws: 40 + 18 * Math.sin(x / 2) + x,
+    azure: 30 + 14 * Math.cos(x / 3) + x * 0.6,
+    github: 22 + 16 * Math.sin(x / 1.4),
+  }))
+  const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a'])
+  const keys = ['aws', 'azure', 'github']
+  const reversed = ['github', 'azure', 'aws']
+  return (
+    <div>
+      <VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} color={color} />
+      <VisXYContainer data={data} color={color} height={140}>
+        <VisGroupedBar x={d => d.x} y={keys.map(k => d => d[k])} colorKeys={keys} />
+        <VisAxis type="x" />
+      </VisXYContainer>
+      <VisXYContainer data={data} color={color} height={140}>
+        <VisArea x={d => d.x} y={reversed.map(k => d => d[k])} colorKeys={reversed} opacity={0.7} />
+        <VisAxis type="x" />
+      </VisXYContainer>
+    </div>
+  )
+}}
+</BrowserOnly>
+
+### Overriding the default palette in code
+When you don't pass a `color` function, components fall back to **`UnovisColorScale`** — a D3 ordinal scale
+whose range is the `--vis-color*` CSS variables. You can re‑range it once at startup to change the default
+palette everywhere, without touching CSS:
+
+```ts
+import { UnovisColorScale } from '@unovis/ts'
+
+UnovisColorScale.range(['#f0a8b4', '#7eb8d4', '#8ed49a', '#ffdc88', '#b89ef0'])
+```
+
+:::warning
+`UnovisColorScale` is global: re‑ranging it affects every chart on every page loaded afterwards. If you only
+need to recolor the palette (and not sync by key), prefer overriding the `--vis-color*`
+[CSS variables](#color-palette) instead.
+:::
+
+## Patterns
+Patterns — stripes, dots, cross‑hatching, and so on — add a second visual channel on top of color. They're
+useful for color‑blind‑safe palettes, grayscale printing, or simply telling series apart in a dense chart.
+_Unovis_ offers two ways to apply them:
+
+- the **`pattern` accessor** on a component, for explicit per‑series (or per‑datum) control;
+- the **`theme-patterns`** body class, which applies a default pattern palette automatically, keyed by series index.
+
+The built‑in pattern definitions are injected into the page for you the first time the library loads, so
+there's nothing to import or register before using them.
+
+### The `pattern` accessor
+Most data components accept a `pattern` accessor: **Area**, **Line**, **Scatter**, **GroupedBar**,
+**StackedBar**, **Timeline**, **Donut**, **NestedDonut**, **Sankey**, and **ChordDiagram**. It resolves to one
+of the built‑in pattern ids, exposed as two enums:
+
+| Enum | Applies to | Values |
+| ---- | ---------- | ------ |
+| `FillPatternType` | Solid shapes (areas, bars, scatter points, donut/sankey segments…) | `StripesDiagonal`, `Dots`, `StripesVertical`, `Crosshatch`, `Waves`, `Circles` |
+| `LinePatternType` | The `Line` component | `Circle`, `Triangle`, `Diamond`, `Arrow`, `Square`, `Star` |
+
+Under the hood, a **fill** pattern is applied as an SVG
+[`mask`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/mask) over the shape, so it's cut out of the
+series' own fill and automatically takes the series color. A **line** pattern combines an SVG
+[`marker`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker) repeated along the path with a
+[`stroke-dasharray`](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray); the marker
+inherits the line's color.
+
+The accessor follows the component's data shape:
+- For **multi‑series** components (where `y` is an array of accessors), the accessor receives the **series
+index** as its second argument — return one pattern per series.
+- For **per‑datum** components like Scatter points or Donut segments, it receives the **datum** and its index,
+so you can vary the pattern by value.
+
+```tsx
+import { VisXYContainer, VisStackedBar, VisLine, VisScatter, VisAxis } from '@unovis/react'
+import { FillPatternType, LinePatternType } from '@unovis/ts'
+
+const fillPatterns = [FillPatternType.StripesDiagonal, FillPatternType.Dots, FillPatternType.Crosshatch]
+const linePatterns = [LinePatternType.Triangle, LinePatternType.Diamond, LinePatternType.Square]
+
+// A fill pattern per series (StackedBar, Area, GroupedBar, …)
+<VisStackedBar x={d => d.x} y={[y0, y1, y2]} pattern={(_d, i) => fillPatterns[i]} />
+
+// A line pattern per series (Line)
+<VisLine x={d => d.x} y={[y0, y1, y2]} pattern={(_d, i) => linePatterns[i]} />
+
+// A fill pattern per data point (Scatter)
+<VisScatter x={d => d.x} y={d => d.y} pattern={d => fillPatterns[Math.round(d.y) % fillPatterns.length]} />
+```
+
+**Fill patterns per series** — a stacked bar where each series gets a different `FillPatternType`
+(`stripes-diagonal`, `dots`, `crosshatch`):
+
+<XYWrapper
+  name='StackedBar'
+  data={generateDataRecords(15)}
+  x={d => d.x}
+  y={[d => d.y, d => d.y1, d => d.y2]}
+  pattern={(d, i) => ['stripes-diagonal', 'dots', 'crosshatch'][i]}
+  height={220}
+  showAxes
+  excludeTabs
+/>
+
+**Line patterns per series** — each line gets a different `LinePatternType` (`triangle`, `diamond`, `square`):
+
+<XYWrapper
+  name='Line'
+  data={generateDataRecords(15)}
+  x={d => d.x}
+  y={[d => d.y, d => d.y1, d => d.y2]}
+  pattern={(d, i) => ['triangle', 'diamond', 'square'][i]}
+  lineWidth={3}
+  height={220}
+  showAxes
+  excludeTabs
+/>
+
+:::note
+An explicit `pattern` accessor always takes precedence over the `theme-patterns` fallback described below —
+the automatic styles only target shapes that don't already carry a pattern. You can therefore enable
+`theme-patterns` globally and still override individual charts with the accessor.
+:::
+
+### Automatic patterns with `theme-patterns`
 When `document.body` has the class `theme-patterns` we automatically apply patterns of two types:
 
-### Fill Patterns
-For solid shapes (most cases). You can customize fill patterns by assigning the corresponding CSS
-to a SVG [`mask`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/mask) reference.
+#### Fill Patterns
+Applied automatically to solid shapes (most cases), keyed by series index. Each index maps to a CSS variable
+(`--vis-pattern-fill0`, `--vis-pattern-fill1`, …) that you can override with any SVG
+[`mask`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/mask) reference.
 
-The fill pattern palette looks like:
+The default fill‑pattern palette looks like:
 
 <body class='theme-patterns' style={{ marginBottom: '20px'}}>
   <XYWrapper
@@ -287,9 +498,10 @@ The fill pattern palette looks like:
 
 </details>
 
-### Line Patterns
+#### Line Patterns
 For the _Line_ component and when _BulletLegend_'s `bulletShape` property is set to `"line"`.
-You can customize these patterns by assigning any combination of the following variable types:
+Each series index maps to a marker variable and a dash‑array variable. You can customize these patterns by
+assigning any combination of the following variable types:
 - Prefixed `--vis-pattern-marker`: accepts SVG defs containings
 [`marker`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker) elements
 - Variables with the prefix `--vis-pattern-dasharray` to a valid value for the
@@ -333,7 +545,12 @@ You can customize these patterns by assigning any combination of the following v
 
 </details>
 
-### Summary
+#### Customizing the pattern palette
+The automatic palette is driven by indexed CSS variables — `--vis-pattern-fill{i}` for fills, and
+`--vis-pattern-marker{i}` / `--vis-pattern-dasharray{i}` for lines. Override them to point at your own SVG
+`<defs>`, or to a different dash array. (These variables back the `theme-patterns` fallback only; charts that
+use the [`pattern` accessor](#the-pattern-accessor) ignore them.)
+
 To override default patterns use the following table for reference.
 
 | CSS Variable Prefix       | Type | Accepted Value | Example |

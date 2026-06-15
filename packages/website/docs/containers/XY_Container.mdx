@@ -220,9 +220,56 @@ It comes in hand when you're updating xDomain programmatically using, for exampl
 You can set `yDirection` to change the direction of data along the Y axis. Supported values are `Direction.North` and `Direction.South`.
 <XYWrapper {...xyContainerProps()} yDirection='south' showContext='container'/>
 
+## Color
+Use the `color` property to give every component inside the container a single _color function_ of type
+`(key: string | number) => string`. Each component resolves its color through this function, passing either a
+data **color key** (from the component's `colorKeys` property) or, as a fallback, the series index. Supplying
+one `color` function at the container level — and reusing it across other containers and the `BulletLegend` —
+is how you keep a category's color consistent across multiple charts.
+
+```ts
+import { Scale } from '@unovis/ts'
+const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a'])
+```
+
+In the example below the _StackedBar_'s three series are labeled with `colorKeys`, and the container's
+`color` function maps each key to a color:
+
+<BrowserOnly>
+{() => {
+  const { Scale } = require('@unovis/ts')
+  const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a'])
+  return (
+    <XYWrapper
+      {...xyContainerProps('StackedBar')}
+      containerProps={{ color }}
+      components={[
+        component('StackedBar', { y: [d => d.y, d => d.y1, d => d.y2], colorKeys: ['aws', 'azure', 'github'] }),
+        { name: 'Axis', props: { type: 'x' }, key: 'xAxis' },
+        { name: 'Axis', props: { type: 'y' }, key: 'yAxis' },
+      ]}
+      excludeTabs
+    />
+  )
+}}
+</BrowserOnly>
+
+For the full walkthrough — color keys, building a color function, syncing the legend and tooltip, and
+overriding the default palette — see
+[Synchronizing Colors Across Charts](/docs/guides/theming#synchronizing-colors-across-charts) in the
+_Theming_ guide.
+
 ## SVG Defs
-You can use the `svgDefs` property to define custom fill patterns for your components.
-See our <a href="/docs/guides/tips-and-tricks#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
+You can use the `svgDefs` property to inject custom SVG definitions — gradients, patterns, clip paths, and
+filters — that your components can reference by `id`. See our
+<a href="/docs/guides/tips-and-tricks#custom-fills-with-svg-defs">Tips and Tricks</a>, or the
+[Gradient Fills](/docs/guides/theming#gradient-fills-with-svg-defs) and
+[SVG Filters](/docs/guides/theming#svg-filters-glow-bevel-3d) sections of the _Theming_ guide, for details.
+
+:::tip
+For ready-made stripe, dot, and hatch fills you don't need custom defs — use a component's `pattern` accessor
+or the `theme-patterns` class. See [Patterns](/docs/guides/theming#patterns) in the _Theming_ guide.
+:::
 
 ## Component Props
 <PropsTable name="VisXYContainer"/>
