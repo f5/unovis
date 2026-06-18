@@ -15,6 +15,7 @@ export * from "./components/plotline";
 export * from "./components/chord-diagram";
 export * from "./components/donut";
 export * from "./components/graph";
+export * from "./components/heatmap";
 export * from "./components/nested-donut";
 export * from "./components/radial-bar";
 export * from "./components/sankey";

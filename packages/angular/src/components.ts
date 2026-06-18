@@ -35,6 +35,9 @@ export { VisGraphModule } from './components/graph/graph.module'
 export { VisGroupedBarComponent } from './components/grouped-bar/grouped-bar.component'
 export { VisGroupedBarModule } from './components/grouped-bar/grouped-bar.module'
 
+export { VisHeatmapComponent } from './components/heatmap/heatmap.component'
+export { VisHeatmapModule } from './components/heatmap/heatmap.module'
+
 export { VisLineComponent } from './components/line/line.component'
 export { VisLineModule } from './components/line/line.module'
 
