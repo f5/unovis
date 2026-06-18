@@ -87,6 +87,13 @@ export const examples: ExampleCollection[] = [
     ],
   },
   {
+    title: 'Heatmaps',
+    description: '',
+    examples: [
+      require('./github-style-heatmap').default,
+    ],
+  },
+  {
     title: 'Composite Charts',
     description: '',
     examples: [
