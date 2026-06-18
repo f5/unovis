@@ -14,6 +14,7 @@ export { default as VisPlotline, VisPlotlineSelectors } from './components/plotl
 export { default as VisChordDiagram, VisChordDiagramSelectors } from './components/chord-diagram/index.vue'
 export { default as VisDonut, VisDonutSelectors } from './components/donut/index.vue'
 export { default as VisGraph, VisGraphSelectors } from './components/graph/index.vue'
+export { default as VisHeatmap, VisHeatmapSelectors } from './components/heatmap/index.vue'
 export { default as VisNestedDonut, VisNestedDonutSelectors } from './components/nested-donut/index.vue'
 export { default as VisRadialBar, VisRadialBarSelectors } from './components/radial-bar/index.vue'
 export { default as VisSankey, VisSankeySelectors } from './components/sankey/index.vue'
