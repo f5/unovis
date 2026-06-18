@@ -1,28 +1,27 @@
-<script setup lang="ts" >
+<script setup lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-import { Tooltip, TooltipConfigInterface } from '@unovis/ts'
-import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
-import { arePropsEqual, useForwardProps } from '../../utils/props'
+import type { TooltipConfigInterface } from '@unovis/ts'
+import { Tooltip } from '@unovis/ts'
+import { inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { tooltipAccessorKey } from '../../utils/context'
+import { arePropsEqual, useForwardProps } from '../../utils/props'
+
+const props = defineProps<Props & { data?: null }>()
 
 const accessor = inject(tooltipAccessorKey)
 
-// data and required props 
+// data and required props
 type Props = TooltipConfigInterface
-const props = defineProps<Props & { data?: null }>()
-
-
 // config
 const config = useForwardProps(props)
 
 // component declaration
 const component = ref<Tooltip>()
 
-
 onMounted(() => {
   nextTick(() => {
     component.value = new Tooltip(config.value)
-    
+
     accessor.update(component.value)
   })
 })
@@ -39,9 +38,8 @@ watch(config, (curr, prev) => {
   }
 })
 
-
 defineExpose({
-  component
+  component,
 })
 </script>
 
@@ -52,5 +50,3 @@ export const VisTooltipSelectors = Tooltip.selectors
 <template>
   <div data-vis-tooltip />
 </template>
-
-
