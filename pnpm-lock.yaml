@@ -192,8 +192,17 @@ importers:
       '@unovis/ts':
         specifier: workspace:*
         version: link:../ts
+      d3-brush:
+        specifier: ~3.0.0
+        version: 3.0.0
+      d3-drag:
+        specifier: ~3.0.0
+        version: 3.0.0
       d3-selection:
         specifier: 3.0.0
+        version: 3.0.0
+      d3-zoom:
+        specifier: ~3.0.0
         version: 3.0.0
       elkjs:
         specifier: ^0.10.0
