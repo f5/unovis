@@ -169,9 +169,17 @@ export function getLabelMaxWidth<N extends SankeyInputNode, L extends SankeyInpu
 ): number {
   const labelHorizontalPadding = 2 * SANKEY_LABEL_SPACING + 2 * SANKEY_LABEL_BLOCK_PADDING
 
+  // Single-layer layouts (e.g. linkless nodes) are rendered centered rather than pinned to a
+  // container edge, so the label doesn't spill into the bleed margin — it has roughly half of the
+  // free horizontal space on its side.
+  if (sankeyMaxLayer === 0) {
+    return clamp(layerSpacing / 2 - labelHorizontalPadding, 0, config.labelMaxWidth ?? Infinity)
+  }
+
   if (d.layer === 0 && labelOrientation === Position.Left) {
     return bleed.left - labelHorizontalPadding
   }
+
   if (d.layer === sankeyMaxLayer && labelOrientation === Position.Right) {
     return bleed.right - labelHorizontalPadding
   }
