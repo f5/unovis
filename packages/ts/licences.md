@@ -65,7 +65,6 @@
 | throttle-debounce                 | perpetual      | MIT          | 5.0.2             | Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com)          |
 | topojson-client                   | perpetual      | ISC          | 3.1.0             | Mike Bostock https://bost.ocks.org/mike                           |
 | tslib                             | perpetual      | 0BSD         | 2.8.1             | Microsoft Corp.                                                   |
-| typescript                        | perpetual      | Apache-2.0   | 4.2.4             | Microsoft Corp.                                                   |
 | @rollup/plugin-json               | perpetual      | MIT          | 4.1.0             | rollup                                                            |
 | @zerollup/ts-transform-paths      | perpetual      | MIT          | 1.7.18            | Stefan Zerkalica zerkalica@gmail.com                              |
 | rimraf                            | perpetual      | ISC          | 3.0.2             | Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)               |
@@ -77,4 +76,5 @@
 | rollup-plugin-terser              | perpetual      | MIT          | 7.0.2             | Bogdan Chadkin <trysound@yandex.ru>                               |
 | rollup-plugin-typescript2         | perpetual      | MIT          | 0.31.2            | @ezolenko                                                         |
 | rollup-plugin-visualizer          | perpetual      | MIT          | 4.2.2             | Denis Bardadym <bardadymchik@gmail.com>                           |
+| typescript                        | perpetual      | Apache-2.0   | 4.2.4             | Microsoft Corp.                                                   |
 

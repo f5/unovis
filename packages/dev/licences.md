@@ -1,9 +1,11 @@
 | Name                                 | License period | License type | Installed version | Author                                                             |
 | :----------------------------------- | :------------- | :----------- | :---------------- | :----------------------------------------------------------------- |
 | d3-hierarchy                         | perpetual      | ISC          | 3.1.2             | Mike Bostock http://bost.ocks.org/mike                             |
+| @codesandbox/sandpack-react          | perpetual      | Apache-2.0   | 2.20.0            | CodeSandbox                                                        |
 | fuse.js                              | perpetual      | Apache-2.0   | 6.6.2             | Kiro Risk kirollos@gmail.com http://kiro.me                        |
 | react                                | perpetual      | MIT          | 19.2.4            | n/a                                                                |
 | react-dom                            | perpetual      | MIT          | 19.2.4            | n/a                                                                |
+| react-resizable-panels               | perpetual      | MIT          | 2.1.9             | Brian Vaughn <brian.david.vaughn@gmail.com>                        |
 | react-router-dom                     | perpetual      | MIT          | 6.30.3            | Remix Software <hello@remix.run>                                   |
 | serve                                | perpetual      | MIT          | 14.2.6            | n/a                                                                |
 | @emotion/css                         | perpetual      | MIT          | 11.13.5           | Kye Hohenberger                                                    |
@@ -17,6 +19,7 @@
 | @types/react-dom                     | perpetual      | MIT          | 19.2.3            | n/a                                                                |
 | @types/react-router                  | perpetual      | MIT          | 5.1.20            | n/a                                                                |
 | @types/webpack-env                   | perpetual      | MIT          | 1.18.8            | n/a                                                                |
+| copy-webpack-plugin                  | perpetual      | MIT          | 12.0.2            | Len Boyette                                                        |
 | cypress                              | perpetual      | MIT          | 13.17.0           | n/a                                                                |
 | html-webpack-plugin                  | perpetual      | MIT          | 5.6.6             | Jan Nicklas <j.nicklas@me.com> (https://github.com/jantimon)       |
 | react-refresh                        | perpetual      | MIT          | 0.14.2            | n/a                                                                |
