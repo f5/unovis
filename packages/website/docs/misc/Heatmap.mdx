@@ -1,0 +1,115 @@
+---
+description: Learn how to configure a Heatmap
+---
+
+import CodeBlock from '@theme/CodeBlock'
+import { PropsTable } from '@site/src/components/PropsTable'
+import { DocWrapper, InputWrapper } from '../wrappers'
+import { Heatmap } from '@unovis/ts'
+
+export const rnd = (i) => { const x = Math.sin((i + 1) * 12.9898) * 43758.5453; return x - Math.floor(x) }
+
+export const heatmapProps = (n = 49) => ({
+  name: "Heatmap",
+  height: 160,
+  containerName: "SingleContainer",
+  configKey: "component",
+  value: d => d,
+  dataType: "number",
+  numRows: 7,
+  cellSize: 16,
+  cellPadding: 3,
+  cellCornerRadius: 3,
+  data: Array(n).fill(0).map((_, i) => Math.round(rnd(i) * 20)),
+})
+
+## Basic Configuration
+The _Heatmap_ component renders a flat array of values as a grid of colored cells — like the GitHub contributions
+calendar. It works inside a _Single Container_ and only needs a `value` accessor. The data can be an array of
+objects or, as below, a plain array of numbers:
+<DocWrapper {...heatmapProps()} showContext="full"/>
+
+## Grid Dimensions
+The array is laid out into a grid whose size you control with `numRows` and/or `numColumns`. By default the grid has
+`7` rows and the data fills **column by column** (`layout: HeatmapLayoutType.Column`) — each column completes top-to-bottom before the
+next begins, just like GitHub weeks. Set `layout: HeatmapLayoutType.Row` to fill row by row instead.
+<InputWrapper {...heatmapProps()} height={230} property="numRows" defaultValue={7} inputType="range" inputProps={{ min: 1, max: 12 }}/>
+
+## Empty Cells & Offset
+When the `value` accessor returns `null` or `undefined`, the cell is rendered empty (using the
+`--vis-heatmap-cell-fill-color` variable). Use `offset` to leave empty cells before the first datum — handy for aligning
+the first value to a specific weekday:
+<DocWrapper {...heatmapProps()} offset={3}/>
+
+## Color
+By default cells are colored with a quantized green scale (configurable via the `--vis-heatmap-color-*` CSS variables).
+Pass `colorRange` to use your own bucket colors, `colorDomain` to fix the `[min, max]` mapping, or a per-cell `color`
+accessor for full control:
+<DocWrapper {...heatmapProps()} colorRange={['#e0e7ff', '#a5b4fc', '#6366f1', '#4338ca']} showContext="minimal"/>
+
+```ts
+// Quantized bucket colors (value → color)
+colorRange={['#e0e7ff', '#a5b4fc', '#6366f1', '#4338ca']}
+
+// Fix the domain so the scale doesn't depend on the data extent
+colorDomain={[0, 20]}
+
+// Or take full control per cell
+color={d => d > 10 ? '#4338ca' : '#a5b4fc'}
+```
+
+## Cell Appearance
+### Cell Size
+By default cells stretch to fill the container. Set `cellSize` to render fixed-size square cells (the component then
+reports its own size, which pairs with the container's `Sizing.Extend`).
+<InputWrapper {...heatmapProps()} property="cellSize" defaultValue={16} inputType="range" inputProps={{ min: 6, max: 30 }}/>
+
+### Cell Padding
+`cellPadding` is the gap between cells in pixels.
+<InputWrapper {...heatmapProps()} property="cellPadding" defaultValue={3} inputType="range" inputProps={{ min: 0, max: 12 }}/>
+
+### Corner Radius
+`cellCornerRadius` rounds the cell corners (pass a number, or `true` for a default radius of `2`).
+<InputWrapper {...heatmapProps()} property="cellCornerRadius" defaultValue={3} inputType="range" inputProps={{ min: 0, max: 8 }}/>
+
+## Labels
+Because the _Heatmap_ isn't an XY component, labels are built in. Provide `columnLabel` and/or `rowLabel` accessors —
+each is called per index and may return `undefined` to skip a label. Column labels render above the grid, row labels to
+the left:
+<DocWrapper {...heatmapProps()} rowLabel={r => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][r]}/>
+
+```ts
+// GitHub-style: months across the top, alternating weekdays on the left
+columnLabel={column => /* month name on the first column of each month */}
+rowLabel={row => ['', 'Mon', '', 'Wed', '', 'Fri', ''][row]}
+```
+
+### Handling Overlap
+When many labels are packed into a small space their text can collide. By default (`labelHideOverlapping: true`) the
+_Heatmap_ hides overlapping labels, resolving each axis independently and keeping the top-most row label and left-most
+column label of every colliding group. Toggle it off to always render every label:
+<InputWrapper {...heatmapProps(120)} numRows={8} cellSize={12} cellPadding={2} columnLabel={c => `Col ${c}`} rowLabel={r => `Row ${r}`} property="labelHideOverlapping" inputType="checkbox" defaultValue={true}/>
+
+## Events
+The following selectors are available for events:
+```ts
+import { Heatmap } from '@unovis/ts'
+...
+events = {
+    [Heatmap.selectors.cell]: { },
+}
+```
+<DocWrapper {...heatmapProps()} excludeGraph events={{}}/>
+
+## CSS Variables
+<details open>
+  <summary>All supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+{`${
+  Object.entries(Heatmap.selectors.cssVarDefaults)
+  .map(([key, value]) => `${key}: ${value};`).join('\n')}
+`}</CodeBlock>
+</details>
+
+## Component Props
+<PropsTable name="VisHeatmap"/>
