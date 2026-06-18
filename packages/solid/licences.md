@@ -6,7 +6,7 @@
 | tslib               | perpetual      | 0BSD         | 2.8.1             | Microsoft Corp.                                 |
 | tsx                 | perpetual      | MIT          | 4.21.0            | Hiroki Osame hiroki.osame@gmail.com             |
 | typescript          | perpetual      | Apache-2.0   | 5.6.3             | Microsoft Corp.                                 |
-| vite                | perpetual      | MIT          | 6.4.1             | Evan You                                        |
+| vite                | perpetual      | MIT          | 7.3.2             | Evan You                                        |
 | vite-plugin-dts     | perpetual      | MIT          | 3.9.1             | qmhc                                            |
 | vite-plugin-solid   | perpetual      | MIT          | 2.11.10           | Alexandre Mouton-Brady <amoutonbrady@gmail.com> |
 | solid-js            | perpetual      | MIT          | 1.9.11            | Ryan Carniato                                   |
