@@ -9,11 +9,37 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: '24.x'
-    - name: Install pnpm
-      run: npm install -g pnpm@10.23.0
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 10.23.0
+        node-version-file: '.nvmrc'
+    - uses: pnpm/action-setup@v4
     - run: pnpm install --frozen-lockfile
     - run: pnpm run build && pnpm run build:dev
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v3
+      with:
+        node-version-file: '.nvmrc'
+    - uses: pnpm/action-setup@v4
+    - run: pnpm install --frozen-lockfile
+    # Enforce the commit-message convention on the PR's commits.
+    - name: Validate commit messages
+      run: pnpm exec commitlint --from "${{ github.event.pull_request.base.sha }}" --to "${{ github.event.pull_request.head.sha }}" --verbose
+    # Lint only the files this PR changes, so the existing repo-wide lint debt
+    # doesn't block PRs while still gating newly touched code.
+    - name: Lint changed files
+      shell: bash
+      run: |
+        base="${{ github.event.pull_request.base.sha }}"
+        head="${{ github.event.pull_request.head.sha }}"
+        files=$(git diff --name-only --diff-filter=ACMR "$base...$head" -- '*.js' '*.jsx' '*.ts' '*.tsx' '*.svelte')
+        if [ -z "$files" ]; then
+          echo "No lintable files changed — skipping."
+          exit 0
+        fi
+        echo "Linting changed files:"
+        echo "$files"
+        pnpm exec eslint --ignore-path .gitignore $files
