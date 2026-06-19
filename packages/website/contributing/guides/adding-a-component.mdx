@@ -381,16 +381,19 @@ const circlesMerged = circles.merge(circlesEnter)
 We have five wrappers for our library for usage in other frameworks: `@unovis/angular`,
 `@unovis/react`, `@unovis/svelte`, `@unovis/vue` and `@unovis/solid`. Each can be found in their named directory in `packages`.
 Before your component is complete you will have to add it to each wrapper. Luckily we've streamlined
-this process in the `autogen` directory of each wrapper. You will just need to do the following steps:
+this process: the wrappers are generated from a single shared registry. You will just need to do the following steps:
 
-1. Add the component's info to the `components` array in `autogen/index.ts`
-2. In the wrapper's root directory, run the following command:
+1. Add an entry for your component to the `getComponentList()` array in `packages/shared/integrations/components.ts`. This registry is the source of truth for all of the wrapper generators (it's also what validates `Component` commit scopes).
+2. In each wrapper's root directory (`packages/react`, `packages/angular`, `packages/svelte`, `packages/vue`, `packages/solid`), run the following command:
   
   ```bash
-  npm run generate
+  pnpm generate
   ```
-3. Take a look at the generated component to see if it looks right. If not, you may need to manually
-write the component.
+3. Take a look at the generated component to see if it looks right. The Solid, Svelte and Vue barrels
+(`src/components.ts`) are updated automatically; for React and Angular, add the export line to
+`src/components.ts` by hand. Never edit the generated component files directly (they carry a
+"do not change" banner) — if the output is wrong, fix the core config or the shared TS parser
+(`packages/shared/integrations`) and regenerate.
 
 ## Visual Testing
 To visually test library components we use a react app located in the `packages/dev` directory. To run

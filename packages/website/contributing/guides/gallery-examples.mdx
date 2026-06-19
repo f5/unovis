@@ -5,7 +5,7 @@ sidebar_label: Adding Gallery Examples
 We welcome anyone to submit an example to our [gallery](https://unovis.dev/gallery).
 
 ## Overview
-Add your example to the website in the directory `packages/website/src/examples`. Before submitting
+Add your example to the directory `packages/shared/examples`. Before submitting
 a pull request, make sure you have done the following:
 
 - [x] Made a directory with all of the [required files](#required-files)
@@ -15,8 +15,8 @@ a pull request, make sure you have done the following:
 
 ## Required Files
 Your directory should be called `your-example-name`. In it, you will need to have files for all
-of our supported UI frameworks (angular, react, svelte and vanilla typescript) as well as a `data`
-and `index` file. The structure looks like:
+of our supported UI frameworks (angular, react, svelte, vue, solid and vanilla typescript) as well
+as a `data` and `index` file. The structure looks like:
 
 ```yaml
 your-example
@@ -26,7 +26,9 @@ your-example
 ├── your-example.component.ts   # ┠ angular
 ├── your-example.module.ts      # ┛
 ├── your-example.svelte         # svelte
-├── your-example.ts             # typescript
+├── your-example.vue            # vue
+├── your-example-solid.tsx      # solid
+├── your-example.ts             # typescript (the vanilla TS entry — name it exactly your-example.ts)
 ├── your-example.tsx            # react
 ```
 
@@ -37,23 +39,23 @@ You can copy and paste the following:
 ```tsx
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
-import BrowserOnly from '@docusaurus/BrowserOnly'
-import { Example } from '@site/src/types/example'
+import type { Example } from '../types'
 
 // highlight-next-line
 const pathname = ''
 const example: Example = {
-  component: () => <BrowserOnly>{() => {
+  component: () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const Component = require(`./${pathname}.tsx`).default
     return <Component />
-  }}</BrowserOnly>,
+  },
   pathname,
   // highlight-next-line
   title: '',
   // highlight-next-line
-  description: <div></div>,
+  description: '',
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
@@ -61,6 +63,7 @@ const example: Example = {
     module: require(`!!raw-loader!./${pathname}.module.ts`).default,
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
+  codeVue: require(`!!raw-loader!./${pathname}.vue`).default,
   data: require('!!raw-loader!./data').default,
   preview: require(`../_previews/${pathname}.png`).default,
   previewDark: require(`../_previews/${pathname}-dark.png`).default,
@@ -71,50 +74,34 @@ export default example
 
 :::note
 - **pathname** should correspond to your directory name
-- **title** should reference the library component(s) your using
+- **title** should reference the library component(s) you're using
 - **description** should be a brief description of your visualization with any data sources cited
 :::
 
 ## Testing each framework
 Before you submit a pull request, be sure you have verified that the example works for each
-framework on your local machine. In the `packages/website` directory, you can view your example
-by following the steps below:
+framework on your local machine.
 
-### React
-1. Run the command
-  ```bash
-npm run start
-  ```
-2. Open [localhost:9300](http://localhost:9300) and navigate to your example's page
-
-### TypeScript
-Same steps above, but add `&ts` to the end of the url.
-
-### Svelte
-1. Add your example's `svelte` file path to the `imports` array in `src-demo/svelte-gallery.svelte`
-2. From the terminal, run the command
+### Multi-framework playground (recommended)
+From the repository root, run:
 ```bash
-cd packages/svelte
-npm run gallery
+pnpm dev:gallery
 ```
+Open the URL printed by Vite and pick your example in the sidebar. It renders the **React**, **Vue**,
+**Solid**, **Svelte** and **vanilla TypeScript** variants side by side. Examples are discovered
+automatically from `packages/shared/examples/*` — there is no manual registration step. The
+TypeScript panel only mounts a file named exactly `your-example.ts` (`data.ts` and `types.ts` are
+treated as shared helpers, not entry points). Angular is not part of this playground — preview it on
+the website or with the Angular gallery below.
 
-### Vue
-1. Add your example's `vue` file path to the `imports` array in `src-demo/App.vue`
-2. From the terminal, run the command
-```bash
-cd packages/vue
-npm run gallery
-```
-
-### Solid
-1. Add your example's `-solid.tsx` file path to the `imports` array in `src-demo/app.tsx`
-2. From the terminal, run the command
-```bash
-cd packages/solid
-npm run gallery
-```
+### Website
+From the repository root, run `pnpm website` and open [localhost:9300](http://localhost:9300).
+Navigate to your example's page to see it rendered together with the code listing for every
+framework. To preview the vanilla TypeScript render, append `&ts` to the example URL.
 
 ### Angular
+Angular isn't included in the multi-framework playground, so preview it with its own gallery:
+
 1. Import your angular module in `gallery/src/main.ts`
 2. Add the imported module to the `imports` field in the `NgModule` decorator:
   ```ts title=main.ts
@@ -138,5 +125,5 @@ npm run gallery
 4. From the terminal, run the command
 ```bash
 cd packages/angular
-npm run gallery
+pnpm gallery
 ```
