@@ -7,7 +7,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange, getValue } from 'utils/data'
+import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange, getValue, clamp } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -90,13 +90,19 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
 
     const stacked = getStackedData(data, config.baseline, yAccessors, this._prevNegative)
     this._prevNegative = stacked.map(s => !!s.isMostlyNegative)
+
+    // Clamp to the visible y range so the area and its fill stay within the container
+    const yRange = this.yScale.range()
+    const yRangeMin = Math.min(yRange[0], yRange[1])
+    const yRangeMax = Math.max(yRange[0], yRange[1])
+
     const minHeightCumulativeArray: number[] = []
     const stackedData: AreaDatum[][] = stacked.map(
       arr => arr.map(
         (d, j) => {
           const x = areaDataX[j]
-          const y0 = this.yScale(d[0])
-          const y1 = this.yScale(d[1])
+          const y0 = clamp(this.yScale(d[0]), yRangeMin, yRangeMax)
+          const y1 = clamp(this.yScale(d[1]), yRangeMin, yRangeMax)
           const isNegativeArea = y1 > y0
 
           // Only apply cumulative adjustment if `config.stackMinHeight` is true
