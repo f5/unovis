@@ -1,0 +1,1 @@
+../../ai/skills/add-component/SKILL.md

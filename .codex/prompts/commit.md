@@ -1,0 +1,1 @@
+../../ai/skills/commit/SKILL.md
