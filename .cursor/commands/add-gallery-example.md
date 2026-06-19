@@ -1,0 +1,1 @@
+../../ai/skills/add-gallery-example/SKILL.md
