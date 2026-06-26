@@ -1,5 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
-import { darkThemeCssSelectors } from 'utils/style'
+import { darkThemeCssSelectors } from 'utils/theme'
 
 export const root = css`
   label: free-brush-component;

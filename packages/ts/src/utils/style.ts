@@ -2,9 +2,7 @@ import { injectGlobal } from '@emotion/css'
 
 import { kebabCaseToCamel } from 'utils/text'
 import type { KebabToCamelCase, RemovePrefix } from 'utils/type'
-
-export const darkThemeCssSelectors =
-  'html[data-theme="dark"],html.dark-theme,body.dark-theme,html.theme-dark,body.theme-dark'
+import { darkThemeCssSelectors } from 'utils/theme'
 
 export const isDarkThemeEnabled = (...targetElements: HTMLElement[]): boolean => {
   const elements = targetElements.length > 0 ? targetElements : [document.documentElement, document.body]
