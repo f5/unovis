@@ -63,6 +63,7 @@ const SKIP_CONTAINS = ['publish', 'update-version']
 const ROOT_SKIP_EXACT = new Set([
   'install:clean',
   'dev',
+  'dev:gallery',
   'website',
   'postinstall',
   'audit-report',
@@ -75,7 +76,7 @@ const ROOT_SKIP_STARTS = ['build'] // 'build' and 'build:*'
 
 // Workspace: publish & gallery variants are out. Long-running servers,
 // interactive / destructive tooling, and generator pass-throughs too.
-const WS_SKIP_CONTAINS = ['publish', 'gallery']
+const WS_SKIP_CONTAINS = ['publish', 'gallery', 'license:check']
 const WS_SKIP_EXACT = new Set([
   'dev',
   'serve',
