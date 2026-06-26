@@ -50,11 +50,17 @@ const plugins = [
   // visualizer({ sourcemap: true, template: 'network' }),
 ]
 
+function onwarn (warning, warn) {
+  if (warning.code === 'CIRCULAR_DEPENDENCY') throw new Error(warning.message)
+  warn(warning)
+}
+
 export default [
   {
     input: 'src/index.ts',
     external: regexesOfPackages,
     treeshake: false,
+    onwarn,
     output: {
       dir: 'dist',
       sourcemap: true,
@@ -66,6 +72,7 @@ export default [
   },
   {
     input: 'src/maps.ts',
+    onwarn,
     output: {
       dir: 'dist',
       format: 'esm',
