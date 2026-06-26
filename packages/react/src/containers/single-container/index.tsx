@@ -15,7 +15,7 @@ import { VisComponentElement } from 'src/types/dom'
 export type VisSingleContainerProps<Data> = SingleContainerConfigInterface<Data> & {
   data?: Data;
   className?: string;
-  style?: React.CSSProperties & Record<`--${string}`, string | number>;
+  style?: React.CSSProperties | Record<`--${string}`, string | number>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

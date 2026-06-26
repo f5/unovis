@@ -18,7 +18,7 @@ import { VisComponentElement } from 'src/types/dom'
 export type VisXYContainerProps<Datum> = XYContainerConfigInterface<Datum> & {
   data?: Datum[];
   className?: string;
-  style?: React.CSSProperties & Record<`--${string}`, string | number>;
+  style?: React.CSSProperties | Record<`--${string}`, string | number>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
