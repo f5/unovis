@@ -29,7 +29,7 @@ export class ComponentCore<
   public config: ConfigInterface
   public prevConfig: ConfigInterface
   public datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
-  public sizing: Sizing | string = Sizing.Fit // Supported by SingleContainer and a subset of components only (Sankey)
+  public sizing: Sizing | string = Sizing.Fit // Supported by SingleContainer and a subset of components only (Sankey, Heatmap)
   public uid: string
 
   protected events: {
