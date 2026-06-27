@@ -48,9 +48,9 @@
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.6",
-    "@angular/common": "12 - 19",
-    "@angular/compiler": "12 - 19",
-    "@angular/core": "12 - 19",
+    "@angular/common": "12 - 22",
+    "@angular/compiler": "12 - 22",
+    "@angular/core": "12 - 22",
     "rxjs": "^6.6.0 || ^7.5.0",
     "d3-array": "3.2.4",
     "d3-geo": "~3.1.1"
