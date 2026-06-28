@@ -1,7 +1,7 @@
 {
   "name": "@unovis/vue",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, and vanilla TypeScript or JavaScript",
-  "version": "1.6.6",
+  "version": "1.6.7",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
@@ -54,7 +54,7 @@
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.6",
+    "@unovis/ts": "1.6.7",
     "vue": "^3"
   },
   "devDependencies": {
