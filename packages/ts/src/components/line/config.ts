@@ -13,6 +13,8 @@ export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<D
   lineWidth?: number;
   /** Line dash array, see SVG's stroke-dasharray. Default: `undefined` */
   lineDashArray?: GenericAccessor<number[], Datum[]>;
+  /** Whether to stack multiple `y` accessors cumulatively (like Area does). Default: `false` */
+  stacked?: boolean;
   /** When a data point has an `undefined`, `NaN`, or other no-data value, they'll be replaced with a value specified here.
    * Setting this property to `undefined` will lead to having the line break when there's no data, and continue when
    * the data appears again. If you set it to `null`, the values will be treated as numerical `0` values and the line
@@ -36,6 +38,7 @@ export const LineDefaultConfig: LineConfigInterface<unknown> = {
   curveType: CurveType.MonotoneX,
   lineWidth: 2,
   lineDashArray: undefined,
+  stacked: false,
   fallbackValue: undefined,
   highlightOnHover: false,
   cursor: null,
