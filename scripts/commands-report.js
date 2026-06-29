@@ -63,7 +63,6 @@ const SKIP_CONTAINS = ['publish', 'update-version']
 const ROOT_SKIP_EXACT = new Set([
   'install:clean',
   'dev',
-  'dev:gallery',
   'website',
   'postinstall',
   'audit-report',
@@ -76,7 +75,7 @@ const ROOT_SKIP_STARTS = ['build'] // 'build' and 'build:*'
 
 // Workspace: publish & gallery variants are out. Long-running servers,
 // interactive / destructive tooling, and generator pass-throughs too.
-const WS_SKIP_CONTAINS = ['publish', 'gallery', 'license:check']
+const WS_SKIP_CONTAINS = ['publish', 'gallery']
 const WS_SKIP_EXACT = new Set([
   'dev',
   'serve',
@@ -190,6 +189,7 @@ if (tasks.length === 0) {
 const ANSI_RE = /\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])/g
 const stripAnsi = s => s.replace(ANSI_RE, '')
 const findTask = name => tasks.find(t => t.name === name)
+const SCRIPT_NAME_ALLOW_RE = /^[A-Za-z0-9:_-]+$/
 
 const getGitBranch = () => {
   try {
@@ -251,19 +251,32 @@ const appendOutput = (name, raw) => {
 // ─── Runner ───────────────────────────────────────────────────────────────────
 
 const runTask = task => new Promise(resolve => {
+  if (!SCRIPT_NAME_ALLOW_RE.test(task.scriptName)) {
+    const err = `Blocked unsafe script name: ${task.scriptName}`
+    console.error(`  ! ${err}`)
+    appendOutput(task.name, err)
+    updateTask(task.name, {
+      status: 'failed',
+      exitCode: -1,
+      startTime: Date.now(),
+      endTime: Date.now(),
+    })
+    resolve()
+    return
+  }
+
   updateTask(task.name, { status: 'running', startTime: Date.now() })
   console.log(`  ▶ starting  [${task.workspace}] ${task.scriptName}`)
 
-  // shell:true ensures pnpm (a shell script/symlink) is resolved via the
-  // user's PATH, and allows scripts that contain shell constructs (e.g.
-  // the gather-licenses "for" loop) to run correctly.
+  // Run without an intermediate shell to avoid command injection via script
+  // names while still allowing package scripts themselves to use shell syntax.
   // detached:true creates a new process group so we can kill the whole
-  // tree (shell + pnpm + children) at once with proc.pid negation.
-  const proc = spawn(`pnpm run ${task.scriptName}`, {
+  // tree (pnpm + children) at once with proc.pid negation.
+  const proc = spawn('pnpm', ['run', task.scriptName], {
     cwd: task.workspaceDir,
     env: { ...process.env, FORCE_COLOR: '0', NO_COLOR: '1' },
     stdio: ['ignore', 'pipe', 'pipe'],
-    shell: true,
+    shell: false,
     detached: true,
   })
   activeProcs.add(proc)
