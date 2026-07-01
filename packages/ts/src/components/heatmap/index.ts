@@ -14,6 +14,7 @@ import { getCSSVariableValue, getCSSVariableValueInPixels } from 'utils/misc'
 import { cssvar } from 'utils/style'
 import { getPreciseStringLengthPx } from 'utils/text-measure'
 import { roundedRectPath } from 'utils/path'
+import { hideOverlappingLabels } from 'utils/text-overlap'
 
 // Types
 import { Spacing } from 'types/spacing'
@@ -49,6 +50,7 @@ export class Heatmap<Datum> extends ComponentCore<Datum[], HeatmapConfigInterfac
 
   /** Gap between a label and the grid in pixels. */
   private _labelPadding = 6
+  private _labelCollisionAnimFrameId: ReturnType<typeof requestAnimationFrame>
 
   constructor (config?: HeatmapConfigInterface<Datum>) {
     super()
@@ -176,11 +178,12 @@ export class Heatmap<Datum> extends ComponentCore<Datum[], HeatmapConfigInterfac
       .style('opacity', 0)
       .remove()
 
-    this._renderColumnLabels(columns, strideX)
-    this._renderRowLabels(rows, strideY, cellHeight)
+    const columnLabels = this._renderColumnLabels(columns, strideX)
+    const rowLabels = this._renderRowLabels(rows, strideY, cellHeight)
+    this._resolveLabelOverlap(columnLabels, rowLabels)
   }
 
-  private _renderColumnLabels (columns: number, strideX: number): void {
+  private _renderColumnLabels (columns: number, strideX: number): Selection<SVGTextElement, ColumnLabelDatum, SVGGElement, unknown> {
     const { config, bleed } = this
     const columnLabel = config.columnLabel
     const labelData: ColumnLabelDatum[] = columnLabel
@@ -189,25 +192,29 @@ export class Heatmap<Datum> extends ComponentCore<Datum[], HeatmapConfigInterfac
         .filter((d): d is ColumnLabelDatum => d.label != null && d.label !== '')
       : []
 
+    // Each label is wrapped in a <g> that owns the enter/exit fade, so the inner <text>
+    // opacity can be driven independently by overlap resolution without fighting the transition.
     const labels = this.columnLabelsGroup
-      .selectAll<SVGTextElement, ColumnLabelDatum>(`.${s.columnLabel}`)
+      .selectAll<SVGGElement, ColumnLabelDatum>('g')
       .data(labelData, d => `${d.column}`)
 
-    const labelsEnter = labels.enter().append('text')
-      .attr('class', `${s.label} ${s.columnLabel}`)
-      .style('opacity', 0)
+    const labelsEnter = labels.enter().append('g').style('opacity', 0)
+    labelsEnter.append('text').attr('class', `${s.label} ${s.columnLabel}`)
 
     const labelsMerged = labelsEnter.merge(labels)
-    labelsMerged
+    const textMerged = labelsMerged.select<SVGTextElement>('text')
+    textMerged
       .attr('x', d => bleed.left + d.column * strideX)
       .attr('y', Math.max(0, bleed.top - this._labelPadding))
       .text(d => d.label)
 
     smartTransition(labelsMerged, this.config.duration).style('opacity', 1)
     smartTransition(labels.exit(), this.config.duration).style('opacity', 0).remove()
+
+    return textMerged
   }
 
-  private _renderRowLabels (rows: number, strideY: number, cellHeight: number): void {
+  private _renderRowLabels (rows: number, strideY: number, cellHeight: number): Selection<SVGTextElement, RowLabelDatum, SVGGElement, unknown> {
     const { config, bleed } = this
     const rowLabel = config.rowLabel
     const labelData: RowLabelDatum[] = rowLabel
@@ -217,21 +224,44 @@ export class Heatmap<Datum> extends ComponentCore<Datum[], HeatmapConfigInterfac
       : []
 
     const labels = this.rowLabelsGroup
-      .selectAll<SVGTextElement, RowLabelDatum>(`.${s.rowLabel}`)
+      .selectAll<SVGGElement, RowLabelDatum>('g')
       .data(labelData, d => `${d.row}`)
 
-    const labelsEnter = labels.enter().append('text')
-      .attr('class', `${s.label} ${s.rowLabel}`)
-      .style('opacity', 0)
+    const labelsEnter = labels.enter().append('g').style('opacity', 0)
+    labelsEnter.append('text').attr('class', `${s.label} ${s.rowLabel}`)
 
     const labelsMerged = labelsEnter.merge(labels)
-    labelsMerged
+    const textMerged = labelsMerged.select<SVGTextElement>('text')
+    textMerged
       .attr('x', Math.max(0, bleed.left - this._labelPadding))
       .attr('y', d => bleed.top + d.row * strideY + cellHeight / 2)
       .text(d => d.label)
 
     smartTransition(labelsMerged, this.config.duration).style('opacity', 1)
     smartTransition(labels.exit(), this.config.duration).style('opacity', 0).remove()
+
+    return textMerged
+  }
+
+  /** Hides row/column labels that overlap their neighbours. Runs in the next frame so the
+   * just-rendered labels can be measured without forcing a synchronous reflow. */
+  private _resolveLabelOverlap (
+    columnLabels: Selection<SVGTextElement, ColumnLabelDatum, SVGGElement, unknown>,
+    rowLabels: Selection<SVGTextElement, RowLabelDatum, SVGGElement, unknown>
+  ): void {
+    if (!this.config.labelHideOverlapping) {
+      columnLabels.style('opacity', null)
+      rowLabels.style('opacity', null)
+      return
+    }
+
+    // Resolve each axis independently — row and column labels live in separate regions
+    // and never overlap one another.
+    cancelAnimationFrame(this._labelCollisionAnimFrameId)
+    this._labelCollisionAnimFrameId = requestAnimationFrame(() => {
+      hideOverlappingLabels(columnLabels, { tolerance: -2 })
+      hideOverlappingLabels(rowLabels, { tolerance: -2 })
+    })
   }
 
   private _usesExtendedCellSize (): boolean {
