@@ -22,7 +22,7 @@ export function getComponentCode (
 
   // Vue 3.3.4 has issue resolving complex Typescript, in this case when the type has `WithOptional`.
   // If the build is failing, add the respective component here.
-  const complexPropComponent = ['Timeline', 'Crosshair']
+  const complexPropComponent = ['Timeline', 'Crosshair', 'Boxplot']
   const isComplexPropComponent = complexPropComponent.includes(componentName)
 
   return `<script setup lang="ts" ${genericsExtend}>
