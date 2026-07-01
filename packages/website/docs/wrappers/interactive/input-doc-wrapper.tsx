@@ -44,7 +44,9 @@ export function InputWrapper ({ property, inputType: type, defaultValue, inputPr
             checked={attr}
           />}
       </label>
-      <DocWrapper {...{ [property]: attr, ...rest }}/>
+      {/* `[property]` is spread last so the input's live value wins even when the
+          base props (e.g. `heatmapProps()`) already include a static value for it. */}
+      <DocWrapper {...{ ...rest, [property]: attr }}/>
     </div>
   )
 }
