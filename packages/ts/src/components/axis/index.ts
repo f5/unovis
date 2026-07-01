@@ -17,7 +17,7 @@ import { smartTransition } from 'utils/d3'
 import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from 'utils/text'
 import { getCachedComputedTextLength } from 'utils/text-measure'
 import { isEqual, isFunction } from 'utils/data'
-import { rectIntersect } from 'utils/misc'
+import { hideOverlappingLabels } from 'utils/text-overlap'
 import { getFontWidthToHeightRatio } from 'styles/index'
 
 // Local Types
@@ -346,53 +346,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     cancelAnimationFrame(this._collideTickLabelsAnimFrameId)
     // Colliding labels in the next frame to prevent forced reflow
     this._collideTickLabelsAnimFrameId = requestAnimationFrame(() => {
-      this._collideTickLabels(tickTextSelection)
-    })
-  }
-
-  private _collideTickLabels (selection: Selection<SVGTextElement, number | Date, SVGGElement, unknown>): void {
-    type SVGOverlappingTextElement = SVGTextElement & {
-      _visible: boolean;
-    }
-
-    // Reset visibility of all labels
-    selection.each((d, i, elements) => {
-      const node = elements[i] as SVGOverlappingTextElement
-      node._visible = true
-    })
-
-    // We do three iterations because not all overlapping labels can be resolved in the first iteration
-    const numIterations = 3
-    for (let i = 0; i < numIterations; i += 1) {
-    // Run collision detection and set labels visibility
-      selection.each((d, i, elements) => {
-        const label1 = elements[i] as SVGOverlappingTextElement
-        const isLabel1Visible = label1._visible
-        if (!isLabel1Visible) return
-
-        // Calculate bounding rect of point's label
-        const label1BoundingRect = label1.getBoundingClientRect()
-
-        for (let j = i + 1; j < elements.length; j += 1) {
-          if (i === j) continue
-          const label2 = elements[j] as SVGOverlappingTextElement
-          const isLabel2Visible = label2._visible
-          if (isLabel2Visible) {
-            const label2BoundingRect = label2.getBoundingClientRect()
-            const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, -5)
-            if (intersect) {
-              label2._visible = false
-              break
-            }
-          }
-        }
-      })
-    }
-
-    // Hide the overlapping labels
-    selection.each((d, i, elements) => {
-      const label = elements[i] as SVGOverlappingTextElement
-      select(label).style('opacity', label._visible ? 1 : 0)
+      hideOverlappingLabels(tickTextSelection, { tolerance: -5 })
     })
   }
 
