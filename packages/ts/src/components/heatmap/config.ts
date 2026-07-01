@@ -46,6 +46,9 @@ export interface HeatmapConfigInterface<Datum> extends ComponentConfigInterface 
   columnLabel?: (columnIndex: number) => string | null | undefined;
   /** Row label accessor, called per row index. Return `undefined` to skip a label. Labels are rendered to the left of the grid. Default: `undefined` */
   rowLabel?: (rowIndex: number) => string | null | undefined;
+  /** Hide row and column labels that overlap their neighbours. Collisions are resolved independently per axis,
+   * keeping the top-most row label and left-most column label of each overlapping group visible. Default: `true` */
+  labelHideOverlapping?: boolean;
 }
 
 export const HeatmapDefaultConfig: HeatmapConfigInterface<unknown> = {
@@ -64,4 +67,5 @@ export const HeatmapDefaultConfig: HeatmapConfigInterface<unknown> = {
   cursor: null,
   columnLabel: undefined,
   rowLabel: undefined,
+  labelHideOverlapping: true,
 }
