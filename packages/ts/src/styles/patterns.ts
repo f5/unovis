@@ -81,13 +81,15 @@ export function getPatternById (id: string): FillPattern | LinePattern | null {
   return fillById.get(id) ?? lineById.get(id) ?? null
 }
 
+// No percentage units here: Chromium resolves them against the 0×0 defs container (not the
+// referencing chart's viewport), which would collapse the mask to zero coverage (#843).
 const maskDef = (p: FillPattern): string =>
   `<mask id="${getFillPatternId(p.id)}">
     <pattern id="vis-pattern-tile-${p.id}" viewBox="0 0 10 10" width="${PATTERN_SIZE_PX}" height="${PATTERN_SIZE_PX}" patternUnits="userSpaceOnUse">
-      <rect width="100%" height="100%" fill="#fff"/>
+      <rect width="10" height="10" fill="#fff"/>
       ${p.svg}
     </pattern>
-    <rect x="-50%" y="-50%" width="200%" height="200%" fill="url(#vis-pattern-tile-${p.id})"/>
+    <rect x="-100000" y="-100000" width="200000" height="200000" fill="url(#vis-pattern-tile-${p.id})"/>
   </mask>`
 
 // Index-colored marker used by the `theme-patterns` CSS fallback, where the series index maps to a fixed color.
@@ -133,8 +135,10 @@ function injectSVGDefs (): void {
   const markerDefs = lines.map((p, i) => markerDef(p, i)).concat(lines.map(contextMarkerDef))
   const svgDefs = fills.map(maskDef).concat(markerDefs).join('')
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-  svg.setAttribute('height', '100%')
-  svg.setAttribute('width', '100%')
+  // Zero-sized so the insertion doesn't register as a viewport-sized layout shift (CLS ~1.0, #843).
+  // Referenced defs (masks/markers) still work at 0×0 — but not under `display: none`.
+  svg.setAttribute('height', '0')
+  svg.setAttribute('width', '0')
   svg.style.position = 'fixed'
   svg.style.zIndex = '-99999999'
   svg.innerHTML = `<defs>${svgDefs}</defs>`
