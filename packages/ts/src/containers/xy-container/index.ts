@@ -19,6 +19,7 @@ import { AxisType } from '@/components/axis/types'
 import { ScaleDimension } from '@/types/scale'
 import { Direction } from '@/types/direction'
 import { PlotLabelLayout, PlotLabelLayoutInfo } from '@/types/plot-label'
+import { Rect } from '@/types/misc'
 
 // Utils
 import { clamp, clean, flatten, isEqual } from '@/utils/data'
@@ -26,7 +27,7 @@ import { guid } from '@/utils/misc'
 
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
-import { Rect, projectLabelRect, tryPlaceLabel } from './plot-label-resolver'
+import { projectLabelRect, tryPlaceLabel } from './plot-label-resolver'
 import {
   AreaConfigInterface,
   BrushConfigInterface,
