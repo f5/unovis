@@ -1,6 +1,5 @@
 import { LabelOverflow, PlotLabelLayout, PlotLabelLayoutInfo } from 'types/plot-label'
-
-export type Rect = { x: number; y: number; width: number; height: number }
+import { Rect } from 'types/misc'
 
 function isRotatedQuarter (transform: string | undefined): boolean {
   if (!transform) return false
