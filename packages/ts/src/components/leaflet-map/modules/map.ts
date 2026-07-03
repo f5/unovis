@@ -4,7 +4,7 @@ import type { GeoJSONSource, Map } from 'maplibre-gl'
 import { feature } from 'topojson-client'
 
 // Types
-import { GenericDataRecord } from 'types/data'
+import { GenericDataRecord } from '@/types/data'
 
 // Config
 import { LeafletMapConfigInterface } from '../config'

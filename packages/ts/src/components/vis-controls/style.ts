@@ -1,6 +1,6 @@
 import { css, injectGlobal } from '@emotion/css'
-import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from 'styles/index'
-import { darkThemeCssSelectors } from 'utils/theme'
+import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from '@/styles/index'
+import { darkThemeCssSelectors } from '@/utils/theme'
 
 export const root = css`
   label: vis-controls-component;

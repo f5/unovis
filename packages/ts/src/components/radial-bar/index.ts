@@ -3,19 +3,19 @@ import { arc } from 'd3-shape'
 import { max } from 'd3-array'
 
 // Core
-import { ComponentCore } from 'core/component'
-import { SeriesDataModel } from 'data-models/series'
+import { ComponentCore } from '@/core/component'
+import { SeriesDataModel } from '@/data-models/series'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { isNumber, clamp, getNumber } from 'utils/data'
-import { getCSSVariableValueInPixels } from 'utils/misc'
-import { cssvar } from 'utils/style'
-import { wrapSVGText } from 'utils/text'
+import { smartTransition } from '@/utils/d3'
+import { isNumber, clamp, getNumber } from '@/utils/data'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
+import { cssvar } from '@/utils/style'
+import { wrapSVGText } from '@/utils/text'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
+import { NumericAccessor } from '@/types/accessor'
+import { Spacing } from '@/types/spacing'
 
 // Local Types
 import { RadialBarArcDatum, RadialBarArcAnimState, RadialBarDatum } from './types'

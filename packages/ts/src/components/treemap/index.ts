@@ -5,21 +5,21 @@ import { scaleLinear, scaleThreshold } from 'd3-scale'
 import { hsl } from 'd3-color'
 
 // Core
-import { ComponentCore } from 'core/component'
+import { ComponentCore } from '@/core/component'
 
 // Data Model
-import { SeriesDataModel } from 'data-models/series'
+import { SeriesDataModel } from '@/data-models/series'
 
 // Utils
-import { getColor, brighter, getHexValue, isColorDark } from 'utils/color'
-import { getString, getNumber, isNumber, isFunction } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { trimSVGText, wrapSVGText } from 'utils/text'
-import { getCachedFontSizePx } from 'utils/text-measure'
-import { cssvar } from 'utils/style'
+import { getColor, brighter, getHexValue, isColorDark } from '@/utils/color'
+import { getString, getNumber, isNumber, isFunction } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { trimSVGText, wrapSVGText } from '@/utils/text'
+import { getCachedFontSizePx } from '@/utils/text-measure'
+import { cssvar } from '@/utils/style'
 
 // Types
-import { FitMode } from 'types/text'
+import { FitMode } from '@/types/text'
 
 // Config
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'

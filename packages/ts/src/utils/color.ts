@@ -2,12 +2,12 @@ import { color, hcl } from 'd3-color'
 import { scaleOrdinal } from 'd3-scale'
 
 // Core
-import { colors, getCSSColorVariable } from 'styles/colors'
+import { colors, getCSSColorVariable } from '@/styles/colors'
 
 // Utils
-import { ColorAccessor, ColorFunction } from 'types/accessor'
-import { isFunction, isNumber } from 'utils/data'
-import { isStringCSSVariable, getCSSVariableValue } from 'utils/misc'
+import { ColorAccessor, ColorFunction } from '@/types/accessor'
+import { isFunction, isNumber } from '@/utils/data'
+import { isStringCSSVariable, getCSSVariableValue } from '@/utils/misc'
 
 type RGBColor = { r: number; g: number; b: number }
 

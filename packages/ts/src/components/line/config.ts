@@ -1,9 +1,9 @@
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { CurveType } from 'types/curve'
-import { ColorAccessor, GenericAccessor, StringAccessor } from 'types/accessor'
-import { LinePatternType } from 'styles/patterns'
+import { CurveType } from '@/types/curve'
+import { ColorAccessor, GenericAccessor, StringAccessor } from '@/types/accessor'
+import { LinePatternType } from '@/styles/patterns'
 
 export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Line color accessor function. The whole data array will be passed as the first argument. Default: `undefined` */

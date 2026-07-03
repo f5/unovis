@@ -2,16 +2,16 @@ import { select, Selection, ValueFn } from 'd3-selection'
 import { Transition } from 'd3-transition'
 
 // Core
-import { CoreDataModel } from 'data-models/core'
+import { CoreDataModel } from '@/data-models/core'
 
 // Utils
-import { merge, throttle } from 'utils/data'
-import { guid } from 'utils/misc'
+import { merge, throttle } from '@/utils/data'
+import { guid } from '@/utils/misc'
 
 // Types
-import { ComponentType, Sizing } from 'types/component'
-import { Spacing } from 'types/spacing'
-import { ColorFunction } from 'types/accessor'
+import { ComponentType, Sizing } from '@/types/component'
+import { Spacing } from '@/types/spacing'
+import { ColorFunction } from '@/types/accessor'
 
 // Local Types
 import { VisEventCallback, VisEventType } from './types'

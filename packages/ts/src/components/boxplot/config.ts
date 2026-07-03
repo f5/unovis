@@ -1,8 +1,8 @@
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { WithOptional } from 'types/misc'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { WithOptional } from '@/types/misc'
 
 export interface BoxplotConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   /** Box fill color accessor function. Default: `d => d.color` */

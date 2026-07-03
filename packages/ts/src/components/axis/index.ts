@@ -4,21 +4,21 @@ import { Axis as D3Axis, axisBottom, axisLeft, axisRight, axisTop } from 'd3-axi
 import { NumberValue } from 'd3-scale'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Types
-import { Position } from 'types/position'
-import { ContinuousScale } from 'types/scale'
-import { Spacing } from 'types/spacing'
-import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAlign } from 'types/text'
+import { Position } from '@/types/position'
+import { ContinuousScale } from '@/types/scale'
+import { Spacing } from '@/types/spacing'
+import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAlign } from '@/types/text'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from 'utils/text'
-import { getCachedComputedTextLength } from 'utils/text-measure'
-import { isEqual, isFunction } from 'utils/data'
-import { hideOverlappingLabels } from 'utils/text-overlap'
-import { getFontWidthToHeightRatio } from 'styles/index'
+import { smartTransition } from '@/utils/d3'
+import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from '@/utils/text'
+import { getCachedComputedTextLength } from '@/utils/text-measure'
+import { isEqual, isFunction } from '@/utils/data'
+import { hideOverlappingLabels } from '@/utils/text-overlap'
+import { getFontWidthToHeightRatio } from '@/styles/index'
 
 // Local Types
 import { AxisType } from './types'

@@ -1,9 +1,9 @@
 // Core
-import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
-import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { FillPatternType } from 'styles/patterns'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { FillPatternType } from '@/styles/patterns'
 import { NestedDonutDirection, NestedDonutLayerSettings, NestedDonutSegment } from './types'
 
 export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterface {

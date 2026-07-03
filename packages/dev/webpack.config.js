@@ -69,14 +69,7 @@ module.exports = {
 
       // Unovis Core
       '@unovis/ts': path.resolve(__dirname, '../ts/src/'),
-      utils: path.resolve(__dirname, '../ts/src/utils/'),
-      components: path.resolve(__dirname, '../ts/src/components/'),
-      containers: path.resolve(__dirname, '../ts/src/containers/'),
-      types: path.resolve(__dirname, '../ts/src/types/'),
-      data: path.resolve(__dirname, '../ts/src/data/'),
-      core: path.resolve(__dirname, '../ts/src/core/'),
-      styles: path.resolve(__dirname, '../ts/src/styles/'),
-      'data-models': path.resolve(__dirname, '../ts/src/data-models/'),
+      '@': path.resolve(__dirname, '../ts/src/'),
 
       // Unovis React
       '@unovis/react': path.resolve(__dirname, '../react/src/'),

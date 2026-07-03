@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { SymbolType } from 'types/symbol'
-import { FillPatternType, LinePatternType } from 'styles/patterns'
+import { SymbolType } from '@/types/symbol'
+import { FillPatternType, LinePatternType } from '@/styles/patterns'
 
 export interface BulletLegendItemInterface {
   name: string | number;

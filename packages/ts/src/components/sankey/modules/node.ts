@@ -2,13 +2,13 @@ import { select, Selection } from 'd3-selection'
 import { max } from 'd3-array'
 
 // Utils
-import { getColor } from 'utils/color'
-import { getPattern, getFillPatternValue } from 'utils/pattern'
-import { getString, isNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue } from '@/utils/pattern'
+import { getString, isNumber } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
 
 // Types
-import { Spacing } from 'types/spacing'
+import { Spacing } from '@/types/spacing'
 
 // Local Types
 import {

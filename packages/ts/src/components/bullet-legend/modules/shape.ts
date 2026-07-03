@@ -2,18 +2,18 @@ import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
 
 // Types
-import { ColorAccessor, ColorFunction } from 'types/accessor'
-import { Symbol, SymbolType } from 'types/symbol'
+import { ColorAccessor, ColorFunction } from '@/types/accessor'
+import { Symbol, SymbolType } from '@/types/symbol'
 
 // Utils
-import { getColor } from 'utils/color'
-import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
-import { ensureArray, getString } from 'utils/data'
-import { getCSSVariableValueInPixels } from 'utils/misc'
-import { toPx } from 'utils/to-px'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { ensureArray, getString } from '@/utils/data'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
+import { toPx } from '@/utils/to-px'
 
 // Constants
-import { PATTERN_SIZE_PX } from 'styles/patterns'
+import { PATTERN_SIZE_PX } from '@/styles/patterns'
 
 // Local types
 import { BulletLegendConfigInterface } from '../config'

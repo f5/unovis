@@ -3,10 +3,10 @@ import { Transition } from 'd3-transition'
 import { interpolateNumber } from 'd3-interpolate'
 
 // Utils
-import { getColor } from 'utils/color'
-import { getPattern, getFillPatternValue } from 'utils/pattern'
-import { getString } from 'utils/data'
-import { smartTransition } from 'utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue } from '@/utils/pattern'
+import { getString } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
 
 // Local Types
 import { SankeyInputLink, SankeyInputNode, SankeyLink } from '../types'
