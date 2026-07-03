@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { LabelOverflow, PlotLabelLayoutInfo } from '../../types/plot-label'
 import { Rect } from '../../types/misc'
-import { projectLabelRect, rectInside, totalOverlap, tryPlaceLabel } from './plot-label-resolver'
+import { projectLabelRect, rectInside, resolveHideOverflow, totalOverlap, tryPlaceLabel } from './plot-label-resolver'
 
 function fakeInfo (opts: {
   preferredAnchor: string;
@@ -113,18 +113,6 @@ describe('tryPlaceLabel', () => {
     expect(r.layout.x).toBe(100)
   })
 
-  it('Hide overflow: marks invisible when no candidate fits', () => {
-    const info = fakeInfo({
-      preferredAnchor: 'top',
-      candidatePositions: { top: { x: 100, y: 50 } },
-      overflow: LabelOverflow.Hide,
-    })
-    const placed: Rect[] = [{ x: 100, y: 50, width: 30, height: 14 }]
-    const r = tryPlaceLabel(info, baseRect, placed, bounds)
-    expect(r.visible).toBe(false)
-    expect(r.rect).toBeNull()
-  })
-
   it('Stack overflow: keeps preferred on no fit', () => {
     const info = fakeInfo({
       preferredAnchor: 'top',
@@ -169,5 +157,33 @@ describe('tryPlaceLabel', () => {
     const r = tryPlaceLabel(info, { x: 0, y: 0, width: 0, height: 0 }, [], bounds)
     expect(r.visible).toBe(true)
     expect(r.layout.x).toBe(100)
+  })
+})
+
+describe('resolveHideOverflow', () => {
+  const bounds: Rect = { x: 0, y: 0, width: 400, height: 200 }
+  const rect = (x: number): Rect => ({ x, y: 50, width: 30, height: 14 })
+
+  it('keeps a candidate clear of everything', () => {
+    expect(resolveHideOverflow([rect(200)], [], bounds)).toEqual([true])
+  })
+
+  it('hides a candidate that clashes with a fixed (positioned) label', () => {
+    expect(resolveHideOverflow([rect(100)], [rect(100)], bounds)).toEqual([false])
+  })
+
+  it('hides an out-of-bounds candidate', () => {
+    expect(resolveHideOverflow([rect(500)], [], bounds)).toEqual([false])
+  })
+
+  it('keeps an unmeasured (null) candidate', () => {
+    expect(resolveHideOverflow([null], [], bounds)).toEqual([true])
+  })
+
+  it('resolves mutual collisions keeping the earlier candidate', () => {
+    // rect(100) spans x∈[100,130], rect(110) spans x∈[110,140] → they overlap
+    expect(resolveHideOverflow([rect(100), rect(110)], [], bounds)).toEqual([true, false])
+    // Non-overlapping pair both survive
+    expect(resolveHideOverflow([rect(100), rect(200)], [], bounds)).toEqual([true, true])
   })
 })

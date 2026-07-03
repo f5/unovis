@@ -18,7 +18,7 @@ import { Spacing } from '@/types/spacing'
 import { AxisType } from '@/components/axis/types'
 import { ScaleDimension } from '@/types/scale'
 import { Direction } from '@/types/direction'
-import { PlotLabelLayout, PlotLabelLayoutInfo } from '@/types/plot-label'
+import { LabelOverflow, PlotLabelLayout, PlotLabelLayoutInfo } from '@/types/plot-label'
 import { Rect } from '@/types/misc'
 
 // Utils
@@ -27,7 +27,7 @@ import { guid } from '@/utils/misc'
 
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
-import { projectLabelRect, tryPlaceLabel } from './plot-label-resolver'
+import { projectLabelRect, resolveHideOverflow, tryPlaceLabel } from './plot-label-resolver'
 import {
   AreaConfigInterface,
   BrushConfigInterface,
@@ -484,6 +484,10 @@ export class XYContainer<Datum> extends ContainerCore {
     const placed: Rect[] = []
     const bounds: Rect = { x: 0, y: 0, width: this.width, height: this.height }
 
+    // `LabelOverflow.Hide` labels are deferred and resolved together at the end so they
+    // yield to the positioned (Stack / auto-positioned) labels instead of displacing them.
+    const hideDeferred: { info: PlotLabelLayoutInfo; layout: PlotLabelLayout; rect: Rect | null }[] = []
+
     for (const info of infos) {
       const baseRect = this._labelBBoxRect(info.labelEl)
       if (!info.participatesInAuto) {
@@ -497,9 +501,21 @@ export class XYContainer<Datum> extends ContainerCore {
         continue
       }
 
+      if (info.overflow === LabelOverflow.Hide) {
+        const layout = info.computeLayout(info.preferredAnchor)
+        const rect = baseRect ? projectLabelRect(layout, baseRect.width, baseRect.height) : null
+        hideDeferred.push({ info, layout, rect })
+        continue
+      }
+
       const result = tryPlaceLabel(info, baseRect, placed, bounds)
       this._applyLabelLayout(info.labelEl, result.layout, result.visible)
       if (result.visible && result.rect) placed.push(result.rect)
+    }
+
+    if (hideDeferred.length) {
+      const visibility = resolveHideOverflow(hideDeferred.map(h => h.rect), placed, bounds)
+      hideDeferred.forEach((h, i) => this._applyLabelLayout(h.info.labelEl, h.layout, visibility[i]))
     }
   }
 
