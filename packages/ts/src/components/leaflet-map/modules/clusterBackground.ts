@@ -2,10 +2,10 @@ import { Selection } from 'd3-selection'
 import type L from 'leaflet'
 
 // Types
-import { GenericDataRecord } from 'types/data'
+import { GenericDataRecord } from '@/types/data'
 
 // Utils
-import { cloneDeep } from 'utils/data'
+import { cloneDeep } from '@/utils/data'
 import { getPointPos, getNodePathData } from './utils'
 
 // Local Types

@@ -5,16 +5,16 @@ import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
 import { drag, D3DragEvent } from 'd3-drag'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValue, groupBy, isPlainObject, isFunction } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
-import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
-import { textAlignToAnchor, trimSVGText } from 'utils/text'
-import { arrowPolylinePath } from 'utils/path'
-import { guid } from 'utils/misc'
+import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValue, groupBy, isPlainObject, isFunction } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { textAlignToAnchor, trimSVGText } from '@/utils/text'
+import { arrowPolylinePath } from '@/utils/path'
+import { guid } from '@/utils/misc'
 
 // Types
 import { TextAlign, TrimMode, Spacing, Arrangement } from 'types'
@@ -389,7 +389,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     linesMerged.selectAll<SVGUseElement, Datum & TimelineLineRenderState>(`.${s.lineStartIcon}`)
       .data(d => [d])
       .attr('href', (d, i) => getString(d, config.lineStartIcon, i))
-      .attr('x', (d, i) => {
+      .attr('x', (d) => {
         const iconSize = d._startIconSize
         const iconArrangement = d._startIconArrangement
         const offset = iconArrangement === Arrangement.Inside ? 0
@@ -405,7 +405,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     linesMerged.selectAll<SVGUseElement, Datum & TimelineLineRenderState>(`.${s.lineEndIcon}`)
       .data(d => [d])
       .attr('href', (d, i) => getString(d, config.lineEndIcon, i))
-      .attr('x', (d, i) => {
+      .attr('x', (d) => {
         const lineLength = d._lengthCorrected
         const iconSize = d._endIconSize
         const iconArrangement = d._endIconArrangement

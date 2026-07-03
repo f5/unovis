@@ -1,8 +1,8 @@
 import { injectGlobal } from '@emotion/css'
-import { getCSSVariableValue } from 'utils/misc'
-import { darkThemeCssSelectors } from 'utils/theme'
-import { UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
-import { UnovisText } from 'types/text'
+import { getCSSVariableValue } from '@/utils/misc'
+import { darkThemeCssSelectors } from '@/utils/theme'
+import { UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { UnovisText } from '@/types/text'
 import { colors, colorsDark, getCSSColorVariable, getLighterColor, getDarkerColor } from './colors'
 import { fills, lines, getPatternVariable } from './patterns'
 

@@ -1,4 +1,4 @@
-import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
 import { AnnotationItem } from './types'

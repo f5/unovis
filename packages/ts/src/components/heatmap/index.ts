@@ -3,22 +3,22 @@ import { extent, range } from 'd3-array'
 import { scaleQuantize } from 'd3-scale'
 
 // Core
-import { ComponentCore } from 'core/component'
-import { SeriesDataModel } from 'data-models/series'
+import { ComponentCore } from '@/core/component'
+import { SeriesDataModel } from '@/data-models/series'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { isNumber, getNumber, getString, clamp } from 'utils/data'
-import { getColor } from 'utils/color'
-import { getCSSVariableValue, getCSSVariableValueInPixels } from 'utils/misc'
-import { cssvar } from 'utils/style'
-import { getPreciseStringLengthPx } from 'utils/text-measure'
-import { roundedRectPath } from 'utils/path'
-import { hideOverlappingLabels } from 'utils/text-overlap'
+import { smartTransition } from '@/utils/d3'
+import { isNumber, getNumber, getString, clamp } from '@/utils/data'
+import { getColor } from '@/utils/color'
+import { getCSSVariableValue, getCSSVariableValueInPixels } from '@/utils/misc'
+import { cssvar } from '@/utils/style'
+import { getPreciseStringLengthPx } from '@/utils/text-measure'
+import { roundedRectPath } from '@/utils/path'
+import { hideOverlappingLabels } from '@/utils/text-overlap'
 
 // Types
-import { Spacing } from 'types/spacing'
-import { ExtendedSizeComponent, Sizing } from 'types/component'
+import { Spacing } from '@/types/spacing'
+import { ExtendedSizeComponent, Sizing } from '@/types/component'
 
 // Local Types
 import { HeatmapCellDatum } from './types'

@@ -1,9 +1,9 @@
 import { GeoProjection } from 'd3-geo'
 
 // Utils
-import { getNumber, getString, isNumber } from 'utils/data'
-import { getColor } from 'utils/color'
-import { MapGraphDataModel } from 'data-models/map-graph'
+import { getNumber, getString, isNumber } from '@/utils/data'
+import { getColor } from '@/utils/color'
+import { MapGraphDataModel } from '@/data-models/map-graph'
 // Local types & config
 import { FlowParticle, FlowUpdateContext } from '../types'
 import { TopoJSONMapConfigInterface } from '../config'

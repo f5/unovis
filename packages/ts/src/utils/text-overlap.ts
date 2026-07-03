@@ -1,10 +1,10 @@
 import { select, Selection, BaseType } from 'd3-selection'
 
 // Types
-import { Rect } from 'types/misc'
+import { Rect } from '@/types/misc'
 
 // Utils
-import { rectIntersect } from 'utils/misc'
+import { rectIntersect } from '@/utils/misc'
 
 export interface ResolveRectsOverlapOptions {
   /** Padding for the intersection test, forwarded to `rectIntersect`.

@@ -3,11 +3,11 @@ import { ScaleContinuousNumeric } from 'd3-scale'
 import { color } from 'd3-color'
 
 // Utils
-import { trimSVGText } from 'utils/text'
-import { getCachedComputedTextLength } from 'utils/text-measure'
-import { smartTransition } from 'utils/d3'
-import { getNumber, getString, getValue } from 'utils/data'
-import { getColor, hexToBrightness } from 'utils/color'
+import { trimSVGText } from '@/utils/text'
+import { getCachedComputedTextLength } from '@/utils/text-measure'
+import { smartTransition } from '@/utils/d3'
+import { getNumber, getString, getValue } from '@/utils/data'
+import { getColor, hexToBrightness } from '@/utils/color'
 
 // Config
 import { ChordDiagramConfigInterface } from '../config'

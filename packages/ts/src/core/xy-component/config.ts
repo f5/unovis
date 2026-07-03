@@ -1,7 +1,7 @@
-import { ContinuousScale } from 'types/scale'
+import { ContinuousScale } from '@/types/scale'
 
 // Types
-import { ColorAccessor, NumericAccessor } from 'types/accessor'
+import { ColorAccessor, NumericAccessor } from '@/types/accessor'
 
 // Config
 import { ComponentDefaultConfig, ComponentConfigInterface } from '../component/config'

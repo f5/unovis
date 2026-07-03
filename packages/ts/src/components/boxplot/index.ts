@@ -2,17 +2,17 @@ import { select, Selection } from 'd3-selection'
 import { min, max } from 'd3-array'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { isNumber, isEmpty, clamp, getString, getNumber, getValue, getExtent, getMin, getMax } from 'utils/data'
-import { roundedRectPath } from 'utils/path'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
+import { isNumber, isEmpty, clamp, getString, getNumber, getValue, getExtent, getMin, getMax } from '@/utils/data'
+import { roundedRectPath } from '@/utils/path'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
+import { NumericAccessor } from '@/types/accessor'
+import { Spacing } from '@/types/spacing'
 
 // Local Types
 import { BoxplotDataRecord } from './types'

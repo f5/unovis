@@ -1,14 +1,14 @@
 import { select, Selection } from 'd3-selection'
-import { Position } from 'types/position'
+import { Position } from '@/types/position'
 
 // Utils
-import { rectIntersect } from 'utils/misc'
-import { estimateStringPixelLength, getCachedFontSizePx } from 'utils/text-measure'
-import { getValue } from 'utils/data'
+import { rectIntersect } from '@/utils/misc'
+import { estimateStringPixelLength, getCachedFontSizePx } from '@/utils/text-measure'
+import { getValue } from '@/utils/data'
 
 // Types
-import { ContinuousScale } from 'types/scale'
-import { Rect } from 'types/misc'
+import { ContinuousScale } from '@/types/scale'
+import { Rect } from '@/types/misc'
 
 // Local Types
 import { ScatterPoint, ScatterPointGroupNode } from '../types'

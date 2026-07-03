@@ -1,19 +1,19 @@
 import { max, min } from 'd3-array'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
-import { polygon, circlePath } from 'utils/path'
+import { polygon, circlePath } from '@/utils/path'
 import { Selection } from 'd3-selection'
 
 // Utils
-import { getNumber, getString, clamp } from 'utils/data'
-import { getColor } from 'utils/color'
-import { estimateStringPixelLength, getCachedFontSizePx } from 'utils/text-measure'
-import { rectIntersect } from 'utils/misc'
-import { smartTransition } from 'utils/d3'
+import { getNumber, getString, clamp } from '@/utils/data'
+import { getColor } from '@/utils/color'
+import { estimateStringPixelLength, getCachedFontSizePx } from '@/utils/text-measure'
+import { rectIntersect } from '@/utils/misc'
+import { smartTransition } from '@/utils/d3'
 
 // Types
-import { NumericAccessor, ColorAccessor } from 'types/accessor'
-import { Rect } from 'types/misc'
-import { GenericDataRecord } from 'types/data'
+import { NumericAccessor, ColorAccessor } from '@/types/accessor'
+import { Rect } from '@/types/misc'
+import { GenericDataRecord } from '@/types/data'
 
 // Styles
 import * as s from './style'

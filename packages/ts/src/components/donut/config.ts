@@ -1,9 +1,9 @@
 // Core
-import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
-import { ColorAccessor, GenericAccessor, NumericAccessor } from 'types/accessor'
-import { FillPatternType } from 'styles/patterns'
+import { ColorAccessor, GenericAccessor, NumericAccessor } from '@/types/accessor'
+import { FillPatternType } from '@/styles/patterns'
 
 export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */

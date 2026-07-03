@@ -1,4 +1,4 @@
-import { TextAlign } from 'types/text'
+import { TextAlign } from '@/types/text'
 
 export type TransformValues = {
   translate: {

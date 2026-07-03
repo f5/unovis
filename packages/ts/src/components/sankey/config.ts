@@ -1,17 +1,17 @@
 import { D3ZoomEvent } from 'd3-zoom'
 
 // Config
-import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Utils
-import { getNumber } from 'utils/data'
+import { getNumber } from '@/utils/data'
 
 // Types
-import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { FillPatternType } from 'styles/patterns'
-import { TrimMode, VerticalAlign, FitMode } from 'types/text'
-import { Position } from 'types/position'
-import { Spacing } from 'types/spacing'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { FillPatternType } from '@/styles/patterns'
+import { TrimMode, VerticalAlign, FitMode } from '@/types/text'
+import { Position } from '@/types/position'
+import { Spacing } from '@/types/spacing'
 
 import {
   SankeyInputLink,

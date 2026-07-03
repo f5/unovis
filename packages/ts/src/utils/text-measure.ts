@@ -2,11 +2,11 @@
 import { UNOVIS_TEXT_DEFAULT_FONT_SIZE, getFontWidthToHeightRatio } from 'styles'
 
 // Types
-import { UnovisFontInfo } from 'types/text'
+import { UnovisFontInfo } from '@/types/text'
 
 // Utils
-import { addToCache } from 'utils/cache'
-import { toPx } from 'utils/to-px'
+import { addToCache } from '@/utils/cache'
+import { toPx } from '@/utils/to-px'
 
 const UNOVIS_TEXT_KEY_SEP = '\x1f'
 const textLengthCache = new Map<string, number>()

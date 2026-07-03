@@ -3,7 +3,7 @@ import { line, curveCardinal, curveCardinalClosed } from 'd3-shape'
 import { Path } from 'd3-path'
 
 // Utils
-import { clamp } from 'utils/data'
+import { clamp } from '@/utils/data'
 
 export type RoundedRectPathOptions = {
   x: number;

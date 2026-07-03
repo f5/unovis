@@ -1,8 +1,8 @@
 // Core
-import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { HeatmapLayoutType } from './types'
 
 export interface HeatmapConfigInterface<Datum> extends ComponentConfigInterface {

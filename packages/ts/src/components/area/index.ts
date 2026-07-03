@@ -4,19 +4,19 @@ import { area, Area as AreaInterface, line, Line as LineInterface } from 'd3-sha
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange, getValue, clamp } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
-import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
+import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange, getValue, clamp } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 
 // Types
-import { Curve, CurveType } from 'types/curve'
-import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
-import { Direction } from 'types/direction'
+import { Curve, CurveType } from '@/types/curve'
+import { NumericAccessor } from '@/types/accessor'
+import { Spacing } from '@/types/spacing'
+import { Direction } from '@/types/direction'
 
 // Local Types
 import { AreaDatum } from './types'

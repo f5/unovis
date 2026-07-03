@@ -1,5 +1,5 @@
 // Local Types
-import { ColorFunction, GenericAccessor } from 'types/accessor'
+import { ColorFunction, GenericAccessor } from '@/types/accessor'
 import { BulletLegendItemInterface, BulletShape, BulletLegendOrientation } from './types'
 
 export interface BulletLegendConfigInterface {

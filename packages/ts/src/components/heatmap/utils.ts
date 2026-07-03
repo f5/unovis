@@ -1,4 +1,4 @@
-import { Spacing } from 'types/spacing'
+import { Spacing } from '@/types/spacing'
 
 import { HeatmapLayoutType } from './types'
 

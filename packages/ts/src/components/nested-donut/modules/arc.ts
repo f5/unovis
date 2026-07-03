@@ -4,9 +4,9 @@ import { interpolate } from 'd3-interpolate'
 import { Arc } from 'd3-shape'
 
 // Utils
-import { getColor } from 'utils/color'
-import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
-import { smartTransition } from 'utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { smartTransition } from '@/utils/d3'
 
 // Local Types
 import { NestedDonutSegment } from '../types'

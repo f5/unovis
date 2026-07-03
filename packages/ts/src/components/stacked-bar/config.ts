@@ -1,9 +1,9 @@
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { ColorAccessor, GenericAccessor, StringAccessor } from 'types/accessor'
-import { FillPatternType } from 'styles/patterns'
-import { Orientation } from 'types/position'
+import { ColorAccessor, GenericAccessor, StringAccessor } from '@/types/accessor'
+import { FillPatternType } from '@/styles/patterns'
+import { Orientation } from '@/types/position'
 
 export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Bar color accessor function. Default: `d => d.color` */

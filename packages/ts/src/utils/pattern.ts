@@ -1,5 +1,5 @@
 // Types
-import { GenericAccessor } from 'types/accessor'
+import { GenericAccessor } from '@/types/accessor'
 
 // Styles
 import {
@@ -12,12 +12,12 @@ import {
   FillPatternType,
   LinePattern,
   LinePatternType,
-} from 'styles/patterns'
+} from '@/styles/patterns'
 
 // Utils
-import { getHexValue } from 'utils/color'
-import { getValue } from 'utils/data'
-import { stringToHtmlId } from 'utils/misc'
+import { getHexValue } from '@/utils/color'
+import { getValue } from '@/utils/data'
+import { stringToHtmlId } from '@/utils/misc'
 
 /** Attribute set on chart paths to carry the series index, used by the `theme-patterns` CSS fallback. */
 export const UNOVIS_PATTERN_INDEX_ATTR = 'unovis-pattern-index'
