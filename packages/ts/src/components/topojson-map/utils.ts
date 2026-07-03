@@ -15,9 +15,6 @@ import { NumericAccessor, ColorAccessor } from '@/types/accessor'
 import { Rect } from '@/types/misc'
 import { GenericDataRecord } from '@/types/data'
 
-// Styles
-import * as s from './style'
-
 // Local Types
 import {
   AreaLabelDatum,
