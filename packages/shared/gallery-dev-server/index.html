@@ -16,7 +16,8 @@
       main { overflow: auto; padding: 16px; }
       .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
       section { border: 1px solid #e5e5e5; border-radius: 6px; padding: 12px; min-width: 0; background: #fff; }
-      section header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+      section header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+      section header .logo { width: 20px; height: 20px; flex: none; }
       section h3 { margin: 0; font-size: 14px; font-weight: 600; }
       section .label { font-size: 11px; color: #888; }
       /* `position: relative` provides the containing block for examples that
@@ -39,11 +40,11 @@
     <aside id="sidebar"></aside>
     <main>
       <div class="grid">
-        <section><header><h3>React</h3><span class="label">@unovis/react</span></header><div class="panel-body" id="root-react"></div></section>
-        <section><header><h3>Vue</h3><span class="label">@unovis/vue</span></header><div class="panel-body" id="root-vue"></div></section>
-        <section><header><h3>Solid</h3><span class="label">@unovis/solid</span></header><div class="panel-body" id="root-solid"></div></section>
-        <section><header><h3>Svelte</h3><span class="label">@unovis/svelte</span></header><div class="panel-body" id="root-svelte"></div></section>
-        <section><header><h3>TypeScript</h3><span class="label">@unovis/ts</span></header><div class="panel-body" id="root-ts"><div id="vis-container"></div></div></section>
+        <section><header><img class="logo" src="./assets/react.svg" alt="React logo" /><h3>React</h3><span class="label">@unovis/react</span></header><div class="panel-body" id="root-react"></div></section>
+        <section><header><img class="logo" src="./assets/vue.svg" alt="Vue logo" /><h3>Vue</h3><span class="label">@unovis/vue</span></header><div class="panel-body" id="root-vue"></div></section>
+        <section><header><img class="logo" src="./assets/solid.svg" alt="Solid logo" /><h3>Solid</h3><span class="label">@unovis/solid</span></header><div class="panel-body" id="root-solid"></div></section>
+        <section><header><img class="logo" src="./assets/svelte.svg" alt="Svelte logo" /><h3>Svelte</h3><span class="label">@unovis/svelte</span></header><div class="panel-body" id="root-svelte"></div></section>
+        <section><header><img class="logo" src="./assets/typescript.svg" alt="TypeScript logo" /><h3>TypeScript</h3><span class="label">@unovis/ts</span></header><div class="panel-body" id="root-ts"><div id="vis-container"></div></div></section>
       </div>
     </main>
     <script type="module" src="/src/main.ts"></script>
