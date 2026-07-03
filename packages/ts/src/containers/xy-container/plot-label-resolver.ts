@@ -1,5 +1,7 @@
 import { LabelOverflow, PlotLabelLayout, PlotLabelLayoutInfo } from 'types/plot-label'
 import { Rect } from 'types/misc'
+import { rectIntersect } from 'utils/misc'
+import { resolveRectsOverlap } from 'utils/text-overlap'
 
 function isRotatedQuarter (transform: string | undefined): boolean {
   if (!transform) return false
@@ -98,18 +100,13 @@ export function tryPlaceLabel (
 
   const preferredLayout = info.computeLayout(info.preferredAnchor)
   const preferredRect = projectLabelRect(preferredLayout, baseRect.width, baseRect.height)
-  const preferredOverlap = totalOverlap(preferredRect, placed)
 
   if (info.overflow === LabelOverflow.Stack) {
     return { layout: preferredLayout, rect: preferredRect, visible: true }
   }
 
-  if (info.overflow === LabelOverflow.Hide) {
-    if (preferredOverlap === 0 && rectInside(preferredRect, bounds)) {
-      return { layout: preferredLayout, rect: preferredRect, visible: true }
-    }
-    return { layout: preferredLayout, rect: null, visible: false }
-  }
+  // `LabelOverflow.Hide` is not handled here — those labels are collision-resolved
+  // together as a batch by `resolveHideOverflow` (see below).
 
   // Tie-break under 1px² so the earlier (closer to preferred) candidate wins
   // instead of jumping to one that's only fractionally less overlapped.
@@ -136,4 +133,42 @@ export function tryPlaceLabel (
     return { layout: bestCandidate.layout, rect: bestCandidate.rect, visible: true }
   }
   return { layout: preferredLayout, rect: preferredRect, visible: true }
+}
+
+/**
+ * Resolves visibility for `LabelOverflow.Hide` labels as a batch.
+ *
+ * Hide labels never move: they either stay at their preferred position or disappear.
+ * A candidate is hidden when it is out of bounds, clashes with a `fixed` rect (a Stack
+ * or already auto-positioned label — those take precedence and never move), or loses a
+ * mutual collision to a higher-priority Hide candidate. Mutual collisions are delegated
+ * to the shared `resolveRectsOverlap` sweep-and-prune util; earlier candidates win ties.
+ *
+ * @param candidateRects Preferred-position rects of the Hide labels (`null` = unmeasured).
+ * @param fixed          Rects of the already-placed, non-hideable labels.
+ * @param bounds         Container bounds; candidates outside are hidden.
+ * @returns A boolean array aligned to `candidateRects`: `true` = keep visible.
+ */
+export function resolveHideOverflow (candidateRects: (Rect | null)[], fixed: Rect[], bounds: Rect): boolean[] {
+  const visible = candidateRects.map(() => true)
+
+  // Drop candidates that can't be shown regardless of their peers: unmeasured labels
+  // stay visible (nothing to test), out-of-bounds or fixed-clashing ones are hidden.
+  const participants: number[] = []
+  candidateRects.forEach((rect, i) => {
+    if (!rect) return
+    if (!rectInside(rect, bounds) || fixed.some(f => rectIntersect(rect, f))) {
+      visible[i] = false
+      return
+    }
+    participants.push(i)
+  })
+
+  // Resolve the remaining candidates against each other with the shared util.
+  const rects = participants.map(i => candidateRects[i] as Rect)
+  const priorities = participants.map((_, k) => participants.length - k) // earlier → higher priority
+  const kept = resolveRectsOverlap(rects, { priorities })
+  participants.forEach((i, k) => { if (!kept[k]) visible[i] = false })
+
+  return visible
 }
