@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import { fileURLToPath } from 'node:url'
-import { resolve } from 'node:path'
+import { resolve, dirname } from 'node:path'
+import { readFile } from 'node:fs/promises'
+import ts from 'typescript'
 
 import react from '@vitejs/plugin-react'
 import vue from '@vitejs/plugin-vue'
@@ -11,6 +13,16 @@ import sveltePreprocess from 'svelte-preprocess'
 const here = fileURLToPath(new URL('.', import.meta.url))
 const pkgSrc = (name: string): string => resolve(here, '..', name, 'src')
 const pkgDist = (name: string): string => resolve(here, '..', name, 'dist')
+
+const angularFilePatterns = [
+  /\.(component|module|directive)\.ts$/,
+  /[/\\]packages[/\\]angular[/\\]src[/\\].+\.ts$/,
+  /[/\\]gallery-dev-server[/\\]src[/\\]mounts[/\\]angular\.ts$/,
+]
+const isAngularFile = (id: string): boolean => {
+  const file = id.split('?')[0]
+  return angularFilePatterns.some(re => re.test(file))
+}
 
 export default defineConfig({
   root: 'gallery-dev-server',
@@ -33,12 +45,76 @@ export default defineConfig({
         return { ...resolved, id: `${resolved.id}?inline` }
       },
     },
+    // Angular (JIT): inline external templates and transpile the decorator
+    // sources with the legacy class-field semantics Angular needs. Runs `pre`
+    // so it claims these files before the React/Babel plugin (whose `.tsx?`
+    // include would otherwise grab the `.ts` files and break the decorators).
+    {
+      name: 'unovis-angular-jit',
+      enforce: 'pre',
+      async transform (code, id) {
+        if (!isAngularFile(id)) return null
+        const file = id.split('?')[0]
+        let src = code
+
+        const tpl = src.match(/templateUrl:\s*['"](.+?)['"]/)
+
+        if (tpl) {
+          const htmlPath = resolve(dirname(file), tpl[1])
+          let html = await readFile(htmlPath, 'utf8')
+
+          html = html.replace(
+            /<([a-z][\w-]*-[\w-]*)((?:[^>"']|"[^"]*"|'[^']*')*?)\s*\/>/g,
+            '<$1$2></$1>'
+          )
+
+          src = src.replace(tpl[0], () => `template: ${JSON.stringify(html)}`)
+          this.addWatchFile(htmlPath)
+        }
+
+        const styleUrls = src.match(/styleUrls:\s*\[([^\]]*)\]/)
+        if (styleUrls) {
+          const paths = [...styleUrls[1].matchAll(/['"]([^'"]+)['"]/g)].map(m => m[1])
+          const cssList = await Promise.all(paths.map(async p => {
+            const cssPath = resolve(dirname(file), p)
+            this.addWatchFile(cssPath)
+            return readFile(cssPath, 'utf8')
+          }))
+          const styles = `styles: [${cssList.map(css => JSON.stringify(css)).join(', ')}]`
+          src = src.replace(styleUrls[0], () => styles)
+        }
+
+        const base = {
+          experimentalDecorators: true,
+          useDefineForClassFields: false,
+          target: ts.ScriptTarget.ES2020,
+          module: ts.ModuleKind.ESNext,
+          sourceMap: true,
+          importHelpers: false,
+        }
+        const wantsMetadata = /[/\\]examples[/\\][^/\\]+[/\\][^/\\]+\.component\.ts$/.test(file)
+        const compile = (emitDecoratorMetadata: boolean): ts.TranspileOutput =>
+          ts.transpileModule(src, { fileName: file, compilerOptions: { ...base, emitDecoratorMetadata } })
+        let out: ts.TranspileOutput
+        try {
+          out = compile(wantsMetadata)
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err)
+          if (!(wantsMetadata && /Debug Failure/.test(msg))) throw err
+          // eslint-disable-next-line no-console
+          console.warn(`[unovis-angular-jit] ${file}: dropped decorator metadata (${msg.split('\n')[0]}); constructor DI here may not resolve`)
+          out = compile(false)
+        }
+        return { code: out.outputText, map: out.sourceMapText ? JSON.parse(out.sourceMapText) : null }
+      },
+    },
     // Solid plugin owns: example *-solid.tsx + every .tsx under @unovis/solid/src
     solid({ include: [/-solid\.tsx$/, /\/packages\/solid\/src\/.+\.tsx$/] }),
     // React plugin owns everything else .tsx (example React variants + @unovis/react/src)
     react({
       include: /\.tsx?$/,
-      exclude: [/-solid\.tsx$/, /\/packages\/solid\/src\//, /\/packages\/vue\/src\//, /\/packages\/svelte\/src\//],
+      exclude: [/-solid\.tsx$/, /\/packages\/solid\/src\//, /\/packages\/vue\/src\//, /\/packages\/svelte\/src\//,
+        ...angularFilePatterns],
     }),
     vue(),
     // The @unovis/svelte source uses TS syntax in <script> blocks WITHOUT
@@ -87,6 +163,9 @@ export default defineConfig({
       '@unovis/vue': pkgDist('vue'),
       '@unovis/solid': pkgSrc('solid'),
       '@unovis/svelte': pkgSrc('svelte'),
+      // @unovis/angular's dist/ is only produced by `ng build`; point at source
+      // (public-api) so it resolves without a prior build, like solid/svelte.
+      '@unovis/angular': `${pkgSrc('angular')}/public-api.ts`,
     },
   },
   server: {
@@ -105,7 +184,7 @@ export default defineConfig({
     // silently never fire. Routing both imports to the raw source ensures one
     // module instance.
     exclude: [
-      '@unovis/ts', '@unovis/react', '@unovis/vue', '@unovis/solid', '@unovis/svelte',
+      '@unovis/ts', '@unovis/react', '@unovis/vue', '@unovis/solid', '@unovis/svelte', '@unovis/angular',
       'svelte', 'svelte/internal', 'svelte/internal/disclose-version',
       'svelte/animate', 'svelte/easing', 'svelte/motion', 'svelte/store', 'svelte/transition',
     ],
