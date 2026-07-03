@@ -1,6 +1,8 @@
 # Gallery audit — framework discrepancies
 
-Server: `pnpm run dev:gallery` (http://localhost:9600). 38 examples × 5 frameworks (React, Vue, Solid, Svelte, vanilla TS).
+Server: `pnpm run dev:gallery` (http://localhost:9600). 38 examples × 6 frameworks (React, Vue, Solid, Svelte, vanilla TS, Angular).
+
+Angular renders via in-browser JIT rather than AOT: the workspace is pinned to Angular 12 (predates the AnalogJS Vite plugin), so the `unovis-angular-jit` plugin in `vite.config.ts` inlines each example's `templateUrl` and transpiles the decorator sources, and `mounts/angular.ts` bootstraps them with `platformBrowserDynamic` + `@angular/compiler`. Because `@angular/core`'s compile switches only flip to Ivy under ngtsc (the CLI/AnalogJS), this JIT path runs in **View Engine** mode — legitimate, but stricter: it needs a host component (can't bootstrap a component type directly) and rejects self-closed custom tags (`<vis-donut />`), which the plugin normalizes.
 
 Method: an iframe walked every `?example=<slug>`, waited 1.2s, and recorded SVG/Leaflet presence, container height, and `.panel-error` content. Selected screenshots confirm the visual results.
 
