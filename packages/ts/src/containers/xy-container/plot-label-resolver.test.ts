@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
 import { LabelOverflow, PlotLabelLayoutInfo } from '../../types/plot-label'
-import { Rect, projectLabelRect, rectInside, totalOverlap, tryPlaceLabel } from './plot-label-resolver'
+import { Rect } from '../../types/misc'
+import { projectLabelRect, rectInside, totalOverlap, tryPlaceLabel } from './plot-label-resolver'
 
 function fakeInfo (opts: {
   preferredAnchor: string;
