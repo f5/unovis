@@ -142,7 +142,7 @@ export class ContainerCore {
     const containerRect = this._container.getBoundingClientRect()
     this._containerSize = { width: containerRect.width, height: containerRect.height }
 
-    this._resizeObserver = new ResizeObserver((entries, observer) => {
+    this._resizeObserver = new ResizeObserver(() => {
       // Using request animation frame to avoid multiple resize events when scrollbars appear/disappear
       // See more: https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver#observation_errors
       cancelAnimationFrame(this._resizeObserverAnimationFrameId)
