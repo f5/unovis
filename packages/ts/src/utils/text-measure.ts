@@ -1,5 +1,5 @@
 // Styles
-import { UNOVIS_TEXT_DEFAULT_FONT_SIZE, getFontWidthToHeightRatio } from 'styles'
+import { UNOVIS_TEXT_DEFAULT_FONT_SIZE, getFontWidthToHeightRatio } from '@/styles'
 
 // Types
 import { UnovisFontInfo } from '@/types/text'

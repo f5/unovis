@@ -17,7 +17,7 @@ import { arrowPolylinePath } from '@/utils/path'
 import { guid } from '@/utils/misc'
 
 // Types
-import { TextAlign, TrimMode, Spacing, Arrangement } from 'types'
+import { TextAlign, TrimMode, Spacing, Arrangement } from '@/types'
 
 // Config
 import { TimelineDefaultConfig, TimelineConfigInterface } from './config'
