@@ -1,5 +1,5 @@
 // Utils
-import { cloneDeep, isNumber, isObject, isString } from 'utils/data'
+import { isNumber, isObject, isString } from 'utils/data'
 
 // Core Data Model
 import { CoreDataModel } from 'data-models/core'
@@ -31,10 +31,13 @@ export class MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> extends CoreDat
     if (!data) return
     this._data = data
 
-    this._areas = cloneDeep(data?.areas ?? [])
-    this._points = cloneDeep(data?.points ?? [])
+    // Shallow-copy the input areas and points: the library augments them with top-level
+    // properties, so the copies keep the user's objects intact while avoiding a deep clone
+    // of the whole dataset. The links are only read here (new objects are built from them)
+    this._areas = (data?.areas ?? []).map(a => ({ ...a }))
+    this._points = (data?.points ?? []).map(p => ({ ...p }))
 
-    this._links = cloneDeep(data?.links ?? []).reduce((arr, link) => {
+    this._links = (data?.links ?? []).reduce((arr, link) => {
       const source = this.findPoint(this.points, this.linkSource(link))
       const target = this.findPoint(this.points, this.linkTarget(link))
       if (source && target) arr.push({ source, target })
