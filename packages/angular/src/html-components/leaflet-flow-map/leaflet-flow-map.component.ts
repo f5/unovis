@@ -296,13 +296,13 @@ export class VisLeafletFlowMapComponent<PointDatum extends GenericDataRecord, Fl
   ngAfterViewInit (): void {
     this.component = new LeafletFlowMap<PointDatum, FlowDatum>(this.containerRef.nativeElement, this.getConfig(), this.data)
 
-    if (this.data) {
+    if (this.data !== undefined) {
       this.component.setData(this.data)
     }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    if (changes.data) { this.component?.setData(this.data) }
+    if (changes.data && this.data !== undefined) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
   }
 

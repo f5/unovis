@@ -103,14 +103,14 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   ngAfterViewInit (): void {
     this.component = new Brush<Datum>(this.getConfig())
 
-    if (this.data) {
+    if (this.data !== undefined) {
       this.component.setData(this.data)
       this.componentContainer?.render()
     }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    if (changes.data) { this.component?.setData(this.data) }
+    if (changes.data && this.data !== undefined) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
     this.componentContainer?.render()
   }

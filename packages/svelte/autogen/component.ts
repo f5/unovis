@@ -42,7 +42,7 @@ export function getComponentCode (
   // Notifies the container that this component's data or config has changed, so it can re-render
   const dirty = getContext<(() => void) | undefined>('dirty')`}
 
-  ${lifecycleMethod}${dataType ? (isStandAlone ? '\n  $: component?.setData(data)' : '\n  $: { component?.setData(data); dirty?.() }') : ''}
+  ${lifecycleMethod}${dataType ? (isStandAlone ? '\n  $: if (data !== undefined) component?.setData(data)' : '\n  $: if (data !== undefined) { component?.setData(data); dirty?.() }') : ''}
   $: if(!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config${isStandAlone ? '' : '\n    dirty?.()'}

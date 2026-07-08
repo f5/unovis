@@ -131,14 +131,14 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   ngAfterViewInit (): void {
     this.component = new ChordDiagram<N, L>(this.getConfig())
 
-    if (this.data) {
+    if (this.data !== undefined) {
       this.component.setData(this.data)
       this.componentContainer?.render()
     }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    if (changes.data) { this.component?.setData(this.data) }
+    if (changes.data && this.data !== undefined) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
     this.componentContainer?.render()
   }

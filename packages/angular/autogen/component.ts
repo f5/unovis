@@ -76,14 +76,14 @@ ${
   ngAfterViewInit (): void {
     this.component = new ${componentName}${genericsStr}(${constructorArgs})
     ${dataType ? `
-      if (this.data) {
+      if (this.data !== undefined) {
         this.component.setData(this.data)
         ${isStandAlone ? '' : 'this.componentContainer?.render()'}
       }` : ''}
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    ${dataType ? 'if (changes.data) { this.component?.setData(this.data) }' : ''}
+    ${dataType ? 'if (changes.data && this.data !== undefined) { this.component?.setData(this.data) }' : ''}
     this.component?.setConfig(this.getConfig())
     ${isStandAlone ? '' : 'this.componentContainer?.render()'}
   }

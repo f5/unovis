@@ -144,14 +144,14 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   ngAfterViewInit (): void {
     this.component = new Line<Datum>(this.getConfig())
 
-    if (this.data) {
+    if (this.data !== undefined) {
       this.component.setData(this.data)
       this.componentContainer?.render()
     }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    if (changes.data) { this.component?.setData(this.data) }
+    if (changes.data && this.data !== undefined) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
     this.componentContainer?.render()
   }

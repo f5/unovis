@@ -19,7 +19,7 @@ export function VisGroupedBar<Datum>(props: VisGroupedBarProps<Datum>) {
   
   onMount(() => {
     setComponent(new GroupedBar<Datum>(config));
-    if (dataProps.data) component()?.setData(dataProps.data)
+    if (dataProps.data !== undefined) component()?.setData(dataProps.data)
     ctx.update("component", component);
   })
 
@@ -48,7 +48,7 @@ export function VisGroupedBar<Datum>(props: VisGroupedBarProps<Datum>) {
     on(
       () => dataProps.data,
       (data) => {
-        if (data) {
+        if (data !== undefined) {
           component()?.setData(data)
           ctx.dirty()
         }

@@ -136,7 +136,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
     const preventRender = true
 
     // Set new Data without re-render
-    if (changes.data) {
+    if (changes.data && this.data !== undefined) {
       this.chart?.setData(this.data, preventRender)
       delete changes.data
     }

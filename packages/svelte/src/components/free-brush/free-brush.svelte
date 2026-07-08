@@ -27,7 +27,7 @@
     component = new FreeBrush<Datum>(config)
     return () => component?.destroy()
   })
-  $: { component?.setData(data); dirty?.() }
+  $: if (data !== undefined) { component?.setData(data); dirty?.() }
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config

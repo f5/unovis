@@ -41,6 +41,7 @@ watchEffect(() => {
 })
 
 watch(data, () => {
+  if (data.value === undefined) return
   if (chart.value) chart.value.setData(data.value)
   else initChart()
 })

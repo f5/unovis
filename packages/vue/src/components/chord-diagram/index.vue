@@ -23,7 +23,8 @@ const component = shallowRef<ChordDiagram<N, L>>()
 onMounted(() => {
   nextTick(() => {
     component.value = new ChordDiagram<N, L>(config.value)
-    component.value?.setData(data.value)
+    if (data.value !== undefined)
+      component.value?.setData(data.value)
     accessor?.update(component.value)
   })
 })
@@ -42,6 +43,8 @@ watch(config, (curr, prev) => {
 })
 
 watch(data, () => {
+  if (data.value === undefined)
+    return
   component.value?.setData(data.value)
   // Notify the container so it can re-render the chart
   accessor?.dirty()

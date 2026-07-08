@@ -56,7 +56,7 @@ export function VisSingleContainer<Datum>(
     on(
       () => data.data,
       (data) => {
-        if (data) chart()?.setData(data)
+        if (data !== undefined) chart()?.setData(data)
       }
     )
   )

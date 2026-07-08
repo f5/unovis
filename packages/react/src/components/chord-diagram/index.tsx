@@ -45,7 +45,7 @@ function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (data) component?.setData(data)
+    if (data !== undefined) component?.setData(data)
     component?.setConfig(config)
   })
 

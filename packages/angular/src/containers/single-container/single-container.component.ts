@@ -58,7 +58,7 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
 
   ngOnChanges (changes: SimpleChanges): void {
     // Set new Data without re-render
-    if (changes.data) {
+    if (changes.data && this.data !== undefined) {
       this.chart?.setData(this.data, true)
       delete changes.data
     }

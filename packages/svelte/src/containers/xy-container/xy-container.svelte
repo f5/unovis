@@ -37,7 +37,7 @@
   }
   let ref: HTMLDivElement
 
-  $: chart?.setData(data, true)
+  $: if (data !== undefined) chart?.setData(data, true)
 
   let animationFrame = 0
   const updateContainer = (): void => {

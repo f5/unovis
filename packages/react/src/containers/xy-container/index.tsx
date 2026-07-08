@@ -78,7 +78,7 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
     const preventRender = true
 
     // Set new Data without re-render
-    if (props.data && (props.data !== dataRef.current)) {
+    if (props.data !== undefined && (props.data !== dataRef.current)) {
       chartRef.current?.setData(props.data, preventRender)
       dataRef.current = props.data
     }

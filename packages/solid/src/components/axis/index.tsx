@@ -19,7 +19,7 @@ export function VisAxis<Datum>(props: VisAxisProps<Datum>) {
   
   onMount(() => {
     setComponent(new Axis<Datum>(config));
-    if (dataProps.data) component()?.setData(dataProps.data)
+    if (dataProps.data !== undefined) component()?.setData(dataProps.data)
     ctx.update("axis", component);
   })
 
@@ -48,7 +48,7 @@ export function VisAxis<Datum>(props: VisAxisProps<Datum>) {
     on(
       () => dataProps.data,
       (data) => {
-        if (data) {
+        if (data !== undefined) {
           component()?.setData(data)
           ctx.dirty()
         }

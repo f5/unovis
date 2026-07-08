@@ -19,7 +19,7 @@ export function VisFreeBrush<Datum>(props: VisFreeBrushProps<Datum>) {
   
   onMount(() => {
     setComponent(new FreeBrush<Datum>(config));
-    if (dataProps.data) component()?.setData(dataProps.data)
+    if (dataProps.data !== undefined) component()?.setData(dataProps.data)
     ctx.update("component", component);
   })
 
@@ -48,7 +48,7 @@ export function VisFreeBrush<Datum>(props: VisFreeBrushProps<Datum>) {
     on(
       () => dataProps.data,
       (data) => {
-        if (data) {
+        if (data !== undefined) {
           component()?.setData(data)
           ctx.dirty()
         }
