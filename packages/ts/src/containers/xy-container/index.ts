@@ -25,22 +25,10 @@ import { guid } from 'utils/misc'
 
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
-import {
-  AreaConfigInterface,
-  BrushConfigInterface,
-  LineConfigInterface,
-  ScatterConfigInterface,
-  StackedBarConfigInterface,
-  TimelineConfigInterface,
-} from '../../components'
 
+/** Configuration of any XY component. Concrete component config interfaces
+ * (e.g. `LineConfigInterface`) extend it, so they can all be passed where this type is expected */
 export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
-| StackedBarConfigInterface<Datum>
-| LineConfigInterface<Datum>
-| ScatterConfigInterface<Datum>
-| BrushConfigInterface<Datum>
-| TimelineConfigInterface<Datum>
-| AreaConfigInterface<Datum>
 
 export class XYContainer<Datum> extends ContainerCore {
   protected _defaultConfig = XYContainerDefaultConfig as XYContainerConfigInterface<Datum>
@@ -280,8 +268,7 @@ export class XYContainer<Datum> extends ContainerCore {
       // Pass accessors
       const yAccessors = nonStackedComponents.map(c => c.config.y)
       const yStackedAccessors = stackedComponents.map(c => c.config.y)
-      const baselineComponentConfig = this.components.find(c => (c.config as AreaConfigInterface<Datum>).baseline)?.config as AreaConfigInterface<Datum>
-      const baselineAccessor = baselineComponentConfig?.baseline
+      const baselineAccessor = this.components.map(c => c.getBaselineAccessor()).find(Boolean)
 
       // Setting up fallback accessors for the crosshair to be used if they are not configured explicitly
       crosshair.accessors = {

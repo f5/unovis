@@ -83,6 +83,13 @@ export class XYComponentCore<
     return getExtent(datamodel.data, config.x)
   }
 
+  /** Components that render their data relative to a baseline (e.g. Area) override this method,
+   * so that containers can pass the baseline accessor to other components (e.g. Crosshair)
+   * without knowing the concrete component types */
+  getBaselineAccessor (): NumericAccessor<Datum> | undefined {
+    return undefined
+  }
+
   /** Some components override this method to provide custom data extent calculation */
   getYDataExtent (scaleByVisibleData: boolean): number[] {
     const { config, datamodel } = this
