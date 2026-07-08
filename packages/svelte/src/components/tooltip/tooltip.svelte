@@ -15,6 +15,8 @@
   // component declaration
   let component: Tooltip
   const lifecycle = getContext<Lifecycle>('tooltip')
+  // Notifies the container that this component's data or config has changed, so it can re-render
+  const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
     component = new Tooltip(config)
@@ -23,6 +25,7 @@
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config
+    dirty?.()
   }
 
   // component accessor
