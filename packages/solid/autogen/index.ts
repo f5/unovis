@@ -1,13 +1,8 @@
-import { exec } from 'node:child_process'
-import { writeFileSync } from 'node:fs'
-
 // Components
-import { getComponentList } from '@unovis/shared/integrations/components'
+import { runComponentGenerator } from '@unovis/shared/integrations/autogen'
 
 // Types
-import type {
-  SolidComponentInput
-} from '@unovis/shared/integrations/types'
+import type { SolidComponentInput } from '@unovis/shared/integrations/types'
 
 // Utils
 import {
@@ -20,45 +15,42 @@ import {
 import { getComponentCode } from './component'
 
 const skipProperties = ['width', 'height', 'renderIntoProvidedDomNode']
-const components = getComponentList() as SolidComponentInput[]
 
-const exports: string[] = []
+const getComponentDirPath = (component: SolidComponentInput): string =>
+  `${component.isStandAlone ? 'html-' : ''}components/${
+    component.kebabCaseName ?? kebabCase(component.name)
+  }`
 
-for (const component of components) {
-  const { generics, statements } = getConfigSummary(component, skipProperties)
-  const importStatements = getImportStatements(
-    component.name,
-    statements,
-    [],
-    generics
-  )
-  const isStandAlone = component.isStandAlone
-  const componentCode = getComponentCode(
-    component.name,
-    generics,
-    importStatements,
-    component.dataType,
-    component.elementSuffix,
-    isStandAlone,
-    component.renderIntoProvidedDomNode,
-    component.solidStyles
-  )
+runComponentGenerator<SolidComponentInput>({
+  generateComponentFiles: (component) => {
+    const { generics, statements } = getConfigSummary(component, skipProperties)
+    const importStatements = getImportStatements(
+      component.name,
+      statements,
+      [],
+      generics
+    )
+    const componentCode = getComponentCode(
+      component.name,
+      generics,
+      importStatements,
+      component.dataType,
+      component.elementSuffix,
+      component.isStandAlone,
+      component.renderIntoProvidedDomNode,
+      component.solidStyles
+    )
 
-  const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
-  const path = `${isStandAlone ? 'html-' : ''}components/${nameKebabCase}`
-  const pathComponentBase = `src/${
-    isStandAlone ? 'html-' : ''
-  }components/${nameKebabCase}`
-  const pathComponent = `${pathComponentBase}/index.tsx`
-
-  exec(`mkdir ${pathComponentBase}`, () => {
-    writeFileSync(pathComponent, componentCode)
-  })
-
-  exports.push(`export * from "./${path}";`)
-
-  console.log(`${component.name} generated`)
-  console.log(`  ${pathComponent}`)
-}
-
-writeFileSync('src/components.ts', `${exports.join('\n')}\n`)
+    return [
+      {
+        path: `src/${getComponentDirPath(component)}/index.tsx`,
+        content: componentCode,
+      },
+    ]
+  },
+  getBarrelExports: (component) => [
+    `export * from "./${getComponentDirPath(component)}";`,
+  ],
+  // The solid generate script runs the package-level lint --fix after generation
+  lintFix: false,
+})

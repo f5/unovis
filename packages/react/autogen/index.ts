@@ -1,8 +1,5 @@
-import { writeFileSync } from 'fs'
-import { exec } from 'child_process'
-
 // Components
-import { getComponentList } from '@unovis/shared/integrations/components'
+import { runComponentGenerator } from '@unovis/shared/integrations/autogen'
 
 // Types
 import { ReactComponentInput } from '@unovis/shared/integrations/types'
@@ -14,33 +11,26 @@ import { getImportStatements, kebabCase, getConfigSummary } from '@unovis/shared
 import { getComponentCode } from './component'
 
 const skipProperties = ['width', 'height']
-const components = getComponentList() as ReactComponentInput[]
 
-for (const component of components) {
-  const { generics, statements, importSourceMap } = getConfigSummary(component, skipProperties)
-  const importStatements = getImportStatements(component.name, statements, [], generics, [], importSourceMap)
+const getComponentDirPath = (component: ReactComponentInput): string =>
+  `${component.isStandAlone ? 'html-' : ''}components/${component.kebabCaseName ?? kebabCase(component.name)}`
 
-  const componentCode = getComponentCode(
-    component.name,
-    generics,
-    importStatements,
-    component.dataType,
-    component.elementSuffix,
-    component.isStandAlone,
-    component.renderIntoProvidedDomNode
-  )
+runComponentGenerator<ReactComponentInput>({
+  generateComponentFiles: (component) => {
+    const { generics, statements, importSourceMap } = getConfigSummary(component, skipProperties)
+    const importStatements = getImportStatements(component.name, statements, [], generics, [], importSourceMap)
 
-  const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
-  const pathComponentBase = `src/${component.isStandAlone ? 'html-' : ''}components/${nameKebabCase}`
-  const pathComponent = `${pathComponentBase}/index.tsx` // `${pathComponentBase}/${nameKebabCase}.component.tsx`
+    const componentCode = getComponentCode(
+      component.name,
+      generics,
+      importStatements,
+      component.dataType,
+      component.elementSuffix,
+      component.isStandAlone,
+      component.renderIntoProvidedDomNode
+    )
 
-  exec(`mkdir ${pathComponentBase}`, () => {
-    writeFileSync(pathComponent, componentCode)
-    exec(`pnpm exec eslint ${pathComponent} --fix`)
-  })
-
-  // eslint-disable-next-line no-console
-  console.log(`${component.name} generated`)
-  // eslint-disable-next-line no-console
-  console.log(`  ${pathComponent}`)
-}
+    return [{ path: `src/${getComponentDirPath(component)}/index.tsx`, content: componentCode }]
+  },
+  getBarrelExports: (component) => [`export * from './${getComponentDirPath(component)}'`],
+})

@@ -1,8 +1,5 @@
-import { writeFileSync } from 'fs'
-import { exec } from 'child_process'
-
 // Components
-import { getComponentList } from '@unovis/shared/integrations/components'
+import { runComponentGenerator } from '@unovis/shared/integrations/autogen'
 
 // Types
 import { AngularComponentInput } from '@unovis/shared/integrations/types'
@@ -14,43 +11,44 @@ import { getImportStatements, kebabCase, getConfigSummary } from '@unovis/shared
 import { getComponentCode } from './component'
 import { getModuleCode } from './module'
 
-const components = getComponentList() as AngularComponentInput[]
-
 const skipProperties = ['renderIntoProvidedDomNode']
 
-for (const component of components) {
-  const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, skipProperties, false)
-  const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, component.isStandAlone ? [] : ['ContainerCore'])
+const getComponentDirPath = (component: AngularComponentInput): string =>
+  `${component.isStandAlone ? 'html-' : ''}components/${component.kebabCaseName ?? kebabCase(component.name)}`
 
-  const componentCode = getComponentCode(
-    component.name,
-    generics,
-    configProperties,
-    component.angularProvide,
-    importStatements,
-    component.dataType,
-    component.kebabCaseName,
-    component.isStandAlone,
-    component.renderIntoProvidedDomNode,
-    component.angularStyles
-  )
-  const moduleCode = getModuleCode(component.name, component.kebabCaseName)
+runComponentGenerator<AngularComponentInput>({
+  generateComponentFiles: (component) => {
+    const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, skipProperties, false)
+    const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, component.isStandAlone ? [] : ['ContainerCore'])
 
-  const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
-  const pathComponentBase = `src/${component.isStandAlone ? 'html-' : ''}components/${nameKebabCase}`
-  const pathComponent = `${pathComponentBase}/${nameKebabCase}.component.ts`
-  const pathModule = `${pathComponentBase}/${nameKebabCase}.module.ts`
+    const componentCode = getComponentCode(
+      component.name,
+      generics,
+      configProperties,
+      component.angularProvide,
+      importStatements,
+      component.dataType,
+      component.kebabCaseName,
+      component.isStandAlone,
+      component.renderIntoProvidedDomNode,
+      component.angularStyles
+    )
+    const moduleCode = getModuleCode(component.name, component.kebabCaseName)
 
-  exec(`mkdir ${pathComponentBase}`, () => {
-    writeFileSync(pathComponent, componentCode)
-    writeFileSync(pathModule, moduleCode)
-    exec(`pnpm exec eslint ${pathComponent} ${pathModule} --fix`)
-  })
-
-  // eslint-disable-next-line no-console
-  console.log(`${component.name} generated`)
-  // eslint-disable-next-line no-console
-  console.log(`  ${pathComponent}`)
-  // eslint-disable-next-line no-console
-  console.log(`  ${pathModule}`)
-}
+    const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
+    const dirPath = `src/${getComponentDirPath(component)}`
+    return [
+      { path: `${dirPath}/${nameKebabCase}.component.ts`, content: componentCode },
+      { path: `${dirPath}/${nameKebabCase}.module.ts`, content: moduleCode },
+    ]
+  },
+  getBarrelExports: (component) => {
+    const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
+    const dirPath = `./${getComponentDirPath(component)}`
+    return [
+      `export { Vis${component.name}Component } from '${dirPath}/${nameKebabCase}.component'`,
+      `export { Vis${component.name}Module } from '${dirPath}/${nameKebabCase}.module'`,
+    ]
+  },
+  barrelHeader: ['// Core', 'export * from \'./core\'', ''],
+})
