@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { ChordDiagram } from '@unovis/ts/components/chord-diagram'
 import { ChordDiagramConfigInterface } from '@unovis/ts/components/chord-diagram/config'
 import { ChordInputNode, ChordInputLink } from '@unovis/ts/components/chord-diagram/types'
@@ -25,12 +25,14 @@ export const VisChordDiagramSelectors = ChordDiagram.selectors
 function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (props: VisChordDiagramProps<N, L>, fRef: ForwardedRef<VisChordDiagramRef<N, L>>): ReactElement {
   const ref = useRef<VisComponentElement<ChordDiagram<N, L>>>(null)
   const componentRef = useRef<ChordDiagram<N, L> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<ChordDiagram<N, L>>)
 
-    const c = new ChordDiagram<N, L>(props)
+    const c = new ChordDiagram<N, L>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,8 +45,8 @@ function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

@@ -29,25 +29,32 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
   const dataRef = useRef<Datum[] | undefined>(undefined)
   const animationFrameRef = useRef<number | null>(null)
 
-  const getConfig = (): XYContainerConfigInterface<Datum> => ({
-    components: Array
-      .from(container.current?.querySelectorAll<VisComponentElement<XYComponentCore<Datum>>>('vis-component') ?? [])
-      .map(c => c.__component__)
-      .filter(Boolean) as XYComponentCore<Datum>[],
-    tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
-    crosshair: container.current?.querySelector<VisComponentElement<Crosshair<Datum>>>('vis-crosshair')?.__component__,
-    annotations: container.current?.querySelector<VisComponentElement<Annotations>>('vis-annotations')?.__component__,
-    xAxis: Array
-      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
-      .map(c => c.__component__)
-      .find(c => c.config.type === AxisType.X),
-    yAxis: Array
-      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
-      .map(c => c.__component__)
-      .find(c => c.config.type === AxisType.Y),
-    margin: { top: 5, left: 5, right: 5, bottom: 5 },
-    ...props,
-  })
+  const getConfig = (): XYContainerConfigInterface<Datum> => {
+    // Strip the props that are not container config properties (deep-cloning the dataset
+    // or React elements into the config would be both wrong and expensive)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { data, className, style, children, ...restProps } = props
+
+    return {
+      components: Array
+        .from(container.current?.querySelectorAll<VisComponentElement<XYComponentCore<Datum>>>('vis-component') ?? [])
+        .map(c => c.__component__)
+        .filter(Boolean) as XYComponentCore<Datum>[],
+      tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
+      crosshair: container.current?.querySelector<VisComponentElement<Crosshair<Datum>>>('vis-crosshair')?.__component__,
+      annotations: container.current?.querySelector<VisComponentElement<Annotations>>('vis-annotations')?.__component__,
+      xAxis: Array
+        .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
+        .map(c => c.__component__)
+        .find(c => c.config.type === AxisType.X),
+      yAxis: Array
+        .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
+        .map(c => c.__component__)
+        .find(c => c.config.type === AxisType.Y),
+      margin: { top: 5, left: 5, right: 5, bottom: 5 },
+      ...restProps,
+    }
+  }
 
   // On Mount
   useEffect(() => {

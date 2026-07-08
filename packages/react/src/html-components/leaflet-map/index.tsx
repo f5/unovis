@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { LeafletMap } from '@unovis/ts/components/leaflet-map'
 import { LeafletMapConfigInterface } from '@unovis/ts/components/leaflet-map/config'
 import { GenericDataRecord } from '@unovis/ts/types/data'
@@ -26,12 +26,14 @@ export const VisLeafletMapSelectors = LeafletMap.selectors
 function VisLeafletMapFC<Datum extends GenericDataRecord> (props: VisLeafletMapProps<Datum>, fRef: ForwardedRef<VisLeafletMapRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<LeafletMap<Datum>, HTMLDivElement>>(null)
   const componentRef = useRef<LeafletMap<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, className, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<LeafletMap<Datum>, HTMLDivElement>)
 
-    const c = new LeafletMap<Datum>(ref.current as VisComponentElement<LeafletMap<Datum>, HTMLDivElement>, props, props.data)
+    const c = new LeafletMap<Datum>(ref.current as VisComponentElement<LeafletMap<Datum>, HTMLDivElement>, config, data)
     componentRef.current = c
     element.__component__ = c
 
@@ -44,8 +46,8 @@ function VisLeafletMapFC<Datum extends GenericDataRecord> (props: VisLeafletMapP
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

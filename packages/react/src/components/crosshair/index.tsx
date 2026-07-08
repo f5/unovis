@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Crosshair } from '@unovis/ts/components/crosshair'
 import { CrosshairConfigInterface } from '@unovis/ts/components/crosshair/config'
 
@@ -24,12 +24,14 @@ export const VisCrosshairSelectors = Crosshair.selectors
 function VisCrosshairFC<Datum> (props: VisCrosshairProps<Datum>, fRef: ForwardedRef<VisCrosshairRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Crosshair<Datum>>>(null)
   const componentRef = useRef<Crosshair<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Crosshair<Datum>>)
 
-    const c = new Crosshair<Datum>(props)
+    const c = new Crosshair<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,8 +44,8 @@ function VisCrosshairFC<Datum> (props: VisCrosshairProps<Datum>, fRef: Forwarded
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

@@ -10,12 +10,13 @@ export const VisFlowLegendSelectors = FlowLegend.selectors
 
 export function VisFlowLegend(props: VisFlowLegendProps) {
   const [component, setComponent] = createSignal<FlowLegend>()
+  const config = props
    
   const [ref, setRef] = createSignal<HTMLDivElement>()
 
   onMount(() => {
     const r = ref()
-    if(r) setComponent(new FlowLegend(r, { ...props, renderIntoProvidedDomNode: true }));
+    if(r) setComponent(new FlowLegend(r, { ...config, renderIntoProvidedDomNode: true }));
     
     
   })
@@ -27,7 +28,7 @@ export function VisFlowLegend(props: VisFlowLegendProps) {
 
   createEffect(
     on(
-      () => ({ ...props }),
+      () => ({ ...config }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
           component()?.setConfig(curr)

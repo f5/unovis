@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Timeline } from '@unovis/ts/components/timeline'
 import { TimelineConfigInterface } from '@unovis/ts/components/timeline/config'
 
@@ -24,12 +24,14 @@ export const VisTimelineSelectors = Timeline.selectors
 function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>, fRef: ForwardedRef<VisTimelineRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Timeline<Datum>>>(null)
   const componentRef = useRef<Timeline<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Timeline<Datum>>)
 
-    const c = new Timeline<Datum>(props)
+    const c = new Timeline<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,8 +44,8 @@ function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>, fRef: ForwardedRe
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

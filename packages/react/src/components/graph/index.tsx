@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Graph } from '@unovis/ts/components/graph'
 import { GraphConfigInterface } from '@unovis/ts/components/graph/config'
 import { GraphInputNode, GraphInputLink } from '@unovis/ts/types/graph'
@@ -25,12 +25,14 @@ export const VisGraphSelectors = Graph.selectors
 function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: VisGraphProps<N, L>, fRef: ForwardedRef<VisGraphRef<N, L>>): ReactElement {
   const ref = useRef<VisComponentElement<Graph<N, L>>>(null)
   const componentRef = useRef<Graph<N, L> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Graph<N, L>>)
 
-    const c = new Graph<N, L>(props)
+    const c = new Graph<N, L>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,8 +45,8 @@ function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: 
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
