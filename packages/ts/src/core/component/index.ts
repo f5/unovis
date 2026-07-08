@@ -160,8 +160,11 @@ export class ComponentCore<
       Object.keys(events[className]).forEach(eventType => {
         const selection = (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>)
           .selectAll<SVGGElement | HTMLElement, unknown>(`.${className}`)
+
+        // Snapshot the matched elements once at bind time (events are re-bound after every render)
+        // instead of re-querying the DOM on every dispatched event
+        const els = selection.nodes()
         selection.on(eventType + suffix, (event: MouseEvent & WheelEvent & PointerEvent & TouchEvent, d) => {
-          const els = selection.nodes()
           const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)
           const eventFunction = events[className][eventType as VisEventType]
           const { datum, index } = this._mapEventDatum(d, i)
