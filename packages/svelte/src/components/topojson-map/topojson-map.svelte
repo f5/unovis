@@ -22,15 +22,18 @@
   // component declaration
   let component: TopoJSONMap<AreaDatum, PointDatum, LinkDatum>
   const lifecycle = getContext<Lifecycle>('component')
+  // Notifies the container that this component's data or config has changed, so it can re-render
+  const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
     component = new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(config)
     return () => component?.destroy()
   })
-  $: component?.setData(data)
+  $: { component?.setData(data); dirty?.() }
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config
+    dirty?.()
   }
 
   // component accessor
