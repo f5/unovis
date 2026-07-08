@@ -1,13 +1,13 @@
 import { Selection, pointer } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
-import { least } from 'd3-array'
+import { least, bisectLeft, bisectRight } from 'd3-array'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
 import { Tooltip } from 'components/tooltip'
 
 // Utils
-import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, getNearest2D, isFunction } from 'utils/data'
+import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest2D, isFunction } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -56,7 +56,16 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   public set colorKeys (colorKeys: string[]) { this._colorKeys = colorKeys }
   public get colorKeys (): string[] { return this.config.colorKeys ?? this._colorKeys }
 
-  public set accessors (accessors: CrosshairAccessors<Datum>) { this._accessors = accessors }
+  /** Data indices sorted by x value with the corresponding sorted values, so per-mousemove
+   * nearest-datum lookups can bisect instead of re-sorting the dataset on every frame.
+   * Invalidated when the data, config, or externally provided accessors change */
+  private _sortedDataCache: { values: number[]; indices: number[] } | null = null
+
+  public set accessors (accessors: CrosshairAccessors<Datum>) {
+    this._accessors = accessors
+    this._sortedDataCache = null
+  }
+
   public get accessors (): CrosshairAccessors<Datum> {
     const { config } = this
 
@@ -117,6 +126,48 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     this.container.on('wheel.crosshair', this._onWheel.bind(this))
   }
 
+  setData (data: Datum[]): void {
+    super.setData(data)
+    this._sortedDataCache = null
+  }
+
+  setConfig (config: CrosshairConfigInterface<Datum>): void {
+    super.setConfig(config)
+    this._sortedDataCache = null
+  }
+
+  private _getSortedData (): { values: number[]; indices: number[] } {
+    if (!this._sortedDataCache) {
+      const data = this.datamodel.data ?? []
+      const x = this.accessors.x
+      const indices = data.map((_, i) => i)
+        .sort((a, b) => getNumber(data[a], x, a) - getNumber(data[b], x, b))
+      const values = indices.map(i => getNumber(data[i], x, i))
+      this._sortedDataCache = { values, indices }
+    }
+
+    return this._sortedDataCache
+  }
+
+  /** Returns the index (in the original data array) of the datum with the x value nearest
+   * to the provided one, bisecting over the sorted x values cache */
+  private _getNearestDatumIndex (value: number, direction: FindNearestDirection = FindNearestDirection.Auto): number | undefined {
+    const data = this.datamodel.data
+    if (!data?.length || !this.accessors.x) return undefined
+    if (data.length === 1) return 0
+
+    const { values, indices } = this._getSortedData()
+    const index = direction === FindNearestDirection.Right
+      ? bisectLeft(values, value, 0, data.length - 1)
+      : bisectRight(values, value, 1, data.length)
+
+    if (direction === FindNearestDirection.Right) return indices[index]
+    if (direction === FindNearestDirection.Left) return indices[index - 1]
+
+    // By default (`FindNearestDirection.Auto`) return the index of the nearest value
+    return value - values[index - 1] > values[index] - value ? indices[index] : indices[index - 1]
+  }
+
   _render (customDuration?: number): void {
     const { config, datamodel } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
@@ -125,10 +176,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     const xValue = this.xScale.invert(xPx) as number
 
-    const leftNearestDatumIndex = (datamodel.data?.length && this.accessors.x)
-      ? datamodel.data.indexOf(
-        getNearest(datamodel.data, xValue, this.accessors.x, FindNearestDirection.Left)
-      ) : undefined
+    const leftNearestDatumIndex = this._getNearestDatumIndex(xValue, FindNearestDirection.Left)
 
     // If `snapToData` is `true`, we need to find the nearest datum to the crosshair
     // It can be from a mouse interaction or from a `forceShowAt` setting
@@ -160,8 +208,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
           nearestDistanceSq = nearest.distanceSq
         }
       } else {
-        nearestDatum = getNearest(datamodel.data, xValue, this.accessors.x)
-        nearestDatumIndex = datamodel.data.indexOf(nearestDatum)
+        nearestDatumIndex = this._getNearestDatumIndex(xValue)
+        nearestDatum = nearestDatumIndex === undefined ? undefined : datamodel.data[nearestDatumIndex]
       }
     }
 
