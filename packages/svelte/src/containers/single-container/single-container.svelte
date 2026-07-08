@@ -55,6 +55,13 @@
   $: if (component) chart === undefined ? initChart() : updateChart(true)
 
   // Lifecycle and contexts
+  // Child components call this after updating their data or config, so the chart re-renders.
+  // The render is scheduled on the next animation frame by the core, so multiple updates get batched
+  setContext('dirty', () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    chart?.render()
+  })
+
   setContext('tooltip', () => ({
     update: (t: Tooltip) => { tooltip = t },
     destroy: () => { tooltip = undefined },
