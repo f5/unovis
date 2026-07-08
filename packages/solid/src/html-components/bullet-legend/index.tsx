@@ -10,12 +10,13 @@ export const VisBulletLegendSelectors = BulletLegend.selectors
 
 export function VisBulletLegend(props: VisBulletLegendProps) {
   const [component, setComponent] = createSignal<BulletLegend>()
+  const config = props
    
   const [ref, setRef] = createSignal<HTMLDivElement>()
 
   onMount(() => {
     const r = ref()
-    if(r) setComponent(new BulletLegend(r, { ...props, renderIntoProvidedDomNode: true }));
+    if(r) setComponent(new BulletLegend(r, { ...config, renderIntoProvidedDomNode: true }));
     
     
   })
@@ -27,7 +28,7 @@ export function VisBulletLegend(props: VisBulletLegendProps) {
 
   createEffect(
     on(
-      () => ({ ...props }),
+      () => ({ ...config }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
           component()?.setConfig(curr)
