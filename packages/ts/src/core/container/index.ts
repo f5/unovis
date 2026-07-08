@@ -1,7 +1,11 @@
 import { select, Selection } from 'd3-selection'
 
+// Core
+import { ComponentCore } from 'core/component'
+
 // Types
 import { Sizing } from 'types/component'
+import { Spacing } from 'types/spacing'
 
 // Utils
 import { isEqual, clamp, merge } from 'utils/data'
@@ -69,6 +73,17 @@ export class ContainerCore {
   // For example, calculating scales, setting component sizes, etc ...
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   protected _preRender (): void {}
+
+  /** Propagates the container's size, margin, and color function to the provided components.
+   * Containers call this during `_preRender` */
+  protected _propagateSizeAndStyleToComponents (components: (ComponentCore<unknown> | undefined)[], margin: Spacing): void {
+    for (const c of components) {
+      if (!c) continue
+      c.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
+      c.setContainerMargin(margin)
+      c.setColorFunction(this.config.color)
+    }
+  }
 
   // The `_render` step should be used to perform the actual rendering
   protected _render (duration?: number): void {

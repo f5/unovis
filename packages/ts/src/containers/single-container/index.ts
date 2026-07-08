@@ -102,11 +102,9 @@ export class SingleContainer<Data> extends ContainerCore {
   protected _preRender (): void {
     const { config } = this
     super._preRender()
-    this.component.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
-    this.component.setContainerMargin(config.margin)
-    this.component.setColorFunction(config.color)
-    config.annotations?.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
-    config.annotations?.setContainerMargin(config.margin)
+
+    // Pass size, margin, and the color function to the component and annotations
+    this._propagateSizeAndStyleToComponents([this.component, config.annotations], config.margin)
   }
 
   protected _render (duration?: number): void {
