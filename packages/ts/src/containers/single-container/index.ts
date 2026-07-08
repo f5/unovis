@@ -10,7 +10,7 @@ import { ComponentConfigInterface } from 'core/component/config'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { Sizing, ExtendedSizeComponent } from 'types/component'
+import { Sizing, isExtendedSizeComponent } from 'types/component'
 
 // Config
 import { SingleContainerDefaultConfig, SingleContainerConfigInterface } from './config'
@@ -51,7 +51,13 @@ export class SingleContainer<Data> extends ContainerCore {
     this._removeAllChildren()
 
     this.component = containerConfig.component
-    if (containerConfig.sizing) this.component.sizing = containerConfig.sizing
+    if (containerConfig.sizing) {
+      const needsExtendedSize = containerConfig.sizing === Sizing.Extend || containerConfig.sizing === Sizing.FitWidth
+      if (needsExtendedSize && !isExtendedSizeComponent(this.component)) {
+        console.warn(`Unovis | Single Container: The component doesn't support the '${containerConfig.sizing}' sizing mode because it doesn't report its own size. Falling back to '${Sizing.Fit}'`)
+      }
+      this.component.sizing = containerConfig.sizing
+    }
     this.element.appendChild(this.component.element)
 
     const tooltip = containerConfig.tooltip
@@ -90,11 +96,9 @@ export class SingleContainer<Data> extends ContainerCore {
 
   public getFitWidthScale (): number {
     const { config, component } = this
+    if (!isExtendedSizeComponent(component)) return 1
 
-    const extendedSizeComponent = component as ExtendedSizeComponent
-    if (!extendedSizeComponent.getWidth) return 1
-
-    const componentWidth = extendedSizeComponent.getWidth() + config.margin.left + config.margin.right
+    const componentWidth = component.getWidth() + config.margin.left + config.margin.right
     return this.width / componentWidth
   }
 
@@ -125,12 +129,11 @@ export class SingleContainer<Data> extends ContainerCore {
   public render (duration = this.config.duration): void {
     const { config, component } = this
 
-    if (config.sizing === Sizing.Extend || config.sizing === Sizing.FitWidth) {
+    if ((config.sizing === Sizing.Extend || config.sizing === Sizing.FitWidth) && isExtendedSizeComponent(component)) {
       const fitToWidth = config.sizing === Sizing.FitWidth
-      const extendedSizeComponent = component as ExtendedSizeComponent
 
-      const componentWidth = extendedSizeComponent.getWidth() + config.margin.left + config.margin.right
-      const componentHeight = extendedSizeComponent.getHeight() + config.margin.top + config.margin.bottom
+      const componentWidth = component.getWidth() + config.margin.left + config.margin.right
+      const componentHeight = component.getHeight() + config.margin.top + config.margin.bottom
       const scale = fitToWidth ? this.getFitWidthScale() : 1
 
       const currentWidth = this.svg.attr('width')

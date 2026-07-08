@@ -12,6 +12,13 @@ export enum Sizing {
 }
 
 export interface ExtendedSizeComponent {
-  getWidth?(): number;
-  getHeight?(): number;
+  getWidth(): number;
+  getHeight(): number;
+}
+
+/** Checks whether a component reports its own size and can be used
+ * with the `Sizing.Extend` and `Sizing.FitWidth` sizing modes */
+export function isExtendedSizeComponent (component: unknown): component is ExtendedSizeComponent {
+  const c = component as ExtendedSizeComponent
+  return typeof c?.getWidth === 'function' && typeof c?.getHeight === 'function'
 }
