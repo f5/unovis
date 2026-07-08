@@ -42,6 +42,8 @@ export type SankeyNode<N extends SankeyInputNode, L extends SankeyInputLink> = G
     greyout?: boolean;
     /* Pre-calculated node height value in pixels that will be used to manually generate the layout when data has no links */
     precalculatedHeight?: number;
+    /** Whether this node is collapsed (hides all connected links) */
+    collapsed?: boolean;
   };
 }
 
