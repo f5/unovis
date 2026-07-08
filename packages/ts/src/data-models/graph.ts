@@ -1,4 +1,4 @@
-import { isNumber, isUndefined, cloneDeep, isFunction, isString, isObject, isEqual } from 'utils/data'
+import { isNumber, isUndefined, isFunction, isString, isObject, isEqual } from 'utils/data'
 
 // Types
 import { GraphInputLink, GraphInputNode, GraphLinkCore, GraphNodeCore } from 'types/graph'
@@ -50,9 +50,13 @@ export class GraphDataModel<
     this._nodesByUserId.clear()
     this._nodesByInputRef.clear()
 
+    // Shallow-copy the input nodes and links: the library augments them with underscore-prefixed
+    // state and top-level layout properties, so the copies keep the user's objects intact while
+    // avoiding a deep clone of the whole dataset (a large allocation on every data update).
+    // Nested objects are shared by reference and are never mutated by the library
     // Todo: Figure out why TypeScript complains about types
-    const nodes = cloneDeep(inputData?.nodes ?? []) as undefined as OutNode[]
-    const links = cloneDeep(inputData?.links ?? []) as undefined as OutLink[]
+    const nodes = (inputData?.nodes ?? []).map(n => ({ ...n })) as undefined as OutNode[]
+    const links = (inputData?.links ?? []).map(l => ({ ...l })) as undefined as OutLink[]
 
     // Every node or link can have a private state used for rendering needs
     // On data update we transfer state between objects with same ids
