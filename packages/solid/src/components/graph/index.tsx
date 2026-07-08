@@ -19,7 +19,7 @@ export function VisGraph<N extends GraphInputNode, L extends GraphInputLink>(pro
   
   onMount(() => {
     setComponent(new Graph<N, L>(config));
-    if (dataProps.data) component()?.setData(dataProps.data)
+    if (dataProps.data !== undefined) component()?.setData(dataProps.data)
     ctx.update("component", component);
   })
 
@@ -48,7 +48,7 @@ export function VisGraph<N extends GraphInputNode, L extends GraphInputLink>(pro
     on(
       () => dataProps.data,
       (data) => {
-        if (data) {
+        if (data !== undefined) {
           component()?.setData(data)
           ctx.dirty()
         }

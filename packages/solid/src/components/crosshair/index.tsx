@@ -19,7 +19,7 @@ export function VisCrosshair<Datum>(props: VisCrosshairProps<Datum>) {
   
   onMount(() => {
     setComponent(new Crosshair<Datum>(config));
-    if (dataProps.data) component()?.setData(dataProps.data)
+    if (dataProps.data !== undefined) component()?.setData(dataProps.data)
     ctx.update("crosshair", component);
   })
 
@@ -48,7 +48,7 @@ export function VisCrosshair<Datum>(props: VisCrosshairProps<Datum>) {
     on(
       () => dataProps.data,
       (data) => {
-        if (data) {
+        if (data !== undefined) {
           component()?.setData(data)
           ctx.dirty()
         }

@@ -23,7 +23,8 @@ const component = shallowRef<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>()
 onMounted(() => {
   nextTick(() => {
     component.value = new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(config.value)
-    component.value?.setData(data.value)
+    if (data.value !== undefined)
+      component.value?.setData(data.value)
     accessor?.update(component.value)
   })
 })
@@ -42,6 +43,8 @@ watch(config, (curr, prev) => {
 })
 
 watch(data, () => {
+  if (data.value === undefined)
+    return
   component.value?.setData(data.value)
   // Notify the container so it can re-render the chart
   accessor?.dirty()

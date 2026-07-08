@@ -49,7 +49,7 @@ ${isStandAlone ? 'const elRef = ref<HTMLDivElement>()' : ''}
 onMounted(() => {
   nextTick(() => {
     ${isStandAlone ? 'if(elRef.value)\n    ' : ''}component.value = new ${componentType}(${constructorArgs})
-    ${propDefs?.length && !isStandAlone ? 'component.value?.setData(data.value)' : ''}
+    ${propDefs?.length && !isStandAlone ? 'if (data.value !== undefined) component.value?.setData(data.value)' : ''}
     ${isStandAlone ? '' : 'accessor?.update(component.value)'}
   })
 })
@@ -67,8 +67,10 @@ watch(config, (curr, prev) => {
   }
 })
 ${propDefs?.length ? (isStandAlone ? `\nwatch(data, () => {
+  if (data.value === undefined) return
   component.value?.setData(data.value)
 })` : `\nwatch(data, () => {
+  if (data.value === undefined) return
   component.value?.setData(data.value)
   // Notify the container so it can re-render the chart
   accessor?.dirty()

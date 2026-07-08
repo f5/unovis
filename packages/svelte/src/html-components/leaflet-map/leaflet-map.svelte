@@ -25,7 +25,7 @@
     component = new LeafletMap<Datum>(ref, config, data)
     return () => component?.destroy()
   })
-  $: component?.setData(data)
+  $: if (data !== undefined) component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config
