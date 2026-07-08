@@ -197,9 +197,14 @@ export class ContainerCore {
     }
   }
 
+  /** Sizing mode that is actually applied. Containers can override it if they don't support some of the modes */
+  protected _getEffectiveSizing (): Sizing | string {
+    return this.config.sizing
+  }
+
   protected _onResize (): void {
-    const { config } = this
-    const redrawOnResize = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
+    const sizing = this._getEffectiveSizing()
+    const redrawOnResize = sizing === Sizing.Fit || sizing === Sizing.FitWidth
     if (redrawOnResize) this.render(0)
   }
 
