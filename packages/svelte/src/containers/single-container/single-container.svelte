@@ -49,7 +49,7 @@
   }
 
   // Reactive statements
-  $: chart?.setData(data)
+  $: if (data !== undefined) chart?.setData(data)
   $: shouldUpdate = Object.keys(props).some(k => !arePropsEqual(chart?.config[k], props[k]))
   $: if (shouldUpdate) updateChart()
   $: if (component) chart === undefined ? initChart() : updateChart(true)

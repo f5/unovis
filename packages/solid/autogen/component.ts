@@ -60,7 +60,7 @@ export function Vis${componentName}${genericsDefStr}(props: Vis${componentName}P
     ${
       isStandAlone ? 'const r = ref()\n    if(r) ' : ''
     }setComponent(new ${componentType}(${constructorArgs}));
-    ${dataType && !isStandAlone ? 'if (dataProps.data) component()?.setData(dataProps.data)' : ''}
+    ${dataType && !isStandAlone ? 'if (dataProps.data !== undefined) component()?.setData(dataProps.data)' : ''}
     ${isStandAlone ? '' : `ctx.update("${elementSuffix}", component);`}
   })
 
@@ -96,7 +96,7 @@ export function Vis${componentName}${genericsDefStr}(props: Vis${componentName}P
     on(
       () => dataProps.data,
       (data) => {
-        if (data) {
+        if (data !== undefined) {
           component()?.setData(data)
           ${isStandAlone ? '' : `ctx.dirty()`}
         }
