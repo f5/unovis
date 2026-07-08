@@ -20,15 +20,18 @@
   // component declaration
   let component: Brush<Datum>
   const lifecycle = getContext<Lifecycle>('component')
+  // Notifies the container that this component's data or config has changed, so it can re-render
+  const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
     component = new Brush<Datum>(config)
     return () => component?.destroy()
   })
-  $: component?.setData(data)
+  $: { component?.setData(data); dirty?.() }
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config
+    dirty?.()
   }
 
   // component accessor

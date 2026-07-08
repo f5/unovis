@@ -19,6 +19,8 @@
   // component declaration
   let component: Annotations
   const lifecycle = getContext<Lifecycle>('annotations')
+  // Notifies the container that this component's data or config has changed, so it can re-render
+  const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
     component = new Annotations(config)
@@ -27,6 +29,7 @@
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config
+    dirty?.()
   }
 
   // component accessor
