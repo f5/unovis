@@ -132,7 +132,7 @@ export class SingleContainer<Data> extends ContainerCore {
 
   // Re-defining the `render()` function to handle different sizing techniques (`Sizing.Extend` and `Sizing.FitWidth`)
   // Not calling `super.render()` because we don't want it to interfere with setting the SVG size here.
-  public render (duration = this.config.duration): void {
+  public render (duration = this.config.duration): Promise<void> {
     const { config, component } = this
     const sizing = this._getEffectiveSizing()
 
@@ -160,15 +160,8 @@ export class SingleContainer<Data> extends ContainerCore {
         .attr('height', this.config.height || this.containerHeight)
     }
 
-    // Set up Resize Observer
-    if (!this._resizeObserver) this._setUpResizeObserver()
-
-    // Schedule the actual rendering in the next frame
-    cancelAnimationFrame(this._renderAnimationFrameId)
-    this._renderAnimationFrameId = requestAnimationFrame(() => {
-      this._preRender()
-      this._render(duration)
-    })
+    // Schedule the actual rendering in the next frame (shared with ContainerCore.render)
+    return this._scheduleRender(duration)
   }
 
   protected _onResize (): void {
