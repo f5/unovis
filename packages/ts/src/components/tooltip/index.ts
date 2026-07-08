@@ -360,12 +360,12 @@ export class Tooltip {
             const template = currentConfig.triggers[className]
             if (!template) continue // Skip if the trigger is not configured
 
-            const els = selection.selectAll<HTMLElement | SVGGElement, unknown>(`.${className}`).nodes()
-
             // Go through all of the elements in the event path (from the deepest element upwards)
             for (const el of path) {
               if (el === selection.node()) break // Break on the component's level (usually the `<g>` element)
               if (el.classList.contains(className)) { // If there's a match, show the tooltip
+                // Query the trigger elements only after a match (we need the element index for the template)
+                const els = selection.selectAll<HTMLElement | SVGGElement, unknown>(`.${className}`).nodes()
                 const i = els.indexOf(el)
                 const d = select(el).datum()
                 const content = template(d, i, els)
