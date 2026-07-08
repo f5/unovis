@@ -19,7 +19,7 @@ export function VisLine<Datum>(props: VisLineProps<Datum>) {
   
   onMount(() => {
     setComponent(new Line<Datum>(config));
-    if (dataProps.data) component()?.setData(dataProps.data)
+    if (dataProps.data !== undefined) component()?.setData(dataProps.data)
     ctx.update("component", component);
   })
 
@@ -48,7 +48,7 @@ export function VisLine<Datum>(props: VisLineProps<Datum>) {
     on(
       () => dataProps.data,
       (data) => {
-        if (data) {
+        if (data !== undefined) {
           component()?.setData(data)
           ctx.dirty()
         }

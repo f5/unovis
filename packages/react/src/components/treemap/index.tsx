@@ -44,7 +44,7 @@ function VisTreemapFC<Datum> (props: VisTreemapProps<Datum>, fRef: ForwardedRef<
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (data) component?.setData(data)
+    if (data !== undefined) component?.setData(data)
     component?.setConfig(config)
   })
 

@@ -37,6 +37,8 @@ watch(config, (curr, prev) => {
 })
 
 watch(data, () => {
+  if (data.value === undefined)
+    return
   component.value?.setData(data.value)
 })
 

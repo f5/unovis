@@ -68,7 +68,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    ${dataType ? 'if (data) component?.setData(data)' : ''}
+    ${dataType ? 'if (data !== undefined) component?.setData(data)' : ''}
     component?.setConfig(config)
   })
 
