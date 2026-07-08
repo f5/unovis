@@ -197,6 +197,11 @@ export class XYContainer<Datum> extends ContainerCore {
   public updateComponents (componentConfigs: XYConfigInterface<Datum>[], preventRender?: boolean): void {
     const { config } = this
 
+    // Configs are matched to components by array index
+    if (componentConfigs && componentConfigs.length !== this.components.length) {
+      console.warn('Unovis | XY Container: The number of provided component configs doesn\'t match the number of components. Configs are matched to components by index, so some components won\'t be updated')
+    }
+
     this.components.forEach((c, i) => {
       const componentConfig = componentConfigs[i]
       if (componentConfig) {
