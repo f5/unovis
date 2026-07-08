@@ -94,7 +94,7 @@ export class Sankey<
 
   constructor (config?: SankeyConfigInterface<N, L>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
     // eslint-disable-next-line @typescript-eslint/naming-convention
     this._gNode = this.g.node() as (SVGGElement & { __zoom: ZoomTransform })
     this._backgroundRect = this.g.append('rect').attr('class', s.background).style('pointer-events', 'all')

@@ -52,7 +52,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
 
   constructor (config?: AreaConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     // Determine if the provided chart should be stacked
     this.stacked = Array.isArray(this.config.y)

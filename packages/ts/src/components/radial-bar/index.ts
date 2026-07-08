@@ -50,7 +50,7 @@ export class RadialBar<Datum> extends ComponentCore<Datum[], RadialBarConfigInte
 
   constructor (config?: RadialBarConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
     this.trackGroup = this.g.append('g')
     this.barGroup = this.g.append('g')
     this.centralLabel = this.g.append('text')

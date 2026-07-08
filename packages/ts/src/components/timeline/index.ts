@@ -82,7 +82,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
   constructor (config?: TimelineConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     // Invisible background rect to track events
     this._background = this.g.append('rect').attr('class', s.background)
