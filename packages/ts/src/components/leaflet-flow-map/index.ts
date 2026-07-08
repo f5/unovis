@@ -230,12 +230,12 @@ export class LeafletFlowMap<
     this.canvasElement.style.transform = `translate(${shift.x}px, ${shift.y}px)`
   }
 
-  public destroy (): void {
+  protected _onDestroy (): void {
     this.resizeObserver?.disconnect()
     this.renderer?.destroy()
     this.canvasElement?.removeEventListener('mousemove', this.onCanvasMouseMoveBound)
     this.canvasElement?.removeEventListener('click', this.onCanvasClickBound)
-    super.destroy()
+    this.leafletMap?.destroy()
   }
 
   // Leaflet Map useful methods

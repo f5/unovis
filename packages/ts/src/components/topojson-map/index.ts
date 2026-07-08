@@ -1571,7 +1571,7 @@ export class TopoJSONMap<
     this._renderPoints(this.config.duration)
   }
 
-  destroy (): void {
+  protected _onDestroy (): void {
     window.cancelAnimationFrame(this._animFrameId)
     this._stopFlowAnimation()
     window.cancelAnimationFrame(this._collisionDetectionAnimFrameId)
