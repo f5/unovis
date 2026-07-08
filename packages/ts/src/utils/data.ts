@@ -114,7 +114,9 @@ export const cloneDeep = <T>(obj: T, stack: Map<any, any> = new Map()): T => {
 export const merge = <T, K>(obj1: T, obj2: K, visited: Map<any, any> = new Map()): T & K => {
   type Rec = Record<string | number, unknown>
 
-  if (!obj1 || !obj2) return obj1 as T & K
+  // Clone `obj1` even when there's nothing to merge, so that callers never get a reference
+  // to the original object (e.g. a shared default config) that they could accidentally mutate
+  if (!obj1 || !obj2) return (obj1 ? cloneDeep(obj1) : obj1) as T & K
   if ((obj1 as unknown) === (obj2 as unknown)) return obj1 as T & K
 
   const newObj = (isAClassInstance(obj1 as Rec) ? obj1 : cloneDeep(obj1)) as T & K
@@ -129,9 +131,8 @@ export const merge = <T, K>(obj1: T, obj2: K, visited: Map<any, any> = new Map()
 
     if (isPlainObject((obj1 as Rec)[key]) && isPlainObject((obj2 as Rec)[key])) {
       (newObj as Rec)[key] = merge((obj1 as Rec)[key], (obj2 as Rec)[key], visited)
-    } else if (isAClassInstance(obj2 as Rec)) {
-      (newObj as Rec)[key] = obj2
     } else {
+      // `cloneDeep` copies class instances and primitives by reference, and clones plain objects / arrays
       (newObj as Rec)[key] = cloneDeep((obj2 as Rec)[key])
     }
   })
