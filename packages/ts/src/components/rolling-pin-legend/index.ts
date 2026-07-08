@@ -27,7 +27,7 @@ export class RollingPinLegend {
 
     this.element = this.div.node()
 
-    if (config) this.setConfig(config)
+    this.setConfig(config)
   }
 
   setConfig (config: RollingPinLegendConfigInterface): void {

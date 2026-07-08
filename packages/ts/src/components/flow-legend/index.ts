@@ -35,7 +35,7 @@ export class FlowLegend {
 
     this.labels = this.div.append('div')
 
-    if (config) this.setConfig(config)
+    this.setConfig(config)
   }
 
   setConfig (config: FlowLegendConfigInterface): void {

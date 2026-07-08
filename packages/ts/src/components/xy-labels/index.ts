@@ -29,7 +29,7 @@ export class XYLabels<Datum> extends XYComponentCore<Datum, XYLabelsConfigInterf
 
   constructor (config?: XYLabelsConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
   }
 
   _render (customDuration?: number): void {

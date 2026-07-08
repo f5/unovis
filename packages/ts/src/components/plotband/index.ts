@@ -25,7 +25,7 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
 
   constructor (config: PlotbandConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     this.plotband = this.g.append('rect')
       .attr('class', s.plotband)

@@ -25,7 +25,7 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfigInte
 
   constructor (config: FreeBrushConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     this.brush = this.g
       .append('g')

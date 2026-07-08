@@ -51,7 +51,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
   constructor (config?: AxisConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     this.g.attr('axis-type', this.config.type)
 

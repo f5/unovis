@@ -45,8 +45,10 @@ export class XYComponentCore<
 
   setConfig (config: ConfigInterface): void {
     // We don't allow changing scales after the component has been initialized
-    if (this.config?.xScale) config.xScale = this.config.xScale
-    if (this.config?.yScale) config.yScale = this.config.yScale
+    if (config) {
+      if (this.config?.xScale) config.xScale = this.config.xScale
+      if (this.config?.yScale) config.yScale = this.config.yScale
+    }
 
     super.setConfig(config)
   }

@@ -38,7 +38,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
 
   constructor (config?: StackedBarConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
   }
 
   get bleed (): Spacing {

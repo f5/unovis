@@ -54,7 +54,7 @@ NestedDonutConfigInterface<Datum>
 
   constructor (config?: NestedDonutConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
     this.arcBackground = this.g.append('g')
     this.arcGroup = this.g.append('g')
       .attr('class', s.segmentsGroup)

@@ -31,7 +31,7 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
 
   constructor (config?: AnnotationsConfigInterface) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
   }
 
   _render (customDuration?: number): void {

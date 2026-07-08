@@ -89,7 +89,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
   constructor (config?: CrosshairConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     this.g.style('opacity', 0)
     this.line = this.g.append('line')

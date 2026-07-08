@@ -37,7 +37,7 @@ export class BulletLegend {
 
     this.element = this.div.node()
 
-    if (config) this.setConfig(config)
+    this.setConfig(config)
   }
 
   setConfig (config: BulletLegendConfigInterface): void {

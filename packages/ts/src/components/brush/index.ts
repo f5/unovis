@@ -38,7 +38,7 @@ export class Brush<Datum> extends XYComponentCore<Datum, BrushConfigInterface<Da
 
   constructor (config?: BrushConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     const directions: BrushHandleType[] = [{ type: BrushDirection.West }, { type: BrushDirection.East }]
     this.unselectedRange = this.g

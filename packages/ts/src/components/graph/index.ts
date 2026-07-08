@@ -157,7 +157,7 @@ export class Graph<
 
   constructor (config?: GraphConfigInterface<N, L>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     this._backgroundRect = this.g.append('rect').attr('class', generalSelectors.background)
     this._graphGroup = this.g.append('g').attr('class', generalSelectors.graphGroup)

@@ -46,7 +46,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
 
   constructor (config?: DonutConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
     this.arcBackground = this.g.append('path')
     this.arcGroup = this.g.append('g')
     this.centralLabel = this.g.append('text')
