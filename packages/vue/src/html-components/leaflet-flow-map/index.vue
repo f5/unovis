@@ -2,7 +2,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import type { GenericDataRecord, LeafletFlowMapConfigInterface } from '@unovis/ts'
 import { LeafletFlowMap } from '@unovis/ts'
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 
 // data and required props
@@ -14,7 +14,8 @@ const data = computed(() => props.data)
 const config = useForwardProps(props)
 
 // component declaration
-const component = ref<LeafletFlowMap<PointDatum, FlowDatum>>()
+// (a shallow ref keeps the unovis instance raw — deep-proxying it adds overhead and is not needed)
+const component = shallowRef<LeafletFlowMap<PointDatum, FlowDatum>>()
 const elRef = ref<HTMLDivElement>()
 
 onMounted(() => {

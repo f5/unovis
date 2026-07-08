@@ -5,28 +5,33 @@ export const componentAccessorKey = Symbol('componentAccessorKey') as InjectionK
   data: Ref<any>;
   update: (c: XYComponentCore<any> | ComponentCore<any>) => void;
   destroy: () => void;
+  dirty: () => void;
 }>
 
 export const tooltipAccessorKey = Symbol('tooltipAccessorKey') as InjectionKey<{
   data: Ref<any>;
   update: (c: Tooltip) => void;
   destroy: () => void;
+  dirty: () => void;
 }>
 
 export const crosshairAccessorKey = Symbol('crosshairAccessorKey') as InjectionKey<{
   data: Ref<any>;
   update: (c: Crosshair<any>) => void;
   destroy: () => void;
+  dirty: () => void;
 }>
 
 export const axisAccessorKey = Symbol('axisAccessorKey') as InjectionKey< {
   data: Ref<any>;
   update: (c: Axis<any>) => void;
   destroy: (c: string) => void;
+  dirty: () => void;
 }>
 
 export const annotationsAccessorKey = Symbol('annotationsAccessorKey') as InjectionKey<{
   data: Ref<any>;
   update: (c: Annotations) => void;
   destroy: () => void;
+  dirty: () => void;
 }>
