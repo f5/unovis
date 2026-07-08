@@ -5,7 +5,7 @@ import { max, min } from 'd3-array'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue } from 'utils/data'
+import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue, areArraysShallowEqual } from 'utils/data'
 import { getColor } from 'utils/color'
 import { getPattern, getFillPatternValue } from 'utils/pattern'
 import { smartTransition } from 'utils/d3'
@@ -45,6 +45,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
   }
 
   private _pointData: ScatterPoint<Datum>[][] = []
+  private _pointDataCacheKey: unknown[] | undefined
   private _points: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]>
   private _sizeScale: ContinuousScale
   private _collideLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
@@ -64,8 +65,24 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     this._updateSizeScale()
   }
 
+  /** Recomputes the on-screen point data unless nothing relevant has changed.
+   * The container evaluates `bleed` (which needs this data) several times per render cycle,
+   * and rebuilding all point objects on every call is expensive for large datasets */
+  private _updatePointData (): void {
+    const cacheKey = [
+      this.datamodel.data, this.config, this._width, this._height,
+      ...this.xScale.domain(), ...this.xScale.range(),
+      ...this.yScale.domain(), ...this.yScale.range(),
+    ]
+
+    if (!this._pointDataCacheKey || !areArraysShallowEqual(cacheKey, this._pointDataCacheKey)) {
+      this._pointData = this._getOnScreenData()
+      this._pointDataCacheKey = cacheKey
+    }
+  }
+
   get bleed (): Spacing {
-    this._pointData = this._getOnScreenData()
+    this._updatePointData()
     const pointDataFlat: ScatterPoint<Datum>[] = flatten(this._pointData)
 
     const yRangeStart = min(this.yScale.range())
@@ -112,6 +129,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
   _render (customDuration?: number): void {
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    this._updatePointData()
 
     // Groups
     const pointGroups = this.g

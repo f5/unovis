@@ -38,6 +38,7 @@ export class XYContainer<Datum> extends ContainerCore {
   private _clipPath: Selection<SVGClipPathElement, unknown, null, undefined>
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
+  private _componentsBleed: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
 
   constructor (element: HTMLElement, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
@@ -185,7 +186,7 @@ export class XYContainer<Datum> extends ContainerCore {
       }
     })
 
-    this._updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
+    // The scales will be updated in `_preRender` during the scheduled render
     if (!preventRender) this.render()
   }
 
@@ -200,6 +201,12 @@ export class XYContainer<Datum> extends ContainerCore {
     const { config } = this
     super._preRender()
 
+    // Set the scales and update their domains once per render cycle
+    // (the domains depend only on the data and the configuration, not on the sizing steps below)
+    const scaledComponents = clean([...this.components, config.xAxis, config.yAxis, config.crosshair])
+    this._setScales(...scaledComponents)
+    this._updateScalesDomain(...scaledComponents)
+
     // Calculate extra margin required to fit the axes
     if (config.autoMargin) {
       this._setAutoMargin()
@@ -209,8 +216,8 @@ export class XYContainer<Datum> extends ContainerCore {
     const components = clean([...this.components, config.xAxis, config.yAxis, config.crosshair, config.annotations])
     this._propagateSizeAndStyleToComponents(components, this._getMargin())
 
-    // Update Scales of all the components at once to calculate required paddings and sync them
-    this._updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
+    // Update the scale ranges to the final size and margin
+    this._updateScalesRange(...scaledComponents)
   }
 
   protected _render (customDuration?: number): void {
@@ -277,14 +284,7 @@ export class XYContainer<Datum> extends ContainerCore {
     config.annotations?.render()
 
     this._firstRender = false
-    config.onRenderComplete?.(this.svg.node(), margin, this._getBleed(this.components), this.containerWidth, this.containerHeight, this.width, this.height)
-  }
-
-  private _updateScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const c = clean(components || this.components)
-    this._setScales(...c)
-    this._updateScalesDomain(...c)
-    this._updateScalesRange(...c)
+    config.onRenderComplete?.(this.svg.node(), margin, this._componentsBleed, this.containerWidth, this.containerHeight, this.width, this.height)
   }
 
   private _setScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
@@ -349,8 +349,10 @@ export class XYContainer<Datum> extends ContainerCore {
       c.setScaleRange(ScaleDimension.Y, config.yRange ?? yRange)
     }
 
-    // Get and combine bleed
+    // Get and combine bleed. The bleed of the final `_updateScalesRange` call of the render
+    // cycle is stored, so `_render` can pass it to `onRenderComplete` without recomputing
     const bleed = this._getBleed(components)
+    this._componentsBleed = bleed
 
     // Update scale range
     for (const c of components) {
@@ -378,13 +380,9 @@ export class XYContainer<Datum> extends ContainerCore {
 
   private _setAutoMargin (): void {
     const { config: { xAxis, yAxis } } = this
-
-    // At first we need to set the domain to the scales
     const components = clean([...this.components, xAxis, yAxis])
-    this._setScales(...components)
-    this._updateScalesDomain(...components)
 
-    // Calculate margin required by the axes
+    // Calculate margin required by the axes. The scale domains have been updated in `_preRender`
     // We do two iterations on the first render, because the amount and size of ticks can change
     //    after new margin are calculated and applied (axes dimensions will change).
     //    That's needed for correct label placement.

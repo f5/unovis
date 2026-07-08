@@ -70,6 +70,9 @@ export const isEqual = (
   return a === b
 }
 
+export const areArraysShallowEqual = (a: unknown[], b: unknown[]): boolean =>
+  Boolean(a) && Boolean(b) && (a.length === b.length) && a.every((item, i) => item === b[i])
+
 export const without = <T>(arr: Array<T>, ...args: T[]): Array<T> => arr.filter(item => !args.includes(item))
 export const flatten = <T>(arr: Array<T | T[]>): Array<T> => arr.flat() as T[]
 export const cloneDeep = <T>(obj: T, stack: Map<any, any> = new Map()): T => {
