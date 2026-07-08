@@ -25,22 +25,11 @@ import { guid } from 'utils/misc'
 
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
-import {
-  AreaConfigInterface,
-  BrushConfigInterface,
-  LineConfigInterface,
-  ScatterConfigInterface,
-  StackedBarConfigInterface,
-  TimelineConfigInterface,
-} from '../../components'
 
-export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
-| StackedBarConfigInterface<Datum>
-| LineConfigInterface<Datum>
-| ScatterConfigInterface<Datum>
-| BrushConfigInterface<Datum>
-| TimelineConfigInterface<Datum>
-| AreaConfigInterface<Datum>
+/** Configuration of any XY component. All fields are optional because `updateComponents` merges partial updates.
+ * Concrete component config interfaces (e.g. `LineConfigInterface`) extend the base one,
+ * so they can all be passed where this type is expected */
+export type XYConfigInterface<Datum> = Partial<XYComponentConfigInterface<Datum>>
 
 export class XYContainer<Datum> extends ContainerCore {
   protected _defaultConfig = XYContainerDefaultConfig as XYContainerConfigInterface<Datum>
@@ -194,7 +183,7 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  public updateComponents (componentConfigs: XYConfigInterface<Datum>[], preventRender?: boolean): void {
+  public updateComponents<C extends XYConfigInterface<Datum>> (componentConfigs: C[], preventRender?: boolean): void {
     const { config } = this
 
     // Configs are matched to components by array index
@@ -213,7 +202,7 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  public update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: Datum[]): void {
+  public update<C extends XYConfigInterface<Datum>> (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: C[], data?: Datum[]): void {
     if (data) this.datamodel.data = data // Just updating the data model because the `updateContainer` method has the `setData` step inside
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfigs) this.updateComponents(componentConfigs, true)
@@ -280,8 +269,7 @@ export class XYContainer<Datum> extends ContainerCore {
       // Pass accessors
       const yAccessors = nonStackedComponents.map(c => c.config.y)
       const yStackedAccessors = stackedComponents.map(c => c.config.y)
-      const baselineComponentConfig = this.components.find(c => (c.config as AreaConfigInterface<Datum>).baseline)?.config as AreaConfigInterface<Datum>
-      const baselineAccessor = baselineComponentConfig?.baseline
+      const baselineAccessor = this.components.map(c => c.getBaselineAccessor()).find(Boolean)
 
       // Setting up fallback accessors for the crosshair to be used if they are not configured explicitly
       crosshair.accessors = {
