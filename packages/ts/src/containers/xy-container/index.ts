@@ -20,7 +20,7 @@ import { ScaleDimension } from '@/types/scale'
 import { Direction } from '@/types/direction'
 
 // Utils
-import { clamp, clean, flatten, isEqual } from '@/utils/data'
+import { clamp, clean, flatten } from '@/utils/data'
 import { guid } from '@/utils/misc'
 
 // Config
@@ -117,6 +117,7 @@ export class XYContainer<Datum> extends ContainerCore {
     const { components, config } = this
     if (!data) return
 
+    const hasDataUpdated = this.datamodel.data !== data
     this.datamodel.data = data
 
     components.forEach((c) => {
@@ -130,7 +131,6 @@ export class XYContainer<Datum> extends ContainerCore {
     // Hide tooltip and crosshair if the data has changed
     // Important: We still want to do `setData` for the components above even if the data hasn't changed
     // because calling `updateContainer` may add new components and we need to pass them the data
-    const hasDataUpdated = !isEqual(this.datamodel.data, data)
     if (hasDataUpdated) {
       config.tooltip?.hide()
       config.crosshair?.hide()

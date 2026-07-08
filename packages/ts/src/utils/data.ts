@@ -29,6 +29,8 @@ export const isEqual = (
   skipKeys: string[] = [],
   visited: Set<any> = new Set()
 ): boolean => {
+  if (a === b) return true
+
   if (Array.isArray(a)) {
     if (!Array.isArray(b) || a.length !== b.length) return false
 
