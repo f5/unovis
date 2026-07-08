@@ -1,4 +1,4 @@
-import { isNumber, isUndefined, cloneDeep, isFunction, without, isString, isObject, isEqual } from 'utils/data'
+import { isNumber, isUndefined, cloneDeep, isFunction, isString, isObject, isEqual } from 'utils/data'
 
 // Types
 import { GraphInputLink, GraphInputNode, GraphLinkCore, GraphNodeCore } from 'types/graph'
@@ -23,6 +23,8 @@ export class GraphDataModel<
   private _links: OutLink[] = []
   private _inputNodesMap = new Map<OutNode, N>()
   private _nodesMap = new Map<string | number, OutNode>()
+  private _nodesByUserId = new Map<string, OutNode>()
+  private _nodesByInputRef = new Map<N, OutNode>()
 
   // Model configuration
   public nodeId: ((n: N) => string | undefined) = n => (isString(n.id) || isFinite(n.id as number)) ? `${n.id}` : undefined
@@ -45,6 +47,8 @@ export class GraphDataModel<
 
     this._inputNodesMap.clear()
     this._nodesMap.clear()
+    this._nodesByUserId.clear()
+    this._nodesByInputRef.clear()
 
     // Todo: Figure out why TypeScript complains about types
     const nodes = cloneDeep(inputData?.nodes ?? []) as undefined as OutNode[]
@@ -61,6 +65,12 @@ export class GraphDataModel<
       node._id = this.nodeId(node) || `${i}`
       this._inputNodesMap.set(node, inputData.nodes[i])
       this._nodesMap.set(node._id, node)
+      this._nodesByInputRef.set(inputData.nodes[i], node)
+
+      // Index nodes by their user-provided id for link endpoint resolution.
+      // The first node wins on duplicate ids, matching lookup-by-scan behavior
+      const userId = this.nodeId(node)
+      if (userId !== undefined && !this._nodesByUserId.has(userId)) this._nodesByUserId.set(userId, node)
     })
 
     // Sort nodes
@@ -73,31 +83,48 @@ export class GraphDataModel<
       link.target = this.findNode(nodes, link.target)
     })
 
-    // Set link index for multiple link rendering
-    links.forEach((link, i) => {
-      if (!isUndefined(link._index) && !isUndefined(link._neighbours)) return
+    // Group links connecting the same pair of nodes (in either direction) to set
+    // their index for multiple link rendering. Nodes are keyed by `_index` because
+    // it's unique per node object (unlike `_id`, which can collide on duplicate user ids)
+    const linkGroups = new Map<string, OutLink[]>()
+    for (const link of links) {
+      const sourceIndex = (link.source as OutNode)?._index ?? -1
+      const targetIndex = (link.target as OutNode)?._index ?? -1
+      const key = sourceIndex <= targetIndex ? `${sourceIndex}|${targetIndex}` : `${targetIndex}|${sourceIndex}`
+      const group = linkGroups.get(key)
+      if (group) group.push(link)
+      else linkGroups.set(key, [link])
+    }
 
-      const linksFiltered = links.filter(l =>
-        ((link.source === l.source) && (link.target === l.target)) ||
-        ((link.source === l.target) && (link.target === l.source))
-      )
+    linkGroups.forEach(group => {
+      // Links that came in with `_index` and `_neighbours` already set keep their values,
+      // but a single new link in the group triggers a reindex of the whole group
+      if (group.every(l => !isUndefined(l._index) && !isUndefined(l._neighbours))) return
 
-      linksFiltered.forEach((l, i) => {
+      const firstLink = group[0]
+      group.forEach((l, i) => {
         l._index = i
         l._id = this.linkId(l) || `${l.source?._id}-${l.target?._id}-${i}`
-        l._neighbours = linksFiltered.length
-        l._direction = ((link.source === l.source) && (link.target === l.target)) ? 1 : -1
+        l._neighbours = group.length
+        l._direction = ((firstLink.source === l.source) && (firstLink.target === l.target)) ? 1 : -1
       })
     })
 
+    // Determine if a node is connected or not and store its links as a property
+    const linksByNode = new Map<OutNode, OutLink[]>()
+    nodes.forEach(node => linksByNode.set(node, []))
+    for (const l of links) {
+      if (l.source) linksByNode.get(l.source as OutNode)?.push(l)
+      if (l.target && l.target !== l.source) linksByNode.get(l.target as OutNode)?.push(l)
+    }
+
     nodes.forEach(d => {
-      // Determine if a node is connected or not and store it as a property
-      d.links = links.filter(l => (l.source === d) || (l.target === d))
+      d.links = linksByNode.get(d)
       d._isConnected = d.links.length !== 0
     })
 
     this._nonConnectedNodes = nodes.filter(d => !d._isConnected)
-    this._connectedNodes = without(nodes, ...this._nonConnectedNodes)
+    this._connectedNodes = nodes.filter(d => d._isConnected)
 
     this._nodes = nodes
 
@@ -131,8 +158,13 @@ export class GraphDataModel<
     let foundNode: OutNode | undefined
 
     if (isNumber(nodeIdentifier)) foundNode = nodes[nodeIdentifier as number]
-    else if (isString(nodeIdentifier)) foundNode = nodes.find(node => this.nodeId(node) === nodeIdentifier)
-    else if (isObject(nodeIdentifier)) foundNode = nodes.find(node => isEqual(this._inputNodesMap.get(node), nodeIdentifier))
+    else if (isString(nodeIdentifier)) foundNode = this._nodesByUserId.get(nodeIdentifier as string)
+    else if (isObject(nodeIdentifier)) {
+      // Fast path: the identifier is the same object as one of the input nodes.
+      // Fall back to a deep-equality scan for value-equal but not identical objects
+      foundNode = this._nodesByInputRef.get(nodeIdentifier as N) ??
+        nodes.find(node => isEqual(this._inputNodesMap.get(node), nodeIdentifier))
+    }
 
     if (!foundNode) {
       console.warn(`Unovis | Graph Data Model: Node ${nodeIdentifier} is missing from the nodes list`)
@@ -146,8 +178,15 @@ export class GraphDataModel<
     itemsPrev: T[],
     getId: (d: T) => string
   ): void {
+    // The first item wins on duplicate ids, matching lookup-by-scan behavior
+    const prevById = new Map<string, T>()
+    for (const dPrev of itemsPrev) {
+      const id = getId(dPrev)
+      if (!prevById.has(id)) prevById.set(id, dPrev)
+    }
+
     for (const item of items) {
-      const dPrev = itemsPrev.find((dp) => getId(dp) === getId(item))
+      const dPrev = prevById.get(getId(item))
       if (dPrev) item._state = { ...dPrev._state }
       else item._state = {}
     }
