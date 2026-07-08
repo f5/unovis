@@ -11,10 +11,11 @@ export const VisAnnotationsSelectors = Annotations.selectors
 
 export function VisAnnotations(props: VisAnnotationsProps) {
   const [component, setComponent] = createSignal<Annotations>()
+  const config = props
    const ctx = useVisContainer();
   
   onMount(() => {
-    setComponent(new Annotations(props));
+    setComponent(new Annotations(config));
     
     ctx.update("annotations", component);
   })
@@ -26,7 +27,7 @@ export function VisAnnotations(props: VisAnnotationsProps) {
 
   createEffect(
     on(
-      () => ({ ...props }),
+      () => ({ ...config }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
           component()?.setConfig(curr)

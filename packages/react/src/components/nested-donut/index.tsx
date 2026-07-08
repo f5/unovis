@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { NestedDonut } from '@unovis/ts/components/nested-donut'
 import { NestedDonutConfigInterface } from '@unovis/ts/components/nested-donut/config'
 
@@ -24,12 +24,14 @@ export const VisNestedDonutSelectors = NestedDonut.selectors
 function VisNestedDonutFC<Datum> (props: VisNestedDonutProps<Datum>, fRef: ForwardedRef<VisNestedDonutRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<NestedDonut<Datum>>>(null)
   const componentRef = useRef<NestedDonut<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<NestedDonut<Datum>>)
 
-    const c = new NestedDonut<Datum>(props)
+    const c = new NestedDonut<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,8 +44,8 @@ function VisNestedDonutFC<Datum> (props: VisNestedDonutProps<Datum>, fRef: Forwa
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

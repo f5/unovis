@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { StackedBar } from '@unovis/ts/components/stacked-bar'
 import { StackedBarConfigInterface } from '@unovis/ts/components/stacked-bar/config'
 
@@ -24,12 +24,14 @@ export const VisStackedBarSelectors = StackedBar.selectors
 function VisStackedBarFC<Datum> (props: VisStackedBarProps<Datum>, fRef: ForwardedRef<VisStackedBarRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<StackedBar<Datum>>>(null)
   const componentRef = useRef<StackedBar<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<StackedBar<Datum>>)
 
-    const c = new StackedBar<Datum>(props)
+    const c = new StackedBar<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,8 +44,8 @@ function VisStackedBarFC<Datum> (props: VisStackedBarProps<Datum>, fRef: Forward
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

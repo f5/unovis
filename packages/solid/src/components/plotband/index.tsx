@@ -11,10 +11,11 @@ export const VisPlotbandSelectors = Plotband.selectors
 
 export function VisPlotband<Datum>(props: VisPlotbandProps<Datum>) {
   const [component, setComponent] = createSignal<Plotband<Datum>>()
+  const config = props
    const ctx = useVisContainer();
   
   onMount(() => {
-    setComponent(new Plotband<Datum>(props));
+    setComponent(new Plotband<Datum>(config));
     
     ctx.update("component", component);
   })
@@ -26,7 +27,7 @@ export function VisPlotband<Datum>(props: VisPlotbandProps<Datum>) {
 
   createEffect(
     on(
-      () => ({ ...props }),
+      () => ({ ...config }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
           component()?.setConfig(curr)

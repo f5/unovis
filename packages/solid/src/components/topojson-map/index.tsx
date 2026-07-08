@@ -1,7 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import type { TopoJSONMapConfigInterface } from "@unovis/ts";
 import { TopoJSONMap } from "@unovis/ts";
-import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
+import { createSignal, onCleanup, createEffect, on, onMount, splitProps } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";
 
@@ -13,11 +13,13 @@ export const VisTopoJSONMapSelectors = TopoJSONMap.selectors
 
 export function VisTopoJSONMap<AreaDatum, PointDatum, LinkDatum>(props: VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum>) {
   const [component, setComponent] = createSignal<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>()
+  // Separate the data prop from the config props, so the dataset doesn't end up in the component config
+  const [dataProps, config] = splitProps(props, ['data'])
    const ctx = useVisContainer();
   
   onMount(() => {
-    setComponent(new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(props));
-    if (props.data) component()?.setData(props.data)
+    setComponent(new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(config));
+    if (dataProps.data) component()?.setData(dataProps.data)
     ctx.update("component", component);
   })
 
@@ -28,7 +30,7 @@ export function VisTopoJSONMap<AreaDatum, PointDatum, LinkDatum>(props: VisTopoJ
 
   createEffect(
     on(
-      () => ({ ...props }),
+      () => ({ ...config }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
           component()?.setConfig(curr)
@@ -44,7 +46,7 @@ export function VisTopoJSONMap<AreaDatum, PointDatum, LinkDatum>(props: VisTopoJ
   
   createEffect(
     on(
-      () => props.data,
+      () => dataProps.data,
       (data) => {
         if (data) {
           component()?.setData(data)

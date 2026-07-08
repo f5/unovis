@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { BulletLegend } from '@unovis/ts/components/bullet-legend'
 import { BulletLegendConfigInterface } from '@unovis/ts/components/bullet-legend/config'
 
@@ -24,12 +24,14 @@ export const VisBulletLegendSelectors = BulletLegend.selectors
 function VisBulletLegendFC (props: VisBulletLegendProps, fRef: ForwardedRef<VisBulletLegendRef>): ReactElement {
   const ref = useRef<VisComponentElement<BulletLegend, HTMLDivElement>>(null)
   const componentRef = useRef<BulletLegend | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { className, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<BulletLegend, HTMLDivElement>)
 
-    const c = new BulletLegend(ref.current as VisComponentElement<BulletLegend, HTMLDivElement>, { ...props, renderIntoProvidedDomNode: true })
+    const c = new BulletLegend(ref.current as VisComponentElement<BulletLegend, HTMLDivElement>, { ...config, renderIntoProvidedDomNode: true })
     componentRef.current = c
     element.__component__ = c
 
@@ -43,7 +45,7 @@ function VisBulletLegendFC (props: VisBulletLegendProps, fRef: ForwardedRef<VisB
   useEffect(() => {
     const component = componentRef.current
 
-    component?.setConfig(props)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

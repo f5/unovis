@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { RollingPinLegend } from '@unovis/ts/components/rolling-pin-legend'
 import { RollingPinLegendConfigInterface } from '@unovis/ts/components/rolling-pin-legend/config'
 
@@ -24,12 +24,14 @@ export const VisRollingPinLegendSelectors = RollingPinLegend.selectors
 function VisRollingPinLegendFC (props: VisRollingPinLegendProps, fRef: ForwardedRef<VisRollingPinLegendRef>): ReactElement {
   const ref = useRef<VisComponentElement<RollingPinLegend, HTMLDivElement>>(null)
   const componentRef = useRef<RollingPinLegend | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { className, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<RollingPinLegend, HTMLDivElement>)
 
-    const c = new RollingPinLegend(ref.current as VisComponentElement<RollingPinLegend, HTMLDivElement>, props)
+    const c = new RollingPinLegend(ref.current as VisComponentElement<RollingPinLegend, HTMLDivElement>, config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,7 +45,7 @@ function VisRollingPinLegendFC (props: VisRollingPinLegendProps, fRef: Forwarded
   useEffect(() => {
     const component = componentRef.current
 
-    component?.setConfig(props)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

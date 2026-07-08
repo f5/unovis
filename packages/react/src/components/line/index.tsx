@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Line } from '@unovis/ts/components/line'
 import { LineConfigInterface } from '@unovis/ts/components/line/config'
 
@@ -24,12 +24,14 @@ export const VisLineSelectors = Line.selectors
 function VisLineFC<Datum> (props: VisLineProps<Datum>, fRef: ForwardedRef<VisLineRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Line<Datum>>>(null)
   const componentRef = useRef<Line<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Line<Datum>>)
 
-    const c = new Line<Datum>(props)
+    const c = new Line<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,8 +44,8 @@ function VisLineFC<Datum> (props: VisLineProps<Datum>, fRef: ForwardedRef<VisLin
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

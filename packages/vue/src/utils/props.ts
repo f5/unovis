@@ -15,7 +15,11 @@ export function useForwardProps<T extends Record<string, any>> (props: T) {
     const assignedProps = vm?.vnode.props ?? {}
 
     Object.keys(assignedProps).forEach((key) => {
-      preservedProps[camelize(key) as keyof T] = props[camelize(key)]
+      const camelKey = camelize(key) as keyof T
+      // `data` is not a config property (it's passed separately via `setData`), so we don't
+      // forward it: the config merge would deep-clone the whole dataset on every update
+      if (camelKey === 'data') return
+      preservedProps[camelKey] = props[camelKey as string]
     })
     return { ...preservedProps, ...attrs }
   })

@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Tooltip } from '@unovis/ts/components/tooltip'
 import { TooltipConfigInterface } from '@unovis/ts/components/tooltip/config'
 
@@ -23,12 +23,13 @@ export const VisTooltipSelectors = Tooltip.selectors
 function VisTooltipFC (props: VisTooltipProps, fRef: ForwardedRef<VisTooltipRef>): ReactElement {
   const ref = useRef<VisComponentElement<Tooltip>>(null)
   const componentRef = useRef<Tooltip | undefined>(undefined)
+  const config = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Tooltip>)
 
-    const c = new Tooltip(props)
+    const c = new Tooltip(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,7 +43,7 @@ function VisTooltipFC (props: VisTooltipProps, fRef: ForwardedRef<VisTooltipRef>
   useEffect(() => {
     const component = componentRef.current
 
-    component?.setConfig(props)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

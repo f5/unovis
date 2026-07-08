@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Sankey } from '@unovis/ts/components/sankey'
 import { SankeyConfigInterface } from '@unovis/ts/components/sankey/config'
 import { SankeyInputNode, SankeyInputLink } from '@unovis/ts/components/sankey/types'
@@ -25,12 +25,14 @@ export const VisSankeySelectors = Sankey.selectors
 function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>, fRef: ForwardedRef<VisSankeyRef<N, L>>): ReactElement {
   const ref = useRef<VisComponentElement<Sankey<N, L>>>(null)
   const componentRef = useRef<Sankey<N, L> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Sankey<N, L>>)
 
-    const c = new Sankey<N, L>(props)
+    const c = new Sankey<N, L>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,8 +45,8 @@ function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (prop
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

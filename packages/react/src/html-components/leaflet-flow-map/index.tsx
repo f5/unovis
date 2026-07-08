@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { LeafletFlowMap } from '@unovis/ts/components/leaflet-flow-map'
 import { LeafletFlowMapConfigInterface } from '@unovis/ts/components/leaflet-flow-map/config'
 import { GenericDataRecord } from '@unovis/ts/types/data'
@@ -26,12 +26,14 @@ export const VisLeafletFlowMapSelectors = LeafletFlowMap.selectors
 function VisLeafletFlowMapFC<PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord> (props: VisLeafletFlowMapProps<PointDatum, FlowDatum>, fRef: ForwardedRef<VisLeafletFlowMapRef<PointDatum, FlowDatum>>): ReactElement {
   const ref = useRef<VisComponentElement<LeafletFlowMap<PointDatum, FlowDatum>, HTMLDivElement>>(null)
   const componentRef = useRef<LeafletFlowMap<PointDatum, FlowDatum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, className, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<LeafletFlowMap<PointDatum, FlowDatum>, HTMLDivElement>)
 
-    const c = new LeafletFlowMap<PointDatum, FlowDatum>(ref.current as VisComponentElement<LeafletFlowMap<PointDatum, FlowDatum>, HTMLDivElement>, props, props.data)
+    const c = new LeafletFlowMap<PointDatum, FlowDatum>(ref.current as VisComponentElement<LeafletFlowMap<PointDatum, FlowDatum>, HTMLDivElement>, config, data)
     componentRef.current = c
     element.__component__ = c
 
@@ -44,8 +46,8 @@ function VisLeafletFlowMapFC<PointDatum extends GenericDataRecord, FlowDatum ext
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

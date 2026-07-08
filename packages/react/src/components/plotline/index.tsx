@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Plotline } from '@unovis/ts/components/plotline'
 import { PlotlineConfigInterface } from '@unovis/ts/components/plotline/config'
 
@@ -23,12 +23,13 @@ export const VisPlotlineSelectors = Plotline.selectors
 function VisPlotlineFC<Datum> (props: VisPlotlineProps<Datum>, fRef: ForwardedRef<VisPlotlineRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Plotline<Datum>>>(null)
   const componentRef = useRef<Plotline<Datum> | undefined>(undefined)
+  const config = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Plotline<Datum>>)
 
-    const c = new Plotline<Datum>(props)
+    const c = new Plotline<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,7 +43,7 @@ function VisPlotlineFC<Datum> (props: VisPlotlineProps<Datum>, fRef: ForwardedRe
   useEffect(() => {
     const component = componentRef.current
 
-    component?.setConfig(props)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

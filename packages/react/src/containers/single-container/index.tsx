@@ -26,14 +26,21 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
   const dataRef = useRef<Data | undefined>(undefined)
   const animationFrameRef = useRef<number | null>(null)
 
-  const getConfig = (): SingleContainerConfigInterface<Data> => ({
-    ...props,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    component: container.current?.querySelector<VisComponentElement<ComponentCore<Data>>>('vis-component')?.__component__,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
-    annotations: container.current?.querySelector<VisComponentElement<Annotations>>('vis-annotations')?.__component__,
-  })
+  const getConfig = (): SingleContainerConfigInterface<Data> => {
+    // Strip the props that are not container config properties (deep-cloning the dataset
+    // or React elements into the config would be both wrong and expensive)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { data, className, style, children, ...restProps } = props
+
+    return {
+      ...restProps,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      component: container.current?.querySelector<VisComponentElement<ComponentCore<Data>>>('vis-component')?.__component__,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
+      annotations: container.current?.querySelector<VisComponentElement<Annotations>>('vis-annotations')?.__component__,
+    }
+  }
 
   // On Mount
   useEffect(() => {

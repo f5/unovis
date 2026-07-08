@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Area } from '@unovis/ts/components/area'
 import { AreaConfigInterface } from '@unovis/ts/components/area/config'
 
@@ -24,12 +24,14 @@ export const VisAreaSelectors = Area.selectors
 function VisAreaFC<Datum> (props: VisAreaProps<Datum>, fRef: ForwardedRef<VisAreaRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Area<Datum>>>(null)
   const componentRef = useRef<Area<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Area<Datum>>)
 
-    const c = new Area<Datum>(props)
+    const c = new Area<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,8 +44,8 @@ function VisAreaFC<Datum> (props: VisAreaProps<Datum>, fRef: ForwardedRef<VisAre
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

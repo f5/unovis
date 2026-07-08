@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Donut } from '@unovis/ts/components/donut'
 import { DonutConfigInterface } from '@unovis/ts/components/donut/config'
 
@@ -24,12 +24,14 @@ export const VisDonutSelectors = Donut.selectors
 function VisDonutFC<Datum> (props: VisDonutProps<Datum>, fRef: ForwardedRef<VisDonutRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Donut<Datum>>>(null)
   const componentRef = useRef<Donut<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Donut<Datum>>)
 
-    const c = new Donut<Datum>(props)
+    const c = new Donut<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,8 +44,8 @@ function VisDonutFC<Datum> (props: VisDonutProps<Datum>, fRef: ForwardedRef<VisD
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

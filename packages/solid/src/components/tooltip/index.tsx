@@ -11,10 +11,11 @@ export const VisTooltipSelectors = Tooltip.selectors
 
 export function VisTooltip(props: VisTooltipProps) {
   const [component, setComponent] = createSignal<Tooltip>()
+  const config = props
    const ctx = useVisContainer();
   
   onMount(() => {
-    setComponent(new Tooltip(props));
+    setComponent(new Tooltip(config));
     
     ctx.update("tooltip", component);
   })
@@ -26,7 +27,7 @@ export function VisTooltip(props: VisTooltipProps) {
 
   createEffect(
     on(
-      () => ({ ...props }),
+      () => ({ ...config }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
           component()?.setConfig(curr)

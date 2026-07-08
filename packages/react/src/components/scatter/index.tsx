@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Scatter } from '@unovis/ts/components/scatter'
 import { ScatterConfigInterface } from '@unovis/ts/components/scatter/config'
 
@@ -24,12 +24,14 @@ export const VisScatterSelectors = Scatter.selectors
 function VisScatterFC<Datum> (props: VisScatterProps<Datum>, fRef: ForwardedRef<VisScatterRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Scatter<Datum>>>(null)
   const componentRef = useRef<Scatter<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Scatter<Datum>>)
 
-    const c = new Scatter<Datum>(props)
+    const c = new Scatter<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -42,8 +44,8 @@ function VisScatterFC<Datum> (props: VisScatterProps<Datum>, fRef: ForwardedRef<
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data) component?.setData(data)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
