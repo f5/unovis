@@ -39,7 +39,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
 
   constructor (config?: GroupedBarConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
   }
 
   get bleed (): Spacing {

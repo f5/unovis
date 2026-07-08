@@ -76,7 +76,7 @@ export class ChordDiagram<
 
   constructor (config?: ChordDiagramConfigInterface<N, L>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     this.background = this.g.append('rect').attr('class', s.background)
     this.linkGroup = this.g.append('g').attr('class', s.links)

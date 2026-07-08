@@ -40,7 +40,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
   constructor (config?: TreemapConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
     this.tiles = this.g.append('g').attr('class', s.tiles)
   }
 

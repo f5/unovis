@@ -24,7 +24,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
 
   constructor (config: PlotlineConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
 
     this.plotline = this.g
       .append('line')

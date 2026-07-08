@@ -142,7 +142,7 @@ export class TopoJSONMap<
       .on('zoom', this._onZoom.bind(this))
       .on('end', this._onZoomEnd.bind(this))
 
-    if (config) this.setConfig(config)
+    this.setConfig(config)
     if (data) this.setData(data)
 
     this.g.append('defs')
