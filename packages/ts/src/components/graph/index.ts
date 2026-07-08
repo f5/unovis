@@ -241,17 +241,19 @@ export class Graph<
       this._brush.call(this._brushBehavior)
 
       // Activate the brush when the shift key is pressed
+      // The event namespace includes the component uid to prevent
+      // multiple Graph instances from overriding each other's listeners
       select(window)
-        .on('keydown.unovis-graph', e => e.key === 'Shift' && this._activateBrush())
-        .on('keyup.unovis-graph', e => e.key === 'Shift' && this._clearBrush())
+        .on(`keydown.unovis-graph-${this.uid}`, e => e.key === 'Shift' && this._activateBrush())
+        .on(`keyup.unovis-graph-${this.uid}`, e => e.key === 'Shift' && this._clearBrush())
 
       this._zoomBehavior.filter(event => !event.shiftKey)
     } else {
       this._brush.on('.brush', null)
 
       select(window)
-        .on('keydown.unovis-graph', null)
-        .on('keyup.unovis-graph', null)
+        .on(`keydown.unovis-graph-${this.uid}`, null)
+        .on(`keyup.unovis-graph-${this.uid}`, null)
 
       // Clear brush in case it was disabled in an active state
       if (this._brush.classed('active')) this._clearBrush()
@@ -1143,5 +1145,14 @@ export class Graph<
 
     const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}:not(.${nodeSelectors.gNodeExit})`)
     updateNodePositions(nodeElements, animDuration)
+  }
+
+  protected _onDestroy (): void {
+    this._timer?.stop()
+    this._timer = undefined
+
+    select(window)
+      .on(`keydown.unovis-graph-${this.uid}`, null)
+      .on(`keyup.unovis-graph-${this.uid}`, null)
   }
 }
