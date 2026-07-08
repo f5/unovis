@@ -449,6 +449,15 @@ export class XYContainer<Datum> extends ContainerCore {
     }
   }
 
+  protected _onResize (): void {
+    const { config } = this
+    super._onResize()
+
+    // Hide the tooltip and crosshair on resize to prevent them from rendering at a stale position
+    config.tooltip?.hide()
+    config.crosshair?.hide()
+  }
+
   private _getBleed<T extends XYComponentCore<Datum>> (components: T[]): Spacing {
     return components.map(c => c.bleed).reduce((bleed, b) => {
       for (const key of Object.keys(bleed)) {

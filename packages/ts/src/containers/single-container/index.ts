@@ -39,9 +39,11 @@ export class SingleContainer<Data> extends ContainerCore {
   public setData (data: Data, preventRender?: boolean): void {
     const { config } = this
 
+    // Hide the tooltip only when the data has actually changed
+    const hasDataUpdated = this.component?.datamodel.data !== data
     if (this.component) this.component.setData(data)
     if (!preventRender) this.render()
-    config.tooltip?.hide()
+    if (hasDataUpdated) config.tooltip?.hide()
   }
 
   public updateContainer (containerConfig: SingleContainerConfigInterface<Data>, preventRender?: boolean): void {
