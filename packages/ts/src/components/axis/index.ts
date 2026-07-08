@@ -16,7 +16,7 @@ import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAl
 import { smartTransition } from 'utils/d3'
 import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from 'utils/text'
 import { getCachedComputedTextLength } from 'utils/text-measure'
-import { isEqual, isFunction } from 'utils/data'
+import { isEqual, isFunction, areArraysShallowEqual } from 'utils/data'
 import { rectIntersect } from 'utils/misc'
 import { getFontWidthToHeightRatio } from 'styles/index'
 
@@ -39,6 +39,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   private _axisRawBBox: DOMRect
   private _axisSizeBBox: SVGRect
   private _requiredMargin: Spacing
+  private _preRenderCacheKey: unknown[] | undefined
   private _defaultNumTicks = 3
   private _collideTickLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
   private _tickTextStyleCached: {
@@ -63,6 +64,16 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   /** Renders axis to an invisible grouped to calculate automatic chart margins */
   public preRender (): void {
     const { config } = this
+
+    // Building and measuring the invisible axis is expensive (a full axis render plus
+    // several getBBox calls), so we skip it when nothing affecting the axis size has changed
+    const cacheKey = [
+      config, this.datamodel.data, this._width, this._height,
+      ...this.xScale.domain(), ...this.xScale.range(),
+      ...this.yScale.domain(), ...this.yScale.range(),
+    ]
+    if (this._preRenderCacheKey && areArraysShallowEqual(cacheKey, this._preRenderCacheKey)) return
+
     const axisRenderHelperGroup = this.g.append('g').attr('opacity', 0)
 
     this._renderAxis(axisRenderHelperGroup, 0)
@@ -79,6 +90,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     this._requiredMargin = this._getRequiredMargin(this._axisSizeBBox)
 
     axisRenderHelperGroup.remove()
+    this._preRenderCacheKey = cacheKey
   }
 
   public getPosition (): Position {
@@ -355,38 +367,34 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       _visible: boolean;
     }
 
-    // Reset visibility of all labels
+    // Reset visibility of all labels and snapshot their bounding rects once:
+    // the labels don't move during collision detection, so a single measurement pass is enough
+    const labels: SVGOverlappingTextElement[] = []
+    const labelRects: DOMRect[] = []
     selection.each((d, i, elements) => {
       const node = elements[i] as SVGOverlappingTextElement
       node._visible = true
+      labels.push(node)
+      labelRects.push(node.getBoundingClientRect())
     })
 
     // We do three iterations because not all overlapping labels can be resolved in the first iteration
     const numIterations = 3
-    for (let i = 0; i < numIterations; i += 1) {
-    // Run collision detection and set labels visibility
-      selection.each((d, i, elements) => {
-        const label1 = elements[i] as SVGOverlappingTextElement
-        const isLabel1Visible = label1._visible
-        if (!isLabel1Visible) return
+    for (let iteration = 0; iteration < numIterations; iteration += 1) {
+      // Run collision detection and set labels visibility
+      for (let i = 0; i < labels.length; i += 1) {
+        if (!labels[i]._visible) continue
 
-        // Calculate bounding rect of point's label
-        const label1BoundingRect = label1.getBoundingClientRect()
-
-        for (let j = i + 1; j < elements.length; j += 1) {
-          if (i === j) continue
-          const label2 = elements[j] as SVGOverlappingTextElement
-          const isLabel2Visible = label2._visible
-          if (isLabel2Visible) {
-            const label2BoundingRect = label2.getBoundingClientRect()
-            const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, -5)
+        for (let j = i + 1; j < labels.length; j += 1) {
+          if (labels[j]._visible) {
+            const intersect = rectIntersect(labelRects[i], labelRects[j], -5)
             if (intersect) {
-              label2._visible = false
+              labels[j]._visible = false
               break
             }
           }
         }
-      })
+      }
     }
 
     // Hide the overlapping labels
