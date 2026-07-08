@@ -20,6 +20,7 @@
 - [ ] Docs
 - [ ] Lint passes on the files I changed
 - [ ] Builds locally (`pnpm build`)
+- [ ] All commands pass (`pnpm cmds-report`)
 
 ## Screenshots / recordings
 
