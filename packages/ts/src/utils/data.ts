@@ -145,6 +145,27 @@ export const merge = <T, K>(obj1: T, obj2: K, visited: Map<any, any> = new Map()
   return newObj
 }
 
+/** Merges two objects into a new one, assigning the values by reference (unlike `merge`, which clones them).
+ * Plain-object values present in both sources are merged recursively into new objects; `obj2` values
+ * take precedence. Intended for building component configs from the immutable default configs:
+ * it avoids deep-cloning the whole default config (and all the provided values) on every
+ * configuration update, which is expensive when configs are updated frequently */
+export const mergeByReference = <T, K>(obj1: T, obj2: K): T & K => {
+  type Rec = Record<string | number, unknown>
+  const result = { ...(obj1 as Rec) }
+
+  for (const key of Object.keys((obj2 as Rec) ?? {})) {
+    // Preventing prototype pollution
+    if (key === '__proto__' || key === 'constructor') continue
+
+    const value1 = (obj1 as Rec)?.[key]
+    const value2 = (obj2 as Rec)[key]
+    result[key] = (isPlainObject(value1) && isPlainObject(value2)) ? mergeByReference(value1, value2) : value2
+  }
+
+  return result as T & K
+}
+
 export const omit = <T extends Record<string | number | symbol, unknown>>(obj: T, props: Array<keyof T>): Partial<T> => {
   obj = { ...obj }
   props.forEach(prop => delete obj[prop])

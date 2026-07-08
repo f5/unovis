@@ -1,7 +1,7 @@
 import { Selection, select } from 'd3-selection'
 
 // Utils
-import { merge } from 'utils/data'
+import { mergeByReference } from 'utils/data'
 
 // Local Types
 import { VisControlItemInterface, VisControlsOrientation } from './types'
@@ -35,7 +35,7 @@ export class VisControls {
   }
 
   update (config: VisControlsConfigInterface): void {
-    this.config = merge(this._defaultConfig, config)
+    this.config = mergeByReference(this._defaultConfig, config)
     this.render()
   }
 
