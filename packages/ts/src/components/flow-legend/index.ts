@@ -2,7 +2,7 @@ import { select, Selection } from 'd3-selection'
 
 // Utils
 import { smartTransition } from 'utils/d3'
-import { merge } from 'utils/data'
+import { mergeByReference } from 'utils/data'
 
 // Config
 import { FlowLegendDefaultConfig, FlowLegendConfigInterface } from './config'
@@ -40,7 +40,7 @@ export class FlowLegend {
 
   setConfig (config: FlowLegendConfigInterface): void {
     this.prevConfig = this.config
-    this.config = merge(this._defaultConfig, config)
+    this.config = mergeByReference(this._defaultConfig, config)
     this.render()
   }
 

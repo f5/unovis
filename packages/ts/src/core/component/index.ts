@@ -5,7 +5,7 @@ import { Transition } from 'd3-transition'
 import { CoreDataModel } from 'data-models/core'
 
 // Utils
-import { merge, throttle } from 'utils/data'
+import { mergeByReference, throttle } from 'utils/data'
 import { guid } from 'utils/misc'
 
 // Types
@@ -86,7 +86,7 @@ export class ComponentCore<
 
   setConfig (config: ConfigInterface): void {
     this.prevConfig = this.config // Store the previous config instance
-    this.config = merge(this._defaultConfig, config)
+    this.config = mergeByReference(this._defaultConfig, config)
   }
 
   setData (data: CoreDatum): void {

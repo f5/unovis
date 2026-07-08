@@ -2,7 +2,7 @@ import { select, Selection } from 'd3-selection'
 
 // Utils
 import { toPx } from 'utils/to-px'
-import { merge } from 'utils/data'
+import { mergeByReference } from 'utils/data'
 import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Config
@@ -42,7 +42,7 @@ export class BulletLegend {
 
   setConfig (config: BulletLegendConfigInterface): void {
     this.prevConfig = this.config
-    this.config = merge(this._defaultConfig, config)
+    this.config = mergeByReference(this._defaultConfig, config)
     this.render()
   }
 

@@ -8,7 +8,7 @@ import { Sizing } from 'types/component'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isEqual, clamp, merge } from 'utils/data'
+import { isEqual, clamp, mergeByReference } from 'utils/data'
 import { ResizeObserver } from 'utils/resize-observer'
 
 // Config
@@ -60,7 +60,7 @@ export class ContainerCore {
   public updateContainer<T extends ContainerConfigInterface> (config: T): void {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     this.prevConfig = this.config
-    this.config = merge(this._defaultConfig, config)
+    this.config = mergeByReference(this._defaultConfig, config)
 
     // Add `svgDefs` if provided in the config
     if (config?.svgDefs !== this.prevConfig?.svgDefs) {

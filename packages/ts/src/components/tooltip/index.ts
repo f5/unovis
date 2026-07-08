@@ -7,7 +7,7 @@ import { ComponentCore } from 'core/component'
 import { Position } from 'types/position'
 
 // Utils
-import { merge, throttle } from 'utils/data'
+import { mergeByReference, throttle } from 'utils/data'
 
 // Config
 import { TooltipDefaultConfig, TooltipConfigInterface } from './config'
@@ -63,7 +63,7 @@ export class Tooltip {
 
   public setConfig (config: TooltipConfigInterface): void {
     this.prevConfig = this.config
-    this.config = merge(this._defaultConfig, config)
+    this.config = mergeByReference(this._defaultConfig, config)
 
     // Reset `this._overriddenHorizontalPlacement` if the `horizontalPlacement` has changed
     if (this.prevConfig.horizontalPlacement !== this.config.horizontalPlacement) {
