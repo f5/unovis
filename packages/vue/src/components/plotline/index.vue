@@ -2,13 +2,13 @@
 // !!! This code was automatically generated. You should not change it !!!
 import type { PlotlineConfigInterface } from '@unovis/ts'
 import { Plotline } from '@unovis/ts'
-import { inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { inject, nextTick, onMounted, onUnmounted, shallowRef, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 
 const props = defineProps<Props & { data?: null }>()
 
-const accessor = inject(componentAccessorKey)
+const accessor = inject(componentAccessorKey, undefined)
 
 // data and required props
 type Props = PlotlineConfigInterface<Datum>
@@ -16,25 +16,27 @@ type Props = PlotlineConfigInterface<Datum>
 const config = useForwardProps(props)
 
 // component declaration
-const component = ref<Plotline<Datum>>()
+// (a shallow ref keeps the unovis instance raw — deep-proxying it adds overhead and is not needed)
+const component = shallowRef<Plotline<Datum>>()
 
 onMounted(() => {
   nextTick(() => {
     component.value = new Plotline<Datum>(config.value)
 
-    accessor.update(component.value)
+    accessor?.update(component.value)
   })
 })
 
 onUnmounted(() => {
   component.value?.destroy()
-  accessor.destroy()
+  accessor?.destroy()
 })
 
 watch(config, (curr, prev) => {
   if (!arePropsEqual(curr, prev)) {
     component.value?.setConfig(config.value)
-    component.value?.render()
+    // Notify the container so it can re-render the chart
+    accessor?.dirty()
   }
 })
 
