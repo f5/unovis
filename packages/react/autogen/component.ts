@@ -16,9 +16,14 @@ export function getComponentCode (
   const componentType = `${componentName}${genericsStr}`
   const refType = isStandAlone ? `VisComponentElement<${componentType}, HTMLDivElement>` : `VisComponentElement<${componentType}>`
   const elementDef = `ref.current as ${refType}`
-  const initProps = renderIntoProvidedDomNode
-    ? '{ ...props, renderIntoProvidedDomNode: true }'
-    : 'props'
+  const initConfig = renderIntoProvidedDomNode
+    ? '{ ...config, renderIntoProvidedDomNode: true }'
+    : 'config'
+  const strippedProps = [dataType && 'data', isStandAlone && 'className'].filter(Boolean)
+  const configDef = strippedProps.length
+    ? `// Separate the config properties from the props that should not be passed to the component
+  const { ${strippedProps.join(', ')}, ...config } = props`
+    : 'const config = props'
 
   // Container-hosted components can't render themselves consistently — the container computes their
   // size, margins, scales and shared domains — so a config change asks the container to re-render.
@@ -34,7 +39,7 @@ export function getComponentCode (
 `
 
   return `// !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
 // Utils
@@ -57,12 +62,13 @@ export const Vis${componentName}Selectors = ${componentName}.selectors
 function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}, fRef: ForwardedRef<Vis${componentName}Ref${genericsStr}>): ReactElement {
   const ref = useRef<${refType}>(null)
   const componentRef = useRef<${componentType} | undefined>(undefined)
+  ${configDef}
 
   // On Mount
   useEffect(() => {
     const element = (${elementDef})
 
-    const c = ${isStandAlone ? `new ${componentType}(${elementDef}, ${initProps}${dataType ? ', props.data' : ''})` : `new ${componentType}(${initProps})`}
+    const c = ${isStandAlone ? `new ${componentType}(${elementDef}, ${initConfig}${dataType ? ', data' : ''})` : `new ${componentType}(${initConfig})`}
     componentRef.current = c
     element.__component__ = c
 
@@ -75,8 +81,8 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    ${dataType ? 'if (props.data) component?.setData(props.data)' : ''}
-    component?.setConfig(props)
+    ${dataType ? 'if (data) component?.setData(data)' : ''}
+    component?.setConfig(config)
   })
 ${containerRenderHook}
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

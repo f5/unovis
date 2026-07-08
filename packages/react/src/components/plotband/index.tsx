@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Plotband } from '@unovis/ts/components/plotband'
 import { PlotbandConfigInterface } from '@unovis/ts/components/plotband/config'
 
@@ -24,12 +24,13 @@ export const VisPlotbandSelectors = Plotband.selectors
 function VisPlotbandFC<Datum> (props: VisPlotbandProps<Datum>, fRef: ForwardedRef<VisPlotbandRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Plotband<Datum>>>(null)
   const componentRef = useRef<Plotband<Datum> | undefined>(undefined)
+  const config = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Plotband<Datum>>)
 
-    const c = new Plotband<Datum>(props)
+    const c = new Plotband<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,7 +44,7 @@ function VisPlotbandFC<Datum> (props: VisPlotbandProps<Datum>, fRef: ForwardedRe
   useEffect(() => {
     const component = componentRef.current
 
-    component?.setConfig(props)
+    component?.setConfig(config)
   })
 
   // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)

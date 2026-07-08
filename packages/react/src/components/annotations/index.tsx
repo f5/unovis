@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Annotations } from '@unovis/ts/components/annotations'
 import { AnnotationsConfigInterface } from '@unovis/ts/components/annotations/config'
 
@@ -24,12 +24,13 @@ export const VisAnnotationsSelectors = Annotations.selectors
 function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnnotationsRef>): ReactElement {
   const ref = useRef<VisComponentElement<Annotations>>(null)
   const componentRef = useRef<Annotations | undefined>(undefined)
+  const config = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Annotations>)
 
-    const c = new Annotations(props)
+    const c = new Annotations(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,7 +44,7 @@ function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnn
   useEffect(() => {
     const component = componentRef.current
 
-    component?.setConfig(props)
+    component?.setConfig(config)
   })
 
   // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)

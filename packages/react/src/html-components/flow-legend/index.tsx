@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { FlowLegend } from '@unovis/ts/components/flow-legend'
 import { FlowLegendConfigInterface } from '@unovis/ts/components/flow-legend/config'
 
@@ -24,12 +24,14 @@ export const VisFlowLegendSelectors = FlowLegend.selectors
 function VisFlowLegendFC (props: VisFlowLegendProps, fRef: ForwardedRef<VisFlowLegendRef>): ReactElement {
   const ref = useRef<VisComponentElement<FlowLegend, HTMLDivElement>>(null)
   const componentRef = useRef<FlowLegend | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { className, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<FlowLegend, HTMLDivElement>)
 
-    const c = new FlowLegend(ref.current as VisComponentElement<FlowLegend, HTMLDivElement>, { ...props, renderIntoProvidedDomNode: true })
+    const c = new FlowLegend(ref.current as VisComponentElement<FlowLegend, HTMLDivElement>, { ...config, renderIntoProvidedDomNode: true })
     componentRef.current = c
     element.__component__ = c
 
@@ -43,7 +45,7 @@ function VisFlowLegendFC (props: VisFlowLegendProps, fRef: ForwardedRef<VisFlowL
   useEffect(() => {
     const component = componentRef.current
 
-    component?.setConfig(props)
+    component?.setConfig(config)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

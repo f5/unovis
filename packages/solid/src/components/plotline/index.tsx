@@ -11,10 +11,11 @@ export const VisPlotlineSelectors = Plotline.selectors
 
 export function VisPlotline<Datum>(props: VisPlotlineProps<Datum>) {
   const [component, setComponent] = createSignal<Plotline<Datum>>()
+  const config = props
    const ctx = useVisContainer();
   
   onMount(() => {
-    setComponent(new Plotline<Datum>(props));
+    setComponent(new Plotline<Datum>(config));
     
     ctx.update("component", component);
   })
@@ -26,7 +27,7 @@ export function VisPlotline<Datum>(props: VisPlotlineProps<Datum>) {
 
   createEffect(
     on(
-      () => ({ ...props }),
+      () => ({ ...config }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
           component()?.setConfig(curr)
