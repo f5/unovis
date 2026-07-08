@@ -48,7 +48,6 @@ export class SingleContainer<Data> extends ContainerCore {
 
   public updateContainer (containerConfig: SingleContainerConfigInterface<Data>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
-    this._removeAllChildren()
 
     this.component = containerConfig.component
     if (containerConfig.sizing) {
@@ -58,7 +57,6 @@ export class SingleContainer<Data> extends ContainerCore {
       }
       this.component.sizing = containerConfig.sizing
     }
-    this.element.appendChild(this.component.element)
 
     const tooltip = containerConfig.tooltip
     if (tooltip) {
@@ -66,14 +64,13 @@ export class SingleContainer<Data> extends ContainerCore {
       tooltip.setComponents([this.component])
     }
 
-    const annotations = containerConfig.annotations
-    if (annotations) {
-      this.element.appendChild(annotations.element)
-    }
-
-    // Defs
-    this.element.appendChild(this._svgDefs.node())
-    this.element.appendChild(this._svgDefsExternal.node())
+    // Sync the SVG children with the updated configuration, touching only the elements that changed
+    this._reconcileChildren([
+      this.component?.element,
+      containerConfig.annotations?.element,
+      this._svgDefs.node(),
+      this._svgDefsExternal.node(),
+    ])
 
     if (!preventRender) this.render()
   }

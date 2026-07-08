@@ -108,13 +108,15 @@ export class XYContainer<Datum> extends ContainerCore {
     const hasDataUpdated = this.datamodel.data !== data
     this.datamodel.data = data
 
+    // Components that already hold this exact data instance are skipped: this makes
+    // re-running `setData` from `updateContainer` cheap when only new components need the data
     components.forEach((c) => {
-      c.setData(data)
+      if (c.datamodel.data !== data) c.setData(data)
     })
 
-    config.crosshair?.setData(data)
-    config.xAxis?.setData(data)
-    config.yAxis?.setData(data)
+    if (config.crosshair && config.crosshair.datamodel.data !== data) config.crosshair.setData(data)
+    if (config.xAxis && config.xAxis.datamodel.data !== data) config.xAxis.setData(data)
+    if (config.yAxis && config.yAxis.datamodel.data !== data) config.yAxis.setData(data)
 
     // Hide tooltip and crosshair if the data has changed
     // Important: We still want to do `setData` for the components above even if the data hasn't changed
@@ -129,25 +131,13 @@ export class XYContainer<Datum> extends ContainerCore {
 
   public updateContainer (containerConfig: XYContainerConfigInterface<Datum>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
-    this._removeAllChildren()
 
     // If there were any new components added we need to pass them data
     this.setData(this.datamodel.data, true)
 
     // Set up the axes
-    if (containerConfig.xAxis) {
-      this.config.xAxis.config.type = AxisType.X
-      this.element.appendChild(containerConfig.xAxis.element)
-    }
-    if (containerConfig.yAxis) {
-      this.config.yAxis.config.type = AxisType.Y
-      this.element.appendChild(containerConfig.yAxis.element)
-    }
-
-    // Re-insert elements to the DOM
-    for (const c of this.components) {
-      this.element.appendChild(c.element)
-    }
+    if (containerConfig.xAxis) this.config.xAxis.config.type = AxisType.X
+    if (containerConfig.yAxis) this.config.yAxis.config.type = AxisType.Y
 
     // Set up the tooltip
     const tooltip = containerConfig.tooltip
@@ -161,22 +151,20 @@ export class XYContainer<Datum> extends ContainerCore {
     if (crosshair) {
       crosshair.setContainer(this.svg)
       crosshair.tooltip = tooltip
-
-      this.element.appendChild(crosshair.element)
     }
 
-    // Set up annotations
-    const annotations = containerConfig.annotations
-    if (annotations) {
-      this.element.appendChild(annotations.element)
-    }
-
-    // Clipping path
-    this.element.appendChild(this._clipPath.node())
-
-    // Defs
-    this.element.appendChild(this._svgDefs.node())
-    this.element.appendChild(this._svgDefsExternal.node())
+    // Sync the SVG children (axes, components, crosshair, annotations, clipping path and defs)
+    // with the updated configuration, touching only the elements that changed
+    this._reconcileChildren([
+      containerConfig.xAxis?.element,
+      containerConfig.yAxis?.element,
+      ...this.components.map(c => c.element),
+      crosshair?.element,
+      containerConfig.annotations?.element,
+      this._clipPath.node(),
+      this._svgDefs.node(),
+      this._svgDefsExternal.node(),
+    ])
 
     // Rendering
     if (!preventRender) this.render()
