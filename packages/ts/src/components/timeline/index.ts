@@ -8,7 +8,19 @@ import { drag, D3DragEvent } from 'd3-drag'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValue, groupBy, isPlainObject, isFunction } from 'utils/data'
+import {
+  isNumber,
+  arrayOfIndices,
+  getMin,
+  getMax,
+  getString,
+  getNumber,
+  getValue,
+  groupBy,
+  isPlainObject,
+  isFunction,
+  areArraysShallowEqual,
+} from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from 'utils/pattern'
@@ -73,6 +85,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _scrollbarHeight = 0
   private _labelWidth = 0 // Will be overridden in `get bleed ()`
   private _lineIconBleed: [number, number] = [0, 0]
+  private _bleedCached: Spacing | undefined
+  private _bleedCacheKey: unknown[] | undefined
   private _lineBleed: [number, number] = [0, 0]
 
   /** We define a dedicated clipping path for this component because it needs to behave
@@ -127,6 +141,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
   get bleed (): Spacing {
     const { config, datamodel: { data } } = this
+
+    // Reuse the previously computed bleed when nothing relevant has changed: the label width
+    // measurement below builds and measures live DOM elements, and the container may
+    // evaluate `bleed` several times per render cycle
+    const bleedCacheKey = [data, config, this._width, this._height]
+    if (this._bleedCached && areArraysShallowEqual(bleedCacheKey, this._bleedCacheKey)) return this._bleedCached
+
     const rowLabels = this._getRowLabels(data)
     const rowHeight = config.rowHeight || (this._height / (rowLabels.length || 1))
     const hasRowIcons = rowLabels.some(l => l.iconHref)
@@ -196,12 +217,15 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     this._lineIconBleed = lineIconBleed
 
-    return {
+    this._bleedCacheKey = bleedCacheKey
+    this._bleedCached = {
       top: 0,
       bottom: 0,
       left: this._labelWidth + lineIconBleed[0] + (hasRowIcons ? maxRowIconSize : 0) + lineBleed[0],
       right: this._scrollBarWidth + this._scrollBarMargin + lineIconBleed[1] + lineBleed[1],
     }
+
+    return this._bleedCached
   }
 
   _render (customDuration?: number): void {

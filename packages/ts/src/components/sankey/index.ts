@@ -16,7 +16,7 @@ import { VerticalAlign } from 'types/text'
 
 // Utils
 import { smartTransition } from 'utils/d3'
-import { clamp, getNumber, getString, groupBy, isNumber } from 'utils/data'
+import { clamp, getNumber, getString, groupBy, isNumber, areArraysShallowEqual } from 'utils/data'
 
 // Config
 import { SankeyDefaultConfig, SankeyConfigInterface } from './config'
@@ -72,6 +72,7 @@ export class Sankey<
   private _prevZoomTransform: { x: number; y: number; k: number } = { x: 0, y: 0, k: 1 }
   private _animationFrameId: number | null = null
   private _bleedCached: Spacing | null = null
+  private _bleedCacheKey: unknown[] | null = null
 
   // Events
   events = {
@@ -111,6 +112,12 @@ export class Sankey<
 
   get bleed (): Spacing {
     const { config, datamodel: { nodes, links } } = this
+
+    // Reuse the previously computed bleed when nothing relevant has changed: the probe layout
+    // pass below is expensive, and the container may evaluate `bleed` several times per render cycle
+    const bleedCacheKey = [nodes, links, config, this._width, this._height]
+    if (this._bleedCached && areArraysShallowEqual(bleedCacheKey, this._bleedCacheKey)) return this._bleedCached
+
     let bleed: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
 
     if (nodes.length) {
@@ -166,8 +173,9 @@ export class Sankey<
     }
 
 
-    // Cache bleed for onZoom
+    // Cache the bleed (also read by `_prepareLayout` and `_onZoom`)
     this._bleedCached = bleed
+    this._bleedCacheKey = bleedCacheKey
 
     return bleed
   }
