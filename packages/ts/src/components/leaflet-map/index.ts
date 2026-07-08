@@ -812,7 +812,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     this.fitToPoints()
   }
 
-  public destroy (): void {
+  protected _onDestroy (): void {
     constraintMapViewThrottled.cancel()
     cancelAnimationFrame(this._renderDataAnimationFrameId)
     cancelAnimationFrame(this._flyToBoundsAnimationFrameId)
@@ -821,7 +821,6 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
 
     map?.stop()
     map?.remove()
-    this.g.remove()
     this.resizeObserver.disconnect()
     this.themeObserver?.disconnect()
   }

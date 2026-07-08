@@ -597,4 +597,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       default: return 0
     }
   }
+
+  protected _onDestroy (): void {
+    cancelAnimationFrame(this._collideTickLabelsAnimFrameId)
+  }
 }

@@ -171,7 +171,15 @@ export class ComponentCore<
     })
   }
 
+  /** Override to release component-specific resources (timers, animation frames, global event
+   * listeners, observers). Called by `destroy()` before the component's DOM node is removed. */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected _onDestroy (): void {}
+
   public destroy (): void {
+    if (this.isDestroyed()) return
+
+    this._onDestroy()
     this.g?.remove()
     this.element = undefined
   }
