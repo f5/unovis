@@ -130,6 +130,33 @@ export class ContainerCore {
     }
   }
 
+  /** Reconciles the direct children of the container's SVG element with the provided list:
+   * only inserts / moves elements that are missing or out of order and removes the ones
+   * that are no longer present. Unlike a full detach + re-append, this doesn't interrupt
+   * CSS transitions or reset the internal state of unaffected elements */
+  protected _reconcileChildren (desiredChildren: (Element | null | undefined)[]): void {
+    const desired = desiredChildren.filter(Boolean)
+    const desiredSet = new Set(desired)
+
+    // Remove the children that are no longer present
+    let child = this.element.firstChild
+    while (child) {
+      const next = child.nextSibling
+      if (!desiredSet.has(child as Element)) this.element.removeChild(child)
+      child = next
+    }
+
+    // Insert or move elements only when their current position doesn't match the desired one
+    let cursor = this.element.firstChild
+    for (const el of desired) {
+      if (el === cursor) {
+        cursor = cursor.nextSibling
+      } else {
+        this.element.insertBefore(el, cursor)
+      }
+    }
+  }
+
   protected _onResize (): void {
     const { config } = this
     const redrawOnResize = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
