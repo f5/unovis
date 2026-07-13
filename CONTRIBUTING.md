@@ -19,7 +19,7 @@ Adding a new component:
 For step-by-step guides, see [Adding a Component](https://unovis.dev/contributing/guides/adding-a-component)
 and [Adding Gallery Examples](https://unovis.dev/contributing/guides/gallery-examples).
 
-> **Using an AI coding agent (Claude Code, Codex, Cursor)?** Start with [`AGENTS.md`](./AGENTS.md) at the
+> **Using an AI coding agent (Claude Code, Codex, Cursor)?** Start with [`AGENTS.md`](https://github.com/f5/unovis/blob/main/AGENTS.md) at the
 > repo root. It captures our commit format, code style, and the component workflow, and ships ready-made
 > `/commit`, `/open-pr`, `/add-component`, and `/add-gallery-example` skills.
 
