@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 // Data
 import cities from '../leaflet-map-vector/cities.json'
+import { mapKey } from '../constants'
 
 // Style
 import s from './style.module.css'
@@ -14,7 +15,6 @@ export const subTitle = 'CSS Variables Configuration'
 
 type MapPointDatum = typeof cities[0]
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const mapKey = 'LNln6dGJDxyBa7F3c7Gd'
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)
 
   return (<>

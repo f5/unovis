@@ -25,7 +25,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const tooltip = new Tooltip({
     triggers: {
       [LeafletMap.selectors.point]: (d: LeafletMapPoint<MapPointDataRecord>) => {
-        return !d.isCluster && !d.clusterPoints ? d.properties?.description : null
+        return !d.isCluster && !d.clusterPoints ? d.properties?.name : null
       },
     },
     attributes: {
@@ -84,11 +84,6 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
       duration={props.duration}
       flyToDuration={props.duration}
       zoomDuration={props.duration}
-      events={{
-        [LeafletMap.selectors.point]: {
-          // mouseover: () => console.log(mapRef.current?.component?.getExpandedCluster()),
-        },
-      }}
       attributes={{
         [LeafletMap.selectors.point]: {
           cluster: (p: LeafletMapPoint<MapPointDataRecord>) => p.isCluster,

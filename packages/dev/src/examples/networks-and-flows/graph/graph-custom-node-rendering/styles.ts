@@ -1,4 +1,5 @@
 import { css } from '@emotion/css'
+import { darkThemeCssSelectors } from '@unovis/ts'
 
 export const exaforceGraph = css`
   label: exaforce-graph;
@@ -123,17 +124,33 @@ export const swimlaneLabelText = css`
 // Checkbox
 export const checkboxContainer = css`
   label: checkbox-container;
+  --graph-control-background: #ffffff;
+  --graph-control-text: #222222;
+  --graph-control-border: #cbd5e1;
   position: absolute;
   top: 10px;
   left: 10px;
-  background: white;
+  background: var(--graph-control-background);
+  color: var(--graph-control-text);
   padding: 5px;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  ${darkThemeCssSelectors} & {
+    --graph-control-background: #1f2937;
+    --graph-control-text: #f8fafc;
+    --graph-control-border: #475569;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+  }
 `
 
 export const graphButton = css`
   label: graph-button;
   display: block;
   margin-top: 5px;
+  color: var(--graph-control-text);
+  background: var(--graph-control-background);
+  border: 1px solid var(--graph-control-border);
+  border-radius: 4px;
+  padding: 6px 10px;
 `
