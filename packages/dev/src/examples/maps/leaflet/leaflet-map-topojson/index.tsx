@@ -1,13 +1,15 @@
 import React, { useCallback } from 'react'
 import { VisLeafletMap } from '@unovis/react'
-import { MapLibreArcticLight } from '@unovis/ts'
+import { useAppContext } from '@src/AppContext'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
+import { mapStyleLight } from '../leaflet-map-colorMap/data'
 
 export const title = 'TopoJSON Overlay'
 export const subTitle = 'WorldMapTopoJSON on top of a Leaflet map'
 
 
 export const component = (): React.ReactNode => {
+  const { isDarkTheme } = useAppContext()
   const data = [
     { id: 'Seattle', latitude: 47.6062, longitude: -122.3321 },
     { id: 'Billerica', latitude: 42.5584, longitude: -71.2689 },
@@ -29,15 +31,9 @@ export const component = (): React.ReactNode => {
   const pointLatitude = (d: MapPointDataRecord): number => d.latitude
   const pointLongitude = (d: MapPointDataRecord): number => d.longitude
   const pointLabel = (d: MapPointDataRecord): string => d.id
-  const mapSources = {
-    sources: {
-      openmaptiles: {
-        type: 'vector',
-        url: `${UNOVIS_MAP_TILE_SERVER_URL}/data/v3.json`,
-      },
-    },
-    glyphs: `${UNOVIS_MAP_TILE_SERVER_URL}/fonts/{fontstack}/{range}.pbf`,
-  }
+  const highlightedCountries = WorldMapTopoJSON.objects.countries.geometries
+    .filter(c => ['US', 'MX', 'GB', 'CN', 'AU', 'IN', 'JP', 'IL', 'PL', 'SG'].includes(c.id as string))
+    .map(c => ({ ...c, properties: { color: '#98df8a' } }))
 
   const topoJSONLayer = {
     sources: {
@@ -47,12 +43,7 @@ export const component = (): React.ReactNode => {
       objects: {
         countries: {
           type: 'GeometryCollection',
-          geometries: WorldMapTopoJSON.objects.countries.geometries.reduce((acc, c) => {
-            if (['US', 'MX', 'GB', 'CN', 'AU', 'IN', 'JP', 'IL', 'PL', 'SG'].includes(c.id as string)) {
-              acc.push({ ...c, properties: { color: '#98df8a' } })
-            }
-            return acc
-          }, []),
+          geometries: highlightedCountries,
         },
       },
     },
@@ -64,7 +55,7 @@ export const component = (): React.ReactNode => {
     <VisLeafletMap<MapPointDataRecord>
       height={550}
       data={data}
-      style={{ ...MapLibreArcticLight, ...mapSources }}
+      style={mapStyleLight}
       pointId={useCallback(pointId, [])}
       pointLatitude={useCallback(pointLatitude, [])}
       pointLongitude={useCallback(pointLongitude, [])}

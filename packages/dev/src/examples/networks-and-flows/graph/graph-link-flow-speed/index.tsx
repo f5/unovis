@@ -70,21 +70,6 @@ export const component = (): React.ReactNode => {
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <VisSingleContainer
-        data={{ nodes, links }}
-        style={{ flex: 1 }}
-      >
-        <VisGraph<NodeDatum, LinkDatum>
-          layoutType={GraphLayoutType.Elk}
-          nodeLabel={d => d.label}
-          nodeSize={40}
-          linkFlow={showFlow}
-          linkFlowParticleSpeed={d => showFlow ? d.speed : undefined}
-          linkFlowParticleSize={3}
-          linkWidth={2}
-        />
-      </VisSingleContainer>
-
       <div style={{
         padding: '20px',
         backgroundColor: '#f5f5f5',
@@ -132,6 +117,20 @@ export const component = (): React.ReactNode => {
           )}
         </div>
       </div>
+      <VisSingleContainer
+        data={{ nodes, links }}
+        style={{ flex: 1 }}
+      >
+        <VisGraph<NodeDatum, LinkDatum>
+          layoutType={GraphLayoutType.Elk}
+          nodeLabel={d => d.label}
+          nodeSize={40}
+          linkFlow={showFlow}
+          linkFlowParticleSpeed={d => showFlow ? d.speed : undefined}
+          linkFlowParticleSize={3}
+          linkWidth={2}
+        />
+      </VisSingleContainer>
     </div>
   )
 }
