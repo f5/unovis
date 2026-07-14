@@ -6,12 +6,12 @@ import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from '
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 
+// data and required props
 // !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412
 const props = defineProps</** @vue-ignore */ BoxplotConfigInterface<Datum> & { data?: Datum[] }>()
 
 const accessor = inject(componentAccessorKey)
 
-// data and required props
 const data = computed(() => accessor.data.value ?? props.data)
 // config
 const config = useForwardProps(props)

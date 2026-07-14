@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { RadialBar, RadialBarConfigInterface } from '@unovis/ts'
+import { RadialBar } from '@unovis/ts/components/radial-bar'
+import { RadialBarConfigInterface } from '@unovis/ts/components/radial-bar/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
