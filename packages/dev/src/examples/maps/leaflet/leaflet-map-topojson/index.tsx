@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { VisLeafletMap } from '@unovis/react'
 import { useAppContext } from '@src/AppContext'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
-import { mapStyleLight } from '../leaflet-map-colorMap/data'
+import { mapStyleDark, mapStyleLight } from '../leaflet-map-colorMap/data'
 
 export const title = 'TopoJSON Overlay'
 export const subTitle = 'WorldMapTopoJSON on top of a Leaflet map'
@@ -56,6 +56,7 @@ export const component = (): React.ReactNode => {
       height={550}
       data={data}
       style={mapStyleLight}
+      styleDarkTheme={mapStyleDark}
       pointId={useCallback(pointId, [])}
       pointLatitude={useCallback(pointLatitude, [])}
       pointLongitude={useCallback(pointLongitude, [])}

@@ -35,7 +35,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         <VisStackedBar<XYDataRecord> data={data} x={d => d.x} y={accessors} duration={props.duration}/>
         <VisAxis type='x' numTicks={10} duration={props.duration}/>
         <VisAxis type='y' tickFormat={(y: number) => `${y}bps`} duration={props.duration}/>
-        <VisCrosshair template={(d: XYDataRecord) => `${d.x}`}/>
+        <VisCrosshair template={(d?: XYDataRecord) => (d ? `${d.x}` : '')}/>
         <VisTooltip ref={tooltipRef}/>
         <VisXYLabels<XYDataRecord>
           data={data}
