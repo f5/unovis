@@ -214,10 +214,22 @@ const config = {
             alias: {
               // eslint-disable-next-line @typescript-eslint/no-var-requires
               '@unovis/ts': require('path').resolve(__dirname, '../../packages/ts/dist'),
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              '@unovis/react$': require('path').resolve(__dirname, '../../packages/react/src/index.ts'),
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              '@unovis/react': require('path').resolve(__dirname, '../../packages/react/src'),
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              src: require('path').resolve(__dirname, '../../packages/react/src'),
             },
           },
           module: {
             rules: [
+              {
+                test: /\.m?js$/,
+                resolve: {
+                  fullySpecified: false,
+                },
+              },
               {
                 test: /\.module.ts|component.ts|.svelte|-solid.tsx$/,
                 loader: 'file-loader',
