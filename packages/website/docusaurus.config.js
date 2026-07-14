@@ -176,6 +176,13 @@ const config = {
         path: 'contributing',
         routeBasePath: 'contributing',
         include: ['**/*.md', '**/*.mdx', '../../**.md'],
+        exclude: [
+          '**/node_modules/**',
+          '../../**/node_modules/**',
+          '../../**/.cache/**',
+          '../../**/dist/**',
+          '../../**/build/**',
+        ],
       },
     ],
     [

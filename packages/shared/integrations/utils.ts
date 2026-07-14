@@ -75,13 +75,6 @@ export function getTypeName (type: ts.Node | undefined): string {
       const generics = (type as ts.TypeReferenceNode).typeArguments?.map(getTypeName).join(', ')
       return name + (generics ? `<${generics}>` : '')
     }
-    case (ts.SyntaxKind.TemplateLiteralType): {
-      const t = type as ts.TemplateLiteralTypeNode
-      const spans = t.templateSpans
-        .map(span => `\${${getTypeName(span.type)}}${span.literal.text}`)
-        .join('')
-      return `\`${t.head.text}${spans}\``
-    }
     case (ts.SyntaxKind.ArrayType): return `${getTypeName((type as ts.ArrayTypeNode).elementType)}[]`
     case (ts.SyntaxKind.TupleType): return `[${(type as ts.TupleTypeNode).elements.map(getTypeName).join(', ')}]`
     case (ts.SyntaxKind.TemplateLiteralType): {
@@ -218,9 +211,14 @@ export function getImportStatements (
         importSources[typeName] = importSourceMap[typeName]
       } else {
         let importSource: string = (importDec.moduleSpecifier as ts.StringLiteral).text
+        // Strip @/ prefix to check the actual path
+        const pathToCheck = importSource.replace(/^@\//, '')
         if (!importSource || importSource.startsWith('./') || importSource.startsWith('core/') ||
           importSource.startsWith('types/') || importSource.startsWith('utils/') || importSource.startsWith('components/') ||
-          importSource.startsWith('styles/') || importSource.startsWith('data-models/') || importSource.startsWith('data/')
+          importSource.startsWith('styles/') || importSource.startsWith('data-models/') || importSource.startsWith('data/') ||
+          pathToCheck.startsWith('core/') || pathToCheck.startsWith('types/') || pathToCheck.startsWith('utils/') ||
+          pathToCheck.startsWith('components/') || pathToCheck.startsWith('styles/') || pathToCheck.startsWith('data-models/') ||
+          pathToCheck.startsWith('data/')
         ) importSource = '@unovis/ts'
 
         importSources[typeName] = importSource
@@ -338,9 +336,15 @@ export function getConfigSummary (
         importSource.startsWith('core/') || importSource.startsWith('types/') ||
         importSource.startsWith('utils/') || importSource.startsWith('components/') ||
         importSource.startsWith('styles/') || importSource.startsWith('data-models/') ||
-        importSource.startsWith('data/')
+        importSource.startsWith('data/') ||
+        importSource.startsWith('@/core/') || importSource.startsWith('@/types/') ||
+        importSource.startsWith('@/utils/') || importSource.startsWith('@/components/') ||
+        importSource.startsWith('@/styles/') || importSource.startsWith('@/data-models/') ||
+        importSource.startsWith('@/data/')
       ) {
-        importSource = `@unovis/ts/${importSource}`
+        // Strip @/ prefix if present, then normalize to @unovis/ts
+        const normalizedSource = importSource.replace(/^@\//, '')
+        importSource = `@unovis/ts/${normalizedSource}`
       }
       for (const importEl of importDec.importClause.namedBindings.elements) {
         importSourceMap[importEl.name.escapedText] = importSource
