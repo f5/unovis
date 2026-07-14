@@ -80,6 +80,11 @@ export class VisBoxplotComponent<Datum> implements BoxplotConfigInterface<Datum>
   /** Box fill color accessor function. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum>
 
+  /** Array of data color keys. Use to map data keys to colors.
+   * Expected to the same length as the `y` accessors array.
+   * Default: `undefined` */
+  @Input() colorKeys?: string[]
+
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
@@ -148,8 +153,8 @@ export class VisBoxplotComponent<Datum> implements BoxplotConfigInterface<Datum>
   }
 
   private getConfig (): BoxplotConfigInterface<Datum> {
-    const { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, median, quartiles, whiskers, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor } = this
-    const config = { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, median, quartiles, whiskers, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor }
+    const { duration, events, attributes, x, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, median, quartiles, whiskers, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor } = this
+    const config = { duration, events, attributes, x, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, median, quartiles, whiskers, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor }
     const keys = Object.keys(config) as (keyof BoxplotConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
