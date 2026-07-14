@@ -70,7 +70,7 @@ const ROOT_SKIP_EXACT = new Set([
   'lint', // temporarily disabled
   'cmds-report'
 ])
-const ROOT_SKIP_CONTAINS = ['publish', 'update-version']
+const ROOT_SKIP_CONTAINS = ['publish', 'update-version', 'gallery']
 const ROOT_SKIP_STARTS = ['build'] // 'build' and 'build:*'
 
 // Workspace: publish & gallery variants are out. Long-running servers,
