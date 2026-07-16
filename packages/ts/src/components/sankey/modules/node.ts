@@ -236,9 +236,12 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
     }
   }
 
-  // Hide intersecting labels
+  // Hide intersecting labels.
+  // Also clear any hover-forced visibility.
   for (const b of labelGroupBBoxes) {
-    b.selection.classed(s.hidden, b.hidden)
+    b.selection
+      .classed(s.hidden, b.hidden)
+      .classed(s.forceShow, false)
   }
 }
 
