@@ -1,17 +1,18 @@
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { WithOptional } from 'types/misc'
-import { ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
-import { TextAlign } from 'types/text'
-import { Arrangement } from 'types/position'
+import { WithOptional } from '@/types/misc'
+import { ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from '@/types/accessor'
+import { FillPatternType } from '@/styles/patterns'
+import { TextAlign, TrimMode } from '@/types/text'
+import { Arrangement } from '@/types/position'
 
 // Local Types
 import type { TimelineArrow, TimelineLineRenderState, TimelineRowIcon, TimelineRowLabel } from './types'
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   // Items (Lines)
-  /** @deprecated This property has been renamed to `key` */
+  /** @deprecated This property has been renamed to `lineRow` */
   type?: StringAccessor<Datum>;
   /** @deprecated This property has been renamed to `lineDuration` */
   length?: NumericAccessor<Datum>;
@@ -23,6 +24,8 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   lineDuration?: NumericAccessor<Datum>;
   /** Timeline item color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum>;
+  /** Timeline item fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  pattern?: GenericAccessor<FillPatternType, Datum>;
   /** Width of the timeline items. Default: `8` */
   lineWidth?: NumericAccessor<Datum>;
   /** Display rounded ends for timeline items. Default: `true` */
@@ -84,6 +87,12 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   rowMaxLabelWidth?: number;
   /** Text alignment for labels: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `TextAlign.Right` */
   rowLabelTextAlign?: TextAlign | `${TextAlign}`;
+  /** Row label trim mode when width is limited: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
+  rowLabelTrimMode?: TrimMode | `${TrimMode}`;
+  /** Row label margin in pixels. Can be a single number or a `[left, right]` tuple. Default: `[0, 5]` */
+  rowLabelMargin?: number | [number, number];
+  /** When component height is larger than the height of all rows, render rows to fill empty space */
+  rowFillEmptySpace?: boolean;
 
   // Arrows
   arrows?: TimelineArrow[];
@@ -113,6 +122,7 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   type: (d: unknown): string => (d as { type: string }).type, // Deprecated (see above)
   length: (d: unknown): number => (d as { length: number }).length, // Deprecated (see above)
   color: (d: unknown): string => (d as { color: string }).color,
+  pattern: undefined,
   lineRow: undefined,
   lineDuration: undefined,
   lineWidth: 8,
@@ -145,6 +155,9 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   rowLabelWidth: undefined,
   rowMaxLabelWidth: undefined,
   rowLabelTextAlign: TextAlign.Right,
+  rowLabelTrimMode: TrimMode.Middle,
+  rowLabelMargin: [0, 6],
+  rowFillEmptySpace: true,
 
   // Arrows
   arrows: undefined,

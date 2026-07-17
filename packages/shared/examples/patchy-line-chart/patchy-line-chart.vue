@@ -15,10 +15,10 @@
       </label>
     </div>
     <div>
-      <VisXYContainer :data="data" :xDomain="[1990, 2024]" width="100%">
+      <VisXYContainer :data :xDomain="[1990, 2024]" width="100%">
         <VisLine
           :curveType="CurveType.Linear"
-          :fallbackValue="fallbackValue"
+          :fallbackValue
           :interpolateMissingData="interpolation"
           :x="xCallback"
           :y="countriesYMemo"
@@ -49,53 +49,26 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref, computed } from 'vue'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import { VisXYContainer, VisLine, VisAxis, VisCrosshair, VisScatter, VisTooltip } from '@unovis/vue'
 import { CurveType } from '@unovis/ts'
 import { countries, data } from './data'
 
-export default defineComponent({
-  name: 'BasicPatchyLineChart',
-  components: {
-    VisXYContainer,
-    VisLine,
-    VisAxis,
-    VisCrosshair,
-    VisScatter,
-    VisTooltip
-  },
-  setup() {
-    const fallbacks = [null, undefined, 0, 2000]
-    const fallbackValue = ref(fallbacks[0])
-    const interpolation = ref(true)
-    const showScatter = ref(true)
+const fallbacks = [null, undefined, 0, 2000]
+const fallbackValue = ref(fallbacks[0])
+const interpolation = ref(true)
+const showScatter = ref(true)
 
-    const xCallback = (d) => d.year
-    
-    const getY = (c) => (d) => d[c.id]
-    const countriesYMemo = computed(() => countries.map(getY))
+const xCallback = (d) => d.year
 
-    const crosshairTemplate = (d) => 
-      `Year: ${d.year} <br/> India: ${d.in ? `${Math.round(d.in || 0)}kWh` : 'NA'}<br/> Brazil: ${d.br ? `${Math.round(d.br || 0)}kWh` : 'NA'}`
+const getY = (c) => (d) => d[c.id]
+const countriesYMemo = computed(() => countries.map(getY))
 
-    const yAxisTickFormat = (d) => `${d}${d ? 'kWh' : ''}`
+const crosshairTemplate = (d) =>
+  `Year: ${d.year} <br/> India: ${d.in ? `${Math.round(d.in || 0)}kWh` : 'NA'}<br/> Brazil: ${d.br ? `${Math.round(d.br || 0)}kWh` : 'NA'}`
 
-    return {
-      fallbacks,
-      fallbackValue,
-      interpolation,
-      showScatter,
-      countries,
-      data,
-      xCallback,
-      countriesYMemo,
-      CurveType,
-      crosshairTemplate,
-      yAxisTickFormat
-    }
-  }
-})
+const yAxisTickFormat = (d) => `${d}${d ? 'kWh' : ''}`
 </script>
 
 <style>

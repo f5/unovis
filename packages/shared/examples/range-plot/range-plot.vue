@@ -24,35 +24,33 @@ const tickFormat = (_, i: number) => data[i].occupation
 </script>
 
 <template>
-  <VisBulletLegend :items='legendItems'/>
-  <VisXYContainer
-      :height= "height"
-    >
+  <VisBulletLegend :items="legendItems"/>
+  <VisXYContainer :height>
     <VisLine
       :data="lineData"
       :x="xLine"
       :y="yLine"
-      :color="'grey'" 
+      color="grey"
     />
     <VisScatter
-      :data="data"
+      :data
       :x="xMen"
-      :y="y"
-      :color="'#4D8CFD'"
+      :y
+      color="#4D8CFD"
       :size="10"
     />
     <VisScatter
-      :color="'#FF6B7E'"
-      :data="data"
+      color="#FF6B7E"
+      :data
       :x="xWomen"
-      :y="y"
+      :y
       :size="10"
     />
-    <VisAxis type='x' :numTicks=5 :label="'Yearly Salary'"/>
-    <VisAxis type='y'
-      :tickFormat="tickFormat"
-      :numTicks='data.length' 
-      :gridLine='false'
+    <VisAxis type="x" :numTicks="5" label="Yearly Salary"/>
+    <VisAxis type="y"
+      :tickFormat
+      :numTicks="data.length"
+      :gridLine="false"
     />
     <VisTooltip :triggers="tooltipTriggers"/>
   </VisXYContainer>

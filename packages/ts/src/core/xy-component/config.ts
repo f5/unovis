@@ -1,7 +1,7 @@
-import { ContinuousScale } from 'types/scale'
+import { ContinuousScale } from '@/types/scale'
 
 // Types
-import { ColorAccessor, NumericAccessor } from 'types/accessor'
+import { ColorAccessor, NumericAccessor } from '@/types/accessor'
 
 // Config
 import { ComponentDefaultConfig, ComponentConfigInterface } from '../component/config'
@@ -15,6 +15,10 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   id?: ((d: Datum, i: number, ...any: any[]) => string);
   /** Component color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>;
+  /** Array of data color keys. Use to map data keys to colors.
+   * Expected to the same length as the `y` accessors array.
+   * Default: `undefined` */
+  colorKeys?: string[];
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined`

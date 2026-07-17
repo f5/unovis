@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
-import { onMounted, onUnmounted, ref, provide, watch, toRefs, reactive, watchEffect, toRaw } from 'vue'
+import { onUnmounted, ref, provide, watch, toRefs, reactive, watchEffect, toRaw } from 'vue'
 import { componentAccessorKey, tooltipAccessorKey, axisAccessorKey, crosshairAccessorKey, annotationsAccessorKey } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"
 
@@ -8,7 +8,7 @@ const props = defineProps<XYContainerConfigInterface<T> & { data?: T[] }>()
 const { data } = toRefs(props)
 const parsedProps = useForwardProps(props)
 
-const chart = ref<XYContainer<T> | undefined>()
+const chart = ref<XYContainer<T>>()
 const config = reactive({
   components: [],
   annotations: undefined,
@@ -19,20 +19,24 @@ const config = reactive({
 }) as XYContainerConfigInterface<T>
 const elRef = ref<HTMLDivElement>()
 
-watch(data, () => {
-  if (chart.value) {
-    chart.value.setData(data.value, true)
-  }
-})
+const initChart = () => {
+  if (chart.value || !elRef.value) return
+  // config holds only child-registration slots — if all are empty, no slot has registered yet
+  const hasContent = Object.values(config).some(v => Array.isArray(v) ? v.length : v)
+  if (!hasContent) return
+  chart.value = new XYContainer(elRef.value, { ...toRaw(config) }, data.value)
+}
 
 watchEffect(() => {
-  // watch deep changes in components config
+  initChart()
+  // touch deep changes in components config to track them
   const t = config.components.map(i => i.config)
   chart.value?.updateContainer({ ...toRaw(parsedProps.value), ...toRaw(config) })
 })
 
-onMounted(() => {
-  if (elRef.value) chart.value = new XYContainer(elRef.value, { ...toRaw(config) }, data.value)
+watch(data, () => {
+  if (chart.value) chart.value.setData(data.value, true)
+  else initChart()
 })
 
 onUnmounted(() => chart.value?.destroy())

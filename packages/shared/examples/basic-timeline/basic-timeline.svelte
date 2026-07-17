@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { Timeline } from '@unovis/ts'
   import { VisXYContainer, VisBulletLegend, VisTooltip, VisTimeline, VisAxis } from '@unovis/svelte'
   import { colorMap, data, DataRecord, ProductType } from './data'
@@ -16,18 +16,18 @@
   }
 
   const x = (d: DataRecord) => d.startDate
-  const length = (d: DataRecord) => d.endDate - d.startDate
-  const type = (d: DataRecord) => d.name
+  const lineDuration = (d: DataRecord) => d.endDate - d.startDate
+  const lineRow = (d: DataRecord) => d.name
   const color = (d: DataRecord) => colorMap[d.type]
 
   const legendItems = Object.keys(ProductType).map((name, i) => ({ name, color: colorMap[name] }))
   const triggers = { [Timeline.selectors.label]: getTooltipText }
 </script>
 
-<VisXYContainer data={data} height={500}>
+<VisXYContainer {data} height={500}>
   <h3>A Timeline of Abandoned Google Products, 1997 - 2022</h3>
   <VisBulletLegend items={legendItems}/>
-  <VisTimeline {x} {length} {type} {color} {labelWidth} showLabels={true}/>
-  <VisTooltip triggers={triggers}/>
+  <VisTimeline {x} {lineDuration} {lineRow} {color} rowLabelWidth={labelWidth} showRowLabels={true}/>
+  <VisTooltip {triggers}/>
   <VisAxis type="x" tickFormat={dateFormatter} numTicks={10}/>
 </VisXYContainer>

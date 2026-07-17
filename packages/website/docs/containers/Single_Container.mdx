@@ -7,7 +7,7 @@ description: Learn how to use Single Container
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { sankeyData } from '../utils/data'
-import { DocWrapper } from '../wrappers'
+import { DocWrapper, DynamicWrapper } from '../wrappers'
 import './styles.css'
 
 export const singleContainerProps = (n=10) => ({
@@ -126,9 +126,89 @@ The `sizing` property determines whether components should fit into the containe
 or the container should expand to fit to the component's size. Currently, only <a href="/docs/networks-and-flows/Sankey#component-sizing">
 Sankey</a> supports the `sizing` option. By default, all components will fit to the size of _Single Container_.
 
+## Color
+Each component in a _Single Container_ is colored through its own `color` accessor. By default, segments and
+elements cycle through the shared _Unovis_ palette (`--vis-color0`, `--vis-color1`, …); pass a `color`
+accessor — a constant, an array of colors, or a function of the datum — to override it. For example, a
+_Donut_ colored from a custom palette by segment:
+
+<BrowserOnly>
+{() => {
+  const palette = ['#4d8cfd', '#ff6b7e', '#00c19a', '#f4b83e', '#a78bfa']
+  return (
+    <DocWrapper {...singleContainerProps()}
+      height={160}
+      components={[{ name: 'Donut', props: { value: d => d, color: (d, i) => palette[i % palette.length] }, key: 'component' }]}
+    />
+  )
+}}
+</BrowserOnly>
+
+To change the default palette or keep colors consistent across charts, see
+[Color Palette](/docs/guides/theming#color-palette) and
+[Synchronizing Colors Across Charts](/docs/guides/theming#synchronizing-colors-across-charts) in the
+_Theming_ guide — re-ranging `UnovisColorScale` there recolors these components' default palette too.
+
+:::note
+Unlike [XY Container](XY_Container#color), the container-level `color` _function_ is consumed by XY
+components. Single-component visualizations such as _Donut_, _Sankey_, and _ChordDiagram_ take their color
+from the component's own `color` accessor.
+:::
+
+
+## Tooltip
+Pair the container with a [Tooltip](/docs/auxiliary/Tooltip) to show details on hover. Provide a `triggers`
+map that pairs a component's selector with a template function — as in the
+[Basic Configuration](#basic-configuration) example above:
+
+```ts
+import { Donut } from '@unovis/ts'
+
+const triggers = { [Donut.selectors.segment]: d => `Value: ${d.data}` }
+```
+
+See the [Tooltip](/docs/auxiliary/Tooltip) docs for positioning, show/hide delays, and custom rendering.
+
+## Annotations
+Use [Annotations](/docs/auxiliary/Annotations) to overlay text labels and callouts — it works in a
+_Single Container_ too. Pass an `items` array positioned with data coordinates or `'%'` strings:
+
+<DocWrapper
+  {...singleContainerProps()}
+  height={220}
+  components={[
+    { name: 'Donut', props: { value: d => d }, key: 'component' },
+    { name: 'Annotations', props: { items: [
+      { x: '65%', y: '6%', content: { text: 'Breakdown by segment', fontSize: 16 } },
+      { x: '12%', y: '50%', content: 'Interesting slice', subject: { x: '36%', y: '50%' } },
+    ] }, key: 'annotations' },
+  ]}
+/>
+
+See the [Annotations](/docs/auxiliary/Annotations) docs for the full set of `AnnotationItem` options.
+
+## Accessibility
+Pass a descriptive `ariaLabel` to set an `aria-label` on the chart's container `div`, giving screen-reader
+users a text summary of the visualization:
+
+```tsx
+<VisSingleContainer data={data} ariaLabel="Sales distribution by product category">
+  {/* … */}
+</VisSingleContainer>
+```
+
 ## SVG Defs
-You can use the `svgDefs` property to define custom fill patterns for your components.
-See our <a href="/docs/guides/tips-and-tricks#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
+You can use the `svgDefs` property to inject custom SVG definitions — gradients, patterns, clip paths, and
+filters — that your component can reference by `id`. See our
+<a href="/docs/guides/theming#gradient-fills-with-svg-defs">Theming guide</a>, or the
+[Gradient Fills](/docs/guides/theming#gradient-fills-with-svg-defs) and
+[SVG Filters](/docs/guides/theming#svg-filters-glow-bevel-3d) sections of the _Theming_ guide, for details.
+
+:::tip
+For ready-made stripe, dot, and hatch fills you don't need custom defs — _Donut_, _NestedDonut_, _Sankey_, and
+_ChordDiagram_ all accept a `pattern` accessor, and the `theme-patterns` class applies a default pattern set
+automatically. See [Patterns](/docs/guides/theming#patterns) in the _Theming_ guide.
+:::
 
 ## Component Props
 <PropsTable name="VisSingleContainer"/>

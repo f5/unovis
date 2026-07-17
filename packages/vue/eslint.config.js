@@ -1,4 +1,8 @@
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import antfu from '@antfu/eslint-config'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default antfu({
   ignorePatterns: ['dist/*'],

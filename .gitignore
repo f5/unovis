@@ -51,9 +51,9 @@ stats.html
 .autogen.js
 .srcsha
 licences.temp
-vulnerability-report.json
-vulnerability-report.html
 .angular
+scripts/vulnerability-report*
+unovis-commands-report-*
 
 # System Files
 .DS_Store

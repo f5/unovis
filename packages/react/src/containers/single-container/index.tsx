@@ -1,6 +1,10 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { SingleContainer, SingleContainerConfigInterface, ComponentCore, Tooltip, Annotations } from '@unovis/ts'
+import { SingleContainer } from '@unovis/ts/containers/single-container'
+import { SingleContainerConfigInterface } from '@unovis/ts/containers/single-container/config'
+import { ComponentCore } from '@unovis/ts/core/component'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { Annotations } from '@unovis/ts/components/annotations'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
@@ -11,7 +15,7 @@ import { VisComponentElement } from 'src/types/dom'
 export type VisSingleContainerProps<Data> = SingleContainerConfigInterface<Data> & {
   data?: Data;
   className?: string;
-  style?: React.CSSProperties;
+  style?: React.CSSProperties | Record<`--${string}`, string | number>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

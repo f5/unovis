@@ -18,10 +18,10 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <p>
+        <div>
           <b style={{ fontFamily: 'monospace' }}>hideWhenFarFromPointer: true (default)</b>
           <div>Will hide when the mouse position is far from the nearest data point</div>
-        </p>
+        </div>
         <VisXYContainer<XYDataRecord> data={data} margin={{ top: 5, left: 5 }}>
           <VisArea x={d => d.x} y={accessors} duration={props.duration}/>
           <VisAxis type='x' duration={props.duration}/>
@@ -33,10 +33,10 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
       {/* Second chart with hideWhenFarFromPointer set to false */}
       <div>
-        <p>
+        <div>
           <b style={{ fontFamily: 'monospace' }}>hideWhenFarFromPointer: false</b>
           <div>Will not hide</div>
-        </p>
+        </div>
         <VisXYContainer<XYDataRecord> data={data} margin={{ top: 5, left: 5 }}>
           <VisArea x={d => d.x} y={accessors} duration={props.duration}/>
           <VisAxis type='x' duration={props.duration}/>

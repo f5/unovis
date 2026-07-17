@@ -1,12 +1,15 @@
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { ColorAccessor, StringAccessor } from 'types/accessor'
-import { Orientation } from 'types/position'
+import { ColorAccessor, GenericAccessor, StringAccessor } from '@/types/accessor'
+import { FillPatternType } from '@/styles/patterns'
+import { Orientation } from '@/types/position'
 
 export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Bar color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum>;
+  /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  pattern?: GenericAccessor<FillPatternType, Datum>;
   /** Force set bar width in pixels. Default: `undefined` */
   barWidth?: number;
   /** Maximum bar width for dynamic sizing. Default: `undefined` */
@@ -34,6 +37,7 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
 export const StackedBarDefaultConfig: StackedBarConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
   color: undefined,
+  pattern: undefined,
   barMaxWidth: undefined,
   barWidth: undefined,
   dataStep: undefined,

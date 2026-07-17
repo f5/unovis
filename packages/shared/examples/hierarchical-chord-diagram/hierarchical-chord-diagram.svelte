@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisSingleContainer, VisChordDiagram } from '@unovis/svelte'
   import { ChordHierarchyNode, ChordLabelAlignment } from '@unovis/ts'
   import { colorMap, links, nodes, LinkDatum, NodeDatum } from './data'
@@ -10,7 +10,7 @@
   const nodeLabelColor = (n: NodeDatum) => n.height && 'var(--vis-tooltip-text-color)'
 </script>
 
-<VisSingleContainer data={data} height={'60vh'}>
+<VisSingleContainer {data} height={'60vh'}>
   <VisChordDiagram
     {linkColor}
     {nodeColor}

@@ -1,28 +1,27 @@
-<script setup lang="ts" >
+<script setup lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-import { Annotations, AnnotationsConfigInterface, AnnotationItem } from '@unovis/ts'
-import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
-import { arePropsEqual, useForwardProps } from '../../utils/props'
+import type { AnnotationsConfigInterface } from '@unovis/ts'
+import { Annotations } from '@unovis/ts'
+import { inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { annotationsAccessorKey } from '../../utils/context'
+import { arePropsEqual, useForwardProps } from '../../utils/props'
+
+const props = defineProps<Props & { data?: null }>()
 
 const accessor = inject(annotationsAccessorKey)
 
-// data and required props 
+// data and required props
 type Props = AnnotationsConfigInterface
-const props = defineProps<Props & { data?: null }>()
-
-
 // config
 const config = useForwardProps(props)
 
 // component declaration
 const component = ref<Annotations>()
 
-
 onMounted(() => {
   nextTick(() => {
     component.value = new Annotations(config.value)
-    
+
     accessor.update(component.value)
   })
 })
@@ -35,12 +34,12 @@ onUnmounted(() => {
 watch(config, (curr, prev) => {
   if (!arePropsEqual(curr, prev)) {
     component.value?.setConfig(config.value)
+    component.value?.render()
   }
 })
 
-
 defineExpose({
-  component
+  component,
 })
 </script>
 
@@ -51,5 +50,3 @@ export const VisAnnotationsSelectors = Annotations.selectors
 <template>
   <div data-vis-annotations />
 </template>
-
-

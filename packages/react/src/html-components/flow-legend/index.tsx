@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { FlowLegend, FlowLegendConfigInterface } from '@unovis/ts'
+import { FlowLegend } from '@unovis/ts/components/flow-legend'
+import { FlowLegendConfigInterface } from '@unovis/ts/components/flow-legend/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

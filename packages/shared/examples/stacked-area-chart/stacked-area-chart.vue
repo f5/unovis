@@ -15,10 +15,10 @@ const labelProps = {
 </script>
 
 <template>
-  <VisXYContainer :data="data" :height="500">
+  <VisXYContainer :data :height="500">
     <VisXYLabels v-bind="labelProps" clusterBackgroundColor="none" :clusterLabel="() => ''" />
-    <VisArea :x="x" :y="y" />
-    <VisAxis type='x' label='Year' :numTicks="10" :gridLine="false" :domainLine="false" />
-    <VisAxis type='y' label='Revenue (USD, billions)' :numTicks="10" />
+    <VisArea :x :y />
+    <VisAxis type="x" label="Year" :numTicks="10" :gridLine="false" :domainLine="false" />
+    <VisAxis type="y" label="Revenue (USD, billions)" :numTicks="10" />
   </VisXYContainer>
 </template>

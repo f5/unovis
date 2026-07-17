@@ -1,8 +1,8 @@
-import * as Seedramdon from 'seedrandom'
+import { randomLcg } from 'd3-random'
 import { GenericDataRecord } from '@unovis/ts'
 import { sample } from './array'
 
-export const randomNumberGenerator = new Seedramdon('unovis')
+export const randomNumberGenerator = randomLcg(0.42)
 
 export type XYDataRecord = {
   x: number;
@@ -15,11 +15,23 @@ export type StackedDataRecord = {
   x: number;
   ys: number[];
 }
+
+export type BoxplotDataRecord = {
+  x: number;
+  median: number;
+  quartiles: [number, number];
+  whiskers: [number, number];
+}
 export interface TimeDataRecord {
   timestamp: number;
   value: number;
   length: number;
   type?: string;
+}
+
+export type TimeSeriesDataRecord = {
+  time: number;
+  values: number[];
 }
 
 export type NodeDatum = GenericDataRecord & {
@@ -50,6 +62,25 @@ export function generateXYDataRecords (n = 10): XYDataRecord[] {
     y: 5 + 5 * randomNumberGenerator(),
     y1: 1 + 3 * randomNumberGenerator(),
     y2: 2 * randomNumberGenerator(),
+  }))
+}
+
+export function generateBoxplotDataRecords (n = 10): BoxplotDataRecord[] {
+  return Array(n).fill(0).map((_, i) => {
+    const median = 4 + 4 * randomNumberGenerator()
+    const q1 = median - (1 + 2 * randomNumberGenerator())
+    const q3 = median + (1 + 2 * randomNumberGenerator())
+    const min = q1 - (1 + 3 * randomNumberGenerator())
+    const max = q3 + (1 + 3 * randomNumberGenerator())
+    return { x: i, median, quartiles: [q1, q3], whiskers: [min, max] }
+  })
+}
+
+export function generateTimeSeriesDataRecords (numSeries = 5, n = 25, interval = 1000 * 60 * 60): TimeSeriesDataRecord[] {
+  const startTime = Date.now() - (n - 1) * interval
+  return Array(n).fill(0).map((_, i) => ({
+    time: startTime + i * interval,
+    values: Array(numSeries).fill(0).map((_, j) => j + 5 * randomNumberGenerator()),
   }))
 }
 

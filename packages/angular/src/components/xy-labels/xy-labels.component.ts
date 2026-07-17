@@ -86,6 +86,11 @@ export class VisXYLabelsComponent<Datum> implements XYLabelsConfigInterface<Datu
   /** Label color accessor function. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum>
 
+  /** Array of data color keys. Use to map data keys to colors.
+   * Expected to the same length as the `y` accessors array.
+   * Default: `undefined` */
+  @Input() colorKeys?: string[]
+
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
@@ -161,8 +166,8 @@ export class VisXYLabelsComponent<Datum> implements XYLabelsConfigInterface<Datu
   }
 
   private getConfig (): XYLabelsConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, xPositioning, yPositioning, labelFontSize, label, backgroundColor, cursor, labelTextBrightnessRatio, clustering, clusterLabel, clusterFontSize, clusterBackgroundColor, clusterCursor, clusterLabelColor } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, xPositioning, yPositioning, labelFontSize, label, backgroundColor, cursor, labelTextBrightnessRatio, clustering, clusterLabel, clusterFontSize, clusterBackgroundColor, clusterCursor, clusterLabelColor }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, xPositioning, yPositioning, labelFontSize, label, backgroundColor, cursor, labelTextBrightnessRatio, clustering, clusterLabel, clusterFontSize, clusterBackgroundColor, clusterCursor, clusterLabelColor } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, xPositioning, yPositioning, labelFontSize, label, backgroundColor, cursor, labelTextBrightnessRatio, clustering, clusterLabel, clusterFontSize, clusterBackgroundColor, clusterCursor, clusterLabelColor }
     const keys = Object.keys(config) as (keyof XYLabelsConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

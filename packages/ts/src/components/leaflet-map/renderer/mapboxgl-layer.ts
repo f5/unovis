@@ -5,10 +5,10 @@ import type { Map } from 'maplibre-gl'
 import { injectGlobal } from '@emotion/css'
 
 // Utils
-import { isObject } from 'utils/data'
+import { isObject } from '@/utils/data'
 
 // Types
-import { GenericDataRecord } from 'types/data'
+import { GenericDataRecord } from '@/types/data'
 
 // Config
 import { LeafletMapConfigInterface } from '../config'

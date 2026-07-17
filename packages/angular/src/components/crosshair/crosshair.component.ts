@@ -10,6 +10,7 @@ import {
   ColorAccessor,
   ContinuousScale,
   Tooltip,
+  CrosshairSnapMode,
   CrosshairCircle,
 } from '@unovis/ts'
 import { VisXYComponent } from '../../core'
@@ -84,6 +85,11 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** Optional color array or color accessor function for crosshair circles. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum>
 
+  /** Array of data color keys. Use to map data keys to colors.
+   * Expected to the same length as the `y` accessors array.
+   * Default: `undefined` */
+  @Input() colorKeys?: string[]
+
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
@@ -105,6 +111,14 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
 
   /** Optional stroke width for crosshair circles. Default: `undefined` */
   @Input() strokeWidth?: NumericAccessor<Datum>
+
+  /** Radius of crosshair circles in pixels. Default: `3` */
+  @Input() circleRadius?: number
+
+  /** When `true`, the Crosshair also renders a horizontal line. The line is placed at the Y position of the
+   * crosshair circle closest to the mouse pointer (i.e. the snapped data point), or follows the pointer
+   * when there are no circles to snap to (e.g. when `snapToData` is `false`). Default: `false` */
+  @Input() showHorizontalLine?: boolean
 
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   @Input() yStacked?: NumericAccessor<Datum>[]
@@ -132,6 +146,16 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    * Default: `true` */
   @Input() snapToData?: boolean
 
+  /** When `snapToData` is enabled, controls how the nearest datum is found:
+   * - `CrosshairSnapMode.XY`: snap to the datum closest to the mouse pointer in both X and Y (measured in pixel space).
+   *  This is the right choice for Scatter charts where many points can share similar X values.
+   * - `CrosshairSnapMode.X`: snap to the datum closest along the X axis only. Best for time series / line / area
+   *  charts where the crosshair is a vertical line tracking the X position.
+   *
+   * Has no effect when `forceShowAt` is set (no pointer Y is available — it falls back to `CrosshairSnapMode.X`).
+   * Default: `CrosshairSnapMode.X` */
+  @Input() snapMode?: CrosshairSnapMode | `${CrosshairSnapMode}`
+
   /** Custom function for setting up the crosshair circles, usually needed when `snapToData` is set to `false`.
    * The function receives the horizontal position of the crosshair (in the data space, not in pixels), the data array,
    * the `yScale` instance to help you calculate the correct vertical position of the circles, and the nearest datum index.
@@ -155,6 +179,13 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** Skip range checks for crosshair visibility. When true, crosshair will show regardless of position within chart bounds. Default: `false`
    * This is useful for testing, especially when you only triggers mousemove event but does not have real mouse event. */
   @Input() skipRangeCheck?: boolean
+
+  /** Minimum fraction (`0` to `1`) of the container's area that must be visible in the
+   * viewport for the Crosshair (and its Tooltip) to be displayed. This prevents the
+   * Crosshair from showing when the chart is mostly scrolled out of view. Charts that are
+   * wider or taller than the viewport may never reach the default ratio, so lower this
+   * value (or set it to `0` to always show the Crosshair) for large charts. Default: `0.35` */
+  @Input() visibilityThreshold?: number
   @Input() data: Datum[]
 
   component: Crosshair<Datum> | undefined
@@ -176,8 +207,8 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

@@ -2,20 +2,21 @@ import { scaleBand } from 'd3-scale'
 import { min, max, range } from 'd3-array'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber } from 'utils/data'
-import { roundedRectPath } from 'utils/path'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
+import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber } from '@/utils/data'
+import { roundedRectPath } from '@/utils/path'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
-import { Direction } from 'types/direction'
-import { Orientation } from 'types/position'
-import { ContinuousScale } from 'types/scale'
+import { NumericAccessor } from '@/types/accessor'
+import { Spacing } from '@/types/spacing'
+import { Direction } from '@/types/direction'
+import { Orientation } from '@/types/position'
+import { ContinuousScale } from '@/types/scale'
 
 // Config
 import { GroupedBarDefaultConfig, GroupedBarConfigInterface } from './config'
@@ -86,6 +87,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
     const duration = isNumber(customDuration)
       ? customDuration
       : config.duration
+    const colorOptions = { colorFn: this._colorFunction }
     const groupWidth = this._getGroupWidth()
 
     const yAccessors = this.getAccessors()
@@ -150,9 +152,12 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         const height = 0
         return this._getBarPath(x, y, width, height, false, valueAxisDirection)
       })
-      .style('fill', (d, i) => getColor(d, config.color, i))
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => i)
+      .style('fill', (d, i) => getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
+      .style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, i)))
 
     const barsMerged = barsEnter.merge(bars)
+    barsMerged.style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, i)))
     smartTransition(barsMerged, duration)
       .attr('d', (d, j) => {
         const x = innerBandScale(j)
@@ -172,7 +177,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         }
         return this._getBarPath(x, y, width, height, isNegative, valueAxisDirection)
       })
-      .style('fill', (d, i) => getColor(d, config.color, i))
+      .style('fill', (d, i) => getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
       .style('cursor', (d, i) => getString(d, config.cursor, i))
 
     smartTransition(bars.exit(), duration).remove()

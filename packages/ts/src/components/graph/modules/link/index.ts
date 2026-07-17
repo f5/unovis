@@ -3,14 +3,14 @@ import { range, sum } from 'd3-array'
 import { Transition } from 'd3-transition'
 
 // Utils
-import { throttle, getValue, getNumber, getBoolean, ensureArray } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getCSSVariableValueInPixels } from 'utils/misc'
-import { estimateStringPixelLength } from 'utils/text'
-import { toPx } from 'utils/to-px'
+import { throttle, getValue, getNumber, getBoolean, ensureArray } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
+import { estimateStringPixelLength } from '@/utils/text-measure'
+import { toPx } from '@/utils/to-px'
 
 // Types
-import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { GraphInputLink, GraphInputNode } from '@/types/graph'
 
 // Local Types
 import { GraphCircleLabel, GraphLink, GraphLinkArrowStyle, GraphLinkStyle } from '../../types'

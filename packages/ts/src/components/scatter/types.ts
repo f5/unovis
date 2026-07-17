@@ -1,5 +1,5 @@
-import { Position } from 'types/position'
-import { SymbolType } from 'types/symbol'
+import { Position } from '@/types/position'
+import { SymbolType } from '@/types/symbol'
 
 export type ScatterPoint<D> = D & {
   _point: {
@@ -7,6 +7,7 @@ export type ScatterPoint<D> = D & {
     yValue: number;
     sizePx: number;
     color: string | null;
+    mask: string | null;
     strokeColor: string | null;
     strokeWidthPx: number | null;
     shape: SymbolType | string;

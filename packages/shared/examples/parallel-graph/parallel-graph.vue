@@ -48,9 +48,9 @@ const graphConfig = computed(() => ({
 
 <template>
   <div class="chart">
-    <VisSingleContainer :data="data">
+    <VisSingleContainer :data>
       <VisGraph v-bind="graphConfig" :layoutType="GraphLayoutType.Parallel" :layoutGroupOrder="['west', mainSite, 'east']"
-        :layoutParallelNodesPerColumn="4" :panels="panels" />
+        :layoutParallelNodesPerColumn="4" :panels />
     </VisSingleContainer>
   </div>
 </template>

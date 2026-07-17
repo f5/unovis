@@ -6,9 +6,9 @@ import { data, DataRecord, processLineData } from './data'
 
 const height = 1600
 const yScale = Scale.scalePoint([0, 800]).domain(data.map(d => d.occupation))
-const lineData = useMemo(() => processLineData(data), [])
 
 export default function RangePlot (): JSX.Element {
+  const lineData = useMemo(() => processLineData(data), [])
   const legendItems = [{ name: 'Women', color: '#FF6B7E' }, { name: 'Men', color: '#4D8CFD' }]
   const tooltipTriggers = useMemo(() =>
     ({

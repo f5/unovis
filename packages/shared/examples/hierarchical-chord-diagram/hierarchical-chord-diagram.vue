@@ -11,7 +11,7 @@ const nodeLabelColor = (n: NodeDatum) => n.height && 'var(--vis-tooltip-text-col
 </script>
 
 <template>
-  <VisSingleContainer :data="data" height="60vh">
+  <VisSingleContainer :data height="60vh">
     <VisChordDiagram v-bind="{
       linkColor,
       nodeColor,

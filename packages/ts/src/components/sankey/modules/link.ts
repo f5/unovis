@@ -3,9 +3,10 @@ import { Transition } from 'd3-transition'
 import { interpolateNumber } from 'd3-interpolate'
 
 // Utils
-import { getColor } from 'utils/color'
-import { getString } from 'utils/data'
-import { smartTransition } from 'utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue } from '@/utils/pattern'
+import { getString } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
 
 // Local Types
 import { SankeyInputLink, SankeyInputNode, SankeyLink } from '../types'
@@ -88,6 +89,7 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
 
   const selectionTransition = smartTransition(linkSelection, duration)
     .style('fill', (link: SankeyLink<N, L>) => getColor(link, config.linkColor))
+    .style('mask', (link: SankeyLink<N, L>) => getFillPatternValue(getPattern(link, config.linkPattern)))
 
   if (duration) {
     (selectionTransition as Transition<SVGPathElement, SankeyLink<N, L>, SVGGElement, unknown>)

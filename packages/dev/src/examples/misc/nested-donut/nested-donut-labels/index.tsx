@@ -22,7 +22,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     <button onClick={toggleHiddenLabels}>{hideLabels ? 'Show' : 'Hide'} Labels</button>
     <div className={s.flex}>
       {Object.values(NestedDonutSegmentLabelAlignment).map(labelAlignment =>
-        <VisSingleContainer height={500} width={500} data={data}>
+        <VisSingleContainer key={labelAlignment} height={500} width={500} data={data}>
           <VisNestedDonut
             direction='outwards'
             hideOverflowingSegmentLabels={hideLabels}

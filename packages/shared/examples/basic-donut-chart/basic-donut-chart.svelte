@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisSingleContainer, VisDonut, VisBulletLegend } from '@unovis/svelte'
   import { data, DataRecord } from './data'
 

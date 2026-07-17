@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisSingleContainer, VisTreemap, VisBulletLegend, VisTooltip } from '@unovis/svelte'
   import { data, DataRecord } from './data'
   import { colors, Position, Treemap } from '@unovis/ts'
@@ -31,7 +31,7 @@
 </script>
 
 <VisBulletLegend items={legendItems} />
-<VisSingleContainer height={400} data={data}>
+<VisSingleContainer height={400} {data}>
   <VisTooltip
     horizontalPlacement={Position.Center}
     triggers={{ [Treemap.selectors.tile]: getTooltipContent }}
@@ -47,12 +47,6 @@
     enableTileLabelFontSizeVariation={true}
     showTileClickAffordance={true}
     labelInternalNodes={true}
-    tileColor={node => {
-      const datum = node.data.datum
-      const category = datum ? datum.category : node.data.key
-      const entry = categoryColorMap.find(g => g.key === category)
-      return entry ? entry.value : '#008877'
-    }}
   />
 </VisSingleContainer>
 

@@ -21,10 +21,10 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   return (<>
 
     {components.map(// eslint-disable-next-line @typescript-eslint/naming-convention
-      Component => (
-        <div className={s.componentRow}>
-          {[y, yStacked].map(accessors => (
-            <VisXYContainer data={data}>
+      (Component, i) => (
+        <div key={i} className={s.componentRow}>
+          {[y, yStacked].map((accessors, j) => (
+            <VisXYContainer key={j} data={data}>
               <Component x={x} y={accessors} duration={props.duration}/>
               <VisCrosshair/>
             </VisXYContainer>

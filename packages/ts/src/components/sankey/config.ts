@@ -1,16 +1,17 @@
 import { D3ZoomEvent } from 'd3-zoom'
 
 // Config
-import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Utils
-import { getNumber } from 'utils/data'
+import { getNumber } from '@/utils/data'
 
 // Types
-import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { TrimMode, VerticalAlign, FitMode } from 'types/text'
-import { Position } from 'types/position'
-import { Spacing } from 'types/spacing'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { FillPatternType } from '@/styles/patterns'
+import { TrimMode, VerticalAlign, FitMode } from '@/types/text'
+import { Position } from '@/types/position'
+import { Spacing } from '@/types/spacing'
 
 import {
   SankeyInputLink,
@@ -40,6 +41,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   zoomExtent?: [number, number];
   /** Zoom interaction mode. Default: `SankeyZoomMode.XY` */
   zoomMode?: SankeyZoomMode | string;
+  /** Disable modifier keys. Has effect only for `SankeyZoomMode.XY` zoom mode. When `true`, zoom mode is not altered by modifier keys. Default: `false` */
+  disableZoomModifierKeys?: boolean;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
   exitTransitionType?: SankeyExitTransitionType;
   /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
@@ -90,6 +93,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   nodeIcon?: StringAccessor<SankeyNode<N, L>>;
   /** Node color accessor function or value. Default: `undefined` */
   nodeColor?: ColorAccessor<SankeyNode<N, L>>;
+  /** Node fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  nodePattern?: GenericAccessor<FillPatternType, SankeyNode<N, L>>;
   /** Node `fixedValue` accessor function or constant. It defines the node value that will be used to calculate
    * the height of the nodes by d3-sankey (by default the height will be based on aggregated `linkValue`).
    * Default: `n => n.fixedValue`
@@ -101,6 +106,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   // Links
   /** Link color accessor function or value. Default: `l => l.color` */
   linkColor?: StringAccessor<SankeyLink<N, L>>;
+  /** Link fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  linkPattern?: GenericAccessor<FillPatternType, SankeyLink<N, L>>;
   /** Link flow accessor function or value. Default: `l => l.value` */
   linkValue?: NumericAccessor<L>;
   /** Link cursor on hover. Default: `undefined` */
@@ -176,6 +183,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   enableZoom: false,
   zoomExtent: [1, 5] as [number, number],
   zoomMode: SankeyZoomMode.Y,
+  disableZoomModifierKeys: false,
   exitTransitionType: SankeyExitTransitionType.Default,
   enterTransitionType: SankeyEnterTransitionType.Default,
   id: (d: SankeyInputNode, i: number) => (d as { _id: string })._id ?? `${i}`,
@@ -191,6 +199,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   nodeMaxHeight: 100,
   nodePadding: 2,
   nodeColor: (d: SankeyInputNode) => (d as { color: string }).color,
+  nodePattern: undefined,
   nodeFixedValue: (d: SankeyInputNode) => (d as { fixedValue: number }).fixedValue,
   showSingleNode: true,
   nodeCursor: undefined,
@@ -221,6 +230,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   subLabelTextDecoration: undefined,
   linkValue: (d: SankeyInputNode) => (d as { value: number }).value,
   linkColor: (d: SankeyInputNode) => (d as { color: string }).color,
+  linkPattern: undefined,
   linkCursor: undefined,
   onZoom: undefined,
   onLayoutCalculated: undefined,

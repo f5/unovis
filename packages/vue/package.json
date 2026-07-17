@@ -1,7 +1,7 @@
 {
   "name": "@unovis/vue",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, and vanilla TypeScript or JavaScript",
-  "version": "1.6.4",
+  "version": "1.6.7",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
@@ -45,15 +45,16 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
+    "build": "pnpm check && vite build && rm -rf dist/.cache && cp LICENSE README.md package.json ./dist",
     "check": "vue-tsc --noEmit",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "publish:dist": "cd ./dist; npm publish",
     "build:gallery": "vite build --mode gallery",
-    "gallery": "vite"
+    "gallery": "vite",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.4",
+    "@unovis/ts": "1.6.7",
     "vue": "^3"
   },
   "devDependencies": {
@@ -70,11 +71,11 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-typescript2": "^0.31.1",
     "tslib": "^2.3.1",
-    "typescript": "~5.6.3",
-    "vite": "^6.2.4",
+    "typescript": "catalog:",
+    "vite": "catalog:",
     "vite-plugin-css-injected-by-js": "^3.3.0",
     "vite-plugin-dts": "^3.5.3",
     "vue": "^3.5.13",
-    "vue-tsc": "^1.8.10"
+    "vue-tsc": "^2.1.0"
   }
 }

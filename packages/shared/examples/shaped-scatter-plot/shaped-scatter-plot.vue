@@ -25,11 +25,11 @@ const triggers = {
 <template>
   <h2>The Rise and Rise of A.I. Large Language Models</h2>
   <VisBulletLegend :items="legendItems" />
-  <VisXYContainer :data="data" :height="600" :scaleByDomain="true">
-    <VisScatter :x="x" :y="y" :color="color" :shape="shape" :label="label"
+  <VisXYContainer :data :height="600" :scaleByDomain="true">
+    <VisScatter :x :y :color :shape :label
        cursor="pointer" />
     <VisAxis type="x" label="Date Released" :tickFormat="Intl.DateTimeFormat('en', {month: 'long', year: 'numeric',}).format" />
     <VisAxis excludeFromDomainCalculation type="y" label="Billion Parameters" :tickPadding="0" />
-    <VisTooltip :triggers="triggers" />
+    <VisTooltip :triggers />
   </VisXYContainer>
 </template>

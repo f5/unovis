@@ -1,36 +1,48 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
+
+import { useAppContext } from '@src/AppContext'
+
 
 // Styles
 import s from './style.module.css'
 
 export function ThemeSelector (): React.ReactNode {
-  const darkCheckboxRef = useRef<HTMLInputElement>(null)
+  const { isCodeHidden, setIsCodeHidden, isDarkTheme, setIsDarkTheme } = useAppContext()
 
-  useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    if (prefersDark) {
-      document.body.classList.add('theme-dark')
-      if (darkCheckboxRef.current) darkCheckboxRef.current.checked = true
-    }
-  }, [])
+  const onDarkModeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsDarkTheme(e.currentTarget.checked)
+  }
 
-  const toggleTheme = (e: React.FormEvent): void => {
-    document.body.classList.toggle((e.target as Element).id)
+  const onPatternsChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    document.body.classList.toggle('theme-patterns', e.currentTarget.checked)
   }
 
   return (
-    <div onChange={toggleTheme} className={s.themeSelector}>
-      <label className={s.colorTheme}>
-        <input type='checkbox' id='theme-dark' ref={darkCheckboxRef}/>
-        <div className='slider'>
-          <span className='fa-solid fa-sun'/>
-          <span className='fa-solid fa-moon'/>
-        </div>
+    <div className={s.themeSelector}>
+      <label className={s.toolbarItem} title="Toggle light / dark theme">
+        <input
+          type='checkbox'
+          id='theme-dark'
+          checked={isDarkTheme}
+          onChange={onDarkModeChange}
+        />
+        <span className={`fa-solid ${isDarkTheme ? 'fa-moon' : 'fa-sun'}`} aria-hidden />
       </label>
-      <label className={s.patternTheme}>
-        <input type='checkbox' id='theme-patterns'/>
-        <span className='fa-solid fa-magic-wand-sparkles'/>
+      <label className={s.toolbarItem} title="Toggle background patterns">
+        <input type='checkbox' id='theme-patterns' onChange={onPatternsChange}/>
+        <span className='fa-solid fa-magic-wand-sparkles' aria-hidden />
       </label>
+      <button
+        type='button'
+        className={s.toolbarItem}
+        data-on={isCodeHidden ? 'false' : 'true'}
+        title='See Source Code'
+        aria-label={isCodeHidden ? 'Show source code' : 'Hide source code'}
+        aria-pressed={!isCodeHidden}
+        onClick={() => setIsCodeHidden(!isCodeHidden)}
+      >
+        <span className='fa-solid fa-code' aria-hidden />
+      </button>
     </div>
   )
 }

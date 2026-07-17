@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Annotations, AnnotationsConfigInterface } from '@unovis/ts'
+import { Annotations } from '@unovis/ts/components/annotations'
+import { AnnotationsConfigInterface } from '@unovis/ts/components/annotations/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

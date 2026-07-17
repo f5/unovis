@@ -12,7 +12,6 @@ import {
   ColorAccessor,
   TreemapTileFunction,
   TreemapDatum,
-  HierarchyNodeWithValue,
   FitMode,
   TrimMode,
 } from '@unovis/ts'
@@ -99,7 +98,7 @@ export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>
   @Input() tileFunction?: TreemapTileFunction<TreemapDatum<Datum>>
 
   /** Comparator for sorting hierarchy nodes before layout. Receives two `HierarchyNode`s. Default: `undefined`. */
-  @Input() tileSort?: ((a: HierarchyNodeWithValue<Datum>, b: HierarchyNodeWithValue<Datum>) => number) | null
+  @Input() tileSort?: ((a: TreemapNode<Datum>, b: TreemapNode<Datum>) => number) | null
 
   /** Padding passed to D3 treemap layout. Default: `2` */
   @Input() tilePadding?: number

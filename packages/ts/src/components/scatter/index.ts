@@ -2,20 +2,21 @@ import { Selection, select } from 'd3-selection'
 import { max, min } from 'd3-array'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue } from 'utils/data'
-import { getColor } from 'utils/color'
-import { smartTransition } from 'utils/d3'
-import { getCSSVariableValueInPixels } from 'utils/misc'
+import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue } from '@/utils/data'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue } from '@/utils/pattern'
+import { smartTransition } from '@/utils/d3'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
 
 // Types
-import { Spacing } from 'types/spacing'
-import { SymbolType } from 'types/symbol'
-import { NumericAccessor } from 'types/accessor'
-import { Position } from 'types/position'
-import { ContinuousScale } from 'types/scale'
+import { Spacing } from '@/types/spacing'
+import { SymbolType } from '@/types/symbol'
+import { NumericAccessor } from '@/types/accessor'
+import { Position } from '@/types/position'
+import { ContinuousScale } from '@/types/scale'
 
 // Local Types
 import { ScatterPointGroupNode, ScatterPoint } from './types'
@@ -147,21 +148,13 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     removePoints(points.exit<ScatterPoint<Datum>>(), this.xScale, this.yScale, duration)
 
     // Take care of overlapping labels
-    if (this._hasLabels()) {
-      this._resolveLabelOverlap()
-    }
-  }
-
-  private _hasLabels (): boolean {
-    // If label config is not defined, no labels will be shown
-    if (!this.config.label) return false
-
-    // Check if any point in the flattened data has a label
-    const pointDataFlat: ScatterPoint<Datum>[] = flatten(this._pointData)
-    return pointDataFlat.some(d => d._point.label)
+    this._resolveLabelOverlap()
   }
 
   private _resolveLabelOverlap (): void {
+    // If label config is not defined, no labels will be shown
+    if (!this.config.label) return
+
     if (!this.config.labelHideOverlapping) {
       const label = this._points.selectAll<SVGTextElement, ScatterPoint<Datum>>('text')
       label.attr('opacity', null)
@@ -170,7 +163,9 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
 
     cancelAnimationFrame(this._collideLabelsAnimFrameId)
     this._collideLabelsAnimFrameId = requestAnimationFrame(() => {
-      collideLabels(this._points, this.config, this.xScale, this.yScale)
+      // Filter out points that don't have a label
+      const pointsSelectionWithLabels = this._points.filter(d => !!d._point.label)
+      collideLabels(pointsSelectionWithLabels, this.config, this.xScale, this.yScale)
     })
   }
 
@@ -195,10 +190,14 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     const maxSizeXDomain = (this.xScale.invert(maxSizePx) as number) - (this.xScale.invert(0) as number)
     const maxSizeYDomain = Math.abs((this.yScale.invert(maxSizePx) as number) - (this.yScale.invert(0) as number))
 
+    const colorOptions = { colorFn: this._colorFunction }
+    const colorOptionsNoFallback = { ...colorOptions, dontFallbackToCssVar: true }
     return yAccessors.map((y, j) => {
       return data?.reduce<ScatterPoint<Datum>[]>((acc, d, i) => {
         const xValue = getNumber(d, config.x, i)
         const yValue = getNumber(d, y, j)
+        if (xValue == null || yValue == null) return acc
+
         const pointSize = getNumber(d, config.size, i)
         const pointSizeScaled = config.sizeRange ? this._sizeScale(pointSize) : pointSize
         const pointSizeXDomain = (this.xScale.invert(pointSizeScaled) as number) - (this.xScale.invert(0) as number)
@@ -216,12 +215,13 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
               xValue: xValue,
               yValue: yValue,
               sizePx: pointSizeScaled,
-              color: getColor(d, config.color, j),
-              strokeColor: getColor(d, config.strokeColor, j, true),
+              color: getColor(d, config.color, j, config.colorKeys?.[j], colorOptions),
+              mask: getFillPatternValue(getPattern(d, config.pattern, j)),
+              strokeColor: getColor(d, config.strokeColor, j, config.colorKeys?.[j], colorOptionsNoFallback),
               strokeWidthPx: getNumber(d, config.strokeWidth, j),
               shape: getString(d, config.shape, j) as SymbolType,
               label: getString(d, config.label, j),
-              labelColor: getColor(d, config.labelColor, j, true),
+              labelColor: getColor(d, config.labelColor, j, config.colorKeys?.[j], colorOptionsNoFallback),
               labelPosition: getValue(d, config.labelPosition, i) as Position,
               cursor: getString(d, config.cursor, j),
               groupIndex: j,
@@ -233,6 +233,19 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
         return acc
       }, []) ?? []
     })
+  }
+
+  // The D3 datum bound to each point is a `ScatterPoint<Datum>` wrapper, and the
+  // DOM-derived index no longer matches the original row index: off-screen
+  // points and points with missing values are filtered out, and points from
+  // all y-accessor groups share the same selection. We restore the original
+  // row index from `_point.pointIndex` while leaving the datum wrapper intact.
+  // Todo: This can be revisited in Unovis 2.0, but the migration guide should contain a note about it.
+  protected _mapEventDatum (d: ScatterPoint<Datum>): { datum: ScatterPoint<Datum>; index: number } {
+    return {
+      datum: d,
+      index: d._point.pointIndex,
+    }
   }
 
   private _onPointMouseOver (d: ScatterPoint<Datum>, event: MouseEvent): void {

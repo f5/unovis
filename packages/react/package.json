@@ -1,7 +1,7 @@
 {
   "name": "@unovis/react",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
-  "version": "1.6.4",
+  "version": "1.6.7",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
@@ -34,10 +34,11 @@
     "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "tsc": "tsc",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
-    "publish:dist": "cd ./dist; npm publish"
+    "publish:dist": "cd ./dist; npm publish",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.4",
+    "@unovis/ts": "1.6.7",
     "react": ">=16.8.0 || ^17 || ^18 || ^19",
     "react-dom": ">=16.8.0 || ^17 || ^18 || ^19"
   },

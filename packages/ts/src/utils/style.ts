@@ -1,7 +1,21 @@
 import { injectGlobal } from '@emotion/css'
 
-import { kebabCaseToCamel } from 'utils/text'
-import type { KebabToCamelCase, RemovePrefix } from 'utils/type'
+import { kebabCaseToCamel } from '@/utils/text'
+import type { KebabToCamelCase, RemovePrefix } from '@/utils/type'
+import { darkThemeCssSelectors } from '@/utils/theme'
+
+export const isDarkThemeEnabled = (...targetElements: HTMLElement[]): boolean => {
+  const elements = targetElements.length > 0 ? targetElements : [document.documentElement, document.body]
+
+  return (
+    elements.some(element => element.getAttribute('data-theme') === 'dark') ||
+    ['dark-theme', 'theme-dark'].some(
+      (className) => elements.some(element =>
+        element.classList.contains(className)
+      )
+    )
+  )
+}
 
 export function getCssVarNames<
   T extends Record<string, unknown>,
@@ -24,7 +38,7 @@ export function injectGlobalCssVariables<T extends Record<string, string | numbe
 ): void {
   injectGlobal({
     ':root': cssVarsObject,
-    [`body.theme-dark .${componentRootClassName}`]: Object.keys(cssVarsObject)
+    [`${darkThemeCssSelectors} .${componentRootClassName}`]: Object.keys(cssVarsObject)
       .filter(key => key.includes('--vis-dark'))
       .map(key => ({
         [key.replace('--vis-dark', '--vis')]: `var(${key})`,

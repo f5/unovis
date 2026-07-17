@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { StackedBar, StackedBarConfigInterface } from '@unovis/ts'
+import { StackedBar } from '@unovis/ts/components/stacked-bar'
+import { StackedBarConfigInterface } from '@unovis/ts/components/stacked-bar/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

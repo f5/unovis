@@ -4,13 +4,13 @@ import { max, mean } from 'd3-array'
 import { Arc } from 'd3-shape'
 
 // Types
-import { ColorAccessor, NumericAccessor } from 'types/accessor'
-import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { ColorAccessor, NumericAccessor } from '@/types/accessor'
+import { GraphInputLink, GraphInputNode } from '@/types/graph'
 
 // Utils
-import { scoreRectPath } from 'utils/path'
-import { isEmpty, isNil, getNumber, getString } from 'utils/data'
-import { getColor, getHexValue, hexToBrightness } from 'utils/color'
+import { scoreRectPath } from '@/utils/path'
+import { isEmpty, isNil, getNumber, getString } from '@/utils/data'
+import { getColor, getHexValue, hexToBrightness } from '@/utils/color'
 
 // Local Types
 import { GraphNode, GraphCircleLabel, GraphNodeAnimatedElement, GraphNodeAnimationState, GraphNodeShape } from '../../types'
@@ -150,7 +150,7 @@ export function getSideLabelTextColor (label: GraphCircleLabel, context: SVGElem
 }
 
 export function getNodeColor<T> (d: T, colorAccessor: ColorAccessor<T>, index: number): string {
-  return getColor(d, colorAccessor, index, true) ?? null
+  return getColor(d, colorAccessor, index, undefined, { dontFallbackToCssVar: true }) ?? null
 }
 
 export function getNodeIconColor<T> (d: T, colorAccessor: ColorAccessor<T>, index: number, context: SVGElement): string {

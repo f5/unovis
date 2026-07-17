@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { FreeBrush, FreeBrushConfigInterface } from '@unovis/ts'
+import { FreeBrush } from '@unovis/ts/components/free-brush'
+import { FreeBrushConfigInterface } from '@unovis/ts/components/free-brush/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

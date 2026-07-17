@@ -1,7 +1,7 @@
 {
   "name": "@unovis/website",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
-  "version": "1.6.4",
+  "version": "1.6.7",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
@@ -28,14 +28,15 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start --port 9300",
-    "build": "docusaurus build --no-minify",
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 docusaurus build --no-minify",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "dependencies": {
     "@docsearch/core": "^4.5.0",

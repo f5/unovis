@@ -1,0 +1,5 @@
+:global(.point-highlighted) [class*="point-shape"] {
+  stroke: white !important;
+  stroke-width: calc(6px / var(--vis-map-current-zoom-level, 1)) !important;
+  opacity: 1 !important;
+}

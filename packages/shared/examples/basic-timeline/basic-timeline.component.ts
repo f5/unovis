@@ -13,8 +13,8 @@ export class BasicTimelineComponent {
 
   data: DataRecord[] = data
   x = (d: DataRecord): number => d.startDate
-  length = (d: DataRecord): number => d.endDate - d.startDate
-  type = (d: DataRecord): string => d.name
+  lineDuration = (d: DataRecord): number => d.endDate - d.startDate
+  lineRow = (d: DataRecord): string => d.name
   color = (d: DataRecord): string => colorMap[d.type]
 
   legendItems = Object.keys(ProductType).map((name, i) => ({ name, color: colorMap[name] }))

@@ -1,7 +1,7 @@
 {
   "name": "@unovis/angular",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
-  "version": "1.6.4",
+  "version": "1.6.7",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
@@ -31,7 +31,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "generate": "rollup -c; node .autogen.cjs; rm .autogen.cjs",
-    "gallery": "node gallery"
+    "gallery": "node gallery",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "main": "dist/lib/bundles/unovis-angular.umd.js",
   "module": "dist/lib/fesm2015/unovis-angular.mjs",
@@ -45,12 +46,13 @@
     "tslib": "^2.3.1"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.4",
-    "@angular/common": "19 - 21",
-    "@angular/compiler": "19 - 21",
-    "@angular/core": "19 - 21",
+    "@unovis/ts": "1.6.7",
     "rxjs": "^7.5.0",
-    "d3-array": "3.2.4"
+    "@angular/common": "19 - 22",
+    "@angular/compiler": "19 - 22",
+    "@angular/core": "19 - 22",
+    "d3-array": "3.2.4",
+    "d3-geo": "~3.1.1"
   },
   "devDependencies": {
     "@unovis/ts": "workspace:*",
@@ -71,11 +73,11 @@
     "@types/node": "^20.0.0",
     "@types/topojson": "^3.2.3",
     "@types/topojson-specification": "^1.0.2",
-    "d3-brush": "^3.0.0",
-    "d3-drag": "^3.0.0",
     "d3-geo": "^3.1.0",
     "d3-selection": "3.0.0",
-    "d3-zoom": "^3.0.0",
+    "d3-brush": "~3.0.0",
+    "d3-drag": "~3.0.0",
+    "d3-zoom": "~3.0.0",
     "elkjs": "^0.10.0",
     "ng-packagr": "^19.0.0",
     "rollup": "^2.61.1",

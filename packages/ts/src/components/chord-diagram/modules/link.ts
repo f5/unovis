@@ -6,12 +6,13 @@ import { Transition } from 'd3-transition'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Types
-import { Curve } from 'types/curve'
+import { Curve } from '@/types/curve'
 
 // Utils
-import { getColor } from 'utils/color'
-import { smartTransition } from 'utils/d3'
-import { convertLineToArc } from 'utils/path'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue } from '@/utils/pattern'
+import { smartTransition } from '@/utils/d3'
+import { convertLineToArc } from '@/utils/path'
 
 // Local Types
 import { ChordInputLink, ChordInputNode, ChordRibbon, ChordRibbonPoint } from '../types'
@@ -72,6 +73,7 @@ export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
     .style('transition', `fill ${duration}ms`)
     .style('fill', d => getColor(d.data, config.linkColor))
     .style('stroke', d => getColor(d.data, config.linkColor))
+    .style('mask', d => getFillPatternValue(getPattern(d.data, config.linkPattern)))
 
   const transition = smartTransition(selection, duration)
     .style('opacity', 1) as Transition<SVGPathElement, ChordRibbon<N, L>, SVGGElement, unknown>

@@ -4,20 +4,21 @@ import { Axis as D3Axis, axisBottom, axisLeft, axisRight, axisTop } from 'd3-axi
 import { NumberValue } from 'd3-scale'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Types
-import { Position } from 'types/position'
-import { ContinuousScale } from 'types/scale'
-import { Spacing } from 'types/spacing'
-import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAlign } from 'types/text'
+import { Position } from '@/types/position'
+import { ContinuousScale } from '@/types/scale'
+import { Spacing } from '@/types/spacing'
+import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAlign } from '@/types/text'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from 'utils/text'
-import { isEqual } from 'utils/data'
-import { rectIntersect } from 'utils/misc'
-import { getFontWidthToHeightRatio } from 'styles/index'
+import { smartTransition } from '@/utils/d3'
+import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from '@/utils/text'
+import { getCachedComputedTextLength } from '@/utils/text-measure'
+import { isEqual, isFunction } from '@/utils/data'
+import { hideOverlappingLabels } from '@/utils/text-overlap'
+import { getFontWidthToHeightRatio } from '@/styles/index'
 
 // Local Types
 import { AxisType } from './types'
@@ -51,6 +52,9 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   constructor (config?: AxisConfigInterface<Datum>) {
     super()
     if (config) this.setConfig(config)
+
+    this.g.attr('axis-type', this.config.type)
+
     this.axisGroup = this.g.append('g')
     this.gridGroup = this.g.append('g')
       .attr('class', s.grid)
@@ -63,11 +67,12 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     this._renderAxis(axisRenderHelperGroup, 0)
 
+    // Align tick text
+    if (config.tickTextAlign) this._alignTickLabels(axisRenderHelperGroup)
+
     // Store axis raw BBox (without the label) for further label positioning (see _renderAxisLabel)
     this._axisRawBBox = axisRenderHelperGroup.node().getBBox()
 
-    // Align tick text
-    if (config.tickTextAlign) this._alignTickLabels()
     // Render label and store total axis size and required margins
     this._renderAxisLabel(axisRenderHelperGroup)
     this._axisSizeBBox = this._getAxisSize(axisRenderHelperGroup)
@@ -157,44 +162,41 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     this._resolveTickLabelOverlap(selection)
   }
 
-  private _buildAxis (): D3Axis<any> {
-    const { config: { type, position, tickPadding } } = this
+  private _getAxisGen (): D3Axis<NumberValue | Date> {
+    const { config } = this
 
-    const ticks = this._getNumTicks()
-    switch (type) {
+    switch (config.type) {
       case AxisType.X:
-        switch (position) {
-          case Position.Top: return axisTop(this.xScale).ticks(ticks).tickPadding(tickPadding)
-          case Position.Bottom: default: return axisBottom(this.xScale).ticks(ticks).tickPadding(tickPadding)
+        switch (config.position) {
+          case Position.Top: return axisTop(this.xScale)
+          case Position.Bottom: default: return axisBottom(this.xScale)
         }
       case AxisType.Y:
-        switch (position) {
-          case Position.Right: return axisRight(this.yScale).ticks(ticks).tickPadding(tickPadding)
-          case Position.Left: default: return axisLeft(this.yScale).ticks(ticks).tickPadding(tickPadding)
+        switch (config.position) {
+          case Position.Right: return axisRight(this.yScale)
+          case Position.Left: default: return axisLeft(this.yScale)
         }
     }
+  }
+
+  private _buildAxis (): D3Axis<NumberValue | Date> {
+    const { config: { tickPadding, tickSize } } = this
+
+    const tickSizeInner = Array.isArray(tickSize) ? tickSize[0] : tickSize
+    const tickSizeOuter = Array.isArray(tickSize) ? tickSize[1] : tickSize
+    const ticks = this._getNumTicks()
+    const axisGen = this._getAxisGen()
+    axisGen.ticks(ticks).tickPadding(tickPadding).tickSizeInner(tickSizeInner).tickSizeOuter(tickSizeOuter)
+
+    return axisGen
   }
 
   private _buildGrid (): D3Axis<NumberValue | Date> {
     const { config } = this
 
-    let gridGen: D3Axis<NumberValue | Date>
-    switch (config.type) {
-      case AxisType.X:
-        switch (config.position) {
-          case Position.Top: { gridGen = axisTop(this.xScale); break }
-          case Position.Bottom: default: { gridGen = axisBottom(this.xScale); break }
-        }
-        gridGen.tickSize(-this._height)
-        break
-      case AxisType.Y:
-        switch (config.position) {
-          case Position.Right: { gridGen = axisRight(this.yScale); break }
-          case Position.Left: default: { gridGen = axisLeft(this.yScale); break }
-        }
-        gridGen.tickSize(-this._width)
-    }
+    const gridGen = this._getAxisGen()
     gridGen
+      .tickSize(config.type === AxisType.X ? -this._height : -this._width)
       .tickSizeOuter(0)
       .tickFormat(() => '')
 
@@ -268,6 +270,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       .filter(tickValue => tickValues.some((t: number | Date) => isEqual(tickValue, t))) // We use isEqual to compare Dates
       .classed(s.tickLabel, true)
       .classed(s.tickLabelHideable, Boolean(config.tickTextHideOverlapping))
+      .classed(s.tickTextExiting, false)
       .style('fill', config.tickTextColor) as Selection<SVGTextElement, number, SVGGElement, unknown> | Selection<SVGTextElement, Date, SVGGElement, unknown>
 
     // Marking exiting elements
@@ -311,7 +314,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
       if (config.tickTextFitMode === FitMode.Trim) {
         const textElementSelection = select<SVGTextElement, string>(textElement).text(text)
-        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode, true, this._tickTextStyleCached.fontSize, 0.58)
+        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode)
         text = select<SVGTextElement, string>(textElement).text()
       }
 
@@ -343,53 +346,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     cancelAnimationFrame(this._collideTickLabelsAnimFrameId)
     // Colliding labels in the next frame to prevent forced reflow
     this._collideTickLabelsAnimFrameId = requestAnimationFrame(() => {
-      this._collideTickLabels(tickTextSelection)
-    })
-  }
-
-  private _collideTickLabels (selection: Selection<SVGTextElement, number | Date, SVGGElement, unknown>): void {
-    type SVGOverlappingTextElement = SVGTextElement & {
-      _visible: boolean;
-    }
-
-    // Reset visibility of all labels
-    selection.each((d, i, elements) => {
-      const node = elements[i] as SVGOverlappingTextElement
-      node._visible = true
-    })
-
-    // We do three iterations because not all overlapping labels can be resolved in the first iteration
-    const numIterations = 3
-    for (let i = 0; i < numIterations; i += 1) {
-    // Run collision detection and set labels visibility
-      selection.each((d, i, elements) => {
-        const label1 = elements[i] as SVGOverlappingTextElement
-        const isLabel1Visible = label1._visible
-        if (!isLabel1Visible) return
-
-        // Calculate bounding rect of point's label
-        const label1BoundingRect = label1.getBoundingClientRect()
-
-        for (let j = i + 1; j < elements.length; j += 1) {
-          if (i === j) continue
-          const label2 = elements[j] as SVGOverlappingTextElement
-          const isLabel2Visible = label2._visible
-          if (isLabel2Visible) {
-            const label2BoundingRect = label2.getBoundingClientRect()
-            const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, -5)
-            if (intersect) {
-              label2._visible = false
-              break
-            }
-          }
-        }
-      })
-    }
-
-    // Hide the overlapping labels
-    selection.each((d, i, elements) => {
-      const label = elements[i] as SVGOverlappingTextElement
-      select(label).style('opacity', label._visible ? 1 : 0)
+      hideOverlappingLabels(tickTextSelection, { tolerance: -5 })
     })
   }
 
@@ -469,7 +426,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     if (labelTextFitMode === FitMode.Wrap) {
       // For Y-axis, use the chart height as the maximum width before rotation
       const maxWidth = type === AxisType.Y ? this._height : this._width
-      const currentTextWidth = textElement.node().getComputedTextLength()
+      const currentTextWidth = getCachedComputedTextLength(textElement.node())
 
       if (currentTextWidth > maxWidth) {
         wrapSVGText(textElement, maxWidth)
@@ -486,16 +443,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       labelHeight = labelBBox.height
     } else {
       const trimWidth = type === AxisType.X ? labelWidth : labelHeight
-      const styleDeclaration = getComputedStyle(textElement.node())
-      const fontSize = Number.parseFloat(styleDeclaration.fontSize)
-      // Use the default fontWidthToHeightRatio
-      trimSVGText(
-        textElement,
-        trimWidth,
-        this.config.labelTextTrimType as TrimMode,
-        true,
-        fontSize
-      )
+      trimSVGText(textElement, trimWidth, this.config.labelTextTrimType as TrimMode)
+
       const trimmedBBox = textElement.node().getBBox()
       labelWidth = trimmedBBox.width
       labelHeight = trimmedBBox.height
@@ -562,19 +511,28 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  private _alignTickLabels (): void {
+  private _alignTickLabels (axisGroup = this.axisGroup): void {
     const { config: { type, tickTextAlign, tickTextAngle, position } } = this
-    const tickText = this.g.selectAll('g.tick > text')
+    const activeTickTexts = axisGroup.selectAll<SVGTextElement, number | Date>(`g.tick > text:not(.${s.tickTextExiting})`)
+    const ticksData = activeTickTexts.data() as number[] | Date[]
 
-    const textAnchor = textAlignToAnchor(tickTextAlign as TextAlign)
-    const translateX = type === AxisType.X
-      ? 0
-      : this._getYTickTextTranslate(tickTextAlign as TextAlign, position as Position)
+    activeTickTexts.each((_, i, elements) => {
+      const tickTextElement = elements[i] as SVGTextElement
+      const tickDatum = ticksData[i]
+      // Compute the tick's target position from the scale rather than reading the DOM transform,
+      // which would return an interpolated value during a transition.
+      const tickPosition: [number, number] = type === AxisType.X
+        ? [this.xScale(tickDatum as never), 0]
+        : [0, this.yScale(tickDatum as never)]
+      const textAlign = (isFunction(tickTextAlign) ? tickTextAlign(tickDatum, i, ticksData, tickPosition, this._width, this._height) : tickTextAlign) as TextAlign
+      const textAnchor = textAlignToAnchor(textAlign)
+      const translateX = type === AxisType.X ? 0 : this._getYTickTextTranslate(textAlign, position as Position)
 
-    const translateValue = tickTextAngle ? `translate(${translateX},0) rotate(${tickTextAngle})` : `translate(${translateX},0)`
-    tickText
-      .attr('transform', translateValue)
-      .attr('text-anchor', textAnchor)
+      const translateValue = tickTextAngle ? `translate(${translateX},0) rotate(${tickTextAngle})` : `translate(${translateX},0)`
+      select(tickTextElement)
+        .attr('transform', translateValue)
+        .attr('text-anchor', textAnchor)
+    })
   }
 
   private _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {

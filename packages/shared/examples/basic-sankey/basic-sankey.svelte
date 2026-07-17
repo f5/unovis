@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { FitMode } from '@unovis/ts'
   import { VisSingleContainer, VisSankey } from '@unovis/svelte'
   import { data, NodeDatum } from './data'

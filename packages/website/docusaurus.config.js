@@ -102,6 +102,10 @@ const config = {
                 label: 'Gallery',
                 to: '/gallery',
               },
+              {
+                label: 'More Examples',
+                href: 'https://unovis.dev/examples',
+              },
             ],
           },
           {
@@ -114,10 +118,6 @@ const config = {
               {
                 label: 'GitHub Discussions',
                 href: 'https://github.com/f5/unovis/discussions',
-              },
-              {
-                label: 'StackOverflow',
-                href: 'https://stackoverflow.com/questions/tagged/unovis',
               },
               {
                 label: 'Twitter',
@@ -161,8 +161,8 @@ const config = {
         id: 'version-1.6-announcement',
         content:
           '⚠️ Important: Angular version support changes in <a rel="noopener noreferrer" href="/releases/1.7-angular">Unovis 1.7</a>',
-        backgroundColor: '#A6CC74',
-        textColor: '#fff',
+        backgroundColor: '#f4f6fc',
+        textColor: '#161328',
         isCloseable: false,
       },
     }),
@@ -176,6 +176,13 @@ const config = {
         path: 'contributing',
         routeBasePath: 'contributing',
         include: ['**/*.md', '**/*.mdx', '../../**.md'],
+        exclude: [
+          '**/node_modules/**',
+          '../../**/node_modules/**',
+          '../../**/.cache/**',
+          '../../**/dist/**',
+          '../../**/build/**',
+        ],
       },
     ],
     [
@@ -203,8 +210,26 @@ const config = {
       configureWebpack () {
         return {
           // cache: false, // Disable cache to prevent issues with building after updating Unovis packages
+          resolve: {
+            alias: {
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              '@unovis/ts': require('path').resolve(__dirname, '../../packages/ts/dist'),
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              '@unovis/react$': require('path').resolve(__dirname, '../../packages/react/src/index.ts'),
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              '@unovis/react': require('path').resolve(__dirname, '../../packages/react/src'),
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              src: require('path').resolve(__dirname, '../../packages/react/src'),
+            },
+          },
           module: {
             rules: [
+              {
+                test: /\.m?js$/,
+                resolve: {
+                  fullySpecified: false,
+                },
+              },
               {
                 test: /\.module.ts|component.ts|.svelte|-solid.tsx$/,
                 loader: 'file-loader',

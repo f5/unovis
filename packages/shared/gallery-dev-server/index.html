@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unovis · Multi-framework playground</title>
+    <style>
+      html, body { margin: 0; padding: 0; height: 100%; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: #222; }
+      body { display: grid; grid-template-columns: 240px 1fr; height: 100vh; }
+      #sidebar { border-right: 1px solid #e5e5e5; overflow: auto; padding: 12px; background: #fafafa; }
+      #sidebar h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin: 0 0 8px; }
+      #sidebar ul { list-style: none; padding: 0; margin: 0; }
+      #sidebar li a { display: block; padding: 4px 8px; border-radius: 4px; color: #333; text-decoration: none; font-size: 13px; }
+      #sidebar li a:hover { background: #eee; }
+      #sidebar li a.active { background: #e6efff; color: #1957d6; font-weight: 600; }
+      main { overflow: auto; padding: 16px; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      section { border: 1px solid #e5e5e5; border-radius: 6px; padding: 12px; min-width: 0; background: #fff; }
+      section header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+      section header .logo { width: 20px; height: 20px; flex: none; }
+      section h3 { margin: 0; font-size: 14px; font-weight: 600; }
+      section .label { font-size: 11px; color: #888; }
+      /* `position: relative` provides the containing block for examples that
+         use `position: absolute` to stack multiple charts (e.g. dual-axis-chart).
+         Without it, the absolute child escapes to the viewport. */
+      .panel-body { min-height: 320px; position: relative; }
+      /* Same for the inner #vis-container that the vanilla TS examples mount into. */
+      #vis-container { position: relative; }
+      /* Unovis custom elements default to inline-display, which collapses height
+         when the Svelte (and other) wrappers don't set a layout. Force block so
+         the chart's intrinsic height can apply. */
+      vis-xy-container, vis-single-container, vis-component, vis-axis,
+      vis-tooltip, vis-bullet-legend, vis-rolling-pin-legend, vis-flow-legend,
+      vis-leaflet-map, vis-graph, vis-sankey, vis-chord-diagram, vis-donut,
+      vis-nested-donut, vis-topojson-map, vis-treemap { display: block; }
+      .panel-error { color: #b00020; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <aside id="sidebar"></aside>
+    <main>
+      <div class="grid">
+        <section><header><h3>React</h3><span class="label">@unovis/react</span></header><div class="panel-body" id="root-react"></div></section>
+        <section><header><h3>Vue</h3><span class="label">@unovis/vue</span></header><div class="panel-body" id="root-vue"></div></section>
+        <section><header><h3>Solid</h3><span class="label">@unovis/solid</span></header><div class="panel-body" id="root-solid"></div></section>
+        <section><header><h3>Svelte</h3><span class="label">@unovis/svelte</span></header><div class="panel-body" id="root-svelte"></div></section>
+        <section><header><h3>TypeScript</h3><span class="label">@unovis/ts</span></header><div class="panel-body" id="root-ts"><div id="vis-container"></div></div></section>
+        <section><header><h3>Angular</h3><span class="label">@unovis/angular</span></header><div class="panel-body" id="root-angular"></div></section>
+      </div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

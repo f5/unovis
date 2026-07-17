@@ -11,10 +11,12 @@ import {
   ContinuousScale,
   StringAccessor,
   GenericAccessor,
+  FillPatternType,
   Arrangement,
   TimelineRowLabel,
   TimelineRowIcon,
   TextAlign,
+  TrimMode,
   TimelineArrow,
   TimelineLineRenderState,
 } from '@unovis/ts'
@@ -87,6 +89,11 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Timeline item color accessor function. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum>
 
+  /** Array of data color keys. Use to map data keys to colors.
+   * Expected to the same length as the `y` accessors array.
+   * Default: `undefined` */
+  @Input() colorKeys?: string[]
+
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
@@ -118,6 +125,9 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Timeline item duration accessor function. Default: `undefined`. Falls back to the deprecated `length` property */
   @Input() lineDuration?: NumericAccessor<Datum>
 
+  /** Timeline item fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  @Input() pattern?: GenericAccessor<FillPatternType, Datum>
+
   /** Width of the timeline items. Default: `8` */
   @Input() lineWidth?: NumericAccessor<Datum>
 
@@ -136,7 +146,7 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Line start icon arrangement configuration. Controls how the icon is positioned relative to the line.
    * Accepts values from the Arrangement enum: `Arrangement.Start`, `Arrangement.Middle`, `Arrangement.End` or a string equivalent.
    * Default: `Arrangement.Inside` */
-  @Input() lineStartIconArrangement?: GenericAccessor<Arrangement | any, Datum>
+  @Input() lineStartIconArrangement?: GenericAccessor<Arrangement | `${Arrangement}`, Datum>
 
   /** Provide a href to an SVG defined in container's `svgDefs` to display an icon at the end of the line. Default: undefined */
   @Input() lineEndIcon?: StringAccessor<Datum>
@@ -150,7 +160,7 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Line end icon arrangement configuration. Controls how the icon is positioned relative to the line.
    * Accepts values from the Arrangement enum: `Arrangement.Start`, `Arrangement.Middle`, `Arrangement.End` or a string equivalent.
    * Default: `Arrangement.Inside` */
-  @Input() lineEndIconArrangement?: GenericAccessor<Arrangement | any, Datum>
+  @Input() lineEndIconArrangement?: GenericAccessor<Arrangement | `${Arrangement}`, Datum>
 
   /** Configurable Timeline item cursor when hovering over. Default: `undefined` */
   @Input() lineCursor?: StringAccessor<Datum>
@@ -198,7 +208,16 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   @Input() rowMaxLabelWidth?: number
 
   /** Text alignment for labels: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `TextAlign.Right` */
-  @Input() rowLabelTextAlign?: TextAlign | any
+  @Input() rowLabelTextAlign?: TextAlign | `${TextAlign}`
+
+  /** Row label trim mode when width is limited: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
+  @Input() rowLabelTrimMode?: TrimMode | `${TrimMode}`
+
+  /** Row label margin in pixels. Can be a single number or a `[left, right]` tuple. Default: `[0, 5]` */
+  @Input() rowLabelMargin?: number | [number, number]
+
+  /** When component height is larger than the height of all rows, render rows to fill empty space */
+  @Input() rowFillEmptySpace?: boolean
 
 
   @Input() arrows?: TimelineArrow[]
@@ -232,8 +251,8 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   }
 
   private getConfig (): TimelineConfigInterface<Datum> {
-    const { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, type, length, cursor, lineRow, lineDuration, lineWidth, lineCap, lineStartIcon, lineStartIconColor, lineStartIconSize, lineStartIconArrangement, lineEndIcon, lineEndIconColor, lineEndIconSize, lineEndIconArrangement, lineCursor, showEmptySegments, showEmptySegmentsCorrectPosition, rowHeight, alternatingRowColors, showLabels, labelWidth, maxLabelWidth, showRowLabels, rowLabelStyle, rowLabelFormatter, rowIcon, rowLabelWidth, rowMaxLabelWidth, rowLabelTextAlign, arrows, animationLineEnterPosition, animationLineExitPosition, onScroll } = this
-    const config = { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, type, length, cursor, lineRow, lineDuration, lineWidth, lineCap, lineStartIcon, lineStartIconColor, lineStartIconSize, lineStartIconArrangement, lineEndIcon, lineEndIconColor, lineEndIconSize, lineEndIconArrangement, lineCursor, showEmptySegments, showEmptySegmentsCorrectPosition, rowHeight, alternatingRowColors, showLabels, labelWidth, maxLabelWidth, showRowLabels, rowLabelStyle, rowLabelFormatter, rowIcon, rowLabelWidth, rowMaxLabelWidth, rowLabelTextAlign, arrows, animationLineEnterPosition, animationLineExitPosition, onScroll }
+    const { duration, events, attributes, x, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, type, length, cursor, lineRow, lineDuration, pattern, lineWidth, lineCap, lineStartIcon, lineStartIconColor, lineStartIconSize, lineStartIconArrangement, lineEndIcon, lineEndIconColor, lineEndIconSize, lineEndIconArrangement, lineCursor, showEmptySegments, showEmptySegmentsCorrectPosition, rowHeight, alternatingRowColors, showLabels, labelWidth, maxLabelWidth, showRowLabels, rowLabelStyle, rowLabelFormatter, rowIcon, rowLabelWidth, rowMaxLabelWidth, rowLabelTextAlign, rowLabelTrimMode, rowLabelMargin, rowFillEmptySpace, arrows, animationLineEnterPosition, animationLineExitPosition, onScroll } = this
+    const config = { duration, events, attributes, x, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, type, length, cursor, lineRow, lineDuration, pattern, lineWidth, lineCap, lineStartIcon, lineStartIconColor, lineStartIconSize, lineStartIconArrangement, lineEndIcon, lineEndIconColor, lineEndIconSize, lineEndIconArrangement, lineCursor, showEmptySegments, showEmptySegmentsCorrectPosition, rowHeight, alternatingRowColors, showLabels, labelWidth, maxLabelWidth, showRowLabels, rowLabelStyle, rowLabelFormatter, rowIcon, rowLabelWidth, rowMaxLabelWidth, rowLabelTextAlign, rowLabelTrimMode, rowLabelMargin, rowFillEmptySpace, arrows, animationLineEnterPosition, animationLineExitPosition, onScroll }
     const keys = Object.keys(config) as (keyof TimelineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

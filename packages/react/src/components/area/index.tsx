@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Area, AreaConfigInterface } from '@unovis/ts'
+import { Area } from '@unovis/ts/components/area'
+import { AreaConfigInterface } from '@unovis/ts/components/area/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

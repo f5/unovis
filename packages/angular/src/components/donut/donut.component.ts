@@ -1,6 +1,16 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Donut, DonutConfigInterface, ContainerCore, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor } from '@unovis/ts'
+import {
+  Donut,
+  DonutConfigInterface,
+  ContainerCore,
+  VisEventType,
+  VisEventCallback,
+  NumericAccessor,
+  ColorAccessor,
+  GenericAccessor,
+  FillPatternType,
+} from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -82,6 +92,10 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   /** Color accessor function. Default: `undefined` */
   @Input() color?: ColorAccessor<Datum>
 
+  /** Fill pattern accessor. Resolves to a `FillPatternType`.
+   * When unset and `theme-patterns` is active, a default pattern is applied by segment index. Default: `undefined` */
+  @Input() pattern?: GenericAccessor<FillPatternType, Datum>
+
   /** Explicitly set the donut outer radius. Default: `undefined` */
   @Input() radius?: number
 
@@ -138,8 +152,8 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   }
 
   private getConfig (): DonutConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY } = this
-    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY }
+    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, pattern, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY } = this
+    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, pattern, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY }
     const keys = Object.keys(config) as (keyof DonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { Position, Scale, Scatter, colors } from '@unovis/ts'
   import { VisXYContainer, VisScatter, VisAxis, VisTooltip, VisBulletLegend } from '@unovis/svelte'
   import { data, DataRecord, shapes, categories, sumCategories } from './data'
@@ -25,8 +25,8 @@
 <h2>The Rise and Rise of A.I. Large Language Models</h2>
 <VisBulletLegend items={legendItems}/>
 <VisXYContainer {data} height={600} scaleByDomain={true}>
-  <VisScatter {x} {y} {color} {label} {shape} size={15} cursor='pointer'/>
-  <VisAxis type='x' label='Date Released' tickFormat={Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' }).format}/>
-  <VisAxis excludeFromDomainCalculation type='y' label='Billion Parameters' tickPadding={0}/>
+  <VisScatter {x} {y} {color} {label} {shape} size={15} cursor="pointer"/>
+  <VisAxis type="x" label="Date Released" tickFormat={Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' }).format}/>
+  <VisAxis excludeFromDomainCalculation type="y" label="Billion Parameters" tickPadding={0}/>
   <VisTooltip {triggers}/>
 </VisXYContainer>

@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisXYContainer, VisLine, VisBulletLegend, VisAxis, VisXYLabels } from '@unovis/svelte'
   import type { DataRecord, Country } from './data'
   import { countries, data, legendItems } from './data'
@@ -35,11 +35,11 @@
 </div>
 <VisXYContainer duration={0} height={300} xDomain={[1961, 2022]} yDomain={[0, 650]}>
   <VisLine {data} {x} {y} {fallbackValue}/>
-  <VisXYLabels backgroundColor='none' {...labelConfig}/>
-  <VisAxis type='x' numTicks={10}/>
+  <VisXYLabels backgroundColor="none" {...labelConfig}/>
+  <VisAxis type="x" numTicks={10}/>
   <VisAxis
-    type='y'
-    label='National Cereal Production, tons'
+    type="y"
+    label="National Cereal Production, tons"
     tickFormat={d => `${d}${d ? 'M' : ''}`}
     tickValues={[0, 200, 400, fallbackValue, 600]}
   />

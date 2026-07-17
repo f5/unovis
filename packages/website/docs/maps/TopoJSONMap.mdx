@@ -9,6 +9,7 @@ import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper, InputWrapper } from '../wrappers'
 import { data, pointData, heatmapData } from './data'
+import cities from './data/us_cities.json'
 
 export const topoJSONMapProps = () => ({
   name: "TopoJSONMap",
@@ -21,6 +22,13 @@ export const topoJSONMapProps = () => ({
 })
 
 export const wiki = (url) => <a href={`https://en.wikipedia.org/wiki/${url}`}>{link}</a>
+
+export const cityData = cities.slice(0, 50).map(d => ({
+  ...d,
+  normal: Math.floor(Math.random() * 50) + 10,
+  blocked: Math.floor(Math.random() * 20) + 5,
+  warning: Math.floor(Math.random() * 30) + 5,
+}))
 
 export const TopoDoc = (props) => (
   <BrowserOnly>
@@ -111,11 +119,32 @@ points:
 * `pointRadius`
 * `pointStrokeWidth`
 
-### Point Labels
-You can provide labels with the `pointLabel` attribute, which accepts a `StringAccessor` function to
-be called on each `MapPoint` datum.
+### Point Labels `1.6.5`
+Points can have two kinds of labels: central and bottom. The label at the center of the point can be set using the `pointLabel` property. This label will fit into the point, so it is supposed to be short.
 
-For example, consider the following type and accessor function:
+:::note Deprecated
+The `pointLabelPosition` property has been deprecated in version 1.6.5. Use `pointLabel` for central labels and `pointBottomLabel` for bottom labels instead.
+:::
+
+#### Central Label
+The central label is displayed at the center of each point. Use the `pointLabel` property to set it:
+
+```ts
+type MapPoint = {
+  id: string;
+  latitude: number;
+  longitude: number;
+  population: number;
+}
+
+const pointLabel = (d: MapPoint) => `${(d.population / 1000000).toFixed(1)}M`
+```
+
+You can control the color of central labels with the `pointLabelColor` config property. By default, the label color will be set to a CSS variable, depending on the point brightness, either to `--vis-map-point-inner-label-text-color-light` or to `--vis-map-point-inner-label-text-color-dark`.
+
+#### Bottom Label
+The bottom label appears below the point and can be longer. It's configurable via the `pointBottomLabel` property:
+
 ```ts
 type MapPoint = {
   id: string;
@@ -124,63 +153,102 @@ type MapPoint = {
   city: string;
 }
 
-const pointLabel = (d: MapPoint) => d.city
+const pointBottomLabel = (d: MapPoint) => d.city
 ```
 
 <TopoDoc
   {...topoJSONMapProps()}
   hideTabLabels
   data={{ points: data.points }}
-  pointLabel={d => d.city}/>
+  pointBottomLabel={d => d.city}/>
 
-### Point Label Styling
-The following _TopoJSONMap_ properties can further customize your Point Label.
-* `pointLabelPosition`
-* `pointLabelTextBrighnessRatio`
+## Clustered Color Map
+When you have multiple points close together, _TopoJSONMap_ can automatically cluster them for better visualization. Enable clustering by setting the `clustering` property to `true`.
 
-### Example: Custom Points
-export const customData = ({
-  points: data.points.map(d => ({
-    ...d,
-    serverName: `server-${d.city.substring(0,1)}${Math.floor(Math.random() * 10)}`,
-    userCount: Math.floor(Math.random() * 80) + 20,
-    threatLevel: Math.floor(Math.random() * 4)
-  }))
-});
-export const colorLegendItems = [
-  { name: 'Safe', color: 'green' },
-  { name: 'Mild', color: 'yellow' },
-  { name: 'Moderate', color: 'orange'},
-  { name: 'Severe', color: 'red' }
-]
+```ts
+clustering={true}
+```
 
-<BrowserOnly>
-{() => {
-  const { TopoJSONMap } = require('@unovis/ts')
-  return (
-    <TopoDoc
-      {...topoJSONMapProps()}
-      data={customData}
-      mapFitToPoints={true}
-      pointLabel={d => d.serverName}
-      pointRadius={d => d.userCount / 10}
-      pointColor={d => ['green', 'yellow', 'orange', 'red'][d.threatLevel]}
-      showContext="minimal"
-      components={[
-        {name: "BulletLegend", props: { items: colorLegendItems }, key: 'components'},
-        {
-          name: "Tooltip",
-          key: "tooltip",
-          props: {
-            triggers: {
-              [TopoJSONMap.selectors.pointCircle]: d => `Users: ${d.userCount}`
-            }
-          }
-        }
-      ]}/>
-  )
-}}
-</BrowserOnly>
+Points will automatically cluster and uncluster as you zoom in or out. When you click on a cluster, you can expand it to see the individual points (if `clusterExpandOnClick` is enabled) or zoom in until the cluster breaks apart.
+
+### Cluster Color and Radius
+You can customize cluster appearance with the `clusterColor` and `clusterRadius` properties. These properties accept either constant values or accessor functions that will receive `TopoJSONMapClusterDatum` as an argument, which has a `clusterPoints` property containing all points within that cluster.
+
+```ts
+clusterColor="#4A46B5"
+clusterRadius={(d) => 10 + 3 * Math.sqrt(d.clusterPoints.length)}
+```
+
+The default cluster color comes from the `--vis-map-cluster-default-fill-color` CSS variable.
+
+### Cluster Labels `1.6.5`
+By default, clusters display the number of contained points in the center. You can override this with the `clusterLabel` property. The `clusterBottomLabel` property allows you to set the bottom label.
+
+```ts
+clusterLabel={d => `${d.pointCount}`}
+clusterBottomLabel={d => `${d.clusterPoints.length} locations`}
+```
+
+Similar to point labels, you can set the color of cluster labels with the `clusterLabelColor` config property.
+
+### Clustering Distance  
+Control how close points need to be to cluster together with the `clusteringDistance` property. The value represents the radius in pixels within which points will be grouped into a cluster.
+
+```ts
+clusteringDistance={50}
+```
+
+### Expand on Click
+If you want clusters to never expand on click, you can set `clusterExpandOnClick` to `false`. In that case, when you click on a cluster, the map will keep zooming in until the zoom level is high enough for the cluster to break.
+
+```ts
+clusterExpandOnClick={false}
+```
+
+### Color Map with Clusters
+If you're using `TopoJSONMapPointShape.Circle` or `TopoJSONMapPointShape.Ring` as a point shape, and your points have multiple values of the same kind associated with them, you can show the distribution of those values as a tiny pie or donut diagram.
+
+Let's say you want to show server status with different categories, and your data point looks like:
+```ts
+type MapPoint = {
+  ...
+  normal: number;
+  blocked: number;
+  warning: number;
+}
+```
+
+You can use the `colorMap` property to define the color (and custom CSS class if necessary) for the corresponding pie/donut segments:
+```ts
+const colorMap = {
+  normal: { color: '#26BDA4' },
+  blocked: { color: '#9876AA' },
+  warning: { color: '#FFD651', className: 'warning' },
+}
+```
+
+When clustering is enabled with a color map, clusters automatically aggregate the values from all contained points. Each cluster is rendered as a donut chart, where each segment represents the sum of values for that category across all points in the cluster. The thickness of the donut ring can be customized using the `clusterRingWidth` property for clusters and `pointRingWidth` for individual points.
+
+<TopoDoc
+  {...topoJSONMapProps()}
+  data={{ points: cityData.slice(0, 30) }}
+  clustering={true}
+  height={400}
+  mapFitToPoints={true}
+  pointBottomLabel={(d) => d.city}
+  pointRadius={(d) => Math.sqrt((d.normal + d.blocked + d.warning) / 3) + 5}
+  clusterRadius={(d) => 10 + 3 * Math.sqrt(d.clusterPoints.length)}
+  clusterLabel={d => `${d.pointCount}`}
+  clusterBottomLabel={d => `${d.clusterPoints.length} locations`}
+  clusterRingWidth={2}
+  pointRingWidth={2}
+  colorMap={{
+    normal: { color: '#26BDA4' },
+    blocked: { color: '#9876AA' },
+    warning: { color: '#FFD651', className: 'warning' },
+  }}
+  excludeTabs
+/>
 
 ## Links
 A minimum viable data type of the objects provided to the `links` attribute contains the keys
@@ -206,6 +274,147 @@ You can further customize the map _Links_ with the following properties:
 * `linkColor`
 * `linkCursor`
 * `linkWidth`
+
+## Flow Map
+_TopoJSONMap_ can display animated particles flowing between points on the map, similar to how data flows in a network. This is useful for visualizing connections, data transfers, or any directional relationships between locations.
+
+### Data
+To use flow animations, provide flow data in the `links` array. Each flow should have source and target coordinates:
+
+```ts
+type FlowDatum = {
+  sourceLongitude: number;
+  sourceLatitude: number;
+  targetLongitude: number;
+  targetLatitude: number;
+}
+```
+
+You can also use custom accessor functions by providing them to: `sourceLongitude`, `sourceLatitude`, `targetLongitude`, and `targetLatitude`.
+
+To enable animated particles, set `enableFlowAnimation` to `true`:
+
+```ts
+const data = {
+  points: [
+    { id: 'NYC', latitude: 40.7128, longitude: -74.0060 },
+    { id: 'LON', latitude: 51.5074, longitude: -0.1278 },
+  ],
+  links: [
+    {
+      sourceLongitude: -74.0060,
+      sourceLatitude: 40.7128,
+      targetLongitude: -0.1278,
+      targetLatitude: 51.5074,
+    }
+  ]
+}
+
+<TopoJSONMap
+  data={data}
+  enableFlowAnimation={true}
+/>
+```
+
+### Particles
+_TopoJSONMap_ allows you to customize the appearance and behavior of the animated particles:
+
+#### Color
+The color of the particles can be set using the `flowParticleColor` property:
+```ts
+flowParticleColor="#54bf31"
+```
+
+#### Radius
+You can change the radius of the particles with the `flowParticleRadius` property:
+```ts
+flowParticleRadius={3}
+```
+
+#### Speed
+The speed of the particles can be controlled using the `flowParticleSpeed` property. The value is in arbitrary angular units; we recommend it to be in the range of [0, 0.2].
+```ts
+flowParticleSpeed={0.08}
+```
+
+#### Density
+The `flowParticleDensity` property sets the density/frequency of the flying particles. The recommended range is [0, 1].
+```ts
+flowParticleDensity={0.6}
+```
+
+### Flow Source Points
+You can customize the appearance of the flow source points:
+
+#### Color
+The color of the flow source can be customized using the `sourcePointColor` configuration property:
+```ts
+sourcePointColor="#4A46B5"
+```
+
+#### Radius
+The `sourcePointRadius` property sets the radius of the source point:
+```ts
+sourcePointRadius={5}
+```
+
+#### Events
+The flow source points have configurable callback functions for mouse events:
+
+```ts
+/** Flow source point click callback function. Default: `undefined` */
+onSourcePointClick: (f: FlowDatum, x: number, y: number, event: MouseEvent) => void;
+/** Flow source point mouse over callback function. Default: `undefined` */
+onSourcePointMouseEnter: (f: FlowDatum, x: number, y: number, event: MouseEvent) => void;
+/** Flow source point mouse leave callback function. Default: `undefined` */
+onSourcePointMouseLeave: (f: FlowDatum, event: MouseEvent) => void;
+```
+
+### Example: Flow Map with Links
+You can display both static links (lines) and animated flow particles simultaneously:
+
+export const flowMapData = {
+  points: [
+    { id: 'NYC', latitude: 40.7128, longitude: -74.0060 },
+    { id: 'LON', latitude: 51.5074, longitude: -0.1278 },
+    { id: 'TYO', latitude: 35.6762, longitude: 139.6503 },
+  ],
+  links: [
+    {
+      source: 'NYC',
+      target: 'LON',
+      sourceLongitude: -74.0060,
+      sourceLatitude: 40.7128,
+      targetLongitude: -0.1278,
+      targetLatitude: 51.5074,
+    },
+    {
+      source: 'LON',
+      target: 'TYO',
+      sourceLongitude: -0.1278,
+      sourceLatitude: 51.5074,
+      targetLongitude: 139.6503,
+      targetLatitude: 35.6762,
+    },
+  ]
+}
+
+<TopoDoc
+  {...topoJSONMapProps()}
+  data={flowMapData}
+  enableFlowAnimation={true}
+  flowParticleColor="#54bf31"
+  flowParticleSpeed={0.05}
+  flowParticleRadius={2}
+  flowParticleDensity={0.8}
+  linkColor={'#607D8B'}
+  linkWidth={2}
+  sourcePointRadius={4}
+  pointRadius={8}
+  pointColor="#4A46B5"
+  mapFitToPoints={true}
+  excludeTabs
+/>
 
 ## Areas
 To work with features in the _TopoJSONMap_, all you need is a unique `id` which is defined in the
@@ -388,6 +597,124 @@ TopoJSONs currently available in `@unovis/ts/maps`:
   </tbody>
 </table>
 
+## Tooltip
+### Points
+_TopoJSONMap_ accepts a _Tooltip_ instance as a config property. If you want to add a tooltip to the points and clusters,
+you can use the `[TopoJSONMap.selectors.point]` selector in your _Tooltip_ configuration for both.
+
+<BrowserOnly>
+{() => {
+  const { TopoJSONMap } = require('@unovis/ts')
+  return (
+  <TopoDoc
+    {...topoJSONMapProps()}
+    data={{ points: data.points.slice(0, 20) }}
+    pointBottomLabel={d => d.city}
+    showContext="minimal"
+    components={[
+      {
+        name: "Tooltip",
+        key: "tooltip",
+        props: {
+          triggers: {
+            [TopoJSONMap.selectors.point]: (d) => {
+              if (d.isCluster) return `${d.clusterPoints.length} locations`
+              const city = d.city || d.properties?.city || d.id
+              return city ? `<strong>${city}</strong>` : null
+            }
+          }
+        }
+      }
+    ]}
+    excludeTabs
+  />
+  )
+}}
+</BrowserOnly>
+
+### Clustered points with color map
+When using clustering with a color map, you can show detailed information about the distribution of values in the tooltip:
+
+<BrowserOnly>
+{() => {
+  const { TopoJSONMap } = require('@unovis/ts')
+  return (
+    <TopoDoc
+      {...topoJSONMapProps()}
+      data={{ points: cityData.slice(0, 30) }}
+      clustering={true}
+      mapFitToPoints={true}
+      pointBottomLabel={(d) => d.city}
+      pointRadius={(d) => Math.sqrt((d.normal + d.blocked + d.warning) / 3) + 5}
+      clusterRadius={(d) => 10 + 3 * Math.sqrt(d.clusterPoints.length)}
+      clusterRingWidth={2}
+      pointRingWidth={2}
+      colorMap={{
+        normal: { color: '#26BDA4' },
+        blocked: { color: '#9876AA' },
+        warning: { color: '#FFD651' },
+      }}
+      showContext="minimal"
+      components={[
+        {
+          name: "Tooltip",
+          key: "tooltip",
+          props: {
+            triggers: {
+              [TopoJSONMap.selectors.point]: (d) => {
+                if (d.isCluster && d.clusterPoints) {
+                  const normal = d.clusterPoints.reduce((sum, p) => sum + (p.properties?.normal || p.normal || 0), 0)
+                  const blocked = d.clusterPoints.reduce((sum, p) => sum + (p.properties?.blocked || p.blocked || 0), 0)
+                  const warning = d.clusterPoints.reduce((sum, p) => sum + (p.properties?.warning || p.warning || 0), 0)
+                  return `<strong>${d.clusterPoints.length} locations</strong><br/>Normal: ${normal}<br/>Blocked: ${blocked}<br/>Warning: ${warning}`
+                }
+                const city = d.city || d.properties?.city || d.id
+                const normal = d.properties?.normal || d.normal || 0
+                const blocked = d.properties?.blocked || d.blocked || 0
+                const warning = d.properties?.warning || d.warning || 0
+                return `<strong>${city}</strong><br/>Normal: ${normal}<br/>Blocked: ${blocked}<br/>Warning: ${warning}`
+              }
+            }
+          }
+        }
+      ]}
+      excludeTabs
+    />
+  )
+}}
+</BrowserOnly>
+
+### Map areas
+If you have area data on your map, you can make the tooltip work with it by using the `[TopoJSONMap.selectors.feature]`
+selector. The tooltip callback will be called when hovering over map features (areas).
+
+<BrowserOnly>
+{() => {
+  const { TopoJSONMap } = require('@unovis/ts')
+  return (
+    <TopoDoc
+      {...topoJSONMapProps()}
+      data={{ areas: data.points.map(d => ({ id: d.id.substring(0, 2) })) }}
+      showContext="minimal"
+      components={[
+        {
+          name: "Tooltip",
+          key: "tooltip",
+          props: {
+            triggers: {
+              [TopoJSONMap.selectors.feature]: (d) => {
+                return d.properties?.name ? `<span>${d.properties.name}</span>` : null
+              }
+            }
+          }
+        }
+      ]}
+      excludeTabs
+    />
+  )
+}}
+</BrowserOnly>
+
 ## Events
 ```ts
 import { TopoJSONMap } from '@unovis/ts'
@@ -402,25 +729,20 @@ const events = {
 The _TopoJSONMap_ component supports additional styling via CSS variables that you can define for
 your visualization container.
 
-<details open>
-  <summary>All supported CSS variables and their default values</summary>
-  <CodeBlock language="css">
-{`--vis-map-feature-color: #dce3eb;
---vis-map-boundary-color: #ffffff;
---vis-map-point-label-text-color-dark: #5b5f6d;
---vis-map-point-label-text-color-light: #fff;
---vis-map-point-label-font-weight: 600;
---vis-map-point-label-font-size: 12px;
---vis-map-point-label-font-family
- 
-/* Dark Theme */
---vis-dark-map-feature-color: #5b5f6d;
---vis-dark-map-boundary-color: #2a2a2a;
---vis-dark-map-point-label-text-color-dark: #fff;
---vis-dark-map-point-label-text-color-light:#5b5f6d;
-`}
-  </CodeBlock>
-</details>
+<BrowserOnly>
+{() => {
+  const { TopoJSONMap } = require('@unovis/ts')
+  const cssVars = TopoJSONMap.selectors.cssVarDefaults || {}
+  return (
+    <details open>
+      <summary>All supported CSS variables and their default values</summary>
+      <CodeBlock language="css">
+{Object.entries(cssVars).map(([key, value]) => `${key}: ${value};`).join('\n')}
+      </CodeBlock>
+    </details>
+  )
+}}
+</BrowserOnly>
 
 ## Component Props
 <PropsTable name="VisTopoJSONMap"/>

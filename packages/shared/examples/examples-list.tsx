@@ -34,6 +34,13 @@ export const examples: ExampleCollection[] = [
     ],
   },
   {
+    title: 'Boxplot',
+    description: '',
+    examples: [
+      require('./basic-boxplot').default,
+    ],
+  },
+  {
     title: 'Scatter Plots',
     description: '',
     examples: [
@@ -74,6 +81,7 @@ export const examples: ExampleCollection[] = [
     description: '',
     examples: [
       require('./basic-donut-chart').default,
+      require('./basic-radial-bar-chart').default,
       require('./hierarchical-chord-diagram').default,
       require('./sunburst-nested-donut').default,
     ],
@@ -83,6 +91,13 @@ export const examples: ExampleCollection[] = [
     description: '',
     examples: [
       require('./treemap').default,
+    ],
+  },
+  {
+    title: 'Heatmaps',
+    description: '',
+    examples: [
+      require('./github-style-heatmap').default,
     ],
   },
   {
@@ -99,6 +114,7 @@ export const examples: ExampleCollection[] = [
     examples: [
       require('./basic-annotations').default,
       require('./crosshair-stacked-bar').default,
+      require('./synced-crosshairs').default,
       require('./brush-grouped-bar').default,
       require('./free-brush-scatters').default,
       require('./plotband-plotline').default,

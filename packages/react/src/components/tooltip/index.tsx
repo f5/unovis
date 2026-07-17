@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Tooltip, TooltipConfigInterface } from '@unovis/ts'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { TooltipConfigInterface } from '@unovis/ts/components/tooltip/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

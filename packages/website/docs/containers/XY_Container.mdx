@@ -7,7 +7,7 @@ description: Learn how to use XY Container
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { generateDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput } from '../wrappers'
+import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from '../wrappers'
 import './styles.css'
 
 export const component = (name, props, override = {}) => ({
@@ -52,7 +52,7 @@ There is no limit to the number of _XY Components_ your container can have.
 
 <XYWrapper {...xyContainerProps()}
   components={[
-    component('StackedBar', { y: d => d.y + (-5), barWidth: 5, color: '#E2203A' }),
+    component('StackedBar', { y: d => d.y + (-5), barWidth: 35, color: '#72a5ff' }),
     component('Line', { y: [d => d.y1 + d.y4, d => d.y2 * 3, d => d.y4 * 4]}, { y: { key: 'y', value: 'multipleY', stringLiteral: false }}),
     component('Scatter', { y: d => d.x, shape: d => Math.random() > 0.5 ? 'triangle' : 'circle'}, { y: { key: 'y', value: 'x'}})
     ]}
@@ -124,6 +124,17 @@ The `xRange` and `yRange` determine the screen space your chart contains. By def
 fit to its container. Provide `xRange` with values [`xStart`, `width`] and `yRange` with [`yStart`, `height`]
 to override the default configuration.
 
+### Automatic Margins
+By default `autoMargin` is `true`: the container measures the X and Y axes and reserves the margin needed so
+their tick labels and titles aren't clipped. Set it to `false` when you'd rather control the spacing yourself
+through the [`margin`](#margin) property — for example, to line several charts up on a shared left edge:
+
+```tsx
+<VisXYContainer data={data} autoMargin={false} margin={{ left: 60, bottom: 30 }}>
+  {/* … */}
+</VisXYContainer>
+```
+
 ## Domain
 You can change the domain of your data with the `xDomain` and `yDomain` properties to configure which values your `XY Component` should display.
 The result will show all data that is in this range- excluding any values that fall outside of the range, and occupying any missing values with white space.
@@ -152,8 +163,8 @@ These properties accept a number array in the form `[number, number]` or more ty
 #### yDomainMaxConstraint: `[undefined, 10]`
 <XYWrapper {...xyContainerProps('Scatter')} data={constraintData} yDomainMaxConstraint={[undefined, 15]} excludeTabs/>
 
-### `preventEmptyDomain`
-When the calculated domain is empty (when domain's min and max values are equal), use the `preventEmptyDomain`
+### Single Data Point
+When the calculated domain is empty (when you have only a single data element and the domain's min and max values are equal), use the `preventEmptyDomain`
 property to extend it by `+1`. This may be useful when you have no data or a single data point and you
 want to show the empty space. The possible values are:
 *  `true`: automatically extend the domain by `+1` when the domain is empty (domain start equals domain end);
@@ -197,7 +208,7 @@ const yScale = Scale.scalePow().exponent(2)
 }}
 </BrowserOnly>
 
-## scaleByDomain
+## Dynamic Y Scale
 You can also set the `yScale` domain dynamically based on the current `xDomain`, meaning that only visible data will be used in the domain calculation.
 Take a look at the example below. The `xDomain` configuration property there is not set, the chart displays the whole dataset and the Y axis shows ticks from 0 to 150.
 
@@ -220,9 +231,139 @@ It comes in hand when you're updating xDomain programmatically using, for exampl
 You can set `yDirection` to change the direction of data along the Y axis. Supported values are `Direction.North` and `Direction.South`.
 <XYWrapper {...xyContainerProps()} yDirection='south' showContext='container'/>
 
+## Color
+Use the `color` property to give every component inside the container a single _color function_ of type
+`(key: string | number) => string`. Each component resolves its color through this function, passing either a
+data **color key** (from the component's `colorKeys` property) or, as a fallback, the series index. Supplying
+one `color` function at the container level — and reusing it across other containers and the `BulletLegend` —
+is how you keep a category's color consistent across multiple charts.
+
+```ts
+import { Scale } from '@unovis/ts'
+const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a'])
+```
+
+In the example below the _StackedBar_'s three series are labeled with `colorKeys`, and the container's
+`color` function maps each key to a color:
+
+<BrowserOnly>
+{() => {
+  const { Scale } = require('@unovis/ts')
+  const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a'])
+  return (
+    <XYWrapper
+      {...xyContainerProps('StackedBar')}
+      containerProps={{ color }}
+      components={[
+        component('StackedBar', { y: [d => d.y, d => d.y1, d => d.y2], colorKeys: ['aws', 'azure', 'github'] }),
+        { name: 'Axis', props: { type: 'x' }, key: 'xAxis' },
+        { name: 'Axis', props: { type: 'y' }, key: 'yAxis' },
+      ]}
+      excludeTabs
+    />
+  )
+}}
+</BrowserOnly>
+
+For the full walkthrough — color keys, building a color function, syncing the legend and tooltip, and
+overriding the default palette — see
+[Synchronizing Colors Across Charts](/docs/guides/theming#synchronizing-colors-across-charts) in the
+_Theming_ guide.
+
+## Animation
+Set `duration` (in milliseconds) on the container to control how long transitions take when the data or
+configuration updates. It applies to every component inside the container. The top chart below animates over
+`1500`ms while the bottom one uses `duration={0}` for instant updates — press the toggle to alternate the data:
+
+<DynamicXYWrapper
+  {...xyContainerProps('Line')}
+  duration={1500}
+  primaryData={generateDataRecords(20)}
+  secondaryData={generateDataRecords(20)}
+  exampleProps={{ duration: 0 }}
+  excludeTabs/>
+
+## Tooltip
+Attach a [Tooltip](/docs/auxiliary/Tooltip) to show details on hover. Provide a `triggers` map that pairs a
+component's selector with a template function returning an HTML string:
+
+<BrowserOnly>
+{() => {
+  const { StackedBar } = require('@unovis/ts')
+  return (
+    <XYWrapper
+      {...xyContainerProps('StackedBar')}
+      components={[
+        component('StackedBar'),
+        { name: 'Axis', props: { type: 'x' }, key: 'xAxis' },
+        { name: 'Axis', props: { type: 'y' }, key: 'yAxis' },
+        { name: 'Tooltip', props: { triggers: { [StackedBar.selectors.bar]: d => `Value: ${Math.round(d.datum.y)}` } }, key: 'tooltip' },
+      ]}
+      excludeTabs
+    />
+  )
+}}
+</BrowserOnly>
+
+See the [Tooltip](/docs/auxiliary/Tooltip) docs for positioning, show/hide delays, and custom rendering.
+
+## Crosshair
+A [Crosshair](/docs/auxiliary/Crosshair) renders a vertical line that follows the pointer and marks the
+nearest value on every series — ideal for line and area charts. Provide a `template` to show a tooltip
+alongside it:
+
+<XYWrapper
+  {...xyContainerProps('Line')}
+  showAxes
+  components={[
+    component('Line', { y: [d => d.y, d => d.y1, d => d.y2] }),
+    { name: 'Crosshair', props: { template: d => `x: ${d.x}` }, key: 'crosshair' },
+  ]}
+  excludeTabs/>
+
+See the [Crosshair](/docs/auxiliary/Crosshair) docs for custom accessors, show/hide behavior, and styling.
+
+## Annotations
+Use [Annotations](/docs/auxiliary/Annotations) to overlay text labels and callouts. Pass an `items` array;
+each item is positioned in data coordinates or with `'%'` strings and can point at a `subject`:
+
+<XYWrapper
+  name="Annotations"
+  configKey="annotations"
+  data={[6, 8, 7, 9, 6, 3, 2, 7, 4, 6].map((y, x) => ({ x, y }))}
+  height={250}
+  showAxes
+  containerProps={{ yDomain: [0, 12] }}
+  components={[component('Area', { curveType: 'linear' })]}
+  items={[
+    { x: '1%', y: '3%', content: { text: 'Annotation title', fontSize: 20 } },
+    { x: '60%', y: '15%', content: 'Callout label', subject: { x: '78%', y: '41%' } },
+  ]}
+  excludeTabs/>
+
+See the [Annotations](/docs/auxiliary/Annotations) docs for the full set of `AnnotationItem` options.
+
+## Accessibility
+Pass a descriptive `ariaLabel` to set an `aria-label` on the chart's container `div`, giving screen-reader
+users a text summary of the visualization:
+
+```tsx
+<VisXYContainer data={data} ariaLabel="Monthly revenue by region, in US dollars">
+  {/* … */}
+</VisXYContainer>
+```
+
 ## SVG Defs
-You can use the `svgDefs` property to define custom fill patterns for your components.
-See our <a href="/docs/guides/tips-and-tricks#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
+You can use the `svgDefs` property to inject custom SVG definitions — gradients, patterns, clip paths, and
+filters — that your components can reference by `id`. See our
+<a href="/docs/guides/theming#gradient-fills-with-svg-defs">Theming guide</a>, or the
+[Gradient Fills](/docs/guides/theming#gradient-fills-with-svg-defs) and
+[SVG Filters](/docs/guides/theming#svg-filters-glow-bevel-3d) sections of the _Theming_ guide, for details.
+
+:::tip
+For ready-made stripe, dot, and hatch fills you don't need custom defs — use a component's `pattern` accessor
+or the `theme-patterns` class. See [Patterns](/docs/guides/theming#patterns) in the _Theming_ guide.
+:::
 
 ## Component Props
 <PropsTable name="VisXYContainer"/>

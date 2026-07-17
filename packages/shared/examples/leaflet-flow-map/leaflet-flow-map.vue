@@ -27,11 +27,11 @@ const pointColor = '#435647'
 </script>
 
 <template>
-  <VisLeafletFlowMap height="50vh" :data="data" :style="style" :fitViewPadding="fitViewPadding"
-    :pointLatitude="pointLatitude" :pointLongitude="pointLongitude" :pointBottomLabel="pointBottomLabel"
-    :sourceLatitude="sourceLatitude" :sourceLongitude="sourceLongitude" :targetLatitude="targetLatitude"
-    :targetLongitude="targetLongitude" :flowParticleDensity="flowParticleDensity" :flowParticleRadius="flowParticleRadius"
-    :flowParticleColor="flowParticleColor" :pointRadius="pointRadius" :pointColor="pointColor" :attribution="[
+  <VisLeafletFlowMap height="50vh" :data :style :fitViewPadding
+    :pointLatitude :pointLongitude :pointBottomLabel
+    :sourceLatitude :sourceLongitude :targetLatitude
+    :targetLongitude :flowParticleDensity :flowParticleRadius
+    :flowParticleColor :pointRadius :pointColor :attribution="[
       `<a href=' https://www.maptiler.com/copyright/' target='_blank'>MapTiler</a>`,
       `<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>`
     ]" />

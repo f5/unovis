@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType, Annotations } from '@unovis/ts'
+import { XYContainer } from '@unovis/ts/containers/xy-container'
+import { XYContainerConfigInterface } from '@unovis/ts/containers/xy-container/config'
+import { XYComponentCore } from '@unovis/ts/core/xy-component'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { Crosshair } from '@unovis/ts/components/crosshair'
+import { Axis } from '@unovis/ts/components/axis'
+import { AxisType } from '@unovis/ts/components/axis/types'
+import { Annotations } from '@unovis/ts/components/annotations'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
@@ -11,7 +18,7 @@ import { VisComponentElement } from 'src/types/dom'
 export type VisXYContainerProps<Datum> = XYContainerConfigInterface<Datum> & {
   data?: Datum[];
   className?: string;
-  style?: React.CSSProperties;
+  style?: React.CSSProperties | Record<`--${string}`, string | number>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -25,7 +32,8 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
   const getConfig = (): XYContainerConfigInterface<Datum> => ({
     components: Array
       .from(container.current?.querySelectorAll<VisComponentElement<XYComponentCore<Datum>>>('vis-component') ?? [])
-      .map(c => c.__component__),
+      .map(c => c.__component__)
+      .filter(Boolean) as XYComponentCore<Datum>[],
     tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
     crosshair: container.current?.querySelector<VisComponentElement<Crosshair<Datum>>>('vis-crosshair')?.__component__,
     annotations: container.current?.querySelector<VisComponentElement<Annotations>>('vis-annotations')?.__component__,

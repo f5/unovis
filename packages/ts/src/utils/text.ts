@@ -1,16 +1,17 @@
 import { Selection } from 'd3-selection'
 import { sum } from 'd3-array'
-import striptags from 'striptags'
 
 // Types
-import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from 'types/text'
+import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from '@/types/text'
 
 // Utils
-import { flatten, isArray, merge } from 'utils/data'
-import { getTextAnchorFromTextAlign } from 'types/svg'
+import { flatten, isArray, merge } from '@/utils/data'
+import { getTextAnchorFromTextAlign } from '@/types/svg'
+import { estimateStringPixelLength, getCachedComputedTextLength, getPreciseStringLengthPx } from '@/utils/text-measure'
+import { toPx } from '@/utils/to-px'
 
 // Styles
-import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT, UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT } from 'styles/index'
+import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT, UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT } from '@/styles/index'
 
 export const textAlignToAnchor = (textAlign: TextAlign): string | null => {
   switch (textAlign) {
@@ -157,7 +158,7 @@ export function wrapSVGText (
 
     const tspanText = `${tspanContent}${word}`
     tspan.text(tspanText)
-    const tspanWidth = tspan.node().getComputedTextLength()
+    const tspanWidth = getCachedComputedTextLength(tspan.node())
     if (tspanWidth > width) {
       tspan.text(tspanContent.trim())
 
@@ -176,7 +177,7 @@ export function wrapSVGText (
  * @param {Selection<SVGTextElement, any, SVGElement, any>} svgTextSelection - The D3 selection of the SVG text element to be trimmed.
  * @param {number} [maxWidth=50] - The maximum width of the text element.
  * @param {TrimMode} [trimType=TrimMode.Middle] - The type of trim (start, middle, or end).
- * @param {boolean} [fastMode=true] - Whether to use a fast estimation method for text length calculation.
+ * @param {boolean} [fastMode=false] - Whether to use a fast estimation method for text length calculation.
  * @param {number} [fontSize=0] - The font size of the text.
  * @param {number} [fontWidthToHeightRatio=getFontWidthToHeightRatio()] - The font width to height ratio.
  * @returns {boolean} True if the text was trimmed, false otherwise.
@@ -185,62 +186,50 @@ export function trimSVGText (
   svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>,
   maxWidth = 50,
   trimType = TrimMode.Middle,
-  fastMode = true,
-  fontSize = +window.getComputedStyle(svgTextSelection.node())?.fontSize || 0,
+  fastMode = false,
+  fontSize = toPx(window.getComputedStyle(svgTextSelection.node())?.fontSize || UNOVIS_TEXT_DEFAULT.fontSize),
   fontWidthToHeightRatio = getFontWidthToHeightRatio()
 ): boolean {
   const text = svgTextSelection.text() || ''
   const textLength = text.length
+  if (!textLength) return false
 
-  const textWidth = fastMode ? fontSize * textLength * fontWidthToHeightRatio : svgTextSelection.node().getComputedTextLength()
-  const tolerance = 1.1
-  const maxCharacters = Math.ceil(textLength * maxWidth / (tolerance * textWidth))
-  if (maxCharacters < textLength) {
-    svgTextSelection.text(trimString(text, maxCharacters, trimType))
-    return true
+  if (fastMode) {
+    // Fast path: estimate width from a uniform per-character width. Cheap but
+    // approximate — it ignores per-glyph width and the appended ellipsis, so the
+    // result can slightly overflow `maxWidth`.
+    const textWidth = estimateStringPixelLength(text, fontSize, fontWidthToHeightRatio)
+    const tolerance = 1.1
+    const maxCharacters = Math.ceil(textLength * maxWidth / (tolerance * textWidth))
+    if (maxCharacters < textLength) {
+      svgTextSelection.text(trimString(text, maxCharacters, trimType))
+      return true
+    }
+    return false
   }
 
-  return false
+  // Accurate path: measure the real rendered width and shrink until the trimmed
+  // text (ellipsis included) actually fits. Binary search keeps this to ~log2(n)
+  // measurements, and measurement is canvas-backed so each is cheap.
+  const node = svgTextSelection.node()
+  if (getCachedComputedTextLength(node) <= maxWidth) return false
+
+  let minCharacters = 0
+  let maxCharacters = textLength
+  let bestFitCharacters = 0
+  while (minCharacters <= maxCharacters) {
+    const candidateCharacters = (minCharacters + maxCharacters) >> 1
+    svgTextSelection.text(trimString(text, candidateCharacters, trimType))
+    if (getCachedComputedTextLength(node) <= maxWidth) {
+      bestFitCharacters = candidateCharacters
+      minCharacters = candidateCharacters + 1
+    } else maxCharacters = candidateCharacters - 1
+  }
+
+  svgTextSelection.text(trimString(text, bestFitCharacters, trimType))
+  return true
 }
 
-/**
- * Estimates the length of a string in pixels.
- * @param {string} str - The string to be measured.
- * @param {number} fontSize - The font size of the string.
- * @param {number} [fontWidthToHeightRatio=getFontWidthToHeightRatio()] - The font width to height ratio.
- * @returns {number} The estimated length of the string in pixels.
- */
-export function estimateStringPixelLength (
-  str: string,
-  fontSize: number,
-  fontWidthToHeightRatio = getFontWidthToHeightRatio()
-): number {
-  return str.length * fontSize * fontWidthToHeightRatio || 0
-}
-
-/**
- * Calculates the precise length of a string in pixels.
- * @param {string} str - The string to be measured.
- * @param {string} [fontFamily] - The font family of the string.
- * @param {(string | number)} [fontSize] - The font size of the string.
- * @returns {number} The precise length of the string in pixels.
- */
-export function getPreciseStringLengthPx (str: string, fontFamily: string, fontSize: string | number): number {
-  const svgNS = 'http://www.w3.org/2000/svg'
-  const svg = document.createElementNS(svgNS, 'svg')
-  const text = document.createElementNS(svgNS, 'text')
-
-  text.textContent = str
-  text.setAttribute('font-size', `${fontSize}`)
-  text.setAttribute('font-family', fontFamily)
-
-  svg.appendChild(text)
-  document.body.appendChild(svg)
-  const length = text.getComputedTextLength()
-  document.body.removeChild(svg)
-
-  return length
-}
 
 /**
  * Estimates the dimensions of an SVG text element.
@@ -249,7 +238,7 @@ export function getPreciseStringLengthPx (str: string, fontFamily: string, fontS
  * @param {Selection<SVGTextElement, any, SVGElement, any>} svgTextSelection - The D3 selection of the SVG text element.
  * @param {number} fontSize - The font size.
  * @param {number} [dy=0.32] - The line height scaling factor.
- * @param {boolean} [fastMode=true] - Whether to use a fast estimation method or a more accurate one.
+ * @param {boolean} [fastMode=false] - Whether to use a fast estimation method or a more accurate one.
  * @param {number} [fontWidthToHeightRatio] - The font width-to-height ratio.
  * @returns {{width: number, height: number}} - The estimated dimensions of the text element.
  */
@@ -257,7 +246,7 @@ export function estimateTextSize (
   svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>,
   fontSize: number,
   dy = 0.32,
-  fastMode = true,
+  fastMode = false,
   fontWidthToHeightRatio?: number
 ): { width: number; height: number } {
   fontWidthToHeightRatio = fontWidthToHeightRatio || getFontWidthToHeightRatio()
@@ -268,12 +257,12 @@ export function estimateTextSize (
 
   let width = 0
   if (tspanSelection.empty()) {
-    const textLength = svgTextSelection.text().length
-    width = fastMode ? fontSize * textLength * fontWidthToHeightRatio : svgTextSelection.node().getComputedTextLength()
+    const text = svgTextSelection.text()
+    width = fastMode ? estimateStringPixelLength(text, fontSize, fontWidthToHeightRatio) : getCachedComputedTextLength(svgTextSelection.node())
   } else {
     for (const tspan of tspanSelection.nodes()) {
-      const tspanTextLength = (tspan as SVGTSpanElement).textContent.length
-      const w = fastMode ? fontSize * tspanTextLength * fontWidthToHeightRatio : (tspan as SVGTSpanElement).getComputedTextLength()
+      const tspanText = (tspan as SVGTSpanElement).textContent
+      const w = fastMode ? estimateStringPixelLength(tspanText, fontSize, fontWidthToHeightRatio) : getCachedComputedTextLength(tspan as SVGTSpanElement)
       if (w > width) width = w
     }
   }
@@ -439,46 +428,52 @@ export function getWrappedText (
 }
 
 
+const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
+
 /**
- * Renders a text or array of texts to SVG tspan strings.
+ * Builds SVG <tspan> elements for the given wrapped text blocks.
+ * Constructs the DOM directly (instead of serializing to a string and re-parsing),
+ * which avoids the cost of `DOMParser.parseFromString` and string sanitization.
  *
  * @param {UnovisWrappedText[]} blocks - The wrapped text blocks.
  * @param {number} [x=0] - The x-coordinate for the tspan elements.
  * @param {number} [y] - The y-coordinate for the tspan elements.
- * @returns {string[]} - The SVG tspan strings.
+ * @returns {SVGTSpanElement[]} - One outer <tspan> element per block.
  */
-function renderTextToTspanStrings (
+function renderTextToTspanElements (
   blocks: UnovisWrappedText[],
   x = 0,
   y?: number,
   dominantBaseline?: string
-): string[] {
+): SVGTSpanElement[] {
   return blocks.map((b, i) => {
     const prevBlock = i > 0 ? blocks[i - 1] : undefined
     const prevBlockMarginBottomEm = prevBlock ? prevBlock.marginBottom / prevBlock.fontSize : 0
     const marginTopEm = b.marginTop / b.fontSize
     const marginEm = Math.max(prevBlockMarginBottomEm, marginTopEm)
-    const attributes = {
-      fontSize: b.fontSize,
-      fontFamily: b.fontFamily,
-      fontWeight: b.fontWeight,
-      fill: b.color,
-      y: (i === 0) && y,
-    }
 
-    const attributesString = Object.entries(attributes)
-      .filter(([_, value]) => value)
-      .map(([key, value]) => `${kebabCase(key)}="${escapeStringKeepHash(value.toString())}"`)
-      .join(' ')
+    const blockTspan = document.createElementNS(SVG_NAMESPACE, 'tspan')
+    if (b.fontSize) blockTspan.setAttribute('font-size', `${b.fontSize}`)
+    if (b.fontFamily) blockTspan.setAttribute('font-family', `${b.fontFamily}`)
+    if (b.fontWeight) blockTspan.setAttribute('font-weight', `${b.fontWeight}`)
+    if (b.color) blockTspan.setAttribute('fill', `${b.color}`)
+    if (i === 0 && y) blockTspan.setAttribute('y', `${y}`)
 
-    return `<tspan xmlns="http://www.w3.org/2000/svg" ${attributesString}>${b._lines.map((line, k) => {
+    b._lines.forEach((line, k) => {
       let dy: number
       if (i === 0 && k === 0) dy = marginEm
       else if (k === 0) dy = marginEm + b.lineHeight
       else dy = b.lineHeight
 
-      return `<tspan x="${x}" dy="${dy}em" dominant-baseline="${dominantBaseline ?? 'auto'}">${line.length ? line : ' '}</tspan>`
-    }).join('')}</tspan>`
+      const lineTspan = document.createElementNS(SVG_NAMESPACE, 'tspan')
+      lineTspan.setAttribute('x', `${x}`)
+      lineTspan.setAttribute('dy', `${dy}em`)
+      lineTspan.setAttribute('dominant-baseline', dominantBaseline ?? 'auto')
+      lineTspan.textContent = line.length ? line : ' '
+      blockTspan.appendChild(lineTspan)
+    })
+
+    return blockTspan
   })
 }
 
@@ -536,14 +531,10 @@ export function renderTextToSvgTextElement (
     textElement.removeAttribute('transform')
   }
 
-  const parser = new DOMParser()
   textElement.textContent = ''
-  wrappedText.forEach(block => {
-    const svgCode = renderTextToTspanStrings([block], x, y, dominantBaseline).join('')
-    const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
-    const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
-    textElement.appendChild(parsedSvgCode)
-  })
+  for (const tspan of renderTextToTspanElements(wrappedText, x, y, dominantBaseline)) {
+    textElement.appendChild(tspan)
+  }
 }
 
 /**
@@ -575,24 +566,16 @@ export function renderTextIntoFrame (
     : frameOptions.verticalAlign === VerticalAlign.Bottom ? dh : 0
 
 
-  const translate = (frameOptions.x || frameOptions.y)
-    ? `transform="translate(${frameOptions.x ?? 0},${frameOptions.y ?? 0})"`
-    : ''
-
-  const svgCode =
-  `<text
-    xmlns="http://www.w3.org/2000/svg"
-    text-anchor="${getTextAnchorFromTextAlign(frameOptions.textAlign)}"
-    ${translate}
-  >
-    ${renderTextToTspanStrings(wrappedText, x, y, 'hanging').join('')}
-  </text>`
-
-  const parser = new DOMParser()
-  const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
-  const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
+  const textEl = document.createElementNS(SVG_NAMESPACE, 'text')
+  textEl.setAttribute('text-anchor', getTextAnchorFromTextAlign(frameOptions.textAlign))
+  if (frameOptions.x || frameOptions.y) {
+    textEl.setAttribute('transform', `translate(${frameOptions.x ?? 0},${frameOptions.y ?? 0})`)
+  }
+  for (const tspan of renderTextToTspanElements(wrappedText, x, y, 'hanging')) {
+    textEl.appendChild(tspan)
+  }
 
   group.textContent = ''
-  group.appendChild(parsedSvgCode)
+  group.appendChild(textEl)
 }
 

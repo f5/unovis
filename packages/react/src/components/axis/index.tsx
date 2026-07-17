@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Axis, AxisConfigInterface } from '@unovis/ts'
+import { Axis } from '@unovis/ts/components/axis'
+import { AxisConfigInterface } from '@unovis/ts/components/axis/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

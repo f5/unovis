@@ -1,5 +1,6 @@
 export * from "./components/area";
 export * from "./components/axis";
+export * from "./components/boxplot";
 export * from "./components/brush";
 export * from "./components/crosshair";
 export * from "./components/free-brush";
@@ -14,7 +15,9 @@ export * from "./components/plotline";
 export * from "./components/chord-diagram";
 export * from "./components/donut";
 export * from "./components/graph";
+export * from "./components/heatmap";
 export * from "./components/nested-donut";
+export * from "./components/radial-bar";
 export * from "./components/sankey";
 export * from "./components/topojson-map";
 export * from "./components/treemap";

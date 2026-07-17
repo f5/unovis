@@ -12,7 +12,7 @@ const linkStroke = (l: LinkDatum) => l.color
 </script>
 
 <template>
-  <VisSingleContainer :data="data" :height="600">
+  <VisSingleContainer :data :height="600">
     <VisGraph v-bind="{
       layoutType,
       nodeLabel,

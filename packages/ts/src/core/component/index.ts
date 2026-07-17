@@ -2,15 +2,16 @@ import { select, Selection, ValueFn } from 'd3-selection'
 import { Transition } from 'd3-transition'
 
 // Core
-import { CoreDataModel } from 'data-models/core'
+import { CoreDataModel } from '@/data-models/core'
 
 // Utils
-import { merge, throttle } from 'utils/data'
-import { guid } from 'utils/misc'
+import { merge, throttle } from '@/utils/data'
+import { guid } from '@/utils/misc'
 
 // Types
-import { ComponentType, Sizing } from 'types/component'
-import { Spacing } from 'types/spacing'
+import { ComponentType, Sizing } from '@/types/component'
+import { Spacing } from '@/types/spacing'
+import { ColorFunction } from '@/types/accessor'
 
 // Local Types
 import { VisEventCallback, VisEventType } from './types'
@@ -28,7 +29,7 @@ export class ComponentCore<
   public config: ConfigInterface
   public prevConfig: ConfigInterface
   public datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
-  public sizing: Sizing | string = Sizing.Fit // Supported by SingleContainer and a subset of components only (Sankey)
+  public sizing: Sizing | string = Sizing.Fit // Supported by SingleContainer and a subset of components only (Sankey, Heatmap)
   public uid: string
 
   protected events: {
@@ -49,12 +50,19 @@ export class ComponentCore<
   protected _containerHeight: number | undefined = undefined
   /** Container margin in pixels. This property is set automatically by the container. */
   protected _containerMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
+  /** Color scale for the component. This property is set automatically by the container. */
+  protected _colorFunction: ColorFunction | undefined = undefined
 
   _setUpComponentEventsThrottled = throttle(this._setUpComponentEvents, 500)
 
   /** Set the container margin. Called automatically by containers. */
   setContainerMargin (margin: Spacing): void {
     this._containerMargin = margin
+  }
+
+  /** Set the color scale for the component. Called automatically by containers. */
+  setColorFunction (colorFunction: ColorFunction): void {
+    this._colorFunction = colorFunction
   }
 
   _setCustomAttributesThrottled = throttle(this._setCustomAttributes, 500)
@@ -140,11 +148,11 @@ export class ComponentCore<
     this._bindEvents(this.config.events, '.user')
   }
 
-  // Sometimes we don't want to pass the original data to the event handler.
+  // Sometimes we don't want to pass the original data and/or index to the event handler.
   // This method can be overridden by components to implement a custom mapping.
-  // See Stacked Bar for an example.
-  protected _mapEventDatum (datum: unknown): unknown {
-    return datum
+  // See Stacked Bar and Scatter for examples.
+  protected _mapEventDatum (datum: unknown, index: number): { datum: unknown; index: number } {
+    return { datum, index }
   }
 
   private _bindEvents (events = this.events, suffix = ''): void {
@@ -156,8 +164,8 @@ export class ComponentCore<
           const els = selection.nodes()
           const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)
           const eventFunction = events[className][eventType as VisEventType]
-          const datum = this._mapEventDatum(d)
-          return eventFunction?.(datum, event, i, els)
+          const { datum, index } = this._mapEventDatum(d, i)
+          return eventFunction?.(datum, event, index, els)
         })
       })
     })

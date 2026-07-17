@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { NestedDonut, NestedDonutConfigInterface } from '@unovis/ts'
+import { NestedDonut } from '@unovis/ts/components/nested-donut'
+import { NestedDonutConfigInterface } from '@unovis/ts/components/nested-donut/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

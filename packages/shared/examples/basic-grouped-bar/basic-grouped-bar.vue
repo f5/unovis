@@ -18,9 +18,9 @@ const color = (d: ElectionDatum, i: number) => items[i].color
 
 <template>
   <h2>U.S. Election Popular Vote Results by Political Party</h2>
-  <VisBulletLegend :items="items" />
+  <VisBulletLegend :items />
   <VisXYContainer :height="500">
-    <VisGroupedBar :data="data" :x="x" :y="y" :color="color" />
+    <VisGroupedBar :data :x :y :color />
     <VisAxis type="x" label="Election Year" :numTicks="data.length" />
     <VisAxis type="y" :tickFormat="(value) => (value / 10 ** 6).toFixed(1)" label="Number of Votes (millions)" />
   </VisXYContainer>

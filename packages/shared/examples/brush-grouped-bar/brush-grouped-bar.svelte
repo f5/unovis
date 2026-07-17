@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { BulletLegendItemInterface } from '@unovis/ts'
   import { VisXYContainer, VisAxis, VisBrush, VisGroupedBar, VisBulletLegend } from '@unovis/svelte'
   import { data, groups, GroupItem, DataRecord } from './data'
@@ -31,12 +31,12 @@
 
 <VisBulletLegend {items} onLegendItemClick={updateItems} />
 <VisXYContainer {duration} {data} height={300} {xDomain} scaleByDomain={true}>
-  <VisGroupedBar x={x} y={y} groupPadding={0.2} roundedCorners barMinHeight={0} />
-  <VisAxis type='x' label='Year' numTicks={Math.min(15, selection[1] - selection[0])} gridLine={false}/>
-  <VisAxis type='y' label='Cereal Production (metric tons, millions)'/>
+  <VisGroupedBar {x} {y} groupPadding={0.2} roundedCorners barMinHeight={0} />
+  <VisAxis type="x" label="Year" numTicks={Math.min(15, selection[1] - selection[0])} gridLine={false}/>
+  <VisAxis type="y" label="Cereal Production (metric tons, millions)"/>
 </VisXYContainer>
 <VisXYContainer {data} height={75} margin={{ left: 60 }}>
   <VisGroupedBar {x} {y}/>
   <VisBrush bind:selection onBrush={updateDomain} draggable={true}/>
-  <VisAxis type='x' numTicks={15}/>
+  <VisAxis type="x" numTicks={15}/>
 </VisXYContainer>

@@ -2,8 +2,9 @@ import { max, min, mean, bisectLeft, bisectRight } from 'd3-array'
 import { throttle as _throttle } from 'throttle-debounce'
 
 // Types
-import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor, GenericAccessor } from 'types/accessor'
-import { FindNearestDirection, StackValuesRecord } from 'types/data'
+import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor, GenericAccessor } from '@/types/accessor'
+import { FindNearestDirection, StackValuesRecord } from '@/types/data'
+import { ContinuousScale } from '@/types/scale'
 
 export const isNumber = <T>(a: T): a is T extends number ? T : never => typeof a === 'number'
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -333,6 +334,69 @@ export function getNearest<Datum> (
 
   // By default (`FindNearestDirection.Auto`) return the nearest value
   return value - values[index - 1] > values[index] - value ? dataWithIndexSorted[index][0] : dataWithIndexSorted[index - 1][0]
+}
+
+/** Finds the datum nearest to a point in the scaled (pixel) space, considering all the provided Y accessors
+ * (regular and stacked) so that multi-series charts pick the nearest series point.
+ * Returns the datum, its index and the squared distance to it, or `undefined` when there's nothing to snap to */
+export function getNearest2D<Datum> (
+  data: Datum[],
+  point: [number, number],
+  xScale: ContinuousScale,
+  yScale: ContinuousScale,
+  xAccessor: NumericAccessor<Datum>,
+  yAccessors: NumericAccessor<Datum>[] = [],
+  yStackedAccessors: NumericAccessor<Datum>[] = [],
+  baselineAccessor?: NumericAccessor<Datum>
+): { datum: Datum; index: number; distanceSq: number } | undefined {
+  if (!data?.length || !xAccessor) return undefined
+
+  const [pointX, pointY] = point
+  let nearestDatum: Datum | undefined
+  let nearestIndex = -1
+  let minDistanceSq = Infinity
+
+  // Linear scan using squared distances (no `sqrt`, no sorting): O(n) per call, which is fast enough
+  // for tens of thousands of points. If a dataset ever outgrows this, a quadtree built in the scaled
+  // space (and invalidated on data / scale changes) would bring the lookup down to O(log n)
+  for (let i = 0; i < data.length; i++) {
+    const datum = data[i]
+    const x = xScale(getNumber(datum, xAccessor, i))
+    if (!isFinite(x)) continue
+    const distanceXSq = (x - pointX) ** 2
+
+    // Stacked series (e.g. StackedBar, Area)
+    if (yStackedAccessors.length) {
+      const baselineValue = getNumber(datum, baselineAccessor, i) || 0
+      const stackedValues = getStackedValues(datum, i, ...yStackedAccessors)
+      for (let j = 0; j < stackedValues.length; j++) {
+        if (!isNumber(getNumber(datum, yStackedAccessors[j], j))) continue
+        const y = yScale(stackedValues[j] + baselineValue)
+        const distanceSq = distanceXSq + (y - pointY) ** 2
+        if (distanceSq < minDistanceSq) {
+          minDistanceSq = distanceSq
+          nearestDatum = datum
+          nearestIndex = i
+        }
+      }
+    }
+
+    // Regular series
+    for (let j = 0; j < yAccessors.length; j++) {
+      const value = getNumber(datum, yAccessors[j], i)
+      if (!isNumber(value)) continue
+      const y = yScale(value)
+      const distanceSq = distanceXSq + (y - pointY) ** 2
+      if (distanceSq < minDistanceSq) {
+        minDistanceSq = distanceSq
+        nearestDatum = datum
+        nearestIndex = i
+      }
+    }
+  }
+
+  if (nearestIndex === -1) return undefined
+  return { datum: nearestDatum, index: nearestIndex, distanceSq: minDistanceSq }
 }
 
 export function filterDataByRange<Datum> (

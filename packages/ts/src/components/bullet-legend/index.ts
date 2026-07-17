@@ -1,9 +1,9 @@
 import { select, Selection } from 'd3-selection'
 
 // Utils
-import { toPx } from 'utils/to-px'
-import { merge } from 'utils/data'
-import { getCSSVariableValueInPixels } from 'utils/misc'
+import { toPx } from '@/utils/to-px'
+import { merge } from '@/utils/data'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
 
 // Config
 import { BulletLegendDefaultConfig, BulletLegendConfigInterface } from './config'
@@ -82,7 +82,7 @@ export class BulletLegend {
       })
       .style('height', config.bulletSize)
       .style('box-sizing', 'content-box')
-      .call(updateBullets, this.config, this._colorAccessor)
+      .call(updateBullets, this.config, this._colorAccessor, config.color)
 
     // Labels
     legendItemsEnter.append('span')

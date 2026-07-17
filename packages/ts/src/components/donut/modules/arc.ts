@@ -4,8 +4,9 @@ import { interpolate } from 'd3-interpolate'
 import { Arc } from 'd3-shape'
 
 // Utils
-import { getColor } from 'utils/color'
-import { smartTransition } from 'utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { smartTransition } from '@/utils/d3'
 
 // Local Types
 import { DonutArcDatum, DonutArcAnimState } from '../types'
@@ -22,7 +23,9 @@ export function createArc<Datum> (
   config: DonutConfigInterface<Datum>
 ): void {
   selection
+    .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d.index)
     .style('fill', d => getColor(d.data, config.color, d.index))
+    .style('mask', d => getFillPatternValue(getPattern(d.data, config.pattern, d.index)))
     .style('opacity', 0)
     .each((d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -46,7 +49,9 @@ export function updateArc<Datum> (
 ): void {
   selection
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
+    .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d.index)
     .style('fill', d => getColor(d.data, config.color, d.index))
+    .style('mask', d => getFillPatternValue(getPattern(d.data, config.pattern, d.index)))
 
   const setOpacity = (d: DonutArcDatum<Datum>): number => (config.showEmptySegments || d.value) ? 1 : 0
   if (duration) {

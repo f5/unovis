@@ -1,7 +1,7 @@
 {
   "name": "@unovis/shared",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
-  "version": "1.6.4",
+  "version": "1.6.7",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
@@ -31,7 +31,10 @@
   "type": "module",
   "sideEffects": false,
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "dev": "vite",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
+  },
   "peerDependencies": {
     "@unovis/ts": "workspace:*"
   },
@@ -39,16 +42,35 @@
     "@angular/core": "^19.2.18",
     "@angular/common": "^19.2.18",
     "@angular/platform-browser": "^19.2.18",
+    "@angular/compiler": "^19.2.18",
+    "@angular/platform-browser-dynamic": "^19.2.18",
+    "@unovis/angular": "workspace:*",
+    "reflect-metadata": "^0.1.14",
+    "rxjs": "^7.8.2",
+    "zone.js": "~0.11.4",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "@tsconfig/svelte": "^2.0.0",
     "@types/d3-scale": "^4.0.8",
     "@types/d3-selection": "^3.0.10",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-vue": "^5.2.3",
     "tslib": "^2.3.1",
     "d3-format": "^3.1.0",
     "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
+    "react-dom": "^18",
+    "react": "^18.3.1",
     "solid-js": "^1.9.3",
     "typescript": "~5.5.2",
+    "svelte": "^4.2.19",
+    "svelte-preprocess": "^4.10.7",
     "d3-array": "3.2.4",
-    "@emotion/css": "^11.7.1"
+    "@emotion/css": "^11.7.1",
+    "vite": "catalog:",
+    "vite-plugin-solid": "^2.10.2",
+    "vue": "^3.5.13"
   },
   "dependencies": {}
 }

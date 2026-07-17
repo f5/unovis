@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Line, LineConfigInterface } from '@unovis/ts'
+import { Line } from '@unovis/ts/components/line'
+import { LineConfigInterface } from '@unovis/ts/components/line/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

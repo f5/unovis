@@ -13,11 +13,11 @@ const legend = new BulletLegend(container, {
 
 const timeline = new Timeline<DataRecord>({
   x: (d: DataRecord) => d.startDate,
-  length: (d: DataRecord) => d.endDate - d.startDate,
-  type: (d: DataRecord) => d.name,
+  lineDuration: (d: DataRecord) => d.endDate - d.startDate,
+  lineRow: (d: DataRecord) => d.name,
   color: (d: DataRecord) => colorMap[d.type],
-  labelWidth,
-  showLabels: true,
+  rowLabelWidth: labelWidth,
+  showRowLabels: true,
 })
 
 const chart = new XYContainer(container, {

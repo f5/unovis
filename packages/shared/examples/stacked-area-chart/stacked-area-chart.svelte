@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisXYContainer, VisAxis, VisArea, VisXYLabels } from '@unovis/svelte'
   import { data, formats, DataRecord, getLabels } from './data'
 
@@ -17,7 +17,7 @@
 <VisXYContainer {data} height={500}>
   <VisXYLabels {...labelProps} clusterBackgroundColor="none" clusterLabel={() => ''}/>
   <VisArea {x} {y}/>
-  <VisAxis type='x' label='Year' numTicks={10} gridLine={false} domainLine={false}/>
-  <VisAxis type='y' label='Revenue (USD, billions)' numTicks={10}/>
+  <VisAxis type="x" label="Year" numTicks={10} gridLine={false} domainLine={false}/>
+  <VisAxis type="y" label="Revenue (USD, billions)" numTicks={10}/>
 </VisXYContainer>
 

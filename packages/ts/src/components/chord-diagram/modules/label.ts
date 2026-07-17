@@ -3,10 +3,11 @@ import { ScaleContinuousNumeric } from 'd3-scale'
 import { color } from 'd3-color'
 
 // Utils
-import { trimSVGText } from 'utils/text'
-import { smartTransition } from 'utils/d3'
-import { getNumber, getString, getValue } from 'utils/data'
-import { getColor, hexToBrightness } from 'utils/color'
+import { trimSVGText } from '@/utils/text'
+import { getCachedComputedTextLength } from '@/utils/text-measure'
+import { smartTransition } from '@/utils/d3'
+import { getNumber, getString, getValue } from '@/utils/data'
+import { getColor, hexToBrightness } from '@/utils/color'
 
 // Config
 import { ChordDiagramConfigInterface } from '../config'
@@ -119,7 +120,7 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
         .attr('dx', nodeLabelAlignment === ChordLabelAlignment.Along ? LABEL_PADDING : null)
         .attr('dy', nodeLabelAlignment === ChordLabelAlignment.Along ? getNumber(d.data, nodeWidth) / 2 : null)
 
-      const textWidth = textElement.node().getComputedTextLength()
+      const textWidth = getCachedComputedTextLength(textElement.node())
       const labelText = textElement.text()
       if (nodeLabelAlignment === ChordLabelAlignment.Along) {
         textElement.text('')

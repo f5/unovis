@@ -1,4 +1,4 @@
-<script  setup lang="ts">
+<script setup lang="ts">
 import { Scale } from '@unovis/ts'
 import { VisXYContainer, VisLine, VisAxis, VisBulletLegend } from '@unovis/vue'
 import { data, labels, CityTemps } from './data'
@@ -14,9 +14,9 @@ const xScale = Scale.scaleTime()
 </script>
 
 <template>
-  <VisBulletLegend :items="items" />
-  <VisXYContainer :data="data" :height="300" :xScale="xScale">
-    <VisLine :x="x" :y="y" />
+  <VisBulletLegend :items />
+  <VisXYContainer :data :height="300" :xScale>
+    <VisLine :x :y />
     <VisAxis type="x" label="Date" :numTicks="6" :tickFormat="(value) => Intl.DateTimeFormat().format(value)" />
     <VisAxis type="y" label="Temperature (celsius)" />
   </VisXYContainer>

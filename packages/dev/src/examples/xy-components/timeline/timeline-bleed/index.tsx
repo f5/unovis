@@ -34,6 +34,8 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
         showEmptySegments={true}
         // lineEndIcon={'#circle_check_filled'}
         lineStartIcon={'#circle_check_filled'}
+        rowLabelMargin={[5, 15]}
+        rowIcon={() => ({ href: '#circle_check_filled', size: 20, color: '#eee' })}
         // lineEndIconArrangement={Arrangement.Outside}
         lineStartIconArrangement={Arrangement.Outside}
         showRowLabels

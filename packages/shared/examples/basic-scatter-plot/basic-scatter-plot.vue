@@ -1,4 +1,4 @@
-<script lang="ts">
+<script setup lang="ts">
 import type { NumericAccessor, StringAccessor } from '@unovis/ts'
 import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend } from '@unovis/vue'
 import { data, DataRecord } from './data'
@@ -16,9 +16,9 @@ const color: StringAccessor<DataRecord> = d => legendItems.find(i => i.name === 
 
 <template>
   <VisBulletLegend :items="legendItems"/>
-  <VisXYContainer :data="data" :height="600">
-    <VisScatter :x="x" :y="y" :color="color" :size="8"/>
-    <VisAxis type='x' label='Beak Length (mm)' />
-    <VisAxis type='y' label='Flipper Length (mm)'/>
+  <VisXYContainer :data :height="600">
+    <VisScatter :x :y :color :size="8"/>
+    <VisAxis type="x" label="Beak Length (mm)" />
+    <VisAxis type="y" label="Flipper Length (mm)"/>
   </VisXYContainer>
 </template>

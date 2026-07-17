@@ -1,19 +1,20 @@
 import { min, max } from 'd3-array'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getString, getNumber, getStackedData, getExtent } from 'utils/data'
-import { roundedRectPath } from 'utils/path'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
+import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getString, getNumber, getStackedData, getExtent } from '@/utils/data'
+import { roundedRectPath } from '@/utils/path'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 
 // Types
-import { ContinuousScale } from 'types/scale'
-import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
-import { Orientation } from 'types/position'
+import { ContinuousScale } from '@/types/scale'
+import { NumericAccessor } from '@/types/accessor'
+import { Spacing } from '@/types/spacing'
+import { Orientation } from '@/types/position'
 
 // Local Types
 import { StackedBarDataRecord } from './types'
@@ -83,6 +84,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
   _render (customDuration?: number): void {
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const colorOptions = { colorFn: this._colorFunction }
 
     const yAccessors = this.getAccessors()
     const stacked = getStackedData(this._barData, 0, yAccessors, this._prevNegative)
@@ -115,6 +117,9 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     smartTransition(barGroupExit, duration)
       .style('opacity', 0)
       .remove()
+      // `transition.remove()` only fires on `end`; if the transition is interrupted by a re-render,
+      // the node would linger in the DOM with opacity < 1 and could be picked up by the next data join.
+      .on('interrupt', function () { this.remove() })
 
     // Animate bars from exiting groups going down
     smartTransition(barGroupExit.selectAll(`.${s.bar}`), duration)
@@ -159,18 +164,24 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
       .attr('d', d => this._getBarPath(d, true))
-      .style('fill', d => getColor(d.datum, config.color, d.stackIndex))
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d.stackIndex)
+      .style('fill', d => getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))
+      .style('mask', d => getFillPatternValue(getPattern(d.datum, config.pattern, d.stackIndex)))
 
     const barsMerged = barsEnter.merge(bars)
 
+    barsMerged.style('mask', d => getFillPatternValue(getPattern(d.datum, config.pattern, d.stackIndex)))
     smartTransition(barsMerged, duration)
       .attr('d', d => this._getBarPath(d))
-      .style('fill', d => getColor(d.datum, config.color, d.stackIndex))
+      .style('fill', d => getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))
       .style('cursor', d => getString(d.datum, config.cursor, d.stackIndex))
 
     smartTransition(bars.exit(), duration)
       .style('opacity', 0)
       .remove()
+      // `transition.remove()` only fires on `end`; if the transition is interrupted by a re-render,
+      // the node would linger in the DOM with opacity < 1 and could be picked up by the next data join.
+      .on('interrupt', function () { this.remove() })
   }
 
   _getBarWidth (): number {
@@ -271,16 +282,17 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
   }
 
   // After performance optimizations in https://github.com/f5/unovis/pull/708
-  // there's a breaking change in the event data structure.
-  // This method is used to map the event data to the original data structure.
+  // there's a breaking change in the event data structure: the d3 datum bound
+  // to each bar is now a `StackedBarDataRecord` wrapper, and the DOM-derived
+  // index no longer matches the original row index (zero-height segments are
+  // filtered out, and bars from all groups share the same selection).
+  // This method maps both back to the pre-#708 contract.
   // Todo: This can be removed in Unovis 2.0, but the migration guide should contain a note about it.
-  protected _mapEventDatum (d: StackedBarDataRecord<Datum>): Datum {
-    const eventDatum = {
-      ...d,
-      ...d.datum,
+  protected _mapEventDatum (d: StackedBarDataRecord<Datum>): { datum: Datum; index: number } {
+    return {
+      datum: { ...d, ...d.datum },
+      index: d.index,
     }
-
-    return eventDatum
   }
 
   getValueScaleExtent (scaleByVisibleData: boolean): number[] {

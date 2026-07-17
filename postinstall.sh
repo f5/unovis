@@ -1,5 +1,5 @@
 echo "Activating git hooks"
-pnpm dlx husky install
+pnpm exec husky
 
 echo "Building @unovis"
 pnpm build:ts

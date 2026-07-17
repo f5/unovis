@@ -1,68 +1,59 @@
 :root {
   --color-active: #2299ff;
-  --color-slider-bg: var(--color-grey);
-  --color-slider-icon: #fff;
-}
-
-body.theme-dark {
-  --color-slider-bg: #eee;
-  --color-slider-icon: var(--color-grey);
 }
 
 .themeSelector {
-  position: absolute;
-  right: 8px;
+  margin-bottom: 4px;
   z-index: 999;
   border-radius: 10px;
   display: flex;
+  gap: 4px;
+  justify-content: end;
+  align-items: center;
 }
 
-.themeSelector label {
+.toolbarItem {
+  position: relative;
   cursor: pointer;
   margin: 0 2px;
-}
-
-.themeSelector input[type='checkbox'] {
-  display: none;
-}
-
-.colorTheme {
-  border-radius: 20px;
-  position: relative;
-}
-
-.slider {
-  display: flex;
-  justify-content: space-between;
+  display: inline-flex;
   align-items: center;
-  background-color: var(--color-slider-bg);
-  color: var(--color-slider-icon);
-  border-radius: 90px;
-  min-width: 2.5em;
-  height: 100%;
-  padding: 2px 0.25em;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
 }
 
-
-.slider::after {
+/* Visually hidden but still in the tab order / label activation (display:none can break change in some cases) */
+.toolbarItem > input {
   position: absolute;
-  content: '';
-  left: 0;
-  width: 1.3em;
-  height: 1.3em;
-  background: var(--color-active);
-  border-radius: 90px;
-  transition: 0.3s;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
 }
 
-input:checked + .slider::after {
-  transform: translateX(100%);
-}
-
-.patternTheme > input:not(:checked) + span {
+.toolbarItem > input:not(:checked) + span,
+.toolbarItem[data-on='false'] > span {
   opacity: 0.6;
 }
 
-.patternTheme > input:checked + span {
+.toolbarItem > input:checked + span,
+.toolbarItem[data-on='true'] > span {
   color: var(--color-active);
+}
+
+.toolbarItem:hover > span {
+  opacity: 1;
+}
+
+.toolbarItem[data-on='false']:hover > span {
+  color: inherit;
 }

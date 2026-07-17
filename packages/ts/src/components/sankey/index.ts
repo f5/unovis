@@ -5,18 +5,18 @@ import { extent, max, min, sum } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 
 // Core
-import { ComponentCore } from 'core/component'
-import { GraphDataModel } from 'data-models/graph'
+import { ComponentCore } from '@/core/component'
+import { GraphDataModel } from '@/data-models/graph'
 
 // Types
-import { ExtendedSizeComponent, Sizing } from 'types/component'
-import { Position } from 'types/position'
-import { Spacing } from 'types/spacing'
-import { VerticalAlign } from 'types/text'
+import { ExtendedSizeComponent, Sizing } from '@/types/component'
+import { Position } from '@/types/position'
+import { Spacing } from '@/types/spacing'
+import { VerticalAlign } from '@/types/text'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { clamp, getNumber, getString, groupBy, isNumber } from 'utils/data'
+import { smartTransition } from '@/utils/d3'
+import { clamp, getNumber, getString, groupBy, isNumber } from '@/utils/data'
 
 // Config
 import { SankeyDefaultConfig, SankeyConfigInterface } from './config'
@@ -25,7 +25,7 @@ import { SankeyDefaultConfig, SankeyConfigInterface } from './config'
 import * as s from './style'
 
 // Local Types
-import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode, SankeyZoomMode } from './types'
+import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode, SankeyZoomMode, SankeyZoomOrigin } from './types'
 
 // Modules
 import { createLinks, removeLinks, updateLinks } from './modules/link'
@@ -258,7 +258,7 @@ export class Sankey<
     const nodeSelection = this._nodesGroup.selectAll<SVGGElement, SankeyNode<N, L>>(`.${s.nodeGroup}`)
       .data(nodes, (d, i) => config.id(d, i) ?? i)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.nodeGroup)
-    const sankeyWidth = (this.sizing === Sizing.Fit ? this._width : this._extendedWidth) * this._zoomScale[0]
+    const sankeyWidth = this._getScaledWidth()
     nodeSelectionEnter.call(createNodes, this.config, sankeyWidth, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, sankeyWidth, bleed, this._hasLinks(), duration, nodeSpacing)
     nodeSelection.exit<SankeyNode<N, L>>()
@@ -313,10 +313,11 @@ export class Sankey<
     return [constrainedX, constrainedY]
   }
 
-  public setZoomScale (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration): void {
+  public setZoomScale (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration, zoomOrigin: SankeyZoomOrigin = SankeyZoomOrigin.TopLeft): void {
     // If zoomScale is controlled by config, do nothing
     if (this.config.zoomScale !== undefined) return
-    const zoomScaleChange: [number, number] = [horizontalScale / this._zoomScale[0], verticalScale / this._zoomScale[1]]
+    const [hCurrent, vCurrent] = this._zoomScale
+    const zoomScaleChange: [number, number] = [horizontalScale / hCurrent, verticalScale / vCurrent]
 
     const [extMin, extMax] = this.config.zoomExtent
     if (isNumber(horizontalScale)) this._zoomScale[0] = Math.min(extMax, Math.max(extMin, horizontalScale))
@@ -330,6 +331,14 @@ export class Sankey<
     const currentTransform = zoomIdentity.scale(effectiveScale)
     this._gNode.__zoom = currentTransform
     this._prevZoomTransform.k = effectiveScale
+
+    if (zoomOrigin === SankeyZoomOrigin.Center) {
+      const cx = this.getWidth() / 2
+      const cy = this.getHeight() / 2
+
+      this._pan[0] = cx - (cx - this._pan[0]) * (this._zoomScale[0] / hCurrent)
+      this._pan[1] = cy - (cy - this._pan[1]) * (this._zoomScale[1] / vCurrent)
+    }
 
     // Constrain pan
     this._pan = this._getConstrainedPan(this._pan, zoomScaleChange)
@@ -400,8 +409,8 @@ export class Sankey<
       // If Cmd (metaKey) is pressed, only change horizontal scale.
       // If Alt/Option (altKey) is pressed, only change vertical scale.
       const deltaK = transform.k / this._prevZoomTransform.k
-      const isHorizontalOnlyKey = Boolean(sourceEvent?.metaKey)
-      const isVerticalOnlyKey = !isHorizontalOnlyKey && Boolean(sourceEvent?.altKey)
+      const isHorizontalOnlyKey = !config.disableZoomModifierKeys && Boolean(sourceEvent?.metaKey)
+      const isVerticalOnlyKey = !isHorizontalOnlyKey && !config.disableZoomModifierKeys && Boolean(sourceEvent?.altKey)
       const isHorizontalOnly = isHorizontalOnlyKey || zoomMode === SankeyZoomMode.X
       const isVerticalOnly = isVerticalOnlyKey || zoomMode === SankeyZoomMode.Y
 
@@ -727,11 +736,15 @@ export class Sankey<
     return nextLayerNode ? nextLayerNode.x0 - (firstLayerNode.x0 + config.nodeWidth) : this._width - firstLayerNode.x1
   }
 
+  private _getScaledWidth (): number {
+    return (this.sizing === Sizing.Fit ? this._width : this._extendedWidth) * this._zoomScale[0]
+  }
+
   private _onNodeMouseOver (d: SankeyNode<N, L>, event: MouseEvent): void {
     const { datamodel } = this
     const bleed = this._bleedCached ?? this.bleed
     const nodeSelection = select<SVGGElement, SankeyNode<N, L>>(event.currentTarget as SVGGElement)
-    const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
+    const sankeyWidth = this._getScaledWidth()
     onNodeMouseOver(d, datamodel.nodes, nodeSelection, this.config, sankeyWidth, this._getLayerSpacing(this.datamodel.nodes), bleed)
   }
 
@@ -739,7 +752,7 @@ export class Sankey<
     const { datamodel } = this
     const bleed = this._bleedCached ?? this.bleed
     const nodeSelection = select<SVGGElement, SankeyNode<N, L>>(event.currentTarget as SVGGElement)
-    const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
+    const sankeyWidth = this._getScaledWidth()
     onNodeMouseOut(d, datamodel.nodes, nodeSelection, this.config, sankeyWidth, this._getLayerSpacing(this.datamodel.nodes), bleed)
   }
 

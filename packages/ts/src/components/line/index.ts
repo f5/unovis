@@ -4,18 +4,19 @@ import { CurveFactoryLineOnly, Line as LineGenInterface, line } from 'd3-shape'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { getNumber, getString, getValue, isArray, isNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
+import { getNumber, getString, getValue, isArray, isNumber } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
-import { Curve, CurveType } from 'types/curve'
-import { Direction } from 'types/direction'
+import { NumericAccessor } from '@/types/accessor'
+import { Spacing } from '@/types/spacing'
+import { Curve, CurveType } from '@/types/curve'
+import { Direction } from '@/types/direction'
 
 // Local Types
 import { LineData, LineDatum } from './types'
@@ -70,6 +71,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
     super._render(customDuration)
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const colorOptions = { colorFn: this._colorFunction }
 
     this.curve = Curve[config.curveType]
     this.lineGen = line<{ x: number; y: number; defined: boolean }>()
@@ -139,7 +141,8 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
     linesEnter
       .append('path')
       .attr('class', s.linePath)
-      .attr('stroke', (d, i) => getColor(data, config.color, i))
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => i)
+      .attr('stroke', (d, i) => getColor(data, config.color, i, config.colorKeys?.[i], colorOptions))
       .attr('stroke-opacity', 0)
       .attr('stroke-width', config.lineWidth)
 
@@ -162,12 +165,18 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       const lineGaps = group.select(`.${s.interpolatedPath}`)
 
       const isLineVisible = d.visible
-      const dashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
+      const lineColor = getColor(data, config.color, i, config.colorKeys?.[i], colorOptions)
+      const linePattern = getLinePatternValue(getPattern(data, config.pattern, i), lineColor, linePath.node())
+      // Explicit `lineDashArray` takes precedence over the resolved pattern's dash array
+      const explicitDashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
+      const dashArray = explicitDashArray?.join(' ') ?? linePattern?.dashArray ?? null
+      linePath
+        .style('marker', linePattern?.marker ?? null)
       const transition = smartTransition(linePath, duration)
-        .attr('stroke', getColor(data, config.color, i))
+        .attr('stroke', lineColor)
         .attr('stroke-width', config.lineWidth)
         .attr('stroke-opacity', isLineVisible ? 1 : 0)
-        .style('stroke-dasharray', dashArray?.join(' ') ?? null) // We use `.style` because there's also a default CSS-variable for stroke-dasharray
+        .style('stroke-dasharray', dashArray) // We use `.style` because there's also a default CSS-variable for stroke-dasharray
 
       const hasUndefinedSegments = d.values.some(d => !d.defined)
       const svgPathD = this.lineGen(d.values)
@@ -188,7 +197,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       if (hasUndefinedSegments && config.interpolateMissingData) {
         smartTransition(lineGaps, duration)
           .attr('d', this.lineGen(d.gaps))
-          .attr('stroke', getColor(data, config.color, i))
+          .attr('stroke', getColor(data, config.color, i, config.colorKeys?.[i], colorOptions))
           .attr('stroke-width', config.lineWidth - 1)
           .style('opacity', 1)
       } else {

@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import type { NumericAccessor } from '@unovis/ts'
   import { CurveType } from '@unovis/ts'
   import { VisXYContainer, VisAxis, VisArea, VisBulletLegend } from '@unovis/svelte'
@@ -13,11 +13,11 @@
   const yTicks = Intl.NumberFormat(navigator.language, { notation: 'compact' }).format
 </script>
 
-<VisXYContainer data={data} height={400}>
+<VisXYContainer {data} height={400}>
   <VisBulletLegend items={Object.values(countries)}/>
   <VisArea {x} {...accessors(Country.UnitedStates)} opacity={0.7} curveType={CurveType.Basis}/>
   <VisArea {x} {...accessors(Country.India)} opacity={0.7} curveType={CurveType.Basis}/>
-  <VisAxis type='x' tickFormat={xTicks}/>
-  <VisAxis type='y' tickFormat={yTicks}/>
+  <VisAxis type="x" tickFormat={xTicks}/>
+  <VisAxis type="y" tickFormat={yTicks}/>
 </VisXYContainer>
 

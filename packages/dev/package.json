@@ -1,15 +1,16 @@
 {
   "name": "@unovis/dev",
-  "version": "1.6.4",
+  "version": "1.6.7",
   "packageManager": "pnpm@10.23.0",
   "main": "index.js",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "webpack",
+    "build": "NODE_ENV=production webpack",
     "dev": "webpack-dev-server --host 0.0.0.0",
     "serve": "serve dist -s -p 9501",
     "check": "tsc --noEmit",
-    "test": "percy exec -- cypress run"
+    "test": "percy exec -- cypress run",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "devDependencies": {
     "@percy/cli": "^1.29.1",
@@ -19,6 +20,7 @@
     "@types/react-dom": "^19",
     "@types/react-router": "^5.1.19",
     "@types/webpack-env": "^1.18.0",
+    "copy-webpack-plugin": "^12.0.2",
     "cypress": "^13.13.0",
     "html-webpack-plugin": "^5.5.0",
     "react-refresh": "^0.14.0",
@@ -34,16 +36,18 @@
   },
   "dependencies": {
     "d3-hierarchy": "~3",
+    "@codesandbox/sandpack-react": "^2.19.9",
     "@unovis/react": "workspace:*",
     "@unovis/ts": "workspace:*",
     "fuse.js": "^6.6.2",
     "react": "^19",
     "react-dom": "^19",
+    "react-resizable-panels": "^2.1.4",
     "react-router-dom": "^6.4.5",
-    "seedrandom": "^3.0.5",
     "serve": "^14.2.3",
     "@emotion/css": "^11.13.0",
     "d3-array": "^3.2.0",
-    "d3-format": "^3.1.0"
+    "d3-format": "^3.1.0",
+    "d3-random": "~3"
   }
 }

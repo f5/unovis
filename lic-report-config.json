@@ -1,4 +1,6 @@
 {
+  "output": "markdown",
+  "excludeRegex": "@unovis/.*",
   "fields": [
     "name",
     "licensePeriod",

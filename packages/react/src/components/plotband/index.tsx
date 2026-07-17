@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Plotband, PlotbandConfigInterface } from '@unovis/ts'
+import { Plotband } from '@unovis/ts/components/plotband'
+import { PlotbandConfigInterface } from '@unovis/ts/components/plotband/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

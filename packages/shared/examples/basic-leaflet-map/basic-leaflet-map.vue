@@ -15,8 +15,8 @@ const pointColor = '#286e47'
 </script>
 
 <template>
-  <VisLeafletMap height="50vh" :style="style" :data="data" :pointLatitude="pointLatitude" :pointLongitude="pointLongitude"
-    :pointBottomLabel="pointBottomLabel" :pointColor="pointColor" :clusterExpandOnClick="false" :attribution="[
+  <VisLeafletMap height="50vh" :style :data :pointLatitude :pointLongitude
+    :pointBottomLabel :pointColor :clusterExpandOnClick="false" :attribution="[
       `<a href='https://www.maptiler.com/copyright/' target='_blank'>MapTiler</a>`,
       `<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>`
     ]" />

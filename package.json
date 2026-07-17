@@ -1,24 +1,16 @@
 {
   "name": "unovis",
-  "version": "1.6.4",
+  "version": "1.6.7",
   "packageManager": "pnpm@10.23.0",
   "license": "Apache-2.0",
   "private": true,
-  "workspaces": [
-    "packages/ts",
-    "packages/angular",
-    "packages/react",
-    "packages/svelte",
-    "packages/vue",
-    "packages/solid",
-    "packages/shared"
-  ],
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=24.0.0",
     "pnpm": ">=8.0.0"
   },
   "scripts": {
     "dev": "cd packages/dev && pnpm dev",
+    "dev:gallery": "pnpm --filter @unovis/shared dev",
     "website": "cd packages/website && pnpm start",
     "build": "pnpm build:ts && pnpm build:react && pnpm build:angular && pnpm build:svelte && pnpm build:vue && pnpm build:solid && pnpm build:website",
     "build:ts": "cd packages/ts && pnpm build",
@@ -45,11 +37,12 @@
     "publish:all:beta": "pnpm publish:ts:beta && pnpm publish:angular:beta && pnpm publish:react:beta && pnpm publish:svelte:beta && pnpm publish:vue:beta && pnpm publish:solid:beta",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --ignore-path .gitignore",
     "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --fix --ignore-path .gitignore",
-    "install:clean": "rm -rf packages/*/node_modules node_modules pnpm-lock.yaml; pnpm install",
+    "install:clean": "rm -rf packages/*/node_modules packages/*/dist packages/*/dist-demo packages/*/.docusaurus node_modules; pnpm install",
     "postinstall": "sh postinstall.sh",
-    "gather-licenses": "for p in packages/*; do echo \"  📄 Checking licenses for $p\"; pnpm license-report --package=$p/package.json --config lic-report-config.json --output=table | grep -v -E '@unovis/ts|@unovis/react' > $p/licences.temp; mv -f $p/licences.temp $p/licences.txt; done",
+    "gather-licenses": "pnpm -r --parallel license:check",
     "update-version": "sh update-version.sh",
-    "audit-report": "node audit-report.js -s"
+    "audit-report": "node scripts/audit-report.js -s",
+    "cmds-report": "node scripts/commands-report.js"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
@@ -66,7 +59,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-svelte": "^2.10.0",
-    "husky": "^7.0.4",
+    "husky": "^9.1.7",
     "license-report": "^6.4.0",
     "lint-staged": "^12.1.3",
     "typescript": "~4.2.4"
@@ -76,8 +69,37 @@
   },
   "pnpm": {
     "overrides": {
-      "serialize-javascript@<=7.0.2": ">=7.0.3",
-      "tar@<=7.5.10": ">=7.5.11"
+      "seroval": ">=1.4.1",
+      "loader-utils@>=2.0.0 <2.0.4": ">=2.0.4 <3.0.0",
+      "minimatch@<3.0.5": ">=3.0.5",
+      "braces@<3.0.3": ">=3.0.3",
+      "micromatch@<4.0.8": ">=4.0.8",
+      "http-proxy-middleware@<2.0.7": ">=2.0.7",
+      "semver@>=7.0.0 <7.5.2": ">=7.5.2",
+      "esbuild@<=0.24.2": ">=0.25.0",
+      "esbuild@>=0.27.3 <0.28.1": ">=0.28.1",
+      "@babel/runtime@<7.26.10": ">=7.26.10",
+      "tmp@<=0.2.3": ">=0.2.4",
+      "node-forge@<1.3.2": ">=1.4.0",
+      "lodash@>=4.0.0 <=4.18.0": ">=4.18.0",
+      "lodash-es@>=4.0.0 <=4.17.23": ">=4.18.0",
+      "tar@<7.5.7": ">=7.5.11",
+      "@isaacs/brace-expansion@<=5.0.0": ">=5.0.1",
+      "serialize-javascript@<=7.0.2": ">=7.0.5",
+      "flatted@<=3.4.1": ">=3.4.2",
+      "yaml@>=2.0.0 <2.8.3": ">=2.8.3",
+      "basic-ftp@<=5.3.0": ">=5.3.1",
+      "follow-redirects@<=1.15.11": ">=1.16.0",
+      "dompurify@<=3.4.10": ">=3.4.11",
+      "protocol-buffers-schema@<3.6.1": ">=3.6.1",
+      "@tootallnate/once@<3.0.1": ">=3.0.1",
+      "socket.io-parser@>=4.0.0 <4.2.6": ">=4.2.6",
+      "picomatch@>=4.0.0 <4.0.4": ">=4.0.4",
+      "shell-quote@>=1.1.0 <=1.8.3": ">=1.8.4",
+      "form-data@>=4.0.0 <4.0.6": ">=4.0.6",
+      "@babel/plugin-transform-modules-systemjs@>=7.12.0 <=7.29.3": ">=7.29.4",
+      "ws@>=8.0.0 <8.20.1": ">=8.20.1",
+      "systeminformation@>=4.17.0 <=5.31.5": ">=5.31.6"
     }
   }
 }

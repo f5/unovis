@@ -5,20 +5,21 @@ import { scaleLinear, scaleThreshold } from 'd3-scale'
 import { hsl } from 'd3-color'
 
 // Core
-import { ComponentCore } from 'core/component'
+import { ComponentCore } from '@/core/component'
 
 // Data Model
-import { SeriesDataModel } from 'data-models/series'
+import { SeriesDataModel } from '@/data-models/series'
 
 // Utils
-import { getColor, brighter, getHexValue, isColorDark } from 'utils/color'
-import { getString, getNumber, isNumber, isFunction } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { trimSVGText, wrapSVGText } from 'utils/text'
-import { cssvar } from 'utils/style'
+import { getColor, brighter, getHexValue, isColorDark } from '@/utils/color'
+import { getString, getNumber, isNumber, isFunction } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { trimSVGText, wrapSVGText } from '@/utils/text'
+import { getCachedFontSizePx } from '@/utils/text-measure'
+import { cssvar } from '@/utils/style'
 
 // Types
-import { FitMode } from 'types/text'
+import { FitMode } from '@/types/text'
 
 // Config
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
@@ -161,7 +162,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     // Set the fill color for the non-first level tiles
     nonFirstLevelTiles.forEach((d, i) => {
-      const providedColor = getColor(d, config.tileColor, i, true)
+      const providedColor = getColor(d, config.tileColor, i, undefined, { dontFallbackToCssVar: true })
       if (providedColor) {
         d._fill = providedColor
         return
@@ -281,12 +282,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
       const text = select(el)
       const maxLabelWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
-      const fontSize = parseFloat(text.property('font-size-px')) || parseFloat(window.getComputedStyle(el).fontSize)
 
       if (config.labelFit === FitMode.Wrap && isLeafNode) {
         wrapSVGText(text, maxLabelWidth)
       } else {
-        trimSVGText(text, maxLabelWidth, config.labelTrimMode, true, fontSize)
+        trimSVGText(text, maxLabelWidth, config.labelTrimMode)
       }
     })
 

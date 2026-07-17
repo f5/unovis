@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Treemap, TreemapConfigInterface } from '@unovis/ts'
+import { Treemap } from '@unovis/ts/components/treemap'
+import { TreemapConfigInterface } from '@unovis/ts/components/treemap/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

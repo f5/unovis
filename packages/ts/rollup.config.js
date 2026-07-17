@@ -38,6 +38,10 @@ const plugins = [
   json(),
   typescript({
     typescript: require('typescript'),
+    tsconfig: './tsconfig.json',
+    include: ['**/*.ts', '**/*.tsx'],
+    exclude: ['**/*.d.ts'],
+    clean: true,
     transformers: [(service) => transformPaths(service.getProgram())],
     check: false, // Todo remove it once we fix all type checks
     abortOnError: false,
@@ -46,11 +50,17 @@ const plugins = [
   // visualizer({ sourcemap: true, template: 'network' }),
 ]
 
+function onwarn (warning, warn) {
+  if (warning.code === 'CIRCULAR_DEPENDENCY') throw new Error(warning.message)
+  warn(warning)
+}
+
 export default [
   {
     input: 'src/index.ts',
     external: regexesOfPackages,
     treeshake: false,
+    onwarn,
     output: {
       dir: 'dist',
       sourcemap: true,
@@ -62,6 +72,7 @@ export default [
   },
   {
     input: 'src/maps.ts',
+    onwarn,
     output: {
       dir: 'dist',
       format: 'esm',

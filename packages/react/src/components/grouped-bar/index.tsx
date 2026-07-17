@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { GroupedBar, GroupedBarConfigInterface } from '@unovis/ts'
+import { GroupedBar } from '@unovis/ts/components/grouped-bar'
+import { GroupedBarConfigInterface } from '@unovis/ts/components/grouped-bar/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

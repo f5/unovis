@@ -132,12 +132,12 @@
     
     <VisSingleContainer
       :class="customNodesGraph"
-      :data="data"
+      :data
       height="50vh"
       :duration="1000"
     >
       <VisTooltip
-        :triggers="triggers"
+        :triggers
         :followCursor="tooltipFollowCursor"
         :allowHover="tooltipAllowHover"
       />
@@ -157,20 +157,20 @@
         nodeStroke="none"
         :nodeSubLabel="getNodeSubLabel"
         :nodeSubLabelTrimLength="30"
-        :nodeEnterCustomRenderFunction="nodeEnterCustomRenderFunction"
-        :nodeUpdateCustomRenderFunction="nodeUpdateCustomRenderFunction"
+        :nodeEnterCustomRenderFunction
+        :nodeUpdateCustomRenderFunction
         @renderComplete="onRenderComplete"
         :nodeSelectionHighlightMode="GraphNodeSelectionHighlightMode.None"
-        :selectedNodeId="selectedNodeId"
-        :events="events"
+        :selectedNodeId
+        :events
         :linkFlow="handleLinkFlow"
         @layoutCalculated="onLayoutCalculated"
         :linkFlowAnimDuration="handleLinkFlowAnimDuration"
         :linkFlowParticleSpeed="handleLinkFlowParticleSpeed"
         :linkFlowParticleSize="handleLinkFlowParticleSize"
-        :fitViewPadding="fitViewPadding"
+        :fitViewPadding
         @zoom="onZoom"
-        :zoomScaleExtent="zoomScaleExtent"
+        :zoomScaleExtent
       />
     </VisSingleContainer>
   </div>

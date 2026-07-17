@@ -30,8 +30,8 @@ function tooltipTemplate(d: DataRecord): string {
   <div>
     <span v-for="l in labels" style="margin-right: 20px" v-html="getIcon(l)"></span>
   </div>
-  <VisXYContainer :data="data" :height="height">
-    <VisStackedBar :x="x" :y="y" />
+  <VisXYContainer :data :height>
+    <VisStackedBar :x :y />
     <VisCrosshair :template="tooltipTemplate" />
     <VisTooltip :verticalShift="height" :horizontalPlacement="Position.Center" />
     <VisAxis type="x" />

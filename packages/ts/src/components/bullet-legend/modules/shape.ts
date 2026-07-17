@@ -2,17 +2,18 @@ import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
 
 // Types
-import { ColorAccessor } from 'types/accessor'
-import { Symbol, SymbolType } from 'types/symbol'
+import { ColorAccessor, ColorFunction } from '@/types/accessor'
+import { Symbol, SymbolType } from '@/types/symbol'
 
 // Utils
-import { getColor } from 'utils/color'
-import { ensureArray, getString } from 'utils/data'
-import { getCSSVariableValueInPixels } from 'utils/misc'
-import { toPx } from 'utils/to-px'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { ensureArray, getString } from '@/utils/data'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
+import { toPx } from '@/utils/to-px'
 
 // Constants
-import { PATTERN_SIZE_PX } from 'styles/patterns'
+import { PATTERN_SIZE_PX } from '@/styles/patterns'
 
 // Local types
 import { BulletLegendConfigInterface } from '../config'
@@ -52,11 +53,13 @@ export function createBullets (
 export function updateBullets (
   container: Selection<SVGElement, BulletLegendItemInterface, HTMLElement, unknown>,
   config: BulletLegendConfigInterface,
-  colorAccessor: ColorAccessor<BulletLegendItemInterface>
+  colorAccessor: ColorAccessor<BulletLegendItemInterface>,
+  colorFunction?: ColorFunction
 ): void {
+  const colorOptions = { colorFn: colorFunction }
   container.each((d, i, els) => {
     const shape = getString(d, config.bulletShape, i) as BulletShape
-    const colors = ensureArray(d.color ?? getColor(d, colorAccessor, i))
+    const colors = ensureArray(d.color ?? getColor(d, colorAccessor, i, d.colorKey, colorOptions))
     const numBullets = colors.length
     const bulletWidth = BULLET_SIZE
     const defaultBulletSize = toPx(config.bulletSize) || getCSSVariableValueInPixels('var(--vis-legend-bullet-size)', els[i])
@@ -71,10 +74,15 @@ export function updateBullets (
     selection.selectAll('path').remove()
 
     const opacity = d.inactive ? 'var(--vis-legend-bullet-inactive-opacity)' : 1
+    const pattern = getPattern(d, d.pattern, i)
+    const fillPattern = getFillPatternValue(pattern)
+    const svgNode = selection.node()
 
     // Create a path for each color
     colors.forEach((color, colorIndex) => {
       const bulletPath = selection.append('path')
+        .attr(UNOVIS_PATTERN_INDEX_ATTR, i)
+      const linePattern = getLinePatternValue(pattern, color, svgNode)
 
       if (shape === BulletShape.Line) {
         const x1 = colorIndex * (bulletWidth + spacing)
@@ -87,6 +95,8 @@ export function updateBullets (
           .style('stroke-width', '3px')
           .style('fill', null)
           .style('fill-opacity', null)
+          .style('marker', linePattern?.marker ?? null)
+          .style('stroke-dasharray', linePattern?.dashArray ?? null)
           .style('marker-start', 'none')
           .style('marker-end', 'none')
       } else {
@@ -117,6 +127,7 @@ export function updateBullets (
           .style('opacity', null)
           .style('fill', color)
           .style('fill-opacity', opacity)
+          .style('mask', fillPattern)
       }
     })
   })

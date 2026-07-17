@@ -25,9 +25,9 @@ const yAxisConfig = {
 
 <template>
   <VisBulletLegend :items="categories" />
-  <VisXYContainer :data="data" :height="500">
-    <VisArea :x="x" :y="y" :baseline="baseline" :curveType="CurveType.Basis" />
-    <VisAxis type='x' label='Year' />
-    <VisAxis type='y' label='Number of Works Acquired' v-bind="yAxisConfig" />
+  <VisXYContainer :data :height="500">
+    <VisArea :x :y :baseline :curveType="CurveType.Basis" />
+    <VisAxis type="x" label="Year" />
+    <VisAxis type="y" label="Number of Works Acquired" v-bind="yAxisConfig" />
   </VisXYContainer>
 </template>

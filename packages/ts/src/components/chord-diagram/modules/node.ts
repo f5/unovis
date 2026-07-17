@@ -4,8 +4,9 @@ import { interpolate } from 'd3-interpolate'
 import { Arc } from 'd3-shape'
 
 // Utils
-import { getColor } from 'utils/color'
-import { smartTransition } from 'utils/d3'
+import { getColor } from '@/utils/color'
+import { getPattern, getFillPatternValue } from '@/utils/pattern'
+import { smartTransition } from '@/utils/d3'
 
 // Local Types
 import { ChordInputNode, ChordInputLink, ChordNode } from '../types'
@@ -49,6 +50,7 @@ export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
     .style('fill', nodeColor)
     .style('stroke', nodeColor)
+    .style('mask', d => getFillPatternValue(getPattern(d.data, config.nodePattern, d.height)))
 
   if (duration) {
     const transition = smartTransition(selection, duration)

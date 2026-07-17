@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue'
 import { VisXYContainer, VisArea, VisAxis, VisLine } from '@unovis/vue'
 import { XYDataRecord, generateXYDataRecords } from './data'
 const margin = { left: 100, right: 100, top: 40, bottom: 60 }
-const style: React.CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '40vh' }
+const style: CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '40vh' }
 
 const chartX = d => d.x
 const chartAY = (d: XYDataRecord, i: number) => i * (d.y || 0)
@@ -14,38 +15,38 @@ const chartBYTicks = (y: number) => `${y}db`
 
 <template>
   <VisXYContainer
-      :data=generateXYDataRecords(150)
-      :margin= margin
-      :autoMargin= false
-      :width="'100%'"
-      :height= "'40vh'"
+      :data="generateXYDataRecords(150)"
+      :margin
+      :autoMargin="false"
+      width="100%"
+      height="40vh"
     >
-      <VisArea :x=chartX :y=chartAY :opacity=0.9 />
-      <VisAxis type='x' :numTicks=3 :tickFormat="xTicks" :label="'Time'"/>
-      <VisAxis type='y'
+      <VisArea :x="chartX" :y="chartAY" :opacity="0.9" />
+      <VisAxis type="x" :numTicks="3" :tickFormat="xTicks" label="Time"/>
+      <VisAxis type="y"
         :tickFormat="chartAYTicks"
-        :tickTextWidth=60
-        :tickTextColor="'#4D8CFD'"
-        :labelColor="'#4D8CFD'"
-        :label="'Traffic'"
+        :tickTextWidth="60"
+        tickTextColor="#4D8CFD"
+        labelColor="#4D8CFD"
+        label="Traffic"
       />
     </VisXYContainer>
     <VisXYContainer
-      :data=generateXYDataRecords(150)
+      :data="generateXYDataRecords(150)"
       :yDomain="[0, 150]"
-      :margin=margin
-      :autoMargin=false
-      :style=style
+      :margin
+      :autoMargin="false"
+      :style
     >
-      <VisLine :x=chartX :y=chartBY :color="'#FF6B7E'" />
+      <VisLine :x="chartX" :y="chartBY" color="#FF6B7E" />
       <VisAxis
-        type='y'
-        :position="'right'"
+        type="y"
+        position="right"
         :tickFormat="chartBYTicks"
-        :gridLine=false
-        :tickTextColor="'#FF6B7E'"
-        :labelColor="'#FF6B7E'"
-        :label="'Signal Strength'"
+        :gridLine="false"
+        tickTextColor="#FF6B7E"
+        labelColor="#FF6B7E"
+        label="Signal Strength"
       />
     </VisXYContainer>
 </template>

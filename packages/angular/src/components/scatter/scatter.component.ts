@@ -9,9 +9,10 @@ import {
   NumericAccessor,
   ColorAccessor,
   ContinuousScale,
+  GenericAccessor,
+  FillPatternType,
   SymbolType,
   StringAccessor,
-  GenericAccessor,
   Position,
 } from '@unovis/ts'
 import { VisXYComponent } from '../../core'
@@ -86,6 +87,11 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   /** Point color accessor function. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum>
 
+  /** Array of data color keys. Use to map data keys to colors.
+   * Expected to the same length as the `y` accessors array.
+   * Default: `undefined` */
+  @Input() colorKeys?: string[]
+
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
@@ -101,6 +107,9 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
    * the scales of the chart.
    * Default: `false` */
   @Input() excludeFromDomainCalculation?: boolean
+
+  /** Point fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
+  @Input() pattern?: GenericAccessor<FillPatternType, Datum>
 
   /** Size of the scatter plot marker (e.g. diameter if `SymbolType.Circle` is used for `shape`) in pixels.
    * Can be a constant value or an accessor function. But if `sizeRange` is set, then the values will be treated
@@ -163,8 +172,8 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   }
 
   private getConfig (): ScatterConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth }
     const keys = Object.keys(config) as (keyof ScatterConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

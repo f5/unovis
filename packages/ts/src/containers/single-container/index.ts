@@ -1,16 +1,16 @@
 // Global CSS variables (side effects import)
-import 'styles/index'
+import '@/styles/index'
 
 // Core
-import { ContainerCore } from 'core/container'
-import { ComponentCore } from 'core/component'
-import { ComponentConfigInterface } from 'core/component/config'
+import { ContainerCore } from '@/core/container'
+import { ComponentCore } from '@/core/component'
+import { ComponentConfigInterface } from '@/core/component/config'
 
 // Utils
-import { smartTransition } from 'utils/d3'
+import { smartTransition } from '@/utils/d3'
 
 // Types
-import { Sizing, ExtendedSizeComponent } from 'types/component'
+import { Sizing, ExtendedSizeComponent } from '@/types/component'
 
 // Config
 import { SingleContainerDefaultConfig, SingleContainerConfigInterface } from './config'
@@ -97,11 +97,13 @@ export class SingleContainer<Data> extends ContainerCore {
   }
 
   protected _preRender (): void {
+    const { config } = this
     super._preRender()
     this.component.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
-    this.component.setContainerMargin(this.config.margin)
-    this.config.annotations?.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
-    this.config.annotations?.setContainerMargin(this.config.margin)
+    this.component.setContainerMargin(config.margin)
+    this.component.setColorFunction(config.color)
+    config.annotations?.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
+    config.annotations?.setContainerMargin(config.margin)
   }
 
   protected _render (duration?: number): void {

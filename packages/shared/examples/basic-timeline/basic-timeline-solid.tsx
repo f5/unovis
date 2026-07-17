@@ -18,8 +18,8 @@ const BasicTimeline = (): JSX.Element => {
   }
 
   const x = (d: DataRecord) => d.startDate
-  const length = (d: DataRecord) => d.endDate - d.startDate
-  const type = (d: DataRecord) => d.name
+  const lineDuration = (d: DataRecord) => d.endDate - d.startDate
+  const lineRow = (d: DataRecord) => d.name
   const color = (d: DataRecord) => colorMap[d.type]
 
   const legendItems = Object.keys(ProductType).map((name, i) => ({
@@ -34,11 +34,11 @@ const BasicTimeline = (): JSX.Element => {
       <VisBulletLegend items={legendItems} />
       <VisTimeline
         x={x}
-        length={length}
-        type={type}
+        lineDuration={lineDuration}
+        lineRow={lineRow}
         color={color}
-        labelWidth={labelWidth}
-        showLabels
+        rowLabelWidth={labelWidth}
+        showRowLabels
       />
       <VisTooltip triggers={triggers} />
       <VisAxis type='x' numTicks={10} tickFormat={dateFormatter} />

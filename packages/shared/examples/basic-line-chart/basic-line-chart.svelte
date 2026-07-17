@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisXYContainer, VisLine, VisAxis } from '@unovis/svelte'
   import { data } from './data'
 </script>

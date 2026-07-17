@@ -1,10 +1,10 @@
 // Utils
-import { getNumber, getValue } from 'utils/data'
-import { getColor, hexToBrightness } from 'utils/color'
+import { getNumber, getValue } from '@/utils/data'
+import { getColor, hexToBrightness } from '@/utils/color'
 import { color } from 'd3-color'
 
 // Types
-import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { GraphInputLink, GraphInputNode } from '@/types/graph'
 
 // Local Types
 import { GraphLink, GraphLinkArrowStyle, GraphCircleLabel } from '../../types'
@@ -57,7 +57,7 @@ export function getLinkBandWidth<N extends GraphInputNode, L extends GraphInputL
 
 export function getLinkColor<N extends GraphInputNode, L extends GraphInputLink> (link: GraphLink<N, L>, config: GraphConfigInterface<N, L>): string {
   const { linkStroke } = config
-  const c = getColor(link, linkStroke, link._indexGlobal, true) ?? 'var(--vis-graph-link-stroke-color)'
+  const c = getColor(link, linkStroke, link._indexGlobal, undefined, { dontFallbackToCssVar: true }) ?? 'var(--vis-graph-link-stroke-color)'
   return c || null
 }
 

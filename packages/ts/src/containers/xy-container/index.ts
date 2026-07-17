@@ -3,25 +3,25 @@ import { extent, merge as mergeArrays } from 'd3-array'
 import { Selection } from 'd3-selection'
 
 // Global CSS variables (side effects import)
-import 'styles/index'
+import '@/styles/index'
 
 // Core
-import { ContainerCore } from 'core/container'
-import { XYComponentCore } from 'core/xy-component'
-import { XYComponentConfigInterface } from 'core/xy-component/config'
+import { ContainerCore } from '@/core/container'
+import { XYComponentCore } from '@/core/xy-component'
+import { XYComponentConfigInterface } from '@/core/xy-component/config'
 
 // Data Model
-import { CoreDataModel } from 'data-models/core'
+import { CoreDataModel } from '@/data-models/core'
 
 // Types
-import { Spacing } from 'types/spacing'
-import { AxisType } from 'components/axis/types'
-import { ScaleDimension } from 'types/scale'
-import { Direction } from 'types/direction'
+import { Spacing } from '@/types/spacing'
+import { AxisType } from '@/components/axis/types'
+import { ScaleDimension } from '@/types/scale'
+import { Direction } from '@/types/direction'
 
 // Utils
-import { clamp, clean, flatten, isEqual } from 'utils/data'
-import { guid } from 'utils/misc'
+import { clamp, clean, flatten, isEqual } from '@/utils/data'
+import { guid } from '@/utils/misc'
 
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
@@ -230,6 +230,7 @@ export class XYContainer<Datum> extends ContainerCore {
     for (const c of components) {
       c.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
       c.setContainerMargin(margin)
+      c.setColorFunction(config.color)
     }
 
     // Update Scales of all the components at once to calculate required paddings and sync them
@@ -269,9 +270,11 @@ export class XYContainer<Datum> extends ContainerCore {
     // Crosshair
     const crosshair = config.crosshair
     if (crosshair) {
+      const nonStackedComponents = this.components.filter(c => !c.stacked)
+      const stackedComponents = this.components.filter(c => c.stacked)
       // Pass accessors
-      const yAccessors = this.components.filter(c => !c.stacked).map(c => c.config.y)
-      const yStackedAccessors = this.components.filter(c => c.stacked).map(c => c.config.y)
+      const yAccessors = nonStackedComponents.map(c => c.config.y)
+      const yStackedAccessors = stackedComponents.map(c => c.config.y)
       const baselineComponentConfig = this.components.find(c => (c.config as AreaConfigInterface<Datum>).baseline)?.config as AreaConfigInterface<Datum>
       const baselineAccessor = baselineComponentConfig?.baseline
 
@@ -283,6 +286,12 @@ export class XYContainer<Datum> extends ContainerCore {
         baseline: baselineAccessor,
       }
 
+      const colorKeys = [
+        nonStackedComponents.map(c => c.config.colorKeys),
+        stackedComponents.map(c => c.config.colorKeys),
+      ].flat(2)
+
+      crosshair.colorKeys = colorKeys
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
         .style('clip-path', `url(#${this._clipPathId})`)
         .style('-webkit-clip-path', `url(#${this._clipPathId})`)

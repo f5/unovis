@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { BulletLegendItemInterface } from '@unovis/ts'
   import { VisXYContainer, VisArea, VisAxis, VisBulletLegend } from '@unovis/svelte'
   import { candidates, data, DataRecord } from './data'
@@ -17,16 +17,16 @@
 </script>
 
 <step-area-chart>
-  <div class='panel'>
+  <div class="panel">
     <VisBulletLegend items={Object.keys(data[0][curr]).map(d => ({ name: d }))}/>
-    <div class='legendSwitch'>
-      <VisBulletLegend labelClassName='legendLabel' {items} {onLegendItemClick}/>
+    <div class="legendSwitch">
+      <VisBulletLegend labelClassName="legendLabel" {items} {onLegendItemClick}/>
     </div>
   </div>
-  <VisXYContainer data={data} height={400} yDomain={[0, 42]}>
-    <VisArea {x} {y} curveType='stepAfter'/>
-    <VisAxis type='x' label='Year'/>
-    <VisAxis type='y' label='Number of Mentions'/>
+  <VisXYContainer {data} height={400} yDomain={[0, 42]}>
+    <VisArea {x} {y} curveType="stepAfter"/>
+    <VisAxis type="x" label="Year"/>
+    <VisAxis type="y" label="Number of Mentions"/>
   </VisXYContainer>
 </step-area-chart>
 

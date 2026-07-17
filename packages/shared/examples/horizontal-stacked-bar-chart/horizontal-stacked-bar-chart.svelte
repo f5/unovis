@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   import { VisXYContainer, VisStackedBar, VisAxis, VisBulletLegend, VisTooltip } from '@unovis/svelte'
   import { FitMode, Direction, Orientation, StackedBar } from '@unovis/ts'
   import { data, labels, EducationDatum } from './data'

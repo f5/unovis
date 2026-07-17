@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 
   import { VisXYContainer, VisBulletLegend, VisTooltip, VisAxis, VisScatter, VisLine } from '@unovis/svelte'
   import { Scale, Scatter } from '@unovis/ts'
@@ -28,7 +28,7 @@
 <div>
   <VisBulletLegend items={legendItems}/>
   <VisXYContainer
-    height={height}
+    {height}
   >
     <VisLine
       data={lineData}
@@ -37,21 +37,21 @@
       color={'grey'}
     />
     <VisScatter
-      data={data}
+      {data}
       x={xMen}
-      y={y}
+      {y}
       color={'#4D8CFD'}
       size={10}
     />
     <VisScatter
-      data={data}
+      {data}
       x={xWomen}
-      y={y}
+      {y}
       color={'#FF6B7E'}
       size={10}
     />
-    <VisAxis type='x' numTicks={5} label={'Yearly Salary'} />
-    <VisAxis type='y' tickFormat={tickFormat} numTicks={data.length} gridLine={false} />
+    <VisAxis type="x" numTicks={5} label={'Yearly Salary'} />
+    <VisAxis type="y" {tickFormat} numTicks={data.length} gridLine={false} />
     <VisTooltip triggers={tooltipTriggers}/>
   </VisXYContainer>
 

@@ -1,8 +1,8 @@
 // Types
-import { Position } from 'types/position'
-import { GraphInputLink, GraphInputNode, GraphNodeCore, GraphLinkCore } from 'types/graph'
-import { Spacing } from 'types/spacing'
-import { TrimMode } from 'types/text'
+import { Position } from '@/types/position'
+import { GraphInputLink, GraphInputNode, GraphNodeCore, GraphLinkCore } from '@/types/graph'
+import { Spacing } from '@/types/spacing'
+import { TrimMode } from '@/types/text'
 
 export type GraphNode<
   N extends GraphInputNode = GraphInputNode,

@@ -31,10 +31,10 @@
       Show Scatter: <input type="checkbox" bind:checked={showScatter} />
     </label>
   </div>
-  <VisXYContainer data={data} xDomain={[1989, 2024]} width="100%" height="50vh">
+  <VisXYContainer {data} xDomain={[1989, 2024]} width="100%" height="50vh">
     <VisLine
       curveType={CurveType.Linear}
-      fallbackValue={fallbackValue}
+      {fallbackValue}
       interpolateMissingData={interpolation}
       x={xCallback}
       y={countriesYMemo}

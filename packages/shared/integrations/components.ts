@@ -8,6 +8,7 @@ export function getComponentList (
     // XY Components
     { name: 'Area', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/area'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Axis', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/axis'], dataType: 'Datum[]', angularProvide: 'VisXYComponent', elementSuffix: 'axis' },
+    { name: 'Boxplot', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/boxplot'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Brush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/brush'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Crosshair', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/crosshair'], dataType: 'Datum[]', angularProvide: 'VisXYComponent', elementSuffix: 'crosshair' },
     { name: 'FreeBrush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/free-brush'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
@@ -24,7 +25,9 @@ export function getComponentList (
     { name: 'ChordDiagram', sources: [coreComponentConfigPath, '/components/chord-diagram'], dataType: '{ nodes: N[]; links?: L[] }', angularProvide: 'VisCoreComponent' },
     { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
     { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], dataType: '{ nodes: N[]; links?: L[] }', angularProvide: 'VisCoreComponent' },
+    { name: 'Heatmap', sources: [coreComponentConfigPath, '/components/heatmap'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
     { name: 'NestedDonut', sources: [coreComponentConfigPath, '/components/nested-donut'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
+    { name: 'RadialBar', sources: [coreComponentConfigPath, '/components/radial-bar'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
     { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], dataType: '{ nodes: N[]; links?: L[] }', angularProvide: 'VisCoreComponent' },
     { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: '{areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]}', angularProvide: 'VisCoreComponent' },
     { name: 'Treemap', sources: [coreComponentConfigPath, '/components/treemap'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
