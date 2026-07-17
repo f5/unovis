@@ -18,7 +18,7 @@ export function DocFrameworkTabs ({
   showData,
 }: DocTabsProps): JSX.Element {
   const children = !context || context === ContextLevel.Minimal
-    ? [components.find(c => c.name === mainComponent)]
+    ? [[...components].reverse().find(c => c.name === mainComponent)]
     : components
 
   if (showData) {

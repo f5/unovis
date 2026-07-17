@@ -228,6 +228,103 @@ By default, it uses the CSS variable `--vis-plotband-label-font-size`, which res
 
 <XYWrapper {...xyContainerLabelFontSizeProps()} showContext="container"/>
 
+### Auto Position
+
+When several `Plotband`s (or a mix of plotbands + plotlines) cluster together, their labels can collapse onto the same screen region. Setting `labelAutoPosition` to `true` opts the label into the chart-wide collision resolver: the configured `labelPosition` becomes the *preferred* anchor, and the resolver may swap to another in-bounds, non-colliding candidate when needed. Plotbands and plotlines are coordinated together inside the container.
+
+Default: `false`
+
+The example below renders four overlapping plotbands sharing the same preferred `labelPosition`. Toggle `labelAutoPosition` to see the **main** label fall back to its preferred anchor (off) or join the resolver and pick a non-colliding one (on).
+
+export const autoPositionBandProps = {
+  name: 'Plotband',
+  containerName: 'XYContainer',
+  height: 200,
+  data: generateDataRecords(11),
+  containerProps: { yDomain: [0, 10], margin: { top: 10, right: 40, bottom: 30, left: 40 } },
+  from: 4.0,
+  to: 6.0,
+  labelText: 'main',
+  labelPosition: 'top-right-outside',
+  color: 'rgba(140, 200, 255, 0.3)',
+  components: [
+    { name: 'Line', props: { x: d => d.x, y: d => d.y }, key: 'components' },
+    ...axisComponents,
+    { name: 'Plotband', props: { from: 4.1, to: 6.1, labelText: 'normal',   labelPosition: 'top-right-outside', labelAutoPosition: true, color: 'rgba(140, 240, 160, 0.3)' }, key: 'plotBand' },
+    { name: 'Plotband', props: { from: 4.2, to: 6.2, labelText: 'warning',  labelPosition: 'top-right-outside', labelAutoPosition: true, color: 'rgba(255, 200, 0, 0.3)' }, key: 'plotBand' },
+    { name: 'Plotband', props: { from: 4.3, to: 6.3, labelText: 'critical', labelPosition: 'top-right-outside', labelAutoPosition: true, color: 'rgba(255, 80, 80, 0.3)' }, key: 'plotBand' },
+  ],
+}
+
+<XYWrapperWithInput
+  {...autoPositionBandProps}
+  inputType="checkbox"
+  property="labelAutoPosition"
+  defaultValue={true}
+/>
+
+### Label Overflow
+
+When `labelAutoPosition` is `true` and **no** candidate anchor passes both bounds and collision checks, the resolver falls back per `labelOverflow`:
+
+* `best-effort` *(default)* – pick the in-bounds candidate with the smallest total intersect area. Label stays visible, may slightly overlap.
+* `hide` – set the label opacity to `0`. DOM is preserved (so transitions back work when labels rearrange), but the text is not visible.
+* `stack` – keep the label at its preferred anchor — today's behavior, deliberately exposed as an opt-out.
+
+Default: `best-effort`
+
+The example below renders eighteen overlapping plotbands. Switch `labelOverflow` to see the highlighted **MAIN BAND** (red) label move to a min-overlap anchor (*best-effort*), disappear (*hide*), or stay at its preferred anchor stacked over the others (*stack*).
+
+export const overflowBandExtras = (label, from, to, color) => ({
+  name: 'Plotband',
+  props: { from, to, labelText: label, labelPosition: 'top-right-outside', labelAutoPosition: true, color },
+  key: 'plotBand',
+})
+
+export const overflowBandProps = {
+  name: 'Plotband',
+  containerName: 'XYContainer',
+  height: 200,
+  data: generateDataRecords(11),
+  containerProps: { yDomain: [0, 10], margin: { top: 10, right: 40, bottom: 30, left: 40 } },
+  from: 4.0,
+  to: 5.0,
+  labelText: 'MAIN BAND',
+  labelColor: '#d62728',
+  labelPosition: 'top-right-outside',
+  labelAutoPosition: true,
+  color: 'rgba(214, 39, 40, 0.45)',
+  components: [
+    { name: 'Line', props: { x: d => d.x, y: d => d.y }, key: 'components' },
+    ...axisComponents,
+    overflowBandExtras('b', 4.02, 5.02, 'rgba(140, 240, 160, 0.3)'),
+    overflowBandExtras('c', 4.04, 5.04, 'rgba(255, 200, 0, 0.3)'),
+    overflowBandExtras('d', 4.06, 5.06, 'rgba(255, 80, 80, 0.3)'),
+    overflowBandExtras('e', 4.08, 5.08, 'rgba(140, 200, 255, 0.3)'),
+    overflowBandExtras('f', 4.10, 5.10, 'rgba(140, 240, 160, 0.3)'),
+    overflowBandExtras('g', 4.12, 5.12, 'rgba(255, 200, 0, 0.3)'),
+    overflowBandExtras('h', 4.14, 5.14, 'rgba(255, 80, 80, 0.3)'),
+    overflowBandExtras('i', 4.16, 5.16, 'rgba(140, 200, 255, 0.3)'),
+    overflowBandExtras('j', 4.18, 5.18, 'rgba(140, 240, 160, 0.3)'),
+    overflowBandExtras('k', 4.20, 5.20, 'rgba(255, 200, 0, 0.3)'),
+    overflowBandExtras('l', 4.22, 5.22, 'rgba(255, 80, 80, 0.3)'),
+    overflowBandExtras('m', 4.24, 5.24, 'rgba(140, 200, 255, 0.3)'),
+    overflowBandExtras('n', 4.26, 5.26, 'rgba(140, 240, 160, 0.3)'),
+    overflowBandExtras('o', 4.28, 5.28, 'rgba(255, 200, 0, 0.3)'),
+    overflowBandExtras('p', 4.30, 5.30, 'rgba(255, 80, 80, 0.3)'),
+    overflowBandExtras('q', 4.32, 5.32, 'rgba(140, 200, 255, 0.3)'),
+    overflowBandExtras('r', 4.34, 5.34, 'rgba(140, 240, 160, 0.3)'),
+  ],
+}
+
+<XYWrapperWithInput
+  {...overflowBandProps}
+  inputType="select"
+  property="labelOverflow"
+  options={["smart", "hide", "stack"]}
+  defaultValue="smart"
+/>
+
 ### Label Color
 
 To customize the label’s appearance, use the `labelColor` property. This accepts any valid CSS color string such as:

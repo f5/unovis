@@ -14,6 +14,7 @@ export * from '@/types/graph'
 export * from '@/types/data'
 export * from '@/types/direction'
 export * from '@/types/misc'
+export * from '@/types/plot-label'
 
 // Component Types
 export * from '@/core/component/types'
