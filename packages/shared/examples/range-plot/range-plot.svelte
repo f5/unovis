@@ -2,7 +2,8 @@
 
   import { VisXYContainer, VisBulletLegend, VisTooltip, VisAxis, VisScatter, VisLine } from '@unovis/svelte'
   import { Scale, Scatter } from '@unovis/ts'
-  import { data, DataRecord, processLineData } from './data'
+  import type { DataRecord } from './data'
+  import { data, processLineData } from './data'
 
   const height = 1600
   const yScale = Scale.scalePoint([0, 800]).domain(data.map(d => d.occupation))

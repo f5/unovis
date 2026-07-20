@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Position, Scale, Scatter } from '@unovis/ts'
   import { VisXYContainer, VisScatter, VisAxis, VisTooltip, VisBulletLegend } from '@unovis/svelte'
-  import { palette, data, DataRecord } from './data'
+  import type { DataRecord } from './data'
+  import { palette, data } from './data'
 
   const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()
   const colorScale = Scale.scaleOrdinal(palette).domain(categories)

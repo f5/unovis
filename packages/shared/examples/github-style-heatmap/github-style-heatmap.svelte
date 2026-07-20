@@ -1,7 +1,8 @@
 <script lang="ts">
   import { VisSingleContainer, VisHeatmap } from '@unovis/svelte'
   import { Sizing } from '@unovis/ts'
-  import { data, DataRecord, numRows, offset, columnLabel, rowLabel } from './data'
+  import type { DataRecord } from './data'
+  import { data, numRows, offset, columnLabel, rowLabel } from './data'
 
   const value = (d: DataRecord): number | undefined => d.count || undefined
 </script>

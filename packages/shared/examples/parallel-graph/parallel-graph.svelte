@@ -2,7 +2,8 @@
   import { VisSingleContainer, VisGraph } from '@unovis/svelte'
   import { Graph, GraphLayoutType } from '@unovis/ts'
 
-  import { nodes, links, sites, StatusMap, NodeDatum, LinkDatum } from './data'
+  import type { NodeDatum, LinkDatum } from './data'
+  import { nodes, links, sites, StatusMap } from './data'
 
   const mainSite = nodes[0].site
 

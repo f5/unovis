@@ -1,6 +1,7 @@
 <script lang="ts">
   import { VisSingleContainer, VisDonut, VisBulletLegend } from '@unovis/svelte'
-  import { data, DataRecord } from './data'
+  import type { DataRecord } from './data'
+  import { data } from './data'
 
   const legendItems = Object.entries(data).map(([_, data]) => ({
     name: data.key.charAt(0).toUpperCase() + data.key.slice(1),

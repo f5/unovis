@@ -50,6 +50,9 @@ export { VisPlotlineModule } from './components/plotline/plotline.module'
 export { VisSankeyComponent } from './components/sankey/sankey.component'
 export { VisSankeyModule } from './components/sankey/sankey.module'
 
+export { VisRadialBarComponent } from './components/radial-bar/radial-bar.component'
+export { VisRadialBarModule } from './components/radial-bar/radial-bar.module'
+
 export { VisScatterComponent } from './components/scatter/scatter.component'
 export { VisScatterModule } from './components/scatter/scatter.module'
 
@@ -64,6 +67,9 @@ export { VisXYLabelsModule } from './components/xy-labels/xy-labels.module'
 
 export { VisTopoJSONMapComponent } from './components/topojson-map/topojson-map.component'
 export { VisTopoJSONMapModule } from './components/topojson-map/topojson-map.module'
+
+export { VisTreemapComponent } from './components/treemap/treemap.component'
+export { VisTreemapModule } from './components/treemap/treemap.module'
 
 export { VisPlotbandComponent } from './components/plotband/plotband.component'
 export { VisPlotbandModule } from './components/plotband/plotband.module'

@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { BulletLegendItemInterface } from '@unovis/ts'
+  import type { BulletLegendItemInterface } from '@unovis/ts'
   import { VisXYContainer, VisArea, VisAxis, VisBulletLegend } from '@unovis/svelte'
-  import { candidates, data, DataRecord } from './data'
+  import type { DataRecord } from './data'
+  import { candidates, data } from './data'
 
   let curr = candidates[0].name
 

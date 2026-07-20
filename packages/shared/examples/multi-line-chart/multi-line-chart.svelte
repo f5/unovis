@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Scale } from '@unovis/ts'
   import { VisXYContainer, VisLine, VisAxis, VisBulletLegend } from '@unovis/svelte'
-  import { data, labels, CityTemps } from './data'
+  import type { CityTemps } from './data'
+  import { data, labels } from './data'
 
   const x = (d: CityTemps) => +(new Date(d.date))
   const y = [

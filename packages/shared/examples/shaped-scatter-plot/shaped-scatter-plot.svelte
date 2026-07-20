@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Position, Scale, Scatter, colors } from '@unovis/ts'
   import { VisXYContainer, VisScatter, VisAxis, VisTooltip, VisBulletLegend } from '@unovis/svelte'
-  import { data, DataRecord, shapes, categories, sumCategories } from './data'
+  import type { DataRecord } from './data'
+  import { data, shapes, categories, sumCategories } from './data'
 
   const shapeScale = Scale.scaleOrdinal(shapes).domain(categories)
   const colorScale = Scale.scaleOrdinal(colors).domain(categories)
