@@ -4,7 +4,8 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "paths": {
-     "@unovis/ts": ["../../ts/lib/index.js"],
+     "@unovis/ts": ["../../ts/dist/index.js"],
+     "@unovis/ts/*": ["../../ts/dist/*"],
      "@unovis/shared/*": ["../../shared/*"],
      "@unovis/angular": ["../src/public-api.ts"],
     },

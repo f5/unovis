@@ -6,6 +6,7 @@ import { data, NodeDatum, LinkDatum } from './data'
 @Component({
   selector: 'dagre-graph',
   templateUrl: './dagre-graph.component.html',
+  standalone: false,
 })
 export class BasicGraphComponent {
   data = data

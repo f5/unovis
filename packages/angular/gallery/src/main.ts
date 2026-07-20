@@ -57,6 +57,7 @@ import { PlotbandPlotlineModule } from '@unovis/shared/examples/plotband-plotlin
 
 @Component({
   selector: 'app-component',
+  standalone: false,
   template: `
     <!-- Area -->
     <stacked-area-chart></stacked-area-chart>

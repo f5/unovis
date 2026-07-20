@@ -12,6 +12,7 @@ const yearIndex = Scale.scaleLinear()
   selector: 'topojson-map',
   templateUrl: './topojson-map.component.html',
   styleUrls: ['./styles.css'],
+  standalone: false,
 })
 export class TopojsonMapComponent {
   topojson = WorldMapTopoJSON
@@ -20,7 +21,7 @@ export class TopojsonMapComponent {
   currentYear = 2019
   mapData = { areas: data }
   tooltipTriggers = {
-    [TopoJSONMap.selectors.feature]: d =>
+    [TopoJSONMap.selectors.feature]: (d: any): string =>
       `${d.properties.name}: ${d.data ? this.getExpectancy(d.data) : 'no data'}`
     ,
   }
@@ -40,7 +41,7 @@ export class TopojsonMapComponent {
   }
 
   // legend config
-  getGradientColor = (_, i: number): string => this.color(i + ageRange[0])
+  getGradientColor = (_: Record<string, never>, i: number): string => this.color(i + ageRange[0])
   gradientSteps: number[] = Array(ageRange[1] - ageRange[0]).fill(1)
   numLabels: number = (ageRange[1] - ageRange[0]) / 5
   tickFormat = (i: number): number => ageRange[0] + i

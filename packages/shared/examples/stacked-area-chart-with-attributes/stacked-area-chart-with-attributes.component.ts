@@ -8,6 +8,7 @@ import { data, countries, FoodExportData, bulletLegends } from './data'
   templateUrl: './stacked-area-chart-with-attributes.component.html',
   styleUrls: ['./styles.css'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class StackedAreaWithAttributesComponent {
   data = data

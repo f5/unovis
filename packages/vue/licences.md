@@ -12,7 +12,7 @@
 | rollup-plugin-typescript2      | perpetual      | MIT          | 0.31.2            | @ezolenko                                                         |
 | tslib                          | perpetual      | 0BSD         | 2.8.1             | Microsoft Corp.                                                   |
 | typescript                     | perpetual      | Apache-2.0   | 5.6.3             | Microsoft Corp.                                                   |
-| vite                           | perpetual      | MIT          | 7.3.2             | Evan You                                                          |
+| vite                           | perpetual      | MIT          | 7.3.6             | Evan You                                                          |
 | vite-plugin-css-injected-by-js | perpetual      | MIT          | 3.5.2             | Marco Prontera                                                    |
 | vite-plugin-dts                | perpetual      | MIT          | 3.9.1             | qmhc                                                              |
 | vue                            | perpetual      | MIT          | 3.5.30            | Evan You                                                          |

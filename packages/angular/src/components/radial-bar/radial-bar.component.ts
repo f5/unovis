@@ -8,6 +8,7 @@ import { VisCoreComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisRadialBarComponent }],
+  standalone: false,
 })
 export class VisRadialBarComponent<Datum> implements RadialBarConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */

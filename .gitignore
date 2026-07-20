@@ -51,6 +51,7 @@ stats.html
 .autogen.js
 .srcsha
 licences.temp
+.angular
 scripts/vulnerability-report*
 unovis-commands-report-*
 

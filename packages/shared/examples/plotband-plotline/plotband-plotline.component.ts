@@ -4,6 +4,7 @@ import { data, DataRecord } from './data'
 @Component({
   selector: 'plotband-plotline',
   templateUrl: './plotband-plotline.component.html',
+  standalone: false,
 })
 export class PlotbandPlotlineComponent {
   x = (d: DataRecord): number => d.x

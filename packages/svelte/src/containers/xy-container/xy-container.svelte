@@ -40,7 +40,7 @@
   $: chart?.setData(data, true)
 
   let animationFrame = 0
-  const updateContainer = async () => {
+  const updateContainer = () => {
     // due to the order of events when a component is removed update container can be called
     // while a component is being destroyed. This can lead to an error because we trigger an update
     // with a destroyed component.
@@ -73,7 +73,9 @@
   }
 
   $: {
+    // eslint-disable-next-line no-unused-expressions
     config
+    // eslint-disable-next-line no-unused-expressions
     $$restProps
     updateContainer()
   }

@@ -4,6 +4,7 @@ import { data, DataRecord } from './data'
 @Component({
   selector: 'basic-donut-chart',
   templateUrl: './basic-donut-chart.component.html',
+  standalone: false,
 })
 
 export class BasicDonutChartComponent {

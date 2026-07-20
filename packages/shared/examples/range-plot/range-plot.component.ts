@@ -6,6 +6,7 @@ const yScale = Scale.scalePoint([0, 800]).domain(data.map(d => d.occupation))
 @Component({
   selector: 'range-plot',
   templateUrl: './range-plot.component.html',
+  standalone: false,
 })
 export class RangePlotComponent {
   height = 1600

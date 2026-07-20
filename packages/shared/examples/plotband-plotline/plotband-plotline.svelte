@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <VisXYContainer :height="600">
+  <VisXYContainer height={600}>
     <VisLine {data} x={d => d.x} y={d => d.y} />
     <VisAxis type="x" />
     <VisAxis type="y" />

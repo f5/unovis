@@ -6,6 +6,7 @@ import { nodes, links, sites, StatusMap, NodeDatum, LinkDatum } from './data'
   selector: 'parallel-graph',
   templateUrl: './parallel-graph.component.html',
   styleUrls: ['./styles.css'],
+  standalone: false,
 })
 export class ParallelGraphComponent {
   mainSite: string = nodes[0].site
@@ -36,7 +37,7 @@ export class ParallelGraphComponent {
   layoutParallelNodesPerColumn = 4
   events = {
     [Graph.selectors.node]: {
-      click: (d: NodeDatum) => this.setExpanded(d.site),
+      click: (d: NodeDatum): void => this.setExpanded(d.site),
     },
   }
 

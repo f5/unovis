@@ -12,6 +12,7 @@ import { VisAnnotationsComponent } from '../../components/annotations/annotation
     <ng-content></ng-content>
   </div>`,
   styles: ['.unovis-single-container { width: 100%; height: 100%; position: relative; }'],
+  standalone: false,
 })
 export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore<Data> = ComponentCore<Data>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
