@@ -290,6 +290,20 @@ export function launchStackBlitz (framework: Framework, example: Example): void 
 
   if (framework !== Framework.TypeScript) project.dependencies[`@unovis/${framework}`] = ver
 
+  if (framework === Framework.Angular) {
+    Object.assign(project.dependencies, {
+      '@angular/core': '^20.0.0',
+      '@angular/common': '^20.0.0',
+      '@angular/platform-browser': '^20.0.0',
+      '@angular/platform-browser-dynamic': '^20.0.0',
+      '@angular/compiler': '^20.0.0',
+      '@angular/animations': '^20.0.0',
+      '@angular/forms': '^20.0.0',
+      '@angular/router': '^20.0.0',
+      'zone.js': '~0.15.0',
+    })
+  }
+
   sdk.openProject(project, {
     openFile: getOpenFiles(framework, project.files),
   })
