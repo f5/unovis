@@ -27,7 +27,7 @@
 | ts-loader                            | perpetual      | MIT          | 9.5.4             | John Reilly <johnny_reilly@hotmail.com> (https://johnnyreilly.com) |
 | typescript                           | perpetual      | Apache-2.0   | 4.9.5             | Microsoft Corp.                                                    |
 | typescript-plugin-css-modules        | perpetual      | MIT          | 4.2.3             | Brody McKee <mrmckeb@hotmail.com>                                  |
-| webpack                              | perpetual      | MIT          | 5.76.0            | Tobias Koppers @sokra                                              |
+| webpack                              | perpetual      | MIT          | 5.105.4           | Tobias Koppers @sokra                                              |
 | webpack-cli                          | perpetual      | MIT          | 5.1.4             | n/a                                                                |
 | webpack-dev-server                   | perpetual      | MIT          | 5.2.3             | Tobias Koppers @sokra                                              |
 | style-loader                         | perpetual      | MIT          | 3.3.4             | Tobias Koppers @sokra                                              |
