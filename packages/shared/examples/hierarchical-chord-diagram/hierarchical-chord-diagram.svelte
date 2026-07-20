@@ -1,7 +1,9 @@
 <script lang="ts">
   import { VisSingleContainer, VisChordDiagram } from '@unovis/svelte'
-  import { ChordHierarchyNode, ChordLabelAlignment } from '@unovis/ts'
-  import { colorMap, links, nodes, LinkDatum, NodeDatum } from './data'
+  import { ChordLabelAlignment } from '@unovis/ts'
+  import type { ChordHierarchyNode } from '@unovis/ts'
+  import type { LinkDatum, NodeDatum } from './data'
+  import { colorMap, links, nodes } from './data'
 
   const data = { links, nodes }
   const linkColor = (l: LinkDatum) => colorMap.get(l.source.country)

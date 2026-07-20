@@ -1,7 +1,8 @@
 <script lang="ts">
 
   import { VisXYContainer, VisArea, VisAxis, VisLine } from '@unovis/svelte'
-  import { XYDataRecord, generateXYDataRecords } from './data'
+  import type { XYDataRecord } from './data'
+  import { generateXYDataRecords } from './data'
 
   const margin = { left: 100, right: 100, top: 40, bottom: 60 }
   const chartX = d => d.x

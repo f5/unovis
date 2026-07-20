@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Scale } from '@unovis/ts'
   import { VisXYContainer, VisLine, VisStackedBar, VisAxis, VisAnnotations } from '@unovis/svelte'
-  import { data, DataRecord } from './data'
+  import type { DataRecord } from './data'
+  import { data } from './data'
 
   // Scales
   const xScale = Scale.scaleTime()

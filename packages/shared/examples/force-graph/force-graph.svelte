@@ -1,7 +1,9 @@
 <script lang="ts">
   import { VisSingleContainer, VisGraph } from '@unovis/svelte'
-  import { GraphForceLayoutSettings, GraphLayoutType } from '@unovis/ts'
-  import { data, LinkDatum, NodeDatum } from './data'
+  import { GraphLayoutType } from '@unovis/ts'
+  import type { GraphForceLayoutSettings } from '@unovis/ts'
+  import type { LinkDatum, NodeDatum } from './data'
+  import { data } from './data'
 
   const forceLayoutSettings: GraphForceLayoutSettings = {
     forceXStrength: 0.2,

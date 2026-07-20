@@ -2,7 +2,8 @@
   // eslint-disable svelte/no-at-html-tags
   import { Position } from '@unovis/ts'
   import { VisAxis, VisCrosshair, VisStackedBar, VisTooltip, VisXYContainer } from '@unovis/svelte'
-  import { data, labels, DataRecord, FormatConfig } from './data'
+  import type { DataRecord, FormatConfig } from './data'
+  import { data, labels } from './data'
 
   const height = 450
   const x = (d: DataRecord) => d.year

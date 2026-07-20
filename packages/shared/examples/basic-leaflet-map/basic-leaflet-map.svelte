@@ -1,7 +1,8 @@
 <script lang="ts">
   import { VisLeafletMap } from '@unovis/svelte'
   // Data
-  import { MapPointDataRecord, data } from './data'
+  import type { MapPointDataRecord } from './data'
+  import { data } from './data'
 
   // !!! Get your own access key from https://maptiler.com
   import { mapKey } from './constants'

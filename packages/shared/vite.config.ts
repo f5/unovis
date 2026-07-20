@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, transformWithEsbuild } from 'vite'
 import { fileURLToPath } from 'node:url'
 import { resolve, dirname } from 'node:path'
 import { readFile } from 'node:fs/promises'
@@ -8,7 +8,6 @@ import react from '@vitejs/plugin-react'
 import vue from '@vitejs/plugin-vue'
 import solid from 'vite-plugin-solid'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
-import sveltePreprocess from 'svelte-preprocess'
 
 const here = fileURLToPath(new URL('.', import.meta.url))
 const pkgSrc = (name: string): string => resolve(here, '..', name, 'src')
@@ -118,14 +117,88 @@ export default defineConfig({
     }),
     vue(),
     // The @unovis/svelte source uses TS syntax in <script> blocks WITHOUT
-    // declaring `lang="ts"`. `svelte-preprocess` (also used by the published
-    // build via packages/svelte/svelte.config.js) treats every script as TS,
-    // strips type-only imports, and handles `$$Generic`.
+    // declaring `lang="ts"`. We use a lightweight custom preprocessor that
+    // strips types via `transformWithEsbuild` — the old `svelte-preprocess@4`
+    // hardcodes the removed `importsNotUsedAsValues` compiler option which
+    // errors on TypeScript 5.5+.
     // `hot: false` disables svelte-hmr's proxy wrapping. The proxy breaks
     // Svelte's lifecycle when we mount via `new Component({target})` outside a
     // tracked container — onMount callbacks never fire under the proxy here.
     svelte({
-      preprocess: sveltePreprocess({ typescript: { tsconfigFile: false } }),
+      preprocess: {
+        async script ({ content, attributes, filename }) {
+          // Treat all <script> blocks as TS (the @unovis/svelte source omits lang="ts" on some files)
+          if (attributes.lang && attributes.lang !== 'ts' && attributes.lang !== 'typescript') return
+
+          // Example files live in packages/shared/examples/ — their imports are
+          // only referenced in the Svelte template. Internal @unovis/svelte
+          // components reference their imports in the script body, so esbuild
+          // can safely tree-shake unused (type-only) imports for those.
+          const isExample = !!filename && /[/\\]examples[/\\]/.test(filename)
+
+          if (!isExample) {
+            // Internal components: just strip types, let esbuild elide type imports
+            const result = await transformWithEsbuild(content, filename ?? 'script.ts', {
+              loader: 'ts',
+              sourcemap: false,
+              tsconfigRaw: { compilerOptions: {} },
+            })
+            return { code: result.code }
+          }
+
+          // Example files: imports are only referenced in the Svelte template,
+          // so esbuild considers them unused. Append a synthetic re-export to
+          // force preservation, then strip it from the output.
+          //
+          // IMPORTANT: only add names from regular `import { }` statements to
+          // the sentinel — never names from `import type { }`. The sentinel
+          // makes esbuild keep the import statement (because the name now has a
+          // value usage), but `export type Foo` is not a real runtime binding.
+          // If such a name survives the sentinel strip Vite raises at load time:
+          // "does not provide an export named 'Foo'".
+          //
+          // Rule: use `import type { TypeName }` (separate from value imports)
+          // for any TypeScript-only name from local modules — then the regex
+          // below never captures it and esbuild correctly elides it.
+          const importNames = new Set<string>()
+          const importRe = /import\s+\{([^}]+)\}\s+from\s+['"][^'"]+['"]/g
+          let m: RegExpExecArray | null
+          while ((m = importRe.exec(content)) !== null) {
+            for (const name of m[1].split(',')) {
+              const raw = name.trim()
+              // Skip inline `type` modifiers: `import { type Foo, Bar }` → skip Foo
+              if (raw.startsWith('type ')) continue
+              const trimmed = raw.split(/\s+as\s+/).pop()!.trim()
+              if (trimmed) importNames.add(trimmed)
+            }
+          }
+          // Also handle default imports: import Foo from '...'
+          // Only PascalCase/UPPER_CASE names — lowercase defaults (e.g. `import d3 from 'd3'`)
+          // are never used as template-level bindings so we intentionally skip them.
+          const defaultRe = /import\s+([A-Z_$][\w$]*)\s+from\s+['"][^'"]+['"]/g
+          while ((m = defaultRe.exec(content)) !== null) {
+            importNames.add(m[1])
+          }
+          // Use a uniquely-named const as the sentinel so we can strip it by name
+          // rather than relying on "last export statement" position, which would
+          // silently corrupt files that already end with a legitimate export {}.
+          const MARKER = '__UNOVIS_SENTINEL__'
+          const sentinel = importNames.size
+            ? `\nconst ${MARKER} = { ${[...importNames].join(', ')} }`
+            : ''
+          const input = sentinel ? content + sentinel : content
+          const result = await transformWithEsbuild(input, filename ?? 'script.ts', {
+            loader: 'ts',
+            sourcemap: false,
+            tsconfigRaw: { compilerOptions: {} },
+          })
+          // Strip the synthetic sentinel const
+          const code = sentinel
+            ? result.code.replace(new RegExp(`\\nconst ${MARKER}[^;]+;\\n?`), '\n')
+            : result.code
+          return { code }
+        },
+      },
       hot: false,
     }),
   ],
@@ -142,14 +215,14 @@ export default defineConfig({
       // Mirror the workspace path aliases that `@unovis/ts` uses internally via
       // tsconfig `paths` (see packages/ts/tsconfig.json). Webpack does the same
       // in packages/dev/webpack.config.js. Order matters — more specific first.
-      'types/': `${pkgSrc('ts')}/types/`,
-      'utils/': `${pkgSrc('ts')}/utils/`,
-      'core/': `${pkgSrc('ts')}/core/`,
-      'components/': `${pkgSrc('ts')}/components/`,
-      'containers/': `${pkgSrc('ts')}/containers/`,
-      'styles/': `${pkgSrc('ts')}/styles/`,
-      'data-models/': `${pkgSrc('ts')}/data-models/`,
-      'data/': `${pkgSrc('ts')}/data/`,
+      '@/types/': `${pkgSrc('ts')}/types/`,
+      '@/utils/': `${pkgSrc('ts')}/utils/`,
+      '@/core/': `${pkgSrc('ts')}/core/`,
+      '@/components/': `${pkgSrc('ts')}/components/`,
+      '@/containers/': `${pkgSrc('ts')}/containers/`,
+      '@/styles/': `${pkgSrc('ts')}/styles/`,
+      '@/data-models/': `${pkgSrc('ts')}/data-models/`,
+      '@/data/': `${pkgSrc('ts')}/data/`,
       // Used in packages/react/src/html-components/**/index.tsx
       'src/utils/react': `${pkgSrc('react')}/utils/react`,
       '@unovis/ts': pkgSrc('ts'),

@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { BulletLegendItemInterface } from '@unovis/ts'
+  import type { BulletLegendItemInterface } from '@unovis/ts'
   import { VisXYContainer, VisAxis, VisBrush, VisGroupedBar, VisBulletLegend } from '@unovis/svelte'
-  import { data, groups, GroupItem, DataRecord } from './data'
+  import type { GroupItem, DataRecord } from './data'
+  import { data, groups } from './data'
 
   type LegendItem = BulletLegendItemInterface & GroupItem
 

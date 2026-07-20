@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Timeline } from '@unovis/ts'
   import { VisXYContainer, VisBulletLegend, VisTooltip, VisTimeline, VisAxis } from '@unovis/svelte'
-  import { colorMap, data, DataRecord, ProductType } from './data'
+  import type { DataRecord } from './data'
+  import { colorMap, data, ProductType } from './data'
 
   const labelWidth = 220
   const dateFormatter = Intl.DateTimeFormat().format

@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { NumericAccessor, StringAccessor } from '@unovis/ts'
   import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend } from '@unovis/svelte'
-  import { data, DataRecord } from './data'
+  import type { DataRecord } from './data'
+  import { data } from './data'
 
   const legendItems = [
     { name: 'Male', color: '#1fc3aa' },

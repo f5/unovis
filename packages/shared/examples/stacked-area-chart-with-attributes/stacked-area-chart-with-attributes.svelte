@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Area } from '@unovis/ts'
   import { VisXYContainer, VisBulletLegend, VisAxis, VisArea } from '@unovis/svelte'
-  import { data, countries, FoodExportData, bulletLegends } from './data'
+  import type { FoodExportData } from './data'
+  import { data, countries, bulletLegends } from './data'
 
   const x = (d: FoodExportData) => d.year
   const y = countries.map(g => (d: FoodExportData) => d[g])

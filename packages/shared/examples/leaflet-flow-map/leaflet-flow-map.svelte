@@ -2,7 +2,8 @@
   import { VisLeafletFlowMap } from '@unovis/svelte'
 
   // Data
-  import { MapPointDataRecord, MapFlowDataRecord, data } from './data'
+  import type { MapPointDataRecord, MapFlowDataRecord } from './data'
+  import { data } from './data'
 
   // !!! Get your own access key from https://maptiler.com
   import { mapKey } from './constants'

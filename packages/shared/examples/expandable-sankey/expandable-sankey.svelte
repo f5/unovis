@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { FitMode, Sankey, SankeyLink, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@unovis/ts'
+  import { FitMode, Sankey, SankeySubLabelPlacement, VerticalAlign } from '@unovis/ts'
+  import type { SankeyLink, SankeyNode } from '@unovis/ts'
   import { VisSingleContainer, VisSankey } from '@unovis/svelte'
-  import { sankeyData, root, Node, Link } from './data'
+  import type { Node, Link } from './data'
+  import { sankeyData, root } from './data'
 
   let data = { nodes: sankeyData.nodes, links: sankeyData.links }
 

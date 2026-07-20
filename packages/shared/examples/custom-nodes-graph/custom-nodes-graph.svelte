@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Selection } from 'd3-selection'
-  import { GraphNode, Graph, GraphNodeSelectionHighlightMode } from '@unovis/ts'
+  import { Graph, GraphNodeSelectionHighlightMode } from '@unovis/ts'
+  import type { GraphNode } from '@unovis/ts'
   import { VisSingleContainer, VisGraph, VisTooltip } from '@unovis/svelte'
   import {
     globalControlsContainer,
@@ -11,7 +12,8 @@
     renderSwimlanes,
     updateSwimlanes,
   } from './constants'
-  import { data, DEFAULT_NODE_SIZE, nodeTypeColorMap, CustomGraphNodeType, CustomGraphLink, CustomGraphNode } from './data'
+  import type { CustomGraphLink, CustomGraphNode } from './data'
+  import { data, DEFAULT_NODE_SIZE, nodeTypeColorMap, CustomGraphNodeType } from './data'
 
   let graphRef: any = null
   let selectedNodeId: string | undefined

@@ -2,7 +2,8 @@
   import type { NumericAccessor } from '@unovis/ts'
   import { CurveType } from '@unovis/ts'
   import { VisXYContainer, VisAxis, VisArea, VisBulletLegend } from '@unovis/svelte'
-  import { countries, Country, data, DataRecord } from './data'
+  import type { DataRecord } from './data'
+  import { countries, Country, data } from './data'
 
   const x = (_: DataRecord, i: number) => i
   const accessors = (id: Country): { y: NumericAccessor<DataRecord>; color: string } => ({
