@@ -2,10 +2,10 @@ import { Selection } from 'd3-selection'
 
 // Utils
 import { estimateTextSize, trimSVGText, wrapSVGText } from '@/utils/text'
-import { estimateStringPixelLength } from '@/utils/text-measure'
+import { estimateStringPixelLength, getPreciseStringLengthPx } from '@/utils/text-measure'
 import { clamp, getString, getValue } from '@/utils/data'
 import { getColor } from '@/utils/color'
-import { getCSSVariableValueInPixels } from '@/utils/misc'
+import { getCSSVariableValue, getCSSVariableValueInPixels } from '@/utils/misc'
 import { cssvar } from '@/utils/style'
 
 // Types
@@ -40,11 +40,17 @@ export function getSubLabelFontSize<N extends SankeyInputNode, L extends SankeyI
   return config.subLabelFontSize ?? getCSSVariableValueInPixels(cssvar(s.variables.sankeyNodeSublabelFontSize), context)
 }
 
+export function getLabelFontFamily (context: HTMLElement | SVGElement): string {
+  return getCSSVariableValue('var(--vis-sankey-label-font-family)', context) ||
+    getCSSVariableValue('var(--vis-font-family)', context)
+}
+
 export function estimateRequiredLabelWidth<N extends SankeyInputNode, L extends SankeyInputLink> (
   d: SankeyNode<N, L>,
   config: SankeyConfigInterface<N, L>,
   labelFontSize: number,
-  subLabelFontSize: number
+  subLabelFontSize: number,
+  context?: HTMLElement | SVGElement
 ): number {
   const labelAddWidth = 2 // Adding a few pixels for the label background to look more aligned
   const inlineLabelAddWidth = 8 // Without this, the label anf sub-label will look too close to each other
@@ -52,8 +58,14 @@ export function estimateRequiredLabelWidth<N extends SankeyInputNode, L extends 
   const isSublabelInline = config.subLabelPlacement === SankeySubLabelPlacement.Inline
   const labelText = `${getString(d, config.label) ?? ''}` // Stringify because theoretically it can be a number
   const sublabelText = `${getString(d, config.subLabel) ?? ''}` // Stringify because theoretically it can be a number
-  const labelTextWidth = tolerance * estimateStringPixelLength(labelText, labelFontSize)
-  const sublabelTextWidth = tolerance * estimateStringPixelLength(sublabelText, subLabelFontSize)
+
+  const fontFamily = context && getLabelFontFamily(context)
+  const measure = (text: string, fontSize: number): number => fontFamily
+    ? getPreciseStringLengthPx(text, fontFamily, fontSize)
+    : estimateStringPixelLength(text, fontSize)
+
+  const labelTextWidth = tolerance * measure(labelText, labelFontSize)
+  const sublabelTextWidth = tolerance * measure(sublabelText, subLabelFontSize)
   return isSublabelInline ? inlineLabelAddWidth + (labelTextWidth + sublabelTextWidth) : labelAddWidth + Math.max(labelTextWidth, sublabelTextWidth)
 }
 
@@ -263,7 +275,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   labelBackground
     .attr('d', () => {
       if (!labelShowBackground) return null
-      const requiredLabelWidth = estimateRequiredLabelWidth(d, config, labelFontSize, subLabelFontSize)
+      const requiredLabelWidth = estimateRequiredLabelWidth(d, config, labelFontSize, subLabelFontSize, labelGroup.node() ?? undefined)
       return getLabelBackground(Math.min(labelMaxWidth, requiredLabelWidth) + 2 * labelPadding, labelGroupHeight, labelOrientation as (Position.Left | Position.Right))
     })
 

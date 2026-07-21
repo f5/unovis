@@ -140,14 +140,14 @@ export class Sankey<
       const hasLabelsOnTheLeft = zeroLayerNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Left)
 
       if (hasLabelsOnTheLeft) {
-        const maxLeftLabelWidth = max(zeroLayerNodes, d => estimateRequiredLabelWidth(d, config, labelFontSize, subLabelFontSize))
+        const maxLeftLabelWidth = max(zeroLayerNodes, d => estimateRequiredLabelWidth(d, config, labelFontSize, subLabelFontSize, this.element as SVGElement))
         left = min([labelMaxWidth, maxLeftLabelWidth]) + labelHorizontalPadding
       }
 
       let right = 0
       const hasLabelsOnTheRight = maxLayerNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Right)
       if (hasLabelsOnTheRight) {
-        const maxRightLabelWidth = max(maxLayerNodes, d => estimateRequiredLabelWidth(d, config, labelFontSize, subLabelFontSize))
+        const maxRightLabelWidth = max(maxLayerNodes, d => estimateRequiredLabelWidth(d, config, labelFontSize, subLabelFontSize, this.element as SVGElement))
         right = min([labelMaxWidth, maxRightLabelWidth]) + labelHorizontalPadding
       }
 
