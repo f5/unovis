@@ -85,6 +85,10 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   nodeMaxHeight?: number;
   /** Sankey vertical separation between nodes in pixels. Default: `2` */
   nodePadding?: number;
+  /** Compress `nodePadding` when it doesn't fit the available height, so that node bodies
+   * always keep at least a third of it instead of collapsing to zero height.
+   * Applied only when `Sizing.Fit` is selected. Default: `false` */
+  nodeAdaptivePadding?: boolean;
   /** Display the graph when data has just one element */
   showSingleNode?: boolean;
   /** Node cursor on hover. Default: `undefined` */
@@ -198,6 +202,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   nodeMinHeight: 20,
   nodeMaxHeight: 100,
   nodePadding: 2,
+  nodeAdaptivePadding: false,
   nodeColor: (d: SankeyInputNode) => (d as { color: string }).color,
   nodePattern: undefined,
   nodeFixedValue: (d: SankeyInputNode) => (d as { fixedValue: number }).fixedValue,
