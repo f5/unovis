@@ -34,6 +34,13 @@ wrapper is generated from it.
    existing util/accessor/type before adding one.
 6. **Verify before you claim done.** Run `pnpm lint` and the relevant `pnpm build:*`; for visual
    components, check `pnpm dev`.
+7. **Constants live in a dedicated `constants.ts`.** When you introduce constants, put them in a
+   `constants.ts` next to the code that uses them (see
+   `packages/ts/src/components/{crosshair,donut,timeline}/constants.ts`) — never inline them in the
+   middle of a component, a util file, or anywhere else.
+8. **Use the repo's type-check helpers.** For runtime type checks reach for the helpers in
+   `@/utils/data` (`isString`, `isNumber`, `isFunction`, `isArray`, `isObject`, `isPlainObject`)
+   instead of hand-writing `typeof x === 'string'`, `typeof x === 'function'`, or `Array.isArray(…)`.
 
 ## Setup & commands
 
