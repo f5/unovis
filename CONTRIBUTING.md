@@ -16,7 +16,12 @@ Adding a new component:
 3. Write documentation for your new component;
 4. Add examples to Gallery.
 
-More details coming soon, stay tuned!
+For step-by-step guides, see [Adding a Component](https://unovis.dev/contributing/guides/adding-a-component)
+and [Adding Gallery Examples](https://unovis.dev/contributing/guides/gallery-examples).
+
+> **Using an AI coding agent (Claude Code, Codex, Cursor)?** Start with [`AGENTS.md`](https://github.com/f5/unovis/blob/main/AGENTS.md) at the
+> repo root. It captures our commit format, code style, and the component workflow, and ships ready-made
+> `/commit`, `/open-pr`, `/add-component`, and `/add-gallery-example` skills.
 
 ## Pull Requests
 We actively welcome pull requests. If you want to submit one, please follow the following process:
