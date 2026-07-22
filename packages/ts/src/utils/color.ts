@@ -22,7 +22,7 @@ export function getColor<T> (
   d: T,
   accessorOrValue: ColorAccessor<T>,
   index?: number,
-  key?: string,
+  key?: string | boolean, // Todo: Remove (key === true) in Unovis 2.0. We have is only for backward compatibility, it used to be `dontFallbackToCssVar`
   options?: {
     dontFallbackToCssVar?: boolean;
     colorFn?: ColorFunction;
@@ -42,12 +42,15 @@ export function getColor<T> (
 
   // If key is provided, return the color for the key
   const colorScale = options?.colorFn ?? UnovisColorScale
-  if (key) {
+  if (typeof key === 'string' && key) {
     return colorScale(key as string)
   }
 
+  // Todo: Remove (key === true) in Unovis 2.0. We have is only for backward compatibility.
+  const dontFallbackToCssVar = options?.dontFallbackToCssVar ?? (key === true)
+
   // If index is a number and `dontFallbackToCssVar` is `false`, return the color for the index
-  if (isNumber(index) && !options?.dontFallbackToCssVar) return colorScale(index % colors.length)
+  if (isNumber(index) && !dontFallbackToCssVar) return colorScale(index % colors.length)
 
   // If all else fails, return null
   return null
