@@ -15,6 +15,7 @@
 <!-- Tick what applies; delete what doesn't. A new component usually touches all four. -->
 
 - [ ] Dev examples
+- [ ] Dev gallery examples (`pnpm dev:gallery`)
 - [ ] Wrappers (regenerated via `pnpm generate`)
 - [ ] Gallery example
 - [ ] Docs
