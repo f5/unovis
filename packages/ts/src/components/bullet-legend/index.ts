@@ -82,7 +82,7 @@ export class BulletLegend {
       })
       .style('height', config.bulletSize)
       .style('box-sizing', 'content-box')
-      .call(updateBullets, this.config, this._colorAccessor, config.color)
+      .call(updateBullets, this.config, this._colorAccessor, config.colorFunction)
 
     // Labels
     legendItemsEnter.append('span')

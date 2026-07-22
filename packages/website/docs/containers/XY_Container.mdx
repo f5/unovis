@@ -232,10 +232,10 @@ You can set `yDirection` to change the direction of data along the Y axis. Suppo
 <XYWrapper {...xyContainerProps()} yDirection='south' showContext='container'/>
 
 ## Color
-Use the `color` property to give every component inside the container a single _color function_ of type
+Use the `colorFunction` property to give every component inside the container a single _color function_ of type
 `(key: string | number) => string`. Each component resolves its color through this function, passing either a
 data **color key** (from the component's `colorKeys` property) or, as a fallback, the series index. Supplying
-one `color` function at the container level — and reusing it across other containers and the `BulletLegend` —
+one `colorFunction` at the container level — and reusing it across other containers and the `BulletLegend` —
 is how you keep a category's color consistent across multiple charts.
 
 ```ts
@@ -244,7 +244,7 @@ const color = Scale.scaleOrdinal().range(['#4d8cfd', '#ff6b7e', '#00c19a'])
 ```
 
 In the example below the _StackedBar_'s three series are labeled with `colorKeys`, and the container's
-`color` function maps each key to a color:
+`colorFunction` maps each key to a color:
 
 <BrowserOnly>
 {() => {
@@ -253,7 +253,7 @@ In the example below the _StackedBar_'s three series are labeled with `colorKeys
   return (
     <XYWrapper
       {...xyContainerProps('StackedBar')}
-      containerProps={{ color }}
+      containerProps={{ colorFunction: color }}
       components={[
         component('StackedBar', { y: [d => d.y, d => d.y1, d => d.y2], colorKeys: ['aws', 'azure', 'github'] }),
         { name: 'Axis', props: { type: 'x' }, key: 'xAxis' },

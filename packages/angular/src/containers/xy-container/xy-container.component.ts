@@ -13,7 +13,18 @@ import {
 } from '@angular/core'
 
 // Vis
-import { Annotations, Axis, ContinuousScale, Crosshair, Direction, Spacing, Tooltip, XYContainer, XYContainerConfigInterface } from '@unovis/ts'
+import {
+  Annotations,
+  Axis,
+  ColorFunction,
+  ContinuousScale,
+  Crosshair,
+  Direction,
+  Spacing,
+  Tooltip,
+  XYContainer,
+  XYContainerConfigInterface,
+} from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 import { VisAnnotationsComponent } from '../../components/annotations/annotations.component'
@@ -113,6 +124,12 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
   */
   @Input() ariaLabel?: string | null | undefined
 
+  /** A custom color function to be used for all the components within the container.
+   * Maps indices or data color keys (when `colorKeys` are provided to components) to colors.
+   * Default: `undefined`
+  */
+  @Input() colorFunction?: ColorFunction
+
   /** Data to be passed to all child components. But if `data` is `undefined` it'll to be passed allowing components to
    * have their individual data. Default: `undefined` */
   @Input() data?: Datum[] | undefined = undefined
@@ -150,7 +167,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
       duration, margin, padding, scaleByDomain, autoMargin, width, height,
       xScale, xDomain, xDomainMinConstraint, xDomainMaxConstraint, xRange,
       yScale, yDomain, yDomainMinConstraint, yDomainMaxConstraint, yRange,
-      yDirection, ariaLabel,
+      yDirection, ariaLabel, colorFunction,
     } = this
     const visComponents = this.visComponents.toArray().map(d => d.component)
 
@@ -188,6 +205,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
       yRange,
       yDirection,
       ariaLabel,
+      colorFunction,
     }
   }
 

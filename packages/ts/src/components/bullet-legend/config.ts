@@ -38,7 +38,7 @@ export interface BulletLegendConfigInterface {
    * without creating additional `div` element. Default: `false` */
   renderIntoProvidedDomNode?: boolean;
   /** Color function. Default: `undefined` */
-  color?: ColorFunction;
+  colorFunction?: ColorFunction;
 }
 
 export const BulletLegendDefaultConfig: BulletLegendConfigInterface = {
