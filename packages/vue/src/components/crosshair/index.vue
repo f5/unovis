@@ -5,12 +5,11 @@ import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from '
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 import { crosshairAccessorKey } from '../../utils/context'
 
-const accessor = inject(crosshairAccessorKey)
-
-// data and required props 
+// data and required props
 // !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412
-const props = defineProps</** @vue-ignore */ CrosshairConfigInterface<Datum> & { data?: Datum[] }>()
+const props = defineProps<{ data?: Datum[] } & /** @vue-ignore */ CrosshairConfigInterface<Datum>>()
 
+const accessor = inject(crosshairAccessorKey)
 const data = computed(() => accessor.data.value ?? props.data)
 // config
 const config = useForwardProps(props)
