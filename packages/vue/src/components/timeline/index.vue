@@ -8,7 +8,7 @@ import { arePropsEqual, useForwardProps } from '../../utils/props'
 
 // data and required props
 // !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412
-const props = defineProps</** @vue-ignore */ TimelineConfigInterface<Datum> & { data?: Datum[] }>()
+const props = defineProps<{ data?: Datum[] } & /** @vue-ignore */ TimelineConfigInterface<Datum>>()
 
 const accessor = inject(componentAccessorKey)
 
