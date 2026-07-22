@@ -263,8 +263,8 @@ There are three pieces:
 
 - **`colorKeys`** — a component property: an array of string keys, one per `y` accessor, that labels each
 series (e.g. `['aws', 'azure', 'github']`).
-- **`color`** — a _color function_ of type `(key: string | number) => string`. It is accepted by the
-**container** (where it applies to every component inside) and by **`BulletLegend`**. Given a key, it returns a color.
+- **`colorFunction`** — a function of type `(key: string | number) => string`, accepted by the **container**
+(where it applies to every component inside) and by **`BulletLegend`**. Given a key, it returns a color.
 - **`UnovisColorScale`** — the default color function, used when you don't provide your own.
 
 ### How a color is resolved
@@ -297,7 +297,7 @@ const color = (key) => colorMap[key] ?? '#cccccc'
 ```
 
 ### Putting it together
-Pass the **same** `color` function to every container and legend, and give each component a `colorKeys`
+Pass the **same** color function to every container and legend, and give each component a `colorKeys`
 array aligned with its `y` accessors:
 
 <FrameworkTabs
@@ -309,14 +309,14 @@ const keys = ['aws', 'azure', 'github']
 const y = keys.map(k => (d) => d[k])
 
 // Legend, charts, and tooltips all share the same color function and keys
-<VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} color={color} />
+<VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} colorFunction={color} />
 
-<VisXYContainer data={data} color={color}>
+<VisXYContainer data={data} colorFunction={color}>
   <VisGroupedBar x={d => d.x} y={y} colorKeys={keys} />
   <VisAxis type="x" />
 </VisXYContainer>
 
-<VisXYContainer data={data} color={color}>
+<VisXYContainer data={data} colorFunction={color}>
   <VisArea x={d => d.x} y={y} colorKeys={keys} />
   <VisAxis type="x" />
 </VisXYContainer>`}
@@ -329,14 +329,14 @@ keys = ['aws', 'azure', 'github']
 x = (d) => d.x
 y = this.keys.map(k => (d) => d[k])
 items = this.keys.map(name => ({ name, colorKey: name }))`,
-    html: `<vis-bullet-legend [items]="items" [color]="color"></vis-bullet-legend>
+    html: `<vis-bullet-legend [items]="items" [colorFunction]="color"></vis-bullet-legend>
 
-<vis-xy-container [data]="data" [color]="color">
+<vis-xy-container [data]="data" [colorFunction]="color">
   <vis-grouped-bar [x]="x" [y]="y" [colorKeys]="keys"></vis-grouped-bar>
   <vis-axis type="x"></vis-axis>
 </vis-xy-container>
 
-<vis-xy-container [data]="data" [color]="color">
+<vis-xy-container [data]="data" [colorFunction]="color">
   <vis-area [x]="x" [y]="y" [colorKeys]="keys"></vis-area>
   <vis-axis type="x"></vis-axis>
 </vis-xy-container>`,
@@ -352,14 +352,14 @@ items = this.keys.map(name => ({ name, colorKey: name }))`,
   const items = keys.map(name => ({ name, colorKey: name }))
 </script>
 
-<VisBulletLegend {items} {color} />
+<VisBulletLegend {items} colorFunction={color} />
 
-<VisXYContainer {data} {color}>
+<VisXYContainer {data} colorFunction={color}>
   <VisGroupedBar {x} {y} colorKeys={keys} />
   <VisAxis type="x" />
 </VisXYContainer>
 
-<VisXYContainer {data} {color}>
+<VisXYContainer {data} colorFunction={color}>
   <VisArea {x} {y} colorKeys={keys} />
   <VisAxis type="x" />
 </VisXYContainer>`}
@@ -375,14 +375,14 @@ const items = keys.map(name => ({ name, colorKey: name }))
 </script>
 
 <template>
-  <VisBulletLegend :items="items" :color="color" />
+  <VisBulletLegend :items="items" :colorFunction="color" />
 
-  <VisXYContainer :data="data" :color="color">
+  <VisXYContainer :data="data" :colorFunction="color">
     <VisGroupedBar :x="x" :y="y" :colorKeys="keys" />
     <VisAxis type="x" />
   </VisXYContainer>
 
-  <VisXYContainer :data="data" :color="color">
+  <VisXYContainer :data="data" :colorFunction="color">
     <VisArea :x="x" :y="y" :colorKeys="keys" />
     <VisAxis type="x" />
   </VisXYContainer>
@@ -395,14 +395,14 @@ const keys = ['aws', 'azure', 'github']
 const y = keys.map(k => (d) => d[k])
 
 // Legend, charts, and tooltips all share the same color function and keys
-<VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} color={color} />
+<VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} colorFunction={color} />
 
-<VisXYContainer data={data} color={color}>
+<VisXYContainer data={data} colorFunction={color}>
   <VisGroupedBar x={d => d.x} y={y} colorKeys={keys} />
   <VisAxis type="x" />
 </VisXYContainer>
 
-<VisXYContainer data={data} color={color}>
+<VisXYContainer data={data} colorFunction={color}>
   <VisArea x={d => d.x} y={y} colorKeys={keys} />
   <VisAxis type="x" />
 </VisXYContainer>`}
@@ -415,24 +415,24 @@ const y = keys.map(k => (d) => d[k])
 // Legend, charts, and tooltips all share the same color function and keys
 const legend = new BulletLegend(legendNode, {
   items: keys.map(name => ({ name, colorKey: name })),
-  color,
+  colorFunction: color,
 })
 
 const groupedBar = new XYContainer(node1, {
-  color,
+  colorFunction: color,
   components: [new GroupedBar({ x: d => d.x, y, colorKeys: keys })],
   xAxis: new Axis({ type: 'x' }),
 }, data)
 
 const area = new XYContainer(node2, {
-  color,
+  colorFunction: color,
   components: [new Area({ x: d => d.x, y, colorKeys: keys })],
   xAxis: new Axis({ type: 'x' }),
 }, data)`}
 />
 
 A few things to keep in mind:
-- `BulletLegend` items carry their key in `colorKey`; pass the same `color` function so the bullets match the charts.
+- `BulletLegend` items carry their key in `colorKey`; pass the same `colorFunction` so the bullets match the charts.
 - The crosshair tooltip picks up `colorKeys` from the components automatically, so its markers stay in sync too.
 - Keep `colorKeys` the same length as the `y` accessor array.
 
@@ -454,12 +454,12 @@ and the legend, bars, and area all agree on the color of every category:
   const reversed = ['github', 'azure', 'aws']
   return (
     <div>
-      <VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} color={color} />
-      <VisXYContainer data={data} color={color} height={140}>
+      <VisBulletLegend items={keys.map(name => ({ name, colorKey: name }))} colorFunction={color} />
+      <VisXYContainer data={data} colorFunction={color} height={140}>
         <VisGroupedBar x={d => d.x} y={keys.map(k => d => d[k])} colorKeys={keys} />
         <VisAxis type="x" />
       </VisXYContainer>
-      <VisXYContainer data={data} color={color} height={140}>
+      <VisXYContainer data={data} colorFunction={color} height={140}>
         <VisArea x={d => d.x} y={reversed.map(k => d => d[k])} colorKeys={reversed} opacity={0.7} />
         <VisAxis type="x" />
       </VisXYContainer>
@@ -469,7 +469,7 @@ and the legend, bars, and area all agree on the color of every category:
 </BrowserOnly>
 
 ### Overriding the default palette in code
-When you don't pass a `color` function, components fall back to **`UnovisColorScale`** — a D3 ordinal scale
+When you don't pass a color function, components fall back to **`UnovisColorScale`** — a D3 ordinal scale
 whose range is the `--vis-color*` CSS variables. You can re‑range it once at startup to change the default
 palette everywhere, without touching CSS:
 

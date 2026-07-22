@@ -53,21 +53,21 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
       <div style={blockStyle}>
         <p>This block of charts uses a color function defined with <code>scaleOrdinal</code> from D3</p>
         <VisBulletLegend
-          color={leftBlockColorScale}
+          colorFunction={leftBlockColorScale}
           items={leftBlockChartKeys.map(key => ({ name: key, colorKey: key }))}
         />
-        <VisXYContainer<Datum> data={data} color={leftBlockColorScale}>
+        <VisXYContainer<Datum> data={data} colorFunction={leftBlockColorScale}>
           <VisLine x={d => d.x} y={accessorsLeftBlockCharts} colorKeys={leftBlockChartKeys}/>
           <VisGroupedBar x={d => d.x} y={accessorsLeftBlockCharts} colorKeys={leftBlockChartKeys} barPadding={0.3}/>
           <VisAxis type='x'/>
           <VisCrosshair template={(d: Datum) => `x: ${d.x}`} />
         </VisXYContainer>
-        <VisXYContainer<Datum> data={data.slice(0, 10)} color={leftBlockColorScale}>
+        <VisXYContainer<Datum> data={data.slice(0, 10)} colorFunction={leftBlockColorScale}>
           <VisGroupedBar x={d => d.x} y={accessorsLeftBlockCharts} colorKeys={leftBlockChartKeys} barPadding={0.1}/>
           <VisAxis type='x'/>
           <VisCrosshair template={(d: Datum) => `x: ${d.x}`} />
         </VisXYContainer>
-        <VisXYContainer<Datum> data={data} color={leftBlockColorScale}>
+        <VisXYContainer<Datum> data={data} colorFunction={leftBlockColorScale}>
           <VisArea x={d => d.x} y={accessorsLeftBlockCharts} colorKeys={leftBlockChartKeys}/>
           <VisAxis type='x'/>
           <VisCrosshair template={(d: Datum) => `x: ${d.x}`} />
@@ -76,15 +76,15 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
       <div style={blockStyle}>
         <p>This block defines a custom color function that assigns the colors using a color map</p>
         <VisBulletLegend
-          color={rightBlockColorFunction}
+          colorFunction={rightBlockColorFunction}
           items={rightBlockChartKeys.map(key => ({ name: key, colorKey: key }))}
         />
-        <VisXYContainer<Datum> data={data} color={rightBlockColorFunction}>
+        <VisXYContainer<Datum> data={data} colorFunction={rightBlockColorFunction}>
           <VisStackedBar x={d => d.x} y={accessorsRightBlockCharts} colorKeys={rightBlockChartKeys} barPadding={0.05}/>
           <VisAxis type='x' />
           <VisCrosshair template={(d: Datum) => `x: ${d.x}`} />
         </VisXYContainer>
-        <VisXYContainer<Datum> data={data.slice(0, 15)} color={rightBlockColorFunction}>
+        <VisXYContainer<Datum> data={data.slice(0, 15)} colorFunction={rightBlockColorFunction}>
           <VisScatter x={d => d.x} y={accessorsRightBlockCharts} colorKeys={rightBlockChartKeys}/>
           <VisAxis type='x' />
           <VisCrosshair template={(d: Datum) => `x: ${d.x}`} />
