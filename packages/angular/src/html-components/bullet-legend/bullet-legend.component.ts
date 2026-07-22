@@ -62,7 +62,7 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   @Input() orientation?: BulletLegendOrientation | string
 
   /** Color function. Default: `undefined` */
-  @Input() color?: ColorFunction
+  @Input() colorFunction?: ColorFunction
 
   component: BulletLegend | undefined
 
@@ -75,8 +75,8 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   }
 
   private getConfig (): BulletLegendConfigInterface {
-    const { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation, color } = this
-    const config = { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation, color }
+    const { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation, colorFunction } = this
+    const config = { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation, colorFunction }
     const keys = Object.keys(config) as (keyof BulletLegendConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

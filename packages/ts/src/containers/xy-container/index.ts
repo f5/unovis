@@ -230,7 +230,7 @@ export class XYContainer<Datum> extends ContainerCore {
     for (const c of components) {
       c.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
       c.setContainerMargin(margin)
-      c.setColorFunction(config.color)
+      c.setColorFunction(config.colorFunction)
     }
 
     // Update Scales of all the components at once to calculate required paddings and sync them

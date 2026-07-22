@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, SimpleChanges, ContentChild } from '@angular/core'
 
 // Vis
-import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Spacing, Annotations, Sizing } from '@unovis/ts'
+import { ColorFunction, ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Spacing, Annotations, Sizing } from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 import { VisAnnotationsComponent } from '../../components/annotations/annotations.component'
@@ -45,6 +45,11 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   /** Defines whether components should fit into the container or the container should expand to fit to the component's size.
    * Works with a limited set of components. Default: `Sizing.Fit` */
   @Input() sizing?: Sizing | string
+  /** A custom color function to be used for all the components within the container.
+   * Maps indices or data color keys (when `colorKeys` are provided to components) to colors.
+   * Default: `undefined`
+  */
+  @Input() colorFunction?: ColorFunction
   /** Data to be passed to the component. Default: `undefined`. */
   @Input() data?: Data
 
@@ -68,13 +73,13 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   }
 
   getConfig (): SingleContainerConfigInterface<Data> {
-    const { width, height, duration, margin, ariaLabel, svgDefs, sizing } = this
+    const { width, height, duration, margin, ariaLabel, svgDefs, sizing, colorFunction } = this
 
     const component = this.visComponent?.component as C
     const tooltip = this.tooltipComponent?.component as Tooltip
     const annotations = this.annotationsComponent?.component as Annotations
 
-    return { width, height, duration, margin, component, tooltip, ariaLabel, annotations, svgDefs, sizing }
+    return { width, height, duration, margin, component, tooltip, ariaLabel, annotations, svgDefs, sizing, colorFunction }
   }
 
   ngOnDestroy (): void {

@@ -36,7 +36,7 @@ export interface ContainerConfigInterface {
    * Maps indices or data color keys (when `colorKeys` are provided to components) to colors.
    * Default: `undefined`
   */
-  color?: ColorFunction;
+  colorFunction?: ColorFunction;
 }
 
 export const ContainerDefaultConfig: ContainerConfigInterface = {
@@ -62,5 +62,5 @@ export const ContainerDefaultConfig: ContainerConfigInterface = {
   svgDefs: undefined,
   ariaLabel: undefined,
 
-  color: undefined,
+  colorFunction: undefined,
 }
