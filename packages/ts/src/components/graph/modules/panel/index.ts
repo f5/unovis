@@ -48,7 +48,7 @@ export function createPanels<N extends GraphNode, L extends GraphLink> (
 
   const sideIcon = selection.append('g')
     .attr('class', panelSelectors.sideIconGroup)
-    .attr('transform', (d, i, elements) => {
+    .attr('transform', (d) => {
       const dx = -OUTLINE_SELECTION_PADDING
       const dy = -OUTLINE_SELECTION_PADDING
       return `translate(${d._width + dx}, ${-dy})`
