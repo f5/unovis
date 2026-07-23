@@ -221,6 +221,14 @@ pixels).
   inputProps={{ min: 1, max: 200}}
 />
 
+#### Adaptive Node Padding
+When _SingleContainer_ uses the default `Sizing.Fit`, a column with many nodes can force the combined
+`nodePadding` to exceed the available height, collapsing node bodies to near-zero height. Set
+`nodeAdaptivePadding` to `true` to automatically compress `nodePadding` in that case, so that node bodies
+always retain at least a third of the available height. The padding is only reduced when it doesn't fit;
+otherwise the configured `nodePadding` is used as-is. This option has no effect for `Sizing.Extend` or
+`Sizing.FitWidth`. Default: `false`.
+
 If `sizing` of _SingleContainer_ is set to `Sizing.Extend` or `Sizing.FitWidth` (see
 [Component Sizing](Sankey#component-sizing)), you can control the height of the nodes by setting the `nodeMinHeight` and
 `nodeMaxHeight` properties. Note that those options are approximate since [d3-sankey](https://github.com/d3/d3-sankey)
