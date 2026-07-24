@@ -13,7 +13,18 @@ import {
 } from '@angular/core'
 
 // Vis
-import { Annotations, Axis, ContinuousScale, Crosshair, Direction, Spacing, Tooltip, XYContainer, XYContainerConfigInterface } from '@unovis/ts'
+import {
+  Annotations,
+  Axis,
+  ContinuousScale,
+  Crosshair,
+  Direction,
+  Spacing,
+  Tooltip,
+  XYComponentCore,
+  XYContainer,
+  XYContainerConfigInterface,
+} from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 import { VisAnnotationsComponent } from '../../components/annotations/annotations.component'
@@ -107,6 +118,14 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
   @Input() scaleByDomain?: boolean
   /** Enables automatic calculation of chart margins based on the size of the axes. Default: `true` */
   @Input() autoMargin?: boolean = true
+  /** Override the automatically calculated bleed — the extra space (in pixels) the components request
+   * to fully fit into the container (e.g. half of the point diameter for Scatter), which gets subtracted
+   * from the scale ranges. Accepts a `Spacing` object or a function that receives the container's
+   * components (their individual bleed values are available via the `bleed` getter) and returns one.
+   * When set, it replaces the automatically calculated values entirely, and undefined sides are treated as `0`.
+   * Useful for synchronizing the scale ranges of multiple charts, since the final bleed is provided
+   * to the `onRenderComplete` callback. Default: `undefined` */
+  @Input() bleed?: Spacing | ((components: XYComponentCore<Datum>[]) => Spacing)
 
   /** Alternative text description of the chart for accessibility purposes. It will be applied as an
    * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
@@ -147,7 +166,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
 
   getConfig (): XYContainerConfigInterface<Datum> {
     const {
-      duration, margin, padding, scaleByDomain, autoMargin, width, height,
+      duration, margin, padding, scaleByDomain, autoMargin, bleed, width, height,
       xScale, xDomain, xDomainMinConstraint, xDomainMaxConstraint, xRange,
       yScale, yDomain, yDomainMinConstraint, yDomainMaxConstraint, yRange,
       yDirection, ariaLabel,
@@ -176,6 +195,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
       annotations,
       scaleByDomain,
       autoMargin,
+      bleed,
       xScale,
       xDomain,
       xDomainMinConstraint,
