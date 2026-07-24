@@ -1,0 +1,261 @@
+---
+description: What chart bleed is and how to use it to align multiple charts
+---
+
+import React from 'react'
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import { FrameworkTabs } from '../components/framework-tabs.tsx'
+import { generateDataRecords } from '../utils/data.ts'
+import { XYWrapper } from '../wrappers/xy-wrapper'
+
+import './styles.css'
+
+# Bleed
+
+export const data = generateDataRecords(15)
+export const axes = [
+  { name: 'Axis', props: { type: 'x' }, key: 'xAxis' },
+  { name: 'Axis', props: { type: 'y' }, key: 'yAxis' },
+]
+export const scatterProps = {
+  name: 'Scatter',
+  data,
+  height: 125,
+  x: d => d.x,
+  y: d => d.y,
+  size: 25,
+  excludeTabs: true,
+  components: axes,
+}
+
+## What is bleed?
+Some _XY Components_ need extra space inside the container for their marks to fully fit: half of the
+point diameter for _Scatter_, half of the bar width for bar charts at the edges of the domain, and so on.
+This space is called **bleed**. Before rendering, _XY Container_ asks every component how much bleed it
+needs, combines the values (taking the maximum for each side), and shrinks the scale ranges accordingly.
+
+That's why the first and the last points of the scatter chart below are shifted inward from the
+container's edges instead of being cut in half:
+
+<XYWrapper {...scatterProps}/>
+
+## Overriding the calculated bleed
+The `bleed` property of _XY Container_ lets you override the calculated values. It accepts either
+a `Spacing` object:
+
+```ts
+type Spacing = { top?: number; bottom?: number; left?: number; right?: number }
+```
+
+or a function that receives the container's components and returns a `Spacing` object (each component's
+own bleed is available via its `bleed` getter):
+
+```ts
+bleed: (components: XYComponentCore<Datum>[]) => Spacing
+```
+
+The sides you provide replace the calculated values, the sides left `undefined` fall back to them, so
+pass `0` explicitly to remove the bleed on a side. Here is the same scatter chart with the bleed set to
+zero on all sides — the edge points now get clipped:
+
+<XYWrapper {...scatterProps} containerProps={{ bleed: { top: 0, bottom: 0, left: 0, right: 0 } }}/>
+
+## Reading the calculated bleed
+The container reports the bleed it ended up using (calculated or configured) through the
+`onRenderComplete` callback:
+
+```ts
+onRenderComplete?: (
+  svgNode: SVGSVGElement,
+  margin: Spacing,
+  bleed: Spacing,
+  containerWidth: number,
+  containerHeight: number,
+  componentWidth: number,
+  componentHeight: number,
+) => void;
+```
+
+## Synchronizing bleed across charts
+Bleed becomes important when you place several charts one below another and want their X values to line
+up. Even if the charts share the same `xDomain`, each one calculates its own bleed, so the same X value
+can land on a different horizontal position in every chart.
+
+To align them, you only need to synchronize the horizontal bleed: capture the `left` and `right` values
+of the chart with the largest marks (or the per-side maximum across all charts) from `onRenderComplete`,
+and pass them to the other charts via the `bleed` property. Leave `top` and `bottom` out — they fall back
+to each chart's own calculated values. Toggle the checkbox below to see the effect — watch how the X axes
+of the two charts align:
+
+<BrowserOnly>
+{() => {
+  const { VisXYContainer, VisScatter, VisLine, VisAxis } = require('@unovis/react')
+  const [sync, setSync] = React.useState(true)
+  const [horizontalBleed, setHorizontalBleed] = React.useState()
+  const onRenderComplete = React.useCallback((svg, margin, b) => {
+    setHorizontalBleed(prev => (prev && prev.left === b.left && prev.right === b.right) ? prev : { left: b.left, right: b.right })
+  }, [])
+  const x = d => d.x
+  const y = d => d.y
+  return (
+    <div>
+      <label style={{ display: 'block', marginBottom: '12px' }}>
+        <input type='checkbox' checked={sync} onChange={e => setSync(e.target.checked)}/>
+        &nbsp;Synchronize bleed
+      </label>
+      <VisXYContainer data={data} height={125} onRenderComplete={onRenderComplete}>
+        <VisScatter x={x} y={y} size={25}/>
+        <VisAxis type='x'/>
+        <VisAxis type='y'/>
+      </VisXYContainer>
+      <VisXYContainer data={data} height={125} bleed={sync ? horizontalBleed : undefined}>
+        <VisLine x={x} y={y}/>
+        <VisAxis type='x'/>
+        <VisAxis type='y'/>
+      </VisXYContainer>
+    </div>
+  )
+}}
+</BrowserOnly>
+
+<FrameworkTabs
+  react={`import { useCallback, useState } from 'react'
+import { VisXYContainer, VisScatter, VisLine, VisAxis } from '@unovis/react'
+
+function SyncedCharts ({ data }) {
+  const [horizontalBleed, setHorizontalBleed] = useState()
+  const onRenderComplete = useCallback((svg, margin, b) => {
+    setHorizontalBleed(prev => (prev?.left === b.left && prev?.right === b.right)
+      ? prev
+      : { left: b.left, right: b.right })
+  }, [])
+
+  // Synchronize the horizontal bleed only, the vertical values fall back to the calculated ones
+  return (<>
+    <VisXYContainer data={data} onRenderComplete={onRenderComplete}>
+      <VisScatter x={d => d.x} y={d => d.y} size={25}/>
+      <VisAxis type='x'/>
+    </VisXYContainer>
+    <VisXYContainer data={data} bleed={horizontalBleed}>
+      <VisLine x={d => d.x} y={d => d.y}/>
+      <VisAxis type='x'/>
+    </VisXYContainer>
+  </>)
+}`}
+  angular={{
+    ts: `x = (d: DataRecord) => d.x
+y = (d: DataRecord) => d.y
+horizontalBleed?: Spacing
+
+// Synchronize the horizontal bleed only, the vertical values fall back to the calculated ones
+onRenderComplete = (svg: SVGSVGElement, margin: Spacing, bleed: Spacing): void => {
+  this.horizontalBleed = { left: bleed.left, right: bleed.right }
+}`,
+    html: `<vis-xy-container [data]="data" [onRenderComplete]="onRenderComplete">
+  <vis-scatter [x]="x" [y]="y" [size]="25"></vis-scatter>
+  <vis-axis type="x"></vis-axis>
+</vis-xy-container>
+<vis-xy-container [data]="data" [bleed]="horizontalBleed">
+  <vis-line [x]="x" [y]="y"></vis-line>
+  <vis-axis type="x"></vis-axis>
+</vis-xy-container>`,
+  }}
+  svelte={`<script lang='ts'>
+  let horizontalBleed: Spacing | undefined
+
+  // Synchronize the horizontal bleed only, the vertical values fall back to the calculated ones
+  const onRenderComplete = (svg: SVGSVGElement, margin: Spacing, b: Spacing) => {
+    if (horizontalBleed?.left !== b.left || horizontalBleed?.right !== b.right) {
+      horizontalBleed = { left: b.left, right: b.right }
+    }
+  }
+</script>
+
+<VisXYContainer {data} {onRenderComplete}>
+  <VisScatter x={d => d.x} y={d => d.y} size={25}/>
+  <VisAxis type='x'/>
+</VisXYContainer>
+<VisXYContainer {data} bleed={horizontalBleed}>
+  <VisLine x={d => d.x} y={d => d.y}/>
+  <VisAxis type='x'/>
+</VisXYContainer>`}
+  vue={`<script setup lang='ts'>
+import { ref } from 'vue'
+const horizontalBleed = ref<Spacing>()
+
+// Synchronize the horizontal bleed only, the vertical values fall back to the calculated ones
+const onRenderComplete = (svg: SVGSVGElement, margin: Spacing, b: Spacing) => {
+  if (horizontalBleed.value?.left !== b.left || horizontalBleed.value?.right !== b.right) {
+    horizontalBleed.value = { left: b.left, right: b.right }
+  }
+}
+</script>
+
+<template>
+  <VisXYContainer :data="data" :onRenderComplete="onRenderComplete">
+    <VisScatter :x="d => d.x" :y="d => d.y" :size="25"/>
+    <VisAxis type="x"/>
+  </VisXYContainer>
+  <VisXYContainer :data="data" :bleed="horizontalBleed">
+    <VisLine :x="d => d.x" :y="d => d.y"/>
+    <VisAxis type="x"/>
+  </VisXYContainer>
+</template>`}
+  solid={`import { createSignal } from 'solid-js'
+import { VisXYContainer, VisScatter, VisLine, VisAxis } from '@unovis/solid'
+
+function SyncedCharts (props) {
+  const [horizontalBleed, setHorizontalBleed] = createSignal<Spacing>()
+
+  // Synchronize the horizontal bleed only, the vertical values fall back to the calculated ones
+  const onRenderComplete = (svg: SVGSVGElement, margin: Spacing, b: Spacing) => {
+    const prev = horizontalBleed()
+    if (prev?.left !== b.left || prev?.right !== b.right) {
+      setHorizontalBleed({ left: b.left, right: b.right })
+    }
+  }
+
+  return (<>
+    <VisXYContainer data={props.data} onRenderComplete={onRenderComplete}>
+      <VisScatter x={d => d.x} y={d => d.y} size={25}/>
+      <VisAxis type='x'/>
+    </VisXYContainer>
+    <VisXYContainer data={props.data} bleed={horizontalBleed()}>
+      <VisLine x={d => d.x} y={d => d.y}/>
+      <VisAxis type='x'/>
+    </VisXYContainer>
+  </>)
+}`}
+  typescript={`import { XYContainer, Scatter, Line, Axis, Spacing } from '@unovis/ts'
+
+const lineChart = new XYContainer(lineChartNode, {
+  components: [new Line({ x: d => d.x, y: d => d.y })],
+  xAxis: new Axis(),
+}, data)
+
+const scatterChart = new XYContainer(scatterChartNode, {
+  components: [new Scatter({ x: d => d.x, y: d => d.y, size: 25 })],
+  xAxis: new Axis(),
+  onRenderComplete: (svg, margin, bleed) => {
+    // Synchronize the horizontal bleed only, the vertical values fall back to the calculated ones
+    lineChart.updateContainer({
+      ...lineChart.config,
+      bleed: { left: bleed.left, right: bleed.right },
+    })
+  },
+}, data)`}
+/>
+
+:::tip
+For the charts to align perfectly, their `margin` values need to match too. If the Y axes of your charts
+have tick labels of different widths, the automatically calculated margins will differ — set
+`autoMargin` to `false` and provide the same explicit [`margin`](/docs/containers/XY_Container#margin)
+to all the charts.
+:::
+
+:::note
+`onRenderComplete` reports the bleed the container actually used, so when you override `bleed` it reports
+your values on the sides you provided and the calculated ones on the sides you left out. If you need the
+components' calculated bleed for a side you're overriding, use the function form of `bleed` and read the
+`bleed` getter of the components you're interested in.
+:::
