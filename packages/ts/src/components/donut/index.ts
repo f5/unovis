@@ -1,4 +1,6 @@
 import { Selection } from 'd3-selection'
+import { Transition } from 'd3-transition'
+import { interpolate } from 'd3-interpolate'
 import { pie, arc } from 'd3-shape'
 
 // Core
@@ -20,7 +22,7 @@ import { DonutArcDatum, DonutArcAnimState, DonutDatum } from './types'
 import { DonutDefaultConfig, DonutConfigInterface } from './config'
 
 // Modules
-import { createArc, updateArc, removeArc } from './modules/arc'
+import { createArc, updateArc, removeArc, ArcNode } from './modules/arc'
 
 // Constants
 import { DONUT_HALF_ANGLE_RANGES } from './constants'
@@ -43,6 +45,9 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
 
   events = {
   }
+
+  // Skip position animation on the first render, nothing to morph from yet.
+  private _firstRender = true
 
   constructor (config?: DonutConfigInterface<Datum>) {
     super()
@@ -100,7 +105,11 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     const translateX = this._width / 2 + (isHalfDonutLeft ? outerRadius / 2 : isHalfDonutRight ? -outerRadius / 2 : 0)
     const translate = `translate(${translateX},${translateY})`
 
-    this.arcGroup.attr('transform', translate)
+    const positionDuration = this._firstRender ? 0 : duration
+
+    // Animate position together with the arcs. Otherwise switching between
+    // full and half jumps to the new layout first and animates after.
+    smartTransition(this.arcGroup, positionDuration).attr('transform', translate)
 
     this.arcGen
       .startAngle(d => d.startAngle)
@@ -178,21 +187,44 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       labelTranslateY = halfDonutLabelOffsetY + translateY
     }
     const labelTranslate = `translate(${labelTranslateX},${labelTranslateY})`
-    this.centralLabel.attr('transform', labelTranslate)
-    this.centralSubLabel.attr('transform', labelTranslate)
+    smartTransition(this.centralLabel, positionDuration).attr('transform', labelTranslate)
+    smartTransition(this.centralSubLabel, positionDuration).attr('transform', labelTranslate)
 
     // Background
     this.arcBackground.attr('class', s.background)
       .attr('visibility', config.showBackground ? null : 'hidden')
-      .attr('transform', translate)
 
-    smartTransition(this.arcBackground, duration)
-      .attr('d', this.arcGen({
-        startAngle: config.backgroundAngleRange?.[0] ?? config.angleRange?.[0] ?? 0,
-        endAngle: config.backgroundAngleRange?.[1] ?? config.angleRange?.[1] ?? 2 * Math.PI,
-        innerRadius,
-        outerRadius,
-      }))
+    const backgroundAnimState: DonutArcAnimState = {
+      startAngle: config.backgroundAngleRange?.[0] ?? config.angleRange?.[0] ?? 0,
+      endAngle: config.backgroundAngleRange?.[1] ?? config.angleRange?.[1] ?? 2 * Math.PI,
+      innerRadius,
+      outerRadius,
+    }
+
+    if (positionDuration) {
+      // Tween the angle/radius values and rebuild the path each tick, same
+      // as the arc segments do via updateArc. Letting D3 interpolate the d
+      // string directly breaks the arc flags, they become non-integer
+      // mid-transition and the browser rejects them.
+      const node = this.arcBackground.node() as ArcNode
+      const prevAnimState = node._animState ?? backgroundAnimState
+      const interpolateState = interpolate(prevAnimState, backgroundAnimState)
+      const transition = smartTransition(this.arcBackground, positionDuration)
+        .attr('transform', translate) as Transition<SVGPathElement, unknown, SVGGElement, unknown>
+
+      transition.attrTween('d', () => (t: number): string => {
+        node._animState = interpolateState(t)
+        return this.arcGen(node._animState as DonutArcAnimState)
+      })
+    } else {
+      const node = this.arcBackground.node() as ArcNode
+      node._animState = backgroundAnimState
+      this.arcBackground
+        .attr('transform', translate)
+        .attr('d', this.arcGen(backgroundAnimState))
+    }
+
+    this._firstRender = false
   }
 }
 
