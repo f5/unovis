@@ -1,6 +1,7 @@
 <script lang="ts">
   import { VisSingleContainer, VisTreemap, VisBulletLegend, VisTooltip } from '@unovis/svelte'
-  import { data, DataRecord } from './data'
+  import type { DataRecord } from './data'
+  import { data } from './data'
   import { colors, Position, Treemap } from '@unovis/ts'
   import { format } from 'd3-format'
 

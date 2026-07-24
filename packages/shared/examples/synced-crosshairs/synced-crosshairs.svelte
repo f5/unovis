@@ -1,6 +1,7 @@
 <script lang="ts">
   import { VisXYContainer, VisArea, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/svelte'
-  import { data, accessors, XYDataRecord } from './data'
+  import type { XYDataRecord } from './data'
+  import { data, accessors } from './data'
 
   let forcePosition: number | undefined = 75
 

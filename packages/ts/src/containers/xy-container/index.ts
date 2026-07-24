@@ -433,12 +433,14 @@ export class XYContainer<Datum> extends ContainerCore {
 
   private _getMargin (): Spacing {
     const { config: { margin } } = this
+    const defaultMargin = { top: 0, bottom: 0, left: 0, right: 0 }
+    const m = margin || defaultMargin
 
     return {
-      top: margin.top + this._axisMargin.top,
-      bottom: margin.bottom + this._axisMargin.bottom,
-      left: margin.left + this._axisMargin.left,
-      right: margin.right + this._axisMargin.right,
+      top: (m.top || 0) + this._axisMargin.top,
+      bottom: (m.bottom || 0) + this._axisMargin.bottom,
+      left: (m.left || 0) + this._axisMargin.left,
+      right: (m.right || 0) + this._axisMargin.right,
     }
   }
 

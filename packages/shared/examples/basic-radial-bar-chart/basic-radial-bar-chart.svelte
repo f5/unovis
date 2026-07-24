@@ -2,7 +2,8 @@
   import { VisSingleContainer, VisRadialBar, VisTooltip, VisBulletLegend } from '@unovis/svelte'
   import { RadialBar } from '@unovis/ts'
   import type { RadialBarArcDatum } from '@unovis/ts'
-  import { data, DataRecord, maxValue, completion } from './data'
+  import type { DataRecord } from './data'
+  import { data, maxValue, completion } from './data'
 
   const legendItems = data.map(d => ({ name: d.key }))
 

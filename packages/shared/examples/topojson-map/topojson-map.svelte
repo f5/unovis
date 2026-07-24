@@ -2,7 +2,8 @@
   import { Orientation, Scale, TopoJSONMap } from '@unovis/ts'
   import { WorldMapTopoJSON } from '@unovis/ts/maps'
   import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@unovis/svelte'
-  import { palette, data, ageRange, yearRange, AreaDatum } from './data'
+  import type { AreaDatum } from './data'
+  import { palette, data, ageRange, yearRange } from './data'
 
   const mapData = { areas: data }
   const range = yearRange[1] - yearRange[0]

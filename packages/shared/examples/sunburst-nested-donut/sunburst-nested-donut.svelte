@@ -1,7 +1,8 @@
 <script lang="ts">
   import { VisSingleContainer, VisNestedDonut } from '@unovis/svelte'
-  import { NestedDonutSegment } from '@unovis/ts'
-  import { colors, data, Datum } from './data'
+  import type { NestedDonutSegment } from '@unovis/ts'
+  import type { Datum } from './data'
+  import { colors, data } from './data'
 
   const layers = [
     (d: Datum) => d.type,

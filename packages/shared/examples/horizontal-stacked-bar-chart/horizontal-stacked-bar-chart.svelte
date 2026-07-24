@@ -1,7 +1,8 @@
 <script lang="ts">
   import { VisXYContainer, VisStackedBar, VisAxis, VisBulletLegend, VisTooltip } from '@unovis/svelte'
   import { FitMode, Direction, Orientation, StackedBar } from '@unovis/ts'
-  import { data, labels, EducationDatum } from './data'
+  import type { EducationDatum } from './data'
+  import { data, labels } from './data'
 
   const chartLabels = Object.entries(labels).map(([k, v], i) => ({
     key: k,

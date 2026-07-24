@@ -1,7 +1,8 @@
 <script lang="ts">
   import { FitMode } from '@unovis/ts'
   import { VisSingleContainer, VisSankey } from '@unovis/svelte'
-  import { data, NodeDatum } from './data'
+  import type { NodeDatum } from './data'
+  import { data } from './data'
 
   const subLabel = (d: NodeDatum) => `£${d.value.toFixed(2)}`
 </script>

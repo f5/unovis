@@ -74,6 +74,7 @@ export type {
   MapFeature,
 } from './components/topojson-map/types'
 export type { LeafletMapConfigInterface } from './components/leaflet-map/config'
+export type { LeafletMapClusterDatum } from './components/leaflet-map/types'
 export type { LeafletFlowMapConfigInterface } from './components/leaflet-flow-map/config'
 export type { ChordDiagramConfigInterface } from './components/chord-diagram/config'
 export type { GraphConfigInterface } from './components/graph/config'

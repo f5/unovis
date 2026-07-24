@@ -1,9 +1,11 @@
 <script lang="ts">
   import { VisLeafletMap } from '@unovis/svelte'
-  import { LeafletMap, LeafletMapClusterDatum } from '@unovis/ts'
+  import { LeafletMap } from '@unovis/ts'
+  import type { LeafletMapClusterDatum } from '@unovis/ts'
 
   // Data
-  import { MapPointDataRecord, data, totalEvents, mapStyleLight, mapStyleDark } from './data'
+  import type { MapPointDataRecord } from './data'
+  import { data, totalEvents, mapStyleLight, mapStyleDark } from './data'
 
   let map: VisLeafletMap | undefined
 
