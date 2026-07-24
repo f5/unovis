@@ -119,6 +119,48 @@ const padding = { left: 100, right: 100 }
   <XYWrapper className='showBorder' {...xyContainerProps()} containerProps={{ height: 100, padding: { left: 100, right: 100 }}} excludeTabs/>
 </div>
 
+### Bleed
+Some components need extra space inside the container for their marks to fully fit: half of the point
+diameter for _Scatter_, half of the bar width for bar charts at the edges of the domain, and so on. This
+space is called **bleed**. Before rendering, the container asks every component how much bleed it needs,
+combines the values (taking the maximum for each side), and shrinks the scale ranges accordingly. That's
+why the first and the last points of the scatter chart below are shifted inward from the container's
+edges instead of being cut in half:
+
+<XYWrapper {...xyContainerProps('Scatter')}
+  components={[
+    component('Scatter', { size: 25 }),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+  ]}
+  height={125}
+  excludeTabs
+/>
+
+The container reports the bleed it used to the `onRenderComplete` callback, and you can override the
+calculated values with the `bleed` property. It accepts a <a href='#sizing'>Spacing</a> object, or a
+function that receives the container's components and returns one. When `bleed` is set, it replaces the
+calculated values entirely and undefined sides are treated as `0`. Here is the same chart with the
+bleed set to zero — the edge points now get clipped:
+
+```ts
+const bleed = { top: 0, bottom: 0, left: 0, right: 0 }
+```
+
+<XYWrapper {...xyContainerProps('Scatter')}
+  components={[
+    component('Scatter', { size: 25 }),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+  ]}
+  height={125}
+  containerProps={{ bleed: { top: 0, bottom: 0, left: 0, right: 0 } }}
+  excludeTabs
+/>
+
+Overriding the bleed is mainly useful for aligning the X values of several charts placed one below
+another — see the [Bleed](/docs/guides/bleed) guide for a complete walkthrough.
+
 ### Range
 The `xRange` and `yRange` determine the screen space your chart contains. By default, an _XY Container_ will
 fit to its container. Provide `xRange` with values [`xStart`, `width`] and `yRange` with [`yStart`, `height`]
