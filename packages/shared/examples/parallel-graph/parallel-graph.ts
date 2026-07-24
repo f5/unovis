@@ -9,7 +9,7 @@ container.classList.add('chart')
 const mainSite = nodes[0].site
 
 const chart = new SingleContainer(container, {
-  height: '65h',
+  height: '65vh',
   component: new Graph<NodeDatum, LinkDatum>({
     layoutType: GraphLayoutType.Parallel,
     layoutGroupOrder: ['west', mainSite, 'east'],
