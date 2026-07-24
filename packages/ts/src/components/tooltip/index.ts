@@ -135,9 +135,9 @@ export class Tooltip {
 
   private _display (): void {
     window.clearTimeout(this._hideDelayTimeoutId)
-    this.div
-      .classed(s.hidden, false) // The `hidden` class sets `display: none;`
-      .classed(s.show, true) // The `show` class triggers the opacity transition
+    this.div.classed(s.hidden, false) // The `hidden` class sets `display: none;`
+    this.element.getBoundingClientRect() // force a reflow so it has a frame to fade in from
+    this.div.classed(s.show, true) // The `show` class triggers the opacity transition
 
     this._isShown = true
   }
@@ -348,8 +348,11 @@ export class Tooltip {
     // We use the Event Delegation pattern to set up Tooltip events
     // Every component will have single `mousemove` and `mouseleave` event listener functions, where we'll check
     // the `path` of the event and trigger corresponding callbacks
-    this.components.forEach(component => {
-      const selection = select(component.element)
+    // We also attach to the container itself: a gap between triggers (e.g. between bars) can be
+    // covered by a sibling component's element, which the per-component listener below never sees
+    const elements = [...this.components.map(c => c.element), this._container]
+    elements.forEach(element => {
+      const selection = select(element)
       selection
         .on('mousemove.tooltip', (e: MouseEvent) => {
           const { config: currentConfig } = this // get latest config because it could have been changed after the event was triggered
@@ -388,6 +391,13 @@ export class Tooltip {
                 return
               }
             }
+          }
+
+          // No match: keep following the cursor so the tooltip doesn't freeze while it fades out
+          // `_isShown` flips false as soon as `_hide` starts the fade, so check `hidden` instead
+          if (currentConfig.followCursor && !this.div.classed(s.hidden)) {
+            const [x, y] = this.isContainerBody() ? [e.clientX, e.clientY] : pointer(e, this._container)
+            this.place({ x, y })
           }
 
           // Hide the tooltip if the event didn't pass through any of the configured triggers.
