@@ -427,6 +427,14 @@ export class Graph<
   private async _calculateLayout (): Promise<void> {
     const { config, datamodel } = this
 
+    // FIX: Always ensure nodes have valid x/y positions before layout calculation
+    // This prevents D3 force simulation from initializing nodes at NaN/undefined
+    // which causes the flickering effect and "undefined coordinates" errors
+    for (const node of datamodel.nodes) {
+      if (!node.x || isNaN(node.x)) node.x = this._width / 2
+      if (!node.y || isNaN(node.y)) node.y = this._height / 2
+    }
+
     // If the layout type has changed, we need to reset the node positions if they were fixed before
     if (this._currentLayoutType !== config.layoutType) {
       for (const node of datamodel.nodes) {
