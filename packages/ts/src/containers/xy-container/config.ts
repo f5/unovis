@@ -92,6 +92,15 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   annotations?: Annotations | undefined;
   /** Extend the clip path by the specified number of pixels. Default: `2` */
   clipPathExtend?: number;
+  /** Override the automatically calculated bleed — the extra space (in pixels) the components request
+   * to fully fit into the container (e.g. half of the point diameter for Scatter), which gets subtracted
+   * from the scale ranges. Accepts a `Spacing` object or a function that receives the container's
+   * components (their individual bleed values are available via the `bleed` getter) and returns one.
+   * The sides you provide replace the calculated values, the sides left `undefined` fall back to them —
+   * pass `0` explicitly to remove the bleed on a side.
+   * Useful for synchronizing the scale ranges of multiple charts, since the final bleed is provided
+   * to the `onRenderComplete` callback. Default: `undefined` */
+  bleed?: Spacing | ((components: XYComponentCore<Datum>[]) => Spacing);
   /** Callback function to be called when the chart rendering is complete. Default: `undefined` */
   onRenderComplete?: (
     svgNode: SVGSVGElement,
@@ -132,5 +141,6 @@ export const XYContainerDefaultConfig: XYContainerConfigInterface<unknown> = {
   scaleByDomain: false,
 
   clipPathExtend: 2,
+  bleed: undefined,
 }
 
