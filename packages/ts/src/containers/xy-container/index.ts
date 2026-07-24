@@ -20,7 +20,7 @@ import { ScaleDimension } from '@/types/scale'
 import { Direction } from '@/types/direction'
 
 // Utils
-import { clamp, clean, flatten } from '@/utils/data'
+import { clamp, clean, flatten, isFunction } from '@/utils/data'
 import { guid } from '@/utils/misc'
 
 // Config
@@ -459,13 +459,27 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   private _getBleed<T extends XYComponentCore<Datum>> (components: T[]): Spacing {
-    return components.map(c => c.bleed).reduce((bleed, b) => {
+    // We request the components' bleed even when the configured `bleed` overrides the result,
+    // because some components prepare their internal rendering state in the `bleed` getter
+    const calculatedBleed = components.map(c => c.bleed).reduce((bleed, b) => {
       for (const key of Object.keys(bleed)) {
         const k = key as keyof Spacing
         if (bleed[k] < b[k]) bleed[k] = b[k]
       }
       return bleed
     }, { top: 0, bottom: 0, left: 0, right: 0 })
+
+    const configuredBleed = isFunction(this.config.bleed) ? this.config.bleed(components) : this.config.bleed
+    if (configuredBleed) {
+      return {
+        top: configuredBleed.top ?? calculatedBleed.top,
+        bottom: configuredBleed.bottom ?? calculatedBleed.bottom,
+        left: configuredBleed.left ?? calculatedBleed.left,
+        right: configuredBleed.right ?? calculatedBleed.right,
+      }
+    }
+
+    return calculatedBleed
   }
 
   public destroy (): void {
