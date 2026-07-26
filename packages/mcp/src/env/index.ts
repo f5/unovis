@@ -12,7 +12,8 @@ import { JSDOM } from 'jsdom'
 import type { DOMWindow } from 'jsdom'
 
 import { RafQueue } from './raf-queue.js'
-import { installCanvasHook } from './canvas.js'
+import { installCanvasHook, registerFontsFromDir } from './canvas.js'
+import { ensureFontsDir } from './fonts.js'
 import { installBBoxPolyfills } from './bbox.js'
 import { installComputedStyle, setVarMaps, setFontRules } from './computed-style.js'
 import type { VarMaps } from './computed-style.js'
@@ -101,6 +102,11 @@ export function getRenderEnv (): Promise<RenderEnv> {
 }
 
 async function createEnv (): Promise<RenderEnv> {
+  // Provision measurement fonts before anything can measure text
+  // (best-effort: falls back to system fonts offline)
+  const fontsDir = await ensureFontsDir()
+  if (fontsDir) registerFontsFromDir(fontsDir)
+
   const dom = new JSDOM('<!doctype html><html><body></body></html>', {
     url: 'http://localhost/',
     pretendToBeVisual: false,

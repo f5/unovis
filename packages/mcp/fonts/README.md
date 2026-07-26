@@ -1,18 +1,19 @@
 # Fonts
 
-Font files placed in this directory (`.ttf` / `.otf` / `.woff2`) are registered
-with the canvas text-measurement engine at startup — the family name is derived
-from the file name (`Inter-Regular.ttf` → `Inter`).
+Text measurement drives label trimming, wrapping and axis margins, so the
+server measures with the same font the output declares (Unovis defaults to
+the Inter stack). Fonts are resolved in this order (see `src/env/fonts.ts`):
 
-Unovis defaults to the Inter font stack, so for exact text metrics (and
-machine-portable test snapshots) add the static Inter faces here:
+1. `UNOVIS_MCP_FONTS_DIR` — an explicit directory of font files
+2. **this directory** — any `.ttf` / `.otf` / `.woff` files placed here are
+   registered at startup; the family name is derived from the file name
+   (`Inter-Regular.ttf` → `Inter`)
+3. a user-level cache (`~/.cache/unovis-mcp/fonts/`), populated automatically
+   on first start by downloading the official
+   [Inter release](https://github.com/rsms/inter) — pinned version, SHA-256
+   verified, licensed under the SIL Open Font License 1.1 (the license file
+   is stored alongside the fonts)
 
-- `Inter-Regular.ttf`
-- `Inter-Bold.ttf`
-
-Inter is available under the SIL Open Font License 1.1 from
-<https://github.com/rsms/inter/releases> — include its `LICENSE.txt` alongside
-the font files when bundling.
-
-Without font files, system fonts are used for measurement: metrics are close,
-but label trimming/wrapping can differ by a few pixels from browser output.
+Set `UNOVIS_MCP_NO_DOWNLOAD=1` to disable the download; the server then falls
+back to system fonts (metrics are close, but label trimming can differ by a
+few pixels from browser output).
