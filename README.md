@@ -63,6 +63,7 @@ Svelte and TypeScript.
 | [`@unovis/svelte`](packages/svelte) | Svelte components | <a href="https://npmx.dev/package/@unovis/svelte"><img src="https://npmx.dev/api/registry/badge/version/@unovis/svelte" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/svelte"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/svelte" alt="Downloads"></a> |
 | [`@unovis/vue`](packages/vue) | Vue components | <a href="https://npmx.dev/package/@unovis/vue"><img src="https://npmx.dev/api/registry/badge/version/@unovis/vue" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/vue"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/vue" alt="Downloads"></a> |
 | [`@unovis/solid`](packages/solid) | Solid components | <a href="https://npmx.dev/package/@unovis/solid"><img src="https://npmx.dev/api/registry/badge/version/@unovis/solid" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/solid"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/solid" alt="Downloads"></a> |
+| [`@unovis/mcp`](packages/mcp) | MCP server generating charts as SVG | <a href="https://npmx.dev/package/@unovis/mcp"><img src="https://npmx.dev/api/registry/badge/version/@unovis/mcp" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/mcp"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/mcp" alt="Downloads"></a> |
 | [`packages/website`](packages/website) | Website, docs and examples | — | — |
 
 ## Contributing

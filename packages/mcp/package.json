@@ -1,0 +1,67 @@
+{
+  "name": "@unovis/mcp",
+  "description": "MCP server that renders Unovis charts to SVG locally in Node — no browser, no remote services",
+  "version": "1.6.7",
+  "packageManager": "pnpm@10.23.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/f5/unovis.git",
+    "directory": "packages/mcp"
+  },
+  "homepage": "https://unovis.dev",
+  "bugs": {
+    "url": "https://github.com/f5/unovis/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model context protocol",
+    "data visualization",
+    "charts",
+    "svg",
+    "llm",
+    "unovis"
+  ],
+  "author": "Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "unovis-mcp": "./dist/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "fonts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "dev": "tsx src/cli.ts",
+    "samples": "tsx scripts/render-samples.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src test scripts --ext .ts",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.0",
+    "@napi-rs/canvas": "^0.1.65",
+    "@unovis/ts": "workspace:*",
+    "jsdom": "^26.1.0",
+    "svg-path-bounds": "^1.0.2",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^20.17.0",
+    "rimraf": "^3.0.2",
+    "tsx": "^4.19.0",
+    "typescript": "catalog:",
+    "vitest": "^3.0.0"
+  }
+}
