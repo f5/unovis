@@ -32,6 +32,11 @@ export interface FinalizeContext {
 
 const PSEUDO_SELECTOR = /:(hover|focus|active|visited|checked|disabled)|::/
 
+/** Frame around the chart so content never touches the image edges.
+ * The requested width/height are the final image size — the renderer draws
+ * the chart at the inner size and the content is offset here. */
+export const CHART_PADDING = { top: 12, right: 16, bottom: 16, left: 16 }
+
 export function finalizeSvg (svg: SVGSVGElement, ctx: FinalizeContext): string {
   const { document, spec } = ctx
 
@@ -52,18 +57,24 @@ export function finalizeSvg (svg: SVGSVGElement, ctx: FinalizeContext): string {
   const fontFamily = substituteVarsForElement('var(--vis-font-family)', null, varCtx) ||
     'Inter, Arial, "Helvetica Neue", Helvetica, sans-serif'
 
-  const width = parseFloat(svg.getAttribute('width') ?? '') || spec.width
-  const height = parseFloat(svg.getAttribute('height') ?? '') || spec.height
+  // Frame the chart: wrap the rendered content and offset it by the padding
+  // (and below the synthesized header). width/height stay the requested size.
+  const width = spec.width
+  const contentGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+  while (svg.firstChild) contentGroup.appendChild(svg.firstChild)
+  svg.appendChild(contentGroup)
+
   const headerHeight = renderHeader(svg, document, {
     title: spec.title,
     legend: spec.legend,
     fontFamily,
   }, varCtx, width)
+  contentGroup.setAttribute('transform', `translate(${CHART_PADDING.left},${headerHeight + CHART_PADDING.top})`)
 
   rewriteIds(svg, ctx.idPrefix ?? `uv${Math.random().toString(36).slice(2, 6)}-`)
 
   // Root hygiene
-  const totalHeight = height + headerHeight
+  const totalHeight = spec.height + headerHeight
   svg.setAttribute('width', String(width))
   svg.setAttribute('height', String(totalHeight))
   svg.setAttribute('viewBox', `0 0 ${width} ${totalHeight}`)

@@ -8,7 +8,7 @@ import { getRenderEnv, defineElementSize } from '../env/index.js'
 import type { RenderEnv } from '../env/index.js'
 import { materializeChart, ChartInputError } from './materialize.js'
 import { Mutex } from './mutex.js'
-import { finalizeSvg } from '../svg/postprocess.js'
+import { finalizeSvg, CHART_PADDING } from '../svg/postprocess.js'
 import type { ChartSpec } from './spec.js'
 
 export { ChartInputError }
@@ -44,8 +44,17 @@ async function renderInEnv (env: RenderEnv, spec: ChartSpec, options: RenderOpti
   const { document, lib, raf } = env
   const warnings: string[] = []
 
+  // The chart renders at the inner size; the post-processor frames it with
+  // CHART_PADDING so content never touches the image edges while width and
+  // height stay the final image dimensions.
+  const inner: ChartSpec = {
+    ...spec,
+    width: Math.max(40, spec.width - CHART_PADDING.left - CHART_PADDING.right),
+    height: Math.max(40, spec.height - CHART_PADDING.top - CHART_PADDING.bottom),
+  }
+
   const host = document.createElement('div')
-  defineElementSize(host, spec.width, spec.height)
+  defineElementSize(host, inner.width, inner.height)
   document.body.appendChild(host)
 
   // Theme + custom palette apply through the getComputedStyle wrapper:
@@ -61,14 +70,14 @@ async function renderInEnv (env: RenderEnv, spec: ChartSpec, options: RenderOpti
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let chart: any
   try {
-    const materialized = materializeChart(lib, spec, () => { renderCompleted = true })
+    const materialized = materializeChart(lib, inner, () => { renderCompleted = true })
 
     chart = materialized.containerType === 'xy'
       ? new lib.XYContainer(host, materialized.containerConfig, materialized.data as never[])
       : new lib.SingleContainer(host, materialized.containerConfig, materialized.data)
 
     // Belt and braces for lib builds without the clientWidth fallback
-    if (chart.element) defineElementSize(chart.element, spec.width, spec.height)
+    if (chart.element) defineElementSize(chart.element, inner.width, inner.height)
 
     const deadline = Date.now() + RENDER_TIMEOUT_MS
     for (let round = 0; round < MAX_FLUSH_ROUNDS; round++) {
