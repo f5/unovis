@@ -1,0 +1,83 @@
+/** ChartSpec — a JSON-serializable intermediate representation of a chart.
+ *
+ * Tool inputs are converted to a ChartSpec (recipes), which the renderer
+ * materializes into live Unovis containers/components. Keeping the IR
+ * serializable enables the `config` output mode and, later, framework code
+ * generation. Accessors are descriptors referencing data fields by name —
+ * user input is never evaluated as code.
+ */
+
+export type FieldType = 'number' | 'string' | 'date'
+
+/** Accessor descriptors (JSON-safe stand-ins for Unovis accessor functions) */
+export type AccessorRef =
+  /** d => coerce(d[field]) */
+  | { $field: string; as?: FieldType }
+  /** (d, i) => i */
+  | { $index: true }
+  /** () => value */
+  | { $const: unknown }
+  /** Multi-line time-aware tick formatter for date scales */
+  | { $dateTickFormat: true }
+  /** Numeric tick formatter with thousands separators */
+  | { $numTickFormat: true }
+  /** (d, i) => values[i % values.length] — e.g. ordinal index → category name */
+  | { $lookup: (string | number)[] }
+  /** d => prefix + formatNumber(d[field]) + suffix (empty string for missing values) */
+  | { $format: { field: string; prefix?: string; suffix?: string } }
+  /** d => mapping[String(d[field])] ?? fallback — e.g. category → color */
+  | { $mapField: { field: string; mapping: Record<string, string>; fallback?: string } }
+
+export const isAccessorRef = (value: unknown): value is AccessorRef => {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return false
+  const keys = Object.keys(value)
+  return keys.some(k => ['$field', '$index', '$const', '$dateTickFormat', '$numTickFormat', '$lookup', '$format', '$mapField'].includes(k))
+}
+
+/** Component config values: JSON values with AccessorRefs anywhere inside */
+export type SpecConfigValue = unknown
+
+export interface ComponentSpec {
+  /** Unovis class name, e.g. 'Line', 'StackedBar', 'Donut' */
+  type: string;
+  config: Record<string, SpecConfigValue>;
+}
+
+export interface AxisSpec {
+  label?: string;
+  gridLine?: boolean;
+  numTicks?: number;
+  tickFormat?: AccessorRef;
+  domainLine?: boolean;
+  tickTextAngle?: number;
+  [key: string]: SpecConfigValue;
+}
+
+export interface LegendItemSpec {
+  name: string;
+  /** Resolved during post-processing when omitted (default palette) */
+  color?: string;
+  /** Palette index used when color is not set */
+  paletteIndex?: number;
+}
+
+export interface ChartSpec {
+  container: 'xy' | 'single';
+  width: number;
+  height: number;
+  theme: 'light' | 'dark';
+  title?: string;
+  /** Extra container config (xy: xDomain, yDirection…; single: sizing…) */
+  containerConfig?: Record<string, SpecConfigValue>;
+  components: ComponentSpec[];
+  xAxis?: AxisSpec;
+  yAxis?: AxisSpec;
+  /** Custom palette — overrides --vis-colorN for the whole chart */
+  colors?: string[];
+  legend?: LegendItemSpec[];
+  data: unknown;
+}
+
+export interface RenderWarnings {
+  warnings: string[];
+}

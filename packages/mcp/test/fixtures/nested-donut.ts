@@ -1,0 +1,48 @@
+export default [
+  {
+    name: 'sales-by-region-country',
+    input: {
+      title: 'Sales by Region and Country',
+      data: [
+        { region: 'EMEA', country: 'Germany', sales: 420 },
+        { region: 'EMEA', country: 'France', sales: 310 },
+        { region: 'EMEA', country: 'UK', sales: 380 },
+        { region: 'Americas', country: 'USA', sales: 940 },
+        { region: 'Americas', country: 'Canada', sales: 210 },
+        { region: 'Americas', country: 'Brazil', sales: 160 },
+        { region: 'APAC', country: 'Japan', sales: 330 },
+        { region: 'APAC', country: 'Australia', sales: 150 },
+      ],
+      layers: ['region', 'country'],
+      value: 'sales',
+      centralLabel: '$2.9M',
+      centralSubLabel: 'total revenue',
+      layerPadding: 4,
+      cornerRadius: 3,
+      height: 520,
+    },
+  },
+  {
+    name: 'counted-tickets',
+    input: {
+      data: [
+        { product: 'Mobile App', severity: 'High' },
+        { product: 'Mobile App', severity: 'High' },
+        { product: 'Mobile App', severity: 'Medium' },
+        { product: 'Mobile App', severity: 'Low' },
+        { product: 'Mobile App', severity: 'Low' },
+        { product: 'Web App', severity: 'High' },
+        { product: 'Web App', severity: 'Medium' },
+        { product: 'Web App', severity: 'Medium' },
+        { product: 'Web App', severity: 'Medium' },
+        { product: 'Web App', severity: 'Low' },
+        { product: 'API', severity: 'High' },
+        { product: 'API', severity: 'Low' },
+        { product: 'API', severity: 'Low' },
+      ],
+      layers: ['product', 'severity'],
+      width: 520,
+      height: 460,
+    },
+  },
+]

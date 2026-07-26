@@ -59,6 +59,7 @@ Svelte and TypeScript.
 * `packages/svelte` Svelte components
 * `packages/vue` Vue components
 * `packages/solid` Solid components
+* `packages/mcp` MCP server generating charts as SVG
 * `packages/website` Website, docs and examples
 
 ## Contributing
