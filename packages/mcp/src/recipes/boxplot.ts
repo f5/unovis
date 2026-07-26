@@ -12,6 +12,8 @@ import {
   distinctValues,
   xyAxes,
   ChartInputError,
+  xyDecorations,
+  decorationComponents,
 } from './shared.js'
 import type { DataRecord } from './shared.js'
 
@@ -36,6 +38,7 @@ export const boxplotInputShape = {
   xAxisLabel: xyInput.xAxisLabel,
   yAxisLabel: xyInput.yAxisLabel,
   showGridLines: xyInput.showGridLines,
+  ...xyDecorations,
   ...commonInput,
 }
 
@@ -82,10 +85,11 @@ export const boxplotRecipe: Recipe<typeof boxplotInputShape> = {
 
     const axes = xyAxes(input)
 
+    const deco = decorationComponents(input)
     return {
       container: 'xy',
       ...baseSpec(input),
-      components: [{
+      components: [...deco.bands, {
         type: 'Boxplot',
         config: {
           x: { $index: true },
@@ -96,7 +100,7 @@ export const boxplotRecipe: Recipe<typeof boxplotInputShape> = {
           ...(input.boxMaxWidth !== undefined ? { barMaxWidth: input.boxMaxWidth } : {}),
           roundedCorners: input.roundedCorners,
         },
-      }],
+      }, ...deco.lines],
       // Explicit integer tick values: with few categories, approximate d3
       // tick counts produce fractional ticks that round to duplicate labels
       xAxis: { ...categoryAxis(axes.xAxis, groups), gridLine: false, tickValues: groups.map((_, i) => i) },

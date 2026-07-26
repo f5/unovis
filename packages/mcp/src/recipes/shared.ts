@@ -9,7 +9,7 @@
 import { z } from 'zod'
 
 import { ChartInputError } from '../render/materialize.js'
-import type { AccessorRef, AxisSpec, ChartSpec, LegendItemSpec } from '../render/spec.js'
+import type { AccessorRef, AxisSpec, ChartSpec, ComponentSpec, LegendItemSpec } from '../render/spec.js'
 
 export { ChartInputError }
 
@@ -42,6 +42,58 @@ export const xyInput = {
   yAxisLabel: z.string().optional().describe('Label for the Y axis'),
   showGridLines: z.boolean().default(true).describe('Show horizontal/vertical grid lines'),
   legend: z.boolean().default(true).describe('Show a legend (multi-series charts only)'),
+}
+
+const hexColor = z.string().regex(/^#[0-9a-fA-F]{3,8}$/, 'hex color, e.g. #FF6B7E')
+
+/** Reference-line / shaded-band decorations available on XY charts */
+export const xyDecorations = {
+  referenceLines: z.array(z.object({
+    axis: z.enum(['x', 'y']).default('y').describe('y: horizontal line at a Y value; x: vertical line at an X value'),
+    value: z.number().describe('Position in data units'),
+    label: z.string().optional().describe('Small label next to the line'),
+    color: hexColor.optional(),
+    lineWidth: z.number().min(0.5).max(10).default(1.5),
+    style: z.enum(['dashed', 'solid', 'dotted']).default('dashed'),
+  })).max(8).optional().describe('Reference lines for thresholds/targets, e.g. an SLA or goal'),
+  referenceBands: z.array(z.object({
+    axis: z.enum(['x', 'y']).default('y'),
+    from: z.number().describe('Band start, in data units'),
+    to: z.number().describe('Band end, in data units'),
+    label: z.string().optional(),
+    color: hexColor.optional(),
+  })).max(8).optional().describe('Shaded ranges drawn behind the data, e.g. an acceptable range'),
+}
+
+export interface DecorationInput {
+  referenceLines?: { axis: 'x' | 'y'; value: number; label?: string; color?: string; lineWidth: number; style: 'dashed' | 'solid' | 'dotted' }[];
+  referenceBands?: { axis: 'x' | 'y'; from: number; to: number; label?: string; color?: string }[];
+}
+
+/** Decoration components: bands render behind the data, lines on top */
+export function decorationComponents (input: DecorationInput): { bands: ComponentSpec[]; lines: ComponentSpec[] } {
+  const bands: ComponentSpec[] = (input.referenceBands ?? []).map(band => ({
+    type: 'Plotband',
+    config: {
+      axis: band.axis,
+      from: band.from,
+      to: band.to,
+      ...(band.color ? { color: band.color } : {}),
+      ...(band.label ? { labelText: band.label } : {}),
+    },
+  }))
+  const lines: ComponentSpec[] = (input.referenceLines ?? []).map(line => ({
+    type: 'Plotline',
+    config: {
+      axis: line.axis,
+      value: line.value,
+      lineWidth: line.lineWidth,
+      lineStyle: line.style,
+      ...(line.color ? { color: line.color } : {}),
+      ...(line.label ? { labelText: line.label } : {}),
+    },
+  }))
+  return { bands, lines }
 }
 
 // ── helpers ─────────────────────────────────────────────────────────────────

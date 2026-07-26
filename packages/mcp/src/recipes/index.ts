@@ -13,6 +13,8 @@ import { treemapRecipe } from './treemap.js'
 import { chordRecipe } from './chord.js'
 import { nestedDonutRecipe } from './nested-donut.js'
 import { radialBarRecipe } from './radial-bar.js'
+import { graphRecipe } from './graph.js'
+import { choroplethRecipe } from './choropleth.js'
 
 export type { Recipe, AnyRecipe } from './types.js'
 
@@ -31,6 +33,8 @@ export const recipes: AnyRecipe[] = [
   chordRecipe,
   nestedDonutRecipe,
   radialBarRecipe,
+  graphRecipe,
+  choroplethRecipe,
 ]
 
 export const recipeByName = new Map(recipes.map(r => [r.name, r]))

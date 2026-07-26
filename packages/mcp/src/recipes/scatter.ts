@@ -2,7 +2,20 @@ import { z } from 'zod'
 
 import type { Recipe } from './types.js'
 import type { AccessorRef, LegendItemSpec } from '../render/spec.js'
-import { commonInput, xyInput, dataRecords, fieldName, assertFieldsExist, baseSpec, distinctValues, field, seriesLegend, xyAxes } from './shared.js'
+import {
+  commonInput,
+  xyInput,
+  dataRecords,
+  fieldName,
+  assertFieldsExist,
+  baseSpec,
+  distinctValues,
+  field,
+  seriesLegend,
+  xyAxes,
+  xyDecorations,
+  decorationComponents,
+} from './shared.js'
 import type { DataRecord } from './shared.js'
 
 /** Category color: custom palette entries cycle; otherwise theme palette variables
@@ -29,6 +42,7 @@ export const scatterInputShape = {
     .describe('Field with point labels. Overlapping labels are hidden automatically'),
   shape: z.enum(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']).default('circle')
     .describe('Point shape'),
+  ...xyDecorations,
   ...xyInput,
   ...commonInput,
 }
@@ -59,10 +73,11 @@ export const scatterRecipe: Recipe<typeof scatterInputShape> = {
 
     const axes = xyAxes(input)
 
+    const deco = decorationComponents(input)
     return {
       container: 'xy',
       ...baseSpec(input),
-      components: [{
+      components: [...deco.bands, {
         type: 'Scatter',
         config: {
           x: field(input.x, 'number'),
@@ -74,7 +89,7 @@ export const scatterRecipe: Recipe<typeof scatterInputShape> = {
           ...(color ? { color } : {}),
           ...(input.label ? { label: { $field: input.label } } : {}),
         },
-      }],
+      }, ...deco.lines],
       xAxis: { ...axes.xAxis, tickFormat: { $numTickFormat: true } },
       yAxis: { ...axes.yAxis, tickFormat: { $numTickFormat: true } },
       legend,

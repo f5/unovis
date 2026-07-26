@@ -1,0 +1,46 @@
+export default [
+  {
+    name: 'world-renewables',
+    input: {
+      title: 'Renewable Electricity Share (%)',
+      map: 'world',
+      data: [
+        { id: 'NO', value: 98 },
+        { id: 'BR', value: 85 },
+        { id: 'CA', value: 68 },
+        { id: 'Germany', value: 46 },
+        { id: 'ES', value: 47 },
+        { id: 'GB', value: 41 },
+        { id: 'CN', value: 31 },
+        { id: 'US', value: 21 },
+        { id: 'IN', value: 20 },
+        { id: 'AU', value: 32 },
+        { id: 'ZA', value: 12 },
+        { id: 'Saudi Arabia', value: 1 },
+      ],
+      colorRange: ['#e8f5e9', '#00796b'],
+      valueLabel: '%',
+    },
+  },
+  {
+    name: 'usa-population-growth',
+    input: {
+      title: 'Population Growth 2020–2025 (%)',
+      map: 'usa',
+      data: [
+        { id: 'TX', value: 6.1 },
+        { id: 'FL', value: 5.8 },
+        { id: 'Idaho', value: 5.4 },
+        { id: 'AZ', value: 3.9 },
+        { id: 'NC', value: 3.7 },
+        { id: 'GA', value: 2.9 },
+        { id: 'WA', value: 2.2 },
+        { id: '06', value: -0.9 },
+        { id: 'NY', value: -2.1 },
+        { id: 'IL', value: -1.8 },
+      ],
+      valueLabel: '%',
+      height: 500,
+    },
+  },
+]

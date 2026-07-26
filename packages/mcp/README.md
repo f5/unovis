@@ -52,7 +52,11 @@ npx @unovis/mcp --transport http --port 3737 --endpoint /mcp
 | `generate_chord_diagram` | Chord diagram (nodes + weighted links) |
 | `generate_nested_donut_chart` | Multi-level (sunburst-style) donut |
 | `generate_radial_bar_chart` | Radial progress bars |
+| `generate_network_graph` | Node-link network (force / circular / concentric layouts) |
+| `generate_choropleth_map` | Geographic areas shaded by value (world, USA, Germany, UK, France, India, China) |
 | `get_unovis_info` | Server/tool discovery info |
+
+XY charts (line, area, bar, scatter, boxplot) also accept `referenceLines` (labeled threshold/target lines) and `referenceBands` (shaded ranges drawn behind the data).
 
 Every chart tool accepts flat-record `data` plus field-name accessors (`x: "month"`, `y: ["sales", "cost"]`), and the shared options `width`, `height`, `theme` (`light`/`dark`), `title`, `colors` (custom palette), plus:
 
@@ -110,4 +114,4 @@ pnpm dev             # run the server from source (tsx)
 npx @modelcontextprotocol/inspector node dist/cli.js   # interactive tool testing
 ```
 
-Roadmap: framework code snippets (`outputType: "code"` for React/Svelte/Vue/Angular/Solid), Graph and TopoJSON map support.
+Roadmap: framework code snippets (`outputType: "code"` for React/Svelte/Vue/Angular/Solid), a combo (bar + line) chart tool, dagre graph layouts (blocked on an `@unovis/graphlibrary` ESM fix).

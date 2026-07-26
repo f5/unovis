@@ -173,23 +173,34 @@ export function installComputedStyle (window: DOMWindow): void {
   const document = window.document
   nativeGetComputedStyle = window.getComputedStyle.bind(window)
 
+  // jsdom's computed style cascades lazily and its css parsers can throw on
+  // declarations they don't fully support (e.g. cssstyle's margin shorthand
+  // handling) — every native read must be treated as fallible.
+  const safe = <T>(fn: () => T, fallback: T): T => {
+    try {
+      return fn()
+    } catch {
+      return fallback
+    }
+  }
+
   const wrapped = (el: Element, pseudo?: string | null): CSSStyleDeclaration => {
-    const target = nativeGetComputedStyle!(el, pseudo)
-    return new Proxy(target, {
-      get (t, prop, receiver) {
+    const target = safe(() => nativeGetComputedStyle!(el, pseudo), undefined as CSSStyleDeclaration | undefined)
+    return new Proxy((target ?? {}) as CSSStyleDeclaration, {
+      get (t, prop) {
         if (prop === 'getPropertyValue') {
           return (name: string): string => {
             if (name.startsWith('--')) return resolveCssVar(name, el, document)
-            const value = t.getPropertyValue(name)
+            const value = safe(() => t.getPropertyValue?.(name) ?? '', '')
             if (/^font/.test(name)) return resolveFontProp(el, name as 'font-size', value, document)
             return value.includes('var(') ? substituteVars(value, document) : value
           }
         }
-        if (prop === 'fontSize') return resolveFontProp(el, 'font-size', t.fontSize, document)
-        if (prop === 'fontFamily') return resolveFontProp(el, 'font-family', t.fontFamily, document)
-        if (prop === 'fontWeight') return resolveFontProp(el, 'font-weight', t.fontWeight, document)
-        if (prop === 'fontStyle') return resolveFontProp(el, 'font-style', t.fontStyle, document)
-        const value = Reflect.get(t, prop, t)
+        if (prop === 'fontSize') return resolveFontProp(el, 'font-size', safe(() => t.fontSize, ''), document)
+        if (prop === 'fontFamily') return resolveFontProp(el, 'font-family', safe(() => t.fontFamily, ''), document)
+        if (prop === 'fontWeight') return resolveFontProp(el, 'font-weight', safe(() => t.fontWeight, ''), document)
+        if (prop === 'fontStyle') return resolveFontProp(el, 'font-style', safe(() => t.fontStyle, ''), document)
+        const value = safe(() => Reflect.get(t, prop, t), undefined)
         return typeof value === 'function' ? value.bind(t) : value
       },
     })

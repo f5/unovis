@@ -16,6 +16,8 @@ import {
   timeTickValuesFromData,
   toArray,
   xyAxes,
+  xyDecorations,
+  decorationComponents,
 } from './shared.js'
 import type { DataRecord } from './shared.js'
 
@@ -35,6 +37,7 @@ export const areaInputShape = {
     .describe('Area interpolation type'),
   xIsTime: z.boolean().default(false).describe('Treat x values as dates/timestamps (time axis)'),
   seriesLabels: z.array(z.string()).optional().describe('Display names for the y series (legend). Defaults to field names'),
+  ...xyDecorations,
   ...xyInput,
   ...commonInput,
 }
@@ -80,10 +83,11 @@ export const areaRecipe: Recipe<typeof areaInputShape> = {
         },
       }]
 
+    const deco = decorationComponents(input)
     return {
       container: 'xy',
       ...baseSpec(input),
-      components,
+      components: [...deco.bands, ...components, ...deco.lines],
       xAxis: {
         ...(categories ? categoryAxis(axes.xAxis, categories) : axes.xAxis),
         ...(input.xIsTime

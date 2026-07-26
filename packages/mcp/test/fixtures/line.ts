@@ -16,6 +16,22 @@ export default [
     },
   },
   {
+    name: 'reference-decorations',
+    input: {
+      title: 'API Latency vs SLA',
+      data: Array.from({ length: 24 }, (_, i) => ({
+        t: i,
+        ms: Math.round(120 + Math.sin(i / 2.5) * 60 + i * 4),
+      })),
+      x: 't',
+      y: 'ms',
+      xAxisLabel: 'Hour',
+      yAxisLabel: 'p95 latency (ms)',
+      referenceLines: [{ axis: 'y', value: 200, label: 'SLA', color: '#FF6B7E', style: 'dashed', lineWidth: 1.5 }],
+      referenceBands: [{ axis: 'y', from: 0, to: 150, label: 'healthy', color: '#00C19A' }],
+    },
+  },
+  {
     name: 'single-series-gaps',
     input: {
       data: Array.from({ length: 20 }, (_, i) => ({

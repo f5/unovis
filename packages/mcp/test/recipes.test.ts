@@ -14,7 +14,7 @@ import { z } from 'zod'
 import { recipes } from '../src/recipes/index.js'
 import { renderChart } from '../src/render/renderer.js'
 
-interface Sample { name: string; input: Record<string, unknown> }
+interface Sample { name: string; input: Record<string, unknown>; vitestSkip?: boolean }
 
 const fixturesDir = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
 
@@ -33,6 +33,7 @@ describe.each(recipes.map(r => [r.name, r] as const))('%s', (name, recipe) => {
     expect(samples.length).toBeGreaterThan(0)
 
     for (const sample of samples) {
+      if (sample.vitestSkip) continue // loader-limited fixture — covered by the samples harness
       const input = z.object(recipe.inputShape).parse(sample.input)
       const spec = recipe.toSpec(input)
       const result = await renderChart(spec, { idPrefix: 'snap-' })
