@@ -6,16 +6,14 @@
  * `HTMLCanvasElement.prototype.getContext` to hand out a real 2D context from
  * @napi-rs/canvas (prebuilt Skia, no postinstall scripts).
  *
- * Fonts: any .ttf/.otf files in the package's `fonts/` directory are
- * registered so text metrics match the font declared in the output
- * (Unovis defaults to Inter). Without font files, system fonts are used —
- * metrics are close but not exact.
+ * Fonts are provisioned by env/fonts.ts and registered via
+ * registerFontsFromDir so text metrics match the font declared in the
+ * output (Unovis defaults to Inter).
  */
 import { createCanvas, GlobalFonts } from '@napi-rs/canvas'
 import type { SKRSContext2D } from '@napi-rs/canvas'
 import { readdirSync } from 'node:fs'
-import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
 
 import type { DOMWindow } from 'jsdom'
 
@@ -26,21 +24,21 @@ export function getSharedContext (): SKRSContext2D {
   return sharedContext
 }
 
-export function registerBundledFonts (): string[] {
+/** Register every font file in a directory. The family name is derived from
+ * the file name: "Inter-Regular.ttf" → "Inter". */
+export function registerFontsFromDir (dir: string): string[] {
   const registered: string[] = []
-  const fontsDir = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'fonts')
   let entries: string[] = []
   try {
-    entries = readdirSync(fontsDir)
+    entries = readdirSync(dir)
   } catch {
     return registered
   }
 
   for (const file of entries) {
     if (!/\.(ttf|otf|woff2?)$/i.test(file)) continue
-    // Font family is derived from the file name: "Inter-Regular.ttf" → "Inter"
     const family = file.replace(/\.(ttf|otf|woff2?)$/i, '').split('-')[0]
-    if (GlobalFonts.registerFromPath(join(fontsDir, file), family)) registered.push(file)
+    if (GlobalFonts.registerFromPath(join(dir, file), family)) registered.push(file)
   }
   return registered
 }
@@ -53,7 +51,6 @@ export function measureTextWidth (text: string, font: string): number {
 }
 
 export function installCanvasHook (window: DOMWindow): void {
-  registerBundledFonts()
   const proto = window.HTMLCanvasElement.prototype as { getContext: (type: string) => unknown }
   proto.getContext = function (type: string) {
     return type === '2d' ? getSharedContext() : null
