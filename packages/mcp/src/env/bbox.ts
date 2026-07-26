@@ -10,6 +10,7 @@
  * polyfills are installed on `SVGElement.prototype` with tag-based dispatch.
  */
 import pathBounds from 'svg-path-bounds'
+import { svgPathProperties as SvgPathProperties } from 'svg-path-properties'
 
 import type { DOMWindow } from 'jsdom'
 
@@ -275,6 +276,17 @@ export function installBBoxPolyfills (window: DOMWindow): void {
     getComputedTextLength?: () => number;
   }
 
+  // SVGAnimatedLength stubs — d3-zoom's defaultExtent reads
+  // svg.width.baseVal.value (used by Graph's fit-to-view)
+  for (const prop of ['width', 'height'] as const) {
+    Object.defineProperty(window.SVGElement.prototype, prop, {
+      configurable: true,
+      get (this: SVGElement) {
+        return { baseVal: { value: parseFloat(this.getAttribute(prop) ?? '') || 0 } }
+      },
+    })
+  }
+
   proto.getBBox = function (this: SVGElement): Box {
     return computeBox(this, document)
   }
@@ -282,6 +294,38 @@ export function installBBoxPolyfills (window: DOMWindow): void {
   proto.getComputedTextLength = function (this: SVGElement): number {
     const { font } = resolveFontShorthand(this, document)
     return measureTextWidth(this.textContent ?? '', font)
+  }
+
+  // Path geometry (Graph links, TopoJSON flows measure their paths)
+  const pathPropsCache = new Map<string, InstanceType<typeof SvgPathProperties>>()
+  const pathProps = (el: SVGElement): InstanceType<typeof SvgPathProperties> | undefined => {
+    const d = el.getAttribute('d')
+    // NaN coordinates would send path-properties' numeric integration into
+    // an endless loop — treat such paths as unmeasurable
+    if (!d || d.includes('NaN')) return undefined
+    let props = pathPropsCache.get(d)
+    if (!props) {
+      try {
+        props = new SvgPathProperties(d)
+      } catch {
+        return undefined
+      }
+      if (pathPropsCache.size > 500) pathPropsCache.clear()
+      pathPropsCache.set(d, props)
+    }
+    return props
+  }
+
+  const protoWithPathMethods = proto as SVGElement & {
+    getTotalLength?: () => number;
+    getPointAtLength?: (length: number) => { x: number; y: number };
+  }
+  protoWithPathMethods.getTotalLength = function (this: SVGElement): number {
+    return pathProps(this)?.getTotalLength() ?? 0
+  }
+  protoWithPathMethods.getPointAtLength = function (this: SVGElement, length: number): { x: number; y: number } {
+    const point = pathProps(this)?.getPointAtLength(length)
+    return point ? { x: point.x, y: point.y } : { x: 0, y: 0 }
   }
 
   // Overlap detection (utils/text-overlap.ts) and a few components measure

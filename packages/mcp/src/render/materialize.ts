@@ -95,24 +95,40 @@ export interface MaterializedChart {
 const XY_COMPONENTS = new Set(['Line', 'Area', 'GroupedBar', 'StackedBar', 'Scatter', 'Timeline', 'Boxplot', 'XYLabels', 'Plotband', 'Plotline'])
 const SINGLE_COMPONENTS = new Set(['Donut', 'NestedDonut', 'RadialBar', 'Sankey', 'Heatmap', 'Treemap', 'ChordDiagram', 'Graph', 'TopoJSONMap'])
 
-function instantiateComponent (lib: UnovisLib, spec: ComponentSpec): unknown {
+/** Components that finish rendering asynchronously (after layout calculation)
+ * and expose their own onRenderComplete hook the renderer must await */
+export const ASYNC_COMPONENTS = new Set(['Graph'])
+
+function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, onComponentComplete?: () => void): unknown {
   const allowed = XY_COMPONENTS.has(spec.type) || SINGLE_COMPONENTS.has(spec.type)
   if (!allowed) throw new ChartInputError(`Unsupported component type: ${spec.type}`)
   const componentClass = (lib as unknown as Record<string, new (config: Record<string, unknown>) => unknown>)[spec.type]
   if (!componentClass) throw new ChartInputError(`Component ${spec.type} is not available in this @unovis/ts build`)
   const config = materializeValue(spec.config) as Record<string, unknown>
   config.duration = 0
+  if (ASYNC_COMPONENTS.has(spec.type) && onComponentComplete) config.onRenderComplete = onComponentComplete
+
+  // { $mapProjection: 'AlbersUsa' } → MapProjection.AlbersUsa() — projections
+  // are factory functions and can't live in the JSON spec directly
+  const projection = config.projection as { $mapProjection?: string } | undefined
+  if (projection?.$mapProjection) {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const projections = (lib as unknown as { MapProjection?: Record<string, () => unknown> }).MapProjection
+    const factory = projections?.[projection.$mapProjection]
+    if (!factory) throw new ChartInputError(`Unknown map projection: ${projection.$mapProjection}`)
+    config.projection = factory()
+  }
   // eslint-disable-next-line new-cap
   return new componentClass(config)
 }
 
-export function materializeChart (lib: UnovisLib, spec: ChartSpec, onRenderComplete: () => void): MaterializedChart {
+export function materializeChart (lib: UnovisLib, spec: ChartSpec, onRenderComplete: () => void, onComponentComplete?: () => void): MaterializedChart {
   const base = materializeValue(spec.containerConfig ?? {}) as Record<string, unknown>
 
   if (spec.container === 'xy') {
     const components = spec.components.map(c => {
       if (!XY_COMPONENTS.has(c.type)) throw new ChartInputError(`${c.type} cannot be used in an XY container`)
-      return instantiateComponent(lib, c)
+      return instantiateComponent(lib, c, onComponentComplete)
     })
     const axisConfig = (axis: Record<string, unknown> | undefined, type: 'x' | 'y'): unknown => {
       if (!axis) return undefined
@@ -135,7 +151,7 @@ export function materializeChart (lib: UnovisLib, spec: ChartSpec, onRenderCompl
   }
 
   if (spec.components.length !== 1) throw new ChartInputError('single container requires exactly one component')
-  const component = instantiateComponent(lib, spec.components[0])
+  const component = instantiateComponent(lib, spec.components[0], onComponentComplete)
   return {
     containerType: 'single',
     containerConfig: {

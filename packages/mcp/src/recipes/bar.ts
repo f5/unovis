@@ -15,6 +15,8 @@ import {
   seriesLegend,
   toArray,
   xyAxes,
+  xyDecorations,
+  decorationComponents,
 } from './shared.js'
 import type { DataRecord } from './shared.js'
 
@@ -30,6 +32,7 @@ export const barInputShape = {
   seriesLabels: z.array(z.string()).optional().describe('Display names for the series (legend). Defaults to field names'),
   roundedCorners: z.boolean().default(true).describe('Round the outer bar corners'),
   barPadding: z.number().min(0).max(0.9).optional().describe('Padding between bars within a group, 0..0.9'),
+  ...xyDecorations,
   ...xyInput,
   ...commonInput,
 }
@@ -65,10 +68,11 @@ export const barRecipe: Recipe<typeof barInputShape> = {
       }
     }
 
+    const deco = decorationComponents(input)
     return {
       container: 'xy',
       ...baseSpec(input),
-      components: [{
+      components: [...deco.bands, {
         type: input.type === 'stacked' ? 'StackedBar' : 'GroupedBar',
         config: {
           x,
@@ -77,7 +81,7 @@ export const barRecipe: Recipe<typeof barInputShape> = {
           roundedCorners: input.roundedCorners,
           ...(input.barPadding !== undefined ? { barPadding: input.barPadding } : {}),
         },
-      }],
+      }, ...deco.lines],
       xAxis,
       yAxis,
       legend: seriesLegend(labels, input.legend, input.colors),
