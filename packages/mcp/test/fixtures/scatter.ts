@@ -1,0 +1,48 @@
+export default [
+  {
+    name: 'basic',
+    input: {
+      title: 'Engine Power vs Fuel Economy',
+      data: Array.from({ length: 30 }, (_, i) => ({
+        power: Math.round(70 + i * 9 + Math.sin(i * 2.7) * 18),
+        mpg: Math.round((48 - i * 0.9 + Math.cos(i * 1.9) * 4.5) * 10) / 10,
+      })),
+      x: 'power',
+      y: 'mpg',
+      pointSize: 9,
+      xAxisLabel: 'Horsepower',
+      yAxisLabel: 'Miles per gallon',
+    },
+  },
+  {
+    name: 'bubbles-color-by',
+    input: {
+      title: 'GDP per Capita vs Life Expectancy',
+      data: [
+        { country: 'Nigeria', region: 'Africa', gdp: 2200, lifeExp: 53.9, population: 219 },
+        { country: 'Egypt', region: 'Africa', gdp: 4300, lifeExp: 70.2, population: 109 },
+        { country: 'South Africa', region: 'Africa', gdp: 6800, lifeExp: 62.3, population: 60 },
+        { country: 'India', region: 'Asia', gdp: 2400, lifeExp: 67.7, population: 1408 },
+        { country: 'China', region: 'Asia', gdp: 12600, lifeExp: 78.2, population: 1412 },
+        { country: 'Japan', region: 'Asia', gdp: 39300, lifeExp: 84.5, population: 125 },
+        { country: 'Indonesia', region: 'Asia', gdp: 4900, lifeExp: 67.6, population: 274 },
+        { country: 'Germany', region: 'Europe', gdp: 51200, lifeExp: 80.9, population: 83 },
+        { country: 'Poland', region: 'Europe', gdp: 18000, lifeExp: 76.5, population: 38 },
+        { country: 'United Kingdom', region: 'Europe', gdp: 46500, lifeExp: 80.7, population: 67 },
+        { country: 'United States', region: 'Americas', gdp: 70200, lifeExp: 76.4, population: 332 },
+        { country: 'Brazil', region: 'Americas', gdp: 8900, lifeExp: 72.8, population: 214 },
+        { country: 'Mexico', region: 'Americas', gdp: 10100, lifeExp: 70.2, population: 127 },
+        { country: 'Canada', region: 'Americas', gdp: 52100, lifeExp: 81.3, population: 38 },
+      ],
+      x: 'gdp',
+      y: 'lifeExp',
+      size: 'population',
+      sizeRange: [10, 46],
+      colorBy: 'region',
+      label: 'country',
+      xAxisLabel: 'GDP per capita (USD)',
+      yAxisLabel: 'Life expectancy (years)',
+      height: 520,
+    },
+  },
+]

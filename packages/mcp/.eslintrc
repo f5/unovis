@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "import/no-unresolved": [2, { "commonjs": true, "amd": true, "ignore": ["^@modelcontextprotocol/sdk"] }]
+  }
+}
