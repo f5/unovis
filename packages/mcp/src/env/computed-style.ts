@@ -42,8 +42,15 @@ export function setFontRules (rules: { selector: string; block: string }[]): voi
   for (const rule of rules) {
     if (!rule.block.includes('font-')) continue
     if (rule.selector.startsWith('@')) continue
+    // :root blocks hold custom-property definitions (e.g.
+    // --vis-icon-font-family) — never real font declarations. Without this,
+    // `html.matches(':root')` would leak icon fonts into every element whose
+    // own classes declare no font.
+    if (rule.selector.includes(':root')) continue
     const declarations = new Map<string, string>()
-    for (const match of rule.block.matchAll(/(font-(?:size|family|weight|style))\s*:\s*([^;}]+)/g)) {
+    // The lookbehind keeps custom properties like --vis-*-font-size from
+    // matching as `font-size`
+    for (const match of rule.block.matchAll(/(?<![-\w])(font-(?:size|family|weight|style))\s*:\s*([^;}]+)/g)) {
       declarations.set(match[1], match[2].trim())
     }
     if (declarations.size) fontRules.push({ selector: rule.selector, declarations })
