@@ -9,6 +9,7 @@ import { Spacing } from '@/types/spacing'
 
 // Utils
 import { isEqual, clamp, merge } from '@/utils/data'
+import { getPixelValue } from '@/utils/misc'
 import { ResizeObserver } from '@/utils/resize-observer'
 
 // Config
@@ -120,14 +121,16 @@ export class ContainerCore {
   }
 
   get containerWidth (): number {
+    // Falling back to the configured value when `clientWidth` is 0 (e.g. detached
+    // containers or non-layouting environments like jsdom / SSR)
     return this.config.width
-      ? this.element.clientWidth
+      ? (this.element.clientWidth || getPixelValue(this.config.width) || 0)
       : (this._container.clientWidth || this._container.getBoundingClientRect().width)
   }
 
   get containerHeight (): number {
     return this.config.height
-      ? this.element.clientHeight
+      ? (this.element.clientHeight || getPixelValue(this.config.height) || 0)
       : (this._container.clientHeight || this._container.getBoundingClientRect().height || ContainerCore.DEFAULT_CONTAINER_HEIGHT)
   }
 
