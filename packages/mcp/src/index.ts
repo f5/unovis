@@ -7,6 +7,8 @@
  */
 export { renderChart, ChartInputError } from './render/renderer.js'
 export type { RenderOptions, RenderResult } from './render/renderer.js'
+export { svgToPng, themeBackground } from './render/rasterize.js'
+export type { RasterizeOptions } from './render/rasterize.js'
 export type { ChartSpec, ComponentSpec, AxisSpec, AccessorRef, LegendItemSpec } from './render/spec.js'
 export { recipes, recipeByName } from './recipes/index.js'
 export type { Recipe, AnyRecipe } from './recipes/index.js'

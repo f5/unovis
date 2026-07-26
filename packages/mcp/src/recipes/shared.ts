@@ -29,10 +29,12 @@ export const commonInput = {
   title: z.string().optional().describe('Chart title rendered above the chart'),
   colors: z.array(z.string().regex(/^#[0-9a-fA-F]{3,8}$/, 'hex color, e.g. #4D8CFD')).max(12).optional()
     .describe('Custom color palette (hex). Replaces the default palette in order'),
-  outputType: z.enum(['svg', 'config']).default('svg')
-    .describe('svg: return the rendered SVG markup; config: return the resolved Unovis chart spec as JSON (no rendering)'),
+  outputType: z.enum(['svg', 'png', 'config']).default('svg')
+    .describe('svg: return the rendered SVG markup; png: return a rendered PNG image; config: return the resolved Unovis chart spec as JSON (no rendering)'),
   outputPath: z.string().optional()
-    .describe('Absolute file path ending in .svg — saves the SVG to disk and returns the path instead of inline markup'),
+    .describe('Absolute file path ending in .svg or .png (matching outputType) — saves the chart to disk and returns the path instead of inline content'),
+  scale: z.number().min(1).max(4).default(2)
+    .describe('Pixel density multiplier for PNG output (2 = retina). Ignored for svg/config'),
 }
 
 export const xyInput = {

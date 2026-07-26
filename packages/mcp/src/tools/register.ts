@@ -8,6 +8,7 @@ import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
 import { recipes } from '../recipes/index.js'
 import type { AnyRecipe } from '../recipes/index.js'
 import { renderChart, ChartInputError } from '../render/renderer.js'
+import { svgToPng, themeBackground } from '../render/rasterize.js'
 
 export interface ToolFilterOptions {
   /** Tool names to hide (env DISABLED_TOOLS / --disable-tools) */
@@ -27,20 +28,42 @@ async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>): Pr
       return textResult(JSON.stringify(spec, null, 2))
     }
 
-    const result = await renderChart(spec)
-    const warningsNote = result.warnings.length ? `\n<!-- warnings: ${result.warnings.join('; ')} -->` : ''
-
+    const isPng = input.outputType === 'png'
+    const extension = isPng ? '.png' : '.svg'
     const outputPath = input.outputPath as string | undefined
-    if (outputPath) {
-      if (!isAbsolute(outputPath) || !outputPath.endsWith('.svg')) {
-        return textResult(`outputPath must be an absolute path ending in .svg, got: ${outputPath}`, true)
+    if (outputPath && (!isAbsolute(outputPath) || !outputPath.endsWith(extension))) {
+      return textResult(`outputPath must be an absolute path ending in ${extension} (matching outputType), got: ${outputPath}`, true)
+    }
+
+    const result = await renderChart(spec)
+    const warningsNote = result.warnings.length ? ` (warnings: ${result.warnings.join('; ')})` : ''
+
+    if (isPng) {
+      const png = await svgToPng(result.svg, {
+        width: result.width,
+        scale: (input.scale as number | undefined) ?? 2,
+        background: themeBackground(spec.theme),
+      })
+      if (outputPath) {
+        mkdirSync(dirname(outputPath), { recursive: true })
+        writeFileSync(outputPath, png)
+        return textResult(`Chart saved to ${outputPath} (${result.width}×${result.height} at ${input.scale ?? 2}x)${warningsNote}`)
       }
+      return {
+        content: [
+          { type: 'image', data: png.toString('base64'), mimeType: 'image/png' },
+          ...(warningsNote ? [{ type: 'text' as const, text: warningsNote.trim() }] : []),
+        ],
+      }
+    }
+
+    if (outputPath) {
       mkdirSync(dirname(outputPath), { recursive: true })
       writeFileSync(outputPath, `<?xml version="1.0" encoding="UTF-8"?>\n${result.svg}`)
       return textResult(`Chart saved to ${outputPath} (${result.width}×${result.height})${warningsNote}`)
     }
 
-    return textResult(result.svg + warningsNote)
+    return textResult(result.svg + (result.warnings.length ? `\n<!-- warnings: ${result.warnings.join('; ')} -->` : ''))
   } catch (e) {
     if (e instanceof ChartInputError) {
       return textResult(`Invalid input for ${recipe.name}: ${e.message}`, true)
@@ -86,7 +109,7 @@ export function registerTools (server: McpServer, filter: ToolFilterOptions = {}
       rendering: 'local headless SVG — no browser, no remote services',
       tools: activeRecipes(filter).map(r => ({ name: r.name, title: r.title })),
       themes: ['light', 'dark'],
-      outputTypes: ['svg', 'config'],
+      outputTypes: ['svg', 'png', 'config'],
       defaultPalette: ['#4D8CFD', '#FF6B7E', '#F4B83E', '#A6CC74', '#00C19A', '#6859BE'],
     }, null, 2))
   )

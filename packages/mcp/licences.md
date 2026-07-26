@@ -2,6 +2,7 @@
 | :------------------------ | :------------- | :----------- | :---------------- | :-------------------------------------------------- |
 | @modelcontextprotocol/sdk | perpetual      | MIT          | 1.29.0            | Anthropic, PBC (https://anthropic.com)              |
 | @napi-rs/canvas           | perpetual      | MIT          | 0.1.100           | n/a                                                 |
+| @resvg/resvg-js           | perpetual      | MPL-2.0      | 2.6.2             | n/a                                                 |
 | fflate                    | perpetual      | MIT          | 0.8.3             | Arjun Barrett <arjunbarrett@gmail.com>              |
 | jsdom                     | perpetual      | MIT          | 26.1.0            | n/a                                                 |
 | svg-path-bounds           | perpetual      | MIT          | 1.0.2             | Dima Yv <df.creative@gmail.com>                     |
