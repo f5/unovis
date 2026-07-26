@@ -57,6 +57,7 @@ npx @unovis/mcp --transport http --port 3737 --endpoint /mcp
 Every chart tool accepts flat-record `data` plus field-name accessors (`x: "month"`, `y: ["sales", "cost"]`), and the shared options `width`, `height`, `theme` (`light`/`dark`), `title`, `colors` (custom palette), plus:
 
 - `outputType: "svg"` (default) — returns standalone SVG markup: styles inlined, CSS variables resolved, deterministic ids. Safe to embed anywhere, ready for rasterization.
+- `outputType: "png"` — returns a rendered PNG image (`scale` controls pixel density, default 2×). Rasterized locally with [resvg](https://github.com/thx/resvg-js) from the same SVG, using the same fonts as measurement.
 - `outputType: "config"` — returns the resolved chart spec as JSON without rendering (useful for iterating before generating pixels).
 - `outputPath: "/abs/path/chart.svg"` — writes the SVG to disk and returns the path instead of inline markup.
 
@@ -109,4 +110,4 @@ pnpm dev             # run the server from source (tsx)
 npx @modelcontextprotocol/inspector node dist/cli.js   # interactive tool testing
 ```
 
-Roadmap: PNG output (`outputType: "png"` via resvg), framework code snippets (`outputType: "code"` for React/Svelte/Vue/Angular/Solid), Graph and TopoJSON map support.
+Roadmap: framework code snippets (`outputType: "code"` for React/Svelte/Vue/Angular/Solid), Graph and TopoJSON map support.

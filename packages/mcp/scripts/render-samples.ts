@@ -11,6 +11,7 @@ import { z } from 'zod'
 
 import { recipes } from '../src/recipes/index.js'
 import { renderChart } from '../src/render/renderer.js'
+import { svgToPng, themeBackground } from '../src/render/rasterize.js'
 
 interface Sample { name: string; input: Record<string, unknown> }
 
@@ -49,6 +50,13 @@ for (const recipe of recipes) {
         const file = `${label}.svg`
         writeFileSync(join(outDir, file), result.svg)
         cards.push(`<figure class="${theme}"><figcaption>${label}${problems.length ? ` ⚠️ ${problems.join(', ')}` : ''}</figcaption><img src="./${file}" loading="lazy"></figure>`)
+
+        // One rasterized variant per light sample to spot-check PNG output
+        if (theme === 'light') {
+          const png = await svgToPng(result.svg, { width: result.width, scale: 2, background: themeBackground(theme) })
+          writeFileSync(join(outDir, `${label}.png`), png)
+          cards.push(`<figure class="${theme}"><figcaption>${label}.png (2x)</figcaption><img src="./${label}.png" loading="lazy"></figure>`)
+        }
       } catch (e) {
         failures.push(`${label}: ${(e as Error).message}`)
         cards.push(`<figure class="${theme} error"><figcaption>${label} 💥 ${(e as Error).message}</figcaption></figure>`)
