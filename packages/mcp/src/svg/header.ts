@@ -66,14 +66,9 @@ export function renderHeader (svg: SVGSVGElement, document: Document, header: He
 
   const headerHeight = PADDING_TOP + (header.title ? TITLE_ROW_HEIGHT : 0) + legendRows * LEGEND_ROW_HEIGHT + PADDING_BOTTOM
 
-  // Wrap existing chart content
-  const contentGroup = document.createElementNS(SVG_NS, 'g')
-  contentGroup.setAttribute('transform', `translate(0,${headerHeight})`)
-  while (svg.firstChild) contentGroup.appendChild(svg.firstChild)
-  svg.appendChild(contentGroup)
-
+  // The caller wraps the chart content and offsets it below the header
   const headerGroup = document.createElementNS(SVG_NS, 'g')
-  svg.insertBefore(headerGroup, contentGroup)
+  svg.insertBefore(headerGroup, svg.firstChild)
 
   if (header.title) {
     const titleEl = document.createElementNS(SVG_NS, 'text')
