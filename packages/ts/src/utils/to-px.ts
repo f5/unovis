@@ -29,7 +29,13 @@ function getSizeBrutal (unit: string, element: Element): number {
 let cachedPPI: number | null = null
 function getPixelsPerInch (): number {
   if (!isBrowser()) return 96 // Standard default
-  if (cachedPPI === null) cachedPPI = getSizeBrutal('in', document.body)
+  if (cachedPPI === null) {
+    // Pre-seed before measuring: environments without layout (e.g. jsdom)
+    // return the specified value ('128in') from getComputedStyle, which would
+    // re-enter this function through toPx and recurse infinitely
+    cachedPPI = 96
+    cachedPPI = getSizeBrutal('in', document.body)
+  }
   return cachedPPI
 }
 
