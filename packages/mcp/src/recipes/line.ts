@@ -15,6 +15,8 @@ import {
   timeTickValuesFromData,
   toArray,
   xyAxes,
+  xyDecorations,
+  decorationComponents,
 } from './shared.js'
 import type { DataRecord } from './shared.js'
 
@@ -32,6 +34,7 @@ export const lineInputShape = {
     .describe('Draw dashed interpolated segments across missing (null) values instead of gaps'),
   yDomainMin: z.number().optional().describe('Force the Y axis to start at this value'),
   yDomainMax: z.number().optional().describe('Force the Y axis to end at this value'),
+  ...xyDecorations,
   ...xyInput,
   ...commonInput,
 }
@@ -52,10 +55,11 @@ export const lineRecipe: Recipe<typeof lineInputShape> = {
     const axes = xyAxes(input)
     const labels = input.seriesLabels?.length ? input.seriesLabels : yFields
 
+    const deco = decorationComponents(input)
     return {
       container: 'xy',
       ...baseSpec(input),
-      components: [{
+      components: [...deco.bands, {
         type: 'Line',
         config: {
           x,
@@ -64,7 +68,7 @@ export const lineRecipe: Recipe<typeof lineInputShape> = {
           curveType: input.curve,
           interpolateMissingData: input.interpolateMissing,
         },
-      }],
+      }, ...deco.lines],
       xAxis: {
         ...(categories ? categoryAxis(axes.xAxis, categories) : axes.xAxis),
         ...(input.xIsTime
