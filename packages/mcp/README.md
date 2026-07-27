@@ -4,6 +4,18 @@ An [MCP](https://modelcontextprotocol.io) server that generates [Unovis](https:/
 
 <img src="https://unovis.dev/img/unovis-social.png" alt="Unovis" width="600"/>
 
+## Documentation
+
+Full docs live in [`docs/`](./docs/README.md):
+[getting started](./docs/getting-started.md) ·
+[tools reference](./docs/tools.md) ·
+[output types](./docs/output-types.md) ·
+[chart spec](./docs/chart-spec.md) ·
+[programmatic use](./docs/programmatic.md) ·
+[interactive charts](./docs/interactive.md) ·
+[architecture](./docs/architecture.md) ·
+[troubleshooting](./docs/troubleshooting.md)
+
 ## Quick start
 
 ```bash
@@ -65,6 +77,7 @@ Every chart tool accepts flat-record `data` plus field-name accessors (`x: "mont
 - `outputType: "html"` — writes a **self-contained interactive** HTML file (tooltips, crosshair, hover highlighting, real HTML legend) and returns its path. Everything is inlined: no network, no build step, opens anywhere.
 - `outputType: "interactive"` — returns the chart spec plus a `ui://unovis/chart` widget reference, so clients supporting MCP UI widgets render the interactive chart **inline in the conversation**. Clients without widget support fall back to the text summary.
 - `outputType: "config"` — returns the resolved chart spec as JSON without rendering (useful for iterating before generating pixels).
+- `outputType: "code"` — returns ready-to-paste Unovis source for `ts`, `react`, `svelte`, `vue`, `angular` or `solid` (`framework` option), data included.
 - `outputPath: "/abs/path/chart.svg"` — writes the SVG to disk and returns the path instead of inline markup.
 
 ## CLI options
@@ -112,7 +125,7 @@ Fonts: on first start the server provisions Inter (Unovis's default font) for te
 ## Programmatic use
 
 ```ts
-import { renderChart, buildServer, recipes } from '@unovis/mcp'
+import { renderChart, renderToSvg, buildServer, recipes } from '@unovis/mcp'
 
 const { svg } = await renderChart({
   container: 'xy',
@@ -132,8 +145,9 @@ cd packages/mcp
 pnpm test            # vitest: env shims, recipes (SVG snapshots), post-processing, MCP integration
 pnpm samples         # renders every fixture (light+dark) to samples/out/index.html for visual QA
 pnpm build:widget    # rebuilds just the browser widget bundle (chained from pnpm build)
+pnpm docs:tools      # regenerates docs/tools.md from the tool schemas
 pnpm dev             # run the server from source (tsx)
 npx @modelcontextprotocol/inspector node dist/cli.js   # interactive tool testing
 ```
 
-Roadmap: framework code snippets (`outputType: "code"` for React/Svelte/Vue/Angular/Solid), a combo (bar + line) chart tool, dagre graph layouts (blocked on an `@unovis/graphlibrary` ESM fix).
+Roadmap: a combo (bar + line) chart tool, dashboard composition, dagre graph layouts (blocked on an `@unovis/graphlibrary` ESM fix), and extracting the headless renderer as `@unovis/ssr`.

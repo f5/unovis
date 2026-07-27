@@ -1,6 +1,6 @@
 {
   "name": "@unovis/mcp",
-  "description": "MCP server that renders Unovis charts to SVG locally in Node — no browser, no remote services",
+  "description": "MCP server that renders Unovis charts to SVG locally in Node \u2014 no browser, no remote services",
   "version": "1.6.7",
   "packageManager": "pnpm@10.23.0",
   "repository": {
@@ -34,6 +34,7 @@
   },
   "files": [
     "dist",
+    "docs",
     "fonts",
     "README.md",
     "LICENSE"
@@ -47,7 +48,8 @@
     "test:watch": "vitest",
     "lint": "eslint src test scripts --ext .ts",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "docs:tools": "node scripts/generate-tool-docs.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
