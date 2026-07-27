@@ -17,17 +17,33 @@ import { bakeCssVars, substituteVarsForElement } from './css-vars.js'
 import type { VarContext } from './css-vars.js'
 import { importExternalDefs, rewriteIds } from './ids.js'
 import { renderHeader } from './header.js'
-import type { ChartSpec } from '../render/spec.js'
+import type { LegendItemSpec } from '../render/spec.js'
 import type { VarMaps } from '../env/computed-style.js'
+
+/** What the output frame needs to know about a chart — deliberately not a
+ * ChartSpec, so the SVG layer stays independent of the spec format. */
+export interface SvgFrame {
+  width: number;
+  height: number;
+  theme?: 'light' | 'dark';
+  /** Rendered as a heading above the chart */
+  title?: string;
+  /** Rendered as swatch + label rows under the title */
+  legend?: LegendItemSpec[];
+  /** Palette overriding --vis-colorN */
+  colors?: string[];
+}
 
 export interface FinalizeContext {
   document: Document;
-  spec: ChartSpec;
+  frame: SvgFrame;
   varMaps: VarMaps;
   /** Deterministic id prefix (tests); random per render by default */
   idPrefix?: string;
   /** Keep emotion class attributes and skip style inlining (debug) */
   keepClasses?: boolean;
+  /** Frame padding; defaults to CHART_PADDING */
+  padding?: { top: number; right: number; bottom: number; left: number };
 }
 
 const PSEUDO_SELECTOR = /:(hover|focus|active|visited|checked|disabled)|::/
@@ -38,14 +54,16 @@ const PSEUDO_SELECTOR = /:(hover|focus|active|visited|checked|disabled)|::/
 export const CHART_PADDING = { top: 12, right: 16, bottom: 16, left: 16 }
 
 export function finalizeSvg (svg: SVGSVGElement, ctx: FinalizeContext): string {
-  const { document, spec } = ctx
+  const { document, frame } = ctx
+  const spec = frame
+  const padding = ctx.padding ?? CHART_PADDING
 
   const overrides = new Map<string, string>()
   spec.colors?.forEach((color, i) => {
     overrides.set(`--vis-color${i}`, color)
     overrides.set(`--vis-dark-color${i}`, color)
   })
-  const varCtx: VarContext = { maps: ctx.varMaps, theme: spec.theme, overrides }
+  const varCtx: VarContext = { maps: ctx.varMaps, theme: spec.theme ?? 'light', overrides }
 
   importExternalDefs(svg, document)
 
@@ -69,7 +87,7 @@ export function finalizeSvg (svg: SVGSVGElement, ctx: FinalizeContext): string {
     legend: spec.legend,
     fontFamily,
   }, varCtx, width)
-  contentGroup.setAttribute('transform', `translate(${CHART_PADDING.left},${headerHeight + CHART_PADDING.top})`)
+  contentGroup.setAttribute('transform', `translate(${padding.left},${headerHeight + padding.top})`)
 
   rewriteIds(svg, ctx.idPrefix ?? `uv${Math.random().toString(36).slice(2, 6)}-`)
 
