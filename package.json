@@ -13,7 +13,7 @@
     "dev:gallery": "pnpm --filter @unovis/shared dev",
     "dev:gallery:csp": "pnpm --filter @unovis/shared dev:csp",
     "website": "cd packages/website && pnpm start",
-    "build": "pnpm build:ts && pnpm build:react && pnpm build:angular && pnpm build:svelte && pnpm build:vue && pnpm build:solid && pnpm build:website",
+    "build": "pnpm build:ts && pnpm build:mcp && pnpm build:react && pnpm build:angular && pnpm build:svelte && pnpm build:vue && pnpm build:solid && pnpm build:website",
     "build:ts": "cd packages/ts && pnpm build",
     "build:mcp": "pnpm build:ts && cd packages/mcp && pnpm build",
     "test:mcp": "cd packages/mcp && pnpm test",

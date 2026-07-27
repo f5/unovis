@@ -133,5 +133,21 @@ The trend matters: as the core becomes SSR-friendlier, the shim layer shrinks.
 Snapshots of force-directed graphs are deliberately skipped: d3-force calls
 `Math.random()`, so their geometry isn't reproducible.
 
+`pnpm test` builds the widget bundle first, so a fresh clone can run the suite
+without a manual build step.
+
+## Continuous integration
+
+The `mcp` job in `.github/workflows/pull_request.yml` runs on every pull
+request: build (`@unovis/ts` then this package), type-check, lint, the full test
+suite, and the sample gallery — which is uploaded as a build artifact so a
+reviewer can look at the charts instead of trusting a green check.
+
+Inter is cached at `~/.cache/unovis-mcp` (keyed on `src/env/fonts.ts`, which
+holds the pinned version and checksum). That keeps the suite off the network and
+keeps text metrics — and therefore the SVG snapshots — reproducible between
+runs. If snapshots ever disagree between machines, the cause is font
+provisioning, not the renderer.
+
 What the suite can't prove is covered in
 [Troubleshooting](./troubleshooting.md#what-the-tests-dont-cover).
