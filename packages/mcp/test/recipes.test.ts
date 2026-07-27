@@ -14,7 +14,7 @@ import { z } from 'zod'
 import { recipes } from '../src/recipes/index.js'
 import { renderChart } from '../src/render/renderer.js'
 
-interface Sample { name: string; input: Record<string, unknown>; vitestSkip?: boolean }
+interface Sample { name: string; input: Record<string, unknown>; vitestSkip?: boolean; noSnapshot?: boolean }
 
 const fixturesDir = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
 
@@ -45,7 +45,11 @@ describe.each(recipes.map(r => [r.name, r] as const))('%s', (name, recipe) => {
       expect(result.svg, `${sample.name}: no emotion classes`).not.toContain('class=')
       expect(result.warnings, `${sample.name}: no render warnings`).toEqual([])
 
-      await expect(result.svg).toMatchFileSnapshot(`./__snapshots__/${name.replace(/^generate_/, '')}-${sample.name}.svg`)
+      // Force-directed layouts call Math.random() (d3-force's jiggle), so their
+      // geometry can't be snapshotted — the structural assertions above still apply
+      if (!sample.noSnapshot) {
+        await expect(result.svg).toMatchFileSnapshot(`./__snapshots__/${name.replace(/^generate_/, '')}-${sample.name}.svg`)
+      }
     }
   })
 
