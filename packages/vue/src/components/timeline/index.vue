@@ -6,11 +6,11 @@ import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from '
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 import { componentAccessorKey } from '../../utils/context'
 
-const accessor = inject(componentAccessorKey)
-
-// data and required props 
+// data and required props
 // !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412
-const props = defineProps</** @vue-ignore */ TimelineConfigInterface<Datum> & { data?: Datum[] }>()
+const props = defineProps<{ data?: Datum[] } & /** @vue-ignore */ TimelineConfigInterface<Datum>>()
+
+const accessor = inject(componentAccessorKey)
 
 const data = computed(() => accessor.data.value ?? props.data)
 // config
