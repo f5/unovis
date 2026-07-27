@@ -1,3 +1,6 @@
+import { mkdtempSync, readFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
@@ -84,6 +87,55 @@ describe('mcp server', () => {
     const only = await connect({ enabledTools: ['generate_bar_chart'] })
     const { tools: onlyTools } = await only.listTools()
     expect(onlyTools.map(t => t.name).filter(n => n.startsWith('generate_'))).toEqual(['generate_bar_chart'])
+  })
+
+  it('writes a self-contained interactive HTML file', async () => {
+    const client = await connect()
+    const target = join(mkdtempSync(join(tmpdir(), 'unovis-html-')), 'chart.html')
+    const result = await client.callTool({
+      name: 'generate_line_chart',
+      arguments: { ...lineArgs, outputType: 'html', outputPath: target },
+    })
+    expect(result.isError).toBeFalsy()
+    expect(firstText(result)).toContain(target)
+
+    const html = readFileSync(target, 'utf8')
+    expect(html).toContain('<!doctype html>')
+    expect(html).toContain('id="uv-spec"')
+    expect(html).not.toMatch(/<script[^>]+src=/) // no network dependencies
+    expect(html.length).toBeGreaterThan(200_000) // widget bundle is inlined
+  })
+
+  it('returns the spec and widget template for interactive output', async () => {
+    const client = await connect()
+    const result = await client.callTool({
+      name: 'generate_line_chart',
+      arguments: { ...lineArgs, outputType: 'interactive', title: 'Live' },
+    })
+    expect(result.isError).toBeFalsy()
+    expect(firstText(result)).toContain('Interactive chart')
+    const spec = (result.structuredContent as { spec?: { components?: unknown[] } })?.spec
+    expect(spec?.components).toHaveLength(1)
+    expect((result._meta as Record<string, string>)['openai/outputTemplate']).toBe('ui://unovis/chart')
+  })
+
+  it('serves the widget as an MCP UI resource', async () => {
+    const client = await connect()
+    const { resources } = await client.listResources()
+    expect(resources.map(r => r.uri)).toContain('ui://unovis/chart')
+    const contents = await client.readResource({ uri: 'ui://unovis/chart' })
+    const html = (contents.contents[0] as { text?: string }).text
+    expect(html).toContain('UnovisChart')
+  })
+
+  it('rejects an html outputPath with the wrong extension', async () => {
+    const client = await connect()
+    const result = await client.callTool({
+      name: 'generate_line_chart',
+      arguments: { ...lineArgs, outputType: 'html', outputPath: '/tmp/chart.svg' },
+    })
+    expect(result.isError).toBe(true)
+    expect(firstText(result)).toContain('.html')
   })
 
   it('serializes concurrent renders safely', async () => {

@@ -47,7 +47,7 @@ const UNOVIS_MAPS = new Set([
 /** Resolve `{ $unovisMap: name }` markers to lazily-imported TopoJSON data
  * (the map bundles are large — only loaded when a map chart renders) and
  * default `mapFeatureName` to the map's feature collection key. */
-async function resolveMapMarkers (components: ComponentSpec[]): Promise<ComponentSpec[]> {
+export async function resolveMapMarkers (components: ComponentSpec[]): Promise<ComponentSpec[]> {
   return Promise.all(components.map(async (component) => {
     const marker = (component.config.topojson as { $unovisMap?: string } | undefined)?.$unovisMap
     if (!marker) return component
@@ -110,12 +110,11 @@ async function renderInEnv (env: RenderEnv, spec: ChartSpec, options: RenderOpti
   let chart: any
   try {
     const resolvedInner: ChartSpec = { ...inner, components: await resolveMapMarkers(inner.components) }
-    const materialized = materializeChart(
-      lib,
-      resolvedInner,
-      () => { renderCompleted = true },
-      () => { componentCompleted = true }
-    )
+    const materialized = materializeChart(lib, resolvedInner, {
+      duration: 0,
+      onRenderComplete: () => { renderCompleted = true },
+      onComponentComplete: () => { componentCompleted = true },
+    })
 
     chart = materialized.containerType === 'xy'
       ? new lib.XYContainer(host, materialized.containerConfig, materialized.data as never[])

@@ -39,7 +39,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "build": "rimraf dist && tsc -p tsconfig.build.json && pnpm build:widget",
+    "build:widget": "node scripts/build-widget.mjs",
     "dev": "tsx src/cli.ts",
     "samples": "pnpm build && node scripts/render-samples.mjs",
     "test": "vitest run",
@@ -62,6 +63,7 @@
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.17.0",
+    "esbuild": "^0.25.12",
     "rimraf": "^3.0.2",
     "tsx": "^4.19.0",
     "typescript": "catalog:",

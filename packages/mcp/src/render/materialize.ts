@@ -99,14 +99,27 @@ const SINGLE_COMPONENTS = new Set(['Donut', 'NestedDonut', 'RadialBar', 'Sankey'
  * and expose their own onRenderComplete hook the renderer must await */
 export const ASYNC_COMPONENTS = new Set(['Graph'])
 
-function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, onComponentComplete?: () => void): unknown {
+/** Options controlling how a spec becomes live Unovis configs.
+ * Static rendering uses `duration: 0` and fixed sizes for deterministic
+ * output; interactive rendering animates and lets the chart fill its host. */
+export interface MaterializeOptions {
+  /** Animation duration in ms. 0 (default) renders synchronously */
+  duration?: number;
+  /** Omit width/height so the container sizes from its DOM parent */
+  responsive?: boolean;
+  onRenderComplete?: () => void;
+  /** Called by components whose layout completes asynchronously (Graph) */
+  onComponentComplete?: () => void;
+}
+
+function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: MaterializeOptions): unknown {
   const allowed = XY_COMPONENTS.has(spec.type) || SINGLE_COMPONENTS.has(spec.type)
   if (!allowed) throw new ChartInputError(`Unsupported component type: ${spec.type}`)
   const componentClass = (lib as unknown as Record<string, new (config: Record<string, unknown>) => unknown>)[spec.type]
   if (!componentClass) throw new ChartInputError(`Component ${spec.type} is not available in this @unovis/ts build`)
   const config = materializeValue(spec.config) as Record<string, unknown>
-  config.duration = 0
-  if (ASYNC_COMPONENTS.has(spec.type) && onComponentComplete) config.onRenderComplete = onComponentComplete
+  config.duration = options.duration ?? 0
+  if (ASYNC_COMPONENTS.has(spec.type) && options.onComponentComplete) config.onRenderComplete = options.onComponentComplete
 
   // { $mapProjection: 'AlbersUsa' } → MapProjection.AlbersUsa() — projections
   // are factory functions and can't live in the JSON spec directly
@@ -122,17 +135,19 @@ function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, onComponentC
   return new componentClass(config)
 }
 
-export function materializeChart (lib: UnovisLib, spec: ChartSpec, onRenderComplete: () => void, onComponentComplete?: () => void): MaterializedChart {
+export function materializeChart (lib: UnovisLib, spec: ChartSpec, options: MaterializeOptions = {}): MaterializedChart {
   const base = materializeValue(spec.containerConfig ?? {}) as Record<string, unknown>
+  const duration = options.duration ?? 0
+  const size = options.responsive ? {} : { width: spec.width, height: spec.height }
 
   if (spec.container === 'xy') {
     const components = spec.components.map(c => {
       if (!XY_COMPONENTS.has(c.type)) throw new ChartInputError(`${c.type} cannot be used in an XY container`)
-      return instantiateComponent(lib, c, onComponentComplete)
+      return instantiateComponent(lib, c, options)
     })
     const axisConfig = (axis: Record<string, unknown> | undefined, type: 'x' | 'y'): unknown => {
       if (!axis) return undefined
-      return new lib.Axis({ ...(materializeValue(axis) as Record<string, unknown>), type, duration: 0 })
+      return new lib.Axis({ ...(materializeValue(axis) as Record<string, unknown>), type, duration })
     }
     return {
       containerType: 'xy',
@@ -141,26 +156,24 @@ export function materializeChart (lib: UnovisLib, spec: ChartSpec, onRenderCompl
         components,
         xAxis: axisConfig(spec.xAxis, 'x'),
         yAxis: axisConfig(spec.yAxis, 'y'),
-        width: spec.width,
-        height: spec.height,
-        duration: 0,
-        onRenderComplete,
+        ...size,
+        duration,
+        onRenderComplete: options.onRenderComplete,
       },
       data: spec.data,
     }
   }
 
   if (spec.components.length !== 1) throw new ChartInputError('single container requires exactly one component')
-  const component = instantiateComponent(lib, spec.components[0], onComponentComplete)
+  const component = instantiateComponent(lib, spec.components[0], options)
   return {
     containerType: 'single',
     containerConfig: {
       ...base,
       component,
-      width: spec.width,
-      height: spec.height,
-      duration: 0,
-      onRenderComplete,
+      ...size,
+      duration,
+      onRenderComplete: options.onRenderComplete,
     },
     data: spec.data,
   }
