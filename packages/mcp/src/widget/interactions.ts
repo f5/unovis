@@ -143,13 +143,18 @@ export function buildInteractions (lib: Lib, spec: ChartSpec): Interactions {
     }
   }
 
-  if (Object.keys(triggers).length) {
+  // Crosshair: continuous XY charts get a shared vertical readout
+  const crosshairComponent = spec.components.find(c => c.type === 'Line' || c.type === 'Area')
+  const usesCrosshair = spec.container === 'xy' && !!crosshairComponent
+
+  // XYContainer renders the crosshair's readout through the container tooltip
+  // (`crosshair.tooltip = tooltip`), so a crosshair needs one even when no
+  // component has its own hover triggers — line/area charts hit exactly this.
+  if (Object.keys(triggers).length || usesCrosshair) {
     containerConfig.tooltip = new lib.Tooltip({ triggers, horizontalPlacement: 'center' })
   }
 
-  // Crosshair: continuous XY charts get a shared vertical readout
-  const crosshairComponent = spec.components.find(c => c.type === 'Line' || c.type === 'Area')
-  if (spec.container === 'xy' && crosshairComponent) {
+  if (usesCrosshair && crosshairComponent) {
     const x = materializeValue(crosshairComponent.config.x as AccessorRef)
     const yFields = specFields(crosshairComponent.config)
       .filter(f => f !== (crosshairComponent.config.x as { $field?: string })?.$field)

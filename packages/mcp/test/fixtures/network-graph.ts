@@ -1,6 +1,8 @@
 export default [
   {
     name: 'service-topology',
+    // Force layout uses Math.random(); geometry is not snapshot-stable
+    noSnapshot: true,
     input: {
       title: 'Payment Platform Service Map',
       layout: 'force',
@@ -44,6 +46,8 @@ export default [
   },
   {
     name: 'release-pipeline',
+    // Force layout uses Math.random(); geometry is not snapshot-stable
+    noSnapshot: true,
     input: {
       title: 'Release Pipeline',
       layout: 'force',
