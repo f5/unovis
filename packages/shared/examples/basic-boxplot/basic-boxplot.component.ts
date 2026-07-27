@@ -3,6 +3,7 @@ import { data, DataRecord } from './data'
 
 @Component({
   selector: 'basic-boxplot',
+  standalone: false,
   templateUrl: './basic-boxplot.component.html',
 })
 export class BasicBoxplotComponent {

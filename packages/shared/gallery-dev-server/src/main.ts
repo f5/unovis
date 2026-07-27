@@ -138,6 +138,14 @@ async function mountAll (slug: string): Promise<void> {
   if (angular) {
     try {
       await import('reflect-metadata')
+      // `@angular/compiler` MUST be loaded before any Angular package.
+      // Angular 20's partially-compiled libraries (e.g. @angular/common)
+      // evaluate `ɵɵngDeclareFactory` in static class field initialisers,
+      // which requires the JIT compiler to be registered. Loading the example
+      // module/component files transitively imports @angular/core → @angular/common,
+      // so the compiler must be available before those imports resolve.
+      await import('zone.js')
+      await import('@angular/compiler')
       const [moduleNs, componentNs] = await Promise.all([angular.moduleLoader(), angular.componentLoader()])
       await mountAngular(byId('root-angular'), moduleNs as Record<string, unknown>, componentNs as Record<string, unknown>)
     } catch (e) { showError(byId('root-angular'), 'angular', e) }

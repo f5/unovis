@@ -4,6 +4,7 @@ import { data, DataRecord, numRows, offset, columnLabel, rowLabel } from './data
 
 @Component({
   selector: 'github-style-heatmap',
+  standalone: false,
   templateUrl: './github-style-heatmap.component.html',
 })
 export class GitHubStyleHeatmapComponent {

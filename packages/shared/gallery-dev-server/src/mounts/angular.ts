@@ -13,23 +13,21 @@
 // component *type* directly (that needs `entryComponents`); instead we bootstrap
 // a tiny host component whose template contains the example's selector, which
 // the JIT compiler resolves against the example module's exports.
-import { Component, NgModule, NgModuleRef, Type } from '@angular/core'
-import { BrowserModule } from '@angular/platform-browser'
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
-
 type ModuleNamespace = Record<string, unknown>
 
 // The last bootstrapped app. `platformBrowserDynamic()` is a page-global
 // singleton, so we destroy the previous module before bootstrapping a new one —
 // otherwise a re-mount (future client-side nav / HMR) would stack modules that
 // all define `gallery-ng-host` and leak their change-detection loops.
-let activeRef: NgModuleRef<unknown> | null = null
+let activeRef: { destroy(): void } | null = null
 
 // The example files use named exports (`BasicBoxplotModule`, `BasicBoxplotComponent`);
 // grab the class whose name matches the expected suffix.
-const pickClass = (ns: ModuleNamespace, suffix: RegExp): Type<unknown> => {
+// eslint-disable-next-line @typescript-eslint/ban-types
+const pickClass = (ns: ModuleNamespace, suffix: RegExp): Function => {
   for (const [name, value] of Object.entries(ns)) {
-    if (typeof value === 'function' && suffix.test(name)) return value as Type<unknown>
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    if (typeof value === 'function' && suffix.test(name)) return value as Function
   }
   throw new Error(`no export matching ${suffix}`)
 }
@@ -37,8 +35,8 @@ const pickClass = (ns: ModuleNamespace, suffix: RegExp): Type<unknown> => {
 // Read the component selector from its decorator metadata. View Engine stores it
 // under `__annotations__`; the Ivy branch is a fallback in case the switch ever
 // flips (e.g. a future AnalogJS-based setup).
-const readSelector = (component: Type<unknown>): string => {
-  const c = component as unknown as {
+const readSelector = (component: Record<string, unknown>): string => {
+  const c = component as {
     // Angular-internal metadata property names, referenced as-is.
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __annotations__?: Array<{ selector?: string }>;
@@ -56,10 +54,15 @@ export async function mountAngular (
   moduleNs: ModuleNamespace,
   componentNs: ModuleNamespace
 ): Promise<void> {
-  // Deferred so the global-patching zone.js and the heavy compiler load only
-  // when an Angular panel is actually rendered.
-  await import('zone.js')
-  await import('@angular/compiler')
+  // zone.js and @angular/compiler are already loaded by the caller in main.ts
+  // before the example module files are imported (which transitively pull in
+  // @angular/core → @angular/common whose static initialisers need the compiler).
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { Component, NgModule } = await import('@angular/core')
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { BrowserModule } = await import('@angular/platform-browser')
+  const { platformBrowserDynamic } = await import('@angular/platform-browser-dynamic')
 
   activeRef?.destroy()
   activeRef = null
@@ -74,7 +77,7 @@ export async function mountAngular (
   const hostEl = document.createElement('gallery-ng-host')
   target.replaceChildren(hostEl)
 
-  @Component({ selector: 'gallery-ng-host', template: `<${selector}></${selector}>` })
+  @Component({ selector: 'gallery-ng-host', standalone: false, template: `<${selector}></${selector}>` })
   class GalleryHostComponent {}
 
   @NgModule({

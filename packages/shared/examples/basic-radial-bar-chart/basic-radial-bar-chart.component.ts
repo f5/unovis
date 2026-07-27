@@ -4,6 +4,7 @@ import { data, DataRecord, maxValue, completion } from './data'
 
 @Component({
   selector: 'basic-radial-bar-chart',
+  standalone: false,
   templateUrl: './basic-radial-bar-chart.component.html',
 })
 
