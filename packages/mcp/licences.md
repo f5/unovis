@@ -10,6 +10,7 @@
 | zod                       | perpetual      | MIT          | 3.25.76           | Colin McDonnell <zod@colinhacks.com>                |
 | @types/jsdom              | perpetual      | MIT          | 21.1.7            | n/a                                                 |
 | @types/node               | perpetual      | MIT          | 20.19.43          | n/a                                                 |
+| esbuild                   | perpetual      | MIT          | 0.25.12           | n/a                                                 |
 | rimraf                    | perpetual      | ISC          | 3.0.2             | Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/) |
 | tsx                       | perpetual      | MIT          | 4.21.0            | Hiroki Osame hiroki.osame@gmail.com                 |
 | typescript                | perpetual      | Apache-2.0   | 5.6.3             | Microsoft Corp.                                     |

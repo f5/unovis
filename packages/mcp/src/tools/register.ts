@@ -1,14 +1,17 @@
 /** Bind chart recipes to MCP tools. */
-import { mkdirSync, writeFileSync } from 'node:fs'
-import { dirname, isAbsolute } from 'node:path'
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, isAbsolute, join } from 'node:path'
 
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
 
 import { recipes } from '../recipes/index.js'
 import type { AnyRecipe } from '../recipes/index.js'
-import { renderChart, ChartInputError } from '../render/renderer.js'
+import { renderChart, resolveMapMarkers, ChartInputError } from '../render/renderer.js'
 import { svgToPng, themeBackground } from '../render/rasterize.js'
+import { buildChartDocument } from '../html/document.js'
+import type { ChartSpec } from '../render/spec.js'
 
 export interface ToolFilterOptions {
   /** Tool names to hide (env DISABLED_TOOLS / --disable-tools) */
@@ -17,8 +20,20 @@ export interface ToolFilterOptions {
   enabledTools?: string[];
 }
 
+/** MCP UI resource the interactive output binds to (registered in server.ts) */
+export const WIDGET_URI = 'ui://unovis/chart'
+
 const textResult = (text: string, isError = false): CallToolResult =>
   ({ content: [{ type: 'text', text }], ...(isError ? { isError: true } : {}) })
+
+/** Map data lives behind a `{ $unovisMap }` marker that only the Node renderer
+ * resolves — the browser widget has no map bundles, so bake it into the spec */
+async function specForBrowser (spec: ChartSpec): Promise<ChartSpec> {
+  return { ...spec, components: await resolveMapMarkers(spec.components) }
+}
+
+const chartSummary = (spec: ChartSpec): string =>
+  `${spec.title ?? spec.components.map(c => c.type).join(' + ')} (${spec.width}×${spec.height}, ${spec.theme} theme)`
 
 async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>): Promise<CallToolResult> {
   try {
@@ -28,11 +43,34 @@ async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>): Pr
       return textResult(JSON.stringify(spec, null, 2))
     }
 
+    // Interactive: hand the spec to a UI-capable client, which renders it with
+    // the widget resource. Static content stays in the transcript as a summary.
+    if (input.outputType === 'interactive') {
+      const browserSpec = await specForBrowser(spec)
+      return {
+        content: [{ type: 'text', text: `Interactive chart: ${chartSummary(spec)}` }],
+        structuredContent: { spec: browserSpec as unknown as Record<string, unknown> },
+        _meta: { 'openai/outputTemplate': WIDGET_URI },
+      }
+    }
+
+    const isHtml = input.outputType === 'html'
     const isPng = input.outputType === 'png'
-    const extension = isPng ? '.png' : '.svg'
+    const extension = isHtml ? '.html' : isPng ? '.png' : '.svg'
     const outputPath = input.outputPath as string | undefined
     if (outputPath && (!isAbsolute(outputPath) || !outputPath.endsWith(extension))) {
       return textResult(`outputPath must be an absolute path ending in ${extension} (matching outputType), got: ${outputPath}`, true)
+    }
+
+    // Self-contained interactive document. Always written to disk: the inlined
+    // widget bundle is far too large to put in a tool result.
+    if (isHtml) {
+      const html = buildChartDocument(await specForBrowser(spec))
+      const target = outputPath ?? join(mkdtempSync(join(tmpdir(), 'unovis-chart-')), 'chart.html')
+      mkdirSync(dirname(target), { recursive: true })
+      writeFileSync(target, html)
+      return textResult(`Interactive chart saved to ${target} — open it in a browser for tooltips, ` +
+        `crosshair and hover highlighting. ${chartSummary(spec)}`)
     }
 
     const result = await renderChart(spec)
@@ -109,7 +147,8 @@ export function registerTools (server: McpServer, filter: ToolFilterOptions = {}
       rendering: 'local headless SVG — no browser, no remote services',
       tools: activeRecipes(filter).map(r => ({ name: r.name, title: r.title })),
       themes: ['light', 'dark'],
-      outputTypes: ['svg', 'png', 'config'],
+      outputTypes: ['svg', 'png', 'html', 'interactive', 'config'],
+      interactive: 'html writes a self-contained interactive file; interactive renders inline in clients supporting MCP UI widgets',
       defaultPalette: ['#4D8CFD', '#FF6B7E', '#F4B83E', '#A6CC74', '#00C19A', '#6859BE'],
     }, null, 2))
   )
