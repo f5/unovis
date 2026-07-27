@@ -11,6 +11,8 @@ import type { AnyRecipe } from '../recipes/index.js'
 import { renderChart, resolveMapMarkers, ChartInputError } from '../render/renderer.js'
 import { svgToPng, themeBackground } from '../render/rasterize.js'
 import { buildChartDocument } from '../html/document.js'
+import { generateCode, formatGeneratedFiles } from '../codegen/index.js'
+import type { Framework } from '../codegen/index.js'
 import type { ChartSpec } from '../render/spec.js'
 
 export interface ToolFilterOptions {
@@ -41,6 +43,13 @@ async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>): Pr
 
     if (input.outputType === 'config') {
       return textResult(JSON.stringify(spec, null, 2))
+    }
+
+    // Code: emit source for the chosen wrapper. Uses the unresolved spec so
+    // map data stays an import rather than an inlined payload.
+    if (input.outputType === 'code') {
+      const files = generateCode(spec, (input.framework as Framework | undefined) ?? 'ts')
+      return textResult(formatGeneratedFiles(files))
     }
 
     // Interactive: hand the spec to a UI-capable client, which renders it with
@@ -147,7 +156,8 @@ export function registerTools (server: McpServer, filter: ToolFilterOptions = {}
       rendering: 'local headless SVG — no browser, no remote services',
       tools: activeRecipes(filter).map(r => ({ name: r.name, title: r.title })),
       themes: ['light', 'dark'],
-      outputTypes: ['svg', 'png', 'html', 'interactive', 'config'],
+      outputTypes: ['svg', 'png', 'html', 'interactive', 'config', 'code'],
+      frameworks: ['ts', 'react', 'svelte', 'vue', 'angular', 'solid'],
       interactive: 'html writes a self-contained interactive file; interactive renders inline in clients supporting MCP UI widgets',
       defaultPalette: ['#4D8CFD', '#FF6B7E', '#F4B83E', '#A6CC74', '#00C19A', '#6859BE'],
     }, null, 2))
