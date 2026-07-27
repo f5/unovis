@@ -29,7 +29,9 @@ export const commonInput = {
   title: z.string().optional().describe('Chart title rendered above the chart'),
   colors: z.array(z.string().regex(/^#[0-9a-fA-F]{3,8}$/, 'hex color, e.g. #4D8CFD')).max(12).optional()
     .describe('Custom color palette (hex). Replaces the default palette in order'),
-  outputType: z.enum(['svg', 'png', 'html', 'interactive', 'config']).default('svg')
+  framework: z.enum(['ts', 'react', 'svelte', 'vue', 'angular', 'solid']).default('ts')
+    .describe('Target framework for outputType "code". ts emits the imperative @unovis/ts API'),
+  outputType: z.enum(['svg', 'png', 'html', 'interactive', 'config', 'code']).default('svg')
     .describe('svg: SVG markup; png: a rendered PNG image; html: a self-contained interactive HTML file ' +
       '(tooltips, crosshair, hover — saved to disk, path returned); interactive: an interactive chart ' +
       'rendered inline by clients that support MCP UI widgets; config: the resolved Unovis chart spec as JSON'),
