@@ -6,7 +6,12 @@
  *   import { renderChart, buildServer, recipes } from '@unovis/mcp'
  */
 export { renderChart, ChartInputError } from './render/renderer.js'
-export type { RenderOptions, RenderResult } from './render/renderer.js'
+export type { RenderOptions } from './render/renderer.js'
+// The headless primitive: render any Unovis chart to standalone SVG in Node
+export { renderToSvg } from './render/headless.js'
+export type { HeadlessRenderOptions, BuildContext, RenderedChart, RenderResult } from './render/headless.js'
+export { buildChartDocument, buildEmbedDocument } from './html/document.js'
+export type { ChartDocumentOptions } from './html/document.js'
 export { svgToPng, themeBackground } from './render/rasterize.js'
 export type { RasterizeOptions } from './render/rasterize.js'
 export type { ChartSpec, ComponentSpec, AxisSpec, AccessorRef, LegendItemSpec } from './render/spec.js'
