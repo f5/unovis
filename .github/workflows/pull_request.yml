@@ -17,3 +17,54 @@ jobs:
         version: 10.23.0
     - run: pnpm install --frozen-lockfile
     - run: pnpm run build && pnpm run build:dev
+
+  mcp:
+    name: MCP server (types, lint, tests)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10.23.0
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24.x'
+        cache: 'pnpm'
+        cache-dependency-path: pnpm-lock.yaml
+    # Text measurement uses Inter, which the server downloads once on first
+    # render. Caching it keeps the suite off the network and makes text metrics
+    # (and therefore the SVG snapshots) reproducible across runs.
+    - name: Cache Inter fonts
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/unovis-mcp
+        key: unovis-mcp-fonts-${{ hashFiles('packages/mcp/src/env/fonts.ts') }}
+        restore-keys: |
+          unovis-mcp-fonts-
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+    # The MCP package renders charts with the built core, so @unovis/ts first
+    - name: Build @unovis/ts and @unovis/mcp
+      run: pnpm run build:mcp
+    - name: Type-check
+      run: cd packages/mcp && pnpm exec tsc --noEmit
+    - name: Lint
+      run: pnpm exec eslint --quiet packages/mcp/src packages/mcp/test packages/mcp/scripts --ext .ts
+    # Covers the env shims, every recipe (SVG snapshots), post-processing, the
+    # MCP surface over a real client, the browser widget bundle, and
+    # type-checking of generated code
+    - name: Test
+      run: pnpm run test:mcp
+    # A chart nobody can look at is a chart nobody can trust: render every
+    # fixture in both themes so failures surface as artifacts, not just logs
+    - name: Render sample gallery
+      run: cd packages/mcp && pnpm run samples
+    - name: Upload sample gallery
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: chart-samples
+        path: packages/mcp/samples/out
+        retention-days: 7
