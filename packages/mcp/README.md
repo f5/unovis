@@ -62,6 +62,8 @@ Every chart tool accepts flat-record `data` plus field-name accessors (`x: "mont
 
 - `outputType: "svg"` (default) — returns standalone SVG markup: styles inlined, CSS variables resolved, deterministic ids. Safe to embed anywhere, ready for rasterization.
 - `outputType: "png"` — returns a rendered PNG image (`scale` controls pixel density, default 2×). Rasterized locally with [resvg](https://github.com/thx/resvg-js) from the same SVG, using the same fonts as measurement.
+- `outputType: "html"` — writes a **self-contained interactive** HTML file (tooltips, crosshair, hover highlighting, real HTML legend) and returns its path. Everything is inlined: no network, no build step, opens anywhere.
+- `outputType: "interactive"` — returns the chart spec plus a `ui://unovis/chart` widget reference, so clients supporting MCP UI widgets render the interactive chart **inline in the conversation**. Clients without widget support fall back to the text summary.
 - `outputType: "config"` — returns the resolved chart spec as JSON without rendering (useful for iterating before generating pixels).
 - `outputPath: "/abs/path/chart.svg"` — writes the SVG to disk and returns the path instead of inline markup.
 
@@ -77,6 +79,25 @@ Every chart tool accepts flat-record `data` plus field-name accessors (`x: "mont
 ```
 
 Environment: `DISABLED_TOOLS=generate_heatmap,...` hides specific tools.
+
+## Interactive charts
+
+Static SVG/PNG is the universal baseline; `html` and `interactive` deliver live charts driven by the *same* JSON chart spec:
+
+```
+recipe → ChartSpec ─┬→ headless renderer  → SVG / PNG        (any client)
+                    ├→ widget bundle      → .html file       (browser)
+                    └→ widget bundle      → ui:// resource    (MCP UI clients)
+```
+
+The browser widget (~580kB, everything inlined) runs the **same materializer** as the headless renderer, so one code path turns a spec into a chart on both sides. It also works as a plain iframe for any web page — point an iframe at the widget with `#embed` and post it a spec:
+
+```js
+iframe.contentWindow.postMessage({ type: 'unovis:render', spec }, '*')
+// iframe → host: { type: 'unovis:ready' } on load, { type: 'unovis:size', width, height } after each render
+```
+
+Interactive charts support every tool except dagre/ELK graph layouts (their layout engines are excluded from the bundle to keep it small). `interactive` output is experimental — the MCP UI widget conventions are still settling, so treat client support as best-effort and prefer `html` for guaranteed results.
 
 ## How it works
 
@@ -110,6 +131,7 @@ pnpm build:ts        # build @unovis/ts first — the mcp package consumes its d
 cd packages/mcp
 pnpm test            # vitest: env shims, recipes (SVG snapshots), post-processing, MCP integration
 pnpm samples         # renders every fixture (light+dark) to samples/out/index.html for visual QA
+pnpm build:widget    # rebuilds just the browser widget bundle (chained from pnpm build)
 pnpm dev             # run the server from source (tsx)
 npx @modelcontextprotocol/inspector node dist/cli.js   # interactive tool testing
 ```
