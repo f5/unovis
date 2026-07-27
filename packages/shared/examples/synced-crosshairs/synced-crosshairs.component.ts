@@ -3,6 +3,7 @@ import { data, accessors, XYDataRecord } from './data'
 
 @Component({
   selector: 'synced-crosshairs',
+  standalone: false,
   templateUrl: './synced-crosshairs.component.html',
 })
 export class SyncedCrosshairsComponent {
