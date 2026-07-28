@@ -7,7 +7,9 @@ import { ColorAccessor, NumericAccessor } from '@/types/accessor'
 export interface RadialBarConfigInterface<Datum> extends ComponentConfigInterface {
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   id?: ((d: Datum, i: number, ...any: unknown[]) => string | number);
-  /** Value accessor function. Default: `undefined` */
+  /** Value accessor function. Returning `null` or `undefined` marks the value as missing,
+   * and the corresponding bar will not be rendered. Default: `undefined`
+   */
   value: NumericAccessor<Datum>;
   /** Maximum value accessor or an array of maximums (indexed by each datum's original position in `data` before sorting).
    * Used to scale each bar's arc length: each bar fills `(value / maxValue) * (angleRange[1] - angleRange[0])`.
@@ -53,7 +55,8 @@ export interface RadialBarConfigInterface<Datum> extends ComponentConfigInterfac
 
 export const RadialBarDefaultConfig: RadialBarConfigInterface<unknown> = {
   ...ComponentDefaultConfig,
-  id: (d: unknown, i: number): string | number => (d as { id: string }).id ?? i,
+  // Optional chaining because a data record itself can be `null` when the data has gaps
+  id: (d: unknown, i: number): string | number => (d as { id: string })?.id ?? i,
   value: undefined,
   maxValue: undefined,
   angleRange: [0, 2 * Math.PI],
