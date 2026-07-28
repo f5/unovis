@@ -109,8 +109,12 @@ export class RadialBar<Datum> extends ComponentCore<Datum[], RadialBarConfigInte
       ? clamp(ringStride - trackPadding, 1, ringStride)
       : trackWidth
 
-    // Resolve per-bar value and max
-    const values = wrapped.map((d) => getNumber(d.datum, config.value, d.index) ?? 0)
+    // Resolve per-bar value and max. `null` and `undefined` are treated as missing data:
+    // such bars are not rendered at all.
+    const values = wrapped.map((d) => {
+      const value = getNumber(d.datum, config.value, d.index)
+      return isNumber(value) && isFinite(value) ? value : null
+    })
     const dataMax = max(values) ?? 0
     const maxValues = wrapped.map((d) => {
       const mv = config.maxValue
@@ -130,7 +134,7 @@ export class RadialBar<Datum> extends ComponentCore<Datum[], RadialBarConfigInte
 
       const value = values[i]
       const perMax = maxValues[i]
-      const fraction = clamp(value / perMax, 0, 1)
+      const fraction = value === null ? 0 : clamp(value / perMax, 0, 1)
 
       return {
         data: d.datum,

@@ -11,7 +11,8 @@ export interface RadialBarArcDatum<Datum> {
   index: number;
   /** Index of the ring counted from the outermost (`0` = outermost). */
   ringIndex: number;
-  value: number;
+  /** Resolved value. `null` when the `value` accessor returned `null`, `undefined` or a non-finite number */
+  value: number | null;
   startAngle: number;
   endAngle: number;
   innerRadius: number;
