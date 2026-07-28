@@ -40,7 +40,7 @@ const html = buildChartDocument(spec, {
 })
 ```
 
-One file, nothing external: the widget bundle (~580kB), the spec, and the styles
+One file, nothing external: the widget bundle (~665kB), the spec, and the styles
 are all inlined. It opens offline, survives being emailed, and can be committed
 to a repo.
 
@@ -110,9 +110,9 @@ want to build charts by hand in the same page.
 
 ## Limits
 
-- **Graph layouts**: `force`, `circular` and `concentric` work. `dagre` and `elk`
-  are excluded — their layout engines are large and load through dynamic
-  imports that a single-file bundle would have to inline (elkjs alone is 1.4MB).
+- **Graph layouts**: `force`, `circular`, `concentric` and `dagre` all work. Only
+  `elk` is excluded — at 1.4MB its engine would have to be inlined into every
+  generated file.
 - **A background tab renders nothing until you look at it.** Browsers pause
   `requestAnimationFrame` for hidden pages, and Unovis schedules its rendering
   through it. The chart appears as soon as the tab becomes visible. This is

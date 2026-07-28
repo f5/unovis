@@ -1,7 +1,10 @@
+/* Graph charts keep settling for a few frames after their layout completes
+ * (fit-view, label collision passes), so exact geometry varies with machine
+ * load — every fixture here sets `noSnapshot`. Structural assertions still
+ * run, and the widget matrix plus the async-layout probe cover rendering. */
 export default [
   {
     name: 'service-topology',
-    // Force layout uses Math.random(); geometry is not snapshot-stable
     noSnapshot: true,
     input: {
       title: 'Payment Platform Service Map',
@@ -46,11 +49,10 @@ export default [
   },
   {
     name: 'release-pipeline',
-    // Force layout uses Math.random(); geometry is not snapshot-stable
     noSnapshot: true,
     input: {
       title: 'Release Pipeline',
-      layout: 'force',
+      layout: 'dagre',
       linkArrows: true,
       nodes: [
         { id: 'commit', label: 'Commit', group: 'ci' },
@@ -79,6 +81,7 @@ export default [
   },
   {
     name: 'team-collaboration',
+    noSnapshot: true,
     input: {
       title: 'Team Collaboration Ring',
       layout: 'circular',

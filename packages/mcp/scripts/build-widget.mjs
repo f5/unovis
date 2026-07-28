@@ -18,10 +18,12 @@ mkdirSync(dirname(outfile), { recursive: true })
 
 // Excluded from the bundle:
 //  - leaflet/maplibre-gl/three: only used by the map components charts never render
-//  - elkjs (1.4MB) and dagre/graphlibrary: graph layout engines behind dynamic
-//    imports, which an IIFE bundle would inline. The widget supports the same
-//    layouts the tools expose (force, circular, concentric).
-const stubbed = ['leaflet', 'maplibre-gl', 'three', 'elkjs', '@unovis/dagre-layout', '@unovis/graphlibrary']
+//  - elkjs: a 1.4MB layout engine behind a dynamic import that an IIFE bundle
+//    would inline. ELK works for static rendering via a hand-written spec, so
+//    it is deliberately absent from the tool's layout options.
+// dagre (with graphlibrary) is bundled — it costs ~80kB and keeps every layout
+// the tools expose working in interactive output too.
+const stubbed = ['leaflet', 'maplibre-gl', 'three', 'elkjs']
 const stubPlugin = {
   name: 'stub-browser-only-deps',
   setup (pluginBuild) {

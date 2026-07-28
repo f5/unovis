@@ -78,11 +78,13 @@ async function loadPage (html: string): Promise<LoadedPage> {
 }
 
 /** Alternate task ticks and frame flushes until `selector` matches */
-async function settle (page: LoadedPage, selector: string, rounds = 20): Promise<void> {
+async function settle (page: LoadedPage, selector: string, rounds = 60): Promise<void> {
   for (let round = 0; round < rounds; round++) {
     await tick()
     page.raf.flushAll()
     if (page.window.document.querySelector(selector)) break
+    // Parsing a ~665kB bundle and delivering postMessage both take real time
+    if (round > 10) await new Promise(resolve => setTimeout(resolve, 5))
   }
   for (const error of page.raf.errors) {
     if (!page.errors.includes(String(error))) page.errors.push(String(error))
