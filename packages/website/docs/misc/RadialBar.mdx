@@ -62,6 +62,24 @@ partial range — useful for semicircular or gauge-style charts.
 For partial arcs the chart's origin lands on the bbox edge of the visible arc, so you may want to combine `centralLabelOffsetY` with the `--vis-radial-bar-central-label-text-anchor` / `--vis-radial-bar-central-sub-label-text-anchor` CSS variables (`start` / `middle` / `end`) to align the labels toward the side the arc opens to.
 <DocWrapper {...radialBarProps()} angleRange={[-Math.PI / 2, Math.PI / 2]} centralLabel="Gauge" centralLabelOffsetY={-15}/>
 
+## Minimum Bar Angle
+Bars representing very small values can become too short to notice. `barMinAngle` sets the minimum angular extent
+of a bar in radians, so that such bars remain visible. It defaults to `0.01`, which is about one pixel wide on a
+ring of a 100 pixel radius — increase it to make small values more prominent, or set it to `0` to disable.
+The value is clamped to the length of `angleRange`.
+
+`0` counts as a value, so zero bars are rendered with the minimum angle too. Missing data is different: when the
+`value` accessor returns `null` or `undefined`, the bar is not rendered at all and only its background track remains.
+In the example below the rings are, from the outside in: a tiny value, a regular value, `0`, and `null`:
+<InputWrapper {...radialBarProps()}
+  data={[0.0005, 0.35, 0, null]}
+  maxValue={1}
+  property="barMinAngle"
+  defaultValue={0.15}
+  inputType="range"
+  inputProps={{ min: 0, max: 1, step: 0.01 }}
+/>
+
 ## Stacking Order
 By default `data[0]` is the **outermost** ring and subsequent data render inward. Set `reverseOrder` to `true`
 to flip the order:
