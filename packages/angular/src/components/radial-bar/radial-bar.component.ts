@@ -63,7 +63,8 @@ export class VisRadialBarComponent<Datum> implements RadialBarConfigInterface<Da
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   @Input() id?: ((d: Datum, i: number, ...rest) => string | number)
 
-  /** Value accessor function. Default: `undefined` */
+  /** Value accessor function. Returning `null` or `undefined` marks the value as missing,
+   * and the corresponding bar will not be rendered. Default: `undefined` */
   @Input() value: NumericAccessor<Datum>
 
   /** Maximum value accessor or an array of maximums (indexed by each datum's original position in `data` before sorting).
@@ -76,6 +77,12 @@ export class VisRadialBarComponent<Datum> implements RadialBarConfigInterface<Da
 
   /** Pad angle in radians applied between the bar and its end. Default: `0` */
   @Input() padAngle?: number
+
+  /** Minimum bar angle in radians. Bars with small values, `0` included, will be extended to that angle,
+   * so that they remain visible. The value is clamped to the length of `angleRange`.
+   * Bars with missing values (see `value`) are not affected: they're never rendered.
+   * Set it to `0` to disable. Default: `0.01` (about 1 pixel wide on a ring of a 100 pixel radius) */
+  @Input() barMinAngle?: number
 
   /** Custom sort function. Default: `undefined` */
   @Input() sortFunction?: (a: Datum, b: Datum) => number
@@ -141,8 +148,8 @@ export class VisRadialBarComponent<Datum> implements RadialBarConfigInterface<Da
   }
 
   private getConfig (): RadialBarConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, maxValue, angleRange, padAngle, sortFunction, cornerRadius, color, radius, trackWidth, trackPadding, reverseOrder, centralLabel, centralSubLabel, centralSubLabelWrap, centralLabelOffsetX, centralLabelOffsetY, showBackground, backgroundAngleRange } = this
-    const config = { duration, events, attributes, id, value, maxValue, angleRange, padAngle, sortFunction, cornerRadius, color, radius, trackWidth, trackPadding, reverseOrder, centralLabel, centralSubLabel, centralSubLabelWrap, centralLabelOffsetX, centralLabelOffsetY, showBackground, backgroundAngleRange }
+    const { duration, events, attributes, id, value, maxValue, angleRange, padAngle, barMinAngle, sortFunction, cornerRadius, color, radius, trackWidth, trackPadding, reverseOrder, centralLabel, centralSubLabel, centralSubLabelWrap, centralLabelOffsetX, centralLabelOffsetY, showBackground, backgroundAngleRange } = this
+    const config = { duration, events, attributes, id, value, maxValue, angleRange, padAngle, barMinAngle, sortFunction, cornerRadius, color, radius, trackWidth, trackPadding, reverseOrder, centralLabel, centralSubLabel, centralSubLabelWrap, centralLabelOffsetX, centralLabelOffsetY, showBackground, backgroundAngleRange }
     const keys = Object.keys(config) as (keyof RadialBarConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
