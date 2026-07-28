@@ -95,10 +95,10 @@ exactly what the PNG rasterizer needs, so `png` reuses it unchanged.
 
 The interactive outputs bundle the **same materializer** the headless renderer
 uses, so one code path turns a spec into a chart on both sides. esbuild keeps it
-at ~580kB by importing components individually — the package barrel statically
-pulls in Leaflet, MapLibre and Three — and by excluding the graph layout engines
-that the tools don't expose. A size budget in the build script fails the build if
-the barrel creeps back in.
+at ~665kB by importing components individually — the package barrel statically
+pulls in Leaflet, MapLibre and Three — and by excluding elkjs, whose 1.4MB
+engine would dwarf everything else. A size budget in the build script fails the
+build if the barrel creeps back in.
 
 Interactions are derived from the spec: per-chart-type tooltip templates, a
 crosshair for continuous XY charts, and the real HTML legend.
@@ -130,8 +130,13 @@ The trend matters: as the core becomes SSR-friendlier, the shim layer shrinks.
 | Codegen | Generated TypeScript **type-checked against `@unovis/ts`** |
 | `pnpm samples` | Every fixture rendered to SVG + PNG, light and dark, as a contact sheet for eyeball review |
 
-Snapshots of force-directed graphs are deliberately skipped: d3-force calls
-`Math.random()`, so their geometry isn't reproducible.
+Graph charts are deliberately not snapshotted. They keep settling for a few
+frames after their layout reports completion — fit-view, label collision passes
+— so exact geometry depends on machine load, and `force` layouts additionally
+call `Math.random()`. The renderer waits out a short grace period so real output
+doesn't lose those late frames, but a byte snapshot would still be a false
+signal that fails randomly under CI load. Structural assertions, the widget
+matrix and the async-layout probe cover graphs instead.
 
 `pnpm test` builds the widget bundle first, so a fresh clone can run the suite
 without a manual build step.

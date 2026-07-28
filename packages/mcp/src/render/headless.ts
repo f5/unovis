@@ -19,13 +19,23 @@ import type { SvgFrame } from '../svg/postprocess.js'
 const RENDER_TIMEOUT_MS = 5000
 /** Async layouts (graph force/dagre/elk) may need dynamic imports + solver time */
 const ASYNC_RENDER_TIMEOUT_MS = 20000
+/** A synchronous render settles within a couple of frames; this only bounds
+ * how long a broken one takes to report itself. Async renders are bounded by
+ * the deadline instead — counting rounds is meaningless there, because a
+ * microtask tick costs microseconds while a cold module import needs
+ * milliseconds of real time. */
 const MAX_FLUSH_ROUNDS = 10
-const MAX_ASYNC_FLUSH_ROUNDS = 2000
+/** Idle wait while an asynchronous layout is still pending */
+const ASYNC_POLL_MS = 5
+/** Extra settle passes after an async layout reports completion */
+const ASYNC_GRACE_ROUNDS = 4
 
 /** Renders share one jsdom document and one frame queue */
 const mutex = new Mutex()
 
 const nextMacrotask = (): Promise<void> => new Promise(resolve => setImmediate(resolve))
+
+const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms))
 
 export interface HeadlessRenderOptions extends SvgFrame {
   /** Deterministic id prefix (snapshot tests); random per render otherwise */
@@ -134,14 +144,29 @@ export async function renderToSvg (
       if (chart?.element) defineElementSize(chart.element, width, height)
 
       const deadline = Date.now() + (needsComponent ? ASYNC_RENDER_TIMEOUT_MS : RENDER_TIMEOUT_MS)
-      const maxRounds = needsComponent ? MAX_ASYNC_FLUSH_ROUNDS : MAX_FLUSH_ROUNDS
-      for (let round = 0; round < maxRounds; round++) {
+      let rounds = 0
+      for (;;) {
         raf.flushAll()
         await nextMacrotask() // let 0ms timers (d3-timer) and layout promises progress
         if (raf.size === 0 && renderCompleted && componentCompleted) break
         if (Date.now() > deadline) break
+        if (!needsComponent && ++rounds >= MAX_FLUSH_ROUNDS) break
+        // Waiting on a layout that resolves through module loading and solver
+        // work: yield real time rather than spinning on microtasks
+        if (needsComponent && raf.size === 0 && !componentCompleted) await sleep(ASYNC_POLL_MS)
       }
       raf.flushAll()
+
+      // Components with async layouts schedule follow-up frames *after*
+      // signalling completion — graph fit-view, label placement. Without a
+      // grace period the output depends on how loaded the machine is, which
+      // shows up as charts that differ run to run.
+      if (needsComponent) {
+        for (let grace = 0; grace < ASYNC_GRACE_ROUNDS; grace++) {
+          await sleep(ASYNC_POLL_MS)
+          raf.flushAll()
+        }
+      }
 
       if (!renderCompleted || !componentCompleted) {
         const details = raf.errors.length ? ` Render errors: ${raf.errors.map(e => String(e)).join('; ')}` : ''

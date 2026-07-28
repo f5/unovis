@@ -6,9 +6,7 @@ import { describe, expect, it } from 'vitest'
 import { renderChart } from '../src/render/renderer.js'
 
 describe('async component rendering', () => {
-  // dagre is excluded: vite-node (like tsx) hangs on @unovis/dagre-layout's
-  // dynamic import — plain node renders it fine (covered by `pnpm samples`)
-  it.each(['force', 'circular', 'concentric'])('renders a %s-layout graph to completion', async (layoutType) => {
+  it.each(['force', 'circular', 'concentric', 'dagre'])('renders a %s-layout graph to completion', async (layoutType) => {
     const g = await renderChart({
       container: 'single',
       width: 500,

@@ -48,22 +48,35 @@ The container never reported finishing. Either `onRenderComplete` isn't wired
 (see above), or a component threw during a frame — the error message includes any
 frame errors that were captured.
 
-## Dagre and ELK graph layouts
+## Graph layouts
 
-- **In tools:** not offered. `generate_network_graph` exposes `force`, `circular`
-  and `concentric`.
-- **In Node, via a hand-written spec:** `elk` works. `dagre` does not —
-  `@unovis/graphlibrary`'s published build contains extensionless ESM imports
-  (`lodash-es/reduce`) that no standards-compliant Node ESM loader can resolve.
-  It needs an upstream fix.
-- **In the browser widget:** neither. Both engines are excluded to keep the
-  bundle small (elkjs alone is 1.4MB and would be inlined into every HTML file).
+`generate_network_graph` offers `force`, `circular`, `concentric` and `dagre`,
+and all four work in static output *and* interactive output.
 
-## The `tsx` loader hangs
+**ELK** is the exception. It renders fine in Node through a hand-written spec:
 
-Running this package's source through `tsx` (or `vite-node`) can hang forever on
-the dynamic imports inside Unovis's graph layouts. Plain Node and vitest are
-fine. That's why `pnpm samples` builds first and runs the compiled output.
+```ts
+components: [{ type: 'Graph', config: { layoutType: 'elk', layoutElkSettings: { 'elk.algorithm': 'layered' } } }]
+```
+
+…but it isn't a tool option, because elkjs is a 1.4MB engine loaded through a
+dynamic import that the single-file widget bundle would have to inline. Offering
+it would mean `outputType: "html"` silently producing a broken chart.
+
+> Dagre required `@unovis/graphlibrary` ≥ 2.2.0-3 and
+> `@unovis/dagre-layout` ≥ 0.8.8-3. Earlier releases shipped extensionless ESM
+> imports that no standards-compliant Node loader could resolve.
+
+## The `tsx` loader can't load graph layouts
+
+Running this package's **source** through `tsx` fails on the dynamic imports
+inside Unovis's graph layouts: the layout promise never settles, so the render
+times out after 20 seconds with "component layout never completed". Plain Node
+and vitest both work.
+
+That's why `pnpm dev` and `pnpm samples` build first and run the compiled
+output. `pnpm dev:tsx` is available for fast iteration, with the caveat that
+graph charts will not render under it.
 
 ## PNG has a transparent background
 

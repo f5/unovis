@@ -32,11 +32,9 @@ export const graphInputShape = {
     .describe('Graph nodes, e.g. [{"id":"gw","label":"Gateway","group":"service"}]'),
   links: z.array(graphLink).max(1000)
     .describe('Edges between nodes by id, e.g. [{"source":"gw","target":"db"}]'),
-  // dagre is omitted: @unovis/graphlibrary's dist has extensionless ESM
-  // imports (lodash-es/reduce) that no plain-Node runtime can resolve
-  layout: z.enum(['force', 'circular', 'concentric']).default('force')
+  layout: z.enum(['force', 'circular', 'concentric', 'dagre']).default('force')
     .describe('Node placement: force (organic, general networks), circular (single ring), ' +
-      'concentric (one ring per group)'),
+      'concentric (one ring per group), dagre (layered top to bottom — best for hierarchies and DAGs)'),
   nodeSize: z.number().min(4).max(100).default(22).describe('Default node diameter in pixels'),
   showLabels: z.boolean().default(true).describe('Show node labels'),
   linkArrows: z.boolean().default(false).describe('Draw source → target arrowheads on links'),
@@ -51,7 +49,8 @@ export const graphRecipe: Recipe<typeof graphInputShape> = {
   title: 'Network graph',
   description: 'Generate a network graph (node-link diagram) of relationships between entities — ' +
     'topologies, dependencies, hierarchies, social networks. Nodes are colored by their optional group. ' +
-    'Use layout "force" for general networks, "circular"/"concentric" for symmetric views. ' +
+    'Use layout "dagre" with linkArrows for hierarchies and DAGs, "force" for general networks, ' +
+    '"circular"/"concentric" for symmetric views. ' +
     'Example: nodes=[{"id":"api","group":"service"},{"id":"db","group":"storage"}], links=[{"source":"api","target":"db"}].',
   inputShape: graphInputShape,
   toSpec: (input) => {
@@ -122,6 +121,7 @@ export const graphRecipe: Recipe<typeof graphInputShape> = {
         type: 'Graph',
         config: {
           layoutType: input.layout,
+          ...(input.layout === 'dagre' ? { dagreLayoutSettings: { rankdir: 'TB', ranker: 'longest-path' } } : {}),
           // Top-to-bottom reads naturally for generated hierarchies (lib default is bottom-to-top)
           nodeLabel: input.showLabels ? { $field: 'label' } : '',
           ...(input.showLabels && anySubLabel ? { nodeSubLabel: { $field: 'subLabel' } } : {}),

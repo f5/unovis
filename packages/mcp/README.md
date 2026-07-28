@@ -64,7 +64,7 @@ npx @unovis/mcp --transport http --port 3737 --endpoint /mcp
 | `generate_chord_diagram` | Chord diagram (nodes + weighted links) |
 | `generate_nested_donut_chart` | Multi-level (sunburst-style) donut |
 | `generate_radial_bar_chart` | Radial progress bars |
-| `generate_network_graph` | Node-link network (force / circular / concentric layouts) |
+| `generate_network_graph` | Node-link network (force / circular / concentric / dagre layouts) |
 | `generate_choropleth_map` | Geographic areas shaded by value (world, USA, Germany, UK, France, India, China) |
 | `get_unovis_info` | Server/tool discovery info |
 
@@ -103,7 +103,7 @@ recipe → ChartSpec ─┬→ headless renderer  → SVG / PNG        (any clie
                     └→ widget bundle      → ui:// resource    (MCP UI clients)
 ```
 
-The browser widget (~580kB, everything inlined) runs the **same materializer** as the headless renderer, so one code path turns a spec into a chart on both sides. It also works as a plain iframe for any web page — point an iframe at the widget with `#embed` and post it a spec:
+The browser widget (~665kB, everything inlined) runs the **same materializer** as the headless renderer, so one code path turns a spec into a chart on both sides. It also works as a plain iframe for any web page — point an iframe at the widget with `#embed` and post it a spec:
 
 ```js
 iframe.contentWindow.postMessage({ type: 'unovis:render', spec }, '*')
@@ -150,4 +150,4 @@ pnpm dev             # run the server from source (tsx)
 npx @modelcontextprotocol/inspector node dist/cli.js   # interactive tool testing
 ```
 
-Roadmap: a combo (bar + line) chart tool, dashboard composition, dagre graph layouts (blocked on an `@unovis/graphlibrary` ESM fix), and extracting the headless renderer as `@unovis/ssr`.
+Roadmap: a combo (bar + line) chart tool, dashboard composition, and extracting the headless renderer as `@unovis/ssr`.
