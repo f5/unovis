@@ -42,14 +42,15 @@
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json && pnpm build:widget",
     "build:widget": "node scripts/build-widget.mjs",
-    "dev": "tsx src/cli.ts",
+    "dev": "pnpm build && node dist/cli.js",
     "samples": "pnpm build && node scripts/render-samples.mjs",
     "test": "pnpm build:widget && vitest run",
     "test:watch": "pnpm build:widget && vitest",
     "lint": "eslint src test scripts --ext .ts",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md",
     "prepublishOnly": "pnpm build",
-    "docs:tools": "node scripts/generate-tool-docs.mjs"
+    "docs:tools": "node scripts/generate-tool-docs.mjs",
+    "dev:tsx": "tsx src/cli.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
