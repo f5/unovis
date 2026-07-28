@@ -20,6 +20,12 @@ export interface RadialBarConfigInterface<Datum> extends ComponentConfigInterfac
   angleRange?: [number, number];
   /** Pad angle in radians applied between the bar and its end. Default: `0` */
   padAngle?: number;
+  /** Minimum bar angle in radians. Bars with small values, `0` included, will be extended to that angle,
+   * so that they remain visible. The value is clamped to the length of `angleRange`.
+   * Bars with missing values (see `value`) are not affected: they're never rendered.
+   * Set it to `0` to disable. Default: `0.01` (about 1 pixel wide on a ring of a 100 pixel radius)
+   */
+  barMinAngle?: number;
   /** Custom sort function. Default: `undefined` */
   sortFunction?: (a: Datum, b: Datum) => number;
   /** Corner Radius. Default: `0` */
@@ -61,6 +67,7 @@ export const RadialBarDefaultConfig: RadialBarConfigInterface<unknown> = {
   maxValue: undefined,
   angleRange: [0, 2 * Math.PI],
   padAngle: 0,
+  barMinAngle: 0.01,
   sortFunction: undefined,
   cornerRadius: 0,
   color: undefined,

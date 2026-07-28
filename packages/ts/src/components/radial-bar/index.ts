@@ -86,6 +86,10 @@ export class RadialBar<Datum> extends ComponentCore<Datum[], RadialBarConfigInte
     const endAngle = config.angleRange?.[1] ?? 2 * Math.PI
     const angleRange = endAngle - startAngle
 
+    // Angle ranges can be reversed (e.g. `[Math.PI, 0]`), so we keep the sweep direction separate from its length
+    const angleDirection = angleRange < 0 ? -1 : 1
+    const barMinAngle = clamp(config.barMinAngle ?? 0, 0, Math.abs(angleRange))
+
     const unitBBox = getArcUnitBoundingBox(startAngle, endAngle)
     const bboxW = unitBBox.xMax - unitBBox.xMin
     const bboxH = unitBBox.yMax - unitBBox.yMin
@@ -110,7 +114,7 @@ export class RadialBar<Datum> extends ComponentCore<Datum[], RadialBarConfigInte
       : trackWidth
 
     // Resolve per-bar value and max. `null` and `undefined` are treated as missing data:
-    // such bars are not rendered at all.
+    // such bars are not rendered at all, unlike `0` values, which still get `barMinAngle`.
     const values = wrapped.map((d) => {
       const value = getNumber(d.datum, config.value, d.index)
       return isNumber(value) && isFinite(value) ? value : null
@@ -136,13 +140,17 @@ export class RadialBar<Datum> extends ComponentCore<Datum[], RadialBarConfigInte
       const perMax = maxValues[i]
       const fraction = value === null ? 0 : clamp(value / perMax, 0, 1)
 
+      // Bars with small values (including `0`) are extended to `barMinAngle` to stay visible.
+      // Bars with missing values are left collapsed and hidden (see `setOpacity` in `modules/bar`).
+      const sweepAngle = value === null ? 0 : Math.max(Math.abs(fraction * angleRange), barMinAngle)
+
       return {
         data: d.datum,
         index: d.index,
         ringIndex,
         value,
         startAngle,
-        endAngle: startAngle + fraction * angleRange,
+        endAngle: startAngle + angleDirection * sweepAngle,
         innerRadius: inner,
         outerRadius: outer,
         padAngle: config.padAngle,
