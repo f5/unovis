@@ -61,7 +61,15 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/f5/unovis/tree/main/packages/website',
+          editUrl: ({ docPath }) => {
+            // docs/mcp is generated from the MCP package by scripts/sync-mcp-docs.mjs
+            const mcpDoc = docPath.match(/^mcp\/(.+)$/)
+            if (mcpDoc) {
+              const source = mcpDoc[1] === 'index.md' ? 'README.md' : mcpDoc[1]
+              return `https://github.com/f5/unovis/tree/main/packages/mcp/docs/${source}`
+            }
+            return `https://github.com/f5/unovis/tree/main/packages/website/docs/${docPath}`
+          },
         },
         blog: {
           showReadingTime: true,

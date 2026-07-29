@@ -6,7 +6,8 @@ An [MCP](https://modelcontextprotocol.io) server that generates [Unovis](https:/
 
 ## Documentation
 
-Full docs live in [`docs/`](./docs/README.md):
+Read them on the web at [unovis.dev/docs/mcp](https://unovis.dev/docs/mcp), or in
+[`docs/`](./docs/README.md) alongside the code:
 [getting started](./docs/getting-started.md) ·
 [tools reference](./docs/tools.md) ·
 [output types](./docs/output-types.md) ·

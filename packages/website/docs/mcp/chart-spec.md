@@ -1,4 +1,12 @@
+---
+mdx:
+  format: md
+description: The JSON format behind every generated chart
+sidebar_position: 5
+---
 # Chart spec
+
+<!-- Generated from packages/mcp/docs — edit there, then run `pnpm sync:mcp-docs`. -->
 
 Every chart in this package is described by one JSON object — the `ChartSpec`.
 Tools build it from their simplified inputs; the headless renderer, the browser
