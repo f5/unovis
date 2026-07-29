@@ -110,6 +110,11 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   @Input() pattern?: GenericAccessor<FillPatternType, Datum>
 
+  /** The value each bar's stack starts from, instead of zero. Number or accessor function.
+   * Useful for floating bars and waterfall charts, where every bar starts where the previous one ended.
+   * Default: `undefined` */
+  @Input() baseline?: NumericAccessor<Datum>
+
   /** Force set bar width in pixels. Default: `undefined` */
   @Input() barWidth?: number
 
@@ -161,8 +166,8 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   }
 
   private getConfig (): StackedBarConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight1Px, barMinHeightZeroValue, orientation } = this
-    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight1Px, barMinHeightZeroValue, orientation }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, baseline, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight1Px, barMinHeightZeroValue, orientation } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, baseline, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight1Px, barMinHeightZeroValue, orientation }
     const keys = Object.keys(config) as (keyof StackedBarConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
