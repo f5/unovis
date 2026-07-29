@@ -1,7 +1,6 @@
 /* This file is for the Angular Gallery Viewer only. See package.json -> scripts -> gallery:angular */
 import { NgModule, Component } from '@angular/core'
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
-import { BrowserModule } from '@angular/platform-browser'
+import { BrowserModule, platformBrowser } from '@angular/platform-browser'
 
 // Area
 import { NonStackedAreaChartModule } from '@unovis/shared/examples/non-stacked-area-chart/non-stacked-area-chart.module'
@@ -133,4 +132,4 @@ export class AppModule {
   constructor () {}
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowser().bootstrapModule(AppModule)
