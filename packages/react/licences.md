@@ -10,6 +10,7 @@
 | react-dom                         | perpetual      | MIT          | 18.3.1            | n/a                                                 |
 | rimraf                            | perpetual      | ISC          | 3.0.2             | Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/) |
 | rollup                            | perpetual      | MIT          | 2.80.0            | Rich Harris                                         |
+| rollup-plugin-commonjs            | perpetual      | MIT          | 10.1.0            | Rich Harris                                         |
 | rollup-plugin-peer-deps-external  | perpetual      | MIT          | 2.2.4             | n/a                                                 |
 | rollup-plugin-postcss             | perpetual      | MIT          | 4.0.2             | EGOIST <0x142857@gmail.com>                         |
 | rollup-plugin-rename-node-modules | perpetual      | MIT          | 1.3.1             | Lazyuki                                             |

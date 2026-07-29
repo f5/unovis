@@ -3,6 +3,8 @@ import typescript from 'rollup-plugin-typescript2'
 const plugins = [
   typescript({
     typescript: require('typescript'),
+    include: ['**/*.ts', '**/*.tsx'],
+    exclude: ['**/*.d.ts'],
   }),
 ]
 

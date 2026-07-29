@@ -12,6 +12,8 @@ const plugins = [
   typescript({
     tsconfig: './autogen/tsconfig.json',
     typescript: require('typescript'),
+    include: ['**/*.ts', '**/*.tsx'],
+    exclude: ['**/*.d.ts'],
     transformers: [(service) => transformPaths(service.getProgram())],
   }),
 ]
