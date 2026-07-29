@@ -31,6 +31,7 @@ export const examples: ExampleCollection[] = [
     examples: [
       require('./basic-grouped-bar').default,
       require('./horizontal-stacked-bar-chart').default,
+      require('./waterfall-chart').default,
     ],
   },
   {

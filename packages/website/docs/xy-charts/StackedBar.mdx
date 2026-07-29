@@ -7,7 +7,7 @@ description: Learn how to configure a Stacked Bar chart
 import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { generateDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from '../wrappers/xy-wrapper'
+import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper, axis } from '../wrappers/xy-wrapper'
 
 export const stackedBarProps = (n=10) => ({
   name: "StackedBar",
@@ -15,6 +15,30 @@ export const stackedBarProps = (n=10) => ({
   x: d=>d.x,
   y: d=>d.y
 });
+
+export const waterfallSteps = [
+  { label: 'Revenue', value: 1240, isTotal: true },
+  { label: 'Cost of revenue', value: -310 },
+  { label: 'Gross profit', isTotal: true },
+  { label: 'Operating costs', value: -765 },
+  { label: 'Tax', value: -23 },
+  { label: 'Net income', isTotal: true },
+];
+
+export const toWaterfall = (steps) => {
+  let running = 0;
+  return steps.map((step, index) => {
+    if (step.isTotal) {
+      running = step.value ?? running;
+      return { index, label: step.label, value: running, start: 0, isTotal: true };
+    }
+    const start = running;
+    running += step.value ?? 0;
+    return { index, label: step.label, value: step.value ?? 0, start, isTotal: false };
+  });
+};
+
+export const waterfallData = toWaterfall(waterfallSteps);
 
 
 ## Basic Configuration
@@ -25,6 +49,67 @@ The _Stacked Bar_ component has been designed to work together with _XY Containe
 ## Multiple Stacked Bars
 _Stacked Bar_ can accept an array of y accessors to display values as a stack of bars:
 <XYWrapper {...stackedBarProps()} showContext="full" y={[d => d.y, d => d.y1, d => d.y2]}/>
+
+## Baseline
+By default every stack starts at zero. The `baseline` property moves that starting point per data record,
+turning the bars into _floating_ bars: each one spans from `baseline` to `baseline + y`. It accepts a constant
+or an accessor function, and works the same way as the [Area](/docs/xy-charts/Area) component's `baseline`.
+
+<XYWrapper {...stackedBarProps()} showContext="minimal" showAxes baseline={d => d.y1}/>
+
+With an array of y accessors the whole stack is offset: the first segment starts at `baseline` and the
+rest stack on top of it as usual. Positive and negative values still stack away from the baseline in
+opposite directions.
+
+### Waterfall Charts
+A waterfall chart is a single-series _Stacked Bar_ whose `baseline` carries the running total, so each bar
+starts where the previous one ended. _Unovis_ doesn't accumulate the values for you — you compute the running
+total when preparing your data, which keeps you in control of ordering, subtotals and totals:
+
+```ts
+type Step = { label: string; value?: number; isTotal?: boolean }
+
+function toWaterfall (steps: Step[]) {
+  let running = 0
+  return steps.map((step, index) => {
+    // Totals and subtotals are absolute, so they're drawn from zero up to the accumulated value
+    if (step.isTotal) {
+      running = step.value ?? running
+      return { index, label: step.label, value: running, start: 0, isTotal: true }
+    }
+
+    const start = running
+    running += step.value ?? 0
+    return { index, label: step.label, value: step.value ?? 0, start, isTotal: false }
+  })
+}
+```
+
+Pass `start` to `baseline` and the signed `value` to `y`, then colour each bar by the sign of its value:
+
+<XYWrapper
+  name="StackedBar"
+  data={waterfallData}
+  height={250}
+  x={d => d.index}
+  y={d => d.value}
+  baseline={d => d.start}
+  color={d => d.isTotal ? '#64748b' : (d.value >= 0 ? '#1acb9a' : '#FF4F4E')}
+  barPadding={0.3}
+  showContext="container"
+  components={[
+    axis('x', { tickValues: waterfallData.map(d => d.index), tickFormat: i => waterfallData[i].label }),
+    axis('y')
+  ]}
+/>
+
+:::note
+Steps whose value is exactly `0` produce a zero-height bar and aren't rendered. Set
+[`barMinHeight1Px`](#minimum-bar-height) if you want those "no change" steps to stay visible as a 1 pixel line.
+:::
+
+See the [Waterfall Chart](/gallery/view?collection=Bar%20Charts&title=Waterfall%20Chart) gallery example for a
+complete version with a tooltip.
 
 ## Orientation
 _Stacked Bar_ supports horizontal and vertical orientation.
