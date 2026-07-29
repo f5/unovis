@@ -1,7 +1,7 @@
 import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { ColorAccessor, GenericAccessor, StringAccessor } from '@/types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
 import { Orientation } from '@/types/position'
 
@@ -10,6 +10,10 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
   color?: ColorAccessor<Datum>;
   /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   pattern?: GenericAccessor<FillPatternType, Datum>;
+  /** The value each bar's stack starts from, instead of zero. Number or accessor function.
+   * Useful for floating bars and waterfall charts, where every bar starts where the previous one ended.
+   * Default: `undefined` */
+  baseline?: NumericAccessor<Datum>;
   /** Force set bar width in pixels. Default: `undefined` */
   barWidth?: number;
   /** Maximum bar width for dynamic sizing. Default: `undefined` */
@@ -38,6 +42,7 @@ export const StackedBarDefaultConfig: StackedBarConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
   color: undefined,
   pattern: undefined,
+  baseline: undefined,
   barMaxWidth: undefined,
   barWidth: undefined,
   dataStep: undefined,
