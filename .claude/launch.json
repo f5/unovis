@@ -16,10 +16,11 @@
     },
     {
       "name": "website",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start"],
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["exec", "docusaurus", "start"],
       "cwd": "packages/website",
-      "port": 9300
+      "port": 9300,
+      "autoPort": true
     }
   ]
 }
