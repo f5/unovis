@@ -13,6 +13,14 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "dev:gallery"],
       "port": 9600
+    },
+    {
+      "name": "website",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["exec", "docusaurus", "start"],
+      "cwd": "packages/website",
+      "port": 9300,
+      "autoPort": true
     }
   ]
 }
