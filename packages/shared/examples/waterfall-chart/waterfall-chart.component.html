@@ -1,0 +1,20 @@
+<h3>FY Income Statement Bridge</h3>
+<vis-xy-container [data]="data" [height]="480">
+    <vis-stacked-bar
+      [x]="x"
+      [y]="y"
+      [baseline]="baseline"
+      [color]="color"
+      [barPadding]="0.3"
+      [barMinHeight1Px]="true"
+    ></vis-stacked-bar>
+    <vis-tooltip [triggers]="triggers"></vis-tooltip>
+    <vis-axis
+      type="x"
+      [tickValues]="tickValues"
+      [tickFormat]="tickFormat"
+      [tickTextWidth]="80"
+      [tickTextFitMode]="tickTextFitMode"
+    ></vis-axis>
+    <vis-axis type="y" label="$ millions" [tickFormat]="yTickFormat"></vis-axis>
+</vis-xy-container>
