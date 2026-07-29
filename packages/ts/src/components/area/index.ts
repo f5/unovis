@@ -7,7 +7,17 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange, getValue, clamp } from '@/utils/data'
+import {
+  getNumber,
+  getString,
+  isArray,
+  isNumber,
+  getStackedExtentWithBaseline,
+  getStackedData,
+  filterDataByRange,
+  getValue,
+  clamp,
+} from '@/utils/data'
 import { smartTransition } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
@@ -241,7 +251,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
 
     const xDomain = this.xScale.domain() as [number, number]
     const data = scaleByVisibleData ? filterDataByRange(datamodel.data, xDomain, config.x, true) : datamodel.data
-    return getStackedExtent(data, config.baseline, ...yAccessors)
+    return getStackedExtentWithBaseline(data, config.baseline, ...yAccessors)
   }
 
   _emptyPath (): string {

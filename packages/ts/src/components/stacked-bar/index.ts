@@ -87,7 +87,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const colorOptions = { colorFn: this._colorFunction }
 
     const yAccessors = this.getAccessors()
-    const stacked = getStackedData(this._barData, 0, yAccessors, this._prevNegative)
+    const stacked = getStackedData(this._barData, config.baseline, yAccessors, this._prevNegative)
     this._prevNegative = stacked.map(s => !!s.isMostlyNegative)
 
     const barGroups = this.g
@@ -139,6 +139,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
             stacked: [number, number];
             stackIndex: number;
             isEnding: boolean;
+            isStarting: boolean;
           }
 
           const groupData = stacked
@@ -148,13 +149,24 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
               stacked: s[j],
               stackIndex: i,
             }))
-            .filter(d => d.stacked[0] !== d.stacked[1]) as StackedBarRenderDatum[] // Skip zero-height bars
+            // Skip zero-height bars, unless `barMinHeight1Px` asks for them to be drawn as a 1px sliver.
+            // The condition mirrors the one in `_getBarPath`, so we don't keep bars it would collapse anyway.
+            .filter(d => {
+              if (d.stacked[0] !== d.stacked[1]) return true
+              if (!config.barMinHeight1Px) return false
+              const value = getNumber(d.datum, yAccessors[d.stackIndex], d.index)
+              return isFinite(value) && (value !== config.barMinHeightZeroValue)
+            }) as StackedBarRenderDatum[]
 
           // Populate `isEnding`
           // Ending bar if the next stack is not the same as the current one
           groupData.forEach((d, i) => {
             d.isEnding = (i === groupData.length - 1) ||
                 ((i <= groupData.length - 1) && groupData[i + 1].stacked[0] !== d.stacked[1])
+            // Starting bar if no other segment of the group ends where this one begins, i.e. its
+            // lower edge is a free end rather than a seam with the segment beneath it. Positive and
+            // negative segments are interleaved by stack index, so we can't rely on array adjacency.
+            d.isStarting = !groupData.some(o => o !== d && o.stacked[1] === d.stacked[0])
           })
           return groupData
         },
@@ -238,13 +250,17 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const yAccessors = this.getAccessors()
     const barWidth = this._getBarWidth()
 
-    const isNegative = d.stacked[1] < 0
+    // Compare the two stack bounds rather than testing against zero: with a non-zero `baseline`
+    // a descending bar can still sit entirely above zero (and an ascending one entirely below it)
+    const isNegative = d.stacked[1] < d.stacked[0]
     const isEnding = d.isEnding // The most top bar or, if the value is negative, the most bottom bar
     const value = getNumber(d.datum, yAccessors[d.stackIndex], d.index)
     const height = isEntering ? 0 : Math.abs(this.valueScale(d.stacked[0]) - this.valueScale(d.stacked[1]))
     const h = !isEntering && config.barMinHeight1Px && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
+    // Entering bars collapse onto the start of their own span, so they grow out of the place they
+    // belong to instead of flying in from the zero line
     const y = isEntering
-      ? this.valueScale(0)
+      ? this.valueScale(d.stacked[0])
       : this.valueScale(isNegative ? d.stacked[0] : d.stacked[1]) - (height < 1 && config.barMinHeight1Px ? 1 : 0)
 
     const x = -barWidth / 2
@@ -256,27 +272,35 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const cornerRadiusClamped = clamp(cornerRadius, 0, Math.min(height, width) / 2)
     const isNorthDirected = this.yScale.range()[0] > this.yScale.range()[1]
 
+    // Every bar has a "far" end, the one its value grows towards, and a "near" end sitting at the
+    // value it starts from. The far end is rounded when the segment tops off its stack (`isEnding`).
+    // The near end is only rounded when the segment starts its stack *and* that start isn't the zero
+    // line — i.e. the bar floats, as in a waterfall chart. Bars growing out of zero keep a flat edge
+    // there, so the default (`baseline` unset) behaviour is unchanged.
+    const roundFar = isEnding
+    const roundNear = d.isStarting && (d.stacked[0] !== 0)
+
+    // Which side of the rect the far end lands on
+    const farIsTop = (!isNegative && isNorthDirected) || (isNegative && !isNorthDirected) // vertical
+    const farIsLeft = isNegative // horizontal
+
     return roundedRectPath({
       x: this.isVertical() ? x : y - h,
       y: this.isVertical() ? y + (isNorthDirected ? 0 : -h) : x,
       w: this.isVertical() ? width : h,
       h: this.isVertical() ? h : width,
-      tl: isEnding && (this.isVertical()
-        ? (!isNegative && isNorthDirected) || (isNegative && !isNorthDirected)
-        : isNegative
-      ),
-      tr: isEnding && (this.isVertical()
-        ? (!isNegative && isNorthDirected) || (isNegative && !isNorthDirected)
-        : !isNegative
-      ),
-      br: isEnding && (this.isVertical()
-        ? (isNegative && isNorthDirected) || (!isNegative && !isNorthDirected)
-        : !isNegative
-      ),
-      bl: isEnding && (this.isVertical()
-        ? (isNegative && isNorthDirected) || (!isNegative && !isNorthDirected)
-        : isNegative
-      ),
+      tl: this.isVertical()
+        ? (farIsTop ? roundFar : roundNear)
+        : (farIsLeft ? roundFar : roundNear),
+      tr: this.isVertical()
+        ? (farIsTop ? roundFar : roundNear)
+        : (farIsLeft ? roundNear : roundFar),
+      br: this.isVertical()
+        ? (farIsTop ? roundNear : roundFar)
+        : (farIsLeft ? roundNear : roundFar),
+      bl: this.isVertical()
+        ? (farIsTop ? roundNear : roundFar)
+        : (farIsLeft ? roundFar : roundNear),
       r: cornerRadiusClamped,
     })
   }
@@ -296,11 +320,11 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
   }
 
   getValueScaleExtent (scaleByVisibleData: boolean): number[] {
-    const { datamodel } = this
+    const { config, datamodel } = this
     const yAccessors = this.getAccessors()
 
     const data = scaleByVisibleData ? this._getVisibleData() : datamodel.data
-    return getStackedExtent(data, ...yAccessors)
+    return getStackedExtentWithBaseline(data, config.baseline, ...yAccessors)
   }
 
   getDataScaleExtent (): number[] {
