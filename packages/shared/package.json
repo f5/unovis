@@ -41,8 +41,8 @@
   "devDependencies": {
     "@angular/core": "^20.0.0",
     "@angular/common": "^20.0.0",
-    "@angular/compiler": "^20.0.0",
     "@angular/platform-browser": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
     "@angular/platform-browser-dynamic": "^20.0.0",
     "@unovis/angular": "workspace:*",
     "reflect-metadata": "^0.1.14",
