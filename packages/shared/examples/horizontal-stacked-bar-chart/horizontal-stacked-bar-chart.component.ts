@@ -19,13 +19,15 @@ export class StackedBarChartComponent {
   legendLabels = this.dataKeys.map(k => ({ name: labels[k] }))
 
   tooltipTriggers = {
-    [StackedBar.selectors.bar]: (d: EducationDatum): string => {
+    // Triggers keyed on `StackedBar.selectors.bar` receive the bar's render record, not the data row
+    [StackedBar.selectors.bar]: (bar: { datum: EducationDatum }): string => {
+      const d = bar.datum
       const title = `<div style="color: #666; text-align: center">${d.country}</div>`
       const total = `Total: <b>${d.total}%</b> of population</br>`
       const stats = this.dataKeys.map((k, i) => [
         labels[k].split(' ')[0],
         `<span style="color: var(--vis-color${i}); font-weight: 800">${d[k]}%</span>`,
-      ]).join(' | ')
+      ].join(': ')).join(' | ')
       return `<div style="font-size: 12px">${title}${total}${stats}</div>`
     },
   }
