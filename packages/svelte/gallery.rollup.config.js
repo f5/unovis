@@ -36,6 +36,7 @@ export default {
     typescript({
       typescript: require('typescript'),
       tsconfig: 'tsconfig.json',
+      include: ['**/*.ts', '**/*.tsx'],
       abortOnError: false,
       transformers: [(service) => transformPaths(service.getProgram())],
     }),
