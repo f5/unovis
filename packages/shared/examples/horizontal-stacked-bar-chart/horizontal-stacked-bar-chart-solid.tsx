@@ -20,7 +20,9 @@ const horizontalStackedBarChart = (): JSX.Element => {
   const y = chartLabels.map((i) => (d: EducationDatum) => d[i.key])
   const tickFormat = (_: EducationDatum, i: number) => data[i].country
 
-  function tooltipTemplate (d: EducationDatum): string {
+  // Triggers keyed on `StackedBar.selectors.bar` receive the bar's render record, not the data row
+  function tooltipTemplate (bar: { datum: EducationDatum }): string {
+    const d = bar.datum
     const title = `<div style="color: #666; text-align: center">${d.country}</div>`
     const total = `Total: <b>${d.total}%</b> of population with a college degree</br>`
     const stats = chartLabels.map((l) => l.tooltip(d)).join(' | ')

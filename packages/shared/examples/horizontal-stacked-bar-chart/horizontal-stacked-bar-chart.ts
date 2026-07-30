@@ -29,8 +29,10 @@ const chart = new XYContainer(container, {
   }),
   tooltip: new Tooltip({
     triggers: {
-      [StackedBar.selectors.bar]: d => {
-        const title = `<div style="color: #666; text-align: center">${d.country}</div`
+      // Triggers keyed on `StackedBar.selectors.bar` receive the bar's render record, not the data row
+      [StackedBar.selectors.bar]: (bar: { datum: EducationDatum }) => {
+        const d = bar.datum
+        const title = `<div style="color: #666; text-align: center">${d.country}</div>`
         const total = `Total: <b>${d.total}%</b> of population with a college degree</br>`
         const stats = Object.keys(labels).map((l, i) => [
           labels[l].split(' ')[0],
