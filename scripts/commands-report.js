@@ -6,14 +6,18 @@
  * Unovis Parallel Command Runner & Live Report
  *
  * Runs all package.json scripts (except publish / update-version) in parallel
- * across configurable worker slots and serves a live, auto-updating HTML report.
+ * across configurable worker slots. By default runs headlessly and exits with
+ * code 0 (all passed) or 1 (any failed). Pass --serve to also start a live
+ * HTTP report server and open it in a browser.
  *
  * Usage:
- *   node run-commands-report.js
- *   node run-commands-report.js --port=3737 --concurrency=4 --timeout=300
- *   node run-commands-report.js --clean          # run pnpm install:clean first
- *   CLEAN_FIRST=1 node run-commands-report.js
- *   PORT=8080 CONCURRENCY=6 TIMEOUT=600 node run-commands-report.js
+ *   node scripts/commands-report.js                          # headless (CI)
+ *   node scripts/commands-report.js --serve                  # live browser report
+ *   node scripts/commands-report.js --port=3737 --concurrency=4 --timeout=300
+ *   node scripts/commands-report.js --clean          # run pnpm install:clean first
+ *   CLEAN_FIRST=1 node scripts/commands-report.js
+ *   PORT=8080 CONCURRENCY=6 TIMEOUT=600 node scripts/commands-report.js
+ *   SERVE=1 node scripts/commands-report.js
  */
 
 const { spawn, execSync } = require('child_process')
@@ -39,6 +43,10 @@ const WORKERS = parseInt(argv.concurrency || process.env.CONCURRENCY || '10', 10
 const TIMEOUT_S = parseInt(argv.timeout || process.env.TIMEOUT || '600', 10)
 // When true, pnpm install:clean runs as phase 0 before any other task.
 const CLEAN_FIRST = !!(argv.clean || process.env.CLEAN_FIRST)
+// When true, starts the live HTTP server and opens a browser tab.
+const SERVE = !!(argv.serve || process.env.SERVE)
+// When true, write static HTML report to disk (off by default).
+const GENERATE_REPORT = !!(argv.report || process.env.GENERATE_REPORT)
 
 /**
  * Skip any script whose name CONTAINS one of these strings.
@@ -75,7 +83,7 @@ const ROOT_SKIP_STARTS = ['build'] // 'build' and 'build:*'
 
 // Workspace: publish & gallery variants are out. Long-running servers,
 // interactive / destructive tooling, and generator pass-throughs too.
-const WS_SKIP_CONTAINS = ['publish', 'gallery']
+const WS_SKIP_CONTAINS = ['publish', 'gallery', 'license:check']
 const WS_SKIP_EXACT = new Set([
   'dev',
   'serve',
@@ -937,29 +945,18 @@ console.log(`  ${'─'.repeat(50)}`)
 })
 console.log(`\n  ${'─'.repeat(50)}\n`)
 
-server.listen(PORT, '0.0.0.0', async () => {
-  const url = `http://127.0.0.1:${PORT}`
-  console.log(`  Live report → ${url}`)
-  console.log('  Ctrl+C to exit early\n')
+// ─── Shared finish logic ──────────────────────────────────────────────────────
 
-  // Open browser (best-effort)
-  const opener = process.platform === 'darwin'
-    ? 'open'
-    : process.platform === 'win32'
-      ? 'start'
-      : 'xdg-open'
-  try { spawn(opener, [url], { detached: true, stdio: 'ignore' }).unref() } catch (_) {}
+const fmtTotal = ms => {
+  if (!ms || ms < 0) return '-'
+  if (ms < 1000) return ms + 'ms'
+  if (ms < 60000) return (ms / 1000).toFixed(1) + 's'
+  return Math.floor(ms / 60000) + 'm ' + Math.round((ms % 60000) / 1000) + 's'
+}
 
-  // Give the browser 1.5s to open and establish the SSE connection
-  // before we start firing events, so no updates are missed.
-  console.log('  Waiting 1.5s for browser to connect...')
-  await new Promise(r => setTimeout(r, 1500))
-
-  // Run everything
-  const { success, failed, completedAt, durationMs } = await runAllTasks()
+const printSummaryAndExit = ({ success, failed, completedAt, durationMs }, closeServer) => {
   lastCompletedAt = completedAt || Date.now()
 
-  // Console summary
   console.log('\n  Results:')
   Object.entries(byWs).forEach(([ws, wsTasks]) => {
     console.log(`\n  [${ws}]`)
@@ -971,26 +968,60 @@ server.listen(PORT, '0.0.0.0', async () => {
       console.log(`    ${icon} ${t.scriptName}${ms}`)
     })
   })
-  const fmtTotal = ms => {
-    if (!ms || ms < 0) return '-'
-    if (ms < 1000) return ms + 'ms'
-    if (ms < 60000) return (ms / 1000).toFixed(1) + 's'
-    return Math.floor(ms / 60000) + 'm ' + Math.round((ms % 60000) / 1000) + 's'
-  }
   console.log(`\n  Total runtime: ${fmtTotal(durationMs || 0)}`)
   console.log(`\n  ${success}/${tasks.length} succeeded${failed ? `, ${failed} failed` : ' 🎉'}`)
 
-  // Save static report
-  const reportPath = path.join(ROOT_DIR, getReportFileName(lastCompletedAt))
-  fs.writeFileSync(reportPath, buildHTML(JSON.stringify(taskSnapshot()), true))
-  console.log(`\n  Static report saved → ${reportPath}`)
-  console.log('  Report complete. Shutting down server.\n')
+  // Save static report (only if explicitly requested or when running in serve mode)
+  if (GENERATE_REPORT || closeServer) {
+    const reportPath = path.join(ROOT_DIR, getReportFileName(lastCompletedAt))
+    fs.writeFileSync(reportPath, buildHTML(JSON.stringify(taskSnapshot()), true))
+    console.log(`\n  Static report saved → ${reportPath}`)
+  } else {
+    console.log('\n  Static report generation skipped (disabled by default).')
+  }
 
   const exitCode = failed > 0 ? 1 : 0
-  server.close(() => process.exit(exitCode))
-  // Fallback in case close callback does not fire promptly.
-  setTimeout(() => process.exit(exitCode), 2000)
-})
+  if (closeServer) {
+    console.log('  Shutting down server.\n')
+    server.close(() => process.exit(exitCode))
+    setTimeout(() => process.exit(exitCode), 2000)
+  } else {
+    process.exit(exitCode)
+  }
+}
+
+// ─── Entry point ──────────────────────────────────────────────────────────────
+
+if (SERVE) {
+  // Live server mode: start HTTP server, open browser, then run tasks.
+  server.listen(PORT, '0.0.0.0', async () => {
+    const url = `http://127.0.0.1:${PORT}`
+    console.log(`  Live report → ${url}`)
+    console.log('  Ctrl+C to exit early\n')
+
+    // Open browser (best-effort)
+    const opener = process.platform === 'darwin'
+      ? 'open'
+      : process.platform === 'win32'
+        ? 'start'
+        : 'xdg-open'
+    try { spawn(opener, [url], { detached: true, stdio: 'ignore' }).unref() } catch (_) {}
+
+    // Give the browser 1.5s to open and establish the SSE connection
+    // before we start firing events, so no updates are missed.
+    console.log('  Waiting 1.5s for browser to connect...')
+    await new Promise(r => setTimeout(r, 1500))
+
+    const result = await runAllTasks()
+    printSummaryAndExit(result, true)
+  })
+} else {
+  // Headless mode (default): run tasks and exit — no server, no browser.
+  ;(async () => {
+    const result = await runAllTasks()
+    printSummaryAndExit(result, false)
+  })()
+}
 
 process.on('SIGINT', () => {
   console.log(`\n  Interrupted — killing ${activeProcs.size} child process(es)...`)
