@@ -45,8 +45,9 @@ const TIMEOUT_S = parseInt(argv.timeout || process.env.TIMEOUT || '600', 10)
 const CLEAN_FIRST = !!(argv.clean || process.env.CLEAN_FIRST)
 // When true, starts the live HTTP server and opens a browser tab.
 const SERVE = !!(argv.serve || process.env.SERVE)
-// When true, write static HTML report to disk (off by default).
-const GENERATE_REPORT = !!(argv.report || process.env.GENERATE_REPORT)
+// HTML report generation is disabled in CI and by default.
+// The script serves a live page in `--serve` mode but does not save a static
+// HTML snapshot to disk anymore.
 
 /**
  * Skip any script whose name CONTAINS one of these strings.
@@ -971,14 +972,10 @@ const printSummaryAndExit = ({ success, failed, completedAt, durationMs }, close
   console.log(`\n  Total runtime: ${fmtTotal(durationMs || 0)}`)
   console.log(`\n  ${success}/${tasks.length} succeeded${failed ? `, ${failed} failed` : ' 🎉'}`)
 
-  // Save static report (only if explicitly requested or when running in serve mode)
-  if (GENERATE_REPORT || closeServer) {
-    const reportPath = path.join(ROOT_DIR, getReportFileName(lastCompletedAt))
-    fs.writeFileSync(reportPath, buildHTML(JSON.stringify(taskSnapshot()), true))
-    console.log(`\n  Static report saved → ${reportPath}`)
-  } else {
-    console.log('\n  Static report generation skipped (disabled by default).')
-  }
+  // Static report generation has been disabled intentionally. If you need
+  // a static HTML snapshot, run the script locally with `--serve` and save
+  // from the browser, or add a custom step that calls `buildHTML()`.
+  console.log('\n  Static report generation is disabled by configuration.')
 
   const exitCode = failed > 0 ? 1 : 0
   if (closeServer) {
