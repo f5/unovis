@@ -62,29 +62,28 @@ jobs:
       run: node scripts/commands-report.js
     # By default this job runs headless and will NOT generate an HTML report.
     # Use the separate `generate-report` workflow job (manual) to create/upload it.
-  
-    generate-report:
-      name: 'Generate Commands HTML Report (manual)'
-      runs-on: ubuntu-latest
-      if: github.event_name == 'workflow_dispatch'
-      steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.23.0
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-      - run: pnpm install --frozen-lockfile
-      - name: Run commands report (generate HTML)
-        env:
-          GENERATE_REPORT: '1'
-        run: node scripts/commands-report.js
-      - name: Upload report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: commands-report
-          path: unovis-commands-report-*.html
+  generate-report:
+    name: 'Generate Commands HTML Report (manual)'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+    - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 10.23.0
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
+        cache: pnpm
+        cache-dependency-path: pnpm-lock.yaml
+    - run: pnpm install --frozen-lockfile
+    - name: Run commands report (generate HTML)
+      env:
+        GENERATE_REPORT: '1'
+      run: node scripts/commands-report.js
+    - name: Upload report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: commands-report
+        path: unovis-commands-report-*.html
