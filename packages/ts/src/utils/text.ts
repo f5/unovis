@@ -291,6 +291,7 @@ function breakTextIntoLines (
   if (!text) return []
   const fontSize = textBlock.fontSize ?? UNOVIS_TEXT_DEFAULT.fontSize
   const fontFamily = textBlock.fontFamily ?? UNOVIS_TEXT_DEFAULT.fontFamily
+  const fontWeight = textBlock.fontWeight
   const fontWidthToHeightRatio: number | undefined = textBlock.fontWidthToHeightRatio ?? UNOVIS_TEXT_DEFAULT.fontWidthToHeightRatio
   const separators = Array.isArray(separator) ? separator : [separator]
 
@@ -304,7 +305,7 @@ function breakTextIntoLines (
     for (let i = 0; i < words.length; i += 1) {
       const textLengthPx = fastMode
         ? estimateStringPixelLength(line + words[i], fontSize, fontWidthToHeightRatio)
-        : getPreciseStringLengthPx(line + words[i], fontFamily, fontSize)
+        : getPreciseStringLengthPx(line + words[i], fontFamily, fontSize, fontWeight)
 
       if (textLengthPx < width || i === 0) {
         line += words[i]
@@ -319,7 +320,7 @@ function breakTextIntoLines (
         while (line.trim().length > minCharactersOnLine) {
           const subLineLengthPx = fastMode
             ? estimateStringPixelLength(line, fontSize, fontWidthToHeightRatio)
-            : getPreciseStringLengthPx(line, fontFamily, fontSize)
+            : getPreciseStringLengthPx(line, fontFamily, fontSize, fontWeight)
 
           if (subLineLengthPx > width) {
             let breakIndex = (line.trim()).length - minCharactersOnLine // Place at least `minCharactersOnLine` characters onto the next line
@@ -327,7 +328,7 @@ function breakTextIntoLines (
               const subLine = `${line.substring(0, breakIndex)}${UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT}` // Use hyphen when force breaking words
               const subLinePx = fastMode
                 ? estimateStringPixelLength(subLine, fontSize, fontWidthToHeightRatio)
-                : getPreciseStringLengthPx(subLine, fontFamily, fontSize)
+                : getPreciseStringLengthPx(subLine, fontFamily, fontSize, fontWeight)
 
               // If the subline is less than the width, or just one character left, break the line
               if (subLinePx <= width || breakIndex === 1) {
@@ -399,7 +400,7 @@ export function getWrappedText (
       const lineWithEllipsis = `${line} …`
       const textLengthPx = fastMode
         ? estimateStringPixelLength(lineWithEllipsis, text.fontSize, text.fontWidthToHeightRatio)
-        : getPreciseStringLengthPx(lineWithEllipsis, text.fontFamily, text.fontSize)
+        : getPreciseStringLengthPx(lineWithEllipsis, text.fontFamily, text.fontSize, text.fontWeight)
 
       maxWidth = Math.max(textLengthPx, maxWidth)
       if (height && (h + dh) > height && (k !== lines.length - 1)) {

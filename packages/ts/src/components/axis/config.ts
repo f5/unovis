@@ -35,8 +35,8 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   minMaxTicksOnly?: boolean;
   /** Show grid lines for the min and max axis ticks. Default: `false` */
   minMaxTicksOnlyShowGridLines?: boolean;
-  /** Draw only the min and max axis ticks, when the chart
-   * width is less than the specified value.
+  /** Draw only the min and max axis ticks, when the chart width is less than the specified value.
+   * Has no effect when `tickTextAdaptiveSets` is enabled.
    * Default: `250` */
   minMaxTicksOnlyWhenWidthIsLess?: number;
   /** Tick label formatter function. Default: `undefined` */
@@ -45,6 +45,9 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickValues?: number[];
   /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
   numTicks?: number;
+  /** Approximate spacing between ticks in pixels, used to derive the number of ticks
+   * when `numTicks` is not set. Only applies to the X axis. Default: `175` */
+  tickSpacing?: number;
   /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
   tickTextFitMode?: FitMode | `${FitMode}`;
   /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
@@ -64,9 +67,17 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextColor?: string | null;
   /** Text rotation angle for ticks. Default: `undefined` */
   tickTextAngle?: number;
+  /** Adaptively pick the number of ticks so that their labels don't overlap: the axis renders the
+   * largest "nice" tick set that fits (measured off-screen), degrading to smaller sets on narrow
+   * charts. `numTicks` (or its width-based default) acts as the upper bound. With explicit
+   * `tickValues`, every-k-th subsets of them are fitted instead.
+   * Has no effect when `minMaxTicksOnly` is set, and disables the width-based
+   * `minMaxTicksOnlyWhenWidthIsLess` fallback. Default: `undefined` */
+  tickTextAdaptiveSets?: boolean;
   /** Hide tick labels that overlap with each other.
    * To define overlapping, a simple bounding box collision detection algorithm is used.
    * Which means the result won't be accurate when `tickTextAngle` is specified.
+   * Consider combining with `tickTextAdaptiveSets` to keep the shown ticks evenly spaced.
    * Default: `undefined` */
   tickTextHideOverlapping?: boolean;
   /** The spacing in pixels between the tick and it's label. Default: `8` */
@@ -88,6 +99,7 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickLine: true,
   domainLine: true,
   numTicks: undefined,
+  tickSpacing: 175,
   minMaxTicksOnly: false,
   minMaxTicksOnlyWhenWidthIsLess: 250,
   minMaxTicksOnlyShowGridLines: false,
@@ -107,5 +119,6 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   fullSize: true,
   tickPadding: 8,
   tickSize: 6,
+  tickTextAdaptiveSets: undefined,
   tickTextHideOverlapping: undefined,
 }

@@ -101,7 +101,8 @@ export function hideOverlappingLabels<El extends SVGGraphicsElement, D, PEl exte
 ): void {
   const nodes = selection.nodes()
   if (nodes.length < 2) {
-    selection.style('opacity', null)
+    // Hideable labels are hidden by a class style until made visible here
+    selection.style('opacity', 1)
     return
   }
 
