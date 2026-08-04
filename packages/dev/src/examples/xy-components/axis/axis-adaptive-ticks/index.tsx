@@ -15,12 +15,15 @@ type AxisExample = {
   tickFormat?: (tick: number | Date) => string;
   tickTextAngle?: number;
   tickValues?: number[];
+  // Fixed margin (with `autoMargin` off) for domains whose extreme labels drop in and out of
+  // the fitted set: their bleed changes the auto margin and makes the whole chart jump
+  margin?: { top: number; bottom: number; left: number; right: number };
 }
 
 const axes: AxisExample[] = [
   { label: '[0, 1000]', domain: [0, 1000] },
   { label: 'custom tickValues, 0..1000 by 100', domain: [0, 1000], tickValues: Array.from({ length: 11 }, (_, i) => i * 100) },
-  { label: '[-500, 500]', domain: [-500, 500] },
+  { label: '[-500, 500]', domain: [-500, 500], margin: { top: 0, bottom: 28, left: 24, right: 24 } },
   { label: '[0, 1]', domain: [0, 1] },
   { label: '[0, 10000000]', domain: [0, 10000000] },
   { label: '[0, 10000000], rotated labels', domain: [0, 10000000], tickTextAngle: 15 },
@@ -31,11 +34,11 @@ const axes: AxisExample[] = [
 const labelStyle: React.CSSProperties = { font: '11px monospace', color: '#888', margin: '12px 0 2px' }
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => (
-  <>
+  <div style={{ marginLeft: 8 }}>
     {axes.map(axis => (
       <div key={axis.label}>
         <div style={labelStyle}>{axis.label}</div>
-        <VisXYContainer xDomain={axis.domain} height={40} xScale={axis.scale}>
+        <VisXYContainer xDomain={axis.domain} height={40} xScale={axis.scale} autoMargin={!axis.margin} margin={axis.margin}>
           <VisAxis
             type='x'
             numTicks={25}
@@ -49,5 +52,5 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         </VisXYContainer>
       </div>
     ))}
-  </>
+  </div>
 )
