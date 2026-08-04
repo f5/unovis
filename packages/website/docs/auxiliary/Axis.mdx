@@ -203,6 +203,20 @@ The specified count is only a hint, the axis can have more or fewer ticks depend
   defaultValue={20}
   property="numTicks"/>
 
+### Tick Spacing `new`
+When `numTicks` is not set, the _Axis_ derives the tick count from the component's size. For the X axis, the `tickSpacing` property controls that density by setting the approximate distance between ticks in pixels (default: `175`). Smaller values pack in more ticks; larger values spread them out.
+
+:::note
+`tickSpacing` only applies to the X axis, and is ignored when `numTicks` is set explicitly.
+:::
+
+<XYWrapperWithInput
+  {...axisProps()}
+  inputType="range"
+  inputProps={{ min: 40, max: 300, step: 5 }}
+  defaultValue={175}
+  property="tickSpacing"/>
+
 ### Display Only Minimum and Maximum Ticks
 Set the `minMaxTicksOnly` property to `true` if you only want to see the two end ticks on the axis.
 
@@ -240,7 +254,7 @@ function tickValues() {
 ```
 <XYWrapper {...axisProps()} tickValues={[0,2,4,6,8]} hiddenProps={{x:d=>d.x}}/>
 
-### Hide Overlapping Ticks `1.5`
+### Hide Overlapping Ticks
 To prevent overlapping tick labels on the axis, you can use the `tickTextHideOverlapping`
 property. When enabled, it hides any tick labels that would otherwise overlap with
 one another based on a simple bounding box collision detection algorithm. This
@@ -253,6 +267,32 @@ so results can vary depending on tick rotation.
 :::
 
 <XYWrapper {...axisProps()} numTicks={15} containerProps={{ xDomain: [0, 10000000] }} hiddenProps={{x:d=>d.x}} tickTextHideOverlapping={true}/>
+
+### Adaptive Tick Sets `new`
+Set `tickTextAdaptiveSets` to `true` to let the _Axis_ pick the number of ticks automatically so that their labels never overlap. The axis measures candidate tick sets off-screen and renders the largest "nice" set that fits, degrading to sparser sets on narrower charts. Ticks left out of the fitted set still render as unlabeled tick marks, so the axis scale stays visually intact.
+
+`numTicks` (or, when it's not set, the width-based default derived from `tickSpacing`) acts as the upper bound on the number of labeled ticks.
+
+Toggle the checkbox below to see how enabling `tickTextAdaptiveSets` resolves the overlap on a dense, wide-range axis:
+
+<XYWrapperWithInput
+  {...axisProps()}
+  inputType="checkbox"
+  defaultValue={true}
+  property="tickTextAdaptiveSets"
+  numTicks={20}
+  containerProps={{ xDomain: [0, 10000000] }}
+  hiddenProps={{ gridLine: false, x: d => d.x }}/>
+
+When explicit `tickValues` are provided, the axis instead fits every-k-th subset of them (every value, then every 2nd, every 3rd, and so on), anchored at the first value so the labeled ticks stay evenly spaced.
+
+:::note
+`tickTextAdaptiveSets` takes over the narrow-width behavior: it disables the width-based `minMaxTicksOnlyWhenWidthIsLess` fallback, and has no effect when `minMaxTicksOnly` is enabled.
+:::
+
+:::tip
+When `tickTextAdaptiveSets` is enabled, you don't need to also set `tickTextHideOverlapping`. The adaptive pass already measures label overlap and only labels the ticks that fit, so no labels overlap in the first place.
+:::
 
 
 ## Displaying Multiple Axes
