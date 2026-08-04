@@ -96,6 +96,9 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   /** Label text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
   @Input() labelTextTrimType?: TrimMode | `${TrimMode}`
 
+  /** Label text separators for wrapping. Default: `[' ', '-']` */
+  @Input() labelTextSeparator?: string[]
+
   /** Font color of the axis label as CSS string. Default: `null` */
   @Input() labelColor?: string | null
 
@@ -114,8 +117,8 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   /** Show grid lines for the min and max axis ticks. Default: `false` */
   @Input() minMaxTicksOnlyShowGridLines?: boolean
 
-  /** Draw only the min and max axis ticks, when the chart
-   * width is less than the specified value.
+  /** Draw only the min and max axis ticks, when the chart width is less than the specified value.
+   * Has no effect when `tickTextAdaptiveSets` is enabled.
    * Default: `250` */
   @Input() minMaxTicksOnlyWhenWidthIsLess?: number
 
@@ -127,6 +130,10 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
 
   /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
   @Input() numTicks?: number
+
+  /** Approximate spacing between ticks in pixels, used to derive the number of ticks
+   * when `numTicks` is not set. Only applies to the X axis. Default: `175` */
+  @Input() tickSpacing?: number
 
   /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
   @Input() tickTextFitMode?: FitMode | `${FitMode}`
@@ -155,9 +162,18 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   /** Text rotation angle for ticks. Default: `undefined` */
   @Input() tickTextAngle?: number
 
+  /** Adaptively pick the number of ticks so that their labels don't overlap: the axis renders the
+   * largest "nice" tick set that fits (measured off-screen), degrading to smaller sets on narrow
+   * charts. `numTicks` (or its width-based default) acts as the upper bound. With explicit
+   * `tickValues`, every-k-th subsets of them are fitted instead.
+   * Has no effect when `minMaxTicksOnly` is set, and disables the width-based
+   * `minMaxTicksOnlyWhenWidthIsLess` fallback. Default: `undefined` */
+  @Input() tickTextAdaptiveSets?: boolean
+
   /** Hide tick labels that overlap with each other.
    * To define overlapping, a simple bounding box collision detection algorithm is used.
    * Which means the result won't be accurate when `tickTextAngle` is specified.
+   * Consider combining with `tickTextAdaptiveSets` to keep the shown ticks evenly spaced.
    * Default: `undefined` */
   @Input() tickTextHideOverlapping?: boolean
 
@@ -188,8 +204,8 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   }
 
   private getConfig (): AxisConfigInterface<Datum> {
-    const { duration, events, attributes, position, type, fullSize, label, labelFontSize, labelMargin, labelTextFitMode, labelTextTrimType, labelColor, gridLine, tickLine, domainLine, minMaxTicksOnly, minMaxTicksOnlyShowGridLines, minMaxTicksOnlyWhenWidthIsLess, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, tickTextColor, tickTextAngle, tickTextHideOverlapping, tickPadding, tickSize } = this
-    const config = { duration, events, attributes, position, type, fullSize, label, labelFontSize, labelMargin, labelTextFitMode, labelTextTrimType, labelColor, gridLine, tickLine, domainLine, minMaxTicksOnly, minMaxTicksOnlyShowGridLines, minMaxTicksOnlyWhenWidthIsLess, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, tickTextColor, tickTextAngle, tickTextHideOverlapping, tickPadding, tickSize }
+    const { duration, events, attributes, position, type, fullSize, label, labelFontSize, labelMargin, labelTextFitMode, labelTextTrimType, labelTextSeparator, labelColor, gridLine, tickLine, domainLine, minMaxTicksOnly, minMaxTicksOnlyShowGridLines, minMaxTicksOnlyWhenWidthIsLess, tickFormat, tickValues, numTicks, tickSpacing, tickTextFitMode, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, tickTextColor, tickTextAngle, tickTextAdaptiveSets, tickTextHideOverlapping, tickPadding, tickSize } = this
+    const config = { duration, events, attributes, position, type, fullSize, label, labelFontSize, labelMargin, labelTextFitMode, labelTextTrimType, labelTextSeparator, labelColor, gridLine, tickLine, domainLine, minMaxTicksOnly, minMaxTicksOnlyShowGridLines, minMaxTicksOnlyWhenWidthIsLess, tickFormat, tickValues, numTicks, tickSpacing, tickTextFitMode, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, tickTextColor, tickTextAngle, tickTextAdaptiveSets, tickTextHideOverlapping, tickPadding, tickSize }
     const keys = Object.keys(config) as (keyof AxisConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
