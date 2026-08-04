@@ -100,23 +100,43 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
 }
 
 export function setLabelRect<T, K extends BaseType, L> (
-  labelSelection: Selection<SVGGElement, T, K, L>,
-  label: string,
-  selector: string
+  labelSelection: Selection<SVGGElement, T, K, L>
 ): Selection<SVGRectElement, T, K, L> {
-  // Set label background rectangle size by text size
-  const labelIsEmpty = isEmpty(label)
-  const labelTextSelection = labelSelection.select<SVGTextElement>(`.${selector}`)
-  const labelTextBBox = (labelTextSelection.node() as SVGGraphicsElement).getBBox()
+  const labelTextElements = labelSelection.selectAll<SVGTextElement, unknown>('text').nodes()
+    .filter(node => !isEmpty(node.textContent))
+
+  let minX = 0
+  let minY = 0
+  let maxX = 0
+  let maxY = 0
+
+  labelTextElements.forEach((node, index) => {
+    const bbox = (node as SVGGraphicsElement).getBBox()
+    if (index === 0) {
+      minX = bbox.x
+      minY = bbox.y
+      maxX = bbox.x + bbox.width
+      maxY = bbox.y + bbox.height
+      return
+    }
+
+    minX = Math.min(minX, bbox.x)
+    minY = Math.min(minY, bbox.y)
+    maxX = Math.max(maxX, bbox.x + bbox.width)
+    maxY = Math.max(maxY, bbox.y + bbox.height)
+  })
+
+  const labelWidth = maxX - minX
+  const labelHeight = maxY - minY
   const backgroundRect = labelSelection.select<SVGRectElement>('rect')
-    .attr('visibility', labelIsEmpty ? 'hidden' : null)
+    .attr('visibility', labelTextElements.length ? null : 'hidden')
     .attr('rx', 4)
     .attr('ry', 4)
-    .attr('x', -labelTextBBox.width / 2 - LABEL_RECT_HORIZONTAL_PADDING)
-    .attr('y', '-0.64em')
-    .attr('width', labelTextBBox.width + 2 * LABEL_RECT_HORIZONTAL_PADDING)
-    .attr('height', labelTextBBox.height + 2 * LABEL_RECT_VERTICAL_PADDING)
-    .style('transform', `translateY(${-LABEL_RECT_VERTICAL_PADDING}px)`)
+    .attr('x', minX - LABEL_RECT_HORIZONTAL_PADDING)
+    .attr('y', minY - LABEL_RECT_VERTICAL_PADDING)
+    .attr('width', labelWidth + 2 * LABEL_RECT_HORIZONTAL_PADDING)
+    .attr('height', labelHeight + 2 * LABEL_RECT_VERTICAL_PADDING)
+    .style('transform', null)
 
   return backgroundRect
 }

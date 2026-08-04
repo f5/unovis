@@ -204,18 +204,34 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeLabel?: StringAccessor<N>;
   /** Defines whether to trim the node labels or not. Default: `true` */
   nodeLabelTrim?: BooleanAccessor<N>;
+  /** Defines whether to wrap the node labels or not. When enabled, wrapping takes precedence over trimming. Default: `false` */
+  nodeLabelWrap?: BooleanAccessor<N>;
   /** Node label trimming mode. Default: `TrimMode.Middle` */
   nodeLabelTrimMode?: GenericAccessor<TrimMode | string, N>;
   /** Node label maximum allowed text length above which the label will be trimmed. Default: `15` */
   nodeLabelTrimLength?: NumericAccessor<N>;
+  /** Maximum width of the wrapped node label in pixels. When not set, wrapped labels use a width derived from the node size. Default: `undefined` */
+  nodeLabelWidth?: NumericAccessor<N>;
+  /** Node label text wrapping separator. String or array of strings. Default: `undefined` */
+  nodeLabelWrapSeparator?: string | string[];
+  /** Force word break for node labels when they don't fit. Default: `false` */
+  nodeLabelForceWordBreak?: boolean;
   /** Node sub-label accessor function or constant value: Default: `''` */
   nodeSubLabel?: StringAccessor<N>;
   /** Defines whether to trim the node sub-labels or not. Default: `true` */
   nodeSubLabelTrim?: BooleanAccessor<N>;
+  /** Defines whether to wrap the node sub-labels or not. When enabled, wrapping takes precedence over trimming. Default: `false` */
+  nodeSubLabelWrap?: BooleanAccessor<N>;
   /** Node sub-label trimming mode. Default: `TrimMode.Middle` */
   nodeSubLabelTrimMode?: GenericAccessor<TrimMode | string, N>;
   /** Node sub-label maximum allowed text length above which the label will be trimmed. Default: `15` */
   nodeSubLabelTrimLength?: NumericAccessor<N>;
+  /** Maximum width of the wrapped node sub-label in pixels. When not set, wrapped labels use a width derived from the node size. Default: `undefined` */
+  nodeSubLabelWidth?: NumericAccessor<N>;
+  /** Node sub-label text wrapping separator. String or array of strings. Default: `undefined` */
+  nodeSubLabelWrapSeparator?: string | string[];
+  /** Force word break for node sub-labels when they don't fit. Default: `false` */
+  nodeSubLabelForceWordBreak?: boolean;
   /** Node circular side labels accessor function. The function should return an array of GraphCircleLabel objects. Default: `undefined` */
   nodeSideLabels?: GenericAccessor<GraphCircleLabel[], N>;
   /** Node bottom icon accessor function. Default: `undefined` */
@@ -382,12 +398,20 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeIconSize: undefined,
   nodeLabel: (n: GraphInputNode): string => (n as { label: string }).label,
   nodeLabelTrim: true,
+  nodeLabelWrap: false,
   nodeLabelTrimLength: 15,
   nodeLabelTrimMode: TrimMode.Middle,
+  nodeLabelWidth: undefined,
+  nodeLabelWrapSeparator: undefined,
+  nodeLabelForceWordBreak: false,
   nodeSubLabel: '',
   nodeSubLabelTrim: true,
+  nodeSubLabelWrap: false,
   nodeSubLabelTrimLength: 15,
   nodeSubLabelTrimMode: TrimMode.Middle,
+  nodeSubLabelWidth: undefined,
+  nodeSubLabelWrapSeparator: undefined,
+  nodeSubLabelForceWordBreak: false,
   nodeSideLabels: undefined,
   nodeBottomIcon: undefined,
   nodeDisabled: false,
