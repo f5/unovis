@@ -114,6 +114,18 @@ export const tickTextExiting = css`
   label: tick-text-exiting;
 `
 
+export const gridTickHidden = css`
+  label: grid-tick-hidden;
+  opacity: 0;
+  transition: var(${variables.axisTickLabelHideTransition});
+`
+
+export const tickTextHidden = css`
+  label: tick-text-hidden;
+  opacity: 0;
+  transition: var(${variables.axisTickLabelHideTransition});
+`
+
 export const label = css`
   label: label;
   fill: var(${variables.axisLabelColor});

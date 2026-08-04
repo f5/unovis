@@ -50,6 +50,24 @@ export function getPixelValue (v: string | number): number | null {
   return typeof v === 'number' ? v : toPx(v)
 }
 
+/** Returns the axis-aligned bounding box of `rect` rotated by `angleRad` around the origin */
+export function getRotatedRectAabb (rect: Rect, angleRad: number): Rect {
+  const sin = Math.sin(angleRad)
+  const cos = Math.cos(angleRad)
+  const corners = [
+    [rect.x, rect.y],
+    [rect.x + rect.width, rect.y],
+    [rect.x, rect.y + rect.height],
+    [rect.x + rect.width, rect.y + rect.height],
+  ]
+  const xs = corners.map(([x, y]) => x * cos - y * sin)
+  const ys = corners.map(([x, y]) => x * sin + y * cos)
+
+  const x = Math.min(...xs)
+  const y = Math.min(...ys)
+  return { x, y, width: Math.max(...xs) - x, height: Math.max(...ys) - y }
+}
+
 export function rectIntersect (rect1: Rect, rect2: Rect, tolerancePx = 0): boolean {
   const [left1, top1, right1, bottom1] = [
     rect1.x + tolerancePx,

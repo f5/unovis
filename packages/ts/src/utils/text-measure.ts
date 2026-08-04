@@ -104,9 +104,9 @@ export function getCachedComputedTextLength (el: SVGTextElement | SVGTSpanElemen
   return length
 }
 
-export function getPreciseStringLengthPx (str: string, fontFamily: string, fontSize: string | number): number {
+export function getPreciseStringLengthPx (str: string, fontFamily: string, fontSize: string | number, fontWeight?: string | number): number {
   const fontSizeStr = typeof fontSize === 'number' ? `${fontSize}px` : fontSize
-  const font = `${fontSizeStr} ${fontFamily}`
+  const font = `${fontWeight ?? ''} ${fontSizeStr} ${fontFamily}`.trimStart()
   const key = getTextCacheKey(str, font)
 
   const cached = textLengthCache.get(key)
@@ -122,6 +122,7 @@ export function getPreciseStringLengthPx (str: string, fontFamily: string, fontS
     text.textContent = str
     text.setAttribute('font-size', fontSizeStr)
     text.setAttribute('font-family', fontFamily)
+    if (fontWeight !== undefined) text.setAttribute('font-weight', `${fontWeight}`)
     svg.appendChild(text)
     document.body.appendChild(svg)
     length = text.getComputedTextLength()
