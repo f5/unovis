@@ -53,13 +53,17 @@ Svelte and TypeScript.
 
 ## Repository structure
 
-* `packages/ts` Core TypeScript package
-* `packages/angular` Angular components
-* `packages/react` React components
-* `packages/svelte` Svelte components
-* `packages/vue` Vue components
-* `packages/solid` Solid components
-* `packages/website` Website, docs and examples
+<a href="https://github.com/f5/unovis/blob/main/LICENSE"><img src="https://img.shields.io/github/license/f5/unovis" alt="License"></a>
+
+| Package | Description | Version | Downloads |
+|---------|-------------|---------|-----------|
+| [`@unovis/ts`](packages/ts) | Core TypeScript package | <a href="https://npmx.dev/package/@unovis/ts"><img src="https://npmx.dev/api/registry/badge/version/@unovis/ts" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/ts"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/ts" alt="Downloads"></a> |
+| [`@unovis/react`](packages/react) | React components | <a href="https://npmx.dev/package/@unovis/react"><img src="https://npmx.dev/api/registry/badge/version/@unovis/react" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/react"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/react" alt="Downloads"></a> |
+| [`@unovis/angular`](packages/angular) | Angular components | <a href="https://npmx.dev/package/@unovis/angular"><img src="https://npmx.dev/api/registry/badge/version/@unovis/angular" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/angular"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/angular" alt="Downloads"></a> |
+| [`@unovis/svelte`](packages/svelte) | Svelte components | <a href="https://npmx.dev/package/@unovis/svelte"><img src="https://npmx.dev/api/registry/badge/version/@unovis/svelte" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/svelte"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/svelte" alt="Downloads"></a> |
+| [`@unovis/vue`](packages/vue) | Vue components | <a href="https://npmx.dev/package/@unovis/vue"><img src="https://npmx.dev/api/registry/badge/version/@unovis/vue" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/vue"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/vue" alt="Downloads"></a> |
+| [`@unovis/solid`](packages/solid) | Solid components | <a href="https://npmx.dev/package/@unovis/solid"><img src="https://npmx.dev/api/registry/badge/version/@unovis/solid" alt="Version"></a> | <a href="https://npmx.dev/package/@unovis/solid"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/solid" alt="Downloads"></a> |
+| [`packages/website`](packages/website) | Website, docs and examples | — | — |
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue
