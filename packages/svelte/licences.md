@@ -18,6 +18,7 @@
 | svelte-check                 | perpetual      | MIT          | 2.10.3            | The Svelte Community                           |
 | svelte-preprocess            | perpetual      | MIT          | 4.10.7            | Christian Kaisermann <christian@kaisermann.me> |
 | tslib                        | perpetual      | 0BSD         | 2.8.1             | Microsoft Corp.                                |
+| tsx                          | perpetual      | MIT          | 4.21.0            | Hiroki Osame hiroki.osame@gmail.com            |
 | ttypescript                  | perpetual      | MIT          | 1.5.15            | cevek                                          |
 | typescript                   | perpetual      | Apache-2.0   | 4.2.4             | Microsoft Corp.                                |
 | svelte                       | perpetual      | MIT          | 3.59.2            | Rich Harris                                    |
