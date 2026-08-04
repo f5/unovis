@@ -4,7 +4,7 @@ import { min, max } from 'd3-array'
 import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getString, getNumber, getStackedData, getExtent } from '@/utils/data'
+import { isNumber, isArray, isEmpty, clamp, getStackedExtentWithBaseline, getString, getNumber, getStackedData, getExtent } from '@/utils/data'
 import { roundedRectPath } from '@/utils/path'
 import { smartTransition } from '@/utils/d3'
 import { getColor } from '@/utils/color'

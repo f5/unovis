@@ -6,6 +6,7 @@ import { barTooltip, data, stepColor, WaterfallDatum } from './data'
 @Component({
   selector: 'waterfall-chart',
   templateUrl: './waterfall-chart.component.html',
+  standalone: false,
 })
 export class WaterfallChartComponent {
   data = data
