@@ -1,5 +1,9 @@
 ![cover](https://user-images.githubusercontent.com/755708/194946760-13db0396-c429-4abb-8324-a5efae0455e2.png)
 
+<a href="https://npmx.dev/package/@unovis/svelte"><img src="https://npmx.dev/api/registry/badge/version/@unovis/svelte" alt="Version"></a>
+<a href="https://npmx.dev/package/@unovis/svelte"><img src="https://npmx.dev/api/registry/badge/downloads/@unovis/svelte" alt="Downloads"></a>
+<a href="https://github.com/f5/unovis/blob/main/LICENSE"><img src="https://img.shields.io/github/license/f5/unovis" alt="License"></a>
+
 🟨 **Unovis** is a modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript.
 
 `@unovis/svelte` provides Svelte components for `@unovis/ts`, which makes Unovis integration into a Svelte
