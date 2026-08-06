@@ -40,6 +40,8 @@ export type UnovisText = {
   marginBottom?: number;
   // The font width-to-height ratio (optional).
   fontWidthToHeightRatio?: number;
+  // The CSS class name to be applied to the rendered text block (optional).
+  className?: string;
 }
 
 export type UnovisWrappedText = UnovisText & {
