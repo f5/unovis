@@ -14,7 +14,7 @@ import { isEqual } from '@/utils/data'
 import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
-import { TrimMode } from '@/types/text'
+import { FitMode, TrimMode } from '@/types/text'
 import { Spacing } from '@/types/spacing'
 import { GraphInputLink, GraphInputNode, GraphInputData } from '@/types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from '@/types/accessor'
@@ -208,6 +208,14 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeLabelTrimMode?: GenericAccessor<TrimMode | string, N>;
   /** Node label maximum allowed text length above which the label will be trimmed. Default: `15` */
   nodeLabelTrimLength?: NumericAccessor<N>;
+  /** Node label fit mode: `FitMode.Trim` or `FitMode.Wrap`. The trim settings apply only in `FitMode.Trim` mode. Default: `FitMode.Trim` */
+  nodeLabelFitMode?: GenericAccessor<FitMode | string, N>;
+  /** Maximum node label width in pixels for wrapping when the fit mode is `FitMode.Wrap`. When not provided, a width derived from the node size will be used. Default: `undefined` */
+  nodeLabelWidth?: NumericAccessor<N>;
+  /** Node label text wrapping separator. String or array of strings. Default: `undefined` */
+  nodeLabelSeparator?: string | string[];
+  /** Force word break for node labels when they don't fit. Default: `false` */
+  nodeLabelForceWordBreak?: boolean;
   /** Node sub-label accessor function or constant value: Default: `''` */
   nodeSubLabel?: StringAccessor<N>;
   /** Defines whether to trim the node sub-labels or not. Default: `true` */
@@ -216,6 +224,14 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeSubLabelTrimMode?: GenericAccessor<TrimMode | string, N>;
   /** Node sub-label maximum allowed text length above which the label will be trimmed. Default: `15` */
   nodeSubLabelTrimLength?: NumericAccessor<N>;
+  /** Node sub-label fit mode: `FitMode.Trim` or `FitMode.Wrap`. The trim settings apply only in `FitMode.Trim` mode. Default: `FitMode.Trim` */
+  nodeSubLabelFitMode?: GenericAccessor<FitMode | string, N>;
+  /** Maximum node sub-label width in pixels for wrapping when the fit mode is `FitMode.Wrap`. When not provided, a width derived from the node size will be used. Default: `undefined` */
+  nodeSubLabelWidth?: NumericAccessor<N>;
+  /** Node sub-label text wrapping separator. String or array of strings. Default: `undefined` */
+  nodeSubLabelSeparator?: string | string[];
+  /** Force word break for node sub-labels when they don't fit. Default: `false` */
+  nodeSubLabelForceWordBreak?: boolean;
   /** Node circular side labels accessor function. The function should return an array of GraphCircleLabel objects. Default: `undefined` */
   nodeSideLabels?: GenericAccessor<GraphCircleLabel[], N>;
   /** Node bottom icon accessor function. Default: `undefined` */
@@ -384,10 +400,18 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeLabelTrim: true,
   nodeLabelTrimLength: 15,
   nodeLabelTrimMode: TrimMode.Middle,
+  nodeLabelFitMode: FitMode.Trim,
+  nodeLabelWidth: undefined,
+  nodeLabelSeparator: undefined,
+  nodeLabelForceWordBreak: false,
   nodeSubLabel: '',
   nodeSubLabelTrim: true,
   nodeSubLabelTrimLength: 15,
   nodeSubLabelTrimMode: TrimMode.Middle,
+  nodeSubLabelFitMode: FitMode.Trim,
+  nodeSubLabelWidth: undefined,
+  nodeSubLabelSeparator: undefined,
+  nodeSubLabelForceWordBreak: false,
   nodeSideLabels: undefined,
   nodeBottomIcon: undefined,
   nodeDisabled: false,

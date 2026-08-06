@@ -26,6 +26,7 @@ import {
   GraphLink,
   GraphNodeShape,
   TrimMode,
+  FitMode,
   GraphNodeSelectionHighlightMode,
   GraphPanelConfig,
   GraphInputData,
@@ -303,6 +304,18 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   /** Node label maximum allowed text length above which the label will be trimmed. Default: `15` */
   @Input() nodeLabelTrimLength?: NumericAccessor<N>
 
+  /** Node label fit mode: `FitMode.Trim` or `FitMode.Wrap`. The trim settings apply only in `FitMode.Trim` mode. Default: `FitMode.Trim` */
+  @Input() nodeLabelFitMode?: GenericAccessor<FitMode | string, N>
+
+  /** Maximum node label width in pixels for wrapping when the fit mode is `FitMode.Wrap`. When not provided, a width derived from the node size will be used. Default: `undefined` */
+  @Input() nodeLabelWidth?: NumericAccessor<N>
+
+  /** Node label text wrapping separator. String or array of strings. Default: `undefined` */
+  @Input() nodeLabelSeparator?: string | string[]
+
+  /** Force word break for node labels when they don't fit. Default: `false` */
+  @Input() nodeLabelForceWordBreak?: boolean
+
   /** Node sub-label accessor function or constant value: Default: `''` */
   @Input() nodeSubLabel?: StringAccessor<N>
 
@@ -314,6 +327,18 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
 
   /** Node sub-label maximum allowed text length above which the label will be trimmed. Default: `15` */
   @Input() nodeSubLabelTrimLength?: NumericAccessor<N>
+
+  /** Node sub-label fit mode: `FitMode.Trim` or `FitMode.Wrap`. The trim settings apply only in `FitMode.Trim` mode. Default: `FitMode.Trim` */
+  @Input() nodeSubLabelFitMode?: GenericAccessor<FitMode | string, N>
+
+  /** Maximum node sub-label width in pixels for wrapping when the fit mode is `FitMode.Wrap`. When not provided, a width derived from the node size will be used. Default: `undefined` */
+  @Input() nodeSubLabelWidth?: NumericAccessor<N>
+
+  /** Node sub-label text wrapping separator. String or array of strings. Default: `undefined` */
+  @Input() nodeSubLabelSeparator?: string | string[]
+
+  /** Force word break for node sub-labels when they don't fit. Default: `false` */
+  @Input() nodeSubLabelForceWordBreak?: boolean
 
   /** Node circular side labels accessor function. The function should return an array of GraphCircleLabel objects. Default: `undefined` */
   @Input() nodeSideLabels?: GenericAccessor<GraphCircleLabel[], N>
@@ -434,8 +459,8 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   }
 
   private getConfig (): GraphConfigInterface<N, L> {
-    const { duration, events, attributes, zoomScaleExtent, disableZoom, zoomEventFilter, disableDrag, disableBrush, zoomThrottledUpdateNodeThreshold, fitViewPadding, fitViewAlign, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelNodeSpacing, layoutParallelSubGroupSpacing, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, layoutElkSettings, layoutElkNodeGroups, layoutElkGetNodeShape, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkFlowParticleSpeed, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, linkCurvature, linkHighlightOnHover, linkSourcePointOffset, linkTargetPointOffset, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength, nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, nodeEnterCustomRenderFunction, nodeUpdateCustomRenderFunction, nodePartialUpdateCustomRenderFunction, nodeExitCustomRenderFunction, nodeOnZoomCustomRenderFunction, nodeSelectionHighlightMode, selectedNodeId, selectedNodeIds, panels, onNodeDragStart, onNodeDrag, onNodeDragEnd, onZoom, onZoomStart, onZoomEnd, onLayoutCalculated, onNodeSelectionBrush, onNodeSelectionDrag, onRenderComplete, shouldDataUpdate } = this
-    const config = { duration, events, attributes, zoomScaleExtent, disableZoom, zoomEventFilter, disableDrag, disableBrush, zoomThrottledUpdateNodeThreshold, fitViewPadding, fitViewAlign, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelNodeSpacing, layoutParallelSubGroupSpacing, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, layoutElkSettings, layoutElkNodeGroups, layoutElkGetNodeShape, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkFlowParticleSpeed, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, linkCurvature, linkHighlightOnHover, linkSourcePointOffset, linkTargetPointOffset, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength, nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, nodeEnterCustomRenderFunction, nodeUpdateCustomRenderFunction, nodePartialUpdateCustomRenderFunction, nodeExitCustomRenderFunction, nodeOnZoomCustomRenderFunction, nodeSelectionHighlightMode, selectedNodeId, selectedNodeIds, panels, onNodeDragStart, onNodeDrag, onNodeDragEnd, onZoom, onZoomStart, onZoomEnd, onLayoutCalculated, onNodeSelectionBrush, onNodeSelectionDrag, onRenderComplete, shouldDataUpdate }
+    const { duration, events, attributes, zoomScaleExtent, disableZoom, zoomEventFilter, disableDrag, disableBrush, zoomThrottledUpdateNodeThreshold, fitViewPadding, fitViewAlign, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelNodeSpacing, layoutParallelSubGroupSpacing, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, layoutElkSettings, layoutElkNodeGroups, layoutElkGetNodeShape, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkFlowParticleSpeed, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, linkCurvature, linkHighlightOnHover, linkSourcePointOffset, linkTargetPointOffset, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength, nodeLabelFitMode, nodeLabelWidth, nodeLabelSeparator, nodeLabelForceWordBreak, nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength, nodeSubLabelFitMode, nodeSubLabelWidth, nodeSubLabelSeparator, nodeSubLabelForceWordBreak, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, nodeEnterCustomRenderFunction, nodeUpdateCustomRenderFunction, nodePartialUpdateCustomRenderFunction, nodeExitCustomRenderFunction, nodeOnZoomCustomRenderFunction, nodeSelectionHighlightMode, selectedNodeId, selectedNodeIds, panels, onNodeDragStart, onNodeDrag, onNodeDragEnd, onZoom, onZoomStart, onZoomEnd, onLayoutCalculated, onNodeSelectionBrush, onNodeSelectionDrag, onRenderComplete, shouldDataUpdate } = this
+    const config = { duration, events, attributes, zoomScaleExtent, disableZoom, zoomEventFilter, disableDrag, disableBrush, zoomThrottledUpdateNodeThreshold, fitViewPadding, fitViewAlign, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelNodeSpacing, layoutParallelSubGroupSpacing, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, layoutElkSettings, layoutElkNodeGroups, layoutElkGetNodeShape, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkFlowParticleSpeed, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, linkCurvature, linkHighlightOnHover, linkSourcePointOffset, linkTargetPointOffset, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength, nodeLabelFitMode, nodeLabelWidth, nodeLabelSeparator, nodeLabelForceWordBreak, nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength, nodeSubLabelFitMode, nodeSubLabelWidth, nodeSubLabelSeparator, nodeSubLabelForceWordBreak, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, nodeEnterCustomRenderFunction, nodeUpdateCustomRenderFunction, nodePartialUpdateCustomRenderFunction, nodeExitCustomRenderFunction, nodeOnZoomCustomRenderFunction, nodeSelectionHighlightMode, selectedNodeId, selectedNodeIds, panels, onNodeDragStart, onNodeDrag, onNodeDragEnd, onZoom, onZoomStart, onZoomEnd, onLayoutCalculated, onNodeSelectionBrush, onNodeSelectionDrag, onRenderComplete, shouldDataUpdate }
     const keys = Object.keys(config) as (keyof GraphConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
