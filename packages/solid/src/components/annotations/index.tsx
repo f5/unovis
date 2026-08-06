@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { AnnotationsConfigInterface } from "@unovis/ts";
-import { Annotations } from "@unovis/ts";
+import { Annotations } from "@unovis/ts/components/annotations";
+import type { AnnotationsConfigInterface } from "@unovis/ts/components/annotations/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

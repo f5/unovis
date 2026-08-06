@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { HeatmapConfigInterface } from '@unovis/ts'
-import { Heatmap } from '@unovis/ts'
+
+import type { HeatmapConfigInterface } from '@unovis/ts/components/heatmap/config'
+import { Heatmap } from '@unovis/ts/components/heatmap'
 import { computed, inject, nextTick, onMounted, onUnmounted, shallowRef, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

@@ -1,32 +1,26 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Sankey } from '@unovis/ts/components/sankey'
+import { SankeyConfigInterface } from '@unovis/ts/components/sankey/config'
+import { ContainerCore } from '@unovis/ts/core/container'
 import {
-  Sankey,
-  SankeyConfigInterface,
-  ContainerCore,
   SankeyInputNode,
   SankeyInputLink,
-  VisEventType,
-  VisEventCallback,
   SankeyZoomMode,
   SankeyExitTransitionType,
   SankeyEnterTransitionType,
   SankeyNode,
   SankeyLink,
   SankeyNodeAlign,
-  StringAccessor,
-  ColorAccessor,
-  GenericAccessor,
-  FillPatternType,
-  NumericAccessor,
-  Position,
-  VerticalAlign,
-  FitMode,
-  TrimMode,
   SankeySubLabelPlacement,
-  Spacing,
-} from '@unovis/ts'
+} from '@unovis/ts/components/sankey/types'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { StringAccessor, ColorAccessor, GenericAccessor, NumericAccessor } from '@unovis/ts/types/accessor'
+import { FillPatternType } from '@unovis/ts/styles/patterns'
+import { Position } from '@unovis/ts/types/position'
+import { VerticalAlign, FitMode, TrimMode } from '@unovis/ts/types/text'
 import { D3ZoomEvent } from 'd3-zoom'
+import { Spacing } from '@unovis/ts/types/spacing'
 import { VisCoreComponent } from '../../core'
 
 @Component({

@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { PlotlineConfigInterface } from "@unovis/ts";
-import { Plotline } from "@unovis/ts";
+import { Plotline } from "@unovis/ts/components/plotline";
+import type { PlotlineConfigInterface } from "@unovis/ts/components/plotline/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

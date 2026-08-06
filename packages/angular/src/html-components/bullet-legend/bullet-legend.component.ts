@@ -1,14 +1,9 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
-import {
-  BulletLegend,
-  BulletLegendConfigInterface,
-  BulletLegendItemInterface,
-  GenericAccessor,
-  BulletShape,
-  BulletLegendOrientation,
-  ColorFunction,
-} from '@unovis/ts'
+import { BulletLegend } from '@unovis/ts/components/bullet-legend'
+import { BulletLegendConfigInterface } from '@unovis/ts/components/bullet-legend/config'
+import { BulletLegendItemInterface, BulletShape, BulletLegendOrientation } from '@unovis/ts/components/bullet-legend/types'
+import { GenericAccessor, ColorFunction } from '@unovis/ts/types/accessor'
 import { VisGenericComponent } from '../../core'
 
 @Component({

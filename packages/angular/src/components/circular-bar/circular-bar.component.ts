@@ -1,15 +1,10 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  CircularBar,
-  CircularBarConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  StringAccessor,
-} from '@unovis/ts'
+import { CircularBar } from '@unovis/ts/components/circular-bar'
+import { CircularBarConfigInterface } from '@unovis/ts/components/circular-bar/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, StringAccessor } from '@unovis/ts/types/accessor'
 import { VisCoreComponent } from '../../core'
 
 @Component({

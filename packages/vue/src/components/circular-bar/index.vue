@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { CircularBarConfigInterface } from '@unovis/ts'
-import { CircularBar } from '@unovis/ts'
+
+import type { CircularBarConfigInterface } from '@unovis/ts/components/circular-bar/config'
+import { CircularBar } from '@unovis/ts/components/circular-bar'
 import { computed, inject, nextTick, onMounted, onUnmounted, shallowRef, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

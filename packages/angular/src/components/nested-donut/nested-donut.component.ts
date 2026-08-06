@@ -1,20 +1,12 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  NestedDonut,
-  NestedDonutConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NestedDonutDirection,
-  NumericAccessor,
-  NestedDonutSegment,
-  StringAccessor,
-  GenericAccessor,
-  NestedDonutLayerSettings,
-  ColorAccessor,
-  FillPatternType,
-} from '@unovis/ts'
+import { NestedDonut } from '@unovis/ts/components/nested-donut'
+import { NestedDonutConfigInterface } from '@unovis/ts/components/nested-donut/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NestedDonutDirection, NestedDonutSegment, NestedDonutLayerSettings } from '@unovis/ts/components/nested-donut/types'
+import { NumericAccessor, StringAccessor, GenericAccessor, ColorAccessor } from '@unovis/ts/types/accessor'
+import { FillPatternType } from '@unovis/ts/styles/patterns'
 import { VisCoreComponent } from '../../core'
 
 @Component({

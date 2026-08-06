@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { BoxplotConfigInterface } from '@unovis/ts'
-import { Boxplot } from '@unovis/ts'
+
+import type { BoxplotConfigInterface } from '@unovis/ts/components/boxplot/config'
+import { Boxplot } from '@unovis/ts/components/boxplot'
 import { computed, inject, nextTick, onMounted, onUnmounted, shallowRef, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
