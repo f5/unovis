@@ -395,37 +395,39 @@ export function getWrappedText (
     h += effectiveMarginPx
     const dh = text.fontSize * text.lineHeight
     let maxWidth = 0
+    const measure = (line: string): number => fastMode
+      ? estimateStringPixelLength(line, text.fontSize, text.fontWidthToHeightRatio)
+      : getPreciseStringLengthPx(line, text.fontFamily, text.fontSize)
+
     // Iterate over lines and handle text overflow based on the height limit if provided
     for (let k = 0; k < lines.length; k += 1) {
       let line = lines[k]
       h += dh
 
-      const lineWithEllipsis = `${line} …`
-      const textLengthPx = fastMode
-        ? estimateStringPixelLength(lineWithEllipsis, text.fontSize, text.fontWidthToHeightRatio)
-        : getPreciseStringLengthPx(lineWithEllipsis, text.fontFamily, text.fontSize, text.fontWeight)
-
-      maxWidth = Math.max(textLengthPx, maxWidth)
       if (height && (h + dh) > height && (k !== lines.length - 1)) {
         // Remove hyphen character from the end of the line if it's there
         const lastCharacter = line.charAt(line.length - 1)
         if (lastCharacter === UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT) {
-          line = line.substr(0, lines[k].length - 1)
+          line = line.substr(0, line.length - 1)
         }
 
-        if (textLengthPx < (text.width ?? width)) {
+        const lineWithEllipsis = `${line} …`
+        if (measure(lineWithEllipsis) < (text.width ?? width)) {
           lines[k] = lineWithEllipsis
         } else {
-          lines[k] = `${lines[k].substr(0, lines[k].length - 2)}…`
+          lines[k] = `${line.substr(0, line.length - 2)}…`
         }
 
+        maxWidth = Math.max(measure(lines[k]), maxWidth)
         lines = lines.slice(0, k + 1)
         break
       }
+
+      maxWidth = Math.max(measure(line), maxWidth)
     }
 
     // Create wrapped text block with its calculated properties
-    blocks.push({ ...text, _lines: lines, _estimatedHeight: h - (prevBlock?._estimatedHeight || 0), _maxWidth: Math.max(maxWidth, prevBlock?._maxWidth ?? 0) })
+    blocks.push({ ...text, _lines: lines, _estimatedHeight: h - (prevBlock?._estimatedHeight || 0), _maxWidth: maxWidth })
   })
 
   return blocks
@@ -493,6 +495,20 @@ export function estimateWrappedTextHeight (blocks: UnovisWrappedText[]): number 
   return sum(blocks, b => b._estimatedHeight)
 }
 
+/**
+ * Estimates the overall bounds of wrapped text blocks without touching the DOM.
+ *
+ * @export
+ * @param {UnovisWrappedText[]} blocks - The wrapped text blocks.
+ * @returns {{ width: number; height: number }} - The estimated width and height of the wrapped text blocks.
+ */
+export function getWrappedTextBounds (blocks: UnovisWrappedText[]): { width: number; height: number } {
+  return {
+    width: blocks.length ? Math.max(...blocks.map(b => b._maxWidth)) : 0,
+    height: estimateWrappedTextHeight(blocks),
+  }
+}
+
 export const allowedSvgTextTags = ['text', 'tspan', 'textPath', 'altGlyph', 'altGlyphDef', 'altGlyphItem', 'glyphRef', 'textRef', 'textArea']
 
 /**
@@ -503,6 +519,7 @@ export const allowedSvgTextTags = ['text', 'tspan', 'textPath', 'altGlyph', 'alt
  * @param {SVGTextElement} textElement - The SVG text element to render the text into.
  * @param {UnovisText | UnovisText[]} text - The text or array of texts to render.
  * @param {UnovisTextOptions} options - The text options.
+ * @returns {UnovisWrappedText[]} - The wrapped text blocks that were rendered.
  */
 export function renderTextToSvgTextElement (
   textElement: SVGTextElement,
@@ -512,7 +529,7 @@ export function renderTextToSvgTextElement (
   // the `options.verticalAlign` property sets alignment for the entire text block
   // shifting it vertically, irrespective of the dominant baseline.
   dominantBaseline?: string
-): void {
+): UnovisWrappedText[] {
   const wrappedText = getWrappedText(text, options.width, undefined, options.fastMode, options.separator, options.wordBreak)
   const textElementX = options.x ?? +textElement.getAttribute('x')
   const textElementY = options.y ?? +textElement.getAttribute('y')
@@ -540,6 +557,8 @@ export function renderTextToSvgTextElement (
   for (const tspan of renderTextToTspanElements(wrappedText, x, y, dominantBaseline)) {
     textElement.appendChild(tspan)
   }
+
+  return wrappedText
 }
 
 /**
