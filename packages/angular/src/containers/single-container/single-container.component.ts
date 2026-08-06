@@ -1,7 +1,14 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, SimpleChanges, ContentChild } from '@angular/core'
 
 // Vis
-import { ColorFunction, ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Spacing, Annotations, Sizing } from '@unovis/ts'
+import { SingleContainer } from '@unovis/ts/containers/single-container'
+import { SingleContainerConfigInterface } from '@unovis/ts/containers/single-container/config'
+import { ComponentCore } from '@unovis/ts/core/component'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { Annotations } from '@unovis/ts/components/annotations'
+import { Spacing } from '@unovis/ts/types/spacing'
+import { Sizing } from '@unovis/ts/types/component'
+import { ColorFunction } from '@unovis/ts/types/accessor'
 import { VisCoreComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 import { VisAnnotationsComponent } from '../../components/annotations/annotations.component'

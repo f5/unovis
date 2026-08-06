@@ -1,4 +1,4 @@
-import { isEqual } from '@unovis/ts'
+import { isEqual } from '@unovis/ts/utils/data'
 import { camelize, computed, getCurrentInstance, useAttrs } from 'vue'
 
 export function arePropsEqual<PropTypes> (prevProps: PropTypes, nextProps: PropTypes): boolean {
