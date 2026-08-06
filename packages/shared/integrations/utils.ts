@@ -335,6 +335,12 @@ export function getConfigSummary (
       if (importSource.startsWith('./') || importSource.startsWith('../')) {
         importSource = `@unovis/ts${path}/${importSource.replace(/^\.\//, '')}`
       } else if (
+        // `@/*` is the ts package's own path alias for its `src` root. Wrapper packages can't resolve it,
+        // so it has to be rewritten the same way a bare `types/...` specifier is.
+        importSource.startsWith('@/')
+      ) {
+        importSource = importSource.replace(/^@\//, '@unovis/ts/')
+      } else if (
         importSource.startsWith('core/') || importSource.startsWith('types/') ||
         importSource.startsWith('utils/') || importSource.startsWith('components/') ||
         importSource.startsWith('styles/') || importSource.startsWith('data-models/') ||
