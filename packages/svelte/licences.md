@@ -2,8 +2,8 @@
 | :--------------------------- | :------------- | :----------- | :---------------- | :--------------------------------------------- |
 | @rollup/plugin-alias         | perpetual      | MIT          | 5.1.1             | Johannes Stein                                 |
 | @rollup/plugin-node-resolve  | perpetual      | MIT          | 13.3.0            | Rich Harris <richard.a.harris@gmail.com>       |
-| @sveltejs/package            | perpetual      | MIT          | 1.0.0-next.5      | n/a                                            |
-| @tsconfig/svelte             | perpetual      | MIT          | 2.0.1             | n/a                                            |
+| @sveltejs/package            | perpetual      | MIT          | 2.5.8             | n/a                                            |
+| @tsconfig/svelte             | perpetual      | MIT          | 3.0.0             | n/a                                            |
 | @zerollup/ts-transform-paths | perpetual      | MIT          | 1.7.18            | Stefan Zerkalica zerkalica@gmail.com           |
 | buffer-from                  | perpetual      | MIT          | 1.1.2             | n/a                                            |
 | eslint-plugin-svelte         | perpetual      | MIT          | 2.46.1            | Yosuke Ota (https://github.com/ota-meshi)      |
@@ -14,11 +14,10 @@
 | rollup-plugin-svelte         | perpetual      | MIT          | 7.2.3             | Rich Harris                                    |
 | rollup-plugin-typescript2    | perpetual      | MIT          | 0.31.2            | @ezolenko                                      |
 | rollup-plugin-commonjs       | perpetual      | MIT          | 10.1.0            | Rich Harris                                    |
-| svelte                       | perpetual      | MIT          | 3.59.2            | Rich Harris                                    |
-| svelte-check                 | perpetual      | MIT          | 2.10.3            | The Svelte Community                           |
-| svelte-preprocess            | perpetual      | MIT          | 4.10.7            | Christian Kaisermann <christian@kaisermann.me> |
+| svelte                       | perpetual      | MIT          | 4.2.20            | Rich Harris                                    |
+| svelte-check                 | perpetual      | MIT          | 3.8.6             | The Svelte Community                           |
+| svelte-preprocess            | perpetual      | MIT          | 5.1.4             | Christian Kaisermann <christian@kaisermann.me> |
 | tslib                        | perpetual      | 0BSD         | 2.8.1             | Microsoft Corp.                                |
 | ttypescript                  | perpetual      | MIT          | 1.5.15            | cevek                                          |
-| typescript                   | perpetual      | Apache-2.0   | 4.2.4             | Microsoft Corp.                                |
-| svelte                       | perpetual      | MIT          | 3.59.2            | Rich Harris                                    |
+| typescript                   | perpetual      | Apache-2.0   | 5.0.4             | Microsoft Corp.                                |
 

@@ -54,6 +54,8 @@ licences.temp
 scripts/vulnerability-report*
 unovis-commands-report-*
 .angular
+.svelte-kit
+.pnpm-store/*
 
 # System Files
 .DS_Store
