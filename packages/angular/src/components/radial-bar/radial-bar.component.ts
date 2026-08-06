@@ -1,6 +1,10 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { RadialBar, RadialBarConfigInterface, ContainerCore, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor } from '@unovis/ts'
+import { RadialBar } from '@unovis/ts/components/radial-bar'
+import { RadialBarConfigInterface } from '@unovis/ts/components/radial-bar/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor } from '@unovis/ts/types/accessor'
 import { VisCoreComponent } from '../../core'
 
 @Component({

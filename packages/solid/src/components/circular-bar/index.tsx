@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { CircularBarConfigInterface } from "@unovis/ts";
-import { CircularBar } from "@unovis/ts";
+import { CircularBar } from "@unovis/ts/components/circular-bar";
+import type { CircularBarConfigInterface } from "@unovis/ts/components/circular-bar/config";
 import { createSignal, onCleanup, createEffect, on, onMount, splitProps } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

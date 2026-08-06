@@ -1,20 +1,13 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Area,
-  AreaConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  ContinuousScale,
-  GenericAccessor,
-  FillPatternType,
-  CurveType,
-  StringAccessor,
-  LinePatternType,
-} from '@unovis/ts'
+import { Area } from '@unovis/ts/components/area'
+import { AreaConfigInterface } from '@unovis/ts/components/area/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, GenericAccessor, StringAccessor } from '@unovis/ts/types/accessor'
+import { ContinuousScale } from '@unovis/ts/types/scale'
+import { FillPatternType, LinePatternType } from '@unovis/ts/styles/patterns'
+import { CurveType } from '@unovis/ts/types/curve'
 import { VisXYComponent } from '../../core'
 
 @Component({

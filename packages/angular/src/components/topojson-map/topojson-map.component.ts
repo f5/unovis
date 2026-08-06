@@ -1,19 +1,12 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  TopoJSONMap,
-  TopoJSONMapConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  StringAccessor,
-  MapPointLabelPosition,
-  TopoJSONMapClusterDatum,
-  TopoJSONMapPointStyles,
-} from '@unovis/ts'
+import { TopoJSONMap } from '@unovis/ts/components/topojson-map'
+import { TopoJSONMapConfigInterface } from '@unovis/ts/components/topojson-map/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
 import { GeoProjection } from 'd3-geo'
+import { NumericAccessor, ColorAccessor, StringAccessor } from '@unovis/ts/types/accessor'
+import { MapPointLabelPosition, TopoJSONMapClusterDatum, TopoJSONMapPointStyles } from '@unovis/ts/components/topojson-map/types'
 import { VisCoreComponent } from '../../core'
 
 @Component({
