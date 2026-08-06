@@ -1,5 +1,11 @@
 <script setup lang="ts" generic="T">
-import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
+import { XYContainer } from '@unovis/ts/containers/xy-container'
+import { XYContainerConfigInterface } from '@unovis/ts/containers/xy-container/config'
+import { XYComponentCore } from '@unovis/ts/core/xy-component'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { Crosshair } from '@unovis/ts/components/crosshair'
+import { Axis } from '@unovis/ts/components/axis'
+import { Annotations } from '@unovis/ts/components/annotations'
 import { onUnmounted, ref, provide, watch, toRefs, reactive, watchEffect, toRaw } from 'vue'
 import { componentAccessorKey, tooltipAccessorKey, axisAccessorKey, crosshairAccessorKey, annotationsAccessorKey } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"

@@ -13,7 +13,15 @@ import {
 } from '@angular/core'
 
 // Vis
-import { Annotations, Axis, ContinuousScale, Crosshair, Direction, Spacing, Tooltip, XYContainer, XYContainerConfigInterface } from '@unovis/ts'
+import { XYContainer } from '@unovis/ts/containers/xy-container'
+import { XYContainerConfigInterface } from '@unovis/ts/containers/xy-container/config'
+import { Annotations } from '@unovis/ts/components/annotations'
+import { Axis } from '@unovis/ts/components/axis'
+import { Crosshair } from '@unovis/ts/components/crosshair'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { ContinuousScale } from '@unovis/ts/types/scale'
+import { Direction } from '@unovis/ts/types/direction'
+import { Spacing } from '@unovis/ts/types/spacing'
 import { VisXYComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 import { VisAnnotationsComponent } from '../../components/annotations/annotations.component'

@@ -36,7 +36,7 @@
     "no-useless-constructor": "off",
     "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 0}],
     "import/extensions": 0,
-    "import/no-unresolved": [2, {"commonjs": true, "amd": true, "ignore": ["^@theme", "^@docusaurus", "^@site"]}],
+    "import/no-unresolved": [2, {"commonjs": true, "amd": true, "ignore": ["^@theme", "^@docusaurus", "^@site", "^@unovis/ts/"]}],
     "import/no-extraneous-dependencies": 0,
     "import/prefer-default-export": 0,
     "import/first": ["error", "absolute-first"],

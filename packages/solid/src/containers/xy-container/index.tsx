@@ -1,12 +1,10 @@
-import { XYContainer } from '@unovis/ts'
-import type {
-  Annotations,
-  Axis,
-  Crosshair,
-  Tooltip,
-  XYComponentCore,
-  XYContainerConfigInterface,
-} from '@unovis/ts'
+import { XYContainer } from '@unovis/ts/containers/xy-container'
+import type { XYContainerConfigInterface } from '@unovis/ts/containers/xy-container/config'
+import type { Annotations } from '@unovis/ts/components/annotations'
+import type { Axis } from '@unovis/ts/components/axis'
+import type { Crosshair } from '@unovis/ts/components/crosshair'
+import type { Tooltip } from '@unovis/ts/components/tooltip'
+import type { XYComponentCore } from '@unovis/ts/core/xy-component'
 import type { JSX, ParentProps } from 'solid-js'
 import {
   createEffect,

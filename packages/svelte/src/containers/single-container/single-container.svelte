@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Annotations } from '@unovis/ts'
+  import { SingleContainer } from '@unovis/ts/containers/single-container'
+  import type { SingleContainerConfigInterface } from '@unovis/ts/containers/single-container/config'
+  import type { ComponentCore } from '@unovis/ts/core/component'
+  import type { Tooltip } from '@unovis/ts/components/tooltip'
+  import type { Annotations } from '@unovis/ts/components/annotations'
   import { arePropsEqual } from '../../utils/props'
   import { onDestroy, setContext } from 'svelte'
 

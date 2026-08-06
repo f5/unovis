@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
+  import { XYContainer } from '@unovis/ts/containers/xy-container'
+  import type { XYContainerConfigInterface } from '@unovis/ts/containers/xy-container/config'
+  import type { XYComponentCore } from '@unovis/ts/core/xy-component'
+  import type { Tooltip } from '@unovis/ts/components/tooltip'
+  import type { Crosshair } from '@unovis/ts/components/crosshair'
+  import type { Axis } from '@unovis/ts/components/axis'
+  import type { Annotations } from '@unovis/ts/components/annotations'
   import { onMount, setContext } from 'svelte'
 
   type Datum = $$Generic
@@ -40,7 +46,7 @@
   $: chart?.setData(data, true)
 
   let animationFrame = 0
-  const updateContainer = async () => {
+  const updateContainer = () => {
     // due to the order of events when a component is removed update container can be called
     // while a component is being destroyed. This can lead to an error because we trigger an update
     // with a destroyed component.
@@ -73,8 +79,12 @@
   }
 
   $: {
+    // Bare references declare the reactive dependencies of this block; they are a Svelte
+    // idiom rather than dead expressions.
+    /* eslint-disable no-unused-expressions */
     config
     $$restProps
+    /* eslint-enable no-unused-expressions */
     updateContainer()
   }
 

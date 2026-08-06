@@ -1,5 +1,9 @@
 <script setup lang="ts" generic="T">
-import { SingleContainer, ComponentCore, SingleContainerConfigInterface, Tooltip, Annotations } from '@unovis/ts'
+import { SingleContainer } from '@unovis/ts/containers/single-container'
+import { SingleContainerConfigInterface } from '@unovis/ts/containers/single-container/config'
+import { ComponentCore } from '@unovis/ts/core/component'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { Annotations } from '@unovis/ts/components/annotations'
 import { onUnmounted, ref, provide, watch, toRefs, watchEffect, reactive, toRaw } from 'vue'
 import { annotationsAccessorKey, componentAccessorKey, tooltipAccessorKey,  } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"
