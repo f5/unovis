@@ -69,6 +69,23 @@ Change the label color with the `labelColor` property.
 The spacing between the label and the axis itself can be set with the `labelMargin` property:
 <XYWrapperWithInput {...axisProps()} label="Label" inputType="range" inputProps={{ min: 0, max: 50, step: 1}} defaultValue={5} property="labelMargin"/>
 
+### Label Text Separator
+When a label is too long to fit, _Axis_ wraps it onto multiple lines (this happens when `labelTextFitMode` is
+set to `FitMode.Wrap`, which is the default). You can control where the text is allowed to break by providing the
+`labelTextSeparator` property with a `string` or `string[]` of separators. By default the label breaks on spaces, hyphens, periods and commas.
+
+In the example below the label contains none of the default separators, so it can't wrap and overflows the axis.
+Provide `"/"` as the separator to let it break on the slashes instead.
+<XYWrapperWithInput
+  {...axisProps()}
+  type="y"
+  configKey="yAxis"
+  height={150}
+  label="Population/Density/Per/Square/Kilometer"
+  inputType="text"
+  defaultValue="/"
+  property="labelTextSeparator"/>
+
 ## Grid Line
 You can enable or disable the visibility of the _Axis_ grid line with the `gridLine` property.
 <XYWrapperWithInput
