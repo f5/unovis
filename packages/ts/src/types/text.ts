@@ -42,6 +42,12 @@ export type UnovisText = {
   fontWidthToHeightRatio?: number;
   // The CSS class name to be applied to the rendered text block (optional).
   className?: string;
+  // The maximum width of this text block in pixels; overrides `UnovisTextOptions.width` (optional).
+  width?: number;
+  // The word separator(s) for this text block; overrides `UnovisTextOptions.separator` (optional).
+  separator?: string | string[];
+  // Force word break for this text block; overrides `UnovisTextOptions.wordBreak` (optional).
+  wordBreak?: boolean;
 }
 
 export type UnovisWrappedText = UnovisText & {

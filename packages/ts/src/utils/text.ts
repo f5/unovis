@@ -373,8 +373,11 @@ export function getWrappedText (
   // Merge input text with default values and convert it to an array if it's not already
   const textArrays = Array.isArray(text) ? text.map(t => merge(UNOVIS_TEXT_DEFAULT, t)) : [merge(UNOVIS_TEXT_DEFAULT, text)]
 
-  // Break input text into lines based on width and separator
-  const textWrapped: Array<string[]> = textArrays.map(block => breakTextIntoLines(block, width, fastMode, separator, wordBreak))
+  // Break input text into lines based on width and separator.
+  // Per-block `width`, `separator` and `wordBreak` values override the ones provided as arguments.
+  const textWrapped: Array<string[]> = textArrays.map(block =>
+    breakTextIntoLines(block, block.width ?? width, fastMode, block.separator ?? separator, block.wordBreak ?? wordBreak)
+  )
 
   const firstBlock = textArrays[0]
   let h = -firstBlock.fontSize * (firstBlock.lineHeight - 1)
@@ -410,7 +413,7 @@ export function getWrappedText (
           line = line.substr(0, lines[k].length - 1)
         }
 
-        if (textLengthPx < width) {
+        if (textLengthPx < (text.width ?? width)) {
           lines[k] = lineWithEllipsis
         } else {
           lines[k] = `${lines[k].substr(0, lines[k].length - 2)}…`
