@@ -21,9 +21,22 @@ export function getComponentCode (
     ? `ref, ${renderIntoProvidedDomNode ? '{ ...config, renderIntoProvidedDomNode: true }' : 'config'}${dataType ? ', data' : ''}`
     : 'config'
   const lifecycleMethod = ['onMount(() => {', `component = new ${componentType}(${constructorArgs})`, 'return () => component?.destroy()', '})'].join('\n    ')
+
+  // The component class is the only import used as a value (`new Component(...)`); config
+  // interfaces and accessor types appear in type positions only. `importsNotUsedAsValues` is
+  // set to `error` for this package, so those have to be emitted as `import type`.
+  const renderImport = (s: { source: string; elements: string[] }): string => {
+    const values = s.elements.filter(e => e === componentName)
+    const types = s.elements.filter(e => e !== componentName)
+    return [
+      values.length ? `import { ${values.join(', ')} } from '${s.source}'` : '',
+      types.length ? `import type { ${types.join(', ')} } from '${s.source}'` : '',
+    ].filter(Boolean).join('\n  ')
+  }
+
   return `<script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n  ')}
+  ${importStatements.map(renderImport).join('\n  ')}
   import { onMount${isStandAlone ? '' : ', getContext'} } from 'svelte'
   ${!isStandAlone ? '\n  import type { Lifecycle } from \'../../types/context\'' : ''}
   import { arePropsEqual } from '../../utils/props'

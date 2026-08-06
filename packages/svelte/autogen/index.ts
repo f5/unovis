@@ -19,8 +19,8 @@ const components = getComponentList() as SvelteComponentInput[]
 const exports: string[] = []
 
 for (const component of components) {
-  const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, skipProperties)
-  const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics)
+  const { configProperties, configInterfaceMembers, generics, statements, importSourceMap } = getConfigSummary(component, skipProperties)
+  const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, [], importSourceMap)
   const isStandAlone = component.isStandAlone
   const componentCode = getComponentCode(
     component.name,
@@ -53,4 +53,4 @@ for (const component of components) {
   console.log(`  ${pathComponent}`)
 }
 
-writeFileSync('src/components.ts', exports.join('\n'))
+writeFileSync('src/components.ts', `${exports.join('\n')}\n`)

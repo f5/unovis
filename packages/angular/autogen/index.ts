@@ -19,8 +19,20 @@ const components = getComponentList() as AngularComponentInput[]
 const skipProperties = ['renderIntoProvidedDomNode']
 
 for (const component of components) {
-  const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, skipProperties, false)
-  const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, component.isStandAlone ? [] : ['ContainerCore'])
+  const { configProperties, configInterfaceMembers, generics, statements, importSourceMap } = getConfigSummary(component, skipProperties, false)
+  // `ContainerCore` isn't referenced by any component config, so it never makes it into
+  // importSourceMap — without an explicit entry it would fall back to the `@unovis/ts` root barrel.
+  const importSources = { ...importSourceMap }
+  importSources.ContainerCore ??= '@unovis/ts/core/container'
+
+  const importStatements = getImportStatements(
+    component.name,
+    statements,
+    configInterfaceMembers,
+    generics,
+    component.isStandAlone ? [] : ['ContainerCore'],
+    importSources
+  )
 
   const componentCode = getComponentCode(
     component.name,

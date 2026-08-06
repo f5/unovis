@@ -25,12 +25,14 @@ const components = getComponentList() as SolidComponentInput[]
 const exports: string[] = []
 
 for (const component of components) {
-  const { generics, statements } = getConfigSummary(component, skipProperties)
+  const { generics, statements, importSourceMap } = getConfigSummary(component, skipProperties)
   const importStatements = getImportStatements(
     component.name,
     statements,
     [],
-    generics
+    generics,
+    [],
+    importSourceMap
   )
   const isStandAlone = component.isStandAlone
   const componentCode = getComponentCode(
