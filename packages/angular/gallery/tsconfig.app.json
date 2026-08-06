@@ -4,7 +4,10 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "paths": {
-     "@unovis/ts": ["../../ts/lib/index.js"],
+     "@unovis/ts": ["../../ts/dist/index.js"],
+     // The wrappers import granular subpaths (`@unovis/ts/components/area`), which only exist
+     // under `packages/ts/dist` — the root of the published tarball, but not of the workspace package.
+     "@unovis/ts/*": ["../../ts/dist/*"],
      "@unovis/shared/*": ["../../shared/*"],
      "@unovis/angular": ["../src/public-api.ts"],
     },

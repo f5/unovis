@@ -24,6 +24,10 @@ export default {
     alias({
       entries: [
         { find: '@unovis/svelte', replacement: path.resolve(__dirname, 'src/index.ts') },
+        // The wrappers import granular subpaths (`@unovis/ts/components/area`), which only exist
+        // under `packages/ts/dist` — the root of the published tarball, but not of the workspace
+        // package. `packages/dev` and `packages/shared` alias `@unovis/ts` the same way.
+        { find: '@unovis/ts', replacement: path.resolve(__dirname, '../ts/dist') },
       ],
     }),
     commonjs(),

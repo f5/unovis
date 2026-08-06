@@ -41,7 +41,10 @@ export default defineConfig(({ command, mode }): UserConfig => {
           entry: resolve(__dirname, 'src/index.ts'),
         },
         rollupOptions: {
-          external: ['vue', '@unovis/ts'],
+          // The regex also covers granular subpaths (`@unovis/ts/components/area`), which the
+          // wrappers import instead of the root barrel. A plain string would only match the
+          // bare specifier and Rollup would inline the core library into this bundle.
+          external: ['vue', /^@unovis\/ts(\/.*)?$/],
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore overloaded issue
           output: [outputDefault('cjs', 'cjs'), outputDefault('es', 'js')],
@@ -60,6 +63,11 @@ export default defineConfig(({ command, mode }): UserConfig => {
       resolve: {
         alias: {
           '@unovis/vue': resolve(__dirname, 'src/index.ts'),
+          // The wrappers import granular subpaths (`@unovis/ts/components/area`). Those only
+          // exist under `packages/ts/dist`, which is the root of the published tarball but not
+          // of the workspace package, so they need an explicit alias here. `packages/dev` and
+          // `packages/shared` alias `@unovis/ts` the same way.
+          '@unovis/ts': resolve(__dirname, '../ts/dist'),
         },
       },
     }

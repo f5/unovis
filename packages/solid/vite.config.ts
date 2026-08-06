@@ -34,8 +34,10 @@ export default defineConfig(({command, mode}) => {
         sourcemap: true,
         rollupOptions: {
           // make sure to externalize deps that shouldn't be bundled
-          // into your library
-          external: ['solid-js', 'solid-js/web', 'solid-js/store', '@unovis/ts', 'tslib'],
+          // into your library. The regex also covers granular `@unovis/ts` subpaths
+          // (`@unovis/ts/components/area`), which a plain string wouldn't match —
+          // Rollup would then inline the core library into this bundle.
+          external: ['solid-js', 'solid-js/web', 'solid-js/store', /^@unovis\/ts(\/.*)?$/, 'tslib'],
           output: [outputDefault('cjs', 'cjs'), outputDefault('es', 'js')]
         }
       },
@@ -49,6 +51,10 @@ export default defineConfig(({command, mode}) => {
       resolve: {
         alias: {
           '@unovis/solid': resolve(__dirname, 'src/index.ts'),
+          // The wrappers import granular subpaths (`@unovis/ts/components/area`), which only
+          // exist under `packages/ts/dist` — the root of the published tarball, but not of the
+          // workspace package. `packages/dev` and `packages/shared` alias `@unovis/ts` the same way.
+          '@unovis/ts': resolve(__dirname, '../ts/dist'),
           'tslib': 'tslib'
         }
       },
