@@ -454,6 +454,7 @@ function renderTextToTspanElements (
     const marginEm = Math.max(prevBlockMarginBottomEm, marginTopEm)
 
     const blockTspan = document.createElementNS(SVG_NAMESPACE, 'tspan')
+    if (b.className) blockTspan.setAttribute('class', b.className)
     if (b.fontSize) blockTspan.setAttribute('font-size', `${b.fontSize}`)
     if (b.fontFamily) blockTspan.setAttribute('font-family', `${b.fontFamily}`)
     if (b.fontWeight) blockTspan.setAttribute('font-weight', `${b.fontWeight}`)
