@@ -23,12 +23,14 @@ const getComponentDirPath = (component: SolidComponentInput): string =>
 
 runComponentGenerator<SolidComponentInput>({
   generateComponentFiles: (component) => {
-    const { generics, statements } = getConfigSummary(component, skipProperties)
+    const { generics, statements, importSourceMap } = getConfigSummary(component, skipProperties)
     const importStatements = getImportStatements(
       component.name,
       statements,
       [],
-      generics
+      generics,
+      [],
+      importSourceMap
     )
     const componentCode = getComponentCode(
       component.name,

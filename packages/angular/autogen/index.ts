@@ -18,8 +18,10 @@ const getComponentDirPath = (component: AngularComponentInput): string =>
 
 runComponentGenerator<AngularComponentInput>({
   generateComponentFiles: (component) => {
-    const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, skipProperties, false)
-    const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, component.isStandAlone ? [] : ['ContainerCore'])
+    const { configProperties, configInterfaceMembers, generics, statements, importSourceMap } = getConfigSummary(component, skipProperties, false)
+    const importSources = { ...importSourceMap }
+    importSources.ContainerCore ??= '@unovis/ts/core/container'
+    const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, component.isStandAlone ? [] : ['ContainerCore'], importSources)
 
     const componentCode = getComponentCode(
       component.name,
