@@ -1,9 +1,11 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { RadialBar, RadialBarConfigInterface } from '@unovis/ts'
+import { RadialBar } from '@unovis/ts/components/radial-bar'
+import { RadialBarConfigInterface } from '@unovis/ts/components/radial-bar/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderRequest } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -23,6 +25,8 @@ export const VisRadialBarSelectors = RadialBar.selectors
 function VisRadialBarFC<Datum> (props: VisRadialBarProps<Datum>, fRef: ForwardedRef<VisRadialBarRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<RadialBar<Datum>>>(null)
   const componentRef = useRef<RadialBar<Datum> | undefined>(undefined)
+  const requestContainerRender = useContainerRenderRequest()
+  const prevPropsRef = useRef<VisRadialBarProps<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
@@ -43,6 +47,11 @@ function VisRadialBarFC<Datum> (props: VisRadialBarProps<Datum>, fRef: Forwarded
     const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
+    // A config change has to drive the render itself. The container re-renders only when its own props
+    // change, which doesn't happen when the new config reaches this component through React context or
+    // a parent's state. Skipped on the first run: the container renders on mount.
+    if (prevPropsRef.current !== undefined && !arePropsEqual(prevPropsRef.current, props)) requestContainerRender()
+    prevPropsRef.current = props
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

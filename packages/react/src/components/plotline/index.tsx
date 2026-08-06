@@ -5,6 +5,7 @@ import { PlotlineConfigInterface } from '@unovis/ts/components/plotline/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderRequest } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -23,6 +24,8 @@ export const VisPlotlineSelectors = Plotline.selectors
 function VisPlotlineFC<Datum> (props: VisPlotlineProps<Datum>, fRef: ForwardedRef<VisPlotlineRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Plotline<Datum>>>(null)
   const componentRef = useRef<Plotline<Datum> | undefined>(undefined)
+  const requestContainerRender = useContainerRenderRequest()
+  const prevPropsRef = useRef<VisPlotlineProps<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
@@ -43,6 +46,11 @@ function VisPlotlineFC<Datum> (props: VisPlotlineProps<Datum>, fRef: ForwardedRe
     const component = componentRef.current
 
     component?.setConfig(props)
+    // A config change has to drive the render itself. The container re-renders only when its own props
+    // change, which doesn't happen when the new config reaches this component through React context or
+    // a parent's state. Skipped on the first run: the container renders on mount.
+    if (prevPropsRef.current !== undefined && !arePropsEqual(prevPropsRef.current, props)) requestContainerRender()
+    prevPropsRef.current = props
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

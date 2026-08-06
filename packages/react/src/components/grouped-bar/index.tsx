@@ -5,6 +5,7 @@ import { GroupedBarConfigInterface } from '@unovis/ts/components/grouped-bar/con
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderRequest } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -24,6 +25,8 @@ export const VisGroupedBarSelectors = GroupedBar.selectors
 function VisGroupedBarFC<Datum> (props: VisGroupedBarProps<Datum>, fRef: ForwardedRef<VisGroupedBarRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<GroupedBar<Datum>>>(null)
   const componentRef = useRef<GroupedBar<Datum> | undefined>(undefined)
+  const requestContainerRender = useContainerRenderRequest()
+  const prevPropsRef = useRef<VisGroupedBarProps<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
@@ -44,6 +47,11 @@ function VisGroupedBarFC<Datum> (props: VisGroupedBarProps<Datum>, fRef: Forward
     const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
+    // A config change has to drive the render itself. The container re-renders only when its own props
+    // change, which doesn't happen when the new config reaches this component through React context or
+    // a parent's state. Skipped on the first run: the container renders on mount.
+    if (prevPropsRef.current !== undefined && !arePropsEqual(prevPropsRef.current, props)) requestContainerRender()
+    prevPropsRef.current = props
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

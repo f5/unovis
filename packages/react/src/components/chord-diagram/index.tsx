@@ -6,6 +6,7 @@ import { ChordInputNode, ChordInputLink } from '@unovis/ts/components/chord-diag
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderRequest } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -25,6 +26,8 @@ export const VisChordDiagramSelectors = ChordDiagram.selectors
 function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (props: VisChordDiagramProps<N, L>, fRef: ForwardedRef<VisChordDiagramRef<N, L>>): ReactElement {
   const ref = useRef<VisComponentElement<ChordDiagram<N, L>>>(null)
   const componentRef = useRef<ChordDiagram<N, L> | undefined>(undefined)
+  const requestContainerRender = useContainerRenderRequest()
+  const prevPropsRef = useRef<VisChordDiagramProps<N, L> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
@@ -45,6 +48,11 @@ function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (
     const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
+    // A config change has to drive the render itself. The container re-renders only when its own props
+    // change, which doesn't happen when the new config reaches this component through React context or
+    // a parent's state. Skipped on the first run: the container renders on mount.
+    if (prevPropsRef.current !== undefined && !arePropsEqual(prevPropsRef.current, props)) requestContainerRender()
+    prevPropsRef.current = props
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

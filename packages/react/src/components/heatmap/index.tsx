@@ -5,6 +5,7 @@ import { HeatmapConfigInterface } from '@unovis/ts/components/heatmap/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderRequest } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -24,6 +25,8 @@ export const VisHeatmapSelectors = Heatmap.selectors
 function VisHeatmapFC<Datum> (props: VisHeatmapProps<Datum>, fRef: ForwardedRef<VisHeatmapRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Heatmap<Datum>>>(null)
   const componentRef = useRef<Heatmap<Datum> | undefined>(undefined)
+  const requestContainerRender = useContainerRenderRequest()
+  const prevPropsRef = useRef<VisHeatmapProps<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
@@ -44,6 +47,11 @@ function VisHeatmapFC<Datum> (props: VisHeatmapProps<Datum>, fRef: ForwardedRef<
     const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
+    // A config change has to drive the render itself. The container re-renders only when its own props
+    // change, which doesn't happen when the new config reaches this component through React context or
+    // a parent's state. Skipped on the first run: the container renders on mount.
+    if (prevPropsRef.current !== undefined && !arePropsEqual(prevPropsRef.current, props)) requestContainerRender()
+    prevPropsRef.current = props
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])

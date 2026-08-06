@@ -150,8 +150,8 @@ export default defineConfig({
       'styles/': `${pkgSrc('ts')}/styles/`,
       'data-models/': `${pkgSrc('ts')}/data-models/`,
       'data/': `${pkgSrc('ts')}/data/`,
-      // Used in packages/react/src/html-components/**/index.tsx
-      'src/utils/react': `${pkgSrc('react')}/utils/react`,
+      // The react wrappers import their helpers as `src/utils/...` (tsconfig `baseUrl`)
+      'src/utils/': `${pkgSrc('react')}/utils/`,
       '@unovis/ts': pkgSrc('ts'),
       '@unovis/react': pkgSrc('react'),
       // Vue and Svelte framework wrappers point at their built dist/ rather than

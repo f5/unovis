@@ -20,12 +20,31 @@ export function getComponentCode (
     ? '{ ...props, renderIntoProvidedDomNode: true }'
     : 'props'
 
+  // Stand-alone components own their DOM node and render from `setConfig` themselves, so they don't
+  // have a container to ask. Container-hosted ones do: `setConfig` only stores the new config.
+  const containerRenderImport = isStandAlone
+    ? ''
+    : "\nimport { useContainerRenderRequest } from 'src/utils/container'"
+  const containerRenderHook = isStandAlone
+    ? ''
+    : `
+  const requestContainerRender = useContainerRenderRequest()
+  const prevPropsRef = useRef<Vis${componentName}Props${genericsStr} | undefined>(undefined)`
+  const containerRenderRequest = isStandAlone
+    ? ''
+    : `
+    // A config change has to drive the render itself. The container re-renders only when its own props
+    // change, which doesn't happen when the new config reaches this component through React context or
+    // a parent's state. Skipped on the first run: the container renders on mount.
+    if (prevPropsRef.current !== undefined && !arePropsEqual(prevPropsRef.current, props)) requestContainerRender()
+    prevPropsRef.current = props`
+
   return `// !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from 'src/utils/react'${containerRenderImport}
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -43,7 +62,7 @@ export const Vis${componentName}Selectors = ${componentName}.selectors
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}, fRef: ForwardedRef<Vis${componentName}Ref${genericsStr}>): ReactElement {
   const ref = useRef<${refType}>(null)
-  const componentRef = useRef<${componentType} | undefined>(undefined)
+  const componentRef = useRef<${componentType} | undefined>(undefined)${containerRenderHook}
 
   // On Mount
   useEffect(() => {
@@ -63,7 +82,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
   useEffect(() => {
     const component = componentRef.current
     ${dataType ? 'if (props.data) component?.setData(props.data)' : ''}
-    component?.setConfig(props)
+    component?.setConfig(props)${containerRenderRequest}
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
