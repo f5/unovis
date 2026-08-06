@@ -166,6 +166,11 @@ export default defineConfig({
       // @unovis/angular's dist/ is only produced by `ng build`; point at source
       // (public-api) so it resolves without a prior build, like solid/svelte.
       '@unovis/angular': `${pkgSrc('angular')}/public-api.ts`,
+      // `@unovis/ts` sources import each other through the `@/*` alias declared in
+      // packages/ts/tsconfig.json. Must stay last: Vite matches a string alias as
+      // `id === find || id.startsWith(find + '/')`, so '@' catches `@/types/curve`
+      // but never `@unovis/*`.
+      '@': pkgSrc('ts'),
     },
   },
   server: {
