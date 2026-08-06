@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { DonutConfigInterface } from '@unovis/ts'
-import { Donut } from '@unovis/ts'
+
+import type { DonutConfigInterface } from '@unovis/ts/components/donut/config'
+import { Donut } from '@unovis/ts/components/donut'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

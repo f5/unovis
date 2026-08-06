@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Scatter, ScatterConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Scatter } from '@unovis/ts/components/scatter'
+  import type { ScatterConfigInterface } from '@unovis/ts/components/scatter/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

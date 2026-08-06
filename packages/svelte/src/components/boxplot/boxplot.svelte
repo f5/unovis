@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Boxplot, BoxplotConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Boxplot } from '@unovis/ts/components/boxplot'
+  import type { BoxplotConfigInterface } from '@unovis/ts/components/boxplot/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
@@ -12,12 +14,11 @@
   // eslint-disable-next-line no-undef-init
   export let data: Datum[] = undefined
   export let x: NumericAccessor<Datum>
-  export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   // config
   let prevConfig: BoxplotConfigInterface<Datum>
   let config: BoxplotConfigInterface<Datum>
-  $: config = { x, y, ...$$restProps }
+  $: config = { x, ...$$restProps }
 
   // component declaration
   let component: Boxplot<Datum>

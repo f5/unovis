@@ -1,6 +1,9 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { LeafletMap, LeafletMapConfigInterface, GenericDataRecord, MapLibreStyleSpecs } from '@unovis/ts'
+  import { LeafletMap } from '@unovis/ts/components/leaflet-map'
+  import type { LeafletMapConfigInterface } from '@unovis/ts/components/leaflet-map/config'
+  import type { GenericDataRecord } from '@unovis/ts/types/data'
+  import type { MapLibreStyleSpecs } from '@unovis/ts/components/leaflet-map/renderer/map-style'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'

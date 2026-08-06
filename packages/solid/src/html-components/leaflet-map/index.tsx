@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { LeafletMapConfigInterface, GenericDataRecord } from "@unovis/ts";
-import { LeafletMap } from "@unovis/ts";
+import { LeafletMap } from "@unovis/ts/components/leaflet-map";
+import type { LeafletMapConfigInterface } from "@unovis/ts/components/leaflet-map/config";
+import type { GenericDataRecord } from "@unovis/ts/types/data";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 

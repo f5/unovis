@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@unovis/ts'
+  import { Graph } from '@unovis/ts/components/graph'
+  import type { GraphConfigInterface } from '@unovis/ts/components/graph/config'
+  import type { GraphInputNode, GraphInputLink } from '@unovis/ts/types/graph'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

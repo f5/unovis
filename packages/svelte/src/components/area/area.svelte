@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Area, AreaConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Area } from '@unovis/ts/components/area'
+  import type { AreaConfigInterface } from '@unovis/ts/components/area/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

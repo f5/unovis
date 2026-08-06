@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="AreaDatum, PointDatum, LinkDatum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { TopoJSONMapConfigInterface } from '@unovis/ts'
-import { TopoJSONMap } from '@unovis/ts'
+
+import type { TopoJSONMapConfigInterface } from '@unovis/ts/components/topojson-map/config'
+import { TopoJSONMap } from '@unovis/ts/components/topojson-map'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

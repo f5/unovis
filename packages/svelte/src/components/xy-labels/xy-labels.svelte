@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { XYLabels, XYLabelsConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { XYLabels } from '@unovis/ts/components/xy-labels'
+  import type { XYLabelsConfigInterface } from '@unovis/ts/components/xy-labels/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from "@unovis/ts";
-import { Sankey } from "@unovis/ts";
+import { Sankey } from "@unovis/ts/components/sankey";
+import type { SankeyConfigInterface } from "@unovis/ts/components/sankey/config";
+import type { SankeyInputNode, SankeyInputLink } from "@unovis/ts/components/sankey/types";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

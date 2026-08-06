@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { DonutConfigInterface } from "@unovis/ts";
-import { Donut } from "@unovis/ts";
+import { Donut } from "@unovis/ts/components/donut";
+import type { DonutConfigInterface } from "@unovis/ts/components/donut/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

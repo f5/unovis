@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { RadialBar, RadialBarConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { RadialBar } from '@unovis/ts/components/radial-bar'
+  import type { RadialBarConfigInterface } from '@unovis/ts/components/radial-bar/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

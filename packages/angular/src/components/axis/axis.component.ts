@@ -1,17 +1,12 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Axis,
-  AxisConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  Position,
-  AxisType,
-  FitMode,
-  TrimMode,
-  TextAlign,
-} from '@unovis/ts'
+import { Axis } from '@unovis/ts/components/axis'
+import { AxisConfigInterface } from '@unovis/ts/components/axis/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { Position } from '@unovis/ts/types/position'
+import { AxisType } from '@unovis/ts/components/axis/types'
+import { FitMode, TrimMode, TextAlign } from '@unovis/ts/types/text'
 import { VisXYComponent } from '../../core'
 
 @Component({

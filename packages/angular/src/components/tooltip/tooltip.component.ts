@@ -1,6 +1,10 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Tooltip, TooltipConfigInterface, ContainerCore, ComponentCore, Position } from '@unovis/ts'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { TooltipConfigInterface } from '@unovis/ts/components/tooltip/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { ComponentCore } from '@unovis/ts/core/component'
+import { Position } from '@unovis/ts/types/position'
 import { VisGenericComponent } from '../../core'
 
 @Component({

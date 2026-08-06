@@ -1,16 +1,11 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Heatmap,
-  HeatmapConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  HeatmapLayoutType,
-  StringAccessor,
-} from '@unovis/ts'
+import { Heatmap } from '@unovis/ts/components/heatmap'
+import { HeatmapConfigInterface } from '@unovis/ts/components/heatmap/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, StringAccessor } from '@unovis/ts/types/accessor'
+import { HeatmapLayoutType } from '@unovis/ts/components/heatmap/types'
 import { VisCoreComponent } from '../../core'
 
 @Component({

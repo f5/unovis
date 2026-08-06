@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { RollingPinLegendConfigInterface } from "@unovis/ts";
-import { RollingPinLegend } from "@unovis/ts";
+import { RollingPinLegend } from "@unovis/ts/components/rolling-pin-legend";
+import type { RollingPinLegendConfigInterface } from "@unovis/ts/components/rolling-pin-legend/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 

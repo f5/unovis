@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { NestedDonut, NestedDonutConfigInterface, StringAccessor } from '@unovis/ts'
+  import { NestedDonut } from '@unovis/ts/components/nested-donut'
+  import type { NestedDonutConfigInterface } from '@unovis/ts/components/nested-donut/config'
+  import type { StringAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

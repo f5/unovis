@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { StackedBarConfigInterface } from "@unovis/ts";
-import { StackedBar } from "@unovis/ts";
+import { StackedBar } from "@unovis/ts/components/stacked-bar";
+import type { StackedBarConfigInterface } from "@unovis/ts/components/stacked-bar/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

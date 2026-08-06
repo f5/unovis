@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { FreeBrushConfigInterface } from "@unovis/ts";
-import { FreeBrush } from "@unovis/ts";
+import { FreeBrush } from "@unovis/ts/components/free-brush";
+import type { FreeBrushConfigInterface } from "@unovis/ts/components/free-brush/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

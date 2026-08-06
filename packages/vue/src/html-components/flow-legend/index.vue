@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-import type { FlowLegendConfigInterface } from '@unovis/ts'
-import { FlowLegend } from '@unovis/ts'
+
+import type { FlowLegendConfigInterface } from '@unovis/ts/components/flow-legend/config'
+import { FlowLegend } from '@unovis/ts/components/flow-legend'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 

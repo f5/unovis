@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { PlotbandConfigInterface } from '@unovis/ts'
-import { Plotband } from '@unovis/ts'
+
+import type { PlotbandConfigInterface } from '@unovis/ts/components/plotband/config'
+import { Plotband } from '@unovis/ts/components/plotband'
 import { inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

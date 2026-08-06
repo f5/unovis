@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Crosshair, CrosshairConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Crosshair } from '@unovis/ts/components/crosshair'
+  import type { CrosshairConfigInterface } from '@unovis/ts/components/crosshair/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

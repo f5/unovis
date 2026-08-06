@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { AreaConfigInterface } from "@unovis/ts";
-import { Area } from "@unovis/ts";
+import { Area } from "@unovis/ts/components/area";
+import type { AreaConfigInterface } from "@unovis/ts/components/area/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

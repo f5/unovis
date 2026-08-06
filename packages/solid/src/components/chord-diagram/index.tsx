@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { ChordDiagramConfigInterface, ChordInputNode, ChordInputLink } from "@unovis/ts";
-import { ChordDiagram } from "@unovis/ts";
+import { ChordDiagram } from "@unovis/ts/components/chord-diagram";
+import type { ChordDiagramConfigInterface } from "@unovis/ts/components/chord-diagram/config";
+import type { ChordInputNode, ChordInputLink } from "@unovis/ts/components/chord-diagram/types";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

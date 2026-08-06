@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { BrushConfigInterface } from "@unovis/ts";
-import { Brush } from "@unovis/ts";
+import { Brush } from "@unovis/ts/components/brush";
+import type { BrushConfigInterface } from "@unovis/ts/components/brush/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { GroupedBar, GroupedBarConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { GroupedBar } from '@unovis/ts/components/grouped-bar'
+  import type { GroupedBarConfigInterface } from '@unovis/ts/components/grouped-bar/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

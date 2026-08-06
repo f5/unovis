@@ -1,6 +1,7 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Plotband, PlotbandConfigInterface } from '@unovis/ts'
+  import { Plotband } from '@unovis/ts/components/plotband'
+  import type { PlotbandConfigInterface } from '@unovis/ts/components/plotband/config'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

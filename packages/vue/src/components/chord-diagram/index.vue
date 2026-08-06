@@ -1,7 +1,9 @@
 <script setup lang="ts" generic="N extends ChordInputNode, L extends ChordInputLink">
 // !!! This code was automatically generated. You should not change it !!!
-import type { ChordDiagramConfigInterface, ChordInputLink, ChordInputNode } from '@unovis/ts'
-import { ChordDiagram } from '@unovis/ts'
+
+import type { ChordDiagramConfigInterface } from '@unovis/ts/components/chord-diagram/config'
+import type { ChordInputLink, ChordInputNode } from '@unovis/ts/components/chord-diagram/types'
+import { ChordDiagram } from '@unovis/ts/components/chord-diagram'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

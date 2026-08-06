@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { FreeBrushConfigInterface } from '@unovis/ts'
-import { FreeBrush } from '@unovis/ts'
+
+import type { FreeBrushConfigInterface } from '@unovis/ts/components/free-brush/config'
+import { FreeBrush } from '@unovis/ts/components/free-brush'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

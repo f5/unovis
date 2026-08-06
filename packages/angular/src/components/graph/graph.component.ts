@@ -1,41 +1,34 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Graph } from '@unovis/ts/components/graph'
+import { GraphConfigInterface } from '@unovis/ts/components/graph/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { GraphInputNode, GraphInputLink, GraphInputData } from '@unovis/ts/types/graph'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { Spacing } from '@unovis/ts/types/spacing'
 import {
-  Graph,
-  GraphConfigInterface,
-  ContainerCore,
-  GraphInputNode,
-  GraphInputLink,
-  VisEventType,
-  VisEventCallback,
-  Spacing,
   GraphFitViewAlignment,
   GraphLayoutType,
-  StringAccessor,
   GraphForceLayoutSettings,
   GraphDagreLayoutSetting,
-  GenericAccessor,
   GraphElkLayoutSettings,
   GraphNode,
-  NumericAccessor,
   GraphLinkStyle,
   GraphLinkArrowStyle,
-  ColorAccessor,
-  BooleanAccessor,
   GraphCircleLabel,
   GraphLink,
   GraphNodeShape,
-  TrimMode,
   GraphNodeSelectionHighlightMode,
   GraphPanelConfig,
-  GraphInputData,
-  GraphDataModel,
-} from '@unovis/ts'
+} from '@unovis/ts/components/graph/types'
+import { StringAccessor, GenericAccessor, NumericAccessor, ColorAccessor, BooleanAccessor } from '@unovis/ts/types/accessor'
 import { ElkShape } from 'elkjs'
+import { TrimMode } from '@unovis/ts/types/text'
 import { Selection } from 'd3-selection'
 import { D3DragEvent } from 'd3-drag'
 import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
 import { D3BrushEvent } from 'd3-brush'
+import { GraphDataModel } from '@unovis/ts/data-models/graph'
 import { VisCoreComponent } from '../../core'
 
 @Component({

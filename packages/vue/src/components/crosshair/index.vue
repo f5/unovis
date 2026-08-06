@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { CrosshairConfigInterface } from '@unovis/ts'
-import { Crosshair } from '@unovis/ts'
+
+import type { CrosshairConfigInterface } from '@unovis/ts/components/crosshair/config'
+import { Crosshair } from '@unovis/ts/components/crosshair'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { crosshairAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

@@ -1,7 +1,11 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Brush, BrushConfigInterface, ContainerCore, VisEventType, VisEventCallback, Arrangement } from '@unovis/ts'
+import { Brush } from '@unovis/ts/components/brush'
+import { BrushConfigInterface } from '@unovis/ts/components/brush/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
 import { D3BrushEvent } from 'd3-brush'
+import { Arrangement } from '@unovis/ts/types/position'
 import { VisXYComponent } from '../../core'
 
 @Component({

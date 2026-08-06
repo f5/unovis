@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { RadialBarConfigInterface } from "@unovis/ts";
-import { RadialBar } from "@unovis/ts";
+import { RadialBar } from "@unovis/ts/components/radial-bar";
+import type { RadialBarConfigInterface } from "@unovis/ts/components/radial-bar/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

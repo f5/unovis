@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { GroupedBarConfigInterface } from "@unovis/ts";
-import { GroupedBar } from "@unovis/ts";
+import { GroupedBar } from "@unovis/ts/components/grouped-bar";
+import type { GroupedBarConfigInterface } from "@unovis/ts/components/grouped-bar/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

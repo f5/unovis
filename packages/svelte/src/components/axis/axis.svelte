@@ -1,6 +1,7 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Axis, AxisConfigInterface } from '@unovis/ts'
+  import { Axis } from '@unovis/ts/components/axis'
+  import type { AxisConfigInterface } from '@unovis/ts/components/axis/config'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-import type { AnnotationsConfigInterface } from '@unovis/ts'
-import { Annotations } from '@unovis/ts'
+
+import type { AnnotationsConfigInterface } from '@unovis/ts/components/annotations/config'
+import { Annotations } from '@unovis/ts/components/annotations'
 import { inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { annotationsAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

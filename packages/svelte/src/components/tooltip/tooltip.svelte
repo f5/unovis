@@ -1,6 +1,7 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Tooltip, TooltipConfigInterface } from '@unovis/ts'
+  import { Tooltip } from '@unovis/ts/components/tooltip'
+  import type { TooltipConfigInterface } from '@unovis/ts/components/tooltip/config'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { TooltipConfigInterface } from "@unovis/ts";
-import { Tooltip } from "@unovis/ts";
+import { Tooltip } from "@unovis/ts/components/tooltip";
+import type { TooltipConfigInterface } from "@unovis/ts/components/tooltip/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

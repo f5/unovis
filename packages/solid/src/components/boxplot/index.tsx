@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { BoxplotConfigInterface } from "@unovis/ts";
-import { Boxplot } from "@unovis/ts";
+import { Boxplot } from "@unovis/ts/components/boxplot";
+import type { BoxplotConfigInterface } from "@unovis/ts/components/boxplot/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

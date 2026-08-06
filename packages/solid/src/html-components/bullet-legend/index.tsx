@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { BulletLegendConfigInterface } from "@unovis/ts";
-import { BulletLegend } from "@unovis/ts";
+import { BulletLegend } from "@unovis/ts/components/bullet-legend";
+import type { BulletLegendConfigInterface } from "@unovis/ts/components/bullet-legend/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 

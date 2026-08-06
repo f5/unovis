@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { ChordDiagram, ChordDiagramConfigInterface, ChordInputNode, ChordInputLink } from '@unovis/ts'
+  import { ChordDiagram } from '@unovis/ts/components/chord-diagram'
+  import type { ChordDiagramConfigInterface } from '@unovis/ts/components/chord-diagram/config'
+  import type { ChordInputNode, ChordInputLink } from '@unovis/ts/components/chord-diagram/types'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

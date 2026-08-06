@@ -1,6 +1,7 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Plotline, PlotlineConfigInterface } from '@unovis/ts'
+  import { Plotline } from '@unovis/ts/components/plotline'
+  import type { PlotlineConfigInterface } from '@unovis/ts/components/plotline/config'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

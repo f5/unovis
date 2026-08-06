@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Heatmap, HeatmapConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Heatmap } from '@unovis/ts/components/heatmap'
+  import type { HeatmapConfigInterface } from '@unovis/ts/components/heatmap/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

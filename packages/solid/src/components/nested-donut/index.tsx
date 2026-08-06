@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { NestedDonutConfigInterface } from "@unovis/ts";
-import { NestedDonut } from "@unovis/ts";
+import { NestedDonut } from "@unovis/ts/components/nested-donut";
+import type { NestedDonutConfigInterface } from "@unovis/ts/components/nested-donut/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

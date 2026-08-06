@@ -1,7 +1,9 @@
 <script setup lang="ts" generic="N extends SankeyInputNode, L extends SankeyInputLink">
 // !!! This code was automatically generated. You should not change it !!!
-import type { SankeyConfigInterface, SankeyInputLink, SankeyInputNode } from '@unovis/ts'
-import { Sankey } from '@unovis/ts'
+
+import type { SankeyConfigInterface } from '@unovis/ts/components/sankey/config'
+import type { SankeyInputLink, SankeyInputNode } from '@unovis/ts/components/sankey/types'
+import { Sankey } from '@unovis/ts/components/sankey'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

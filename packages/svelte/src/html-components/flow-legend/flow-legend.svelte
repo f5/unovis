@@ -1,6 +1,7 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { FlowLegend, FlowLegendConfigInterface } from '@unovis/ts'
+  import { FlowLegend } from '@unovis/ts/components/flow-legend'
+  import type { FlowLegendConfigInterface } from '@unovis/ts/components/flow-legend/config'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'

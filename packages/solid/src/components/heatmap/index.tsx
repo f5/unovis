@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { HeatmapConfigInterface } from "@unovis/ts";
-import { Heatmap } from "@unovis/ts";
+import { Heatmap } from "@unovis/ts/components/heatmap";
+import type { HeatmapConfigInterface } from "@unovis/ts/components/heatmap/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

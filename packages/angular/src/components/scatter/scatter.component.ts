@@ -1,20 +1,14 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Scatter,
-  ScatterConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  ContinuousScale,
-  GenericAccessor,
-  FillPatternType,
-  SymbolType,
-  StringAccessor,
-  Position,
-} from '@unovis/ts'
+import { Scatter } from '@unovis/ts/components/scatter'
+import { ScatterConfigInterface } from '@unovis/ts/components/scatter/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, GenericAccessor, StringAccessor } from '@unovis/ts/types/accessor'
+import { ContinuousScale } from '@unovis/ts/types/scale'
+import { FillPatternType } from '@unovis/ts/styles/patterns'
+import { SymbolType } from '@unovis/ts/types/symbol'
+import { Position } from '@unovis/ts/types/position'
 import { VisXYComponent } from '../../core'
 
 @Component({

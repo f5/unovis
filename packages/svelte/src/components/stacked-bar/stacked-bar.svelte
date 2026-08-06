@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { StackedBar, StackedBarConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { StackedBar } from '@unovis/ts/components/stacked-bar'
+  import type { StackedBarConfigInterface } from '@unovis/ts/components/stacked-bar/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

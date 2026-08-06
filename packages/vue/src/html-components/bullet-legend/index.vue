@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-import type { BulletLegendConfigInterface } from '@unovis/ts'
-import { BulletLegend } from '@unovis/ts'
+
+import type { BulletLegendConfigInterface } from '@unovis/ts/components/bullet-legend/config'
+import { BulletLegend } from '@unovis/ts/components/bullet-legend'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 

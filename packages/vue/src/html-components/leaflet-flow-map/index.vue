@@ -1,7 +1,9 @@
 <script setup lang="ts" generic="PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord">
 // !!! This code was automatically generated. You should not change it !!!
-import type { GenericDataRecord, LeafletFlowMapConfigInterface } from '@unovis/ts'
-import { LeafletFlowMap } from '@unovis/ts'
+
+import type { LeafletFlowMapConfigInterface } from '@unovis/ts/components/leaflet-flow-map/config'
+import type { GenericDataRecord } from '@unovis/ts/types/data'
+import { LeafletFlowMap } from '@unovis/ts/components/leaflet-flow-map'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 

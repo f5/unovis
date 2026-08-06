@@ -1,16 +1,11 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Donut,
-  DonutConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  GenericAccessor,
-  FillPatternType,
-} from '@unovis/ts'
+import { Donut } from '@unovis/ts/components/donut'
+import { DonutConfigInterface } from '@unovis/ts/components/donut/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, GenericAccessor } from '@unovis/ts/types/accessor'
+import { FillPatternType } from '@unovis/ts/styles/patterns'
 import { VisCoreComponent } from '../../core'
 
 @Component({

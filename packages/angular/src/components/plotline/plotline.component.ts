@@ -1,16 +1,11 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Plotline,
-  PlotlineConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  AxisType,
-  PlotlineLineStylePresets,
-  PlotlineLabelPosition,
-  PlotlineLabelOrientation,
-} from '@unovis/ts'
+import { Plotline } from '@unovis/ts/components/plotline'
+import { PlotlineConfigInterface } from '@unovis/ts/components/plotline/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { AxisType } from '@unovis/ts/components/axis/types'
+import { PlotlineLineStylePresets, PlotlineLabelPosition, PlotlineLabelOrientation } from '@unovis/ts/components/plotline/types'
 import { VisXYComponent } from '../../core'
 
 @Component({

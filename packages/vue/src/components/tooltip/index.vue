@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-import type { TooltipConfigInterface } from '@unovis/ts'
-import { Tooltip } from '@unovis/ts'
+
+import type { TooltipConfigInterface } from '@unovis/ts/components/tooltip/config'
+import { Tooltip } from '@unovis/ts/components/tooltip'
 import { inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { tooltipAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Line, LineConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Line } from '@unovis/ts/components/line'
+  import type { LineConfigInterface } from '@unovis/ts/components/line/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@unovis/ts'
+  import { Sankey } from '@unovis/ts/components/sankey'
+  import type { SankeyConfigInterface } from '@unovis/ts/components/sankey/config'
+  import type { SankeyInputNode, SankeyInputLink } from '@unovis/ts/components/sankey/types'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

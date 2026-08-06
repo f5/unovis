@@ -1,19 +1,12 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  XYLabels,
-  XYLabelsConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  ContinuousScale,
-  GenericAccessor,
-  XYLabelPositioning,
-  StringAccessor,
-  XYLabel,
-} from '@unovis/ts'
+import { XYLabels } from '@unovis/ts/components/xy-labels'
+import { XYLabelsConfigInterface } from '@unovis/ts/components/xy-labels/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, GenericAccessor, StringAccessor } from '@unovis/ts/types/accessor'
+import { ContinuousScale } from '@unovis/ts/types/scale'
+import { XYLabelPositioning, XYLabel } from '@unovis/ts/components/xy-labels/types'
 import { VisXYComponent } from '../../core'
 
 @Component({

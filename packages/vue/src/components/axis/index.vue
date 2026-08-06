@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { AxisConfigInterface } from '@unovis/ts'
-import { Axis } from '@unovis/ts'
+
+import type { AxisConfigInterface } from '@unovis/ts/components/axis/config'
+import { Axis } from '@unovis/ts/components/axis'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { axisAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

@@ -1,6 +1,10 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Annotations, AnnotationsConfigInterface, ContainerCore, VisEventType, VisEventCallback, AnnotationItem } from '@unovis/ts'
+import { Annotations } from '@unovis/ts/components/annotations'
+import { AnnotationsConfigInterface } from '@unovis/ts/components/annotations/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { AnnotationItem } from '@unovis/ts/components/annotations/types'
 import { VisGenericComponent } from '../../core'
 
 @Component({

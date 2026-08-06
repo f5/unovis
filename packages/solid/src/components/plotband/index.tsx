@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { PlotbandConfigInterface } from "@unovis/ts";
-import { Plotband } from "@unovis/ts";
+import { Plotband } from "@unovis/ts/components/plotband";
+import type { PlotbandConfigInterface } from "@unovis/ts/components/plotband/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

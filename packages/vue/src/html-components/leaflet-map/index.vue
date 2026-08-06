@@ -1,7 +1,9 @@
 <script setup lang="ts" generic="Datum extends GenericDataRecord">
 // !!! This code was automatically generated. You should not change it !!!
-import type { GenericDataRecord, LeafletMapConfigInterface } from '@unovis/ts'
-import { LeafletMap } from '@unovis/ts'
+
+import type { LeafletMapConfigInterface } from '@unovis/ts/components/leaflet-map/config'
+import type { GenericDataRecord } from '@unovis/ts/types/data'
+import { LeafletMap } from '@unovis/ts/components/leaflet-map'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 

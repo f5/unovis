@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { LineConfigInterface } from '@unovis/ts'
-import { Line } from '@unovis/ts'
+
+import type { LineConfigInterface } from '@unovis/ts/components/line/config'
+import { Line } from '@unovis/ts/components/line'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

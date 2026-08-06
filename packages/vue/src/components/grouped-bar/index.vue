@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { GroupedBarConfigInterface } from '@unovis/ts'
-import { GroupedBar } from '@unovis/ts'
+
+import type { GroupedBarConfigInterface } from '@unovis/ts/components/grouped-bar/config'
+import { GroupedBar } from '@unovis/ts/components/grouped-bar'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

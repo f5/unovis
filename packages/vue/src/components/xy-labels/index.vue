@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { XYLabelsConfigInterface } from '@unovis/ts'
-import { XYLabels } from '@unovis/ts'
+
+import type { XYLabelsConfigInterface } from '@unovis/ts/components/xy-labels/config'
+import { XYLabels } from '@unovis/ts/components/xy-labels'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

@@ -1,22 +1,12 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  ChordDiagram,
-  ChordDiagramConfigInterface,
-  ContainerCore,
-  ChordInputNode,
-  ChordInputLink,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ChordNodeDatum,
-  ColorAccessor,
-  ChordLinkDatum,
-  GenericAccessor,
-  FillPatternType,
-  StringAccessor,
-  ChordLabelAlignment,
-} from '@unovis/ts'
+import { ChordDiagram } from '@unovis/ts/components/chord-diagram'
+import { ChordDiagramConfigInterface } from '@unovis/ts/components/chord-diagram/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { ChordInputNode, ChordInputLink, ChordNodeDatum, ChordLinkDatum, ChordLabelAlignment } from '@unovis/ts/components/chord-diagram/types'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, GenericAccessor, StringAccessor } from '@unovis/ts/types/accessor'
+import { FillPatternType } from '@unovis/ts/styles/patterns'
 import { VisCoreComponent } from '../../core'
 
 @Component({

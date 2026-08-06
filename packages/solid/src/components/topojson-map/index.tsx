@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { TopoJSONMapConfigInterface } from "@unovis/ts";
-import { TopoJSONMap } from "@unovis/ts";
+import { TopoJSONMap } from "@unovis/ts/components/topojson-map";
+import type { TopoJSONMapConfigInterface } from "@unovis/ts/components/topojson-map/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

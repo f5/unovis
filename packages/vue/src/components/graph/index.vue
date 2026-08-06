@@ -1,7 +1,9 @@
 <script setup lang="ts" generic="N extends GraphInputNode, L extends GraphInputLink">
 // !!! This code was automatically generated. You should not change it !!!
-import type { GraphConfigInterface, GraphInputLink, GraphInputNode } from '@unovis/ts'
-import { Graph } from '@unovis/ts'
+
+import type { GraphConfigInterface } from '@unovis/ts/components/graph/config'
+import type { GraphInputLink, GraphInputNode } from '@unovis/ts/types/graph'
+import { Graph } from '@unovis/ts/components/graph'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Treemap, TreemapConfigInterface, StringAccessor } from '@unovis/ts'
+  import { Treemap } from '@unovis/ts/components/treemap'
+  import type { TreemapConfigInterface } from '@unovis/ts/components/treemap/config'
+  import type { StringAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { TreemapConfigInterface } from '@unovis/ts'
-import { Treemap } from '@unovis/ts'
+
+import type { TreemapConfigInterface } from '@unovis/ts/components/treemap/config'
+import { Treemap } from '@unovis/ts/components/treemap'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

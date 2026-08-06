@@ -1,18 +1,14 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Crosshair,
-  CrosshairConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  ContinuousScale,
-  Tooltip,
-  CrosshairSnapMode,
-  CrosshairCircle,
-} from '@unovis/ts'
+import { Crosshair } from '@unovis/ts/components/crosshair'
+import { CrosshairConfigInterface } from '@unovis/ts/components/crosshair/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor } from '@unovis/ts/types/accessor'
+import { ContinuousScale } from '@unovis/ts/types/scale'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { CrosshairSnapMode } from '@unovis/ts/components/crosshair/constants'
+import { CrosshairCircle } from '@unovis/ts/components/crosshair/types'
 import { VisXYComponent } from '../../core'
 
 @Component({

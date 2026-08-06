@@ -1,19 +1,13 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  StackedBar,
-  StackedBarConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  ContinuousScale,
-  GenericAccessor,
-  FillPatternType,
-  StringAccessor,
-  Orientation,
-} from '@unovis/ts'
+import { StackedBar } from '@unovis/ts/components/stacked-bar'
+import { StackedBarConfigInterface } from '@unovis/ts/components/stacked-bar/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, GenericAccessor, StringAccessor } from '@unovis/ts/types/accessor'
+import { ContinuousScale } from '@unovis/ts/types/scale'
+import { FillPatternType } from '@unovis/ts/styles/patterns'
+import { Orientation } from '@unovis/ts/types/position'
 import { VisXYComponent } from '../../core'
 
 @Component({

@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { NestedDonutConfigInterface } from '@unovis/ts'
-import { NestedDonut } from '@unovis/ts'
+
+import type { NestedDonutConfigInterface } from '@unovis/ts/components/nested-donut/config'
+import { NestedDonut } from '@unovis/ts/components/nested-donut'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

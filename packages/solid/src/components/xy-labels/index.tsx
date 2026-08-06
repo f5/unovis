@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { XYLabelsConfigInterface } from "@unovis/ts";
-import { XYLabels } from "@unovis/ts";
+import { XYLabels } from "@unovis/ts/components/xy-labels";
+import type { XYLabelsConfigInterface } from "@unovis/ts/components/xy-labels/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { PlotlineConfigInterface } from '@unovis/ts'
-import { Plotline } from '@unovis/ts'
+
+import type { PlotlineConfigInterface } from '@unovis/ts/components/plotline/config'
+import { Plotline } from '@unovis/ts/components/plotline'
 import { inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

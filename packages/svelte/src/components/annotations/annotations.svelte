@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Annotations, AnnotationsConfigInterface, AnnotationItem } from '@unovis/ts'
+  import { Annotations } from '@unovis/ts/components/annotations'
+  import type { AnnotationsConfigInterface } from '@unovis/ts/components/annotations/config'
+  import type { AnnotationItem } from '@unovis/ts/components/annotations/types'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

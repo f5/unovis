@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { AreaConfigInterface } from '@unovis/ts'
-import { Area } from '@unovis/ts'
+
+import type { AreaConfigInterface } from '@unovis/ts/components/area/config'
+import { Area } from '@unovis/ts/components/area'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

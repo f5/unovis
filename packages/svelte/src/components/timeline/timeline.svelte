@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Timeline, TimelineConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Timeline } from '@unovis/ts/components/timeline'
+  import type { TimelineConfigInterface } from '@unovis/ts/components/timeline/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'

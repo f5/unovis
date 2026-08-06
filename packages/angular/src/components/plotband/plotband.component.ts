@@ -1,15 +1,11 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Plotband,
-  PlotbandConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  AxisType,
-  PlotbandLabelPosition,
-  PlotbandLabelOrientation,
-} from '@unovis/ts'
+import { Plotband } from '@unovis/ts/components/plotband'
+import { PlotbandConfigInterface } from '@unovis/ts/components/plotband/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { AxisType } from '@unovis/ts/components/axis/types'
+import { PlotbandLabelPosition, PlotbandLabelOrientation } from '@unovis/ts/components/plotband/types'
 import { VisXYComponent } from '../../core'
 
 @Component({

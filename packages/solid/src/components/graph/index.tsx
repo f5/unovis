@@ -1,6 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { GraphConfigInterface, GraphInputNode, GraphInputLink } from "@unovis/ts";
-import { Graph } from "@unovis/ts";
+import { Graph } from "@unovis/ts/components/graph";
+import type { GraphConfigInterface } from "@unovis/ts/components/graph/config";
+import type { GraphInputNode, GraphInputLink } from "@unovis/ts/types/graph";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";

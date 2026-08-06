@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
+  import { BulletLegend } from '@unovis/ts/components/bullet-legend'
+  import type { BulletLegendConfigInterface } from '@unovis/ts/components/bullet-legend/config'
+  import type { BulletLegendItemInterface } from '@unovis/ts/components/bullet-legend/types'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'

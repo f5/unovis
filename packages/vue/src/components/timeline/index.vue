@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import type { TimelineConfigInterface } from '@unovis/ts'
-import { Timeline } from '@unovis/ts'
+
+import type { TimelineConfigInterface } from '@unovis/ts/components/timeline/config'
+import { Timeline } from '@unovis/ts/components/timeline'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
 import { arePropsEqual, useForwardProps } from '../../utils/props'

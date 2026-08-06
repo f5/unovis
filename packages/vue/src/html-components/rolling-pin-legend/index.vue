@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-import type { RollingPinLegendConfigInterface } from '@unovis/ts'
-import { RollingPinLegend } from '@unovis/ts'
+
+import type { RollingPinLegendConfigInterface } from '@unovis/ts/components/rolling-pin-legend/config'
+import { RollingPinLegend } from '@unovis/ts/components/rolling-pin-legend'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 

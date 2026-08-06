@@ -1,6 +1,7 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Brush, BrushConfigInterface } from '@unovis/ts'
+  import { Brush } from '@unovis/ts/components/brush'
+  import type { BrushConfigInterface } from '@unovis/ts/components/brush/config'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
