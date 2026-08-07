@@ -227,7 +227,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 ): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> {
   const {
     nodeGaugeAnimDuration, nodeStrokeWidth, nodeShape, nodeSize, nodeGaugeValue, nodeGaugeFill,
-    nodeIcon, nodeIconSize, nodeLabel,
+    nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel,
     nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon,
   } = config
 
@@ -397,19 +397,19 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     group
       .on('mouseenter', () => {
         renderNodeLabels(label, d, config, labelFontSize, subLabelFontSize, true)
-        setLabelRect(label, getString(d, nodeLabel, d._index), nodeSelectors.labelText)
+        setLabelRect(label, getString(d, nodeLabel, d._index), getString(d, nodeSubLabel, d._index), nodeSelectors.labelText)
         group.raise()
       })
       .on('mouseleave', () => {
         renderNodeLabels(label, d, config, labelFontSize, subLabelFontSize)
-        setLabelRect(label, getString(d, nodeLabel, d._index), nodeSelectors.labelText)
+        setLabelRect(label, getString(d, nodeLabel, d._index), getString(d, nodeSubLabel, d._index), nodeSelectors.labelText)
       })
 
     // Position label
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
     const nodeHeight = isStringSvg((getString(d, nodeShape, d._index)) as GraphNodeShape) ? nodeBBox.height : nodeSizeValue
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
-    if (scale >= ZoomLevel.Level3) setLabelRect(label, getString(d, nodeLabel, d._index), nodeSelectors.labelText)
+    if (scale >= ZoomLevel.Level3) setLabelRect(label, getString(d, nodeLabel, d._index), getString(d, nodeSubLabel, d._index), nodeSelectors.labelText)
 
     // Bottom Icon
     bottomIcon.html(getString(d, nodeBottomIcon, d._index))
@@ -451,12 +451,10 @@ function setLabelBackgroundRect<N extends GraphInputNode, L extends GraphInputLi
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>
 ): void {
-  const { nodeLabel } = config
-
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
     const label: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.label}`)
-    setLabelRect(label, getString(d, nodeLabel, i), nodeSelectors.labelText)
+    setLabelRect(label, getString(d, config.nodeLabel, i), getString(d, config.nodeSubLabel, i), nodeSelectors.labelText)
   })
 }
 
