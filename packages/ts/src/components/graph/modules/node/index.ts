@@ -4,10 +4,11 @@ import { arc } from 'd3-shape'
 
 // Types
 import { GraphInputLink, GraphInputNode } from '@/types/graph'
-import { TrimMode } from '@/types/text'
+import { FitMode, TrimMode, UnovisText } from '@/types/text'
+import { BooleanAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 
 // Utils
-import { trimString } from '@/utils/text'
+import { renderTextToSvgTextElement, trimString } from '@/utils/text'
 import { polygon } from '@/utils/path'
 import { smartTransition, Selection$Transition } from '@/utils/d3'
 import { getBoolean, getNumber, getString, getValue, throttle } from '@/utils/data'
@@ -88,18 +89,14 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
         .attr('class', nodeSelectors.nodeBottomIcon)
     }
 
-    // Label
+    // Label. The label and sub-label are rendered into the `<text>` element
+    // as text blocks with the `nodeSelectors.labelTextContent` and
+    // `nodeSelectors.subLabelTextContent` classes, see `renderNodeLabels`
     const label = group.append('g').attr('class', nodeSelectors.label)
     label.append('rect').attr('class', nodeSelectors.labelBackground)
-
-    const labelText = label.append('text')
+    label.append('text')
       .attr('class', nodeSelectors.labelText)
       .attr('dy', '0.32em')
-    labelText.append('tspan').attr('class', nodeSelectors.labelTextContent)
-    labelText.append('tspan')
-      .attr('class', nodeSelectors.subLabelTextContent)
-      .attr('dy', '1.1em')
-      .attr('x', '0')
   })
 }
 
@@ -148,6 +145,80 @@ export function updateNodePositions<N extends GraphInputNode, L extends GraphInp
     .attr('opacity', 1)
 }
 
+/** Resolves the visible text and wrapping settings of a node label or sub-label into an UnovisText block */
+function getNodeLabelTextBlock<N extends GraphInputNode, L extends GraphInputLink> (
+  d: GraphNode<N, L>,
+  accessors: {
+    text: StringAccessor<N>;
+    fitMode: GenericAccessor<FitMode | string, N>;
+    trim: BooleanAccessor<N>;
+    trimMode: GenericAccessor<TrimMode | string, N>;
+    trimLength: NumericAccessor<N>;
+    width: NumericAccessor<N>;
+    separator: string | string[] | undefined;
+    forceWordBreak: boolean | undefined;
+  },
+  fontSize: number,
+  className: string,
+  defaultWrapWidth: number,
+  forceExpanded: boolean
+): UnovisText | undefined {
+  const text = getString(d, accessors.text, d._index)
+  if (!text) return undefined
+
+  const shouldWrap = getValue(d, accessors.fitMode, d._index) === FitMode.Wrap
+  const visibleText = (!shouldWrap && !forceExpanded && getBoolean(d, accessors.trim, d._index))
+    ? trimString(text, getNumber(d, accessors.trimLength, d._index), getValue(d, accessors.trimMode as TrimMode, d._index))
+    : text
+
+  return {
+    text: visibleText,
+    fontSize,
+    className,
+    width: shouldWrap ? (getNumber(d, accessors.width, d._index) ?? defaultWrapWidth) : undefined,
+    separator: accessors.separator,
+    wordBreak: accessors.forceWordBreak,
+  }
+}
+
+/** Renders the node label and sub-label as text blocks into the label's `<text>` element */
+function renderNodeLabels<N extends GraphInputNode, L extends GraphInputLink> (
+  label: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
+  d: GraphNode<N, L>,
+  config: GraphConfigInterface<N, L>,
+  labelFontSize: number,
+  subLabelFontSize: number,
+  forceExpanded = false
+): void {
+  const defaultWrapWidth = Math.max(getNodeSize(d, config.nodeSize, d._index) * 2.5, labelFontSize * 4)
+  const blocks = [
+    getNodeLabelTextBlock(d, {
+      text: config.nodeLabel,
+      fitMode: config.nodeLabelFitMode,
+      trim: config.nodeLabelTrim,
+      trimMode: config.nodeLabelTrimMode,
+      trimLength: config.nodeLabelTrimLength,
+      width: config.nodeLabelWidth,
+      separator: config.nodeLabelSeparator,
+      forceWordBreak: config.nodeLabelForceWordBreak,
+    }, labelFontSize, nodeSelectors.labelTextContent, defaultWrapWidth, forceExpanded),
+    getNodeLabelTextBlock(d, {
+      text: config.nodeSubLabel,
+      fitMode: config.nodeSubLabelFitMode,
+      trim: config.nodeSubLabelTrim,
+      trimMode: config.nodeSubLabelTrimMode,
+      trimLength: config.nodeSubLabelTrimLength,
+      width: config.nodeSubLabelWidth,
+      separator: config.nodeSubLabelSeparator,
+      forceWordBreak: config.nodeSubLabelForceWordBreak,
+    }, subLabelFontSize, nodeSelectors.subLabelTextContent, defaultWrapWidth, forceExpanded),
+  ].filter(Boolean) as UnovisText[]
+
+  const labelTextSelection = label.select<SVGTextElement>(`.${nodeSelectors.labelText}`)
+  if (blocks.length) renderTextToSvgTextElement(labelTextSelection.node(), blocks, {})
+  else labelTextSelection.text('')
+}
+
 export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>,
@@ -156,8 +227,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 ): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> {
   const {
     nodeGaugeAnimDuration, nodeStrokeWidth, nodeShape, nodeSize, nodeGaugeValue, nodeGaugeFill,
-    nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength,
-    nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength,
+    nodeIcon, nodeIconSize, nodeLabel,
     nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon,
   } = config
 
@@ -199,8 +269,6 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     const icon = group.select<SVGTextElement>(`.${nodeSelectors.nodeIcon}`)
     const sideLabelsGroup = group.select<SVGGElement>(`.${nodeSelectors.sideLabelsGroup}`)
     const label = group.select<SVGGElement>(`.${nodeSelectors.label}`)
-    const labelTextContent = label.select<SVGTextElement>(`.${nodeSelectors.labelTextContent}`)
-    const sublabelTextContent = label.select<SVGTextElement>(`.${nodeSelectors.subLabelTextContent}`)
     const bottomIcon = group.select<SVGTextElement>(`.${nodeSelectors.nodeBottomIcon}`)
     const nodeSelectionOutline = group.select<SVGGElement>(`.${nodeSelectors.nodeSelection}`)
     const nodeSizeValue = getNodeSize(d, nodeSize, d._index)
@@ -321,33 +389,23 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
     sideLabels.exit().remove()
 
-    // Set label and sub-label text
-    const labelText = getString(d, nodeLabel, d._index)
-    const sublabelText = getString(d, nodeSubLabel, d._index)
-    const labelTextTrimmed = getBoolean(d, nodeLabelTrim, d._index)
-      ? trimString(labelText, getNumber(d, nodeLabelTrimLength, d._index), getValue(d, nodeLabelTrimMode as TrimMode, d._index))
-      : labelText
-    const sublabelTextTrimmed = getBoolean(d, nodeSubLabelTrim, d._index)
-      ? trimString(sublabelText, getNumber(d, nodeSubLabelTrimLength, d._index), getValue(d, nodeSubLabelTrimMode as TrimMode, d._index))
-      : sublabelText
-
-    labelTextContent.text(labelTextTrimmed)
-    sublabelTextContent.text(sublabelTextTrimmed)
+    // Set label and sub-label text. Expanded labels (on hover) show the full text
+    // instead of the trimmed one, while wrapped labels always show the full text
+    const labelFontSize = getCSSVariableValueInPixels('var(--vis-graph-node-label-font-size)', groupElement) || 12
+    const subLabelFontSize = getCSSVariableValueInPixels('var(--vis-graph-node-sublabel-font-size)', groupElement) || labelFontSize
+    renderNodeLabels(label, d, config, labelFontSize, subLabelFontSize)
     group
       .on('mouseenter', () => {
-        labelTextContent.text(labelText)
-        sublabelTextContent.text(sublabelText)
-        setLabelRect(label, labelText, nodeSelectors.labelText)
+        renderNodeLabels(label, d, config, labelFontSize, subLabelFontSize, true)
+        setLabelRect(label, getString(d, nodeLabel, d._index), nodeSelectors.labelText)
         group.raise()
       })
       .on('mouseleave', () => {
-        labelTextContent.text(labelTextTrimmed)
-        sublabelTextContent.text(sublabelTextTrimmed)
-        setLabelRect(label, labelTextTrimmed, nodeSelectors.labelText)
+        renderNodeLabels(label, d, config, labelFontSize, subLabelFontSize)
+        setLabelRect(label, getString(d, nodeLabel, d._index), nodeSelectors.labelText)
       })
 
     // Position label
-    const labelFontSize = getCSSVariableValueInPixels('var(--vis-graph-node-label-font-size)', groupElement) || 12
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
     const nodeHeight = isStringSvg((getString(d, nodeShape, d._index)) as GraphNodeShape) ? nodeBBox.height : nodeSizeValue
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
