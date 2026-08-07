@@ -104,7 +104,9 @@ export function setLabelRect<T, K extends BaseType, L> (
   label: string,
   selector: string
 ): Selection<SVGRectElement, T, K, L> {
-  // Set label background rectangle size by text size
+  // Set label background rectangle size by text size. Using the rendered
+  // bounding box directly makes the rectangle work for multi-line (wrapped)
+  // labels as well as single-line ones
   const labelIsEmpty = isEmpty(label)
   const labelTextSelection = labelSelection.select<SVGTextElement>(`.${selector}`)
   const labelTextBBox = (labelTextSelection.node() as SVGGraphicsElement).getBBox()
@@ -112,11 +114,11 @@ export function setLabelRect<T, K extends BaseType, L> (
     .attr('visibility', labelIsEmpty ? 'hidden' : null)
     .attr('rx', 4)
     .attr('ry', 4)
-    .attr('x', -labelTextBBox.width / 2 - LABEL_RECT_HORIZONTAL_PADDING)
-    .attr('y', '-0.64em')
+    .attr('x', labelTextBBox.x - LABEL_RECT_HORIZONTAL_PADDING)
+    .attr('y', labelTextBBox.y - LABEL_RECT_VERTICAL_PADDING)
     .attr('width', labelTextBBox.width + 2 * LABEL_RECT_HORIZONTAL_PADDING)
     .attr('height', labelTextBBox.height + 2 * LABEL_RECT_VERTICAL_PADDING)
-    .style('transform', `translateY(${-LABEL_RECT_VERTICAL_PADDING}px)`)
+    .style('transform', null)
 
   return backgroundRect
 }
