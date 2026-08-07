@@ -96,7 +96,6 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
     label.append('rect').attr('class', nodeSelectors.labelBackground)
     label.append('text')
       .attr('class', nodeSelectors.labelText)
-      .attr('dy', '0.32em')
   })
 }
 
