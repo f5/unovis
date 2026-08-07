@@ -22,8 +22,8 @@ import type { DataRecord } from './shared.js'
 
 export const barInputShape = {
   data: dataRecords,
-  x: fieldName.describe('Field for the category dimension (names or numbers)'),
-  y: z.union([fieldName, z.array(fieldName).min(1).max(12)])
+  x: fieldName().describe('Field for the category dimension (names or numbers)'),
+  y: z.union([fieldName(), z.array(fieldName()).min(1).max(12)])
     .describe('Field name(s) for bar values. Multiple field names render one bar (or stack segment) per series'),
   type: z.enum(['grouped', 'stacked']).default('grouped')
     .describe('How multiple series are arranged: side-by-side groups or stacks'),

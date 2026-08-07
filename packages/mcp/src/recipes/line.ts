@@ -22,8 +22,8 @@ import type { DataRecord } from './shared.js'
 
 export const lineInputShape = {
   data: dataRecords,
-  x: fieldName.describe('Field for X values: numbers, or date strings when xIsTime is true, or category names'),
-  y: z.union([fieldName, z.array(fieldName).min(1).max(12)])
+  x: fieldName().describe('Field for X values: numbers, or date strings when xIsTime is true, or category names'),
+  y: z.union([fieldName(), z.array(fieldName()).min(1).max(12)])
     .describe('Field name(s) for Y values. Multiple field names render multiple lines'),
   xIsTime: z.boolean().default(false).describe('Treat x values as dates/timestamps (time axis)'),
   seriesLabels: z.array(z.string()).optional().describe('Display names for the y series (legend). Defaults to field names'),

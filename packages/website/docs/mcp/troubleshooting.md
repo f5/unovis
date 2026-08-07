@@ -34,6 +34,25 @@ used for measuring must match the font used for drawing.
   few pixels different from the SVG. Nothing to fix — just don't expect them to
   be pixel-identical.
 
+## The client rejects the whole tool list
+
+If a client refuses to start with something like `input_schema: JSON schema is
+invalid. It must match JSON Schema draft 2020-12`, a tool schema is using a
+construct that only exists in draft-07. One bad schema takes down every tool,
+not just its own, because the tool list is validated as a unit.
+
+The SDK converts Zod v3 through `zod-to-json-schema`, which targets draft-07.
+Most of that output is valid 2020-12 as well; two things are not, and both are
+enforced by `test/tool-schemas.test.ts`:
+
+- **`z.tuple([a, b])`** lowers to the draft-07 array form of `items`, where
+  2020-12 requires `items` to be a schema. Use `z.array(a).length(2)`.
+- **Reusing one schema instance** inside a tool makes the converter emit
+  `$ref: #/properties/…`. That's valid, but clients that flatten refs drop the
+  subschema, leaving a property with no type — an array argument then arrives as
+  a string. Shared leaves (`fieldName()`, `hexColor()`) are factories so every
+  use site gets a fresh instance.
+
 ## A chart is blank
 
 Work through these in order:

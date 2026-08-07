@@ -6,7 +6,7 @@ import { commonInput, ChartInputError } from './shared.js'
 import { choroplethMaps, resolveArea } from './choropleth-regions.js'
 import type { ChoroplethMapKey } from './choropleth-regions.js'
 
-const hexColor = z.string().regex(/^#[0-9a-fA-F]{3,8}$/, 'hex color, e.g. #2260C4')
+const hexColor = (): z.ZodString => z.string().regex(/^#[0-9a-fA-F]{3,8}$/, 'hex color, e.g. #2260C4')
 
 const hexToRgb = (hex: string): number[] => {
   let h = hex.slice(1)
@@ -29,7 +29,7 @@ export const choroplethInputShape = {
     id: z.string().min(1).describe('Area code or name (see the map option for accepted formats)'),
     value: z.number().describe('Numeric value driving the area color'),
   })).min(1).describe('One entry per area, e.g. [{"id":"US","value":21},{"id":"Germany","value":46}]'),
-  colorRange: z.tuple([hexColor, hexColor]).optional()
+  colorRange: z.array(hexColor()).length(2).optional()
     .describe('[lowColor, highColor] hex pair; area colors are interpolated between them. Defaults to a blue ramp'),
   valueLabel: z.string().default('').describe('Unit for legend labels, e.g. "%" or " GWh"'),
   ...commonInput,

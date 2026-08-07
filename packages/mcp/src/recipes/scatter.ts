@@ -28,17 +28,19 @@ const UNKNOWN_CATEGORY_COLOR = '#94A0AB'
 
 export const scatterInputShape = {
   data: dataRecords,
-  x: fieldName.describe('Field for X values (numeric)'),
-  y: fieldName.describe('Field for Y values (numeric)'),
-  size: fieldName.optional()
+  x: fieldName().describe('Field for X values (numeric)'),
+  y: fieldName().describe('Field for Y values (numeric)'),
+  size: fieldName().optional()
     .describe('Numeric field mapped to point size (bubble chart). Values are scaled into sizeRange'),
-  sizeRange: z.tuple([z.number().min(1).max(200), z.number().min(1).max(200)]).default([8, 40])
+  // A 2-item array rather than z.tuple: tuples lower to the draft-07 array form
+  // of `items`, which is invalid under JSON Schema draft 2020-12
+  sizeRange: z.array(z.number().min(1).max(200)).length(2).default([8, 40])
     .describe('Point diameter range [min, max] in pixels, used when size is set'),
   pointSize: z.number().min(1).max(100).default(10)
     .describe('Fixed point diameter in pixels, used when size is not set'),
-  colorBy: fieldName.optional()
+  colorBy: fieldName().optional()
     .describe('Categorical field: points are colored by its value and a legend is shown'),
-  label: fieldName.optional()
+  label: fieldName().optional()
     .describe('Field with point labels. Overlapping labels are hidden automatically'),
   shape: z.enum(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']).default('circle')
     .describe('Point shape'),
