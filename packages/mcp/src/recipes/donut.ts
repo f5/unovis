@@ -6,8 +6,8 @@ import type { DataRecord } from './shared.js'
 
 export const donutInputShape = {
   data: dataRecords,
-  value: fieldName.describe('Field with the numeric value of each segment'),
-  label: fieldName.optional().describe('Field with the segment name (used for the legend)'),
+  value: fieldName().describe('Field with the numeric value of each segment'),
+  label: fieldName().optional().describe('Field with the segment name (used for the legend)'),
   variant: z.enum(['donut', 'pie']).default('donut').describe('Donut (ring) or full pie'),
   arcWidth: z.number().min(2).max(200).optional().describe('Ring thickness in pixels (donut variant only)'),
   centralLabel: z.string().optional().describe('Text in the middle of the donut'),

@@ -35,11 +35,11 @@ const toTime = (value: string | number | boolean | null | undefined): number => 
  * instead. Returns undefined for degenerate extents. */
 export const timelineInputShape = {
   data: dataRecords,
-  row: fieldName.describe('Field with the row (lane) name. Records sharing a row value are drawn in one lane'),
-  start: fieldName.describe('Field with the item start: a number, or a date string (e.g. "2024-03-01")'),
-  end: fieldName.optional()
+  row: fieldName().describe('Field with the row (lane) name. Records sharing a row value are drawn in one lane'),
+  start: fieldName().describe('Field with the item start: a number, or a date string (e.g. "2024-03-01")'),
+  end: fieldName().optional()
     .describe('Field with the item end, same format as start. Provide either end or duration'),
-  duration: fieldName.optional()
+  duration: fieldName().optional()
     .describe('Field with the item duration, in the same units as start (milliseconds when start is a date). Ignored when end is provided'),
   timeIsDate: z.boolean().optional()
     .describe('Treat start/end values as dates (time axis). Auto-detected from the start field when omitted'),

@@ -133,6 +133,7 @@ The trend matters: as the core becomes SSR-friendlier, the shim layer shrinks.
 | Recipe snapshots | Byte-stable SVG per chart type (with a deterministic id prefix) |
 | Post-processing tests | Id rewriting, variable baking, header synthesis, theme |
 | MCP integration | Real SDK client over an in-memory transport: schemas, every output type, error paths, tool filtering, concurrency |
+| Tool schemas | Every advertised schema validated against the draft 2020-12 meta-schema, with no `$ref`s — the shape a client must accept before any chart can render ([why](./troubleshooting.md#the-client-rejects-the-whole-tool-list)) |
 | Widget tests | The **real browser bundle** executed in jsdom: rendering, a simulated hover producing tooltip content, the embed protocol |
 | Widget matrix | All 15 chart types rendered interactively with a clean console |
 | Codegen | Generated TypeScript **type-checked against `@unovis/ts`** |

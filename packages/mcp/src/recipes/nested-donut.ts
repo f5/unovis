@@ -6,9 +6,9 @@ import type { DataRecord } from './shared.js'
 
 export const nestedDonutInputShape = {
   data: dataRecords,
-  layers: z.array(fieldName).min(1).max(4)
+  layers: z.array(fieldName()).min(1).max(4)
     .describe('Fields defining the hierarchy rings, innermost ring first, e.g. ["region", "country"]'),
-  value: fieldName.optional()
+  value: fieldName().optional()
     .describe('Field with the numeric segment weight. Records are counted when omitted'),
   centralLabel: z.string().optional().describe('Text in the middle of the donut'),
   centralSubLabel: z.string().optional().describe('Smaller text under the central label'),

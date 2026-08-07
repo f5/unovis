@@ -6,9 +6,9 @@ import type { DataRecord } from './shared.js'
 
 export const treemapInputShape = {
   data: dataRecords,
-  layers: z.array(fieldName).min(1).max(4)
+  layers: z.array(fieldName()).min(1).max(4)
     .describe('Fields defining the hierarchy, top-level groups first, e.g. ["sector", "company"]'),
-  value: fieldName.describe('Field with the numeric tile size'),
+  value: fieldName().describe('Field with the numeric tile size'),
   labelInternalNodes: z.boolean().optional()
     .describe('Show labels on the group (non-leaf) tiles. Defaults to true when there is more than one layer'),
   tilePadding: z.number().min(0).max(24).default(2).describe('Padding between tiles in pixels'),
