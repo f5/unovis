@@ -20,7 +20,12 @@ export const dataValue = z.union([z.string(), z.number(), z.boolean(), z.null()]
 export const dataRecords = z.array(z.record(z.string(), dataValue)).min(1)
   .describe('Chart data: an array of flat records, e.g. [{"month": "Jan", "sales": 120, "cost": 80}, ...]')
 
-export const fieldName = z.string().min(1)
+/* A factory, not a constant: zod-to-json-schema emits a $ref whenever the same
+ * schema instance appears twice in one tool, and clients that flatten those refs
+ * drop the type altogether — a `y` with no type at all turned multi-series calls
+ * into a JSON string. A fresh instance per use site keeps each property
+ * self-describing. */
+export const fieldName = (): z.ZodString => z.string().min(1)
 
 export const commonInput = {
   width: z.number().int().min(100).max(4000).default(800).describe('Chart width in pixels'),
@@ -48,7 +53,7 @@ export const xyInput = {
   legend: z.boolean().default(true).describe('Show a legend (multi-series charts only)'),
 }
 
-const hexColor = z.string().regex(/^#[0-9a-fA-F]{3,8}$/, 'hex color, e.g. #FF6B7E')
+const hexColor = (): z.ZodString => z.string().regex(/^#[0-9a-fA-F]{3,8}$/, 'hex color, e.g. #FF6B7E')
 
 /** Reference-line / shaded-band decorations available on XY charts */
 export const xyDecorations = {
@@ -56,7 +61,7 @@ export const xyDecorations = {
     axis: z.enum(['x', 'y']).default('y').describe('y: horizontal line at a Y value; x: vertical line at an X value'),
     value: z.number().describe('Position in data units'),
     label: z.string().optional().describe('Small label next to the line'),
-    color: hexColor.optional(),
+    color: hexColor().optional(),
     lineWidth: z.number().min(0.5).max(10).default(1.5),
     style: z.enum(['dashed', 'solid', 'dotted']).default('dashed'),
   })).max(8).optional().describe('Reference lines for thresholds/targets, e.g. an SLA or goal'),
@@ -65,7 +70,7 @@ export const xyDecorations = {
     from: z.number().describe('Band start, in data units'),
     to: z.number().describe('Band end, in data units'),
     label: z.string().optional(),
-    color: hexColor.optional(),
+    color: hexColor().optional(),
   })).max(8).optional().describe('Shaded ranges drawn behind the data, e.g. an acceptable range'),
 }
 

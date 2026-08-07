@@ -4,7 +4,7 @@ import type { Recipe } from './types.js'
 import { commonInput, dataRecords, fieldName, assertFieldsExist, baseSpec, distinctValues, field } from './shared.js'
 import type { DataRecord } from './shared.js'
 
-const hexColor = z.string().regex(/^#[0-9a-fA-F]{3,8}$/, 'hex color, e.g. #40C463')
+const hexColor = (): z.ZodString => z.string().regex(/^#[0-9a-fA-F]{3,8}$/, 'hex color, e.g. #40C463')
 
 const hexToRgb = (hex: string): number[] => {
   let h = hex.slice(1)
@@ -25,10 +25,10 @@ const interpolateHexStops = (from: string, to: string, count: number): string[] 
 
 export const heatmapInputShape = {
   data: dataRecords,
-  row: fieldName.describe('Field with the row category of each cell'),
-  column: fieldName.describe('Field with the column category of each cell'),
-  value: fieldName.describe('Field with the numeric cell value (drives the cell color)'),
-  colorRange: z.tuple([hexColor, hexColor]).optional()
+  row: fieldName().describe('Field with the row category of each cell'),
+  column: fieldName().describe('Field with the column category of each cell'),
+  value: fieldName().describe('Field with the numeric cell value (drives the cell color)'),
+  colorRange: z.array(hexColor()).length(2).optional()
     .describe('[lowColor, highColor] hex pair; cell colors are interpolated between them. Defaults to a green sequence'),
   cellPadding: z.number().min(0).max(20).default(2).describe('Gap between cells in pixels'),
   cellCornerRadius: z.number().min(0).max(30).default(2).describe('Cell corner radius in pixels'),

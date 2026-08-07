@@ -345,7 +345,7 @@ importers:
         version: 4.9.5
       typescript-plugin-css-modules:
         specifier: ^4.1.1
-        version: 4.2.3(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.9.5))(typescript@4.9.5)
+        version: 4.2.3(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.9.5))(typescript@4.9.5)
       webpack:
         specifier: ^5.75.0
         version: 5.76.0(webpack-cli@5.1.4)
@@ -392,6 +392,9 @@ importers:
       '@types/node':
         specifier: ^20.17.0
         version: 20.19.43
+      ajv:
+        specifier: ^8.20.0
+        version: 8.20.0
       esbuild:
         specifier: ^0.25.12
         version: 0.25.12
@@ -635,7 +638,7 @@ importers:
         version: 1.1.2
       eslint-plugin-svelte:
         specifier: ^2.10.0
-        version: 2.46.1(eslint@8.57.1)(svelte@3.59.2)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4))
+        version: 2.46.1(eslint@8.57.1)(svelte@3.59.2)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4))
       rollup:
         specifier: ^2.61.1
         version: 2.80.0
@@ -662,16 +665,16 @@ importers:
         version: 3.59.2
       svelte-check:
         specifier: ^2.7.0
-        version: 2.10.3(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)
+        version: 2.10.3(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)
       svelte-preprocess:
         specifier: ^4.10.7
-        version: 4.10.7(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)(typescript@4.2.4)
+        version: 4.10.7(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)(typescript@4.2.4)
       tslib:
         specifier: ^2.3.1
         version: 2.8.1
       ttypescript:
         specifier: ^1.5.13
-        version: 1.5.15(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4))(typescript@4.2.4)
+        version: 1.5.15(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4))(typescript@4.2.4)
       typescript:
         specifier: ~4.2.4
         version: 4.2.4
@@ -900,7 +903,7 @@ importers:
         version: 5.2.0(rollup@2.80.0)
       rollup-plugin-postcss:
         specifier: ^4.0.1
-        version: 4.0.2(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4))
+        version: 4.0.2(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4))
       rollup-plugin-rename-node-modules:
         specifier: ^1.3.1
         version: 1.3.1(rollup@2.80.0)
@@ -5454,6 +5457,9 @@ packages:
 
   ajv@8.18.0:
     resolution: {integrity: sha512-PlXPeEWMXMZ7sPYOHqmDyCJzcfNrUr3fGNKtezX14ykXOEIvyK81d+qydx89KY5O71FKMPaQ2vBfBFI5NHR63A==}
+
+  ajv@8.20.0:
+    resolution: {integrity: sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==}
 
   ajv@8.6.2:
     resolution: {integrity: sha512-9807RlWAgT564wT+DjeyU5OFMPjmzxVobvDFmNAhY+5zD6A2ly3jDp6sgnfyDtlIQ+7H97oc/DGCzzfu9rjw9w==}
@@ -14101,7 +14107,7 @@ snapshots:
       '@ampproject/remapping': 1.0.1
       '@angular-devkit/architect': 0.1202.18
       '@angular-devkit/build-optimizer': 0.1202.18(webpack@5.50.0)
-      '@angular-devkit/build-webpack': 0.1202.18(webpack-dev-server@3.11.3(webpack@5.76.0))(webpack@5.50.0)
+      '@angular-devkit/build-webpack': 0.1202.18(webpack-dev-server@3.11.3(webpack@5.50.0))(webpack@5.50.0)
       '@angular-devkit/core': 12.2.18
       '@angular/compiler-cli': 12.2.17(@angular/compiler@12.2.17)(typescript@4.2.4)
       '@babel/core': 7.14.8
@@ -14195,7 +14201,7 @@ snapshots:
     optionalDependencies:
       webpack: 5.50.0
 
-  '@angular-devkit/build-webpack@0.1202.18(webpack-dev-server@3.11.3(webpack@5.76.0))(webpack@5.50.0)':
+  '@angular-devkit/build-webpack@0.1202.18(webpack-dev-server@3.11.3(webpack@5.50.0))(webpack@5.50.0)':
     dependencies:
       '@angular-devkit/architect': 0.1202.18
       rxjs: 6.6.7
@@ -17928,8 +17934,8 @@ snapshots:
   '@modelcontextprotocol/sdk@1.29.0(zod@3.25.76)':
     dependencies:
       '@hono/node-server': 1.19.15(hono@4.12.32)
-      ajv: 8.18.0
-      ajv-formats: 3.0.1(ajv@8.18.0)
+      ajv: 8.20.0
+      ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
       cors: 2.8.6
       cross-spawn: 7.0.6
@@ -18411,7 +18417,7 @@ snapshots:
       source-map: 0.7.6
       webpack: 5.76.0(webpack-cli@5.1.4)
     optionalDependencies:
-      sockjs-client: 1.6.1
+      sockjs-client: 1.6.1(supports-color@6.1.0)
       type-fest: 4.41.0
       webpack-dev-server: 5.2.3(tslib@2.8.1)(webpack-cli@5.1.4)(webpack@5.76.0)
 
@@ -20082,9 +20088,9 @@ snapshots:
     optionalDependencies:
       ajv: 8.18.0
 
-  ajv-formats@3.0.1(ajv@8.18.0):
+  ajv-formats@3.0.1(ajv@8.20.0):
     optionalDependencies:
-      ajv: 8.18.0
+      ajv: 8.20.0
 
   ajv-keywords@3.5.2(ajv@6.14.0):
     dependencies:
@@ -20110,6 +20116,13 @@ snapshots:
       uri-js: 4.4.1
 
   ajv@8.18.0:
+    dependencies:
+      fast-deep-equal: 3.1.3
+      fast-uri: 3.1.0
+      json-schema-traverse: 1.0.0
+      require-from-string: 2.0.2
+
+  ajv@8.20.0:
     dependencies:
       fast-deep-equal: 3.1.3
       fast-uri: 3.1.0
@@ -22407,7 +22420,7 @@ snapshots:
 
   eslint-import-resolver-node@0.3.9:
     dependencies:
-      debug: 3.2.7(supports-color@8.1.1)
+      debug: 3.2.7(supports-color@6.1.0)
       is-core-module: 2.16.1
       resolve: 1.22.11
     transitivePeerDependencies:
@@ -22437,7 +22450,7 @@ snapshots:
 
   eslint-module-utils@2.12.1(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.2.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@2.7.1)(eslint@8.57.1):
     dependencies:
-      debug: 3.2.7(supports-color@8.1.1)
+      debug: 3.2.7(supports-color@6.1.0)
     optionalDependencies:
       '@typescript-eslint/parser': 5.62.0(eslint@8.57.1)(typescript@4.2.4)
       eslint: 8.57.1
@@ -22498,7 +22511,7 @@ snapshots:
       array.prototype.findlastindex: 1.2.6
       array.prototype.flat: 1.3.3
       array.prototype.flatmap: 1.3.3
-      debug: 3.2.7(supports-color@8.1.1)
+      debug: 3.2.7(supports-color@6.1.0)
       doctrine: 2.1.0
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
@@ -22620,7 +22633,7 @@ snapshots:
     dependencies:
       eslint: 8.57.1
 
-  eslint-plugin-svelte@2.46.1(eslint@8.57.1)(svelte@3.59.2)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4)):
+  eslint-plugin-svelte@2.46.1(eslint@8.57.1)(svelte@3.59.2)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4)):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@8.57.1)
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -22629,7 +22642,7 @@ snapshots:
       esutils: 2.0.3
       known-css-properties: 0.35.0
       postcss: 8.5.8
-      postcss-load-config: 3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4))
+      postcss-load-config: 3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4))
       postcss-safe-parser: 6.0.0(postcss@8.5.8)
       postcss-selector-parser: 6.1.2
       semver: 7.7.4
@@ -25748,7 +25761,7 @@ snapshots:
 
   needle@2.9.1:
     dependencies:
-      debug: 3.2.7(supports-color@8.1.1)
+      debug: 3.2.7(supports-color@6.1.0)
       iconv-lite: 0.4.24
       sax: 1.5.0
     transitivePeerDependencies:
@@ -26729,6 +26742,14 @@ snapshots:
       postcss: 8.5.8
       ts-node: 10.9.2(@types/node@16.18.126)(typescript@4.2.4)
 
+  postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.9.5)):
+    dependencies:
+      lilconfig: 2.1.0
+      yaml: 1.10.2
+    optionalDependencies:
+      postcss: 8.5.8
+      ts-node: 10.9.2(@types/node@16.18.126)(typescript@4.9.5)
+
   postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4)):
     dependencies:
       lilconfig: 2.1.0
@@ -26736,14 +26757,7 @@ snapshots:
     optionalDependencies:
       postcss: 8.5.8
       ts-node: 10.9.2(@types/node@20.19.43)(typescript@4.2.4)
-
-  postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.9.5)):
-    dependencies:
-      lilconfig: 2.1.0
-      yaml: 1.10.2
-    optionalDependencies:
-      postcss: 8.5.8
-      ts-node: 10.9.2(@types/node@20.19.43)(typescript@4.9.5)
+    optional: true
 
   postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.6.3)):
     dependencies:
@@ -28041,25 +28055,6 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  rollup-plugin-postcss@4.0.2(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4)):
-    dependencies:
-      chalk: 4.1.2
-      concat-with-sourcemaps: 1.1.0
-      cssnano: 5.1.15(postcss@8.5.8)
-      import-cwd: 3.0.0
-      p-queue: 6.6.2
-      pify: 5.0.0
-      postcss: 8.5.8
-      postcss-load-config: 3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4))
-      postcss-modules: 4.3.1(postcss@8.5.8)
-      promise.series: 0.2.0
-      resolve: 1.22.11
-      rollup-pluginutils: 2.8.2
-      safe-identifier: 0.4.2
-      style-inject: 0.3.0
-    transitivePeerDependencies:
-      - ts-node
-
   rollup-plugin-rename-node-modules@1.3.1(rollup@2.80.0):
     dependencies:
       estree-walker: 2.0.2
@@ -28620,17 +28615,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  sockjs-client@1.6.1:
-    dependencies:
-      debug: 3.2.7(supports-color@8.1.1)
-      eventsource: 2.0.2
-      faye-websocket: 0.11.4
-      inherits: 2.0.4
-      url-parse: 1.5.10
-    transitivePeerDependencies:
-      - supports-color
-    optional: true
-
   sockjs-client@1.6.1(supports-color@6.1.0):
     dependencies:
       debug: 3.2.7(supports-color@6.1.0)
@@ -29065,7 +29049,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@2.10.3(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2):
+  svelte-check@2.10.3(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       chokidar: 3.6.0
@@ -29074,7 +29058,7 @@ snapshots:
       picocolors: 1.1.1
       sade: 1.8.1
       svelte: 3.59.2
-      svelte-preprocess: 4.10.7(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)(typescript@5.2.2)
+      svelte-preprocess: 4.10.7(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)(typescript@5.2.2)
       typescript: 5.2.2
     transitivePeerDependencies:
       - '@babel/core'
@@ -29112,7 +29096,7 @@ snapshots:
     dependencies:
       svelte: 4.2.20
 
-  svelte-preprocess@4.10.7(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)(typescript@4.2.4):
+  svelte-preprocess@4.10.7(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)(typescript@4.2.4):
     dependencies:
       '@types/pug': 2.0.10
       '@types/sass': 1.45.0
@@ -29125,11 +29109,11 @@ snapshots:
       '@babel/core': 7.29.0
       less: 4.5.1
       postcss: 8.5.8
-      postcss-load-config: 3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4))
+      postcss-load-config: 3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4))
       sass: 1.97.3
       typescript: 4.2.4
 
-  svelte-preprocess@4.10.7(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)(typescript@5.2.2):
+  svelte-preprocess@4.10.7(@babel/core@7.29.0)(less@4.5.1)(postcss-load-config@3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4)))(postcss@8.5.8)(sass@1.97.3)(svelte@3.59.2)(typescript@5.2.2):
     dependencies:
       '@types/pug': 2.0.10
       '@types/sass': 1.45.0
@@ -29142,7 +29126,7 @@ snapshots:
       '@babel/core': 7.29.0
       less: 4.5.1
       postcss: 8.5.8
-      postcss-load-config: 3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4))
+      postcss-load-config: 3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.2.4))
       sass: 1.97.3
       typescript: 5.2.2
 
@@ -29414,6 +29398,25 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
+  ts-node@10.9.2(@types/node@16.18.126)(typescript@4.9.5):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.12
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 16.18.126
+      acorn: 8.16.0
+      acorn-walk: 8.3.5
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.4
+      make-error: 1.3.6
+      typescript: 4.9.5
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optional: true
+
   ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -29429,24 +29432,6 @@ snapshots:
       diff: 4.0.4
       make-error: 1.3.6
       typescript: 4.2.4
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-
-  ts-node@10.9.2(@types/node@20.19.43)(typescript@4.9.5):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.12
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.19.43
-      acorn: 8.16.0
-      acorn-walk: 8.3.5
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.4
-      make-error: 1.3.6
-      typescript: 4.9.5
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optional: true
@@ -29526,12 +29511,6 @@ snapshots:
       ts-node: 10.9.2(@types/node@16.18.126)(typescript@4.2.4)
       typescript: 4.2.4
 
-  ttypescript@1.5.15(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.2.4))(typescript@4.2.4):
-    dependencies:
-      resolve: 1.22.11
-      ts-node: 10.9.2(@types/node@20.19.43)(typescript@4.2.4)
-      typescript: 4.2.4
-
   tunnel-agent@0.6.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -29608,7 +29587,7 @@ snapshots:
     dependencies:
       is-typedarray: 1.0.0
 
-  typescript-plugin-css-modules@4.2.3(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.9.5))(typescript@4.9.5):
+  typescript-plugin-css-modules@4.2.3(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.9.5))(typescript@4.9.5):
     dependencies:
       '@types/postcss-modules-local-by-default': 4.0.2
       '@types/postcss-modules-scope': 3.0.4
@@ -29617,7 +29596,7 @@ snapshots:
       less: 4.5.1
       lodash.camelcase: 4.3.0
       postcss: 8.5.8
-      postcss-load-config: 3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@20.19.43)(typescript@4.9.5))
+      postcss-load-config: 3.1.4(postcss@8.5.8)(ts-node@10.9.2(@types/node@16.18.126)(typescript@4.9.5))
       postcss-modules-extract-imports: 3.1.0(postcss@8.5.8)
       postcss-modules-local-by-default: 4.2.0(postcss@8.5.8)
       postcss-modules-scope: 3.2.1(postcss@8.5.8)

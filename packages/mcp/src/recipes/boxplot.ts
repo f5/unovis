@@ -30,8 +30,8 @@ const round6 = (value: number): number => Math.round(value * 1e6) / 1e6
 
 export const boxplotInputShape = {
   data: dataRecords,
-  groupBy: fieldName.describe('Field with the group/category of each observation (one box per distinct value)'),
-  value: fieldName.describe('Field with the numeric value of each observation'),
+  groupBy: fieldName().describe('Field with the group/category of each observation (one box per distinct value)'),
+  value: fieldName().describe('Field with the numeric value of each observation'),
   boxPadding: z.number().min(0).max(0.9).default(0.25).describe('Fractional padding between boxes, 0..0.9'),
   boxMaxWidth: z.number().min(4).max(400).optional().describe('Maximum box width in pixels'),
   roundedCorners: z.number().min(0).max(20).default(2).describe('Corner radius of the boxes in pixels'),

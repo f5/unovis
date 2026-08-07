@@ -66,6 +66,7 @@
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.17.0",
+    "ajv": "^8.20.0",
     "esbuild": "^0.25.12",
     "rimraf": "^3.0.2",
     "tsx": "^4.19.0",

@@ -28,8 +28,8 @@ const seriesColor = (i: number, colors?: string[]): string =>
 
 export const areaInputShape = {
   data: dataRecords,
-  x: fieldName.describe('Field for X values: numbers, or date strings when xIsTime is true, or category names'),
-  y: z.union([fieldName, z.array(fieldName).min(1).max(12)])
+  x: fieldName().describe('Field for X values: numbers, or date strings when xIsTime is true, or category names'),
+  y: z.union([fieldName(), z.array(fieldName()).min(1).max(12)])
     .describe('Field name(s) for Y values. Multiple field names render multiple areas'),
   stacked: z.boolean().default(true)
     .describe('Stack multiple y series on top of each other. When false, series overlap with transparency'),

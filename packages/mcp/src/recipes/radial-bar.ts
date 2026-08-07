@@ -6,8 +6,8 @@ import type { DataRecord } from './shared.js'
 
 export const radialBarInputShape = {
   data: dataRecords,
-  value: fieldName.describe('Field with the numeric value of each ring'),
-  label: fieldName.optional().describe('Field with the ring name (used for the legend)'),
+  value: fieldName().describe('Field with the numeric value of each ring'),
+  label: fieldName().optional().describe('Field with the ring name (used for the legend)'),
   maxValue: z.number().positive().optional()
     .describe('Value at which a ring forms a full circle. Defaults to the largest value in the data'),
   arcWidth: z.number().min(2).max(100).default(16).describe('Ring thickness in pixels'),
