@@ -1,10 +1,10 @@
 | Name                              | License period | License type | Installed version | Author                                                           |
 | :-------------------------------- | :------------- | :----------- | :---------------- | :--------------------------------------------------------------- |
-| @angular/core                     | perpetual      | MIT          | 20.3.26           | angular                                                          |
-| @angular/common                   | perpetual      | MIT          | 20.3.26           | angular                                                          |
-| @angular/platform-browser         | perpetual      | MIT          | 20.3.26           | angular                                                          |
-| @angular/compiler                 | perpetual      | MIT          | 20.3.26           | angular                                                          |
-| @angular/platform-browser-dynamic | perpetual      | MIT          | 20.3.26           | angular                                                          |
+| @angular/core                     | perpetual      | MIT          | 20.3.27           | angular                                                          |
+| @angular/common                   | perpetual      | MIT          | 20.3.27           | angular                                                          |
+| @angular/platform-browser         | perpetual      | MIT          | 20.3.27           | angular                                                          |
+| @angular/compiler                 | perpetual      | MIT          | 20.3.27           | angular                                                          |
+| @angular/platform-browser-dynamic | perpetual      | MIT          | 20.3.27           | angular                                                          |
 | reflect-metadata                  | perpetual      | Apache-2.0   | 0.1.14            | Ron Buckton ron.buckton@microsoft.com http://github.com/rbuckton |
 | rxjs                              | perpetual      | Apache-2.0   | 7.8.2             | Ben Lesh <ben@benlesh.com>                                       |
 | zone.js                           | perpetual      | MIT          | 0.15.1            | Brian Ford                                                       |
