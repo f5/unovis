@@ -5,8 +5,10 @@ import {
   ContentChild,
   ContentChildren,
   ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
+  Output,
   QueryList,
   SimpleChanges,
   ViewChild,
@@ -24,6 +26,7 @@ import {
   Tooltip,
   XYContainer,
   XYContainerConfigInterface,
+  XYContainerRenderPayload,
 } from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
@@ -135,7 +138,26 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
    * have their individual data. Default: `undefined` */
   @Input() data?: Datum[] | undefined = undefined
 
+  /** Emitted once after the chart's first render completes. */
+  @Output() load = new EventEmitter<XYContainerRenderPayload>()
+  /** Emitted after every render of the chart, including the first. */
+  @Output() render = new EventEmitter<XYContainerRenderPayload>()
+  /** Emitted after every render except the first. */
+  @Output() redraw = new EventEmitter<XYContainerRenderPayload>()
+
   chart: XYContainer<Datum>
+  private _hasLoaded = false
+
+  private _onRenderComplete: XYContainerConfigInterface<Datum>['onRenderComplete'] = (svg, margin, bleed, containerWidth, containerHeight, componentWidth, componentHeight) => {
+    const payload: XYContainerRenderPayload = { svg, margin, bleed, containerWidth, containerHeight, componentWidth, componentHeight }
+    this.render.emit(payload)
+    if (this._hasLoaded) {
+      this.redraw.emit(payload)
+    } else {
+      this._hasLoaded = true
+      this.load.emit(payload)
+    }
+  }
 
   ngAfterViewInit (): void {
     this.chart = new XYContainer<Datum>(this.containerRef.nativeElement, this.getConfig(), this.data)
@@ -207,6 +229,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
       yDirection,
       ariaLabel,
       colorFunction,
+      onRenderComplete: this._onRenderComplete,
     }
   }
 
