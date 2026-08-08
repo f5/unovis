@@ -46,7 +46,7 @@
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.7",
+    "@unovis/ts": "workspace:*",
     "svelte": "^3.48.0 || ^4.0.0 "
   },
   "devDependencies": {
