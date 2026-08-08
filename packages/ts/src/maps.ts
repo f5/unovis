@@ -10,25 +10,20 @@ import germany from './maps/germany-regions.json'
 import india from './maps/ind-regions.json'
 import uk from './maps/uk-regions.json'
 
-export const WorldMapTopoJSON = worldMap as unknown as
-  TopoJSON.Topology<{countries: TopoJSON.GeometryCollection<{name: string; color: string}>}>
-export const WorldMap110mAlphaTopoJSON = worldMap110mAlpha as unknown as
-  TopoJSON.Topology<{countries: TopoJSON.GeometryCollection<{name: string; color: string}>}>
-export const WorldMapSimplestTopoJSON = worldMapSimplest as unknown as
-  TopoJSON.Topology<{countries: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+type RegionFeature = { name: string; color: string }
+type Topo<K extends string> = TopoJSON.Topology<Record<K, TopoJSON.GeometryCollection<RegionFeature>>>
 
-export const USATopoJSON = unitedStates as unknown as
-  TopoJSON.Topology<{states: TopoJSON.GeometryCollection<{name: string; color: string}>}>
-export const USCountiesTopoJSON = usCounties as unknown as
-  TopoJSON.Topology<{counties: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+const topo = <T>(json: unknown): T => json as T
 
-export const GermanyTopoJSON = germany as unknown as
-  TopoJSON.Topology<{regions: TopoJSON.GeometryCollection<{name: string; color: string}>}>
-export const UKTopoJSON = uk as unknown as
-  TopoJSON.Topology<{regions: TopoJSON.GeometryCollection<{name: string; color: string}>}>
-export const FranceTopoJSON = france as unknown as
-  TopoJSON.Topology<{regions: TopoJSON.GeometryCollection<{name: string; color: string}>}>
-export const IndiaTopoJSON = india as unknown as
-  TopoJSON.Topology<{regions: TopoJSON.GeometryCollection<{name: string; color: string}>}>
-export const ChinaTopoJSON = china as unknown as
-  TopoJSON.Topology<{provinces: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+export const WorldMapTopoJSON = topo<Topo<'countries'>>(worldMap)
+export const WorldMap110mAlphaTopoJSON = topo<Topo<'countries'>>(worldMap110mAlpha)
+export const WorldMapSimplestTopoJSON = topo<Topo<'countries'>>(worldMapSimplest)
+
+export const USATopoJSON = topo<Topo<'states'>>(unitedStates)
+export const USCountiesTopoJSON = topo<Topo<'counties'>>(usCounties)
+
+export const GermanyTopoJSON = topo<Topo<'regions'>>(germany)
+export const UKTopoJSON = topo<Topo<'regions'>>(uk)
+export const FranceTopoJSON = topo<Topo<'regions'>>(france)
+export const IndiaTopoJSON = topo<Topo<'regions'>>(india)
+export const ChinaTopoJSON = topo<Topo<'provinces'>>(china)
