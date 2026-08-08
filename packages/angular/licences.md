@@ -3,11 +3,11 @@
 | tslib                         | perpetual      | 0BSD         | 2.8.1             | Microsoft Corp.                         |
 | @angular-devkit/build-angular | perpetual      | MIT          | 20.3.32           | Angular Authors                         |
 | @angular/cli                  | perpetual      | MIT          | 20.3.32           | Angular Authors                         |
-| @angular/common               | perpetual      | MIT          | 20.3.26           | angular                                 |
-| @angular/compiler             | perpetual      | MIT          | 20.3.26           | angular                                 |
-| @angular/compiler-cli         | perpetual      | MIT          | 20.3.26           | n/a                                     |
-| @angular/core                 | perpetual      | MIT          | 20.3.26           | angular                                 |
-| @angular/platform-browser     | perpetual      | MIT          | 20.3.26           | angular                                 |
+| @angular/common               | perpetual      | MIT          | 20.3.27           | angular                                 |
+| @angular/compiler             | perpetual      | MIT          | 20.3.27           | angular                                 |
+| @angular/compiler-cli         | perpetual      | MIT          | 20.3.27           | n/a                                     |
+| @angular/core                 | perpetual      | MIT          | 20.3.27           | angular                                 |
+| @angular/platform-browser     | perpetual      | MIT          | 20.3.27           | angular                                 |
 | @types/d3-array               | perpetual      | MIT          | 3.2.2             | n/a                                     |
 | @types/d3-brush               | perpetual      | MIT          | 3.0.6             | n/a                                     |
 | @types/d3-dispatch            | perpetual      | MIT          | 3.0.6             | n/a                                     |
@@ -30,9 +30,9 @@
 | rxjs                          | perpetual      | Apache-2.0   | 7.8.2             | Ben Lesh <ben@benlesh.com>              |
 | typescript                    | perpetual      | Apache-2.0   | 5.8.3             | Microsoft Corp.                         |
 | zone.js                       | perpetual      | MIT          | 0.15.1            | Brian Ford                              |
-| @angular/common               | perpetual      | MIT          | 20.3.26           | angular                                 |
-| @angular/compiler             | perpetual      | MIT          | 20.3.26           | angular                                 |
-| @angular/core                 | perpetual      | MIT          | 20.3.26           | angular                                 |
+| @angular/common               | perpetual      | MIT          | 20.3.27           | angular                                 |
+| @angular/compiler             | perpetual      | MIT          | 20.3.27           | angular                                 |
+| @angular/core                 | perpetual      | MIT          | 20.3.27           | angular                                 |
 | d3-array                      | perpetual      | ISC          | 3.2.4             | Mike Bostock http://bost.ocks.org/mike  |
 | d3-geo                        | perpetual      | ISC          | 3.1.1             | Mike Bostock https://bost.ocks.org/mike |
 
