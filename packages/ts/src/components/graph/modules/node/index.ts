@@ -226,7 +226,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 ): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> {
   const {
     nodeGaugeAnimDuration, nodeStrokeWidth, nodeShape, nodeSize, nodeGaugeValue, nodeGaugeFill,
-    nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel,
+    nodeIcon, nodeIconSize,
     nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon,
   } = config
 
@@ -396,19 +396,19 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     group
       .on('mouseenter', () => {
         renderNodeLabels(label, d, config, labelFontSize, subLabelFontSize, true)
-        setLabelRect(label, getString(d, nodeLabel, d._index), getString(d, nodeSubLabel, d._index), nodeSelectors.labelText)
+        setLabelRect(label, nodeSelectors.labelText)
         group.raise()
       })
       .on('mouseleave', () => {
         renderNodeLabels(label, d, config, labelFontSize, subLabelFontSize)
-        setLabelRect(label, getString(d, nodeLabel, d._index), getString(d, nodeSubLabel, d._index), nodeSelectors.labelText)
+        setLabelRect(label, nodeSelectors.labelText)
       })
 
     // Position label
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
     const nodeHeight = isStringSvg((getString(d, nodeShape, d._index)) as GraphNodeShape) ? nodeBBox.height : nodeSizeValue
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
-    if (scale >= ZoomLevel.Level3) setLabelRect(label, getString(d, nodeLabel, d._index), getString(d, nodeSubLabel, d._index), nodeSelectors.labelText)
+    if (scale >= ZoomLevel.Level3) setLabelRect(label, nodeSelectors.labelText)
 
     // Bottom Icon
     bottomIcon.html(getString(d, nodeBottomIcon, d._index))
@@ -447,13 +447,12 @@ export function removeNodes<N extends GraphInputNode, L extends GraphInputLink> 
 }
 
 function setLabelBackgroundRect<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
-  config: GraphConfigInterface<N, L>
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>
 ): void {
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
     const label: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.label}`)
-    setLabelRect(label, getString(d, config.nodeLabel, i), getString(d, config.nodeSubLabel, i), nodeSelectors.labelText)
+    setLabelRect(label, nodeSelectors.labelText)
   })
 }
 
@@ -479,7 +478,7 @@ export function zoomNodes<N extends GraphInputNode, L extends GraphInputLink> (
     selection.selectAll(`.${nodeSelectors.sideLabel}`)
       .attr('transform', `scale(${1 / Math.pow(scale, 0.45)})`)
 
-    if (scale >= ZoomLevel.Level3) selection.call(setLabelBackgroundRectThrottled, config)
+    if (scale >= ZoomLevel.Level3) selection.call(setLabelBackgroundRectThrottled)
   }
 }
 

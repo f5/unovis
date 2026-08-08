@@ -101,17 +101,15 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
 
 export function setLabelRect<T, K extends BaseType, L> (
   labelSelection: Selection<SVGGElement, T, K, L>,
-  label: string,
-  subLabel: string,
   selector: string
 ): Selection<SVGRectElement, T, K, L> {
   // Set label background rectangle size by text size. Using the rendered
   // bounding box directly makes the rectangle work for multi-line (wrapped)
   // labels as well as single-line ones.
-  // The rect is hidden only when both the label and sub-label are empty,
-  // so a node with only a sub-label still shows its background rectangle.
-  const labelIsEmpty = isEmpty(label) && isEmpty(subLabel)
+  // The rect is hidden when the rendered text is empty, so a node with only
+  // a sub-label still shows its background rectangle.
   const labelTextSelection = labelSelection.select<SVGTextElement>(`.${selector}`)
+  const labelIsEmpty = isEmpty(labelTextSelection.text())
   const labelTextBBox = (labelTextSelection.node() as SVGGraphicsElement).getBBox()
   const backgroundRect = labelSelection.select<SVGRectElement>('rect')
     .attr('visibility', labelIsEmpty ? 'hidden' : null)
