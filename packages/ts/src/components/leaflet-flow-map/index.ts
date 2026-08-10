@@ -55,6 +55,7 @@ export class LeafletFlowMap<
     super(ComponentType.HTML)
 
     this.leafletMap = new LeafletMap<PointDatum>(container, config, data?.points ?? [])
+    this.setConfig(config)
 
     const rendererImportPromise = import('./renderer')
     Promise.all([rendererImportPromise, this.leafletMap.getLeafletInstancePromise()])

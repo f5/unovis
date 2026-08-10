@@ -33,7 +33,7 @@ export class Boxplot<Datum> extends XYComponentCore<Datum, BoxplotConfigInterfac
 
   constructor (config?: BoxplotConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
   }
 
   get bleed (): Spacing {
