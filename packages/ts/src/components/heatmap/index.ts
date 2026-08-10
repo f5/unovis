@@ -54,7 +54,7 @@ export class Heatmap<Datum> extends ComponentCore<Datum[], HeatmapConfigInterfac
 
   constructor (config?: HeatmapConfigInterface<Datum>) {
     super()
-    if (config) this.setConfig(config)
+    this.setConfig(config)
     this.cellsGroup = this.g.append('g')
     this.columnLabelsGroup = this.g.append('g')
     this.rowLabelsGroup = this.g.append('g')
