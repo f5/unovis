@@ -30,14 +30,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Publish packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           TAG="${GITHUB_REF_NAME}"
           if [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            pnpm publish:all
+            pnpm publish:all --provenance
           elif [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ ]]; then
-            pnpm publish:all:beta
+            pnpm publish:all:beta --provenance
           else
             echo "Unrecognized tag format: $TAG. Expected X.Y.Z or X.Y.Z-beta.N." >&2
             exit 1
