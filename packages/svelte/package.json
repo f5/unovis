@@ -47,7 +47,7 @@
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.7",
-    "svelte": "^4.0.0"
+    "svelte": "^5.0.0"
   },
   "devDependencies": {
     "@unovis/ts": "workspace:*",
@@ -55,7 +55,7 @@
     "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@sveltejs/package": "^2.0.0",
-    "@tsconfig/svelte": "^3.0.0",
+    "@tsconfig/svelte": "^5.0.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "buffer-from": "^1.1.2",
     "eslint-plugin-svelte": "^2.10.0",
@@ -66,9 +66,8 @@
     "rollup-plugin-svelte": "^7.1.0",
     "rollup-plugin-typescript2": "^0.31.1",
     "rollup-plugin-commonjs": "^10.1.0",
-    "svelte": "^4.0.0",
-    "svelte-check": "^3.0.0",
-    "svelte-preprocess": "^5.0.0",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.0.0",
     "tslib": "^2.3.1",
     "ttypescript": "^1.5.13",
     "typescript": "~5.0.0"

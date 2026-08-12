@@ -33,7 +33,7 @@
 
 </script>
 
-<vis-bullet-legend bind:this={ref}/>
+<vis-bullet-legend bind:this={ref}></vis-bullet-legend>
 
 <style>
   vis-bullet-legend {

@@ -29,7 +29,7 @@
 
 </script>
 
-<vis-flow-legend bind:this={ref}/>
+<vis-flow-legend bind:this={ref}></vis-flow-legend>
 
 <style>
   vis-flow-legend {

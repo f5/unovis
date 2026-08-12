@@ -30,5 +30,5 @@
 
 </script>
 
-<vis-tooltip use:lifecycle={component}/>
+<vis-tooltip use:lifecycle={component}></vis-tooltip>
 

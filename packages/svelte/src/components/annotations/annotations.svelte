@@ -34,5 +34,5 @@
 
 </script>
 
-<vis-annotations use:lifecycle={component}/>
+<vis-annotations use:lifecycle={component}></vis-annotations>
 

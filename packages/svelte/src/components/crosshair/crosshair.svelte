@@ -38,5 +38,5 @@
 
 </script>
 
-<vis-crosshair use:lifecycle={component}/>
+<vis-crosshair use:lifecycle={component}></vis-crosshair>
 
