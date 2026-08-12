@@ -6,9 +6,12 @@
     "strictNullChecks": false,
     "strictPropertyInitialization": false,
     "declaration": false,
+    "baseUrl": "../",
     "types": [
       "node"
     ],
-    "importsNotUsedAsValues": "preserve",
+    "paths": {
+      "@unovis/shared/*": ["../shared/*"]
+    }
   }
 }
