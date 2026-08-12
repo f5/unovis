@@ -33,7 +33,7 @@
 
 </script>
 
-<vis-rolling-pin-legend bind:this={ref}/>
+<vis-rolling-pin-legend bind:this={ref}></vis-rolling-pin-legend>
 
 <style>
   vis-rolling-pin-legend {

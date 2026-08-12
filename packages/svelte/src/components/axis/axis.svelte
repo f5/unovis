@@ -39,5 +39,5 @@
 
 </script>
 
-<vis-axis use:lifecycle={component}/>
+<vis-axis use:lifecycle={component}></vis-axis>
 

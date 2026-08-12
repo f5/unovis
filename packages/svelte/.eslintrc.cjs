@@ -5,6 +5,15 @@ module.exports = {
     'src-demo/svelte-gallery.svelte',
   ],
   overrides: [{
+    files: ['autogen/**/*.ts'],
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: [`${__dirname}/autogen/tsconfig.json`],
+        },
+      },
+    },
+  }, {
     files: ['src/**/*.svelte', 'src/*.svelte', 'src-demo/*.svelte'],
     extends: [
       'plugin:svelte/recommended',

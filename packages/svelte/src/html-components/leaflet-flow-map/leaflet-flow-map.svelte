@@ -37,7 +37,7 @@
 
 </script>
 
-<vis-leaflet-flow-map bind:this={ref}/>
+<vis-leaflet-flow-map bind:this={ref}></vis-leaflet-flow-map>
 
 <style>
   vis-leaflet-flow-map {
