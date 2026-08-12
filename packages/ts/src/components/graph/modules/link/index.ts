@@ -124,8 +124,14 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
     const pathData = `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
     const linkPathElement = linkSupport.attr('d', pathData).node()
     const cachedLinkPathLength = linkPathLengthMap.get(pathData)
-    const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
-    if (!cachedLinkPathLength) linkPathLengthMap.set(pathData, pathLength)
+    // getTotalLength can throw InvalidStateError when path data is invalid/empty (e.g. NaN
+    // coordinates during the transient window between layout start and first draw).
+    let pathLength = cachedLinkPathLength
+    if (pathLength === undefined) {
+      try { pathLength = linkPathElement.getTotalLength() } catch (_) { pathLength = 0 }
+    }
+    if (!cachedLinkPathLength && pathLength > 0) linkPathLengthMap.set(pathData, pathLength)
+    if (!pathLength) return
 
     linkSupport
       .style('stroke', linkColor)
@@ -266,8 +272,15 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     const linkLabelMargin = 1
     let linkLabelShiftCumulative = -sum(linkLabelsDataPrepared, d => d._backgroundWidth + linkLabelMargin) / 2 // Centering the labels
     const cachedLinkPathLength = linkPathLengthMap.get(linkPathElement.getAttribute('d'))
-    const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
+    let pathLength = cachedLinkPathLength
+    if (pathLength === undefined) {
+      try { pathLength = linkPathElement.getTotalLength() } catch (_) { pathLength = 0 }
+    }
     const linkArrowStyle = getLinkArrowStyle(d, config)
+    if (!pathLength) {
+      smartTransition(linkLabelGroups.exit(), duration).style('opacity', 0).remove()
+      return
+    }
     linkLabelGroupsMerged.each((linkLabelDatum, i, elements) => {
       const element = elements[i]
       const linkLabelGroup = select<SVGGElement, GraphCircleLabelPrepared>(element)
@@ -367,8 +380,13 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
     const flowGroup = linkGroup.select(`.${linkSelectors.flowGroup}`)
 
     const linkPathElement = linkGroup.select<SVGPathElement>(`.${linkSelectors.link}`).node()
-    const cachedLinkPathLength = linkPathLengthMap.get(linkPathElement.getAttribute('d'))
-    const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
+    const dAttr = linkPathElement?.getAttribute('d')
+    if (!dAttr) return
+    const cachedLinkPathLength = linkPathLengthMap.get(dAttr)
+    let pathLength = cachedLinkPathLength
+    if (pathLength === undefined) {
+      try { pathLength = linkPathElement.getTotalLength() } catch (_) { pathLength = 0 }
+    }
 
     if (!getBoolean(d, linkFlow, d._indexGlobal) || !pathLength) return
     const t = d._state.flowAnimDistanceRelative
