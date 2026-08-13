@@ -40,7 +40,7 @@
   "scripts": {
     "build": "pnpm run check && pnpm svelte-package --input src; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
+    "generate": "tsx ./autogen/index.ts",
     "gallery": "rm -rf dist-gallery; rollup -c gallery.rollup.config.js --watch",
     "publish:dist": "cd ./dist; npm publish",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
@@ -69,6 +69,7 @@
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "tslib": "^2.3.1",
+    "tsx": "^4.19.1",
     "ttypescript": "^1.5.13",
     "typescript": "~5.0.0"
   },
