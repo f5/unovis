@@ -22,7 +22,7 @@ const output: OutputOptions = {
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({ jsxRuntime: 'classic' }),
     dts({ tsconfigPath: './tsconfig.lib.json', exclude: ['vite.config.ts'] }),
   ],
   resolve: {
