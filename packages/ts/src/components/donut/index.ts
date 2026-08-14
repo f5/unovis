@@ -24,6 +24,9 @@ import { DonutDefaultConfig, DonutConfigInterface } from './config'
 // Modules
 import { createArc, updateArc, removeArc, ArcNode } from './modules/arc'
 
+// Local Utils
+import { applyMinSegmentAngle } from './utils'
+
 // Constants
 import { DONUT_HALF_ANGLE_RANGES } from './constants'
 
@@ -126,7 +129,15 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .value(d => getNumber(d.datum, config.value, d.index) || 0)
       .sort((a, b) => config.sortFunction?.(a.datum, b.datum))
 
-    const arcData: DonutArcDatum<Datum>[] = pieGen(data).map(d => {
+    const pieData = pieGen(data)
+    if (isNumber(config.minSegmentAngle)) {
+      applyMinSegmentAngle(pieData, config.minSegmentAngle, [
+        config.angleRange?.[0] ?? 0,
+        config.angleRange?.[1] ?? 2 * Math.PI,
+      ])
+    }
+
+    const arcData: DonutArcDatum<Datum>[] = pieData.map(d => {
       const arc = {
         ...d,
         data: d.data.datum,
