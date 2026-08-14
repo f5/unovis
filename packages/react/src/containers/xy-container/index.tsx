@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
+import React, { ReactNode, useEffect, useMemo, useRef, useState, PropsWithChildren } from 'react'
 import { XYContainer } from '@unovis/ts/containers/xy-container'
 import { XYContainerConfigInterface } from '@unovis/ts/containers/xy-container/config'
 import { XYComponentCore } from '@unovis/ts/core/xy-component'
@@ -11,6 +11,7 @@ import { Annotations } from '@unovis/ts/components/annotations'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { VisContainerContext, VisContainerContextValue } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -28,6 +29,21 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
   const chartRef = useRef<XYContainer<Datum> | undefined>(undefined)
   const dataRef = useRef<Datum[] | undefined>(undefined)
   const animationFrameRef = useRef<number | null>(null)
+  const renderRequestFrameRef = useRef<number | null>(null)
+
+  // Children ask for a re-render when their own config changes. We coalesce the requests into a single
+  // frame, and skip them when this container's props changed too, because the `updateContainer` call
+  // scheduled below renders on its own.
+  const containerContext = useMemo<VisContainerContextValue>(() => ({
+    requestRender: () => {
+      if (renderRequestFrameRef.current !== null) return
+      renderRequestFrameRef.current = requestAnimationFrame(() => {
+        renderRequestFrameRef.current = null
+        if (animationFrameRef.current !== null) return
+        chartRef.current?.render()
+      })
+    },
+  }), [])
 
   const getConfig = (): XYContainerConfigInterface<Datum> => ({
     components: Array
@@ -62,6 +78,10 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
         animationFrameRef.current = null
         prevPropsRef.current = {}
       }
+      if (renderRequestFrameRef.current !== null) {
+        cancelAnimationFrame(renderRequestFrameRef.current)
+        renderRequestFrameRef.current = null
+      }
       c.destroy()
     }
   }, [])
@@ -87,6 +107,7 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
       prevPropsRef.current = props
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
       animationFrameRef.current = requestAnimationFrame(() => {
+        animationFrameRef.current = null
         chartRef.current?.updateContainer(getConfig())
       })
     }
@@ -94,7 +115,9 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
 
   return (
     <div ref={container} className={props.className} style={props.style}>
-      {props.children}
+      <VisContainerContext.Provider value={containerContext}>
+        {props.children}
+      </VisContainerContext.Provider>
     </div>
   )
 }

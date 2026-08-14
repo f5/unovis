@@ -5,6 +5,7 @@ import { TopoJSONMapConfigInterface } from '@unovis/ts/components/topojson-map/c
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderOnUpdate } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -45,6 +46,11 @@ function VisTopoJSONMapFC<AreaDatum, PointDatum, LinkDatum> (props: VisTopoJSONM
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
+
+  // A config change has to drive the render itself: the container re-renders only when its own props
+  // change, which doesn't happen when new config reaches this component through React context or a
+  // parent's state. See `useContainerRenderOnUpdate` for how updates are detected.
+  useContainerRenderOnUpdate()
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-component ref={ref} />

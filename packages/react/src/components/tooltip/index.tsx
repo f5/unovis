@@ -5,6 +5,7 @@ import { TooltipConfigInterface } from '@unovis/ts/components/tooltip/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderOnUpdate } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -44,6 +45,11 @@ function VisTooltipFC (props: VisTooltipProps, fRef: ForwardedRef<VisTooltipRef>
 
     component?.setConfig(props)
   })
+
+  // A config change has to drive the render itself: the container re-renders only when its own props
+  // change, which doesn't happen when new config reaches this component through React context or a
+  // parent's state. See `useContainerRenderOnUpdate` for how updates are detected.
+  useContainerRenderOnUpdate()
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-tooltip ref={ref} />
