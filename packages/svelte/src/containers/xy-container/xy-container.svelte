@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
+  import { XYContainer, XYComponentCore, type XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
   import { onMount, setContext } from 'svelte'
 
   type Datum = $$Generic

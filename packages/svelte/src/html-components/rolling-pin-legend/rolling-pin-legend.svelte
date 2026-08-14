@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { RollingPinLegend, RollingPinLegendConfigInterface, RollingPinLegendItem } from '@unovis/ts'
+  import { RollingPinLegend, type RollingPinLegendConfigInterface, type RollingPinLegendItem } from '@unovis/ts'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'
