@@ -230,6 +230,9 @@ export function getImportStatements (
   const typeList = gatherTypeReferences(configInterfaceMembers.map(node => (node as ts.IndexSignatureDeclaration).type))
     .filter(name => !genericNames.includes(name)) // Filter out generics
 
+  // Track type-only imports so generators can use inline `type` modifiers
+  const valueNames = new Set([componentName, ...additionalComponentTypes])
+
   const importStatements: { source: string; elements: string[] }[] = []
   for (const name of Array.from(new Set([...componentTypes, ...genericExtends, ...genericDefaults, ...typeList]))) {
     const importSource: string = importSources[name]
@@ -238,9 +241,10 @@ export function getImportStatements (
       continue
     }
 
+    const element = valueNames.has(name) ? name : `type ${name}`
     const statement = importStatements.find(s => s.source === importSource)
-    if (!statement) importStatements.push({ source: importSource, elements: [name] })
-    else statement.elements.push(name)
+    if (!statement) importStatements.push({ source: importSource, elements: [element] })
+    else statement.elements.push(element)
   }
 
   return importStatements
