@@ -6,6 +6,7 @@ import { GraphInputNode, GraphInputLink } from '@unovis/ts/types/graph'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderOnUpdate } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -46,6 +47,11 @@ function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: 
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
+
+  // A config change has to drive the render itself: the container re-renders only when its own props
+  // change, which doesn't happen when new config reaches this component through React context or a
+  // parent's state. See `useContainerRenderOnUpdate` for how updates are detected.
+  useContainerRenderOnUpdate()
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-component ref={ref} />
