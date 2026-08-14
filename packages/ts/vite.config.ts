@@ -40,6 +40,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     cssMinify: true,
+    minify: false,
     lib: {
       entry: {
         index: resolve(__dirname, 'src/index.ts'),

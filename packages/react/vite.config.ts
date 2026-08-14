@@ -34,6 +34,7 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     sourcemap: true,
+    minify: false,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       formats: ['es'],
