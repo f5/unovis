@@ -1,6 +1,7 @@
 import { resolve } from 'node:path'
 import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import { defineConfig } from 'vite'
 import type { OutputOptions } from 'rollup'
 
@@ -24,6 +25,7 @@ export default defineConfig({
   plugins: [
     react({ jsxRuntime: 'classic' }),
     dts({ tsconfigPath: './tsconfig.lib.json', exclude: ['vite.config.ts'] }),
+    cssInjectedByJsPlugin(),
   ],
   resolve: {
     alias: [

@@ -367,6 +367,9 @@ importers:
       vite:
         specifier: 'catalog:'
         version: 7.3.6(@types/node@16.18.126)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+      vite-plugin-css-injected-by-js:
+        specifier: ^3.3.0
+        version: 3.5.2(vite@7.3.6(@types/node@16.18.126)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
       vite-plugin-dts:
         specifier: ^3.5.3
         version: 3.9.1(@types/node@16.18.126)(rollup@4.59.0)(typescript@5.6.3)(vite@7.3.6(@types/node@16.18.126)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
@@ -26381,6 +26384,10 @@ snapshots:
       vfile-message: 4.0.3
 
   visit-values@2.0.0: {}
+
+  vite-plugin-css-injected-by-js@3.5.2(vite@7.3.6(@types/node@16.18.126)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)):
+    dependencies:
+      vite: 7.3.6(@types/node@16.18.126)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
 
   vite-plugin-css-injected-by-js@3.5.2(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)):
     dependencies:
