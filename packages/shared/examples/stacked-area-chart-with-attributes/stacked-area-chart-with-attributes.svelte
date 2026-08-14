@@ -18,12 +18,14 @@
   }
 </script>
 
-<VisXYContainer {data} height={500}>
-  <VisBulletLegend items={Object.values(bulletLegends)}/>
-  <VisArea {x} {y} {attributes}/>
-  <VisAxis type="x" label="Year" numTicks={10} gridLine={false} domainLine={false}/>
-  <VisAxis type="y" label="Food Exports(% of merchandise exports)" numTicks={10}/>
-</VisXYContainer>
+<div>
+  <VisXYContainer {data} height={500}>
+    <VisBulletLegend items={Object.values(bulletLegends)}/>
+    <VisArea {x} {y} {attributes}/>
+    <VisAxis type="x" label="Year" numTicks={10} gridLine={false} domainLine={false}/>
+    <VisAxis type="y" label="Food Exports(% of merchandise exports)" numTicks={10}/>
+  </VisXYContainer>
+</div>
 
 <style>
   :global([custom-stroke-styles="true"]) {

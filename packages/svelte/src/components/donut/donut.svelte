@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Donut, DonutConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Donut, type DonutConfigInterface, type NumericAccessor } from '@unovis/ts'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
