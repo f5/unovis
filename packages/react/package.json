@@ -29,7 +29,10 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "composites/time-series/style.module.css.js",
+    "dist/composites/time-series/style.module.css.js"
+  ],
   "scripts": {
     "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "tsc": "tsc",
@@ -56,6 +59,7 @@
     "typescript": "catalog:",
     "tsx": "^4.19.1",
     "vite": "catalog:",
+    "vite-plugin-css-injected-by-js": "^3.3.0",
     "vite-plugin-dts": "^3.5.3"
   }
 }
