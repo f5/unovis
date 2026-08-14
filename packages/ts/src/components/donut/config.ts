@@ -14,6 +14,13 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   angleRange?: [number, number];
   /** Pad angle. Default: `0` */
   padAngle?: number;
+  /** Minimum angular sweep, in radians, for any segment with a positive value.
+   * Segments whose proportional sweep would be smaller are inflated to this angle,
+   * with the difference taken proportionally from the remaining segments.
+   * Guarantees a segment can survive the `padAngle` inset instead of collapsing
+   * to a zero-area path; a sensible setting is `minSegmentAngle >= 2 * padAngle`.
+   * Default: `undefined` */
+  minSegmentAngle?: number;
   /** Custom sort function. Default: `undefined` */
   sortFunction?: (a: Datum, b: Datum) => number;
   /** Corner Radius. Default: `0` */
@@ -60,6 +67,7 @@ export const DonutDefaultConfig: DonutConfigInterface<unknown> = {
   value: undefined,
   angleRange: [0, 2 * Math.PI],
   padAngle: 0,
+  minSegmentAngle: undefined,
   sortFunction: undefined,
   cornerRadius: 0,
   color: undefined,
