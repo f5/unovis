@@ -107,6 +107,16 @@ Providing a value to the `cornerRadius` property adds rounded corners to your _D
 Pad each segment with the `padAngle` property.
 <DocWrapper {...donutProps()} padAngle={0.1}/>
 
+### Minimum Segment Angle
+When `padAngle` is set, segments with a very small (but non-zero) value can collapse to a zero-area
+path and disappear, because the pad inset consumes their entire angular sweep. Provide a
+`minSegmentAngle` (in radians) to guarantee every segment with a positive value keeps at least that
+sweep, with the difference taken proportionally from the remaining segments. The raw values reported
+by tooltips and events stay untouched. For the inflated segments to stay visible, set
+`minSegmentAngle` to at least `2 * padAngle`. Try changing the value below — at `0` the four
+smallest segments disappear:
+<InputWrapper {...donutProps()} data={[6800, 2400, 790, 14, 10, 7, 5]} padAngle={0.02} property="minSegmentAngle" inputType="range" defaultValue={0.04} inputProps={{ min: 0, max: 0.15, step: 0.005 }}/>
+
 ### Empty Segments
 When segments are empty (i.e. when their values are 0), you may still want them displayed in your _Donut_ as thin slices.
 To do this, set `showEmptySegments` to `true`:
