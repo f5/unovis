@@ -83,6 +83,14 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   /** Pad angle. Default: `0` */
   @Input() padAngle?: number
 
+  /** Minimum angular sweep, in radians, for any segment with a positive value.
+   * Segments whose proportional sweep would be smaller are inflated to this angle,
+   * with the difference taken proportionally from the remaining segments.
+   * Guarantees a segment can survive the `padAngle` inset instead of collapsing
+   * to a zero-area path; a sensible setting is `minSegmentAngle >= 2 * padAngle`.
+   * Default: `undefined` */
+  @Input() minSegmentAngle?: number
+
   /** Custom sort function. Default: `undefined` */
   @Input() sortFunction?: (a: Datum, b: Datum) => number
 
@@ -152,8 +160,8 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   }
 
   private getConfig (): DonutConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, pattern, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY } = this
-    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, pattern, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY }
+    const { duration, events, attributes, id, value, angleRange, padAngle, minSegmentAngle, sortFunction, cornerRadius, color, pattern, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY } = this
+    const config = { duration, events, attributes, id, value, angleRange, padAngle, minSegmentAngle, sortFunction, cornerRadius, color, pattern, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY }
     const keys = Object.keys(config) as (keyof DonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
