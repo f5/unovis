@@ -53,6 +53,10 @@ export class ComponentCore<
   /** Color scale for the component. This property is set automatically by the container. */
   protected _colorFunction: ColorFunction | undefined = undefined
 
+  /** Re-binds the component's event listeners so that newly rendered elements get them too.
+   * Throttled because the components that render a lot of elements call it on every frame of a
+   * pan / zoom / layout interaction (see Graph, LeafletMap and TopoJSONMap). Delaying a re-bind
+   * does not delay a configuration change: `_bindEvents` resolves the callbacks at dispatch time. */
   _setUpComponentEventsThrottled = throttle(this._setUpComponentEvents, 500)
 
   /** Set the container margin. Called automatically by containers. */
@@ -142,10 +146,10 @@ export class ComponentCore<
 
   private _setUpComponentEvents (): void {
     // Set up default events
-    this._bindEvents(this.events)
+    this._bindEvents(() => this.events)
 
     // Set up user-defined events
-    this._bindEvents(this.config.events, '.user')
+    this._bindEvents(() => this.config.events, '.user')
   }
 
   // Sometimes we don't want to pass the original data and/or index to the event handler.
@@ -155,7 +159,13 @@ export class ComponentCore<
     return { datum, index }
   }
 
-  private _bindEvents (events = this.events, suffix = ''): void {
+  /** Attaches a listener for every selector / event type of the provided events map.
+   * The map is passed as a getter and the callback is resolved when the event fires instead of
+   * being captured here: `setConfig` replaces `this.config` with a newly merged object, so a
+   * captured map would keep invoking the callbacks of an outdated configuration until the next
+   * re-bind — which `render()` throttles by 500ms. */
+  private _bindEvents (getEvents: () => ComponentConfigInterface['events'], suffix = ''): void {
+    const events = getEvents() ?? {}
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
         const selection = (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>)
@@ -165,10 +175,12 @@ export class ComponentCore<
         // instead of re-querying the DOM on every dispatched event
         const els = selection.nodes()
         selection.on(eventType + suffix, (event: MouseEvent & WheelEvent & PointerEvent & TouchEvent, d) => {
+          const eventFunction = getEvents()?.[className]?.[eventType as VisEventType]
+          if (!eventFunction) return
+
           const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)
-          const eventFunction = events[className][eventType as VisEventType]
           const { datum, index } = this._mapEventDatum(d, i)
-          return eventFunction?.(datum, event, index, els)
+          return eventFunction(datum, event, index, els)
         })
       })
     })
