@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Annotations } from '@unovis/ts'
+  import { ComponentCore, SingleContainer, type SingleContainerConfigInterface, Tooltip, Annotations } from '@unovis/ts'
   import { arePropsEqual } from '../../utils/props'
   import { onDestroy, setContext } from 'svelte'
 
@@ -50,11 +50,18 @@
 
   // Reactive statements
   $: chart?.setData(data)
-  $: shouldUpdate = Object.keys(props).some(k => !arePropsEqual(chart?.config[k], props[k]))
+  $: shouldUpdate = Object.keys(props).some(k => !arePropsEqual((chart?.config as Record<string, unknown>)?.[k], (props as Record<string, unknown>)[k]))
   $: if (shouldUpdate) updateChart()
   $: if (component) chart === undefined ? initChart() : updateChart(true)
 
   // Lifecycle and contexts
+  // Child components call this after updating their data or config, so the chart re-renders.
+  // The render is scheduled on the next animation frame by the core, so multiple updates get batched
+  setContext('dirty', () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    chart?.render()
+  })
+
   setContext('tooltip', () => ({
     update: (t: Tooltip) => { tooltip = t },
     destroy: () => { tooltip = undefined },

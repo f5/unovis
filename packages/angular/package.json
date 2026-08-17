@@ -30,7 +30,7 @@
     "ng": "ng",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "generate": "rollup -c; node .autogen.cjs; rm .autogen.cjs",
+    "generate": "tsx ./autogen/index.ts",
     "gallery": "node gallery",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
@@ -80,8 +80,7 @@
     "d3-zoom": "~3.0.0",
     "elkjs": "^0.10.0",
     "ng-packagr": "^20.0.0",
-    "rollup": "^2.61.1",
-    "rollup-plugin-typescript2": "^0.31.1",
+    "tsx": "^4.19.1",
     "rxjs": "^7.5.0",
     "typescript": "~5.8.0",
     "zone.js": "~0.15.0",

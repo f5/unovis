@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
+  import { BulletLegend, type BulletLegendConfigInterface, type BulletLegendItemInterface } from '@unovis/ts'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'
@@ -33,7 +33,7 @@
 
 </script>
 
-<vis-bullet-legend bind:this={ref}/>
+<vis-bullet-legend bind:this={ref}></vis-bullet-legend>
 
 <style>
   vis-bullet-legend {

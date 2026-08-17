@@ -38,12 +38,14 @@ export function getComponentCode (
 
   // component declaration
   let component: ${componentType}
-  ${isStandAlone ? 'let ref: HTMLDivElement' : `const lifecycle = getContext<Lifecycle>('${elementSuffix}')`}
+  ${isStandAlone ? 'let ref: HTMLDivElement' : `const lifecycle = getContext<Lifecycle>('${elementSuffix}')
+  // Notifies the container that this component's data or config has changed, so it can re-render
+  const dirty = getContext<(() => void) | undefined>('dirty')`}
 
-  ${lifecycleMethod}${dataType ? '\n  $: component?.setData(data)' : ''}
+  ${lifecycleMethod}${dataType ? (isStandAlone ? '\n  $: component?.setData(data)' : '\n  $: { component?.setData(data); dirty?.() }') : ''}
   $: if(!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = config${isStandAlone ? '' : '\n    dirty?.()'}
   }
 
   // component accessor
@@ -51,7 +53,7 @@ export function getComponentCode (
 
 </script>
 
-<vis-${elementSuffix} ${isStandAlone ? 'bind:this={ref}' : 'use:lifecycle={component}'}/>
+<vis-${elementSuffix} ${isStandAlone ? 'bind:this={ref}' : 'use:lifecycle={component}'}></vis-${elementSuffix}>
 ${isStandAlone ? `\n<style>\n  vis-${elementSuffix} {\n    ${styles?.join(';\n    ')};\n  }\n</style>` : ''}
 `
 }

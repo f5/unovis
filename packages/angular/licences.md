@@ -25,8 +25,7 @@
 | d3-zoom                       | perpetual      | ISC          | 3.0.0             | Mike Bostock https://bost.ocks.org/mike |
 | elkjs                         | perpetual      | EPL-2.0      | 0.10.2            | Ulf Rüegg uruurumail@gmail.com          |
 | ng-packagr                    | perpetual      | MIT          | 20.3.2            | David Herges <david@spektrakel.de>      |
-| rollup                        | perpetual      | MIT          | 2.80.0            | Rich Harris                             |
-| rollup-plugin-typescript2     | perpetual      | MIT          | 0.31.2            | @ezolenko                               |
+| tsx                           | perpetual      | MIT          | 4.21.0            | Hiroki Osame hiroki.osame@gmail.com     |
 | rxjs                          | perpetual      | Apache-2.0   | 7.8.2             | Ben Lesh <ben@benlesh.com>              |
 | typescript                    | perpetual      | Apache-2.0   | 5.8.3             | Microsoft Corp.                         |
 | zone.js                       | perpetual      | MIT          | 0.15.1            | Brian Ford                              |

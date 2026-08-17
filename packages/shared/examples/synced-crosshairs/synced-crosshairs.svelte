@@ -58,5 +58,5 @@
     <VisTooltip container={tooltipContainer}/>
   </VisXYContainer>
 
-  <div style="height: 800px; width: 100%"/>
+  <div style="height: 800px; width: 100%"></div>
 </div>
