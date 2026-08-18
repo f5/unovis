@@ -1,0 +1,22 @@
+.controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(200px, 1fr));
+  grid-gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  font-size: 11px;
+  font-family: monospace;
+}
+
+.chart {
+  border: 1px solid #d5d9e0;
+}
