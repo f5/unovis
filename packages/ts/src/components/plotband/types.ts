@@ -1,3 +1,5 @@
+import { TextAlign, VerticalAlign } from '@/types/text'
+
 export enum PlotbandLabelPosition {
   TopLeftInside = 'top-left-inside',
   TopLeftOutside = 'top-left-outside',
@@ -22,26 +24,16 @@ export enum PlotbandLabelOrientation {
   Vertical = 'vertical',
 }
 
-export interface PlotbandLabelOptions {
-  labelText?: string;
-  labelPosition: PlotbandLabelPosition;
-  labelOffsetX: number;
-  labelOffsetY: number;
-  labelOrientation: PlotbandLabelOrientation;
-  labelColor?: string;
-  labelSize?: number;
-}
-
 export type PlotbandLayoutValue = {
   x: number;
   y: number;
-  textAnchor: string;
-  dominantBaseline: string;
+  textAlign: TextAlign;
+  verticalAlign: VerticalAlign;
 }
 
 export type PlotbandLabelLayout = {
+  /** Rotation in degrees, applied around the label's anchor point */
   rotation: number;
-  transform: string;
 } & PlotbandLayoutValue
 
 

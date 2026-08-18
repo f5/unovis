@@ -3,6 +3,7 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-
 
 // Types
 import { AxisType } from '@/components/axis/types'
+import { UnovisText } from '@/types/text'
 import { PlotbandLabelOrientation, PlotbandLabelPosition } from './types'
 
 export interface PlotbandConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
@@ -36,8 +37,15 @@ export interface PlotbandConfigInterface<Datum> extends Partial<XYComponentConfi
    */
   duration?: number;
 
-  /** Optional text to display on the plotband */
-  labelText?: string;
+  /**
+   * Label to display on the plotband.
+   * Accepts a plain string (use `\n` for line breaks), or one or more `UnovisText` blocks
+   * for styled multi-line labels. Font size, color and font family set on a text block
+   * take priority over the `labelSize` and `labelColor` options.
+   *
+   * @default undefined
+   */
+  labelText?: string | UnovisText | UnovisText[];
 
   /** Position of the label relative to the plotband area (e.g., 'top-left-outside').
    *  Can be customized with a string.
