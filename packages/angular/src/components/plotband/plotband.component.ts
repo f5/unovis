@@ -7,6 +7,7 @@ import {
   VisEventType,
   VisEventCallback,
   AxisType,
+  UnovisText,
   PlotbandLabelPosition,
   PlotbandLabelOrientation,
 } from '@unovis/ts'
@@ -79,8 +80,11 @@ export class VisPlotbandComponent<Datum> implements PlotbandConfigInterface<Datu
   /** End coordinate for the plotband. */
   @Input() to?: number | null | undefined
 
-  /** Optional text to display on the plotband */
-  @Input() labelText?: string
+  /** Label to display on the plotband.
+   * Accepts a plain string (use `\n` for line breaks), or one or more `UnovisText` blocks
+   * for styled multi-line labels. Font size, color and font family set on a text block
+   * take priority over the `labelSize` and `labelColor` options. */
+  @Input() labelText?: string | UnovisText | UnovisText[]
 
   /** Position of the label relative to the plotband area (e.g., 'top-left-outside').
    * Can be customized with a string. */

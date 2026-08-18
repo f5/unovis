@@ -8,6 +8,7 @@ import {
   VisEventCallback,
   AxisType,
   PlotlineLineStylePresets,
+  UnovisText,
   PlotlineLabelPosition,
   PlotlineLabelOrientation,
 } from '@unovis/ts'
@@ -87,8 +88,11 @@ export class VisPlotlineComponent<Datum> implements PlotlineConfigInterface<Datu
    * Uses CSS variable: `--vis-plotline-dasharray`. */
   @Input() lineStyle?: PlotlineLineStylePresets | number[]
 
-  /** Label text to display on the plotline. */
-  @Input() labelText?: string
+  /** Label to display on the plotline.
+   * Accepts a plain string (use `\n` for line breaks), or one or more `UnovisText` blocks
+   * for styled multi-line labels. Font size, color and font family set on a text block
+   * take priority over the `labelSize` and `labelColor` options. */
+  @Input() labelText?: string | UnovisText | UnovisText[]
 
   /** Position of the label relative to the plotline. */
   @Input() labelPosition?: PlotlineLabelPosition
