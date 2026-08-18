@@ -51,13 +51,17 @@
     "forcebuild": "rimraf dist; vite build; rm -rf dist/.cache; cp LICENSE README.md ./dist; npm run build:package-json",
     "publish:dist": "cd ./dist; npm publish",
     "build:package-json": "node -e \"const p=JSON.parse(require('fs').readFileSync('package.json','utf8')); delete p.typesVersions; require('fs').writeFileSync('./dist/package.json', JSON.stringify(p, null, 2))\"",
-    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
+    "jsdom": "catalog:",
     "rimraf": "^3.0.2",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plugin-dts": "^3.5.3"
+    "vite-plugin-dts": "^3.5.3",
+    "vitest": "catalog:"
   },
   "dependencies": {
     "@emotion/css": "^11.7.1",

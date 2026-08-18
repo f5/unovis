@@ -37,6 +37,7 @@
     "publish:all:beta": "pnpm publish:ts:beta && pnpm publish:angular:beta && pnpm publish:react:beta && pnpm publish:svelte:beta && pnpm publish:vue:beta && pnpm publish:solid:beta",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --ignore-path .gitignore",
     "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --fix --ignore-path .gitignore",
+    "test:ts": "cd packages/ts && pnpm test",
     "install:clean": "rm -rf packages/*/node_modules packages/*/dist packages/*/dist-demo packages/*/.docusaurus node_modules; pnpm install",
     "postinstall": "sh postinstall.sh",
     "gather-licenses": "pnpm -r --parallel license:check",
