@@ -68,6 +68,15 @@ export function getRotatedRectAabb (rect: Rect, angleRad: number): Rect {
   return { x, y, width: Math.max(...xs) - x, height: Math.max(...ys) - y }
 }
 
+/** Returns the translation needed to fit `rect` into `bounds`.
+ * When the rect is larger than the bounds, fitting its top left corner takes priority. */
+export function getRectFitTranslation (rect: Rect, bounds: Rect): { dx: number; dy: number } {
+  return {
+    dx: Math.max(bounds.x - rect.x, Math.min(0, bounds.x + bounds.width - rect.x - rect.width)),
+    dy: Math.max(bounds.y - rect.y, Math.min(0, bounds.y + bounds.height - rect.y - rect.height)),
+  }
+}
+
 export function rectIntersect (rect1: Rect, rect2: Rect, tolerancePx = 0): boolean {
   const [left1, top1, right1, bottom1] = [
     rect1.x + tolerancePx,
