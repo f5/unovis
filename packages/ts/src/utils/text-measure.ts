@@ -74,8 +74,10 @@ function getFontInfo (el: Element): UnovisFontInfo {
 
   const style = window.getComputedStyle(el)
   const fontSize = style.fontSize || `${UNOVIS_TEXT_DEFAULT_FONT_SIZE}px`
+  const fontFamily = style.fontFamily || 'sans-serif'
   info = {
-    font: `${style.fontStyle || 'normal'} ${style.fontWeight || 'normal'} ${fontSize} ${style.fontFamily || 'sans-serif'}`,
+    font: `${style.fontStyle || 'normal'} ${style.fontWeight || 'normal'} ${fontSize} ${fontFamily}`,
+    fontFamily,
     fontSizePx: toPx(fontSize),
   }
 
@@ -86,6 +88,10 @@ function getFontInfo (el: Element): UnovisFontInfo {
 
 export function getCachedFontSizePx (el: Element): number {
   return getFontInfo(el).fontSizePx
+}
+
+export function getCachedFontFamily (el: Element): string {
+  return getFontInfo(el).fontFamily
 }
 
 export function getCachedComputedTextLength (el: SVGTextElement | SVGTSpanElement): number {
