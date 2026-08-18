@@ -1,5 +1,6 @@
 export * from './data'
 export * from './text'
+export * from './bleed'
 export * from './svg'
 export * from './color'
 export * from './pattern'
