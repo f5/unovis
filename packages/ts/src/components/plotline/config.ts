@@ -3,6 +3,7 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-
 
 // Types
 import { AxisType } from '@/components/axis/types'
+import { UnovisText } from '@/types/text'
 import { PlotlineLabelPosition, PlotlineLabelOrientation, PlotlineLineStylePresets } from './types'
 
 export interface PlotlineConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
@@ -54,11 +55,14 @@ export interface PlotlineConfigInterface<Datum> extends Partial<XYComponentConfi
   lineStyle?: PlotlineLineStylePresets | number[];
 
   /**
-   * Label text to display on the plotline.
+   * Label to display on the plotline.
+   * Accepts a plain string (use `\n` for line breaks), or one or more `UnovisText` blocks
+   * for styled multi-line labels. Font size, color and font family set on a text block
+   * take priority over the `labelSize` and `labelColor` options.
    *
    * @default undefined
    */
-  labelText?: string;
+  labelText?: string | UnovisText | UnovisText[];
 
   /**
    * Position of the label relative to the plotline.

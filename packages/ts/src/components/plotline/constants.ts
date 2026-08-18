@@ -1,3 +1,4 @@
+import { TextAlign, VerticalAlign } from '@/types/text'
 import { PlotlineLineStylePresets, PlotlineLabelPosition, PlotlineLayoutMap, LineStyleValue } from './types'
 
 export const LINE_STYLE: Record<PlotlineLineStylePresets, LineStyleValue | 'none'> = {
@@ -15,45 +16,45 @@ export const LINE_STYLE: Record<PlotlineLineStylePresets, LineStyleValue | 'none
 }
 
 export const HORIZONTAL_X: PlotlineLayoutMap = {
-  [PlotlineLabelPosition.TopLeft]: ({ width, offsetX, offsetY }) => ({ x: width - offsetX, y: offsetY, textAnchor: 'end', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.Top]: ({ width, offsetY }) => ({ x: width, y: offsetY, textAnchor: 'middle', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.TopRight]: ({ width, offsetX, offsetY }) => ({ x: width + offsetX, y: offsetY, textAnchor: 'start', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.Right]: ({ width, height, offsetX }) => ({ x: width + offsetX, y: height / 2, textAnchor: 'start', dominantBaseline: 'middle' }),
-  [PlotlineLabelPosition.BottomRight]: ({ width, height, offsetX, offsetY }) => ({ x: width + offsetX, y: height - offsetY, textAnchor: 'start', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.Bottom]: ({ width, height, offsetY }) => ({ x: width, y: height - offsetY, textAnchor: 'middle', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.BottomLeft]: ({ width, height, offsetX, offsetY }) => ({ x: width - offsetX, y: height - offsetY, textAnchor: 'end', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.Left]: ({ width, height, offsetX }) => ({ x: width - offsetX, y: height / 2, textAnchor: 'end', dominantBaseline: 'middle' }),
+  [PlotlineLabelPosition.TopLeft]: ({ width, offsetX, offsetY }) => ({ x: width - offsetX, y: offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.Top]: ({ width, offsetY }) => ({ x: width, y: offsetY, textAlign: TextAlign.Center, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.TopRight]: ({ width, offsetX, offsetY }) => ({ x: width + offsetX, y: offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.Right]: ({ width, height, offsetX }) => ({ x: width + offsetX, y: height / 2, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Middle }),
+  [PlotlineLabelPosition.BottomRight]: ({ width, height, offsetX, offsetY }) => ({ x: width + offsetX, y: height - offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.Bottom]: ({ width, height, offsetY }) => ({ x: width, y: height - offsetY, textAlign: TextAlign.Center, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.BottomLeft]: ({ width, height, offsetX, offsetY }) => ({ x: width - offsetX, y: height - offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.Left]: ({ width, height, offsetX }) => ({ x: width - offsetX, y: height / 2, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Middle }),
 }
 
 export const VERTICAL_X: PlotlineLayoutMap = {
-  [PlotlineLabelPosition.TopLeft]: ({ width, offsetX, offsetY }) => ({ x: width - offsetX, y: offsetY, textAnchor: 'end', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.Top]: ({ width, offsetY }) => ({ x: width, y: offsetY, textAnchor: 'end', dominantBaseline: 'middle' }),
-  [PlotlineLabelPosition.TopRight]: ({ width, offsetX, offsetY }) => ({ x: width + offsetX, y: offsetY, textAnchor: 'end', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.Right]: ({ width, height, offsetX }) => ({ x: width + offsetX, y: height / 2, textAnchor: 'middle', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.BottomRight]: ({ width, height, offsetX, offsetY }) => ({ x: width + offsetX, y: height - offsetY, textAnchor: 'start', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.Bottom]: ({ width, height, offsetY }) => ({ x: width, y: height - offsetY, textAnchor: 'start', dominantBaseline: 'middle' }),
-  [PlotlineLabelPosition.BottomLeft]: ({ width, height, offsetX, offsetY }) => ({ x: width - offsetX, y: height - offsetY, textAnchor: 'start', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.Left]: ({ width, height, offsetX }) => ({ x: width - offsetX, y: height / 2, textAnchor: 'middle', dominantBaseline: 'text-after-edge' }),
+  [PlotlineLabelPosition.TopLeft]: ({ width, offsetX, offsetY }) => ({ x: width - offsetX, y: offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.Top]: ({ width, offsetY }) => ({ x: width, y: offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Middle }),
+  [PlotlineLabelPosition.TopRight]: ({ width, offsetX, offsetY }) => ({ x: width + offsetX, y: offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.Right]: ({ width, height, offsetX }) => ({ x: width + offsetX, y: height / 2, textAlign: TextAlign.Center, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.BottomRight]: ({ width, height, offsetX, offsetY }) => ({ x: width + offsetX, y: height - offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.Bottom]: ({ width, height, offsetY }) => ({ x: width, y: height - offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Middle }),
+  [PlotlineLabelPosition.BottomLeft]: ({ width, height, offsetX, offsetY }) => ({ x: width - offsetX, y: height - offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.Left]: ({ width, height, offsetX }) => ({ x: width - offsetX, y: height / 2, textAlign: TextAlign.Center, verticalAlign: VerticalAlign.Bottom }),
 }
 
 export const HORIZONTAL_Y: PlotlineLayoutMap = {
-  [PlotlineLabelPosition.TopLeft]: ({ offsetX, height, offsetY }) => ({ x: offsetX, y: height - offsetY, textAnchor: 'start', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.Top]: ({ width, height, offsetY }) => ({ x: width / 2, y: height - offsetY, textAnchor: 'middle', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.TopRight]: ({ width, offsetX, height, offsetY }) => ({ x: width - offsetX, y: height - offsetY, textAnchor: 'end', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.Right]: ({ width, offsetX, height }) => ({ x: width - offsetX, y: height, textAnchor: 'end', dominantBaseline: 'middle' }),
-  [PlotlineLabelPosition.BottomRight]: ({ width, offsetX, height, offsetY }) => ({ x: width - offsetX, y: height + offsetY, textAnchor: 'end', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.Bottom]: ({ width, height, offsetY }) => ({ x: width / 2, y: height + offsetY, textAnchor: 'middle', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.BottomLeft]: ({ offsetX, height, offsetY }) => ({ x: offsetX, y: height + offsetY, textAnchor: 'start', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.Left]: ({ offsetX, height }) => ({ x: offsetX, y: height, textAnchor: 'start', dominantBaseline: 'middle' }),
+  [PlotlineLabelPosition.TopLeft]: ({ offsetX, height, offsetY }) => ({ x: offsetX, y: height - offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.Top]: ({ width, height, offsetY }) => ({ x: width / 2, y: height - offsetY, textAlign: TextAlign.Center, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.TopRight]: ({ width, offsetX, height, offsetY }) => ({ x: width - offsetX, y: height - offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.Right]: ({ width, offsetX, height }) => ({ x: width - offsetX, y: height, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Middle }),
+  [PlotlineLabelPosition.BottomRight]: ({ width, offsetX, height, offsetY }) => ({ x: width - offsetX, y: height + offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.Bottom]: ({ width, height, offsetY }) => ({ x: width / 2, y: height + offsetY, textAlign: TextAlign.Center, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.BottomLeft]: ({ offsetX, height, offsetY }) => ({ x: offsetX, y: height + offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.Left]: ({ offsetX, height }) => ({ x: offsetX, y: height, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Middle }),
 }
 
 export const VERTICAL_Y: PlotlineLayoutMap = {
-  [PlotlineLabelPosition.TopLeft]: ({ offsetX, height, offsetY }) => ({ x: offsetX, y: height - offsetY, textAnchor: 'start', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.Top]: ({ width, height, offsetY }) => ({ x: width / 2, y: height - offsetY, textAnchor: 'start', dominantBaseline: 'central' }),
-  [PlotlineLabelPosition.TopRight]: ({ width, offsetX, height, offsetY }) => ({ x: width - offsetX, y: height - offsetY, textAnchor: 'start', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.Right]: ({ width, offsetX, height }) => ({ x: width - offsetX, y: height, textAnchor: 'middle', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.BottomRight]: ({ width, offsetX, height, offsetY }) => ({ x: width - offsetX, y: height + offsetY, textAnchor: 'end', dominantBaseline: 'text-after-edge' }),
-  [PlotlineLabelPosition.Bottom]: ({ width, height, offsetY }) => ({ x: width / 2, y: height + offsetY, textAnchor: 'end', dominantBaseline: 'central' }),
-  [PlotlineLabelPosition.BottomLeft]: ({ offsetX, height, offsetY }) => ({ x: offsetX, y: height + offsetY, textAnchor: 'end', dominantBaseline: 'text-before-edge' }),
-  [PlotlineLabelPosition.Left]: ({ offsetX, height }) => ({ x: offsetX, y: height, textAnchor: 'middle', dominantBaseline: 'text-before-edge' }),
+  [PlotlineLabelPosition.TopLeft]: ({ offsetX, height, offsetY }) => ({ x: offsetX, y: height - offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.Top]: ({ width, height, offsetY }) => ({ x: width / 2, y: height - offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Middle }),
+  [PlotlineLabelPosition.TopRight]: ({ width, offsetX, height, offsetY }) => ({ x: width - offsetX, y: height - offsetY, textAlign: TextAlign.Left, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.Right]: ({ width, offsetX, height }) => ({ x: width - offsetX, y: height, textAlign: TextAlign.Center, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.BottomRight]: ({ width, offsetX, height, offsetY }) => ({ x: width - offsetX, y: height + offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Bottom }),
+  [PlotlineLabelPosition.Bottom]: ({ width, height, offsetY }) => ({ x: width / 2, y: height + offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Middle }),
+  [PlotlineLabelPosition.BottomLeft]: ({ offsetX, height, offsetY }) => ({ x: offsetX, y: height + offsetY, textAlign: TextAlign.Right, verticalAlign: VerticalAlign.Top }),
+  [PlotlineLabelPosition.Left]: ({ offsetX, height }) => ({ x: offsetX, y: height, textAlign: TextAlign.Center, verticalAlign: VerticalAlign.Top }),
 }

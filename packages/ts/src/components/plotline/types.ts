@@ -1,3 +1,5 @@
+import { TextAlign, VerticalAlign } from '@/types/text'
+
 export enum PlotlineLineStylePresets {
   Solid = 'solid',
   Dash = 'dash',
@@ -28,26 +30,16 @@ export enum PlotlineLabelOrientation {
   Vertical = 'vertical',
 }
 
-export interface PlotlineLabelOptions {
-  labelText?: string;
-  labelPosition: PlotlineLabelPosition;
-  labelOffsetX: number;
-  labelOffsetY: number;
-  labelOrientation: PlotlineLabelOrientation;
-  labelColor?: string;
-  labelSize?: number;
-}
-
 export type PlotlineLayoutValue = {
   x: number;
   y: number;
-  textAnchor: string;
-  dominantBaseline: string;
+  textAlign: TextAlign;
+  verticalAlign: VerticalAlign;
 }
 
 export type PlotlineLabelLayout = {
+  /** Rotation in degrees, applied around the label's anchor point */
   rotation: number;
-  transform: string;
 } & PlotlineLayoutValue
 
 export type LineStyleValue =
