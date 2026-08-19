@@ -358,6 +358,10 @@ export class Tooltip {
           const { config: currentConfig } = this // get latest config because it could have been changed after the event was triggered
           const path: (HTMLElement | SVGGElement)[] = (e.composedPath && e.composedPath()) || (e as any).path || [e.target]
 
+          // Events coming from the tooltip itself (possible when `allowHover` is enabled, because the tooltip
+          // lives inside the container) are handled by the tooltip's own hover listeners, see below
+          if (path.includes(this.element)) return
+
           // Go through all of the configured triggers
           for (const className of Object.keys(currentConfig.triggers)) {
             const template = currentConfig.triggers[className]
