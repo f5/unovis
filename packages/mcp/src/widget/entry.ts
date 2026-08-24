@@ -9,6 +9,8 @@
 import * as unovis from './unovis-slim.js'
 import { materializeChart } from '../render/materialize.js'
 import { buildInteractions } from './interactions.js'
+import { componentEvents } from './events.js'
+import type { ChartEvent } from './events.js'
 import { SPEC_VERSION } from '../render/spec.js'
 import type { ChartSpec } from '../render/spec.js'
 
@@ -23,6 +25,9 @@ export interface RenderOptions {
   duration?: number;
   /** Render the spec title as a heading above the chart */
   showTitle?: boolean;
+  /** Receive clicks on chart elements (bars, segments, nodes…), normalized to
+   * the caller's own data records. In embed mode, set `events: true` instead */
+  onEvent?: (event: ChartEvent) => void;
 }
 
 export interface ChartHandle {
@@ -62,6 +67,19 @@ export function render (spec: ChartSpec, container: HTMLElement, options: Render
 
   const lib = unovis as unknown as Record<string, unknown>
   const { containerConfig: interactionConfig, legendItems } = buildInteractions(lib, spec)
+
+  // Interaction events are widget behavior, not chart description, so they
+  // merge into the components here rather than living in the spec
+  const onEvent = options.onEvent
+  if (onEvent) {
+    spec = {
+      ...spec,
+      components: spec.components.map((component, i) => {
+        const events = componentEvents(lib, component, i, onEvent)
+        return events ? { ...component, config: { ...component.config, events } } : component
+      }),
+    }
+  }
 
   let legend: { destroy?: () => void } | undefined
   if (legendItems?.length) {
@@ -105,7 +123,10 @@ export function render (spec: ChartSpec, container: HTMLElement, options: Render
 interface EmbedMessage {
   type?: string;
   spec?: ChartSpec;
-  options?: RenderOptions;
+  options?: RenderOptions & {
+    /** Post `unovis:event` messages for clicks on chart elements */
+    events?: boolean;
+  };
 }
 
 function startEmbedMode (): void {
@@ -125,7 +146,12 @@ function startEmbedMode (): void {
     if (message?.type !== 'unovis:render' || !message.spec) return
     handle?.destroy()
     try {
-      handle = render(message.spec, root, message.options ?? {})
+      const { events, ...options } = message.options ?? {}
+      if (events) {
+        options.onEvent = (chartEvent) =>
+          window.parent?.postMessage({ type: 'unovis:event', ...chartEvent }, '*')
+      }
+      handle = render(message.spec, root, options)
       postSize()
     } catch (e) {
       root.innerHTML = `<div class="uv-error">${String(e instanceof Error ? e.message : e)}</div>`

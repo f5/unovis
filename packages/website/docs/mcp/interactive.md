@@ -99,9 +99,44 @@ with the `#embed` hash, and post it a spec:
 | widget → host | `{ type: 'unovis:ready' }` | Loaded, waiting for a spec |
 | host → widget | `{ type: 'unovis:render', spec, options }` | Render this spec (replaces any previous chart) |
 | widget → host | `{ type: 'unovis:size', width, height }` | Content size after a render |
+| widget → host | `{ type: 'unovis:event', component, componentIndex, event, datum }` | A click on a chart element — sent only when the render options set `events: true` |
 
 Send `unovis:render` as often as you like — each one tears down the previous
-chart. `options` accepts `duration` and `showTitle`.
+chart. `options` accepts `duration`, `showTitle` and `events`.
+
+### Interaction events
+
+Charts are actionable, not just visible: opt in with `events: true` in the
+render options and every element that has a tooltip also reports clicks —
+"tap the severity slice, filter the findings list" needs nothing more than a
+message listener:
+
+```js
+frame.contentWindow.postMessage({ type: 'unovis:render', spec, options: { events: true } }, '*')
+
+window.addEventListener('message', (event) => {
+  if (event.data?.type === 'unovis:event') {
+    // { component: 'Donut', componentIndex: 0, event: 'click', datum: { category: 'Critical', count: 12 } }
+    filterBy(event.data.datum)
+  }
+})
+```
+
+`datum` is your own flat data record (JSON-safe, internal render state
+stripped), so the handler works with the same objects you built the spec from.
+Sankey and graph links report `{ source, target, value }`; treemap and nested
+donut segments report `{ key, value }`.
+
+Two shapes don't click: **lines and areas** have no per-datum element (the
+crosshair is their readout), and Unovis attaches user event listeners through
+a throttled setup pass, so handlers become active **within ~500ms of the
+render settling** — relevant only to automated tests that click immediately.
+
+Using the widget API directly, pass a callback instead:
+
+```js
+window.UnovisChart.render(spec, el, { onEvent: (e) => filterBy(e.datum) })
+```
 
 ## Using the widget API directly
 

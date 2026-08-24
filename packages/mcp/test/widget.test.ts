@@ -7,15 +7,11 @@
  */
 import { readFileSync } from 'node:fs'
 import { describe, expect, it, beforeAll } from 'vitest'
-import { JSDOM, VirtualConsole } from 'jsdom'
 import { z } from 'zod'
 
 import pkg from '../package.json'
 
-import { installBBoxPolyfills } from '../src/env/bbox.js'
-import { installCanvasHook } from '../src/env/canvas.js'
-import { installComputedStyle } from '../src/env/computed-style.js'
-import { RafQueue } from '../src/env/raf-queue.js'
+import { loadPage, settle, svgOf } from './widget-harness.js'
 import { buildChartDocument, buildEmbedDocument } from '../src/html/document.js'
 import { SPEC_VERSION } from '../src/render/spec.js'
 import { lineRecipe } from '../src/recipes/line.js'
@@ -23,81 +19,6 @@ import { donutRecipe } from '../src/recipes/donut.js'
 import { barRecipe } from '../src/recipes/bar.js'
 import type { ChartSpec } from '../src/render/spec.js'
 
-/* eslint-disable @typescript-eslint/no-empty-function */
-class NoopResizeObserver {
-  observe (): void {}
-  unobserve (): void {}
-  disconnect (): void {}
-}
-/* eslint-enable @typescript-eslint/no-empty-function */
-
-interface LoadedPage {
-  window: JSDOM['window'];
-  raf: RafQueue;
-  errors: string[];
-}
-
-const tick = (): Promise<void> => new Promise(resolve => setImmediate(resolve))
-
-/** Load an HTML document, execute its scripts, and drain animation frames.
- * Async because the widget renders on DOMContentLoaded, which jsdom fires
- * after the constructor returns. */
-async function loadPage (html: string): Promise<LoadedPage> {
-  const raf = new RafQueue()
-  const errors: string[] = []
-  const virtualConsole = new VirtualConsole()
-  virtualConsole.on('jsdomError', (e: Error) => errors.push(String(e.message ?? e)))
-  virtualConsole.on('error', (...args: unknown[]) => errors.push(args.map(String).join(' ')))
-  virtualConsole.on('warn', (...args: unknown[]) => errors.push(args.map(String).join(' ')))
-
-  const dom = new JSDOM(html, {
-    runScripts: 'dangerously',
-    pretendToBeVisual: false,
-    url: 'http://localhost/',
-    virtualConsole,
-    beforeParse (window) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const w = window as any
-      w.requestAnimationFrame = raf.request
-      w.cancelAnimationFrame = raf.cancel
-      w.ResizeObserver = NoopResizeObserver
-      installCanvasHook(window)
-      installBBoxPolyfills(window)
-      installComputedStyle(window)
-      // The chart sizes itself from its container, which jsdom never lays out
-      Object.defineProperties(window.HTMLElement.prototype, {
-        clientWidth: { configurable: true, get: () => 800 },
-        clientHeight: { configurable: true, get: () => 400 },
-      })
-    },
-  })
-
-  const page = { window: dom.window, raf, errors }
-  // Parsing, DOMContentLoaded and postMessage all resolve asynchronously in
-  // jsdom, so settle instead of guessing a fixed number of ticks
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  await settle(page, '.uv-chart svg')
-  return page
-}
-
-/** Alternate task ticks and frame flushes until `selector` matches */
-async function settle (page: LoadedPage, selector: string, rounds = 60): Promise<void> {
-  for (let round = 0; round < rounds; round++) {
-    await tick()
-    page.raf.flushAll()
-    if (page.window.document.querySelector(selector)) break
-    // Parsing a ~665kB bundle and delivering postMessage both take real time
-    if (round > 10) await new Promise(resolve => setTimeout(resolve, 5))
-  }
-  for (const error of page.raf.errors) {
-    if (!page.errors.includes(String(error))) page.errors.push(String(error))
-  }
-}
-
-/** The chart's own SVG — scoped to .uv-chart so the legend's bullet SVGs
- * (BulletLegend renders one per item) don't match first */
-const svgOf = (page: LoadedPage, root = '.uv-chart'): SVGSVGElement | null =>
-  page.window.document.querySelector(`${root} svg`) as SVGSVGElement | null
 
 describe('interactive widget bundle', () => {
   let lineSpec: ChartSpec
