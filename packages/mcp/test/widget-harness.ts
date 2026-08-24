@@ -31,7 +31,12 @@ const tick = (): Promise<void> => new Promise(resolve => setImmediate(resolve))
 /** Load an HTML document, execute its scripts, and drain animation frames.
  * Async because the widget renders on DOMContentLoaded, which jsdom fires
  * after the constructor returns. */
-export async function loadPage (html: string): Promise<LoadedPage> {
+export interface LoadPageOptions {
+  /** Extra window setup before the document parses (e.g. host bridges) */
+  beforeParse?: (window: JSDOM['window']) => void;
+}
+
+export async function loadPage (html: string, options: LoadPageOptions = {}): Promise<LoadedPage> {
   const raf = new RafQueue()
   const errors: string[] = []
   const virtualConsole = new VirtualConsole()
@@ -58,6 +63,7 @@ export async function loadPage (html: string): Promise<LoadedPage> {
         clientWidth: { configurable: true, get: () => 800 },
         clientHeight: { configurable: true, get: () => 400 },
       })
+      options.beforeParse?.(window)
     },
   })
 
