@@ -8,6 +8,24 @@ MCP server.
 npm install @unovis/mcp
 ```
 
+## Entry points
+
+The root export carries the full library — including the headless renderer,
+which drags jsdom along. Two subpaths stay dependency-light for consumers that
+only build or type specs (a browser app driving the widget, a service
+validating stored charts):
+
+```ts
+import { recipes, recipeByName, baseSpec, field, xyAxes, timeTickValuesFromData } from '@unovis/mcp/recipes'
+import { SPEC_VERSION, type ChartSpec } from '@unovis/mcp/spec'
+```
+
+`@unovis/mcp/recipes` turns validated tool inputs into specs (`recipeByName
+.get('generate_line_chart').toSpec(input)`) and exposes the helpers the recipes
+themselves use — accessors, axis defaults, legends, calendar-aligned time
+ticks — so hand-built specs don't reimplement them. Neither subpath touches
+jsdom or the canvas.
+
 ## Render a chart spec
 
 ```ts
