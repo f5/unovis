@@ -15,7 +15,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 /** Shared options documented once in output-types.md rather than 16 times */
 const COMMON = new Set([
   'width', 'height', 'theme', 'title', 'colors',
-  'outputType', 'outputPath', 'scale', 'framework',
+  'outputType', 'outputPath', 'scale', 'framework', 'locale',
 ])
 
 const escape = (text) => String(text).replace(/\|/g, '\\|').replace(/\n+/g, ' ')
@@ -88,7 +88,7 @@ const content = `# Tools reference
 Every chart tool takes \`data\` as an array of flat records plus field-name
 accessors, and shares the options documented in
 [Output types](./output-types.md#shared-options): \`width\`, \`height\`,
-\`theme\`, \`title\`, \`colors\`, \`outputType\`, \`outputPath\`, \`scale\`
+\`theme\`, \`title\`, \`colors\`, \`locale\`, \`outputType\`, \`outputPath\`, \`scale\`
 and \`framework\`.
 
 Tools can be hidden per deployment with \`DISABLED_TOOLS\` or \`--tools\`

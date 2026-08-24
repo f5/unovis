@@ -10,11 +10,14 @@ import { describe, expect, it, beforeAll } from 'vitest'
 import { JSDOM, VirtualConsole } from 'jsdom'
 import { z } from 'zod'
 
+import pkg from '../package.json'
+
 import { installBBoxPolyfills } from '../src/env/bbox.js'
 import { installCanvasHook } from '../src/env/canvas.js'
 import { installComputedStyle } from '../src/env/computed-style.js'
 import { RafQueue } from '../src/env/raf-queue.js'
 import { buildChartDocument, buildEmbedDocument } from '../src/html/document.js'
+import { SPEC_VERSION } from '../src/render/spec.js'
 import { lineRecipe } from '../src/recipes/line.js'
 import { donutRecipe } from '../src/recipes/donut.js'
 import { barRecipe } from '../src/recipes/bar.js'
@@ -169,6 +172,17 @@ describe('interactive widget bundle', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const api = (page.window as any).UnovisChart
     expect(typeof api.startEmbed).toBe('function')
+
+    // The ready handshake reports versions, so a host with a persisted embed
+    // document can assert compatibility instead of rendering blind
+    const ready = await new Promise<Record<string, unknown>>((resolve) => {
+      page.window.addEventListener('message', (event: MessageEvent) => {
+        if (event.data?.type === 'unovis:ready') resolve(event.data as Record<string, unknown>)
+      })
+      api.startEmbed()
+    })
+    expect(ready.version).toBe(pkg.version)
+    expect(ready.specVersion).toBe(SPEC_VERSION)
 
     // Drive the protocol directly: the listener is installed by startEmbed()
     page.window.postMessage({ type: 'unovis:render', spec: lineSpec, options: { duration: 0 } }, '*')

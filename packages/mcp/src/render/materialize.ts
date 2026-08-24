@@ -4,7 +4,8 @@
  * property name only — user input is never evaluated as code.
  */
 import type { UnovisLib } from '../env/index.js'
-import { isAccessorRef } from './spec.js'
+import { isAccessorRef, SPEC_VERSION } from './spec.js'
+import { timeTickValuesFromData } from './time-ticks.js'
 import type { AccessorRef, ChartSpec, ComponentSpec } from './spec.js'
 
 type DataRecord = Record<string, unknown>
@@ -27,23 +28,26 @@ const coerceDate = (value: unknown): number | undefined => {
 }
 
 /** Time tick formatter: picks granularity from the value */
-const formatDateTick = (value: unknown): string => {
-  const time = typeof value === 'number' ? value : Number(value)
+export const formatDateTick = (value: unknown, locale = 'en-US'): string => {
+  // Axes hand over epoch ms; tooltip headers can hand over the raw record
+  // value, which may be a date string
+  const numeric = typeof value === 'number' ? value : Number(value)
+  const time = Number.isFinite(numeric) ? numeric : new Date(String(value)).getTime()
   if (!Number.isFinite(time)) return String(value)
   const date = new Date(time)
   const opts: Intl.DateTimeFormatOptions = date.getUTCHours() === 0 && date.getUTCMinutes() === 0
     ? (date.getUTCDate() === 1 ? { year: 'numeric', month: 'short' } : { month: 'short', day: 'numeric' })
     : { hour: '2-digit', minute: '2-digit' }
-  return date.toLocaleString('en-US', { ...opts, timeZone: 'UTC' })
+  return date.toLocaleString(locale, { ...opts, timeZone: 'UTC' })
 }
 
-const formatNumTick = (value: unknown): string => {
+export const formatNumTick = (value: unknown, locale = 'en-US'): string => {
   const n = Number(value)
   if (!Number.isFinite(n)) return String(value)
-  return n.toLocaleString('en-US', { maximumFractionDigits: 6 })
+  return n.toLocaleString(locale, { maximumFractionDigits: 6 })
 }
 
-export function materializeAccessor (ref: AccessorRef): AnyFn | unknown {
+export function materializeAccessor (ref: AccessorRef, locale?: string): AnyFn | unknown {
   if ('$field' in ref) {
     const { $field: field, as } = ref
     if (as === 'number') return (d: DataRecord) => coerceNumber(d?.[field])
@@ -52,8 +56,8 @@ export function materializeAccessor (ref: AccessorRef): AnyFn | unknown {
   }
   if ('$index' in ref) return (_: unknown, i: number) => i
   if ('$const' in ref) return () => (ref as { $const: unknown }).$const
-  if ('$dateTickFormat' in ref) return formatDateTick
-  if ('$numTickFormat' in ref) return formatNumTick
+  if ('$dateTickFormat' in ref) return (value: unknown) => formatDateTick(value, locale)
+  if ('$numTickFormat' in ref) return (value: unknown) => formatNumTick(value, locale)
   if ('$lookup' in ref) {
     const values = ref.$lookup
     return (d: unknown) => values[Math.round(Number(d)) % values.length] ?? String(d)
@@ -63,7 +67,7 @@ export function materializeAccessor (ref: AccessorRef): AnyFn | unknown {
     return (d: DataRecord) => {
       const value = d?.[field]
       if (value === null || value === undefined) return ''
-      return `${prefix}${formatNumTick(value)}${suffix}`
+      return `${prefix}${formatNumTick(value, locale)}${suffix}`
     }
   }
   if ('$mapField' in ref) {
@@ -74,12 +78,12 @@ export function materializeAccessor (ref: AccessorRef): AnyFn | unknown {
 }
 
 /** Deep-walk a config value, replacing accessor descriptors with functions */
-export function materializeValue (value: unknown): unknown {
-  if (isAccessorRef(value)) return materializeAccessor(value)
-  if (Array.isArray(value)) return value.map(materializeValue)
+export function materializeValue (value: unknown, locale?: string): unknown {
+  if (isAccessorRef(value)) return materializeAccessor(value, locale)
+  if (Array.isArray(value)) return value.map(v => materializeValue(v, locale))
   if (typeof value === 'object' && value !== null) {
     const out: Record<string, unknown> = {}
-    for (const [key, v] of Object.entries(value)) out[key] = materializeValue(v)
+    for (const [key, v] of Object.entries(value)) out[key] = materializeValue(v, locale)
     return out
   }
   return value
@@ -112,12 +116,12 @@ export interface MaterializeOptions {
   onComponentComplete?: () => void;
 }
 
-function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: MaterializeOptions): unknown {
+function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: MaterializeOptions, locale?: string): unknown {
   const allowed = XY_COMPONENTS.has(spec.type) || SINGLE_COMPONENTS.has(spec.type)
   if (!allowed) throw new ChartInputError(`Unsupported component type: ${spec.type}`)
   const componentClass = (lib as unknown as Record<string, new (config: Record<string, unknown>) => unknown>)[spec.type]
   if (!componentClass) throw new ChartInputError(`Component ${spec.type} is not available in this @unovis/ts build`)
-  const config = materializeValue(spec.config) as Record<string, unknown>
+  const config = materializeValue(spec.config, locale) as Record<string, unknown>
   config.duration = options.duration ?? 0
   if (ASYNC_COMPONENTS.has(spec.type) && options.onComponentComplete) config.onRenderComplete = options.onComponentComplete
 
@@ -136,18 +140,35 @@ function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: Mat
 }
 
 export function materializeChart (lib: UnovisLib, spec: ChartSpec, options: MaterializeOptions = {}): MaterializedChart {
-  const base = materializeValue(spec.containerConfig ?? {}) as Record<string, unknown>
+  // Additions to the IR are non-breaking, so only a newer major is refused —
+  // with a reason, instead of the blank chart version drift produces otherwise
+  if (spec.specVersion !== undefined && Math.floor(spec.specVersion) > SPEC_VERSION) {
+    throw new ChartInputError(`Chart spec version ${spec.specVersion} is newer than this renderer supports (${SPEC_VERSION}) — upgrade @unovis/mcp`)
+  }
+  const locale = spec.locale
+  const base = materializeValue(spec.containerConfig ?? {}, locale) as Record<string, unknown>
   const duration = options.duration ?? 0
   const size = options.responsive ? {} : { width: spec.width, height: spec.height }
 
   if (spec.container === 'xy') {
     const components = spec.components.map(c => {
       if (!XY_COMPONENTS.has(c.type)) throw new ChartInputError(`${c.type} cannot be used in an XY container`)
-      return instantiateComponent(lib, c, options)
+      return instantiateComponent(lib, c, options, locale)
     })
     const axisConfig = (axis: Record<string, unknown> | undefined, type: 'x' | 'y'): unknown => {
       if (!axis) return undefined
-      return new lib.Axis({ ...(materializeValue(axis) as Record<string, unknown>), type, duration })
+      return new lib.Axis({ ...(materializeValue(axis, locale) as Record<string, unknown>), type, duration })
+    }
+    // Hand-written specs usually omit tickValues; linear-scale defaults
+    // degenerate on time domains (one tick, time-of-day labels), so derive
+    // calendar-aligned ticks from the data the way the recipes do.
+    if (spec.xAxis && '$dateTickFormat' in ((spec.xAxis.tickFormat ?? {}) as Record<string, unknown>) && spec.xAxis.tickValues === undefined) {
+      const xField = (spec.components[0]?.config?.x as { $field?: string } | undefined)?.$field
+      const records = Array.isArray(spec.data) ? spec.data as Record<string, unknown>[] : undefined
+      if (xField && records) {
+        const tickValues = timeTickValuesFromData(records, xField)
+        if (tickValues) spec = { ...spec, xAxis: { ...spec.xAxis, tickValues } }
+      }
     }
     return {
       containerType: 'xy',
@@ -165,7 +186,7 @@ export function materializeChart (lib: UnovisLib, spec: ChartSpec, options: Mate
   }
 
   if (spec.components.length !== 1) throw new ChartInputError('single container requires exactly one component')
-  const component = instantiateComponent(lib, spec.components[0], options)
+  const component = instantiateComponent(lib, spec.components[0], options, locale)
   return {
     containerType: 'single',
     containerConfig: {

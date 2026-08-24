@@ -5,7 +5,7 @@
  * a crosshair on continuous XY charts, and — unlike SVG output — Unovis's
  * real HTML BulletLegend.
  */
-import { materializeValue } from '../render/materialize.js'
+import { formatNumTick, materializeValue } from '../render/materialize.js'
 import type { AccessorRef, ChartSpec } from '../render/spec.js'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,14 +16,14 @@ type Datum = Record<string, any>
 const escapeHtml = (value: unknown): string => String(value)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
-const formatValue = (value: unknown): string => {
+const formatValue = (value: unknown, locale?: string): string => {
   if (value === null || value === undefined) return '—'
-  if (typeof value === 'number') return value.toLocaleString('en-US', { maximumFractionDigits: 6 })
+  if (typeof value === 'number') return formatNumTick(value, locale)
   return escapeHtml(value)
 }
 
-const row = (label: string, value: unknown): string =>
-  `<div class="uv-tt-row"><span class="uv-tt-key">${escapeHtml(label)}</span><span class="uv-tt-val">${formatValue(value)}</span></div>`
+const row = (label: string, value: unknown, locale?: string): string =>
+  `<div class="uv-tt-row"><span class="uv-tt-key">${escapeHtml(label)}</span><span class="uv-tt-val">${formatValue(value, locale)}</span></div>`
 
 const title = (text: unknown): string => `<div class="uv-tt-title">${escapeHtml(text)}</div>`
 
@@ -54,13 +54,13 @@ const publicEntries = (datum: Datum): [string, unknown][] =>
   Object.entries(datum ?? {}).filter(([key, value]) =>
     !key.startsWith('_') && (value === null || typeof value !== 'object'))
 
-function recordTooltip (fields: string[], labelField?: string): (d: Datum) => string {
+function recordTooltip (fields: string[], labelField?: string, locale?: string): (d: Datum) => string {
   return (d: Datum) => {
     if (!d) return ''
     const head = labelField && d[labelField] !== undefined ? title(d[labelField]) : ''
     const shown = fields.length
-      ? fields.filter(f => d[f] !== undefined).map(f => row(f, d[f]))
-      : publicEntries(d).map(([key, value]) => row(key, value))
+      ? fields.filter(f => d[f] !== undefined).map(f => row(f, d[f], locale))
+      : publicEntries(d).map(([key, value]) => row(key, value, locale))
     return `${head}${shown.join('')}` || title('no data')
   }
 }
@@ -79,7 +79,7 @@ export function buildInteractions (lib: Lib, spec: ChartSpec): Interactions {
 
   for (const component of spec.components) {
     const fields = specFields(component.config)
-    const generic = recordTooltip(fields)
+    const generic = recordTooltip(fields, undefined, spec.locale)
 
     switch (component.type) {
       case 'Line':
@@ -155,20 +155,26 @@ export function buildInteractions (lib: Lib, spec: ChartSpec): Interactions {
   }
 
   if (usesCrosshair && crosshairComponent) {
-    const x = materializeValue(crosshairComponent.config.x as AccessorRef)
+    const x = materializeValue(crosshairComponent.config.x as AccessorRef, spec.locale)
     const yFields = specFields(crosshairComponent.config)
       .filter(f => f !== (crosshairComponent.config.x as { $field?: string })?.$field)
     const labels = spec.legend?.map(item => item.name) ?? yFields
     const xField = (crosshairComponent.config.x as { $field?: string })?.$field
+    // Format the header with the x axis's own tick formatter — the raw value
+    // on a time axis is epoch milliseconds
+    const headFormat = spec.xAxis?.tickFormat
+      ? materializeValue(spec.xAxis.tickFormat, spec.locale) as (value: unknown) => string
+      : undefined
 
     containerConfig.crosshair = new lib.Crosshair({
       x,
       // Crosshair places one marker per y accessor — without these it warns
       // and renders only the vertical line
-      y: materializeValue(crosshairComponent.config.y),
+      y: materializeValue(crosshairComponent.config.y, spec.locale),
       template: (d: Datum) => {
-        const head = xField && d?.[xField] !== undefined ? title(d[xField]) : ''
-        const rows = yFields.map((f, i) => row(labels[i] ?? f, d?.[f]))
+        const xValue = xField ? d?.[xField] : undefined
+        const head = xValue !== undefined ? title(headFormat ? headFormat(xValue) : xValue) : ''
+        const rows = yFields.map((f, i) => row(labels[i] ?? f, d?.[f], spec.locale))
         return `${head}${rows.join('')}`
       },
     })

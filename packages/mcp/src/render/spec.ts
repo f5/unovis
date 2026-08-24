@@ -61,7 +61,14 @@ export interface LegendItemSpec {
   paletteIndex?: number;
 }
 
+/** Version of the ChartSpec contract. Bump the integer on breaking IR
+ * changes only; additions are non-breaking. Consumers that persist specs or
+ * embed documents compare it via the `unovis:ready` handshake. */
+export const SPEC_VERSION = 1
+
 export interface ChartSpec {
+  /** ChartSpec contract version this spec was written against (see SPEC_VERSION) */
+  specVersion?: number;
   container: 'xy' | 'single';
   width: number;
   height: number;
@@ -74,6 +81,8 @@ export interface ChartSpec {
   yAxis?: AxisSpec;
   /** Custom palette — overrides --vis-colorN for the whole chart */
   colors?: string[];
+  /** BCP-47 locale for date/number tick and tooltip formatting (default en-US) */
+  locale?: string;
   legend?: LegendItemSpec[];
   data: unknown;
 }
