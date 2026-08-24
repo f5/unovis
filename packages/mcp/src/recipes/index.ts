@@ -38,3 +38,18 @@ export const recipes: AnyRecipe[] = [
 ]
 
 export const recipeByName = new Map(recipes.map(r => [r.name, r]))
+
+// Spec-building helpers, so consumers of `@unovis/mcp/recipes` don't have to
+// hand-roll accessors, axes, legends or time ticks that the recipes already do
+export {
+  ChartInputError,
+  assertFieldsExist,
+  baseSpec,
+  categoricalX,
+  dateTickValues,
+  field,
+  seriesLegend,
+  timeTickValuesFromData,
+  xyAxes,
+} from './shared.js'
+export type { DataRecord } from './shared.js'

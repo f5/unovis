@@ -1,6 +1,6 @@
 {
   "name": "@unovis/mcp",
-  "description": "MCP server that renders Unovis charts to SVG locally in Node — no browser, no remote services",
+  "description": "MCP server that renders Unovis charts to SVG locally in Node \u2014 no browser, no remote services",
   "version": "1.7.0-mcp.1",
   "packageManager": "pnpm@10.23.0",
   "repository": {
@@ -28,6 +28,21 @@
   "types": "./dist/index.d.ts",
   "bin": {
     "unovis-mcp": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./recipes": {
+      "types": "./dist/recipes/index.d.ts",
+      "default": "./dist/recipes/index.js"
+    },
+    "./spec": {
+      "types": "./dist/render/spec.d.ts",
+      "default": "./dist/render/spec.js"
+    },
+    "./package.json": "./package.json"
   },
   "engines": {
     "node": ">=20"
