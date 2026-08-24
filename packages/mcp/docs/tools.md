@@ -5,7 +5,7 @@
 Every chart tool takes `data` as an array of flat records plus field-name
 accessors, and shares the options documented in
 [Output types](./output-types.md#shared-options): `width`, `height`,
-`theme`, `title`, `colors`, `outputType`, `outputPath`, `scale`
+`theme`, `title`, `colors`, `locale`, `outputType`, `outputPath`, `scale`
 and `framework`.
 
 Tools can be hidden per deployment with `DISABLED_TOOLS` or `--tools`
@@ -87,7 +87,7 @@ Generate a scatter plot (or bubble chart) showing the relationship between two n
 | `x` | string | **required** | Field for X values (numeric) |
 | `y` | string | **required** | Field for Y values (numeric) |
 | `size` | string | — | Numeric field mapped to point size (bubble chart). Values are scaled into sizeRange |
-| `sizeRange` | [number, number] | `[8,40]` | Point diameter range [min, max] in pixels, used when size is set |
+| `sizeRange` | number[] | `[8,40]` | Point diameter range [min, max] in pixels, used when size is set |
 | `pointSize` | number | `10` | Fixed point diameter in pixels, used when size is not set |
 | `colorBy` | string | — | Categorical field: points are colored by its value and a legend is shown |
 | `label` | string | — | Field with point labels. Overlapping labels are hidden automatically |
@@ -178,7 +178,7 @@ Generate a heatmap: a grid of cells colored by value across two categorical dime
 | `row` | string | **required** | Field with the row category of each cell |
 | `column` | string | **required** | Field with the column category of each cell |
 | `value` | string | **required** | Field with the numeric cell value (drives the cell color) |
-| `colorRange` | [string, string] | — | [lowColor, highColor] hex pair; cell colors are interpolated between them. Defaults to a green sequence |
+| `colorRange` | string[] | — | [lowColor, highColor] hex pair; cell colors are interpolated between them. Defaults to a green sequence |
 | `cellPadding` | number | `2` | Gap between cells in pixels |
 | `cellCornerRadius` | number | `2` | Cell corner radius in pixels |
 
@@ -242,13 +242,13 @@ Generate a radial bar chart (activity rings): one concentric ring per record, fi
 
 ### `generate_network_graph`
 
-Generate a network graph (node-link diagram) of relationships between entities — topologies, dependencies, hierarchies, social networks. Nodes are colored by their optional group. Use layout "force" for general networks, "circular"/"concentric" for symmetric views. Example: nodes=[{"id":"api","group":"service"},{"id":"db","group":"storage"}], links=[{"source":"api","target":"db"}].
+Generate a network graph (node-link diagram) of relationships between entities — topologies, dependencies, hierarchies, social networks. Nodes are colored by their optional group. Use layout "dagre" with linkArrows for hierarchies and DAGs, "force" for general networks, "circular"/"concentric" for symmetric views. Example: nodes=[{"id":"api","group":"service"},{"id":"db","group":"storage"}], links=[{"source":"api","target":"db"}].
 
 | Option | Type | Default | Description |
 |---|---|---|---|
 | `nodes` | { id, label, group, size, subLabel }[] | **required** | Graph nodes, e.g. [{"id":"gw","label":"Gateway","group":"service"}] |
 | `links` | { source, target, label, width }[] | **required** | Edges between nodes by id, e.g. [{"source":"gw","target":"db"}] |
-| `layout` | `force` \| `circular` \| `concentric` | `"force"` | Node placement: force (organic, general networks), circular (single ring), concentric (one ring per group) |
+| `layout` | `force` \| `circular` \| `concentric` \| `dagre` | `"force"` | Node placement: force (organic, general networks), circular (single ring), concentric (one ring per group), dagre (layered top to bottom — best for hierarchies and DAGs) |
 | `nodeSize` | number | `22` | Default node diameter in pixels |
 | `showLabels` | boolean | `true` | Show node labels |
 | `linkArrows` | boolean | `false` | Draw source → target arrowheads on links |
@@ -263,7 +263,7 @@ Generate a choropleth map: geographic areas (countries, states, regions) shaded 
 |---|---|---|---|
 | `map` | `world` \| `usa` \| `germany` \| `uk` \| `france` \| `india` \| `china` | `"world"` | Which map to draw. Area ids: world — ISO 3166-1 alpha-2 codes or country names; usa — state names, USPS abbreviations or FIPS codes; germany/france/india — ISO 3166-2 codes or names; uk — statistical regions by name; china — province names |
 | `data` | { id, value }[] | **required** | One entry per area, e.g. [{"id":"US","value":21},{"id":"Germany","value":46}] |
-| `colorRange` | [string, string] | — | [lowColor, highColor] hex pair; area colors are interpolated between them. Defaults to a blue ramp |
+| `colorRange` | string[] | — | [lowColor, highColor] hex pair; area colors are interpolated between them. Defaults to a blue ramp |
 | `valueLabel` | string | `""` | Unit for legend labels, e.g. "%" or " GWh" |
 
 ## `get_unovis_info`

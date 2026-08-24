@@ -8,7 +8,7 @@
  * Run: pnpm build:widget (chained from pnpm build)
  */
 import { build } from 'esbuild'
-import { mkdirSync, statSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -44,6 +44,10 @@ const result = await build({
   sourcemap: false,
   legalComments: 'none',
   plugins: [stubPlugin],
+  define: {
+    // Reported by the unovis:ready handshake so hosts can assert compatibility
+    __UNOVIS_MCP_VERSION__: JSON.stringify(JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version),
+  },
   logLevel: 'warning',
   metafile: true,
 })

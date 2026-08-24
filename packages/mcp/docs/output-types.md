@@ -23,6 +23,7 @@ These exist on every chart tool:
 | `theme` | `light` \| `dark` | `light` | Dark theme bakes Unovis's dark palette and a dark background |
 | `title` | string | — | Rendered as a heading above the chart |
 | `colors` | string[] | — | Hex palette replacing the default one, in order |
+| `locale` | string | `en-US` | BCP-47 locale for date/number formatting on axes and tooltips, e.g. `de-DE` |
 | `outputType` | see above | `svg` | |
 | `outputPath` | string | — | Absolute path with an extension matching `outputType` (`.svg`, `.png`, `.html`) |
 | `scale` | 1–4 | `2` | PNG pixel density only |

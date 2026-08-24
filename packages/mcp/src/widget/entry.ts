@@ -9,7 +9,14 @@
 import * as unovis from './unovis-slim.js'
 import { materializeChart } from '../render/materialize.js'
 import { buildInteractions } from './interactions.js'
+import { SPEC_VERSION } from '../render/spec.js'
 import type { ChartSpec } from '../render/spec.js'
+
+// Injected by scripts/build-widget.mjs; 'dev' when running unbundled (tests)
+// eslint-disable-next-line @typescript-eslint/naming-convention
+declare const __UNOVIS_MCP_VERSION__: string
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const BUNDLE_VERSION = typeof __UNOVIS_MCP_VERSION__ !== 'undefined' ? __UNOVIS_MCP_VERSION__ : 'dev'
 
 export interface RenderOptions {
   /** Animation duration in ms (0 disables animations) */
@@ -125,7 +132,9 @@ function startEmbedMode (): void {
     }
   })
 
-  window.parent?.postMessage({ type: 'unovis:ready' }, '*')
+  // Version handshake: hosts that persist embed documents or specs assert
+  // compatibility here instead of discovering drift as a blank chart
+  window.parent?.postMessage({ type: 'unovis:ready', version: BUNDLE_VERSION, specVersion: SPEC_VERSION }, '*')
 }
 
 /** Render a spec embedded in the page as <script type="application/json" id="uv-spec"> */
