@@ -66,6 +66,9 @@ summary.
 This is **experimental** — the conventions are still moving, so don't build a
 product on it yet. `html` is the dependable path.
 
+For React Native and other native WebViews, see
+[Embedding in native WebViews](./webview.md).
+
 ## Embedding the widget in your own page
 
 The widget doubles as a plain iframe component, so any web app can render Unovis
@@ -98,6 +101,7 @@ with the `#embed` hash, and post it a spec:
 |---|---|---|
 | widget → host | `{ type: 'unovis:ready' }` | Loaded, waiting for a spec |
 | host → widget | `{ type: 'unovis:render', spec, options }` | Render this spec (replaces any previous chart) |
+| host → widget | `{ type: 'unovis:theme', theme }` | Re-render the last spec in `'light'` or `'dark'` and restyle the page — no need to resend the spec |
 | widget → host | `{ type: 'unovis:size', width, height }` | Content size after a render |
 | widget → host | `{ type: 'unovis:event', component, componentIndex, event, datum }` | A click on a chart element — sent only when the render options set `events: true` |
 

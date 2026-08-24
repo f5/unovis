@@ -2,7 +2,7 @@
 mdx:
   format: md
 description: Fonts, blank charts, timeouts and known limits
-sidebar_position: 9
+sidebar_position: 10
 ---
 # Troubleshooting
 

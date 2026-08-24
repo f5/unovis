@@ -26,7 +26,7 @@ describe('documentation', () => {
 
   it('resolves cross-page links', () => {
     const pages = ['README.md', 'getting-started.md', 'output-types.md', 'chart-spec.md',
-      'programmatic.md', 'interactive.md', 'architecture.md', 'troubleshooting.md', 'tools.md']
+      'programmatic.md', 'interactive.md', 'webview.md', 'architecture.md', 'troubleshooting.md', 'tools.md']
     for (const page of pages) {
       const content = read(page)
       for (const [, target] of content.matchAll(/\]\(\.\/([\w-]+\.md)(?:#[\w-]+)?\)/g)) {

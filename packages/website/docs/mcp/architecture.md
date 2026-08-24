@@ -2,7 +2,7 @@
 mdx:
   format: md
 description: How Unovis renders headlessly in Node
-sidebar_position: 8
+sidebar_position: 9
 ---
 # Architecture
 

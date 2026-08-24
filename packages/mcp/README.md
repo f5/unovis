@@ -14,6 +14,7 @@ Read them on the web at [unovis.dev/docs/mcp](https://unovis.dev/docs/mcp), or i
 [chart spec](./docs/chart-spec.md) ·
 [programmatic use](./docs/programmatic.md) ·
 [interactive charts](./docs/interactive.md) ·
+[native WebViews](./docs/webview.md) ·
 [architecture](./docs/architecture.md) ·
 [troubleshooting](./docs/troubleshooting.md)
 

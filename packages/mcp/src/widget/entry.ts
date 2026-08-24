@@ -118,49 +118,89 @@ export function render (spec: ChartSpec, container: HTMLElement, options: Render
 
 // ── embed mode ──────────────────────────────────────────────────────────────
 // Host page → iframe: { type: 'unovis:render', spec, options }
-// iframe → host:      { type: 'unovis:ready' } and { type: 'unovis:size', height }
+//                     { type: 'unovis:theme', theme }
+// iframe → host:      { type: 'unovis:ready', version, specVersion },
+//                     { type: 'unovis:size', width, height } and
+//                     { type: 'unovis:event', … }
 
 interface EmbedMessage {
   type?: string;
   spec?: ChartSpec;
+  theme?: 'light' | 'dark';
   options?: RenderOptions & {
     /** Post `unovis:event` messages for clicks on chart elements */
     events?: boolean;
   };
 }
 
+/** React Native's WebView exposes its own bridge and only accepts strings */
+interface ReactNativeWebViewBridge {
+  postMessage: (data: string) => void;
+}
+
 function startEmbedMode (): void {
   const root = document.getElementById('uv-embed-root') ?? document.body
   let handle: ChartHandle | undefined
+  let lastSpec: ChartSpec | undefined
+  let lastOptions: EmbedMessage['options']
 
-  const postSize = (): void => {
-    window.parent?.postMessage({
-      type: 'unovis:size',
-      width: root.scrollWidth,
-      height: root.scrollHeight,
-    }, '*')
+  // In a React Native WebView the host listens on its own bridge, not on
+  // window.parent — and receives strings, not structured clones
+  const post = (message: Record<string, unknown>): void => {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const bridge = (window as unknown as { ReactNativeWebView?: ReactNativeWebViewBridge }).ReactNativeWebView
+    if (bridge) bridge.postMessage(JSON.stringify(message))
+    else window.parent?.postMessage(message, '*')
   }
 
-  window.addEventListener('message', (event: MessageEvent<EmbedMessage>) => {
-    const message = event.data
-    if (message?.type !== 'unovis:render' || !message.spec) return
+  const postSize = (): void => {
+    post({ type: 'unovis:size', width: root.scrollWidth, height: root.scrollHeight })
+  }
+
+  const renderMessage = (spec: ChartSpec, rawOptions: EmbedMessage['options']): void => {
     handle?.destroy()
     try {
-      const { events, ...options } = message.options ?? {}
+      const { events, ...options } = rawOptions ?? {}
       if (events) {
-        options.onEvent = (chartEvent) =>
-          window.parent?.postMessage({ type: 'unovis:event', ...chartEvent }, '*')
+        options.onEvent = (chartEvent) => post({ type: 'unovis:event', ...chartEvent })
       }
-      handle = render(message.spec, root, options)
+      handle = render(spec, root, options)
+      lastSpec = spec
+      lastOptions = rawOptions
       postSize()
     } catch (e) {
       root.innerHTML = `<div class="uv-error">${String(e instanceof Error ? e.message : e)}</div>`
     }
-  })
+  }
+
+  const onMessage = (event: Event): void => {
+    // React Native posts strings; iframes post structured clones
+    const raw = (event as MessageEvent<EmbedMessage | string>).data
+    let message: EmbedMessage
+    if (typeof raw === 'string') {
+      try { message = JSON.parse(raw) as EmbedMessage } catch { return }
+    } else {
+      message = raw
+    }
+
+    if (message?.type === 'unovis:render' && message.spec) renderMessage(message.spec, message.options)
+
+    // Theme flips shouldn't force the host to resend the spec (or reload the
+    // document): re-render the last spec, or restyle the empty page
+    if (message?.type === 'unovis:theme' && (message.theme === 'light' || message.theme === 'dark')) {
+      if (lastSpec) renderMessage({ ...lastSpec, theme: message.theme }, lastOptions)
+      else applyTheme(message.theme)
+    }
+  }
+
+  // React Native delivers 'message' on document (Android) or window (iOS);
+  // iframes always on window. Same handler everywhere.
+  window.addEventListener('message', onMessage)
+  document.addEventListener('message' as never, onMessage)
 
   // Version handshake: hosts that persist embed documents or specs assert
   // compatibility here instead of discovering drift as a blank chart
-  window.parent?.postMessage({ type: 'unovis:ready', version: BUNDLE_VERSION, specVersion: SPEC_VERSION }, '*')
+  post({ type: 'unovis:ready', version: BUNDLE_VERSION, specVersion: SPEC_VERSION })
 }
 
 /** Render a spec embedded in the page as <script type="application/json" id="uv-spec"> */

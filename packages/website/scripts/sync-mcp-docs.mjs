@@ -24,6 +24,7 @@ const PAGES = [
   ['chart-spec.md', 'chart-spec.md', 'The JSON format behind every generated chart'],
   ['programmatic.md', 'programmatic.md', 'Render charts from your own code, scripts or CI'],
   ['interactive.md', 'interactive.md', 'Live charts, the browser widget and iframe embedding'],
+  ['webview.md', 'webview.md', 'Embedding charts in React Native and other native WebViews'],
   ['architecture.md', 'architecture.md', 'How Unovis renders headlessly in Node'],
   ['troubleshooting.md', 'troubleshooting.md', 'Fonts, blank charts, timeouts and known limits'],
 ]
