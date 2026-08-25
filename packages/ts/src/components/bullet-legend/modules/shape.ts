@@ -67,7 +67,7 @@ export function updateBullets (
     const width = getBulletsTotalWidth(bulletWidth, numBullets, spacing)
     const height = shape === BulletShape.Line ? BULLET_SIZE / 2.5 : BULLET_SIZE
 
-    const selection = select(els[i]).select('svg')
+    const selection = select(els[i]).select<SVGSVGElement>('svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
 
     // Remove existing paths

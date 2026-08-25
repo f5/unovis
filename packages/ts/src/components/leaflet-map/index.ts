@@ -63,9 +63,9 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   protected _defaultConfig = LeafletMapDefaultConfig as LeafletMapConfigInterface<Datum>
   public config: LeafletMapConfigInterface<Datum> = this._defaultConfig
 
-  g: Selection<HTMLElement, unknown, null, undefined>
+  declare g: Selection<HTMLElement, unknown, null, undefined>
   type = ComponentType.HTML
-  element: HTMLElement
+  declare element: HTMLElement
   datamodel: MapDataModel<Datum> = new MapDataModel()
   protected _container: HTMLElement
   protected _containerSelection: Selection<HTMLElement, unknown, null, undefined>
@@ -527,7 +527,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
       .call(createNodes)
 
     const pointsMerged = points.merge(pointsEnter)
-    pointsEnter.call(updateNodes, config, this._map.leaflet)
+    pointsEnter.call(updateNodes, config, this._map.leaflet, false)
     points.call(updateNodes, config, this._map.leaflet, mapMoveZoomUpdateOnly)
     pointsMerged.call(collideLabels, this._map.leaflet)
 

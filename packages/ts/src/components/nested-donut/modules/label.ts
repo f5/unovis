@@ -14,7 +14,7 @@ import { wrapSVGText } from '@/utils/text'
 import { NestedDonutConfigInterface } from '../config'
 
 // Local Types
-import { NestedDonutSegment, NestedDonutSegmentLabelAlignment } from '../types'
+import { NestedDonutArcAnimState, NestedDonutSegment, NestedDonutSegmentLabelAlignment } from '../types'
 
 // Styles
 import { variables } from '../style'
@@ -39,7 +39,7 @@ function getLabelFillColor<Datum> (
 
 function getLabelTransform<Datum> (
   d: NestedDonutSegment<Datum>,
-  arcGen: Arc<unknown, NestedDonutSegment<Datum>>
+  arcGen: Arc<unknown, NestedDonutArcAnimState>
 ): string {
   const translate = `translate(${arcGen.centroid(d)})`
   const degree = 180 / Math.PI * (arcGen.startAngle()(d) + arcGen.endAngle()(d)) / 2 - 90
@@ -71,7 +71,7 @@ function getLabelBounds<Datum> (
 
 export function createLabel<Datum> (
   selection: Selection<SVGTextElement, NestedDonutSegment<Datum>, SVGGElement, unknown>,
-  arcGen: Arc<unknown, NestedDonutSegment<Datum>>
+  arcGen: Arc<unknown, NestedDonutArcAnimState>
 ): void {
   selection
     .attr('transform', d => getLabelTransform(d, arcGen))
@@ -83,7 +83,7 @@ export function createLabel<Datum> (
 export function updateLabel<Datum> (
   selection: Selection<SVGTextElement, NestedDonutSegment<Datum>, SVGGElement, unknown>,
   config: NestedDonutConfigInterface<Datum>,
-  arcGen: Arc<unknown, NestedDonutSegment<Datum>>,
+  arcGen: Arc<unknown, NestedDonutArcAnimState>,
   duration: number
 ): void {
   selection

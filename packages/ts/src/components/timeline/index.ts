@@ -1,5 +1,4 @@
 import { select, Selection } from 'd3-selection'
-import { Transition } from 'd3-transition'
 import { max, min, minIndex } from 'd3-array'
 import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
 import { drag, D3DragEvent } from 'd3-drag'
@@ -9,7 +8,7 @@ import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
 import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValue, groupBy, isPlainObject, isFunction } from '@/utils/data'
-import { smartTransition } from '@/utils/d3'
+import { smartTransition, Selection$Transition } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 import { textAlignToAnchor, trimSVGText } from '@/utils/text'
@@ -368,7 +367,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => yOrdinalScale(this._getRecordKey(d, i)))
       .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i)), undefined, colorOptions))
       .style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, yOrdinalScale(this._getRecordKey(d, i)))))
-      .call(this._renderLines.bind(this), rowHeight)
+      .call(this._renderLines.bind(this))
 
     linesEnter.append('use').attr('class', s.lineStartIcon)
     linesEnter.append('use').attr('class', s.lineEndIcon)
@@ -384,7 +383,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i)), undefined, colorOptions))
       .style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, yOrdinalScale(this._getRecordKey(d, i)))))
       .style('cursor', (d, i) => getString(d, config.lineCursor ?? config.cursor, i))
-      .call(this._renderLines.bind(this), rowHeight)
+      .call(this._renderLines.bind(this))
 
     linesMerged.selectAll<SVGUseElement, Datum & TimelineLineRenderState>(`.${s.lineStartIcon}`)
       .data(d => [d])
@@ -623,7 +622,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
 
   private _renderLines (
-    selection: Selection<SVGRectElement, Datum & TimelineLineRenderState, SVGGElement, unknown> | Transition<SVGRectElement, Datum & TimelineLineRenderState, SVGGElement, unknown>
+    selection: Selection$Transition<SVGRectElement, Datum & TimelineLineRenderState, SVGGElement, unknown>
   ): void {
     const { config } = this
 

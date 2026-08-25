@@ -40,7 +40,7 @@ export function createNode<N extends ChordInputNode, L extends ChordInputLink> (
 export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
   selection: Selection<SVGPathElement, ChordNode<N>, SVGGElement, unknown>,
   config: ChordDiagramConfigInterface<N, L>,
-  arcGen: Arc<unknown, AnimState>,
+  arcGen: Arc<any, ChordNode<N>>,
   duration: number
 ): void {
   const nodeColor = (d: ChordNode<N>): string => getColor(d.data, config.nodeColor, d.height)
@@ -63,7 +63,7 @@ export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
 
       return (t: number): string => {
         arcNode._animState = datum(t)
-        return arcGen(arcNode._animState)
+        return arcGen(arcNode._animState as unknown as ChordNode<N>)
       }
     })
   } else {

@@ -43,7 +43,7 @@ export function resolveHeatmapCellSize (
 /** Resolves the grid dimensions from the total number of cells, the fill layout, and any explicit dimensions. */
 export function getHeatmapGridSize (
   total: number,
-  layout: HeatmapLayoutType,
+  layout: HeatmapLayoutType | `${HeatmapLayoutType}`,
   numRows?: number,
   numColumns?: number
 ): { rows: number; columns: number } {

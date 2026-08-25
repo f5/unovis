@@ -57,9 +57,9 @@ export function createPanels<N extends GraphNode, L extends GraphLink> (
   sideIcon.append('text').attr('class', panelSelectors.sideIconSymbol)
 }
 
-export function updatePanels<N extends GraphNode, L extends GraphLink> (
+export function updatePanels<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphPanel, SVGGElement, unknown>,
-  config: GraphConfigInterface<GraphInputNode, GraphInputLink>,
+  config: GraphConfigInterface<N, L>,
   duration: number
 ): void {
   smartTransition(selection, duration)
@@ -86,7 +86,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink> (
   const sideIcon = selection.select<SVGGElement>(`.${panelSelectors.sideIconGroup}`)
 
   sideIcon.select<SVGGElement>(`.${panelSelectors.sideIconShape}`)
-    .call(updateShape, (d: GraphPanel) => d.sideIconShape, (d: GraphPanel) => d.sideIconShapeSize ?? DEFAULT_SIDE_LABEL_SIZE)
+    .call(updateShape, (d: GraphPanel) => d.sideIconShape, (d: GraphPanel) => d.sideIconShapeSize ?? DEFAULT_SIDE_LABEL_SIZE, 0)
     .style('stroke', d => d.sideIconShapeStroke)
     .style('cursor', d => d.sideIconCursor ?? null)
     .style('opacity', d => d.sideIconShape ? 1 : 0)
@@ -125,9 +125,9 @@ export function updatePanels<N extends GraphNode, L extends GraphLink> (
     })
 }
 
-export function removePanels<N extends GraphNode, L extends GraphLink> (
+export function removePanels<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphPanel, SVGGElement, unknown>,
-  config: GraphConfigInterface<GraphInputNode, GraphInputLink>,
+  config: GraphConfigInterface<N, L>,
   duration: number
 ): void {
   smartTransition(selection, duration / 2)

@@ -16,6 +16,8 @@ export type NestedDonutSegment<Datum> = HierarchyRectangularNode<NestedDonutSegm
   };
 }
 
+export type NestedDonutArcAnimState = { x0: number; x1: number; y0: number; y1: number }
+
 export enum NestedDonutDirection {
   Inwards = 'inwards',
   Outwards = 'outwards',

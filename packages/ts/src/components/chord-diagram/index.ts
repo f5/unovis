@@ -15,9 +15,19 @@ import { getCSSVariableValueInPixels } from '@/utils/misc'
 
 // Types
 import { Spacing } from '@/types/spacing'
+import { GraphNodeCore } from '@/types/graph'
 
 // Local Types
-import { ChordInputNode, ChordInputLink, ChordDiagramData, ChordNode, ChordRibbon, ChordLabelAlignment, ChordLeafNode } from './types'
+import {
+  ChordInputNode,
+  ChordInputLink,
+  ChordDiagramData,
+  ChordHierarchyNode,
+  ChordNode,
+  ChordRibbon,
+  ChordLabelAlignment,
+  ChordLeafNode,
+} from './types'
 
 // Config
 import { ChordDiagramDefaultConfig, ChordDiagramConfigInterface } from './config'
@@ -67,7 +77,7 @@ export class ChordDiagram<
   }
 
   private _nodes: ChordNode<N>[] = []
-  private _links: ChordRibbon<N>[] = []
+  private _links: ChordRibbon<N, L>[] = []
   private _rootNode: ChordNode<N>
 
   private get _forceHighlight (): boolean {
@@ -140,7 +150,7 @@ export class ChordDiagram<
     links = links.filter(d => d._state.value)
     const root = getHierarchyNodes(nodes, d => d._state?.value, nodeLevels)
 
-    const partitionData = partition().size([this.config.angleRange[1], 1])(root) as ChordNode<N>
+    const partitionData = partition<ChordHierarchyNode<GraphNodeCore<N, L>>>().size([this.config.angleRange[1], 1])(root) as unknown as ChordNode<N>
     partitionData.each((n, i) => {
       positionChildren(n, padAngle)
       n.uid = `${this.uid.substr(0, 4)}-${i}`
@@ -152,7 +162,7 @@ export class ChordDiagram<
     const partitionDataWithRoot = partitionData.descendants()
     this._rootNode = partitionDataWithRoot.find(d => d.depth === 0)
     this._nodes = partitionDataWithRoot.filter(d => d.depth !== 0) // Filter out the root node
-    this._links = getRibbons<N>(partitionData, links, padAngle)
+    this._links = getRibbons<N, L>(partitionData, links, padAngle)
   }
 
   _render (customDuration?: number): void {
@@ -190,7 +200,7 @@ export class ChordDiagram<
 
     // Links
     const linksSelection = this.linkGroup
-      .selectAll<SVGPathElement, ChordRibbon<N>>(`.${s.link}`)
+      .selectAll<SVGPathElement, ChordRibbon<N, L>>(`.${s.link}`)
       .data(this._links, d => String(d.data._id))
 
     const linksEnter = linksSelection.enter().append('path')
@@ -215,12 +225,12 @@ export class ChordDiagram<
 
     const nodesEnter = nodesSelection.enter().append('path')
       .attr('class', s.node)
-      .call(createNode, config)
+      .call(createNode)
 
     const nodesMerged = nodesSelection
       .merge(nodesEnter)
       .classed(s.highlightedNode, d => config.highlightedNodeId === d.data._id)
-    nodesMerged.call(updateNode, config, this.arcGen, duration, this.bleed)
+    nodesMerged.call(updateNode, config, this.arcGen, duration)
 
     nodesSelection.exit()
       .call(removeNode, duration)
@@ -244,7 +254,7 @@ export class ChordDiagram<
   }
 
   private _onNodeMouseOver (d: ChordNode<N>): void {
-    let ribbons: ChordRibbon<N>[]
+    let ribbons: ChordRibbon<N, L>[]
     if (d.children) {
       const leaves = d.leaves() as ChordLeafNode<N>[]
       ribbons = this._links.filter(l =>
@@ -264,7 +274,7 @@ export class ChordDiagram<
     this._highlightOnHover()
   }
 
-  private _onLinkMouseOver (d: ChordRibbon<N>): void {
+  private _onLinkMouseOver (d: ChordRibbon<N, L>): void {
     this._highlightOnHover([d])
   }
 
@@ -272,7 +282,7 @@ export class ChordDiagram<
     this._highlightOnHover()
   }
 
-  private _highlightOnHover (links?: ChordRibbon<N>[]): void {
+  private _highlightOnHover (links?: ChordRibbon<N, L>[]): void {
     if (this._forceHighlight) return
     if (links) {
       links.forEach(l => {
@@ -289,7 +299,7 @@ export class ChordDiagram<
 
     this.nodeGroup.selectAll<SVGPathElement, ChordNode<N>>(`.${s.node}`)
       .classed(s.highlightedNode, d => d._state.hovered)
-    this.linkGroup.selectAll<SVGPathElement, ChordRibbon<N>>(`.${s.link}`)
+    this.linkGroup.selectAll<SVGPathElement, ChordRibbon<N, L>>(`.${s.link}`)
       .classed(s.highlightedLink, d => d._state.hovered)
 
     this.g.classed(s.transparent, !!links)

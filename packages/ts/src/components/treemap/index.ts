@@ -15,7 +15,6 @@ import { getColor, brighter, getHexValue, isColorDark } from '@/utils/color'
 import { getString, getNumber, isNumber, isFunction } from '@/utils/data'
 import { smartTransition } from '@/utils/d3'
 import { trimSVGText, wrapSVGText } from '@/utils/text'
-import { getCachedFontSizePx } from '@/utils/text-measure'
 import { cssvar } from '@/utils/style'
 
 // Types
