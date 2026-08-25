@@ -31,6 +31,9 @@ Options:
   --port <port>             HTTP port (default: 3737)
   --endpoint <path>         HTTP endpoint path (default: /mcp)
   --tools <a,b,...>         Only expose these tools
+  --allow-write-dir <dir>   Directory outputPath may write into. stdio default:
+                            anywhere (the user's own machine); http default:
+                            file writes disabled
   --version                 Print version
   --help                    Show this help
 
@@ -42,6 +45,7 @@ async function main (): Promise<void> {
   const { values } = parseArgs({
     options: {
       transport: { type: 'string', default: 'stdio' },
+      'allow-write-dir': { type: 'string' },
       host: { type: 'string', default: '127.0.0.1' },
       port: { type: 'string', default: '3737' },
       endpoint: { type: 'string', default: '/mcp' },
@@ -63,6 +67,9 @@ async function main (): Promise<void> {
   const filter: ToolFilterOptions = {
     disabledTools: (process.env.DISABLED_TOOLS ?? '').split(',').map(s => s.trim()).filter(Boolean),
     enabledTools: values.tools?.split(',').map(s => s.trim()).filter(Boolean),
+    // A local stdio server acts with its user's own authority; an HTTP
+    // endpoint must not be a remote file-write primitive
+    writeDir: values['allow-write-dir'] ?? (values.transport === 'http' ? false : undefined),
   }
 
   if (values.transport === 'stdio') {

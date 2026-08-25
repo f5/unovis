@@ -117,6 +117,11 @@ Two things to know before exposing it:
 
 - **There is no built-in authentication.** Keep it on a private network or put
   a reverse proxy with a bearer-token check in front.
+- **File writes are disabled by default on HTTP.** `outputPath` (and the
+  file-only `html` output) would otherwise let any client write to any path
+  the process can reach. Opt in with `--allow-write-dir /srv/charts` to allow
+  writes inside one directory; stdio servers are unrestricted, acting with
+  their user's own authority.
 - **Renders are serialized per process** (one shared jsdom document). The
   server is stateless, so scale by running several replicas behind a load
   balancer rather than expecting concurrency from one instance.

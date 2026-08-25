@@ -1,7 +1,7 @@
 /** Bind chart recipes to MCP tools. */
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, isAbsolute, join } from 'node:path'
+import { dirname, isAbsolute, join, resolve, sep } from 'node:path'
 
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
@@ -20,6 +20,12 @@ export interface ToolFilterOptions {
   disabledTools?: string[];
   /** When set, only these tools are exposed (--tools) */
   enabledTools?: string[];
+  /** Where `outputPath` may write. `undefined` = anywhere (a local stdio
+   * server acts with its user's own authority); a directory = only inside
+   * it; `false` = file writes disabled. The HTTP transport defaults to
+   * `false` — an unauthenticated network endpoint must not double as a
+   * remote file-write primitive. */
+  writeDir?: string | false;
 }
 
 /** MCP UI resource the interactive output binds to (registered in server.ts) */
@@ -37,7 +43,22 @@ async function specForBrowser (spec: ChartSpec): Promise<ChartSpec> {
 const chartSummary = (spec: ChartSpec): string =>
   `${spec.title ?? spec.components.map(c => c.type).join(' + ')} (${spec.width}×${spec.height}, ${spec.theme} theme)`
 
-async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>): Promise<CallToolResult> {
+/** Enforce the write policy on a requested outputPath. Returns an error
+ * message, or undefined when the write is allowed. */
+export function refuseWrite (outputPath: string, writeDir: ToolFilterOptions['writeDir']): string | undefined {
+  if (writeDir === undefined) return undefined
+  if (writeDir === false) {
+    return 'outputPath is disabled on this server — request inline output, or start the server with --allow-write-dir <dir>'
+  }
+  const dir = resolve(writeDir)
+  const target = resolve(outputPath)
+  if (target !== dir && !target.startsWith(dir + sep)) {
+    return `outputPath must be inside ${dir} on this server, got: ${outputPath}`
+  }
+  return undefined
+}
+
+async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>, writeDir?: ToolFilterOptions['writeDir']): Promise<CallToolResult> {
   try {
     const spec = recipe.toSpec(input)
 
@@ -70,12 +91,21 @@ async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>): Pr
     if (outputPath && (!isAbsolute(outputPath) || !outputPath.endsWith(extension))) {
       return textResult(`outputPath must be an absolute path ending in ${extension} (matching outputType), got: ${outputPath}`, true)
     }
+    if (outputPath) {
+      const refused = refuseWrite(outputPath, writeDir)
+      if (refused) return textResult(refused, true)
+    }
 
     // Self-contained interactive document. Always written to disk: the inlined
     // widget bundle is far too large to put in a tool result.
     if (isHtml) {
+      // html output IS a file — with writes disabled there is nothing to return
+      if (writeDir === false) {
+        return textResult('outputType "html" writes a file, which is disabled on this server — use "svg", "png" or "interactive", or start the server with --allow-write-dir <dir>', true)
+      }
       const html = buildChartDocument(await specForBrowser(spec))
-      const target = outputPath ?? join(mkdtempSync(join(tmpdir(), 'unovis-chart-')), 'chart.html')
+      const fallbackDir = typeof writeDir === 'string' ? resolve(writeDir) : tmpdir()
+      const target = outputPath ?? join(mkdtempSync(join(fallbackDir, 'unovis-chart-')), 'chart.html')
       mkdirSync(dirname(target), { recursive: true })
       writeFileSync(target, html)
       return textResult(`Interactive chart saved to ${target} — open it in a browser for tooltips, ` +
@@ -139,7 +169,7 @@ export function registerTools (server: McpServer, filter: ToolFilterOptions = {}
         },
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async (args: any) => runRecipe(recipe, args)
+      async (args: any) => runRecipe(recipe, args, filter.writeDir)
     )
   }
 
