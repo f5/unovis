@@ -140,7 +140,15 @@ there:
 - Root `index.js` / `maps.js` entries so `@unovis/ts` resolves in plain Node.
 
 The trend matters: as the core becomes SSR-friendlier, `@unovis/ssr`'s shim
-layer shrinks.
+layer shrinks. Three upstream issues track the next deletions:
+[#888](https://github.com/f5/unovis/issues/888) (text measurement via canvas
+instead of getBBox — retires the hardest shim),
+[#889](https://github.com/f5/unovis/issues/889) (event binding without the
+500ms throttle window), and
+[#890](https://github.com/f5/unovis/issues/890) — already fixed upstream: the
+diagnostics are cleared and the core build now fails if the entry
+declarations are missing, which retired this package's post-build workaround.
+One down, two to go.
 
 ## Testing strategy
 
