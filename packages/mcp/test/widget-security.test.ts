@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest'
 
 // Everything a generated document can execute: the bundle and the
 // self-extracting bootstrap that inflates it
-const bundle = ['bundle.js', 'unpack.js']
+const bundle = ['bundle.js', 'bundle.standard.js', 'unpack.js']
   .map(name => readFileSync(join(__dirname, '..', 'dist', 'widget', name), 'utf8'))
   .join('\n')
 

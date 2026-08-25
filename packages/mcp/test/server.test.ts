@@ -103,7 +103,7 @@ describe('mcp server', () => {
     expect(html).toContain('<!doctype html>')
     expect(html).toContain('id="uv-spec"')
     expect(html).not.toMatch(/<script[^>]+src=/) // no network dependencies
-    expect(html.length).toBeGreaterThan(200_000) // widget bundle is inlined
+    expect(html).toContain('id="uv-bundle-gz"') // widget bundle is inlined (compressed)
   })
 
   it('returns the spec and widget template for interactive output', async () => {

@@ -12,6 +12,8 @@ import { fileURLToPath } from 'node:url'
 import { gzipSync } from 'node:zlib'
 
 import type { ChartSpec } from '../render/spec.js'
+import { bundleVariantFor } from '../widget/variants.js'
+import type { BundleVariant } from '../widget/variants.js'
 
 const artifactCache = new Map<string, string>()
 
@@ -35,8 +37,8 @@ function widgetArtifact (name: string): string {
 }
 
 /** The compiled widget bundle */
-export function widgetBundle (): string {
-  return widgetArtifact('bundle.js')
+export function widgetBundle (variant: BundleVariant = 'full'): string {
+  return widgetArtifact(variant === 'standard' ? 'bundle.standard.js' : 'bundle.js')
 }
 
 /** The widget, inlined. Compressed by default: a standalone file never gets
@@ -44,12 +46,12 @@ export function widgetBundle (): string {
  * ~5kB synchronous bootstrap ahead of it (~3× smaller documents). The spec
  * and styles stay plain text so committed artifacts remain readable and
  * diffable. */
-function inlineWidget (compress: boolean): string {
-  if (!compress) return `<script>${widgetBundle()}</script>`
-  const key = 'bundle.js.gz64'
+function inlineWidget (compress: boolean, variant: BundleVariant): string {
+  if (!compress) return `<script>${widgetBundle(variant)}</script>`
+  const key = `${variant}.gz64`
   let payload = artifactCache.get(key)
   if (!payload) {
-    payload = gzipSync(Buffer.from(widgetBundle()), { level: 9 }).toString('base64')
+    payload = gzipSync(Buffer.from(widgetBundle(variant)), { level: 9 }).toString('base64')
     artifactCache.set(key, payload)
   }
   return `<script type="application/gzip" id="uv-bundle-gz">${payload}</script>
@@ -96,8 +98,9 @@ export interface ChartDocumentOptions {
 /** A standalone page that renders `spec` on load */
 export function buildChartDocument (spec: ChartSpec, options: ChartDocumentOptions = {}): string {
   const title = options.documentTitle ?? spec.title ?? 'Unovis chart'
+  const variant = bundleVariantFor(spec.components.map(c => c.type))
   return `<!doctype html>
-<html lang="en"${spec.theme === 'dark' ? ' data-theme="dark"' : ''}>
+<html lang="en" data-uv-bundle="${variant}"${spec.theme === 'dark' ? ' data-theme="dark"' : ''}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -108,7 +111,7 @@ export function buildChartDocument (spec: ChartSpec, options: ChartDocumentOptio
 <div id="uv-root"></div>
 <script type="application/json" id="uv-spec">${escapeForScript(JSON.stringify(spec))}</script>
 <script type="application/json" id="uv-options">${escapeForScript(JSON.stringify({ duration: options.duration ?? 400 }))}</script>
-${inlineWidget(options.compress !== false)}
+${inlineWidget(options.compress !== false, variant)}
 </body>
 </html>
 `
@@ -120,11 +123,16 @@ ${inlineWidget(options.compress !== false)}
 export interface EmbedDocumentOptions {
   /** See ChartDocumentOptions.compress (default true) */
   compress?: boolean;
+  /** Component types this embed will ever render (e.g. ['Line', 'Donut']).
+   * Lets the document carry the smaller standard bundle when the set allows;
+   * omitted, it carries the full bundle so any spec renders */
+  components?: string[];
 }
 
 export function buildEmbedDocument (options: EmbedDocumentOptions = {}): string {
+  const variant = options.components ? bundleVariantFor(options.components) : 'full'
   return `<!doctype html>
-<html lang="en">
+<html lang="en" data-uv-bundle="${variant}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -135,7 +143,7 @@ export function buildEmbedDocument (options: EmbedDocumentOptions = {}): string 
 </head>
 <body>
 <div id="uv-embed-root"></div>
-${inlineWidget(options.compress !== false)}
+${inlineWidget(options.compress !== false, variant)}
 <script>window.UnovisChart.startEmbed()</script>
 </body>
 </html>
