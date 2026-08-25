@@ -31,7 +31,17 @@ const output: OutputOptions = {
 
 export default defineConfig({
   plugins: [
-    dts({ tsconfigPath: './tsconfig.json', exclude: ['vite.config.ts'] }),
+    dts({
+      tsconfigPath: './tsconfig.json',
+      exclude: ['vite.config.ts'],
+      afterBuild: (emittedFiles) => {
+        // vite-plugin-dts skips entries whose type-check reports diagnostics without failing
+        // the build, which would publish a dist untyped at the package root — fail loudly instead
+        const emitted = [...emittedFiles.keys()].map(f => f.replace(/\\/g, '/'))
+        const missing = ['index.d.ts', 'maps.d.ts'].filter(entry => !emitted.some(f => f.endsWith(`/dist/${entry}`)))
+        if (missing.length) throw new Error(`Declaration entries were not emitted: ${missing.join(', ')}. Check the type errors above.`)
+      },
+    }),
   ],
   resolve: {
     alias: { '@': resolve(__dirname, './src') },
