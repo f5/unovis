@@ -105,7 +105,7 @@ recipe → ChartSpec ─┬→ headless renderer  → SVG / PNG        (any clie
                     └→ widget bundle      → ui:// resource    (MCP UI clients)
 ```
 
-The browser widget (~665kB, everything inlined) runs the **same materializer** as the headless renderer, so one code path turns a spec into a chart on both sides. It also works as a plain iframe for any web page — point an iframe at the widget with `#embed` and post it a spec:
+The browser widget (everything inlined; documents are ~290kB — the bundle travels as a gzip payload with a self-extracting bootstrap) runs the **same materializer** as the headless renderer, so one code path turns a spec into a chart on both sides. It also works as a plain iframe for any web page — point an iframe at the widget with `#embed` and post it a spec:
 
 ```js
 iframe.contentWindow.postMessage({ type: 'unovis:render', spec }, '*')

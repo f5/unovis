@@ -68,4 +68,26 @@ if (bytes / 1024 > LIMIT_KB) {
 
 writeFileSync(join(root, 'dist', 'widget', 'bundle.meta.json'), JSON.stringify({ bytes }, null, 2))
 console.error(`✓ widget bundle: ${(bytes / 1024).toFixed(0)}kB → ${outfile}`)
+
+// The self-extracting bootstrap: inflates the gzip+base64 payload that chart
+// documents carry instead of the raw bundle (~3× smaller files on disk)
+const unpackFile = join(root, 'dist', 'widget', 'unpack.js')
+await build({
+  entryPoints: [join(root, 'src', 'widget', 'unpack.ts')],
+  outfile: unpackFile,
+  bundle: true,
+  format: 'iife',
+  platform: 'browser',
+  target: ['es2020'],
+  minify: true,
+  sourcemap: false,
+  legalComments: 'none',
+  logLevel: 'warning',
+})
+const unpackBytes = statSync(unpackFile).size
+if (unpackBytes / 1024 > 15) {
+  console.error(`✗ unpack bootstrap is ${(unpackBytes / 1024).toFixed(1)}kB — it must stay trivially small`)
+  process.exit(1)
+}
+console.error(`✓ unpack bootstrap: ${(unpackBytes / 1024).toFixed(1)}kB → ${unpackFile}`)
 console.error(`  heaviest inputs: ${heaviest.join(', ')}`)

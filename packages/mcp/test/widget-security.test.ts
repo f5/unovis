@@ -7,7 +7,11 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-const bundle = readFileSync(join(__dirname, '..', 'dist', 'widget', 'bundle.js'), 'utf8')
+// Everything a generated document can execute: the bundle and the
+// self-extracting bootstrap that inflates it
+const bundle = ['bundle.js', 'unpack.js']
+  .map(name => readFileSync(join(__dirname, '..', 'dist', 'widget', name), 'utf8'))
+  .join('\n')
 
 describe('widget bundle network capability', () => {
   it.each([
