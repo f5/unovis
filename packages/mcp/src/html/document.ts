@@ -64,7 +64,13 @@ const escapeForScript = (json: string): string => json.replace(/</g, '\\u003c')
 const FONT_STACK = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
 
 function styles (spec?: ChartSpec): string {
-  const aspect = spec ? `${spec.width} / ${spec.height}` : '16 / 9'
+  // Interpolated into markup — a hand-built spec could smuggle anything in
+  // these fields, so only finite numbers survive
+  const width = Number(spec?.width)
+  const height = Number(spec?.height)
+  const aspect = Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0
+    ? `${width} / ${height}`
+    : '16 / 9'
   return `
   :root { --uv-bg: #ffffff; --uv-fg: #1f2937; --uv-muted: #6b7280; --uv-border: #e5e7eb; }
   :root[data-theme="dark"] { --uv-bg: #292b34; --uv-fg: #f2f4f9; --uv-muted: #aab2c0; --uv-border: #3a3d47; }
