@@ -44,8 +44,10 @@ export function substituteVarsForElement (value: string, el: Element | null, ctx
   return result
 }
 
-/** Attributes that commonly carry var() references or url() functions */
-const PAINT_ATTRS = ['fill', 'stroke', 'color', 'stop-color', 'marker', 'marker-start', 'marker-mid', 'marker-end', 'mask', 'filter', 'stroke-dasharray', 'flood-color']
+/** Attributes that commonly carry var() references or url() functions.
+ * font-family included: the core's text renderer emits
+ * `font-family="var(--vis-font-family)"` as a presentation attribute. */
+const PAINT_ATTRS = ['fill', 'stroke', 'color', 'stop-color', 'marker', 'marker-start', 'marker-mid', 'marker-end', 'mask', 'filter', 'stroke-dasharray', 'flood-color', 'font-family']
 
 export function bakeCssVars (svg: SVGSVGElement, ctx: VarContext): void {
   const elements = [svg, ...Array.from(svg.querySelectorAll('*'))]
