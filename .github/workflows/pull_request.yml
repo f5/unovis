@@ -60,6 +60,14 @@ jobs:
     # type-checking of generated code
     - name: Test
       run: cd packages/ssr && pnpm test && cd ../.. && pnpm run test:mcp
+    # jsdom performs no layout, paint or real event dispatch — a broken
+    # crosshair once passed every jsdom test. Chromium renders every family
+    # and drives hover/click/theme with real input; screenshots land in the
+    # sample-gallery artifact.
+    - name: Install Playwright Chromium
+      run: cd packages/mcp && pnpm exec playwright install --with-deps chromium
+    - name: Browser smoke lane
+      run: cd packages/mcp && pnpm run test:browser
     # A chart nobody can look at is a chart nobody can trust: render every
     # fixture in both themes so failures surface as artifacts, not just logs
     - name: Render sample gallery

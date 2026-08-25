@@ -147,10 +147,10 @@ output, and what you expected.
 
 Worth knowing before you trust a green suite:
 
-- **Real-browser rendering of interactive output.** The jsdom tests execute the
-  real widget bundle, but jsdom has no layout or paint: no pixel positions, no
-  transitions, and `ResizeObserver` is stubbed. A crosshair bug that jsdom passed
-  was found only by opening a real browser.
+- **Touch devices.** The Chromium smoke lane (`pnpm test:browser`) covers real
+  layout, paint, mouse hover and clicks — added after a crosshair bug passed
+  every jsdom test — but taps, drags and tooltip-linger semantics on actual
+  touch hardware remain untested.
 - **MCP UI widget rendering** in an actual client.
 - **Visual regression.** Snapshots catch structural drift, not "this looks
   wrong". `pnpm samples` exists for human review.

@@ -154,6 +154,7 @@ layer shrinks.
 | Tool schemas | Every advertised schema validated against the draft 2020-12 meta-schema, with no `$ref`s — the shape a client must accept before any chart can render ([why](./troubleshooting.md#the-client-rejects-the-whole-tool-list)) |
 | Widget tests | The **real browser bundle** executed in jsdom: rendering, a simulated hover producing tooltip content, the embed protocol with its version handshake, clicks surfacing as normalized events, the React Native bridge and runtime theme switching |
 | Widget matrix | All 15 chart types rendered interactively with a clean console |
+| Browser smoke lane | Headless Chromium (real layout, paint and input): every family renders with a clean console, hover produces the crosshair readout, a click travels the embed protocol, the theme message re-renders — the interactions jsdom cannot exercise |
 | Codegen | Generated TypeScript **type-checked against `@unovis/ts`** |
 | `pnpm samples` | Every fixture rendered to SVG + PNG, light and dark, as a contact sheet for eyeball review |
 
