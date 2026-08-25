@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 
-import { registerTools, WIDGET_URI } from './tools/register.js'
+import { registerTools, sniffAppsCapability, WIDGET_URI, APPS_MIME_TYPE } from './tools/register.js'
 import type { ToolFilterOptions } from './tools/register.js'
 import { buildEmbedDocument } from './html/document.js'
 
@@ -22,6 +22,12 @@ export function buildServer (options: ToolFilterOptions = {}): McpServer {
     name: 'unovis',
     version: getPackageVersion(),
   })
+  // Sniff the MCP Apps capability from the raw initialize (see register.ts)
+  const connect = server.connect.bind(server)
+  server.connect = async (transport) => {
+    sniffAppsCapability(server, transport)
+    await connect(transport)
+  }
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   registerWidgetResource(server)
   registerTools(server, options)
@@ -40,12 +46,15 @@ function registerWidgetResource (server: McpServer): void {
     {
       title: 'Unovis chart widget',
       description: 'Interactive chart renderer. Send it a chart spec to render.',
-      mimeType: 'text/html+skybridge',
+      mimeType: APPS_MIME_TYPE,
+      // Empty CSP allowlists are the point: the widget is fully self-contained
+      // (a tested no-network guarantee), so hosts can sandbox it completely
+      _meta: { ui: { csp: { connectDomains: [], resourceDomains: [] }, prefersBorder: true } },
     },
     async () => ({
       contents: [{
         uri: WIDGET_URI,
-        mimeType: 'text/html+skybridge',
+        mimeType: APPS_MIME_TYPE,
         text: buildEmbedDocument(),
       }],
     })

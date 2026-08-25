@@ -16,7 +16,7 @@ decide separately how you want it delivered.
 | `svg` (default) | Standalone SVG markup as text | Embedding in docs, READMEs, anything; works in every client |
 | `png` | A rendered PNG image (base64) | Chat clients that display images; slides; anywhere SVG isn't accepted |
 | `html` | Path to a self-contained interactive file | Exploration: tooltips, crosshair, hover |
-| `interactive` | The chart spec + a widget reference | Clients that render MCP UI resources inline |
+| `interactive` | The chart spec + a widget reference | Hosts implementing the MCP Apps extension |
 | `config` | The resolved chart spec as JSON | Iterating on a chart before rendering; feeding another tool |
 | `code` | Ready-to-paste Unovis source | Putting the chart into your own app |
 
@@ -99,7 +99,7 @@ widget works.
 ## `interactive`
 
 Returns the chart spec as structured content plus a reference to the
-`ui://unovis/chart` widget resource, letting clients that support MCP UI
+`ui://unovis/chart` widget resource, letting hosts that support the MCP Apps extension
 resources render the chart **inside the conversation**. The text content is a
 short summary, which is what clients without widget support will show.
 
@@ -107,9 +107,9 @@ short summary, which is what clients without widget support will show.
 { "outputType": "interactive" }
 ```
 
-This is experimental: the conventions for embedded UI in MCP are still
-settling, so treat client support as best-effort and prefer `html` when you
-need a guaranteed result.
+Implements the official MCP Apps extension (`io.modelcontextprotocol/ui`,
+protocol revision 2026-07-28). Host adoption is still spreading — prefer
+`html` when you need a guaranteed result.
 
 ## `config`
 

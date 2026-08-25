@@ -42,7 +42,7 @@ export const commonInput = {
   outputType: z.enum(['svg', 'png', 'html', 'interactive', 'config', 'code']).default('svg')
     .describe('svg: SVG markup; png: a rendered PNG image; html: a self-contained interactive HTML file ' +
       '(tooltips, crosshair, hover — saved to disk, path returned); interactive: an interactive chart ' +
-      'rendered inline by clients that support MCP UI widgets; config: the resolved Unovis chart spec as JSON'),
+      'rendered inline by clients that support the MCP Apps extension; config: the resolved Unovis chart spec as JSON'),
   outputPath: z.string().optional()
     .describe('Absolute file path with an extension matching outputType (.svg, .png or .html) — saves the chart to disk and returns the path instead of inline content'),
   scale: z.number().min(1).max(4).default(2)

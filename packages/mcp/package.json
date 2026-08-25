@@ -78,6 +78,7 @@
     "zod": "^3.25.0"
   },
   "devDependencies": {
+    "@modelcontextprotocol/ext-apps": "^1.7.5",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.17.0",
     "@types/pngjs": "^6.0.5",

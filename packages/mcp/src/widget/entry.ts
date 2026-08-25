@@ -133,6 +133,26 @@ interface EmbedMessage {
   };
 }
 
+/** JSON-RPC over postMessage, the MCP Apps (io.modelcontextprotocol/ui)
+ * host protocol */
+interface JsonRpcMessage {
+  jsonrpc?: string;
+  id?: number | string;
+  method?: string;
+  params?: {
+    structuredContent?: { spec?: ChartSpec };
+    hostContext?: { theme?: string };
+  };
+  result?: {
+    hostContext?: { theme?: string };
+  };
+}
+
+/** The MCP Apps extension revision this view implements */
+const APPS_PROTOCOL_VERSION = '2026-01-26'
+/** Fixed request id for the view-initiated ui/initialize */
+const APPS_INIT_ID = 'unovis-ui-init'
+
 /** React Native's WebView exposes its own bridge and only accepts strings */
 interface ReactNativeWebViewBridge {
   postMessage: (data: string) => void;
@@ -143,6 +163,7 @@ function startEmbedMode (): void {
   let handle: ChartHandle | undefined
   let lastSpec: ChartSpec | undefined
   let lastOptions: EmbedMessage['options']
+  let appsAnswered = false
 
   // In a React Native WebView the host listens on its own bridge, not on
   // window.parent — and receives strings, not structured clones
@@ -155,6 +176,7 @@ function startEmbedMode (): void {
 
   const postSize = (): void => {
     post({ type: 'unovis:size', width: root.scrollWidth, height: root.scrollHeight })
+    post({ jsonrpc: '2.0', method: 'ui/notifications/size-changed', params: { width: root.scrollWidth, height: root.scrollHeight } })
   }
 
   const renderMessage = (spec: ChartSpec, rawOptions: EmbedMessage['options']): void => {
@@ -173,6 +195,43 @@ function startEmbedMode (): void {
     }
   }
 
+  // MCP Apps hosts speak JSON-RPC. The view initiates the lifecycle
+  // (ui/initialize → host result → ui/notifications/initialized) — hosts MUST
+  // NOT send tool data before the initialized notification arrives, so the
+  // handshake is not optional. Returns true when the message was JSON-RPC.
+  const applyHostTheme = (theme: string | undefined): void => {
+    if (theme !== 'dark' && theme !== 'light') return
+    if (lastSpec) renderMessage({ ...lastSpec, theme }, lastOptions)
+    else applyTheme(theme)
+  }
+
+  const onJsonRpc = (message: JsonRpcMessage): boolean => {
+    if (message.jsonrpc !== '2.0') return false
+
+    // The host answered our ui/initialize: adopt its context, signal readiness
+    if (message.id === APPS_INIT_ID && message.result) {
+      appsAnswered = true
+      applyHostTheme(message.result.hostContext?.theme)
+      post({ jsonrpc: '2.0', method: 'ui/notifications/initialized' })
+      return true
+    }
+    if (message.method === 'ui/notifications/tool-result') {
+      const spec = message.params?.structuredContent?.spec
+      // Results without a spec (static output types) leave the frame empty
+      if (spec) renderMessage(spec, { events: true })
+      return true
+    }
+    if (message.method === 'ui/notifications/host-context-changed') {
+      applyHostTheme(message.params?.hostContext?.theme)
+      return true
+    }
+    if (message.method === 'ping' && message.id !== undefined) {
+      post({ jsonrpc: '2.0', id: message.id, result: {} })
+      return true
+    }
+    return true // tool-input, tool-cancelled, other ui/*: acknowledged by ignoring
+  }
+
   const onMessage = (event: Event): void => {
     // React Native posts strings; iframes post structured clones
     const raw = (event as MessageEvent<EmbedMessage | string>).data
@@ -182,6 +241,7 @@ function startEmbedMode (): void {
     } else {
       message = raw
     }
+    if (onJsonRpc(message as JsonRpcMessage)) return
 
     if (message?.type === 'unovis:render' && message.spec) renderMessage(message.spec, message.options)
 
@@ -201,6 +261,25 @@ function startEmbedMode (): void {
   // Version handshake: hosts that persist embed documents or specs assert
   // compatibility here instead of discovering drift as a blank chart
   post({ type: 'unovis:ready', version: BUNDLE_VERSION, specVersion: SPEC_VERSION })
+  // MCP Apps lifecycle: view initiates. Retried briefly because a host may
+  // attach its bridge after this document's scripts run; non-Apps hosts never
+  // answer, and the retries stop on their own — harmless either way
+  const postInitialize = (): void => post({
+    jsonrpc: '2.0',
+    id: APPS_INIT_ID,
+    method: 'ui/initialize',
+    params: {
+      protocolVersion: APPS_PROTOCOL_VERSION,
+      appInfo: { name: 'unovis-chart-widget', version: BUNDLE_VERSION },
+      appCapabilities: {},
+    },
+  })
+  postInitialize()
+  let initializeAttempts = 0
+  const initializeRetry = setInterval(() => {
+    if (appsAnswered || ++initializeAttempts > 8) { clearInterval(initializeRetry); return }
+    postInitialize()
+  }, 500)
 }
 
 /** Render a spec embedded in the page as <script type="application/json" id="uv-spec"> */
