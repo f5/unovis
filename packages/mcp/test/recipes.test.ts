@@ -1,10 +1,9 @@
 /** Renders every fixture of every registered recipe and checks structural
- * invariants + file snapshots.
- *
- * Snapshot note: text metrics come from the fonts available to
- * @napi-rs/canvas, so snapshots are stable per machine. Bundling Inter in
- * fonts/ makes them portable across machines.
- */
+ * invariants + pixel-based visual snapshots (see test/image-snapshot.ts —
+ * rendered pixels within a tolerance, not bytes, so harmless upstream
+ * attribute changes don't churn and visual changes fail with a reviewable
+ * diff image). Text metrics come from the pinned Inter, so rasters are
+ * comparable across machines. */
 import { existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -13,6 +12,8 @@ import { z } from 'zod'
 
 import { recipes } from '../src/recipes/index.js'
 import { renderChart } from '../src/render/renderer.js'
+
+import { matchImageSnapshot } from './image-snapshot.js'
 
 interface Sample { name: string; input: Record<string, unknown>; vitestSkip?: boolean; noSnapshot?: boolean }
 
@@ -48,7 +49,8 @@ describe.each(recipes.map(r => [r.name, r] as const))('%s', (name, recipe) => {
       // Force-directed layouts call Math.random() (d3-force's jiggle), so their
       // geometry can't be snapshotted — the structural assertions above still apply
       if (!sample.noSnapshot) {
-        await expect(result.svg).toMatchFileSnapshot(`./__snapshots__/${name.replace(/^generate_/, '')}-${sample.name}.svg`)
+        const match = await matchImageSnapshot(result.svg, `${name.replace(/^generate_/, '')}-${sample.name}`)
+        expect(match.ok, match.message).toBe(true)
       }
     }
   })

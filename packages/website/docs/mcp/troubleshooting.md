@@ -160,8 +160,9 @@ Worth knowing before you trust a green suite:
   every jsdom test — but taps, drags and tooltip-linger semantics on actual
   touch hardware remain untested.
 - **MCP UI widget rendering** in an actual client.
-- **Visual regression.** Snapshots catch structural drift, not "this looks
-  wrong". `pnpm samples` exists for human review.
+- **Pixel baselines are light-theme.** Visual regression rasterizes every
+  fixture against committed baselines; dark theme is exercised structurally and
+  in `pnpm samples`, not pixel-compared.
 - **Non-`ts` code targets aren't compiled.** The vanilla-TypeScript output is
   type-checked against `@unovis/ts`; the JSX and template targets are checked
   structurally only.

@@ -147,7 +147,7 @@ layer shrinks.
 | Layer | What it proves |
 |---|---|
 | Env unit tests | Bbox math, variable resolution, frame flushing |
-| Recipe snapshots | Byte-stable SVG per chart type (with a deterministic id prefix) |
+| Visual regression | Every fixture compared as pixels against a text-stored SVG baseline (both sides rasterized at test time) — attribute noise passes, visual changes fail with a reviewable diff image |
 | Spec contract | Version gating, locale-aware formatting, derived time-axis ticks |
 | Post-processing tests | Id rewriting, variable baking, header synthesis, theme |
 | MCP integration | Real SDK client over an in-memory transport: schemas, every output type, error paths, tool filtering, concurrency |
@@ -158,13 +158,14 @@ layer shrinks.
 | Codegen | Generated TypeScript **type-checked against `@unovis/ts`** |
 | `pnpm samples` | Every fixture rendered to SVG + PNG, light and dark, as a contact sheet for eyeball review |
 
-Graph charts are deliberately not snapshotted. They keep settling for a few
-frames after their layout reports completion — fit-view, label collision passes
-— so exact geometry depends on machine load, and `force` layouts additionally
-call `Math.random()`. The renderer waits out a short grace period so real output
-doesn't lose those late frames, but a byte snapshot would still be a false
-signal that fails randomly under CI load. Structural assertions, the widget
-matrix and the async-layout probe cover graphs instead.
+Graph charts are deliberately not snapshotted — even as pixels. They keep
+settling for a few frames after their layout reports completion — fit-view,
+label collision passes — so exact geometry depends on machine load, and
+`force` layouts additionally call `Math.random()`. The renderer waits out a
+short grace period so real output doesn't lose those late frames, but a
+snapshot would still be a false signal that fails randomly under CI load.
+Structural assertions, the widget matrix and the async-layout probe cover
+graphs instead.
 
 `pnpm test` builds the widget bundle first, so a fresh clone can run the suite
 without a manual build step.
@@ -179,8 +180,11 @@ reviewer can look at the charts instead of trusting a green check.
 Inter is cached at `~/.cache/unovis-ssr` (keyed on `@unovis/ssr`'s `src/env/fonts.ts`, which
 holds the pinned version and checksum). That keeps the suite off the network and
 keeps text metrics — and therefore the SVG snapshots — reproducible between
-runs. If snapshots ever disagree between machines, the cause is font
-provisioning, not the renderer.
+runs. Baselines are SVG text: reviewable diffs, and git stores deltas instead
+of binary copies. Both the baseline and the fresh render rasterize through
+the same resvg on the same machine at compare time, so platform differences
+cancel — the tight pixel tolerance only absorbs sub-pixel jitter from
+harmless baseline drift.
 
 What the suite can't prove is covered in
 [Troubleshooting](./troubleshooting.md#what-the-tests-dont-cover).

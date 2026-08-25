@@ -68,7 +68,8 @@
     "docs:tools": "node scripts/generate-tool-docs.mjs",
     "dev:tsx": "tsx src/cli.ts",
     "test:browser": "node scripts/browser-smoke.mjs",
-    "docs:schema": "node scripts/generate-spec-schema.mjs"
+    "docs:schema": "node scripts/generate-spec-schema.mjs",
+    "test:images:update": "UPDATE_IMAGES=1 vitest run test/recipes.test.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
@@ -79,11 +80,14 @@
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.17.0",
+    "@types/pngjs": "^6.0.5",
     "ajv": "^8.20.0",
     "esbuild": "^0.25.12",
     "fflate": "^0.8.3",
     "jsdom": "^26.1.0",
+    "pixelmatch": "^7.2.0",
     "playwright": "^1.62.1",
+    "pngjs": "^7.0.0",
     "rimraf": "^3.0.2",
     "tsx": "^4.19.0",
     "typescript": "catalog:",
