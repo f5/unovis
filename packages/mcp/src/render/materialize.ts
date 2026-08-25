@@ -96,8 +96,8 @@ export interface MaterializedChart {
 }
 
 /** Component classes recipes are allowed to instantiate */
-const XY_COMPONENTS = new Set(['Line', 'Area', 'GroupedBar', 'StackedBar', 'Scatter', 'Timeline', 'Boxplot', 'XYLabels', 'Plotband', 'Plotline'])
-const SINGLE_COMPONENTS = new Set(['Donut', 'NestedDonut', 'RadialBar', 'Sankey', 'Heatmap', 'Treemap', 'ChordDiagram', 'Graph', 'TopoJSONMap'])
+export const XY_COMPONENTS = new Set(['Line', 'Area', 'GroupedBar', 'StackedBar', 'Scatter', 'Timeline', 'Boxplot', 'XYLabels', 'Plotband', 'Plotline'])
+export const SINGLE_COMPONENTS = new Set(['Donut', 'NestedDonut', 'RadialBar', 'Sankey', 'Heatmap', 'Treemap', 'ChordDiagram', 'Graph', 'TopoJSONMap'])
 
 /** Components that finish rendering asynchronously (after layout calculation)
  * and expose their own onRenderComplete hook the renderer must await */

@@ -50,6 +50,24 @@ interface ChartSpec {
   treemap, chord, graph, map, …).
 - `components` renders in array order, so later entries draw on top.
 
+## Validating hand-built specs
+
+The contract ships as JSON Schema — validate before rendering instead of
+discovering a typo as a blank chart or a runtime error:
+
+```ts
+import Ajv from 'ajv'
+import schema from '@unovis/mcp/chart-spec.schema.json'
+
+const validate = new Ajv({ strict: false }).compile(schema)
+if (!validate(spec)) throw new Error(JSON.stringify(validate.errors))
+```
+
+Top-level fields and accessor descriptors are validated strictly (unknown
+component types and misspelled top-level keys are refused); `config` and
+`containerConfig` stay open by design — they're the escape hatch to Unovis
+options the tools don't expose.
+
 ## Versioning
 
 The spec is a persistence format — apps store specs and commit generated embed
@@ -61,6 +79,12 @@ major refuses with an explicit error instead of drawing a wrong or blank
 chart, and the widget reports `{ version, specVersion }` in its
 [`unovis:ready` handshake](./interactive.md#protocol) so hosts can assert
 compatibility up front. Specs without `specVersion` are treated as current.
+
+The policy is enforced, not promised: a frozen baseline of the v1 schema is
+committed next to it, and CI fails if the current schema removes a property,
+changes a type, drops an enum value, or adds a new requirement — the four ways
+an "additive" change quietly isn't. Breaking on purpose means bumping
+`SPEC_VERSION` and freezing a new baseline.
 
 ## A complete example
 

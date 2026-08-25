@@ -1,0 +1,309 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://unovis.dev/schema/chart-spec.v1.json",
+  "title": "Unovis ChartSpec",
+  "description": "The @unovis/mcp chart spec contract, version 1. Additions are non-breaking; the version moves only on breaking changes.",
+  "type": "object",
+  "properties": {
+    "specVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "ChartSpec contract version (see SPEC_VERSION); additions are non-breaking, the integer moves only on breaking changes"
+    },
+    "container": {
+      "type": "string",
+      "enum": [
+        "xy",
+        "single"
+      ]
+    },
+    "width": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "height": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "light",
+        "dark"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "containerConfig": {
+      "type": "object",
+      "additionalProperties": {}
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "Line",
+              "Area",
+              "GroupedBar",
+              "StackedBar",
+              "Scatter",
+              "Timeline",
+              "Boxplot",
+              "XYLabels",
+              "Plotband",
+              "Plotline",
+              "Donut",
+              "NestedDonut",
+              "RadialBar",
+              "Sankey",
+              "Heatmap",
+              "Treemap",
+              "ChordDiagram",
+              "Graph",
+              "TopoJSONMap"
+            ]
+          },
+          "config": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "type",
+          "config"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "xAxis": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "gridLine": {
+          "type": "boolean"
+        },
+        "numTicks": {
+          "type": "number"
+        },
+        "tickFormat": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "$field": {
+                  "type": "string"
+                },
+                "as": {
+                  "type": "string",
+                  "enum": [
+                    "number",
+                    "string",
+                    "date"
+                  ]
+                }
+              },
+              "required": [
+                "$field"
+              ],
+              "additionalProperties": false,
+              "description": "d => coerce(d[field])"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "$index": {
+                  "type": "boolean",
+                  "const": true
+                }
+              },
+              "required": [
+                "$index"
+              ],
+              "additionalProperties": false,
+              "description": "(d, i) => i"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "$const": {}
+              },
+              "additionalProperties": false,
+              "description": "() => value"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "$dateTickFormat": {
+                  "type": "boolean",
+                  "const": true
+                }
+              },
+              "required": [
+                "$dateTickFormat"
+              ],
+              "additionalProperties": false,
+              "description": "Locale-aware date tick formatter"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "$numTickFormat": {
+                  "type": "boolean",
+                  "const": true
+                }
+              },
+              "required": [
+                "$numTickFormat"
+              ],
+              "additionalProperties": false,
+              "description": "Locale-aware number tick formatter"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "$lookup": {
+                  "type": "array",
+                  "items": {
+                    "type": [
+                      "string",
+                      "number"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "$lookup"
+              ],
+              "additionalProperties": false,
+              "description": "(d, i) => values[i % values.length]"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "$format": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "string"
+                    },
+                    "prefix": {
+                      "type": "string"
+                    },
+                    "suffix": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "field"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "$format"
+              ],
+              "additionalProperties": false,
+              "description": "d => prefix + formatNumber(d[field]) + suffix"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "$mapField": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "string"
+                    },
+                    "mapping": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    },
+                    "fallback": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "field",
+                    "mapping"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "$mapField"
+              ],
+              "additionalProperties": false,
+              "description": "d => mapping[String(d[field])] ?? fallback"
+            }
+          ]
+        },
+        "domainLine": {
+          "type": "boolean"
+        },
+        "tickTextAngle": {
+          "type": "number"
+        },
+        "tickValues": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "additionalProperties": {}
+    },
+    "yAxis": {
+      "$ref": "#/properties/xAxis"
+    },
+    "colors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "locale": {
+      "type": "string",
+      "description": "BCP-47 locale for date/number formatting (default en-US)"
+    },
+    "legend": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "paletteIndex": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "data": {}
+  },
+  "required": [
+    "container",
+    "width",
+    "height",
+    "theme",
+    "components"
+  ],
+  "additionalProperties": false
+}

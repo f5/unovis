@@ -42,13 +42,15 @@
       "types": "./dist/render/spec.d.ts",
       "default": "./dist/render/spec.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./chart-spec.schema.json": "./schema/chart-spec.v1.json"
   },
   "engines": {
     "node": ">=20"
   },
   "files": [
     "dist",
+    "schema",
     "docs",
     "README.md",
     "LICENSE"
@@ -65,7 +67,8 @@
     "prepublishOnly": "pnpm build",
     "docs:tools": "node scripts/generate-tool-docs.mjs",
     "dev:tsx": "tsx src/cli.ts",
-    "test:browser": "node scripts/browser-smoke.mjs"
+    "test:browser": "node scripts/browser-smoke.mjs",
+    "docs:schema": "node scripts/generate-spec-schema.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
@@ -84,6 +87,7 @@
     "rimraf": "^3.0.2",
     "tsx": "^4.19.0",
     "typescript": "catalog:",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "zod-to-json-schema": "^3.25.2"
   }
 }
