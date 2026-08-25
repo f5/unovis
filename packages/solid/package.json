@@ -1,7 +1,7 @@
 {
   "name": "@unovis/solid",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid and vanilla TypeScript or JavaScript",
-  "version": "1.7.0-mcp.1",
+  "version": "1.7.0-mcp.2",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.7.0-mcp.1",
+    "@unovis/ts": "1.7.0-mcp.2",
     "solid-js": "^1.9.0"
   },
   "devDependencies": {
