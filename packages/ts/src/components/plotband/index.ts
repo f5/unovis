@@ -94,9 +94,9 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
         .style('font-size', config.labelSize ? `${config.labelSize}px` : undefined)
 
       smartTransition(this.label, config.duration)
-        .text(config.labelText)
         .attr('x', labelProps.x)
         .attr('y', labelProps.y)
+        .text(config.labelText)
     }
 
     smartTransition(this.plotband.exit())

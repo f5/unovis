@@ -2,7 +2,7 @@ import { Selection } from 'd3-selection'
 import { arc, pie } from 'd3-shape'
 import { hierarchy, HierarchyNode, partition } from 'd3-hierarchy'
 import { scaleLinear, ScaleLinear } from 'd3-scale'
-import { group } from 'd3-array'
+import { group, InternMap } from 'd3-array'
 
 // Core
 import { ComponentCore } from '@/core/component'
@@ -20,7 +20,7 @@ import { cssvar } from '@/utils/style'
 import { wrapSVGText } from '@/utils/text'
 
 // Local Types
-import { NestedDonutDirection, NestedDonutSegment, NestedDonutLayer, NestedDonutSegmentLabelAlignment } from './types'
+import { NestedDonutArcAnimState, NestedDonutDirection, NestedDonutSegment, NestedDonutLayer, NestedDonutSegmentLabelAlignment } from './types'
 
 // Config
 import { NestedDonutDefaultConfig, NestedDonutConfigInterface } from './config'
@@ -47,7 +47,7 @@ NestedDonutConfigInterface<Datum>
   centralLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
   centralSubLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
 
-  arcGen = arc<Partial<NestedDonutSegment<Datum>>>()
+  arcGen = arc<NestedDonutArcAnimState>()
   colorScale: ScaleLinear<string, string> = scaleLinear()
 
   events = { }
@@ -181,7 +181,7 @@ NestedDonutConfigInterface<Datum>
       ? hierarchy(nestedData).sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
       : hierarchy(nestedData).count()
 
-    const partitionData = partition().size([config.angleRange[1], 1])(rootNode) as NestedDonutSegment<Datum>
+    const partitionData = partition<InternMap<string, number[]>>().size([config.angleRange[1], 1])(rootNode) as unknown as NestedDonutSegment<Datum>
 
     partitionData
       .each(node => {

@@ -54,8 +54,8 @@ function linkGen (points: ChordRibbonPoint[], radiusScale: ScalePower<number, nu
   return convertLineToArc(path, radius)
 }
 
-export function createLink<N extends ChordInputNode> (
-  selection: Selection<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>,
+export function createLink<N extends ChordInputNode, L extends ChordInputLink> (
+  selection: Selection<SVGPathElement, ChordRibbon<N, L>, SVGGElement, unknown>,
   radiusScale: ScalePower<number, number>
 ): void {
   selection

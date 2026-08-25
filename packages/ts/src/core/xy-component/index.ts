@@ -18,10 +18,10 @@ export class XYComponentCore<
   Datum,
   ConfigInterface extends Partial<XYComponentConfigInterface<Datum>> = Partial<XYComponentConfigInterface<Datum>>,
 > extends ComponentCore<Datum[], ConfigInterface> {
-  public element: SVGGraphicsElement
-  public g: Selection<SVGGElement, unknown, null, undefined>
-  public config: ConfigInterface
-  public prevConfig: ConfigInterface
+  public declare element: SVGGraphicsElement
+  public declare g: Selection<SVGGElement, unknown, null, undefined>
+  public declare config: ConfigInterface
+  public declare prevConfig: ConfigInterface
   public datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
 
   /** Clippable components can be affected by a clipping path (set up in the container) */

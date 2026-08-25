@@ -9,7 +9,7 @@ import { getNumber, groupBy } from '@/utils/data'
 import { NumericAccessor } from '@/types/accessor'
 
 // Local Types
-import { ChordNode, ChordRibbon, ChordLinkDatum, ChordHierarchyNode, ChordLeafNode } from '../types'
+import { ChordInputLink, ChordInputNode, ChordNode, ChordRibbon, ChordLinkDatum, ChordHierarchyNode, ChordLeafNode } from '../types'
 
 function transformData <T> (node: HierarchyNode<T>): void {
   const { height, depth } = node
@@ -26,7 +26,7 @@ export function getHierarchyNodes<N> (
   levels: string[] = []
 ): HierarchyNode<ChordHierarchyNode<N>> {
   const nodeLevels = levels.map(level => (d: N) => d[level as keyof N]) as unknown as [(d: N) => string]
-  const nestedData = levels.length ? group<N, string>(data, ...nodeLevels) : { key: 'root', children: data }
+  const nestedData = levels.length ? group(data, ...nodeLevels) : { key: 'root', children: data }
 
   const root = hierarchy(nestedData)
     .sum(d => getNumber(d as unknown as N, value))
@@ -63,7 +63,7 @@ export function positionChildren<N> (node: ChordNode<N>, padding: number, scalin
   })
 }
 
-export function getRibbons<N> (data: ChordNode<N>, links: ChordLinkDatum<N>[], padding: number): ChordRibbon<N>[] {
+export function getRibbons<N extends ChordInputNode, L extends ChordInputLink> (data: ChordNode<N>, links: ChordLinkDatum<N, L>[], padding: number): ChordRibbon<N, L>[] {
   type LinksArrayType = typeof links
   const groupedBySource: Record<string, LinksArrayType> = groupBy(links, d => d.source._id)
   const groupedByTarget: Record<string, LinksArrayType> = groupBy(links, d => d.target._id)
@@ -77,8 +77,8 @@ export function getRibbons<N> (data: ChordNode<N>, links: ChordLinkDatum<N>[], p
     partitionHeight: number,
     nodes: ChordNode<N>[] = []
   ): ChordNode<N>[] => {
-    nodes[source.height] = source
-    nodes[partitionHeight * 2 - target.height] = target
+    nodes[source.height] = source as unknown as ChordNode<N>
+    nodes[partitionHeight * 2 - target.height] = target as unknown as ChordNode<N>
     if (source.parent && target.parent) getNodesInRibbon(source.parent, target.parent, partitionHeight, nodes)
     return nodes
   }

@@ -160,7 +160,7 @@ export class Brush<Datum> extends XYComponentCore<Datum, BrushConfigInterface<Da
   _onBrush (event: D3BrushEvent<Datum>): void {
     const { config } = this
     const xScale = this.xScale
-    const xRange = [0, this._width]
+    const xRange: [number, number] = [0, this._width]
     const s = (event?.selection || xRange) as [number, number]
     const userDriven = !!event?.sourceEvent
     // Handle edge cases:

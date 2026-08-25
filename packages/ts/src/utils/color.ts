@@ -34,7 +34,7 @@ export function getColor<T> (
   // If accessor is a function, call it and return the result
   let value: string | null | undefined
   if (isFunction(accessorOrValue)) {
-    value = accessorOrValue(d, index, key) as (string | null | undefined)
+    value = accessorOrValue(d, index, key as string) as (string | null | undefined)
   } else {
     value = accessorOrValue as string | null | undefined
   }

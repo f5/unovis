@@ -88,7 +88,7 @@ export class Graph<
   }
 
   static nodeSelectors = nodeSelectors
-  g: Selection<SVGGElement, unknown, null, undefined>
+  declare g: Selection<SVGGElement, unknown, null, undefined>
   protected _defaultConfig = GraphDefaultConfig as unknown as GraphConfigInterface<N, L>
   public config: GraphConfigInterface<N, L> = this._defaultConfig
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>> = new GraphDataModel()
@@ -376,7 +376,7 @@ export class Graph<
 
     const linkGroupsEnter = linkGroups.enter().append('g')
       .attr('class', linkSelectors.gLink)
-      .call(createLinks, config, duration)
+      .call(createLinks)
 
     const linkGroupsMerged = linkGroups.merge(linkGroupsEnter)
     linkGroupsMerged.call(updateLinks, config, duration, this._scale, this._getLinkArrowDefId, this._linkPathLengthMap)
@@ -413,7 +413,7 @@ export class Graph<
 
     const panelGroupEnter = panelGroup.enter().append('g')
       .attr('class', panelSelectors.gPanel)
-      .call(createPanels, selection)
+      .call(createPanels)
     const panelGroupMerged = panelGroup.merge(panelGroupEnter)
 
     this._updatePanels(panelGroupMerged, duration)
@@ -771,8 +771,7 @@ export class Graph<
       .call(
         (nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomLinksThrottled : zoomLinks) as typeof zoomLinks,
         config,
-        this._scale,
-        this._getLinkArrowDefId
+        this._scale
       )
   }
 

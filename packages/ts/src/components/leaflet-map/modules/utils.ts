@@ -229,7 +229,7 @@ export function shouldClusterExpand<D extends GenericDataRecord> (
 
   const clusterExpansionZoomLevel = cluster.clusterIndex.getClusterExpansionZoom(cluster.properties.cluster_id as number)
   return zoomLevel >= maxLevel ||
-        (zoomLevel >= midLevel && (cluster.properties.point_count < 20 || clusterExpansionZoomLevel >= maxClusterZoomLevel))
+        (zoomLevel >= midLevel && ((cluster.properties as LeafletMapClusterDatum<D>).point_count < 20 || clusterExpansionZoomLevel >= maxClusterZoomLevel))
 }
 
 export function findPointAndClusterByPointId<D extends GenericDataRecord> (

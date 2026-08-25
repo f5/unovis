@@ -25,7 +25,7 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
   protected _defaultConfig = AnnotationsDefaultConfig as AnnotationsConfigInterface
   public config: AnnotationsConfigInterface = this._defaultConfig
 
-  g: Selection<SVGGElement, unknown, null, undefined>
+  declare g: Selection<SVGGElement, unknown, null, undefined>
 
   events = {}
 

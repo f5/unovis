@@ -9,14 +9,13 @@ import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/ut
 import { smartTransition } from '@/utils/d3'
 
 // Local Types
-import { NestedDonutSegment } from '../types'
+import { NestedDonutArcAnimState, NestedDonutSegment } from '../types'
 
 // Config
 import { NestedDonutConfigInterface } from '../config'
 
-type AnimState = { x0: number; x1: number; y0: number; y1: number }
 export interface ArcNode extends SVGElement {
-  _animState?: AnimState;
+  _animState?: NestedDonutArcAnimState;
 }
 
 export function createArc<Datum> (
@@ -44,7 +43,7 @@ export function createArc<Datum> (
 export function updateArc<Datum> (
   selection: Selection<SVGPathElement, NestedDonutSegment<Datum>, SVGGElement, unknown>,
   config: NestedDonutConfigInterface<Datum>,
-  arcGen: Arc<any, AnimState>,
+  arcGen: Arc<any, NestedDonutArcAnimState>,
   duration: number
 ): void {
   selection

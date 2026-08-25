@@ -31,6 +31,7 @@ import {
   MapProjection,
   TopoJSONMapPointShape,
   FlowParticle,
+  FlowUpdateContext,
   TopoJSONMapPoint,
   TopoJSONMapClusterDatum,
   TopoJSONMapPointDatum,
@@ -38,6 +39,7 @@ import {
   ExpandedClusterPoint,
   CollapsedClusterFeature,
   PointOrClusterProperties,
+  AreaLabelDatum,
 } from './types'
 
 // Config
@@ -62,7 +64,7 @@ import {
 import { updateDonut } from './modules/donut'
 import { renderBackground } from './modules/background'
 import { updateSelectionRing } from './modules/selectionRing'
-import { initFlowFeatures, updateFlowParticles, FlowInitContext, FlowUpdateContext } from './modules/flow'
+import { initFlowFeatures, updateFlowParticles, FlowInitContext } from './modules/flow'
 
 // Styles
 import * as s from './style'
@@ -85,7 +87,7 @@ export class TopoJSONMap<
   public config: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> = this._defaultConfig
 
   datamodel: MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> = new MapGraphDataModel()
-  g: Selection<SVGGElement, unknown, null, undefined>
+  declare g: Selection<SVGGElement, unknown, null, undefined>
   private _firstRender = true
   private _isResizing = false
   private _initialScale: number = undefined
@@ -114,18 +116,15 @@ export class TopoJSONMap<
 
   private _featureCollection: GeoJSON.FeatureCollection
   private _zoomBehavior: ZoomBehavior<SVGGElement, unknown> = zoom()
-  private _backgroundRect = this.g.append('rect').attr('class', s.background)
-  private _featuresGroup = this.g.append('g').attr('class', s.features)
-  private _areaLabelsGroup = this.g.append('g').attr('class', s.areaLabel)
-  private _linksGroup = this.g.append('g').attr('class', s.links)
-  private _clusterBackgroundGroup = this.g.append('g').attr('class', s.clusterBackground)
-  private _flowParticlesGroup = this.g.append('g').attr('class', s.flowParticles)
-  // Points after links + flow groups so map nodes paint above link arcs and flow particles
-  private _pointsGroup = this.g.append('g').attr('class', s.points)
-  private _pointSelectionRing = this._pointsGroup.append('g').attr('class', s.pointSelectionRing)
-    .call(sel => sel.append('path').attr('class', s.pointSelection))
-
-  private _sourcePointsGroup = this.g.append('g').attr('class', s.sourcePoints)
+  private _backgroundRect: Selection<SVGRectElement, unknown, null, undefined>
+  private _featuresGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _areaLabelsGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _linksGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _clusterBackgroundGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _flowParticlesGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _pointsGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _pointSelectionRing: Selection<SVGGElement, unknown, null, undefined>
+  private _sourcePointsGroup: Selection<SVGGElement, unknown, null, undefined>
   private _selectedPoint: TopoJSONMapPoint<PointDatum> | null = null
   private _flowParticles: FlowParticle[] = []
   private _sourcePoints: { x: number; y: number; radius: number; color: string; flowData: LinkDatum }[] = []
@@ -138,6 +137,18 @@ export class TopoJSONMap<
 
   constructor (config?: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, data?: MapData<AreaDatum, PointDatum, LinkDatum>) {
     super()
+    this._backgroundRect = this.g.append('rect').attr('class', s.background)
+    this._featuresGroup = this.g.append('g').attr('class', s.features)
+    this._areaLabelsGroup = this.g.append('g').attr('class', s.areaLabel)
+    this._linksGroup = this.g.append('g').attr('class', s.links)
+    this._clusterBackgroundGroup = this.g.append('g').attr('class', s.clusterBackground)
+    this._flowParticlesGroup = this.g.append('g').attr('class', s.flowParticles)
+    // Points after links + flow groups so map nodes paint above link arcs and flow particles
+    this._pointsGroup = this.g.append('g').attr('class', s.points)
+    this._pointSelectionRing = this._pointsGroup.append('g').attr('class', s.pointSelectionRing)
+      .call(sel => sel.append('path').attr('class', s.pointSelection))
+    this._sourcePointsGroup = this.g.append('g').attr('class', s.sourcePoints)
+
     this._zoomBehavior
       .on('zoom', this._onZoom.bind(this))
       .on('end', this._onZoomEnd.bind(this))
@@ -1138,7 +1149,7 @@ export class TopoJSONMap<
     this._collisionDetectionAnimFrameId = window.requestAnimationFrame(() => {
       const duration = this.config.duration
       // Run collision detection for area labels
-      const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, unknown>(`.${s.areaLabel}`)
+      const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, AreaLabelDatum>(`.${s.areaLabel}`)
       collideAreaLabels(areaLabels, duration)
 
       // Run collision detection for point bottom labels

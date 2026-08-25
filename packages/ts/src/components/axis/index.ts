@@ -317,7 +317,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       .classed(s.tickLabelHideable, Boolean(config.tickTextHideOverlapping))
       // Ticks outside the fitted set render as unlabeled tick marks
       .classed(s.tickTextHidden, tickValue => labeledTickKeys ? !labeledTickKeys.has(tickKey(tickValue)) : false)
-      .style('fill', config.tickTextColor) as Selection<SVGTextElement, number, SVGGElement, unknown> | Selection<SVGTextElement, Date, SVGGElement, unknown>
+      .style('fill', config.tickTextColor) as Selection<SVGTextElement, number | Date, SVGGElement, unknown>
 
     // Stale inline opacity (set by the overlap pass) would override the hiding class
     if (labeledTickKeys) {

@@ -53,7 +53,7 @@ export class Sankey<
   protected _defaultConfig = SankeyDefaultConfig as SankeyConfigInterface<N, L>
   public config: SankeyConfigInterface<N, L> = this._defaultConfig
   datamodel: GraphDataModel<N, L, SankeyNode<N, L>, SankeyLink<N, L>> = new GraphDataModel()
-  public g: Selection<SVGGElement, unknown, null, undefined>
+  public declare g: Selection<SVGGElement, unknown, null, undefined>
   // eslint-disable-next-line @typescript-eslint/naming-convention
   private _gNode: SVGGElement & { __zoom: ZoomTransform }
   private _prevWidth: number | undefined = undefined
@@ -237,7 +237,7 @@ export class Sankey<
       (nodes.length === 1 && !config.showSingleNode) ||
       (nodes.length > 1 && links.length === 0)
     ) {
-      this._linksGroup.selectAll<SVGGElement, SankeyLink<N, L>>(`.${s.link}`).call(removeLinks, duration)
+      this._linksGroup.selectAll<SVGGElement, SankeyLink<N, L>>(`.${s.link}`).call(removeLinks)
       this._nodesGroup.selectAll<SVGGElement, SankeyNode<N, L>>(`.${s.nodeGroup}`).call(removeNodes, config, duration)
     }
 

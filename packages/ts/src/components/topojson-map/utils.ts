@@ -272,9 +272,9 @@ export function toGeoJSONPoint<D> (
   }
 }
 
-export function calculateClusterIndex<D> (
+export function calculateClusterIndex<A, D, L> (
   data: D[],
-  config: TopoJSONMapConfigInterface<unknown, D, unknown>,
+  config: TopoJSONMapConfigInterface<A, D, L>,
   maxClusterZoomLevel = 24
 ): Supercluster<D> {
   const { colorMap, pointShape, latitude, longitude, clusteringDistance } = config
@@ -333,11 +333,11 @@ export function getPointRadius<D> (
     : radius
 }
 
-export function geoJsonPointToScreenPoint<D> (
+export function geoJsonPointToScreenPoint<A, D, L> (
   geoPoint: ClusterFeature<TopoJSONMapClusterDatum<D>> | PointFeature<TopoJSONMapPointDatum<D>>,
   i: number,
   projection: (coordinates: [number, number]) => [number, number],
-  config: TopoJSONMapConfigInterface<unknown, D, unknown>,
+  config: TopoJSONMapConfigInterface<A, D, L>,
   zoomLevel: number
 ): TopoJSONMapPoint<D> {
   const isCluster = (geoPoint.properties as TopoJSONMapClusterDatum<D>).cluster
