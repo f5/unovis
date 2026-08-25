@@ -1,7 +1,7 @@
 {
   "name": "@unovis/ssr",
-  "description": "Server-side rendering for Unovis: render charts to standalone SVG and PNG in Node \u2014 no browser, no remote services",
-  "version": "1.7.0-mcp.1",
+  "description": "Server-side rendering for Unovis: render charts to standalone SVG and PNG in Node — no browser, no remote services",
+  "version": "1.7.0-mcp.2",
   "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
