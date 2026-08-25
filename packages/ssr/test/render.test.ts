@@ -1,9 +1,8 @@
 /** The headless primitive used the way an SSR consumer would: hand-written
- * Unovis code, no chart spec involved. This is the API a future @unovis/ssr
- * package would expose, so it is tested independently of the MCP layer. */
+ * Unovis code, no chart spec involved. */
 import { describe, expect, it } from 'vitest'
 
-import { renderToSvg } from '../src/render/headless.js'
+import { renderToSvg } from '../src/headless.js'
 
 interface Point { x: number; y: number }
 

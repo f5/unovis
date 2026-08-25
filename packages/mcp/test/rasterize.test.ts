@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest'
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js'
 
+import { svgToPng, themeBackground } from '@unovis/ssr'
 import { buildServer } from '../src/server.js'
 import { renderChart } from '../src/render/renderer.js'
-import { svgToPng, themeBackground } from '../src/render/rasterize.js'
 import type { ChartSpec } from '../src/render/spec.js'
 
 const spec: ChartSpec = {

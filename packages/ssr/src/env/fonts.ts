@@ -4,14 +4,15 @@
  * trimming, wrapping and axis margins — measuring with the same font the
  * viewer renders keeps geometry faithful. Fonts are resolved in order:
  *
- *  1. `UNOVIS_MCP_FONTS_DIR` (explicit directory of font files)
+ *  1. `UNOVIS_SSR_FONTS_DIR` (explicit directory of font files; the
+ *     pre-extraction `UNOVIS_MCP_FONTS_DIR` name still works)
  *  2. the package's own `fonts/` directory (manually added / bundled)
  *  3. a user-level cache, populated once by downloading the official Inter
  *     release (pinned version + SHA-256 verified) and extracting four static
  *     TTF faces + the OFL license
  *
  * The download is best-effort: offline environments (or
- * `UNOVIS_MCP_NO_DOWNLOAD=1`) fall back to system fonts with a one-line
+ * `UNOVIS_SSR_NO_DOWNLOAD=1` (or `UNOVIS_MCP_NO_DOWNLOAD=1`)) fall back to system fonts with a one-line
  * stderr note — rendering never fails because of fonts.
  */
 import { createHash } from 'node:crypto'
@@ -41,7 +42,7 @@ const hasFontFiles = (dir: string): boolean => {
 
 function cacheDir (): string {
   const base = process.env.XDG_CACHE_HOME || join(homedir(), '.cache')
-  return join(base, 'unovis-mcp', 'fonts', `inter-${INTER_VERSION}`)
+  return join(base, 'unovis-ssr', 'fonts', `inter-${INTER_VERSION}`)
 }
 
 async function downloadInter (targetDir: string): Promise<boolean> {
@@ -59,7 +60,7 @@ async function downloadInter (targetDir: string): Promise<boolean> {
 
   // Extract to a temp dir and move into place so a killed process can't
   // leave a half-populated cache behind
-  const staging = join(tmpdir(), `unovis-mcp-fonts-${process.pid}`)
+  const staging = join(tmpdir(), `unovis-ssr-fonts-${process.pid}`)
   rmSync(staging, { recursive: true, force: true })
   mkdirSync(staging, { recursive: true })
   for (const [name, data] of Object.entries(entries)) {
@@ -82,10 +83,11 @@ export function ensureFontsDir (): Promise<string | undefined> {
 }
 
 async function resolveFontsDir (): Promise<string | undefined> {
-  const explicit = process.env.UNOVIS_MCP_FONTS_DIR
+  // Both prefixes: the vars shipped under the MCP name before the extraction
+  const explicit = process.env.UNOVIS_SSR_FONTS_DIR ?? process.env.UNOVIS_MCP_FONTS_DIR
   if (explicit) {
     if (hasFontFiles(explicit)) return explicit
-    console.error(`unovis-mcp: UNOVIS_MCP_FONTS_DIR has no font files: ${explicit}`)
+    console.error(`unovis-ssr: the configured fonts directory has no font files: ${explicit}`)
   }
 
   const packageFonts = fileURLToPath(new URL('../../fonts', import.meta.url))
@@ -94,14 +96,14 @@ async function resolveFontsDir (): Promise<string | undefined> {
   const cache = cacheDir()
   if (hasFontFiles(cache)) return cache
 
-  if (process.env.UNOVIS_MCP_NO_DOWNLOAD) return undefined
+  if (process.env.UNOVIS_SSR_NO_DOWNLOAD || process.env.UNOVIS_MCP_NO_DOWNLOAD) return undefined
 
   try {
     await downloadInter(cache)
-    console.error(`unovis-mcp: downloaded Inter ${INTER_VERSION} (SIL OFL 1.1) to ${cache}`)
+    console.error(`unovis-ssr: downloaded Inter ${INTER_VERSION} (SIL OFL 1.1) to ${cache}`)
     return cache
   } catch (e) {
-    console.error(`unovis-mcp: Inter download skipped (${e instanceof Error ? e.message : e}) — using system fonts for text measurement`)
+    console.error(`unovis-ssr: Inter download skipped (${e instanceof Error ? e.message : e}) — using system fonts for text measurement`)
     return undefined
   }
 }

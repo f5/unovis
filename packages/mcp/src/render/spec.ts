@@ -6,6 +6,7 @@
  * generation. Accessors are descriptors referencing data fields by name —
  * user input is never evaluated as code.
  */
+import type { LegendItemSpec } from '@unovis/ssr'
 
 export type FieldType = 'number' | 'string' | 'date'
 
@@ -53,13 +54,9 @@ export interface AxisSpec {
   [key: string]: SpecConfigValue;
 }
 
-export interface LegendItemSpec {
-  name: string;
-  /** Resolved during post-processing when omitted (default palette) */
-  color?: string;
-  /** Palette index used when color is not set */
-  paletteIndex?: number;
-}
+// The header synthesizer owns this shape — re-exported so @unovis/mcp/spec
+// keeps its full IR vocabulary
+export type { LegendItemSpec } from '@unovis/ssr'
 
 /** Version of the ChartSpec contract. Bump the integer on breaking IR
  * changes only; additions are non-breaking. Consumers that persist specs or

@@ -7,10 +7,7 @@
  */
 import { JSDOM, VirtualConsole } from 'jsdom'
 
-import { installBBoxPolyfills } from '../src/env/bbox.js'
-import { installCanvasHook } from '../src/env/canvas.js'
-import { installComputedStyle } from '../src/env/computed-style.js'
-import { RafQueue } from '../src/env/raf-queue.js'
+import { installBBoxPolyfills, installCanvasHook, installComputedStyle, RafQueue } from '@unovis/ssr'
 
 /* eslint-disable @typescript-eslint/no-empty-function */
 class NoopResizeObserver {

@@ -34,6 +34,12 @@ themselves use — accessors, axis defaults, legends, calendar-aligned time
 ticks — so hand-built specs don't reimplement them. Neither subpath touches
 jsdom or the canvas.
 
+The headless renderer itself is its own package,
+[`@unovis/ssr`](https://www.npmjs.com/package/@unovis/ssr) — `renderToSvg`,
+`svgToPng` and the environment shims live there and are re-exported here, so
+both import paths work. Depend on `@unovis/ssr` directly when you want
+server-side rendering without the MCP surface.
+
 ## Render a chart spec
 
 ```ts

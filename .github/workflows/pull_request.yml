@@ -15,7 +15,7 @@ jobs:
     - run: pnpm run build && pnpm run build:dev
 
   mcp:
-    name: MCP server (types, lint, tests)
+    name: SSR + MCP (types, lint, tests)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -35,19 +35,19 @@ jobs:
     - name: Cache Inter fonts
       uses: actions/cache@v4
       with:
-        path: ~/.cache/unovis-mcp
-        key: unovis-mcp-fonts-${{ hashFiles('packages/mcp/src/env/fonts.ts') }}
+        path: ~/.cache/unovis-ssr
+        key: unovis-ssr-fonts-${{ hashFiles('packages/ssr/src/env/fonts.ts') }}
         restore-keys: |
-          unovis-mcp-fonts-
+          unovis-ssr-fonts-
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
-    # The MCP package renders charts with the built core, so @unovis/ts first
-    - name: Build @unovis/ts and @unovis/mcp
+    # Build order matters: @unovis/ts → @unovis/ssr → @unovis/mcp
+    - name: Build @unovis/ts, @unovis/ssr and @unovis/mcp
       run: pnpm run build:mcp
     - name: Type-check
-      run: cd packages/mcp && pnpm exec tsc --noEmit
+      run: cd packages/ssr && pnpm exec tsc --noEmit && cd ../mcp && pnpm exec tsc --noEmit
     - name: Lint
-      run: pnpm exec eslint --quiet packages/mcp/src packages/mcp/test packages/mcp/scripts --ext .ts
+      run: pnpm exec eslint --quiet packages/ssr/src packages/ssr/test packages/mcp/src packages/mcp/test packages/mcp/scripts --ext .ts
     # The website pages under docs/mcp are generated from packages/mcp/docs, so
     # editing the docs without re-running the sync would ship a stale website
     - name: Check website docs are in sync
@@ -59,7 +59,7 @@ jobs:
     # MCP surface over a real client, the browser widget bundle, and
     # type-checking of generated code
     - name: Test
-      run: pnpm run test:mcp
+      run: cd packages/ssr && pnpm test && cd ../.. && pnpm run test:mcp
     # A chart nobody can look at is a chart nobody can trust: render every
     # fixture in both themes so failures surface as artifacts, not just logs
     - name: Render sample gallery

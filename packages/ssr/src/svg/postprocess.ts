@@ -17,7 +17,7 @@ import { bakeCssVars, substituteVarsForElement } from './css-vars.js'
 import type { VarContext } from './css-vars.js'
 import { importExternalDefs, rewriteIds } from './ids.js'
 import { renderHeader } from './header.js'
-import type { LegendItemSpec } from '../render/spec.js'
+import type { LegendItemSpec } from './header.js'
 import type { VarMaps } from '../env/computed-style.js'
 
 /** What the output frame needs to know about a chart — deliberately not a

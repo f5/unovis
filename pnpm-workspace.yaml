@@ -1,6 +1,7 @@
 packages:
   - packages/ts
   - packages/mcp
+  - packages/ssr
   - packages/angular
   - packages/react
   - packages/svelte

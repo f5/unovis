@@ -122,7 +122,7 @@ Unovis is a browser-first library — it renders SVG into a live DOM using D3. T
 2. charts render with `duration: 0` (fully synchronous), the frame queue is drained until quiescent, and `onRenderComplete` confirms the chart is final;
 3. a post-processing pass makes the SVG standalone: emotion styles are inlined as attributes, `var()` references baked to literal values (theme-aware), ids rewritten deterministically, and the title/legend header synthesized.
 
-Fonts: on first start the server provisions Inter (Unovis's default font) for text measurement — it downloads the official [Inter release](https://github.com/rsms/inter) once (pinned version, SHA-256 verified, SIL OFL 1.1) into `~/.cache/unovis-mcp/fonts/` and reuses it from there. Offline or with `UNOVIS_MCP_NO_DOWNLOAD=1` it falls back to system fonts (metrics are close, not exact). To use your own fonts, set `UNOVIS_MCP_FONTS_DIR=/path/to/fonts` or drop font files into the package's `fonts/` directory — both take precedence over the download.
+Fonts: on first start the server provisions Inter (Unovis's default font) for text measurement — it downloads the official [Inter release](https://github.com/rsms/inter) once (pinned version, SHA-256 verified, SIL OFL 1.1) into `~/.cache/unovis-ssr/fonts/` and reuses it from there. Offline or with `UNOVIS_MCP_NO_DOWNLOAD=1` it falls back to system fonts (metrics are close, not exact). To use your own fonts, set `UNOVIS_MCP_FONTS_DIR=/path/to/fonts` or drop font files into `@unovis/ssr`'s `fonts/` directory — both take precedence over the download.
 
 ## Programmatic use
 

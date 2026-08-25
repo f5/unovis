@@ -8,7 +8,16 @@
 import { measureTextWidth } from '../env/canvas.js'
 import { substituteVarsForElement } from './css-vars.js'
 import type { VarContext } from './css-vars.js'
-import type { LegendItemSpec } from '../render/spec.js'
+/** One legend entry drawn in the synthesized header. `color` wins; without
+ * it, `paletteIndex` resolves against the theme palette during
+ * post-processing. */
+export interface LegendItemSpec {
+  name: string;
+  /** Resolved during post-processing when omitted (default palette) */
+  color?: string;
+  /** Palette index used when color is not set */
+  paletteIndex?: number;
+}
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 

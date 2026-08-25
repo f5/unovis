@@ -3,10 +3,10 @@
  * chart. */
 import { describe, expect, it } from 'vitest'
 
+import type { UnovisLib } from '@unovis/ssr'
 import { materializeChart, materializeValue, formatDateTick, formatNumTick, ChartInputError } from '../src/render/materialize.js'
 import { SPEC_VERSION } from '../src/render/spec.js'
 import type { ChartSpec } from '../src/render/spec.js'
-import type { UnovisLib } from '../src/env/index.js'
 import { recipeByName } from '../src/recipes/index.js'
 import { timeTickValuesFromData } from '../src/render/time-ticks.js'
 

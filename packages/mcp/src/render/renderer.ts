@@ -3,9 +3,9 @@
  * The headless mechanics (DOM, frame flushing, serialization) live in
  * headless.ts; this module only knows how to turn a spec into components.
  */
+import { renderToSvg } from '@unovis/ssr'
+import type { RenderResult } from '@unovis/ssr'
 import { materializeChart, ChartInputError, ASYNC_COMPONENTS } from './materialize.js'
-import { renderToSvg } from './headless.js'
-import type { RenderResult } from './headless.js'
 import type { ChartSpec, ComponentSpec } from './spec.js'
 
 export { ChartInputError }
@@ -17,7 +17,7 @@ export interface RenderOptions {
   keepClasses?: boolean;
 }
 
-export type { RenderResult } from './headless.js'
+export type { RenderResult } from '@unovis/ssr'
 
 /** Unovis map names accepted in `{ $unovisMap: name }` config markers */
 const UNOVIS_MAPS = new Set([
