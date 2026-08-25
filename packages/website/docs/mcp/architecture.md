@@ -109,7 +109,10 @@ engine would dwarf everything else. A size budget in the build script fails the
 build if the barrel creeps back in.
 
 Interactions are derived from the spec: per-chart-type tooltip templates, a
-crosshair for continuous XY charts, and the real HTML legend.
+crosshair for continuous XY charts, and the real HTML legend. Hosts that opt
+in also receive clicks as normalized events, and native WebViews get the same
+protocol over their own bridge ([Interactive charts](./interactive.md),
+[Native WebViews](./webview.md)).
 
 ## Upstream changes
 
@@ -131,10 +134,11 @@ The trend matters: as the core becomes SSR-friendlier, the shim layer shrinks.
 |---|---|
 | Env unit tests | Bbox math, variable resolution, frame flushing |
 | Recipe snapshots | Byte-stable SVG per chart type (with a deterministic id prefix) |
+| Spec contract | Version gating, locale-aware formatting, derived time-axis ticks |
 | Post-processing tests | Id rewriting, variable baking, header synthesis, theme |
 | MCP integration | Real SDK client over an in-memory transport: schemas, every output type, error paths, tool filtering, concurrency |
 | Tool schemas | Every advertised schema validated against the draft 2020-12 meta-schema, with no `$ref`s — the shape a client must accept before any chart can render ([why](./troubleshooting.md#the-client-rejects-the-whole-tool-list)) |
-| Widget tests | The **real browser bundle** executed in jsdom: rendering, a simulated hover producing tooltip content, the embed protocol |
+| Widget tests | The **real browser bundle** executed in jsdom: rendering, a simulated hover producing tooltip content, the embed protocol with its version handshake, clicks surfacing as normalized events, the React Native bridge and runtime theme switching |
 | Widget matrix | All 15 chart types rendered interactively with a clean console |
 | Codegen | Generated TypeScript **type-checked against `@unovis/ts`** |
 | `pnpm samples` | Every fixture rendered to SVG + PNG, light and dark, as a contact sheet for eyeball review |

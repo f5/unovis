@@ -26,6 +26,7 @@ reach Unovis options the tool schemas deliberately don't expose.
 
 ```ts
 interface ChartSpec {
+  specVersion?: number                         // contract version (see below)
   container: 'xy' | 'single'
   width: number
   height: number
@@ -36,6 +37,7 @@ interface ChartSpec {
   xAxis?: Record<string, unknown>              // XY containers only
   yAxis?: Record<string, unknown>
   colors?: string[]
+  locale?: string                              // BCP-47, for date/number formatting
   legend?: { name: string; color?: string; paletteIndex?: number }[]
   data: unknown
 }
@@ -47,6 +49,18 @@ interface ChartSpec {
 - **`container: 'single'`** holds exactly one component (donut, sankey, heatmap,
   treemap, chord, graph, map, …).
 - `components` renders in array order, so later entries draw on top.
+
+## Versioning
+
+The spec is a persistence format — apps store specs and commit generated embed
+documents — so it carries a version. `SPEC_VERSION` (importable from
+`@unovis/mcp/spec`) is the current contract; the recipes stamp it into every
+spec they produce. The policy: **additions are non-breaking; the integer bumps
+only on breaking changes.** A renderer or widget given a spec with a newer
+major refuses with an explicit error instead of drawing a wrong or blank
+chart, and the widget reports `{ version, specVersion }` in its
+[`unovis:ready` handshake](./interactive.md#protocol) so hosts can assert
+compatibility up front. Specs without `specVersion` are treated as current.
 
 ## A complete example
 
