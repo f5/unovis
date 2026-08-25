@@ -120,7 +120,7 @@ function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: Mat
   const allowed = XY_COMPONENTS.has(spec.type) || SINGLE_COMPONENTS.has(spec.type)
   if (!allowed) throw new ChartInputError(`Unsupported component type: ${spec.type}`)
   const componentClass = (lib as unknown as Record<string, new (config: Record<string, unknown>) => unknown>)[spec.type]
-  if (!componentClass) throw new ChartInputError(`Component ${spec.type} is not available in this @unovis/ts build`)
+  if (!componentClass) throw new ChartInputError(`Component ${spec.type} is not available in this bundle — regenerate the document for this chart type`)
   const config = materializeValue(spec.config, locale) as Record<string, unknown>
   config.duration = options.duration ?? 0
   if (ASYNC_COMPONENTS.has(spec.type) && options.onComponentComplete) config.onRenderComplete = options.onComponentComplete

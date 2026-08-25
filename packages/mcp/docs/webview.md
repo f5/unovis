@@ -4,7 +4,9 @@ The embed document works in React Native's WebView (and other native WebViews)
 without a shim: the widget detects the native bridge and speaks the same
 protocol over it. The document is a build artifact — generate it once with
 `buildEmbedDocument()`, commit it to the app, and load it from local assets so
-charts work offline.
+charts work offline. If the app only renders some chart types, say so —
+`buildEmbedDocument({ components: ['Line', 'Donut'] })` — and the committed
+document carries a bundle half the size.
 
 ## What the widget does differently under React Native
 

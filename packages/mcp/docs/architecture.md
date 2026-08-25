@@ -100,10 +100,18 @@ uses, so one code path turns a spec into a chart on both sides. esbuild keeps
 the bundle at ~670kB by importing components individually — the package barrel
 statically pulls in Leaflet, MapLibre and Three — and by excluding elkjs, whose
 1.4MB engine would dwarf everything else. A size budget in the build script
-fails the build if the barrel creeps back in. Documents don't carry those bytes
-raw: the bundle is inlined as a gzip+base64 payload with a ~5kB synchronous
-self-extracting bootstrap, so a chart file is ~290kB on disk while the spec and
-styles stay readable.
+fails the build if the barrel creeps back in.
+
+Documents don't carry those bytes raw, twice over. Two prebuilt variants split
+along the dependency line — `standard` (~330kB: XY and radial charts) and
+`full` (~670kB: plus sankey, chord, graph, maps, whose layout and geo engines
+are most of the difference) — and the document builder picks the smallest one
+that covers the spec. The chosen bundle is then inlined as a gzip+base64
+payload with a ~5kB synchronous self-extracting bootstrap. Net effect: a line
+chart document is ~140kB on disk, a graph document ~290kB, and the spec and
+styles stay readable in both. A spec rendered against a bundle that lacks its
+component fails with an explicit error, and size budgets fail the build if
+either bundle outgrows its reason to exist.
 
 Interactions are derived from the spec: per-chart-type tooltip templates, a
 crosshair for continuous XY charts, and the real HTML legend. Hosts that opt

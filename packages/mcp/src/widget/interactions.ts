@@ -78,6 +78,9 @@ export function buildInteractions (lib: Lib, spec: ChartSpec): Interactions {
   const triggers: Record<string, (d: Datum) => string> = {}
 
   for (const component of spec.components) {
+    // A variant bundle may not carry this component — let the materializer
+    // report it instead of crashing on lib.X.selectors
+    if (!lib[component.type]) continue
     const fields = specFields(component.config)
     const generic = recordTooltip(fields, undefined, spec.locale)
 

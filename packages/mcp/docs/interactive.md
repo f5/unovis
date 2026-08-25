@@ -41,10 +41,12 @@ const html = buildChartDocument(spec, {
 ```
 
 One file, nothing external: the widget bundle, the spec, and the styles are
-all inlined (~290kB — the bundle ships as a gzip payload with a self-extracting
-bootstrap, while the spec stays readable so committed files diff meaningfully;
-`compress: false` opts out). It opens offline, survives being emailed, and can
-be committed to a repo.
+all inlined. XY and radial charts get a smaller bundle variant automatically
+(~140kB documents), the network/flow/geo families the full one (~290kB); the
+bundle ships as a gzip payload with a self-extracting bootstrap, while the
+spec stays readable so committed files diff meaningfully (`compress: false`
+opts out). It opens offline, survives being emailed, and can be committed to
+a repo.
 
 ## Inline in the conversation
 
@@ -68,7 +70,9 @@ For React Native and other native WebViews, see
 The widget doubles as a plain iframe component, so any web app can render Unovis
 specs without bundling Unovis. Serve the embed document (it's what the `ui://`
 resource returns, and `buildEmbedDocument()` produces it), point an iframe at it
-with the `#embed` hash, and post it a spec:
+with the `#embed` hash, and post it a spec. An embed carries the full bundle so
+any spec renders; hosts that know their chart types can opt into the smaller
+variant with `buildEmbedDocument({ components: ['Line', 'Donut'] })`:
 
 ```html
 <iframe id="chart" src="/unovis-widget.html#embed" style="width:100%;border:0"></iframe>

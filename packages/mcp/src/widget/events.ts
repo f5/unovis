@@ -75,6 +75,7 @@ const extractors: Record<string, (d: Datum) => unknown> = {
 
 /** CSS selectors of the clickable primitives per component type */
 function clickableSelectors (lib: Lib, type: string): string[] {
+  if (!lib[type]) return [] // variant bundle without this component
   switch (type) {
     case 'GroupedBar': return [lib.GroupedBar.selectors.bar]
     case 'StackedBar': return [lib.StackedBar.selectors.bar]
