@@ -326,7 +326,7 @@ configuration updates. It applies to every component inside the container. The t
   excludeTabs/>
 
 ## Tooltip
-Attach a [Tooltip](/docs/auxiliary/Tooltip) to show details on hover. Provide a `triggers` map that pairs a
+Attach a [Tooltip](/docs/components/Tooltip) to show details on hover. Provide a `triggers` map that pairs a
 component's selector with a template function returning an HTML string:
 
 <BrowserOnly>
@@ -347,10 +347,10 @@ component's selector with a template function returning an HTML string:
 }}
 </BrowserOnly>
 
-See the [Tooltip](/docs/auxiliary/Tooltip) docs for positioning, show/hide delays, and custom rendering.
+See the [Tooltip](/docs/components/Tooltip) docs for positioning, show/hide delays, and custom rendering.
 
 ## Crosshair
-A [Crosshair](/docs/auxiliary/Crosshair) renders a vertical line that follows the pointer and marks the
+A [Crosshair](/docs/components/Crosshair) renders a vertical line that follows the pointer and marks the
 nearest value on every series — ideal for line and area charts. Provide a `template` to show a tooltip
 alongside it:
 
@@ -363,10 +363,10 @@ alongside it:
   ]}
   excludeTabs/>
 
-See the [Crosshair](/docs/auxiliary/Crosshair) docs for custom accessors, show/hide behavior, and styling.
+See the [Crosshair](/docs/components/Crosshair) docs for custom accessors, show/hide behavior, and styling.
 
 ## Annotations
-Use [Annotations](/docs/auxiliary/Annotations) to overlay text labels and callouts. Pass an `items` array;
+Use [Annotations](/docs/components/Annotations) to overlay text labels and callouts. Pass an `items` array;
 each item is positioned in data coordinates or with `'%'` strings and can point at a `subject`:
 
 <XYWrapper
@@ -383,7 +383,7 @@ each item is positioned in data coordinates or with `'%'` strings and can point 
   ]}
   excludeTabs/>
 
-See the [Annotations](/docs/auxiliary/Annotations) docs for the full set of `AnnotationItem` options.
+See the [Annotations](/docs/components/Annotations) docs for the full set of `AnnotationItem` options.
 
 ## Accessibility
 Pass a descriptive `ariaLabel` to set an `aria-label` on the chart's container `div`, giving screen-reader

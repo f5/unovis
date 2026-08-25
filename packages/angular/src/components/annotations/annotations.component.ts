@@ -72,7 +72,7 @@ export class VisAnnotationsComponent implements AnnotationsConfigInterface, Afte
    *  height?: LengthUnit;
    * }
    * ```
-   * To learn more, see our docs https://unovis.dev/docs/auxiliary/Annotations/
+   * To learn more, see our docs https://unovis.dev/docs/components/Annotations/
    * Default: `[]` */
   @Input() items: AnnotationItem[] | undefined
 

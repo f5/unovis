@@ -53,7 +53,7 @@ _Stacked Bar_ can accept an array of y accessors to display values as a stack of
 ## Baseline
 By default every stack starts at zero. The `baseline` property moves that starting point per data record,
 turning the bars into _floating_ bars: each one spans from `baseline` to `baseline + y`. It accepts a constant
-or an accessor function, and works the same way as the [Area](/docs/xy-charts/Area) component's `baseline`.
+or an accessor function, and works the same way as the [Area](/docs/components/Area) component's `baseline`.
 
 <XYWrapper {...stackedBarProps()} showContext="minimal" showAxes baseline={d => d.y1}/>
 

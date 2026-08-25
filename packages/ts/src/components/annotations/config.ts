@@ -15,7 +15,7 @@ export interface AnnotationsConfigInterface extends ComponentConfigInterface {
    *   height?: LengthUnit;
    * }
    * ```
-   * To learn more, see our docs https://unovis.dev/docs/auxiliary/Annotations/
+   * To learn more, see our docs https://unovis.dev/docs/components/Annotations/
   * Default: `[]` */
   items: AnnotationItem[] | undefined;
   /** Debug option to render bounding boxes around text elements. Default: `false` */

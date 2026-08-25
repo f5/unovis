@@ -5,13 +5,13 @@ import React, { useState, useRef } from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import CodeBlock from '@theme/CodeBlock'
 
-import { CSSVariables } from '../components/css-variables'
+import { CSSVariables } from '../doc-components/css-variables'
 import { data, generateScatterDataRecords, generateTimeSeries, generateDataRecords } from '../utils/data.ts'
 import { DocWrapper } from '../wrappers'
 import { XYWrapper, axis } from '../wrappers/xy-wrapper'
-import { sankeyProps as sankeyProps } from '../networks-and-flows/Sankey.mdx'
-import { donutProps as donutProps } from '../misc/Donut.mdx'
-import { FrameworkTabs } from '../components/framework-tabs.tsx'
+import { sankeyProps as sankeyProps } from '../components/Sankey.mdx'
+import { donutProps as donutProps } from '../components/Donut.mdx'
+import { FrameworkTabs } from '../doc-components/framework-tabs.tsx'
 
 import './styles.css'
 
@@ -70,7 +70,7 @@ to supply the values of various SVG attributes such as `fill`, `stroke`, `opacit
 these variables to further customize your _Unovis_ components.
 
 Every variable has the following naming convention: `--vis` + _label_ + _attribute_. For example, the variable named
-`--vis-area-cursor` would apply to the [Area](../xy-charts/Area) component's cursor property.
+`--vis-area-cursor` would apply to the [Area](../components/Area) component's cursor property.
 
 Note that while our variables follow this convention, it does not guarantee that the value you wish
 to override is available. Be sure to check the corresponding doc page of the component you want to customize
@@ -168,13 +168,13 @@ of a labeled _Scatter_ chart:
 :::note
 When using this theme, the following components have caveats:
 
-- [**Scatter**](../xy-charts/Scatter):
-If the [`labelPosition`](../xy-charts/Scatter#label-position) property is set to `Position.Center`,
+- [**Scatter**](../components/Scatter):
+If the [`labelPosition`](../components/Scatter#label-position) property is set to `Position.Center`,
 point labels will try fit to the point's size. In this case, you will instead need to update the
-[`pointSize`](../xy-charts/Scatter#size-and-size-range) property to render larger labels.
+[`pointSize`](../components/Scatter#size-and-size-range) property to render larger labels.
 
-- [**Timeline**](../xy-charts/Timeline)
-Additionally, you may need to adjust the [`rowHeight`](../xy-charts/Timeline#row-height) property to
+- [**Timeline**](../components/Timeline)
+Additionally, you may need to adjust the [`rowHeight`](../components/Timeline#row-height) property to
 accommodate larger labels.
 :::
 
