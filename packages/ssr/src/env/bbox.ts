@@ -9,6 +9,8 @@
  * Note: jsdom instantiates most SVG tags as plain `SVGElement`, so the
  * polyfills are installed on `SVGElement.prototype` with tag-based dispatch.
  */
+// Shrinks when f5/unovis#888 lands (core text measurement via canvas
+// instead of getBBox) — the text branch here is the hard 80%.
 import pathBounds from 'svg-path-bounds'
 import { svgPathProperties as SvgPathProperties } from 'svg-path-properties'
 

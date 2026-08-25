@@ -132,7 +132,8 @@ donut segments report `{ key, value }`.
 Two shapes don't click: **lines and areas** have no per-datum element (the
 crosshair is their readout), and Unovis attaches user event listeners through
 a throttled setup pass, so handlers become active **within ~500ms of the
-render settling** — relevant only to automated tests that click immediately.
+render settling** — relevant only to automated tests that click immediately
+(tracked upstream as [f5/unovis#889](https://github.com/f5/unovis/issues/889)).
 
 Using the widget API directly, pass a callback instead:
 

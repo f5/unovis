@@ -17,7 +17,8 @@ import donutFixtures from './fixtures/donut.js'
 import barFixtures from './fixtures/bar.js'
 
 /** ComponentCore binds user events through a 500ms-throttled setup pass, so
- * listeners appear up to half a second after the last render frame */
+ * listeners appear up to half a second after the last render frame —
+ * f5/unovis#889 tracks removing the window (and with it, these sleeps) */
 const eventsBound = async (page: LoadedPage): Promise<void> => {
   await new Promise(resolve => setTimeout(resolve, 550))
   page.raf.flushAll()
