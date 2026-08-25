@@ -15,6 +15,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
 import { z } from 'zod'
+import { build } from 'esbuild'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const { buildChartDocument, buildEmbedDocument, recipeByName } = await import(join(root, 'dist', 'index.js'))
@@ -115,6 +116,44 @@ for (const name of Object.keys(INPUTS)) {
   const theme = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))
   check(theme === 'dark', 'unovis:theme re-renders in dark')
   check(errors.length === 0, `embed console stayed clean (errors: ${errors.join('; ') || 'none'})`)
+  await page.close()
+}
+
+// ── 4. MCP Apps conformance: the official AppBridge drives the widget ──────
+{
+  const harness = await build({
+    entryPoints: [join(root, 'scripts', 'apps-host-harness.ts')],
+    write: false, bundle: true, format: 'iife', platform: 'browser', logLevel: 'silent',
+  })
+  const spec = specFor('generate_line_chart')
+  // `<` escaped so the embedded document's own </script> tags can't
+  // terminate this script block — the same trick the document builder uses
+  const inline = (value) => JSON.stringify(value).replace(/</g, '\\u003c')
+  const hostPage = `<!doctype html><html><body>
+<script>
+window.__EMBED_HTML = ${inline(buildEmbedDocument())};
+window.__SPEC = ${inline({ ...spec, containerConfig: { ...spec.containerConfig, duration: 0 } })};
+</script>
+<script>${harness.outputFiles[0].text}</script>
+</body></html>`
+
+  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } })
+  const errors = []
+  page.on('pageerror', (error) => errors.push(String(error)))
+  await page.setContent(hostPage, { waitUntil: 'load' })
+
+  const initialized = await page.waitForFunction(() => window.__hostState?.initialized, undefined, { timeout: 10000 }).then(() => true).catch(() => false)
+  check(initialized, 'AppBridge lifecycle completed (initialize → initialized)')
+
+  const frame = page.frames().find(f => f !== page.mainFrame())
+  const chart = frame ? await frame.waitForSelector('.uv-chart svg', { timeout: 10000 }).catch(() => null) : null
+  check(chart !== null, 'widget rendered the tool result inside the sandboxed iframe')
+
+  const sized = await page.waitForFunction(() => window.__hostState?.sizeChanged, undefined, { timeout: 5000 }).then(() => true).catch(() => false)
+  check(sized, 'widget reported ui/notifications/size-changed to the host')
+  const hostErrors = await page.evaluate(() => window.__hostState?.errors ?? [])
+  check(errors.length === 0 && hostErrors.length === 0, `apps host stayed clean (errors: ${[...errors, ...hostErrors].join('; ') || 'none'})`)
+  await page.screenshot({ path: join(shotsDir, 'mcp-apps-host.png') })
   await page.close()
 }
 

@@ -7,7 +7,7 @@ browser bundle that shares the spec layer with the headless renderer.
 ```
 ChartSpec ──┬──► headless renderer  ──► SVG / PNG   (works everywhere)
             ├──► widget bundle      ──► .html file   (any browser)
-            └──► widget bundle      ──► ui:// resource (MCP UI clients)
+            └──► widget bundle      ──► ui:// resource (MCP Apps hosts)
 ```
 
 ## What you get
@@ -54,13 +54,26 @@ a repo.
 { "outputType": "interactive" }
 ```
 
-The tool returns the spec as structured content plus a reference to the
-`ui://unovis/chart` resource, which is the widget in embed mode. Clients that
-implement MCP UI resources render it inline; the others fall back to the text
-summary.
+The server implements the **MCP Apps extension**
+(`io.modelcontextprotocol/ui`, [SEP-1865](https://modelcontextprotocol.io/seps/1865-mcp-apps-interactive-user-interfaces-for-mcp)),
+official since the 2026-07-28 protocol revision. Every chart tool declares its
+template ahead of time (`_meta.ui.resourceUri: "ui://unovis/chart"`), so hosts
+can prefetch, cache and security-review the widget before any call — and the
+review is easy: the resource ships with **empty CSP allowlists**, because the
+widget's no-network property is a tested guarantee, not a promise. The widget implements
+the full view lifecycle — it initiates `ui/initialize`, signals
+`ui/notifications/initialized`, renders on `ui/notifications/tool-result`,
+adopts the host's theme (including live `host-context-changed` switches),
+reports `size-changed`, answers `ping` — and keeps its plain-iframe protocol
+for non-MCP hosts. Because an Apps host renders the frame for *every* call of
+a declared tool, the server includes the chart spec in `structuredContent` on
+every result when the client advertises the extension capability — so a plain
+`outputType: "svg"` call still shows a live chart in Claude or ChatGPT, while
+non-Apps clients keep lean responses.
 
-This is **experimental** — the conventions are still moving, so don't build a
-product on it yet. `html` is the dependable path.
+Pre-extension hosts that understood the earlier `openai/outputTemplate`
+convention keep working — the result still carries it. Host support for the
+extension is still uneven; when in doubt, `html` remains the always-works path.
 
 For React Native and other native WebViews, see
 [Embedding in native WebViews](./webview.md).

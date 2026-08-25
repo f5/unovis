@@ -12,7 +12,7 @@ rendered locally in Node, with no browser and no remote services.
 | [Output types](./output-types.md) | `svg`, `png`, `html`, `interactive`, `config`, `code` — what each returns and when to use it |
 | [Chart spec](./chart-spec.md) | The JSON IR behind every chart: containers, components, accessor references |
 | [Programmatic use](./programmatic.md) | Use it as a library: `renderChart`, the `renderToSvg` SSR primitive, PNG rasterization, embedding the tools in your own MCP server |
-| [Interactive charts](./interactive.md) | The browser widget, self-contained HTML, iframe embedding, MCP UI resources |
+| [Interactive charts](./interactive.md) | The browser widget, self-contained HTML, iframe embedding, the MCP Apps extension |
 | [Native WebViews](./webview.md) | React Native embedding: the bridge, theme switching without reloads, version pinning |
 | [Architecture](./architecture.md) | How headless rendering actually works, and why each piece exists |
 | [Troubleshooting](./troubleshooting.md) | Fonts, blank charts, timeouts, large data, known limitations |

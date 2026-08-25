@@ -28,8 +28,14 @@ export interface ToolFilterOptions {
   writeDir?: string | false;
 }
 
-/** MCP UI resource the interactive output binds to (registered in server.ts) */
+/** MCP Apps resource the interactive output binds to (registered in server.ts) */
 export const WIDGET_URI = 'ui://unovis/chart'
+
+/** MCP Apps extension (SEP-1865, io.modelcontextprotocol/ui) wire constants.
+ * Pinned by tests; keep in sync with the extension spec rather than importing
+ * @modelcontextprotocol/ext-apps, whose react peer deps we don't need. */
+export const APPS_MIME_TYPE = 'text/html;profile=mcp-app'
+export const APPS_EXTENSION_ID = 'io.modelcontextprotocol/ui'
 
 const textResult = (text: string, isError = false): CallToolResult =>
   ({ content: [{ type: 'text', text }], ...(isError ? { isError: true } : {}) })
@@ -58,19 +64,31 @@ export function refuseWrite (outputPath: string, writeDir: ToolFilterOptions['wr
   return undefined
 }
 
-async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>, writeDir?: ToolFilterOptions['writeDir']): Promise<CallToolResult> {
+/** In an MCP Apps host, every declared tool call renders the widget iframe —
+ * so every result must carry the spec, or the frame sits empty next to the
+ * answer. Gated on the client capability to keep non-Apps responses lean
+ * (the spec embeds the full dataset). */
+async function appsResult (result: CallToolResult, spec: ChartSpec, appsHost: boolean): Promise<CallToolResult> {
+  if (!appsHost) return result
+  return {
+    ...result,
+    structuredContent: { spec: (await specForBrowser(spec)) as unknown as Record<string, unknown> },
+  }
+}
+
+async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>, writeDir?: ToolFilterOptions['writeDir'], appsHost = false): Promise<CallToolResult> {
   try {
     const spec = recipe.toSpec(input)
 
     if (input.outputType === 'config') {
-      return textResult(JSON.stringify(spec, null, 2))
+      return appsResult(textResult(JSON.stringify(spec, null, 2)), spec, appsHost)
     }
 
     // Code: emit source for the chosen wrapper. Uses the unresolved spec so
     // map data stays an import rather than an inlined payload.
     if (input.outputType === 'code') {
       const files = generateCode(spec, (input.framework as Framework | undefined) ?? 'ts')
-      return textResult(formatGeneratedFiles(files))
+      return appsResult(textResult(formatGeneratedFiles(files)), spec, appsHost)
     }
 
     // Interactive: hand the spec to a UI-capable client, which renders it with
@@ -80,6 +98,8 @@ async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>, wri
       return {
         content: [{ type: 'text', text: `Interactive chart: ${chartSummary(spec)}` }],
         structuredContent: { spec: browserSpec as unknown as Record<string, unknown> },
+        // Result-level template link kept for pre-MCP-Apps hosts; official
+        // hosts key off the tool-level _meta.ui declaration instead
         _meta: { 'openai/outputTemplate': WIDGET_URI },
       }
     }
@@ -108,8 +128,8 @@ async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>, wri
       const target = outputPath ?? join(mkdtempSync(join(fallbackDir, 'unovis-chart-')), 'chart.html')
       mkdirSync(dirname(target), { recursive: true })
       writeFileSync(target, html)
-      return textResult(`Interactive chart saved to ${target} — open it in a browser for tooltips, ` +
-        `crosshair and hover highlighting. ${chartSummary(spec)}`)
+      return appsResult(textResult(`Interactive chart saved to ${target} — open it in a browser for tooltips, ` +
+        `crosshair and hover highlighting. ${chartSummary(spec)}`), spec, appsHost)
     }
 
     const result = await renderChart(spec)
@@ -124,23 +144,23 @@ async function runRecipe (recipe: AnyRecipe, input: Record<string, unknown>, wri
       if (outputPath) {
         mkdirSync(dirname(outputPath), { recursive: true })
         writeFileSync(outputPath, png)
-        return textResult(`Chart saved to ${outputPath} (${result.width}×${result.height} at ${input.scale ?? 2}x)${warningsNote}`)
+        return appsResult(textResult(`Chart saved to ${outputPath} (${result.width}×${result.height} at ${input.scale ?? 2}x)${warningsNote}`), spec, appsHost)
       }
-      return {
+      return appsResult({
         content: [
           { type: 'image', data: png.toString('base64'), mimeType: 'image/png' },
           ...(warningsNote ? [{ type: 'text' as const, text: warningsNote.trim() }] : []),
         ],
-      }
+      }, spec, appsHost)
     }
 
     if (outputPath) {
       mkdirSync(dirname(outputPath), { recursive: true })
       writeFileSync(outputPath, `<?xml version="1.0" encoding="UTF-8"?>\n${result.svg}`)
-      return textResult(`Chart saved to ${outputPath} (${result.width}×${result.height})${warningsNote}`)
+      return appsResult(textResult(`Chart saved to ${outputPath} (${result.width}×${result.height})${warningsNote}`), spec, appsHost)
     }
 
-    return textResult(result.svg + (result.warnings.length ? `\n<!-- warnings: ${result.warnings.join('; ')} -->` : ''))
+    return appsResult(textResult(result.svg + (result.warnings.length ? `\n<!-- warnings: ${result.warnings.join('; ')} -->` : '')), spec, appsHost)
   } catch (e) {
     if (e instanceof ChartInputError) {
       return textResult(`Invalid input for ${recipe.name}: ${e.message}`, true)
@@ -155,6 +175,45 @@ export function activeRecipes (filter: ToolFilterOptions = {}): AnyRecipe[] {
   return recipes.filter(r => !disabled.has(r.name) && (!enabled || enabled.has(r.name)))
 }
 
+/** Connections whose client advertised the MCP Apps extension.
+ *
+ * The SDK's ClientCapabilities schema predates SEP-1724, so it strips the
+ * `extensions` key during initialize — getClientCapabilities() can never see
+ * it (verified end-to-end). Until the SDK learns the field, the raw
+ * initialize message is sniffed at the transport seam; the schema path below
+ * takes over automatically once it stops returning undefined. */
+const appsClients = new WeakSet<McpServer>()
+
+/** Intercept a transport's onmessage assignment to sniff
+ * `capabilities.extensions` from the raw initialize request. Must run BEFORE
+ * connect — with an in-memory transport the initialize can arrive in the same
+ * microtask the connection is established in. */
+export function sniffAppsCapability (server: McpServer, transport: object): void {
+  type Handler = (...args: never[]) => void
+  let assigned: Handler | undefined
+  Object.defineProperty(transport, 'onmessage', {
+    configurable: true,
+    enumerable: true,
+    get: () => assigned,
+    set: (handler: Handler | undefined) => {
+      assigned = handler && ((...args: never[]) => {
+        const message = args[0] as { method?: string; params?: { capabilities?: { extensions?: Record<string, unknown> } } }
+        if (message?.method === 'initialize' && message.params?.capabilities?.extensions?.[APPS_EXTENSION_ID]) {
+          appsClients.add(server)
+        }
+        handler.apply(transport, args)
+      })
+    },
+  })
+}
+
+/** Did the connected client advertise the MCP Apps extension capability? */
+function appsCapableClient (server: McpServer): boolean {
+  if (appsClients.has(server)) return true
+  const capabilities = server.server.getClientCapabilities() as { extensions?: Record<string, unknown> } | undefined
+  return Boolean(capabilities?.extensions?.[APPS_EXTENSION_ID])
+}
+
 export function registerTools (server: McpServer, filter: ToolFilterOptions = {}): void {
   for (const recipe of activeRecipes(filter)) {
     server.registerTool(
@@ -167,9 +226,12 @@ export function registerTools (server: McpServer, filter: ToolFilterOptions = {}
           readOnlyHint: false, // outputPath can write a file
           openWorldHint: false, // fully local, no network
         },
+        // MCP Apps: the template is declared on the tool, ahead of time, so
+        // hosts can prefetch, cache and security-review it before any call
+        _meta: { ui: { resourceUri: WIDGET_URI } },
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async (args: any) => runRecipe(recipe, args, filter.writeDir)
+      async (args: any) => runRecipe(recipe, args, filter.writeDir, appsCapableClient(server))
     )
   }
 

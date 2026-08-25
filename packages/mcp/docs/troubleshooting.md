@@ -110,8 +110,9 @@ The `png` output type does this for you.
 
 ## Interactive output doesn't render in my client
 
-`outputType: "interactive"` depends on MCP UI resource support, which is
-experimental and unevenly implemented. Use `outputType: "html"` — it works
+`outputType: "interactive"` depends on the MCP Apps extension
+(`io.modelcontextprotocol/ui`) — official since protocol revision 2026-07-28,
+but host adoption is still uneven. Use `outputType: "html"` — it works
 everywhere because it's just a file.
 
 ## Large datasets
@@ -151,7 +152,7 @@ Worth knowing before you trust a green suite:
   layout, paint, mouse hover and clicks — added after a crosshair bug passed
   every jsdom test — but taps, drags and tooltip-linger semantics on actual
   touch hardware remain untested.
-- **MCP UI widget rendering** in an actual client.
+- **MCP Apps rendering in a commercial host.** The lifecycle is verified against the official AppBridge host implementation in the Chromium lane (sandboxed iframe, real handshake) — Claude/ChatGPT-specific behavior is not.
 - **Pixel baselines are light-theme.** Visual regression rasterizes every
   fixture against committed baselines; dark theme is exercised structurally and
   in `pnpm samples`, not pixel-compared.
