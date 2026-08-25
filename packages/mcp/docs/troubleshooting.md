@@ -3,7 +3,7 @@
 ## The first render is slow
 
 Expected. The first call initialises jsdom, imports `@unovis/ts`, and downloads
-Inter once (~34MB into `~/.cache/unovis-mcp/fonts/`). Later renders are
+Inter once (~34MB into `~/.cache/unovis-ssr/fonts/`). Later renders are
 milliseconds. To avoid the download entirely:
 
 ```bash

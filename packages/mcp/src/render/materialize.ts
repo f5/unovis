@@ -3,7 +3,7 @@
  * Converts JSON accessor descriptors into real functions. Field access is by
  * property name only — user input is never evaluated as code.
  */
-import type { UnovisLib } from '../env/index.js'
+import type { UnovisLib } from '@unovis/ssr'
 import { isAccessorRef, SPEC_VERSION } from './spec.js'
 import { timeTickValuesFromData } from './time-ticks.js'
 import type { AccessorRef, ChartSpec, ComponentSpec } from './spec.js'

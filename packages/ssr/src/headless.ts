@@ -10,11 +10,11 @@
  * the shims are installed. Handing the already-initialised namespace to the
  * callback is what makes that safe.
  */
-import { getRenderEnv, defineElementSize } from '../env/index.js'
-import type { UnovisLib } from '../env/index.js'
+import { getRenderEnv, defineElementSize } from './env/index.js'
+import type { UnovisLib } from './env/index.js'
 import { Mutex } from './mutex.js'
-import { finalizeSvg, CHART_PADDING } from '../svg/postprocess.js'
-import type { SvgFrame } from '../svg/postprocess.js'
+import { finalizeSvg, CHART_PADDING } from './svg/postprocess.js'
+import type { SvgFrame } from './svg/postprocess.js'
 
 const RENDER_TIMEOUT_MS = 5000
 /** Async layouts (graph force/dagre/elk) may need dynamic imports + solver time */

@@ -50,7 +50,6 @@
   "files": [
     "dist",
     "docs",
-    "fonts",
     "README.md",
     "LICENSE"
   ],
@@ -59,8 +58,8 @@
     "build:widget": "node scripts/build-widget.mjs",
     "dev": "pnpm build && node dist/cli.js",
     "samples": "pnpm build && node scripts/render-samples.mjs",
-    "test": "pnpm build:widget && vitest run",
-    "test:watch": "pnpm build:widget && vitest",
+    "test": "pnpm --dir ../ssr build && pnpm build:widget && vitest run",
+    "test:watch": "pnpm --dir ../ssr build && pnpm build:widget && vitest",
     "lint": "eslint src test scripts --ext .ts",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md",
     "prepublishOnly": "pnpm build",
@@ -69,13 +68,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
-    "@napi-rs/canvas": "^0.1.65",
-    "@resvg/resvg-js": "^2.6.2",
+    "@unovis/ssr": "workspace:*",
     "@unovis/ts": "workspace:*",
-    "fflate": "^0.8.3",
-    "jsdom": "^26.1.0",
-    "svg-path-bounds": "^1.0.2",
-    "svg-path-properties": "^1.3.0",
     "zod": "^3.25.0"
   },
   "devDependencies": {
@@ -83,6 +77,7 @@
     "@types/node": "^20.17.0",
     "ajv": "^8.20.0",
     "esbuild": "^0.25.12",
+    "jsdom": "^26.1.0",
     "rimraf": "^3.0.2",
     "tsx": "^4.19.0",
     "typescript": "catalog:",

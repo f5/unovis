@@ -29,19 +29,21 @@ tool call ──► recipe ──► ChartSpec ──► materializer ──► 
 
 ## Layers
 
-| Directory | Responsibility |
+| Package / directory | Responsibility |
 |---|---|
-| `src/env/` | The headless browser: jsdom plus the shims Unovis needs |
-| `src/render/` | `headless.ts` (the SSR primitive), `materialize.ts` (spec → components), `renderer.ts` (spec → SVG), `rasterize.ts` (SVG → PNG) |
-| `src/svg/` | Turning a live SVG element into a standalone document |
+| **`@unovis/ssr`** `src/env/` | The headless browser: jsdom plus the shims Unovis needs |
+| **`@unovis/ssr`** `src/svg/` | Turning a live SVG element into a standalone document |
+| **`@unovis/ssr`** `src/headless.ts`, `src/rasterize.ts` | `renderToSvg` (the SSR primitive) and SVG → PNG |
+| `src/render/` | `materialize.ts` (spec → components), `renderer.ts` (spec → SVG via `renderToSvg`) |
 | `src/recipes/` | Tool inputs → `ChartSpec` (one file per chart type) |
 | `src/codegen/` | `ChartSpec` → framework source |
 | `src/widget/` + `src/html/` | The browser bundle and the documents that host it |
 | `src/tools/`, `src/server.ts`, `src/cli.ts` | The MCP surface |
 
-The dependency arrows only point one way: `env` and `svg` know nothing about
-specs, and `render` knows nothing about MCP. `renderToSvg` is deliberately the
-boundary a future `@unovis/ssr` package would follow.
+The dependency arrows only point one way: [`@unovis/ssr`](https://www.npmjs.com/package/@unovis/ssr)
+knows nothing about specs, and `render` knows nothing about MCP. `renderToSvg`
+is the package boundary: this server consumes it exactly the way any other
+SSR consumer would, and re-exports it unchanged.
 
 ## The environment shims
 
@@ -58,7 +60,7 @@ its environment at module load.
 | **No-op `ResizeObserver`** | Containers construct one on every render. |
 
 Fonts are provisioned once at startup: the pinned Inter release is downloaded
-(SHA-256 verified) into `~/.cache/unovis-mcp/fonts/` and registered with the
+(SHA-256 verified) into `~/.cache/unovis-ssr/fonts/` and registered with the
 canvas. Text then measures against the same font the output declares. Offline,
 it degrades to system fonts.
 
@@ -126,7 +128,8 @@ there:
   infinitely.
 - Root `index.js` / `maps.js` entries so `@unovis/ts` resolves in plain Node.
 
-The trend matters: as the core becomes SSR-friendlier, the shim layer shrinks.
+The trend matters: as the core becomes SSR-friendlier, `@unovis/ssr`'s shim
+layer shrinks.
 
 ## Testing strategy
 
@@ -161,7 +164,7 @@ request: build (`@unovis/ts` then this package), type-check, lint, the full test
 suite, and the sample gallery — which is uploaded as a build artifact so a
 reviewer can look at the charts instead of trusting a green check.
 
-Inter is cached at `~/.cache/unovis-mcp` (keyed on `src/env/fonts.ts`, which
+Inter is cached at `~/.cache/unovis-ssr` (keyed on `@unovis/ssr`'s `src/env/fonts.ts`, which
 holds the pinned version and checksum). That keeps the suite off the network and
 keeps text metrics — and therefore the SVG snapshots — reproducible between
 runs. If snapshots ever disagree between machines, the cause is font

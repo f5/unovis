@@ -8,7 +8,7 @@
  * resvg ignores the CSS `background-color` style on the root (it's not an
  * SVG rendering attribute), so the theme background is passed explicitly.
  */
-import { ensureFontsDir } from '../env/fonts.js'
+import { ensureFontsDir } from './env/fonts.js'
 
 export interface RasterizeOptions {
   /** CSS pixel width of the SVG (defaults to the width attribute) */
