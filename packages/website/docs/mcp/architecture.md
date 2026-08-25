@@ -104,11 +104,14 @@ exactly what the PNG rasterizer needs, so `png` reuses it unchanged.
 ## The browser widget
 
 The interactive outputs bundle the **same materializer** the headless renderer
-uses, so one code path turns a spec into a chart on both sides. esbuild keeps it
-at ~665kB by importing components individually — the package barrel statically
-pulls in Leaflet, MapLibre and Three — and by excluding elkjs, whose 1.4MB
-engine would dwarf everything else. A size budget in the build script fails the
-build if the barrel creeps back in.
+uses, so one code path turns a spec into a chart on both sides. esbuild keeps
+the bundle at ~670kB by importing components individually — the package barrel
+statically pulls in Leaflet, MapLibre and Three — and by excluding elkjs, whose
+1.4MB engine would dwarf everything else. A size budget in the build script
+fails the build if the barrel creeps back in. Documents don't carry those bytes
+raw: the bundle is inlined as a gzip+base64 payload with a ~5kB synchronous
+self-extracting bootstrap, so a chart file is ~290kB on disk while the spec and
+styles stay readable.
 
 Interactions are derived from the spec: per-chart-type tooltip templates, a
 crosshair for continuous XY charts, and the real HTML legend. Hosts that opt

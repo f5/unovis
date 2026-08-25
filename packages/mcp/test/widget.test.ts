@@ -120,6 +120,26 @@ describe('interactive widget bundle', () => {
     // The embedded JSON must not be able to close its own script element
     expect(html).not.toContain('</script>"')
   })
+
+  it('ships the widget compressed, with the spec still readable', () => {
+    const compressed = buildChartDocument(lineSpec, { duration: 0 })
+    const plain = buildChartDocument(lineSpec, { duration: 0, compress: false })
+
+    expect(compressed).toContain('id="uv-bundle-gz"')
+    // The spec stays plain text so committed artifacts diff meaningfully
+    expect(compressed).toContain('id="uv-spec"')
+    expect(compressed.length).toBeLessThan(plain.length / 2)
+
+    // The payload must never be able to terminate its host script element
+    const payload = compressed.match(/id="uv-bundle-gz">([^<]*)</)![1]
+    expect(payload).toMatch(/^[A-Za-z0-9+/=]+$/)
+  })
+
+  it('renders from a plain (uncompressed) document too', async () => {
+    const page = await loadPage(buildChartDocument(lineSpec, { duration: 0, compress: false }))
+    expect(page.errors).toEqual([])
+    expect(svgOf(page), 'plain document rendered').toBeTruthy()
+  })
 })
 
 describe('widget bundle artifact', () => {

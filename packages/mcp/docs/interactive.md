@@ -40,9 +40,11 @@ const html = buildChartDocument(spec, {
 })
 ```
 
-One file, nothing external: the widget bundle (~665kB), the spec, and the styles
-are all inlined. It opens offline, survives being emailed, and can be committed
-to a repo.
+One file, nothing external: the widget bundle, the spec, and the styles are
+all inlined (~290kB — the bundle ships as a gzip payload with a self-extracting
+bootstrap, while the spec stays readable so committed files diff meaningfully;
+`compress: false` opts out). It opens offline, survives being emailed, and can
+be committed to a repo.
 
 ## Inline in the conversation
 

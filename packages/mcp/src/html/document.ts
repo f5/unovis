@@ -9,26 +9,51 @@
  */
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import { gzipSync } from 'node:zlib'
 
 import type { ChartSpec } from '../render/spec.js'
 
-let cachedBundle: string | undefined
+const artifactCache = new Map<string, string>()
 
-/** The compiled widget bundle (built by scripts/build-widget.mjs) */
-export function widgetBundle (): string {
-  if (cachedBundle) return cachedBundle
-  // Resolve relative to this module so it works from dist/ and from src/
+/** A compiled widget artifact (built by scripts/build-widget.mjs), resolved
+ * relative to this module so it works from dist/ and from src/ */
+function widgetArtifact (name: string): string {
+  const cached = artifactCache.get(name)
+  if (cached) return cached
   const candidates = [
-    new URL('../widget/bundle.js', import.meta.url),
-    new URL('../../dist/widget/bundle.js', import.meta.url),
+    new URL(`../widget/${name}`, import.meta.url),
+    new URL(`../../dist/widget/${name}`, import.meta.url),
   ]
   for (const candidate of candidates) {
     try {
-      cachedBundle = readFileSync(fileURLToPath(candidate), 'utf8')
-      return cachedBundle
+      const content = readFileSync(fileURLToPath(candidate), 'utf8')
+      artifactCache.set(name, content)
+      return content
     } catch { /* try the next candidate */ }
   }
-  throw new Error('Widget bundle not found — run `pnpm build:widget`')
+  throw new Error(`Widget artifact ${name} not found — run \`pnpm build:widget\``)
+}
+
+/** The compiled widget bundle */
+export function widgetBundle (): string {
+  return widgetArtifact('bundle.js')
+}
+
+/** The widget, inlined. Compressed by default: a standalone file never gets
+ * transport compression, so the bundle ships as a gzip+base64 payload with a
+ * ~5kB synchronous bootstrap ahead of it (~3× smaller documents). The spec
+ * and styles stay plain text so committed artifacts remain readable and
+ * diffable. */
+function inlineWidget (compress: boolean): string {
+  if (!compress) return `<script>${widgetBundle()}</script>`
+  const key = 'bundle.js.gz64'
+  let payload = artifactCache.get(key)
+  if (!payload) {
+    payload = gzipSync(Buffer.from(widgetBundle()), { level: 9 }).toString('base64')
+    artifactCache.set(key, payload)
+  }
+  return `<script type="application/gzip" id="uv-bundle-gz">${payload}</script>
+<script>${widgetArtifact('unpack.js')}</script>`
 }
 
 /** `</script` inside embedded JSON would close the host script element */
@@ -62,6 +87,10 @@ export interface ChartDocumentOptions {
   /** Animation duration in ms. 0 renders immediately (deterministic tests,
    * and useful when the chart is screenshotted right after load) */
   duration?: number;
+  /** Inline the widget as a gzip+base64 payload with a self-extracting
+   * bootstrap (default true). Set false for a plain-text bundle — e.g. when
+   * a host page's CSP forbids injected script elements */
+  compress?: boolean;
 }
 
 /** A standalone page that renders `spec` on load */
@@ -79,7 +108,7 @@ export function buildChartDocument (spec: ChartSpec, options: ChartDocumentOptio
 <div id="uv-root"></div>
 <script type="application/json" id="uv-spec">${escapeForScript(JSON.stringify(spec))}</script>
 <script type="application/json" id="uv-options">${escapeForScript(JSON.stringify({ duration: options.duration ?? 400 }))}</script>
-<script>${widgetBundle()}</script>
+${inlineWidget(options.compress !== false)}
 </body>
 </html>
 `
@@ -88,7 +117,12 @@ export function buildChartDocument (spec: ChartSpec, options: ChartDocumentOptio
 /** A page that renders whatever spec it is sent over postMessage.
  * Protocol: iframe posts `unovis:ready`, host posts `unovis:render` with a
  * spec, iframe posts `unovis:size` after each render. */
-export function buildEmbedDocument (): string {
+export interface EmbedDocumentOptions {
+  /** See ChartDocumentOptions.compress (default true) */
+  compress?: boolean;
+}
+
+export function buildEmbedDocument (options: EmbedDocumentOptions = {}): string {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -101,7 +135,7 @@ export function buildEmbedDocument (): string {
 </head>
 <body>
 <div id="uv-embed-root"></div>
-<script>${widgetBundle()}</script>
+${inlineWidget(options.compress !== false)}
 <script>window.UnovisChart.startEmbed()</script>
 </body>
 </html>
