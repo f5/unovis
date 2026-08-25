@@ -64,7 +64,8 @@
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md",
     "prepublishOnly": "pnpm build",
     "docs:tools": "node scripts/generate-tool-docs.mjs",
-    "dev:tsx": "tsx src/cli.ts"
+    "dev:tsx": "tsx src/cli.ts",
+    "test:browser": "node scripts/browser-smoke.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
@@ -79,6 +80,7 @@
     "esbuild": "^0.25.12",
     "fflate": "^0.8.3",
     "jsdom": "^26.1.0",
+    "playwright": "^1.62.1",
     "rimraf": "^3.0.2",
     "tsx": "^4.19.0",
     "typescript": "catalog:",
