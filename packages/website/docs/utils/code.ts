@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { FrameworkTabProps } from '../components/framework-tabs'
+import { FrameworkTabProps } from '../doc-components/framework-tabs'
 import { ComponentInfo, PropInfo, parseComponent as parse, tab, t } from './parser'
 
 type CodeConfig = {
