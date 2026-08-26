@@ -33,6 +33,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "dev:csp": "UNOVIS_CSP=1 vite",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {

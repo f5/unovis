@@ -1,4 +1,6 @@
 import { defineConfig, transformWithEsbuild } from 'vite'
+import type { Plugin, ViteDevServer } from 'vite'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import { fileURLToPath } from 'node:url'
 import { resolve, dirname } from 'node:path'
 import { readFile } from 'node:fs/promises'
@@ -26,6 +28,115 @@ const isAngularFile = (id: string): boolean => {
 export default defineConfig({
   root: 'gallery-dev-server',
   plugins: [
+    // Opt-in Content-Security-Policy for verifying the @unovis/ts Emotion nonce
+    // fix end-to-end. Enable with `UNOVIS_CSP=1 pnpm dev:gallery`. Sets a real
+    // response header (browser-enforced, not just a meta tag) and injects a
+    // pre-bundle script that seeds `window.UNOVIS_NONCE` so Emotion's cache
+    // reads it before any `injectGlobal` runs.
+    ...(process.env.UNOVIS_CSP
+      ? [{
+        name: 'unovis-csp-nonce-test',
+        configureServer (server: ViteDevServer) {
+          const nonce = process.env.UNOVIS_CSP_NONCE || 'unovis-dev-nonce'
+          server.middlewares.use((_req: IncomingMessage, res: ServerResponse, next: (err?: unknown) => void) => {
+            res.setHeader(
+              'Content-Security-Policy',
+              [
+                "default-src 'self'",
+                // <script> blocks & module URLs — nonce-gated
+                `script-src-elem 'self' 'nonce-${nonce}'`,
+                // Inline event handlers (onclick="…") — always blocked
+                "script-src-attr 'none'",
+                // Vite dev needs eval; both -elem and -attr inherit from here
+                `script-src 'self' 'nonce-${nonce}' 'unsafe-eval'`,
+                // <style> blocks & external stylesheets — nonce-gated for
+                // inline, plus `https:` so 3rd-party CSS (Google Fonts,
+                // Bootstrap Icons CDN, etc.) still loads.
+                `style-src-elem 'self' 'nonce-${nonce}' https:`,
+                // Inline style="…" attributes — nonces don't cover these (CSP3
+                // limitation), and d3 / leaflet / Vite's error overlay all set
+                // them at runtime. Kept permissive; not what we're verifying.
+                "style-src-attr 'unsafe-inline'",
+                `style-src 'self' 'nonce-${nonce}'`,
+                "img-src 'self' data: blob:",
+                // Unovis loads Font Awesome from cdnjs for graph icons (see
+                // packages/ts/src/core/container/index.ts). Consumers who
+                // self-host fonts can tighten this to `'self' data:`.
+                "font-src 'self' data: https:",
+                "connect-src 'self' ws: wss: http: https:",
+                // ELK.js (elk-layered-graph example) spawns its layout engine
+                // in a Worker created from a `Blob` URL — falls back to
+                // script-src otherwise, which doesn't allow blob:.
+                "worker-src 'self' blob:",
+              ].join('; ')
+            )
+            next()
+          })
+        },
+        // Runs after other plugins (React Refresh preamble, Vite HMR client)
+        // so their injected inline <script>/<style> tags also receive the nonce.
+        transformIndexHtml: {
+          order: 'post' as const,
+          handler (html: string) {
+            const nonce = process.env.UNOVIS_CSP_NONCE || 'unovis-dev-nonce'
+            const addNonce = (tag: 'script' | 'style', input: string): string =>
+              input.replace(
+                new RegExp(`<${tag}(?![^>]*\\snonce=)([^>]*)>`, 'gi'),
+                `<${tag} nonce="${nonce}"$1>`
+              )
+            const withNonces = addNonce('style', addNonce('script', html))
+            // Runtime shim: stamp the nonce onto every <style>/<link> created
+            // via `document.createElement` AND onto any such node inserted via
+            // appendChild/insertBefore (covers Solid's cloneNode template
+            // pattern, Vite HMR CSS updates, Vue's `styleInject`, Angular's
+            // SharedStylesHost, etc.). A MutationObserver would fire too late
+            // — the CSP check runs synchronously during insertion.
+            const bootstrap = `
+              window.UNOVIS_NONCE = ${JSON.stringify(nonce)};
+              (function () {
+                var n = window.UNOVIS_NONCE;
+                if (!n) return;
+                function stamp (node) {
+                  if (!node) return;
+                  if (node.nodeType === 1) {
+                    var tag = node.tagName;
+                    if ((tag === 'STYLE' || tag === 'LINK') && !node.getAttribute('nonce')) {
+                      node.setAttribute('nonce', n);
+                    }
+                  }
+                  if (node.querySelectorAll) {
+                    var list = node.querySelectorAll('style, link');
+                    for (var i = 0; i < list.length; i++) {
+                      if (!list[i].getAttribute('nonce')) list[i].setAttribute('nonce', n);
+                    }
+                  }
+                }
+                var origCreate = document.createElement.bind(document);
+                document.createElement = function (tag, opts) {
+                  var el = origCreate(tag, opts);
+                  var t = String(tag).toLowerCase();
+                  if (t === 'style' || t === 'link') el.setAttribute('nonce', n);
+                  return el;
+                };
+                var origAppend = Node.prototype.appendChild;
+                Node.prototype.appendChild = function (child) { stamp(child); return origAppend.call(this, child); };
+                var origInsert = Node.prototype.insertBefore;
+                Node.prototype.insertBefore = function (child, ref) { stamp(child); return origInsert.call(this, child, ref); };
+              })();
+            `.replace(/\s+/g, ' ').trim()
+            return {
+              html: withNonces,
+              tags: [{
+                tag: 'script',
+                attrs: { nonce },
+                children: bootstrap,
+                injectTo: 'head-prepend' as const,
+              }],
+            }
+          },
+        },
+      } satisfies Plugin]
+      : []),
     // @unovis/ts has ONE `import leafletCSS from './leaflet.css'` (in
     // packages/ts/src/components/leaflet-map/style.ts) that expects the CSS as
     // a string default export — webpack provides this via css-loader; Vite no
