@@ -26,7 +26,9 @@ Create `packages/ts/src/components/<kebab-name>/` (kebab-case dir + files):
   and a `_render(customDuration?)` (or `render`) with clear **enter / update / exit** D3 selections.
 - **`style.ts`** — emotion `css` selectors + a `cssVarDefaults` map. CSS variables are named
   `--vis-<component>-<selector>-<property>`; every color var needs a `--vis-dark-...` counterpart.
-  Export `variables = getCssVarNames(cssVarDefaults)` and call `injectGlobalCssVariables(...)`.
+  Import `css` / `injectGlobal` from `@/styles/emotion` (not `@emotion/css` directly) so styles
+  respect the `globalThis.UNOVIS_NONCE` CSP nonce. Export `variables = getCssVarNames(cssVarDefaults)`
+  and call `injectGlobalCssVariables(...)`.
 - **`types.ts`** — component-specific types (optional).
 - **`modules/`** — extract long render logic into `call`-able helpers (optional).
 
