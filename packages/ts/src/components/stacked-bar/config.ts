@@ -4,12 +4,19 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
 import { Orientation } from '@/types/position'
+import { StyleDeclaration } from '@/types/style'
 
 export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Bar color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum>;
   /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   pattern?: GenericAccessor<FillPatternType, Datum>;
+  /** Per-bar inline styles accessor, called with the datum and its stack index. The returned
+   * object is applied as inline styles, with camelCase keys converted to kebab-case.
+   * Keys the component manages itself (`fill`, `opacity`, `cursor`, `mask`) take precedence over
+   * their defaults (e.g. the `color` accessor) and stay animated; all other keys are applied
+   * instantly. Keys no longer returned are cleaned up on the next render. Default: `undefined` */
+  barStyle?: GenericAccessor<StyleDeclaration, Datum>;
   /** The value each bar's stack starts from, instead of zero. Number or accessor function.
    * Useful for floating bars and waterfall charts, where every bar starts where the previous one ended.
    * Default: `undefined` */
@@ -42,6 +49,7 @@ export const StackedBarDefaultConfig: StackedBarConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
   color: undefined,
   pattern: undefined,
+  barStyle: undefined,
   baseline: undefined,
   barMaxWidth: undefined,
   barWidth: undefined,
