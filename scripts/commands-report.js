@@ -75,7 +75,7 @@ const ROOT_SKIP_STARTS = ['build'] // 'build' and 'build:*'
 
 // Workspace: publish & gallery variants are out. Long-running servers,
 // interactive / destructive tooling, and generator pass-throughs too.
-const WS_SKIP_CONTAINS = ['publish', 'gallery']
+const WS_SKIP_CONTAINS = ['publish', 'gallery', 'csp']
 const WS_SKIP_EXACT = new Set([
   'dev',
   'serve',
