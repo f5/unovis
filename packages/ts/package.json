@@ -66,6 +66,7 @@
   "dependencies": {
     "@emotion/css": "^11.7.1",
     "@juggle/resize-observer": "^3.3.1",
+    "csstype": "^3.2.3",
     "d3-array": "~3",
     "d3-shape": "~3",
     "d3-hierarchy": "~3",

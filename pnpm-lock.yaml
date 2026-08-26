@@ -695,6 +695,9 @@ importers:
       '@unovis/graphlibrary':
         specifier: 2.2.0-2
         version: 2.2.0-2
+      csstype:
+        specifier: ^3.2.3
+        version: 3.2.3
       d3:
         specifier: ^7.2.1
         version: 7.9.0
