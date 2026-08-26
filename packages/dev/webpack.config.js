@@ -73,7 +73,8 @@ module.exports = {
 
       // Unovis React
       '@unovis/react': path.resolve(__dirname, '../react/src/'),
-      'src/utils/react': path.resolve(__dirname, '../react/src/utils/react'),
+      // The react wrappers import their helpers as `src/utils/...` (tsconfig `baseUrl`)
+      'src/utils': path.resolve(__dirname, '../react/src/utils'),
 
       // Unovis Shared
       '@unovis/shared': path.resolve(__dirname, '../shared/'),
