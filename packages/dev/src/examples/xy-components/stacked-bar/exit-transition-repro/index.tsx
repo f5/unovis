@@ -22,7 +22,7 @@ const datasets: Rec[][] = [
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [index, setIndex] = useState(0)
   const [running, setRunning] = useState<number | false>(false)
-  const intervalRef = useRef<ReturnType<typeof setInterval>>()
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
   useEffect(() => {
     if (running) intervalRef.current = setInterval(() => setIndex(i => i + 1), running)
@@ -49,6 +49,9 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           y={[d => d.y, d => d.y1]}
           id={d => String(d.x)}
           dataStep={1}
+          barStyle={(d, i) => (i === 1 && d.y1 < 0
+            ? { strokeDasharray: '4 3', stroke: 'var(--vis-color1)', strokeWidth: 1, fillOpacity: 0.25 }
+            : undefined)}
           duration={props.duration ?? 1000}
         />
         <VisAxis type='x' duration={props.duration ?? 1000}/>
