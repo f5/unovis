@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-use-before-define
-import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
+import React, { ReactNode, useEffect, useMemo, useRef, useState, PropsWithChildren } from 'react'
 import { SingleContainer } from '@unovis/ts/containers/single-container'
 import { SingleContainerConfigInterface } from '@unovis/ts/containers/single-container/config'
 import { ComponentCore } from '@unovis/ts/core/component'
@@ -8,6 +8,7 @@ import { Annotations } from '@unovis/ts/components/annotations'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { VisContainerContext, VisContainerContextValue } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -25,6 +26,21 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
   const chartRef = useRef<SingleContainer<Data> | undefined>(undefined)
   const dataRef = useRef<Data | undefined>(undefined)
   const animationFrameRef = useRef<number | null>(null)
+  const renderRequestFrameRef = useRef<number | null>(null)
+
+  // Children ask for a re-render when their own config changes. We coalesce the requests into a single
+  // frame, and skip them when this container's props changed too, because the `updateContainer` call
+  // scheduled below renders on its own.
+  const containerContext = useMemo<VisContainerContextValue>(() => ({
+    requestRender: () => {
+      if (renderRequestFrameRef.current !== null) return
+      renderRequestFrameRef.current = requestAnimationFrame(() => {
+        renderRequestFrameRef.current = null
+        if (animationFrameRef.current !== null) return
+        chartRef.current?.render()
+      })
+    },
+  }), [])
 
   const getConfig = (): SingleContainerConfigInterface<Data> => ({
     ...props,
@@ -47,6 +63,10 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
         cancelAnimationFrame(animationFrameRef.current)
         animationFrameRef.current = null
         prevPropsRef.current = {}
+      }
+      if (renderRequestFrameRef.current !== null) {
+        cancelAnimationFrame(renderRequestFrameRef.current)
+        renderRequestFrameRef.current = null
       }
       c.destroy()
     }
@@ -73,6 +93,7 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
       prevPropsRef.current = props
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
       animationFrameRef.current = requestAnimationFrame(() => {
+        animationFrameRef.current = null
         chartRef.current?.updateContainer(getConfig())
       })
     }
@@ -80,7 +101,9 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
 
   return (
     <div ref={container} className={props.className} style={props.style}>
-      {props.children}
+      <VisContainerContext.Provider value={containerContext}>
+        {props.children}
+      </VisContainerContext.Provider>
     </div>
   )
 }

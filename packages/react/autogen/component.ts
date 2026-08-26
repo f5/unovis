@@ -20,12 +20,25 @@ export function getComponentCode (
     ? '{ ...props, renderIntoProvidedDomNode: true }'
     : 'props'
 
+  // Container-hosted components can't render themselves consistently — the container computes their
+  // size, margins, scales and shared domains — so a config change asks the container to re-render.
+  // Stand-alone components own their DOM node and render from `setConfig` themselves.
+  const containerRenderImport = isStandAlone
+    ? ''
+    : "\nimport { useContainerRenderOnUpdate } from 'src/utils/container'"
+  const containerRenderHook = isStandAlone
+    ? ''
+    : `
+  // Ask the container to re-render when this component's config changes (see \`useContainerRenderOnUpdate\`)
+  useContainerRenderOnUpdate()
+`
+
   return `// !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from 'src/utils/react'${containerRenderImport}
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -65,7 +78,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
     ${dataType ? 'if (props.data) component?.setData(props.data)' : ''}
     component?.setConfig(props)
   })
-
+${containerRenderHook}
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <${isStandAlone ? 'div className={props.className}' : `vis-${elementSuffix}`} ref={ref} />
 }
