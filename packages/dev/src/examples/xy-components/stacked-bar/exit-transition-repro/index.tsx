@@ -4,8 +4,8 @@ import { VisXYContainer, VisStackedBar, VisAxis } from '@unovis/react'
 
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
-export const title = 'Exit Transition Stress Test'
-export const subTitle = 'Rapid data updates'
+export const title = 'Enter & Exit Transitions'
+export const subTitle = 'Rapid data updates, negative stacks'
 
 type Rec = { x: number; y: number; y1: number }
 
@@ -15,6 +15,7 @@ const datasets: Rec[][] = [
   [1, 3, 5, 7].map(x => ({ x, y: 4, y1: x })),
   [4].map(x => ({ x, y: 8, y1: 1 })),
   [],
+  [1, 3, 4, 6].map(x => ({ x, y: 4 + x, y1: -3 - (x % 3) })),
   [1, 2, 6, 7].map(x => ({ x, y: 6, y1: 2 })),
 ]
 
@@ -47,6 +48,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           x={d => d.x}
           y={[d => d.y, d => d.y1]}
           id={d => String(d.x)}
+          dataStep={1}
           duration={props.duration ?? 1000}
         />
         <VisAxis type='x' duration={props.duration ?? 1000}/>
