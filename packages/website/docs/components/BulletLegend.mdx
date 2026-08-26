@@ -151,12 +151,12 @@ const items = labels.map(label => ({ name: label, inactive: true }))
 
 ### Pointer
 The `pointer` property in the `BulletLegendItemInterface` refers to the [cursor CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor).
-Note that there is no specified default value unless `onLegendItemCilck` property is provided, in which case the
+Note that there is no specified default value unless `onLegendItemClick` property is provided, in which case the
 cursor will be `pointer`.
 
 ## Orientation
 The `orientation` property can be set to `BulletLegendOrientation.Horizontal` (`'horizontal'`) or
-`BulletLegendOrientation.Horizontal` (`'vertical'`) to change the layout of the legend items.
+`BulletLegendOrientation.Vertical` (`'vertical'`) to change the layout of the legend items.
 Having a vertical legend is useful when you have a large number of items and the legend
 container is scrollable.
 
