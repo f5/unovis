@@ -1,0 +1,362 @@
+---
+description: Use Unovis under a strict Content-Security-Policy
+---
+
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+import CodeBlock from '@theme/CodeBlock'
+
+# Content Security Policy (CSP)
+
+_Unovis_ supports strict CSP setups that require a per-request `nonce` on every
+injected `<style>` and `<script>` element. Integration is opt-in and consists of
+one line — assigning `window.UNOVIS_NONCE` **before** the library is imported.
+Consumers who don't use CSP need to do nothing; the library remains fully
+backward-compatible.
+
+## Why a nonce?
+
+Every _Unovis_ component ships its styles via [Emotion](https://emotion.sh),
+which injects `<style>` elements into `document.head` at runtime. Under a
+strict `style-src` directive those tags are rejected unless they carry either
+`'unsafe-inline'` (defeats the point of CSP), a matching hash, or the request's
+nonce. _Unovis_ hands its Emotion cache the nonce you provide, so every one of
+its `<style>` tags satisfies `style-src 'self' 'nonce-<value>'`.
+
+## Quick start — set `UNOVIS_NONCE`
+
+Set `window.UNOVIS_NONCE` to the value your server issued for the current
+request, **before** any `@unovis/*` module is evaluated. The safest place is an
+inline `<script>` at the very top of `<head>` — same nonce as the CSP header:
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <script nonce="<SERVER_NONCE>">window.UNOVIS_NONCE = "<SERVER_NONCE>"</script>
+    <!-- your framework bundle imports @unovis/* below this line -->
+    <script nonce="<SERVER_NONCE>" type="module" src="/app.js"></script>
+  </head>
+  <body>...</body>
+</html>
+```
+
+That's it. Every `<style>` Emotion injects for _Unovis_ will now carry
+`nonce="<SERVER_NONCE>"` and be accepted by the browser.
+
+:::info Timing matters
+The nonce is captured once, when the `@unovis/ts` Emotion module first
+evaluates. Setting `window.UNOVIS_NONCE` **after** the library has loaded has no
+effect on the styles it has already injected.
+:::
+
+## Recommended CSP header
+
+A minimum-friction, nonce-based policy that works with every _Unovis_ chart
+looks like this:
+
+```
+Content-Security-Policy:
+  default-src 'self';
+  script-src-elem 'self' 'nonce-<SERVER_NONCE>';
+  script-src-attr 'none';
+  style-src-elem 'self' 'nonce-<SERVER_NONCE>';
+  style-src-attr 'unsafe-inline';
+  img-src 'self' data: blob:;
+  font-src 'self' data: https:;
+  connect-src 'self' https:;
+  worker-src 'self' blob:;
+```
+
+Notes on each directive:
+
+- **`script-src-elem 'nonce-…'`** — enforces the nonce on `<script>` blocks and
+  external `src` scripts.
+- **`script-src-attr 'none'`** — blocks inline event-handler attributes like
+  `onclick="…"`; _Unovis_ never emits any.
+- **`style-src-elem 'nonce-…'`** — enforces the nonce on `<style>` blocks and
+  `<link rel="stylesheet">` elements. This is the one that protects _Unovis_'s
+  Emotion output.
+- **`style-src-attr 'unsafe-inline'`** — **required**. Nonces cannot cover
+  inline `style="…"` attributes ([CSP3 limitation](https://www.w3.org/TR/CSP3/#directive-style-src-attr)),
+  and `d3-selection`, Leaflet, and other DOM libraries _Unovis_ depends on set
+  them on every update. There is no way around this short of a per-page hash
+  allowlist that changes with every data update.
+- **`img-src 'self' data: blob:`** — allows tile images, generated SVG
+  thumbnails, and inline data URIs.
+- **`font-src 'self' data: https:`** — only required if you use graph node
+  icons; _Unovis_ loads Font Awesome from `cdnjs.cloudflare.com` for the
+  built-in icon set. Self-host the font to tighten this to `'self' data:`.
+- **`worker-src 'self' blob:`** — only required if you render the
+  [ELK-layered graph](../components/Graph), which spawns a Web Worker
+  from a `Blob` URL.
+
+## Framework integration
+
+Below are copy-paste snippets for wiring the nonce into each supported
+framework. The pattern is always the same:
+
+1. Have your server emit a nonce per request and echo it into both the
+   `Content-Security-Policy` header and every `<script nonce>` / `<style nonce>`
+   tag it renders.
+2. Set `window.UNOVIS_NONCE` in an inline nonced `<script>` before your app
+   bundle loads.
+
+<Tabs groupId="framework">
+
+<TabItem value="react" label="React">
+
+**Vite / plain HTML entry** — edit `index.html`:
+
+```html
+<script nonce="<%= nonce %>">window.UNOVIS_NONCE = "<%= nonce %>"</script>
+<script nonce="<%= nonce %>" type="module" src="/src/main.tsx"></script>
+```
+
+**Next.js App Router** — set the nonce in `middleware.ts`, then read it in the
+root layout:
+
+```ts
+// middleware.ts
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export function middleware (req: NextRequest): NextResponse {
+  const nonce = crypto.randomUUID().replace(/-/g, '')
+  const csp = [
+    "default-src 'self'",
+    `script-src-elem 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    `style-src-elem 'self' 'nonce-${nonce}'`,
+    "style-src-attr 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "font-src 'self' data: https:",
+  ].join('; ')
+  const res = NextResponse.next({ request: { headers: new Headers({ ...req.headers, 'x-nonce': nonce }) } })
+  res.headers.set('content-security-policy', csp)
+  return res
+}
+```
+
+```tsx
+// app/layout.tsx
+import { headers } from 'next/headers'
+import Script from 'next/script'
+
+export default function RootLayout ({ children }: { children: React.ReactNode }) {
+  const nonce = headers().get('x-nonce') ?? ''
+  return (
+    <html>
+      <head>
+        <Script id="unovis-nonce" nonce={nonce} strategy="beforeInteractive">
+          {`window.UNOVIS_NONCE = ${JSON.stringify(nonce)}`}
+        </Script>
+      </head>
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+</TabItem>
+
+<TabItem value="angular" label="Angular">
+
+Angular has its own `SharedStylesHost` for component styles. Provide **both**
+Angular's built-in [`CSP_NONCE`](https://angular.dev/api/core/CSP_NONCE) token
+_and_ `window.UNOVIS_NONCE`:
+
+```ts
+// main.ts
+import { bootstrapApplication, CSP_NONCE } from '@angular/core'
+import { AppComponent } from './app/app.component'
+
+// The nonce is emitted by your server; e.g. read it from a <meta> tag or a
+// window-level variable set inline in index.html.
+const nonce = document.querySelector<HTMLMetaElement>('meta[name="csp-nonce"]')?.content ?? ''
+;(window as any).UNOVIS_NONCE = nonce
+
+bootstrapApplication(AppComponent, {
+  providers: [{ provide: CSP_NONCE, useValue: nonce }],
+})
+```
+
+```html
+<!-- index.html -->
+<meta name="csp-nonce" content="<%= nonce %>" />
+<script nonce="<%= nonce %>">window.UNOVIS_NONCE = document.querySelector('meta[name="csp-nonce"]').content</script>
+```
+
+</TabItem>
+
+<TabItem value="svelte" label="Svelte / SvelteKit">
+
+**SvelteKit** — set the CSP header and inject the seed via `handle` in
+`hooks.server.ts`:
+
+```ts
+// hooks.server.ts
+import type { Handle } from '@sveltejs/kit'
+import { randomBytes } from 'node:crypto'
+
+export const handle: Handle = async ({ event, resolve }) => {
+  const nonce = randomBytes(16).toString('base64url')
+
+  return resolve(event, {
+    transformPageChunk: ({ html }) =>
+      html
+        .replace('%unovis.nonce%', nonce)
+        .replace(
+          '<head>',
+          `<head><script nonce="${nonce}">window.UNOVIS_NONCE = ${JSON.stringify(nonce)}</script>`
+        ),
+  })
+}
+```
+
+```html
+<!-- src/app.html — SvelteKit inserts nonces on framework scripts via csp config -->
+<!doctype html>
+<html>
+  <head>
+    <meta name="csp-nonce" content="%unovis.nonce%" />
+    %sveltekit.head%
+  </head>
+  <body>
+    <div>%sveltekit.body%</div>
+  </body>
+</html>
+```
+
+Set the CSP directives via SvelteKit's [`csp` config](https://kit.svelte.dev/docs/configuration#csp)
+in `svelte.config.js`.
+
+</TabItem>
+
+<TabItem value="vue" label="Vue">
+
+**Vite + `vue-router`** — same pattern as React. Set `window.UNOVIS_NONCE` in
+`index.html`:
+
+```html
+<script nonce="<%= nonce %>">window.UNOVIS_NONCE = "<%= nonce %>"</script>
+<script nonce="<%= nonce %>" type="module" src="/src/main.ts"></script>
+```
+
+**Nuxt 3** — use a server middleware to set the header, then a plugin to seed:
+
+```ts
+// server/middleware/csp.ts
+export default defineEventHandler(event => {
+  const nonce = crypto.randomUUID().replace(/-/g, '')
+  event.context.nonce = nonce
+  setResponseHeader(event, 'Content-Security-Policy',
+    `default-src 'self'; script-src-elem 'self' 'nonce-${nonce}'; style-src-elem 'self' 'nonce-${nonce}'; style-src-attr 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data: https:`
+  )
+})
+```
+
+```ts
+// plugins/unovis-nonce.server.ts
+export default defineNuxtPlugin(nuxt => {
+  const nonce = useRequestEvent()?.context.nonce
+  useHead({
+    script: [{ innerHTML: `window.UNOVIS_NONCE = ${JSON.stringify(nonce)}`, tagPriority: 'critical', nonce }],
+  })
+})
+```
+
+</TabItem>
+
+<TabItem value="solid" label="Solid">
+
+**SolidStart** — set the CSP header via a request handler and seed the nonce
+in `entry-server.tsx`:
+
+```tsx
+// src/entry-server.tsx
+import { createHandler, StartServer } from '@solidjs/start/server'
+import { randomBytes } from 'node:crypto'
+
+export default createHandler(() => {
+  const nonce = randomBytes(16).toString('base64url')
+  return (
+    <StartServer
+      document={({ assets, children, scripts }) => (
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <script nonce={nonce}>{`window.UNOVIS_NONCE = ${JSON.stringify(nonce)}`}</script>
+            {assets}
+          </head>
+          <body>
+            <div id="app">{children}</div>
+            {scripts}
+          </body>
+        </html>
+      )}
+    />
+  )
+})
+```
+
+</TabItem>
+
+<TabItem value="ts" label="Vanilla TypeScript">
+
+Any static HTML page works — just make sure the seed script runs before the
+bundle that imports `@unovis/ts`:
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <script nonce="<%= nonce %>">window.UNOVIS_NONCE = "<%= nonce %>"</script>
+    <script nonce="<%= nonce %>" type="module" src="/app.js"></script>
+  </head>
+  <body><div id="chart"></div></body>
+</html>
+```
+
+```ts
+// app.ts
+import { Line, XYContainer } from '@unovis/ts'
+
+const container = new XYContainer(document.getElementById('chart')!, {
+  components: [new Line({ x: d => d.x, y: d => d.y })],
+  data: [/* … */],
+})
+```
+
+</TabItem>
+
+</Tabs>
+
+## Known limitations
+
+- **Inline `style="…"` attributes** — CSP3 nonces do not apply to element
+  `style` attributes. Because `d3-selection` sets them on every update
+  (`selection.style('fill', '#fff')`), a strict `style-src-attr` breaks every
+  chart. Use `style-src-attr 'unsafe-inline'` (or a per-page hash allowlist if
+  you must — impractical for data-driven charts).
+- **External stylesheets** — `<link rel="stylesheet">` from third-party origins
+  (e.g. Google Fonts, Bootstrap Icons CDN) cannot carry your server's nonce.
+  Either self-host, add the origin to `style-src-elem`, or allow `https:`.
+- **Web Workers from `Blob` URLs** — the ELK-layered graph uses one. Add
+  `worker-src 'self' blob:` if you render that component.
+- **Runtime style injection by other libraries** — the nonce is only applied to
+  _Unovis_'s own Emotion output. If you use Angular, MUI, Vuetify, Chakra, etc.
+  in the same app, follow each library's own nonce-integration guide.
+
+## Verifying locally
+
+The multi-framework gallery playground doubles as a CSP verification harness.
+From the repo root:
+
+```bash
+UNOVIS_CSP_NONCE=devnonce123 pnpm dev:gallery:csp
+```
+
+Then open [http://localhost:9600](http://localhost:9600) and inspect the
+_Network_ tab — the response `Content-Security-Policy` header will show the
+strict policy, and every example (React, Vue, Solid, Svelte, TypeScript,
+Angular) should render with an empty DevTools console.
