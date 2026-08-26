@@ -18,5 +18,6 @@ declare global {
       marginTop: number;
       marginBottom: number;
     }
+    var UNOVIS_NONCE: string | undefined
   }
 }
