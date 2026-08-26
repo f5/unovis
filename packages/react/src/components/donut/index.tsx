@@ -5,6 +5,7 @@ import { DonutConfigInterface } from '@unovis/ts/components/donut/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderOnUpdate } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -45,6 +46,9 @@ function VisDonutFC<Datum> (props: VisDonutProps<Datum>, fRef: ForwardedRef<VisD
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
+
+  // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)
+  useContainerRenderOnUpdate()
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-component ref={ref} />

@@ -5,6 +5,7 @@ import { AnnotationsConfigInterface } from '@unovis/ts/components/annotations/co
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderOnUpdate } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -44,6 +45,9 @@ function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnn
 
     component?.setConfig(props)
   })
+
+  // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)
+  useContainerRenderOnUpdate()
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-annotations ref={ref} />

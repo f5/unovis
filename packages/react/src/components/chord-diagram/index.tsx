@@ -6,6 +6,7 @@ import { ChordInputNode, ChordInputLink } from '@unovis/ts/components/chord-diag
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderOnUpdate } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -46,6 +47,9 @@ function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
+
+  // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)
+  useContainerRenderOnUpdate()
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-component ref={ref} />
