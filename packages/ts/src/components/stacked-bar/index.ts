@@ -185,15 +185,17 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     barsMerged.style('mask', d => getFillPatternValue(getPattern(d.datum, config.pattern, d.stackIndex)))
     smartTransition(barsMerged, duration)
       .attr('d', d => this._getBarPath(d))
+      // A re-entering bar can be mid exit fade; bring it back instead of leaving it semi-transparent
+      .style('opacity', 1)
       .style('fill', d => getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))
       .style('cursor', d => getString(d.datum, config.cursor, d.stackIndex))
 
+    // No `interrupt` removal here: an interrupted exit means the next data join has re-adopted the node
+    // (it keeps the `bar` class), so it either re-enters the update selection or exits and fades again.
+    // Removing it on `interrupt` would delete bars that legitimately re-entered on a rapid re-render.
     smartTransition(bars.exit(), duration)
       .style('opacity', 0)
       .remove()
-      // `transition.remove()` only fires on `end`; if the transition is interrupted by a re-render,
-      // the node would linger in the DOM with opacity < 1 and could be picked up by the next data join.
-      .on('interrupt', function () { this.remove() })
   }
 
   _getBarWidth (): number {
