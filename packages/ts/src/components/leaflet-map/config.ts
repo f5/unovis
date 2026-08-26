@@ -52,6 +52,10 @@ export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> exte
   attribution?: string[];
   /** Rendering mode for map's tile layer. For raster files, use `LeafletMapRenderer.Raster`. Default: `LeafletMapRenderer.MapLibre` */
   renderer?: LeafletMapRenderer | string;
+  /** Keep the MapLibre WebGL drawing buffer after each frame, so the map canvas can be read back
+   * with `toDataURL()` or `drawImage()`. Costs an extra buffer copy per rendered frame.
+   * Has no effect when renderer is `LeafletMapRenderer.Raster`. Default: `false` */
+  preserveDrawingBuffer?: boolean;
 
   // Map events
   /** Function to be called after the map's async initialization is done. Default: `undefined` */
@@ -188,6 +192,7 @@ export const LeafletMapDefaultConfig: LeafletMapConfigInterface<GenericDataRecor
   style: undefined,
   styleDarkTheme: undefined,
   renderer: LeafletMapRenderer.MapLibre,
+  preserveDrawingBuffer: false,
 
   // Map events
   onMapInitialized: undefined,

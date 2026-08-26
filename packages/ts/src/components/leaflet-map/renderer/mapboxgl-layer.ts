@@ -28,7 +28,7 @@ export function getMaplibreGLLayer<Datum extends GenericDataRecord> (
   leaflet: typeof L,
   maplibre: typeof Maplibre
 ): L.Layer & { getMaplibreMap(): Map } {
-  const { accessToken, style } = config
+  const { accessToken, style, preserveDrawingBuffer } = config
 
   if (isObject(style) && !(style as MapLibreStyleSpecs).glyphs) {
     console.warn('Unovis | Leaflet Map: Glyphs URL is required in order to show the map. Set `mapboxglGlyphs` URL in the style settings')
@@ -45,6 +45,7 @@ export function getMaplibreGLLayer<Datum extends GenericDataRecord> (
   const layer = MaplibreGLLayer(leaflet, maplibre, {
     style: style,
     accessToken: accessToken || 'not-needed',
+    preserveDrawingBuffer: preserveDrawingBuffer ?? false,
   })
 
   return layer
