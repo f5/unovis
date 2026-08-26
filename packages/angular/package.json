@@ -34,9 +34,9 @@
     "gallery": "node gallery",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
-  "main": "dist/lib/bundles/unovis-angular.umd.js",
-  "module": "dist/lib/fesm2015/unovis-angular.mjs",
-  "typings": "dist/lib/public-api.d.ts",
+  "main": "dist/lib/fesm2022/unovis-angular.mjs",
+  "module": "dist/lib/fesm2022/unovis-angular.mjs",
+  "typings": "dist/lib/index.d.ts",
   "type": "module",
   "sideEffects": false,
   "files": [
