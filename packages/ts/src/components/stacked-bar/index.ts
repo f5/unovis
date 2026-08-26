@@ -259,10 +259,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const value = getNumber(d.datum, yAccessors[d.stackIndex], d.index)
     const height = isEntering ? 0 : Math.abs(this.valueScale(d.stacked[0]) - this.valueScale(d.stacked[1]))
     const h = !isEntering && config.barMinHeight1Px && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
-    // Entering bars collapse onto the start of their own span, so they grow out of the place they
-    // belong to instead of flying in from the zero line
+    // Entering bars collapse onto the stack's origin (the baseline, zero by default), so the whole
+    // stack grows out of it instead of each segment growing from the start of its own span
     const y = isEntering
-      ? this.valueScale(d.stacked[0])
+      ? this.valueScale(config.baseline ? getNumber(d.datum, config.baseline, d.index) || 0 : 0)
       : this.valueScale(isNegative ? d.stacked[0] : d.stacked[1]) - (height < 1 && config.barMinHeight1Px ? 1 : 0)
 
     const x = -barWidth / 2
