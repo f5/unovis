@@ -5,6 +5,40 @@ const lightCodeTheme = require('prism-react-renderer/themes/github')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
+// Legacy Component Reference sub-category per doc page, before they were merged into a single
+// `components` directory. Used to generate redirects for bookmarked/indexed URLs.
+const legacyComponentCategoryByDocId = {
+  Area: 'xy-charts',
+  Boxplot: 'xy-charts',
+  GroupedBar: 'xy-charts',
+  Line: 'xy-charts',
+  Scatter: 'xy-charts',
+  StackedBar: 'xy-charts',
+  Timeline: 'xy-charts',
+  ChordDiagram: 'networks-and-flows',
+  Graph: 'networks-and-flows',
+  Sankey: 'networks-and-flows',
+  LeafletFlowMap: 'maps',
+  LeafletMap: 'maps',
+  TopoJSONMap: 'maps',
+  Donut: 'misc',
+  Heatmap: 'misc',
+  NestedDonut: 'misc',
+  RadialBar: 'misc',
+  Treemap: 'misc',
+  Annotations: 'auxiliary',
+  Axis: 'auxiliary',
+  Brush: 'auxiliary',
+  BulletLegend: 'auxiliary',
+  Crosshair: 'auxiliary',
+  FreeBrush: 'auxiliary',
+  Plotband: 'auxiliary',
+  Plotline: 'auxiliary',
+  RollingPinLegend: 'auxiliary',
+  Tooltip: 'auxiliary',
+  XYLabels: 'auxiliary',
+}
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Unovis',
@@ -169,6 +203,16 @@ const config = {
 
   plugins: [
     '@docusaurus/theme-mermaid',
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        createRedirects (existingPath) {
+          const match = existingPath.match(/^\/docs\/components\/(.+)$/)
+          const legacyCategory = match && legacyComponentCategoryByDocId[match[1]]
+          return legacyCategory ? [`/docs/${legacyCategory}/${match[1]}`] : undefined
+        },
+      },
+    ],
     [
       '@docusaurus/plugin-content-docs',
       {
