@@ -23,6 +23,10 @@ export const isEmpty = <T>(obj: T): boolean => {
 }
 
 // Based on https://github.com/maplibre/maplibre-gl-js/blob/e78ad7944ef768e67416daa4af86b0464bd0f617/src/style-spec/util/deep_equal.ts, 3-Clause BSD license
+// `visited` holds the `a`-side references that are currently *on the recursion stack*, so that
+// `visited.has(a)` means "we've re-entered a cycle" and nothing else. Entries are removed on the
+// way out: a reference that merely appears twice in `a` (a repeated sibling, not a cycle) has to be
+// compared against its own counterpart in `b` both times.
 export const isEqual = (
   a: unknown | null | undefined,
   b: unknown | null | undefined,
@@ -41,6 +45,7 @@ export const isEqual = (
       if (!isEqual(a[i], b[i], skipKeys, visited)) return false
     }
 
+    visited.delete(a)
     return true
   }
 
@@ -50,7 +55,6 @@ export const isEqual = (
 
   if (typeof a === 'object' && a !== null && b !== null) {
     if (!(typeof b === 'object')) return false
-    if (a === b) return true
 
     const keysA = Object.keys(a).filter(key => !skipKeys.includes(key))
     const keysB = Object.keys(b).filter(key => !skipKeys.includes(key))
@@ -64,6 +68,7 @@ export const isEqual = (
       if (!isEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key], skipKeys, visited)) return false
     }
 
+    visited.delete(a)
     return true
   }
 
