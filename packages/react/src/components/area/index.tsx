@@ -5,6 +5,7 @@ import { AreaConfigInterface } from '@unovis/ts/components/area/config'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
+import { useContainerRenderOnUpdate } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
@@ -45,6 +46,9 @@ function VisAreaFC<Datum> (props: VisAreaProps<Datum>, fRef: ForwardedRef<VisAre
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
+
+  // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)
+  useContainerRenderOnUpdate()
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-component ref={ref} />
