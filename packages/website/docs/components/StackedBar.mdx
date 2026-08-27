@@ -150,6 +150,29 @@ const color = (d: DataRecord) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}
 <XYWrapper excludeTabs {...stackedBarProps()} showContext="minimal" showAxes={true} color={(d,i) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}/>
 
 
+## Custom Bar Styles
+When color alone isn't enough, the `barStyle` accessor lets you style individual bars. It's called for
+every bar with the datum and its stack index, and the returned object is applied to the bar as inline
+styles. Property names can be camelCase or kebab-case, and CSS custom properties (`--*`) are supported.
+A common use case is rendering projected or estimated values differently from actuals:
+
+```ts
+const barStyle = (d: DataRecord, i: number) => d.x > 5
+  ? { strokeDasharray: '4 3', strokeWidth: 1, fillOpacity: 0.2 }
+  : undefined
+```
+
+<XYWrapper excludeTabs {...stackedBarProps()} showContext="minimal" showAxes y={[d => d.y, d => d.y1]} barStyle={(d, i) => d.x > 5 ? ({ strokeDasharray: '4 3', strokeWidth: 1, stroke: `var(--vis-color${i})`, fillOpacity: 0.2 }) : undefined}/>
+
+A few things to keep in mind:
+- The properties the component manages itself — `fill`, `opacity`, `cursor` and `mask` — take precedence
+over their regular sources (like the `color` accessor) and stay animated; all other properties are applied
+instantly.
+- Properties that are no longer returned for a bar are removed on the next render, so conditional styles
+clean up after themselves.
+- Since inline styles bypass the CSS cascade, use CSS variable references (e.g. `stroke: 'var(--my-color)'`)
+for values that should respond to theming.
+
 ## Bar Sizing
 ### Bar Width
 By default, the width of the bars is calculated automatically based on their count. But you can also strictly set the bar's width in pixels using the barWidth property:
