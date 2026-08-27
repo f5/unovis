@@ -11,6 +11,7 @@ import {
   ContinuousScale,
   GenericAccessor,
   FillPatternType,
+  StyleDeclaration,
   StringAccessor,
   Orientation,
 } from '@unovis/ts'
@@ -110,6 +111,13 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   @Input() pattern?: GenericAccessor<FillPatternType, Datum>
 
+  /** Per-bar inline styles accessor, called with the datum and its stack index. The returned
+   * object is applied as inline styles, with camelCase keys converted to kebab-case.
+   * Keys the component manages itself (`fill`, `opacity`, `cursor`, `mask`) take precedence over
+   * their defaults (e.g. the `color` accessor) and stay animated; all other keys are applied
+   * instantly. Keys no longer returned are cleaned up on the next render. Default: `undefined` */
+  @Input() barStyle?: GenericAccessor<StyleDeclaration, Datum>
+
   /** The value each bar's stack starts from, instead of zero. Number or accessor function.
    * Useful for floating bars and waterfall charts, where every bar starts where the previous one ended.
    * Default: `undefined` */
@@ -166,8 +174,8 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   }
 
   private getConfig (): StackedBarConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, baseline, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight1Px, barMinHeightZeroValue, orientation } = this
-    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, baseline, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight1Px, barMinHeightZeroValue, orientation }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, barStyle, baseline, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight1Px, barMinHeightZeroValue, orientation } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, barStyle, baseline, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight1Px, barMinHeightZeroValue, orientation }
     const keys = Object.keys(config) as (keyof StackedBarConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
