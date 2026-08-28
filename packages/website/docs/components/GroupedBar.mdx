@@ -29,6 +29,29 @@ In this example, each bar's color is assigned based on its index:
 <XYWrapper {...groupedBarProps()} showContext="minimal" showAxes color={(d,i) => ['#04c0c7', '#5144d3', '#da348f'][i]}/>
 
 
+## Custom Bar Styles
+When color alone isn't enough, the `barStyle` accessor lets you style individual bars. It's called for
+every bar with the datum and the bar's index within the group, and the returned object is applied to the
+bar as inline styles. Property names can be camelCase or kebab-case, and CSS custom properties (`--*`)
+are supported. A common use case is rendering projected or estimated values differently from actuals:
+
+```ts
+const barStyle = (d: DataRecord, i: number) => d.x > 5
+  ? { strokeDasharray: '4 3', strokeWidth: 1, fillOpacity: 0.2 }
+  : undefined
+```
+
+<XYWrapper excludeTabs {...groupedBarProps()} showContext="minimal" showAxes y={[d => d.y, d => d.y1]} barStyle={(d, i) => d.x > 5 ? ({ strokeDasharray: '4 3', strokeWidth: 1, stroke: `var(--vis-color${i})`, fillOpacity: 0.2 }) : undefined}/>
+
+A few things to keep in mind:
+- The properties the component manages itself — `fill`, `cursor` and `mask` — take precedence
+over their regular sources (like the `color` accessor) and stay animated; all other properties are applied
+instantly.
+- Properties that are no longer returned for a bar are removed on the next render, so conditional styles
+clean up after themselves.
+- Since inline styles bypass the CSS cascade, use CSS variable references (e.g. `stroke: 'var(--my-color)'`)
+for values that should respond to theming.
+
 ## Rounded Corners
 You can apply rounded corners to the top bar in your _Grouped Bar_ component using the `roundedCorners` property, which accepts
 either a `number` (in pixels) or `boolean` argument.
