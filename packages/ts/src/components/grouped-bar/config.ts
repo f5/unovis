@@ -4,12 +4,19 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-
 import { ColorAccessor, GenericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
 import { Orientation } from '@/types/position'
+import { StyleDeclaration } from '@/types/style'
 
 export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Bar color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum>;
   /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   pattern?: GenericAccessor<FillPatternType, Datum>;
+  /** Per-bar inline styles accessor, called with the datum and the bar's index within the group.
+   * The returned object is applied as inline styles, with camelCase keys converted to kebab-case.
+   * Keys the component manages itself (`fill`, `cursor`, `mask`) take precedence over their
+   * defaults (e.g. the `color` accessor) and stay animated; all other keys are applied
+   * instantly. Keys no longer returned are cleaned up on the next render. Default: `undefined` */
+  barStyle?: GenericAccessor<StyleDeclaration, Datum>;
   /** Force set the group width in pixels. Default: `undefined` */
   groupWidth?: number;
   /** Maximum group width for dynamic sizing. Limits the groupWidth property from the top. Default: `undefined` */
@@ -36,6 +43,7 @@ export const GroupedBarDefaultConfig: GroupedBarConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
   color: undefined,
   pattern: undefined,
+  barStyle: undefined,
   groupMaxWidth: undefined,
   groupWidth: undefined,
   dataStep: undefined,
