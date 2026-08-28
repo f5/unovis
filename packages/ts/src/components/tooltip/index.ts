@@ -26,6 +26,10 @@ export class Tooltip {
   private _setUpEventsThrottled = throttle(this._setUpEvents, 500)
   private _setContainerPositionThrottled = throttle(this._setContainerPosition, 500)
   private _isShown = false
+  // Set when the tooltip is shown imperatively via `show()` (e.g. by Crosshair). While set, the component
+  // that called `show()` owns the tooltip's visibility and position, so the delegated mousemove / mouseleave
+  // handlers below must not hide or re-place it. Released by `hide()`.
+  private _isControlledExternally = false
   private _container: HTMLElement
   private _mutationObserver: MutationObserver
   private _hoveredElement: HTMLElement | SVGElement
@@ -106,6 +110,7 @@ export class Tooltip {
 
   /** Show the tooltip immediately by providing content and position */
   public show (html: string | HTMLElement | null | void, pos: { x: number; y: number }): void {
+    this._isControlledExternally = true
     this.render(html)
     this.place(pos)
   }
@@ -124,6 +129,7 @@ export class Tooltip {
 
   /** Hides the tooltip after `hideDelay` */
   public hide (): void {
+    this._isControlledExternally = false
     window.clearTimeout(this._showDelayTimeoutId)
     if (this.config.hideDelay) {
       window.clearTimeout(this._hideDelayTimeoutId)
@@ -397,6 +403,10 @@ export class Tooltip {
             }
           }
 
+          // No triggers matched. If the tooltip is controlled externally (e.g. by Crosshair via `show()`,
+          // possibly pinned with `forceShowAt`), its owner decides when to move or hide it — not us
+          if (this._isControlledExternally) return
+
           // No match: keep following the cursor so the tooltip doesn't freeze while it fades out
           // `_isShown` flips false as soon as `_hide` starts the fade, so check `hidden` instead
           if (currentConfig.followCursor && !this.div.classed(s.hidden)) {
@@ -411,6 +421,7 @@ export class Tooltip {
         })
         .on('mouseleave.tooltip', (e: MouseEvent) => {
           e.stopPropagation() // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
+          if (this._isControlledExternally) return
           this.hide()
         })
     })
