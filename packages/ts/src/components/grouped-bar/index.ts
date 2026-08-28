@@ -125,7 +125,12 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
       .style('opacity', 1)
 
     const barGroupExit = barGroups.exit().attr('class', s.barGroupExit)
-    smartTransition(barGroupExit, duration).style('opacity', 0).remove()
+    smartTransition(barGroupExit, duration)
+      .style('opacity', 0)
+      .remove()
+      // `transition.remove()` only fires on `end`; if the exit is interrupted by a re-render, the group
+      // would linger in the DOM forever — its class was swapped, so no data join can re-adopt or remove it
+      .on('interrupt', function () { this.remove() })
 
     // Animate exiting bars going down
     smartTransition(barGroupExit.selectAll<SVGPathElement, Datum>(`.${s.bar}`), duration)
