@@ -23,6 +23,19 @@ strict `style-src` directive those tags are rejected unless they carry either
 nonce. _Unovis_ hands its Emotion cache the nonce you provide, so every one of
 its `<style>` tags satisfies `style-src 'self' 'nonce-<value>'`.
 
+Passing a `nonce` requires _Unovis_ to create its own Emotion cache instance
+rather than relying on the default `@emotion/css` singleton, and Emotion
+requires every cache sharing a page to use a distinct
+[`key`](https://emotion.sh/docs/@emotion/cache#key) — reusing the default
+`css` key risks two caches "fighting" over the same style elements. Because of
+this, when `UNOVIS_NONCE` is set, _Unovis_'s generated class names carry a
+`unovis-` prefix (e.g. `unovis-1a2b3c`) instead of the usual `css-` prefix.
+Consumers who don't set `UNOVIS_NONCE` are unaffected — _Unovis_ keeps using
+the default `@emotion/css` singleton and its `css-` prefix. Either way, this
+only affects the auto-generated, content-hashed class names Emotion assigns
+internally — the supported styling API (the `--vis-*` CSS custom properties
+documented in [Theming](./theming.mdx)) is unaffected.
+
 ## Quick start — set `UNOVIS_NONCE`
 
 Set `window.UNOVIS_NONCE` to the value your server issued for the current

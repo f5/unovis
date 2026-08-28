@@ -12,7 +12,7 @@ describe('emotion nonce (jsdom)', () => {
 
   afterEach(() => {
     globals.UNOVIS_NONCE = undefined
-    document.head.querySelectorAll('style[data-emotion^="unovis"]').forEach(n => n.remove())
+    document.head.querySelectorAll('style[data-emotion]').forEach(n => n.remove())
   })
 
   it('applies globalThis.UNOVIS_NONCE to injected style tags', async () => {
@@ -27,7 +27,7 @@ describe('emotion nonce (jsdom)', () => {
     }
   })
 
-  it('omits the nonce attribute when UNOVIS_NONCE is unset', async () => {
+  it('falls back to the default css- prefix and omits the nonce attribute when UNOVIS_NONCE is unset', async () => {
     globals.UNOVIS_NONCE = undefined
     vi.resetModules()
 
@@ -35,7 +35,7 @@ describe('emotion nonce (jsdom)', () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     injectGlobal`.__unovis_nonce_absent__ { color: blue; }`
 
-    const tags = document.head.querySelectorAll<HTMLStyleElement>('style[data-emotion^="unovis"]')
+    const tags = document.head.querySelectorAll<HTMLStyleElement>('style[data-emotion^="css"]')
     expect(tags.length).toBeGreaterThan(0)
     for (const tag of tags) {
       expect(tag.hasAttribute('nonce')).toBe(false)
