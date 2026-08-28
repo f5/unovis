@@ -5,9 +5,9 @@ import { min, max, range } from 'd3-array'
 import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber } from '@/utils/data'
+import { clamp, getExtent, getMax, getMin, getNumber, getString, getValue, isArray, isEmpty, isNumber } from '@/utils/data'
 import { roundedRectPath } from '@/utils/path'
-import { smartTransition } from '@/utils/d3'
+import { smartTransition, applyInlineStyles } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 
@@ -17,9 +17,13 @@ import { Spacing } from '@/types/spacing'
 import { Direction } from '@/types/direction'
 import { Orientation } from '@/types/position'
 import { ContinuousScale } from '@/types/scale'
+import { StyleDeclaration } from '@/types/style'
 
 // Config
 import { GroupedBarDefaultConfig, GroupedBarConfigInterface } from './config'
+
+// Constants
+import { MANAGED_BAR_STYLES } from './constants'
 
 // Styles
 import * as s from './style'
@@ -158,11 +162,16 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         return this._getBarPath(x, y, width, height, false, valueAxisDirection)
       })
       .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => i)
-      .style('fill', (d, i) => getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
-      .style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, i)))
+      .style('fill', (d, i) => this._getBarStyle(d, i)?.fill ?? getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
+      .style('mask', (d, i) => this._getBarStyle(d, i)?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)))
 
     const barsMerged = barsEnter.merge(bars)
-    barsMerged.style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, i)))
+    barsMerged.style('mask', (d, i) => this._getBarStyle(d, i)?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)))
+
+    // Custom per-bar styles; the managed keys are merged into the transition below instead,
+    // so they keep animating and don't get stomped by the next render
+    applyInlineStyles(barsMerged, (d, i) => this._getBarStyle(d, i), MANAGED_BAR_STYLES)
+
     smartTransition(barsMerged, duration)
       .attr('d', (d, j) => {
         const x = innerBandScale(j)
@@ -182,10 +191,14 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         }
         return this._getBarPath(x, y, width, height, isNegative, valueAxisDirection)
       })
-      .style('fill', (d, i) => getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
-      .style('cursor', (d, i) => getString(d, config.cursor, i))
+      .style('fill', (d, i) => this._getBarStyle(d, i)?.fill ?? getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
+      .style('cursor', (d, i) => this._getBarStyle(d, i)?.cursor ?? getString(d, config.cursor, i))
 
     smartTransition(bars.exit(), duration).remove()
+  }
+
+  private _getBarStyle (d: Datum, index: number): StyleDeclaration | null | undefined {
+    return getValue<Datum, StyleDeclaration>(d, this.config.barStyle, index)
   }
 
   _getValueAxisDirection (): Direction.North | Direction.South {
