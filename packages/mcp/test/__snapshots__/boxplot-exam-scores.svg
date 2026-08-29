@@ -1,1 +1,126 @@
-<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="400" width="800" viewBox="0 0 800 400" role="img"><g transform="translate(16,12)"><g axis-type="x" transform="translate(53.000000190734866,344.8)"><g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="user-select: none;"><path stroke="currentColor" d="M0.5, 0 V0.5 H715.4999998092651 V0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/><g opacity="1" transform="translate(47.50000000000001,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Class A</tspan></tspan></text></g><g opacity="1" transform="translate(357.99999990463255,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Class B</tspan></tspan></text></g><g opacity="1" transform="translate(668.4999998092651,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Class C</tspan></tspan></text></g></g><g style="opacity: 0;"/></g><g axis-type="y" transform="translate(53.000000190734866,0)"><g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="user-select: none;"><path stroke="currentColor" d="M0, 345.3 H0.5 V0.5 H0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/><g opacity="1" transform="translate(0,330.93333333333334)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">50</tspan></tspan></text></g><g opacity="1" transform="translate(0,259.1)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">60</tspan></tspan></text></g><g opacity="1" transform="translate(0,187.2666666666667)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">70</tspan></tspan></text></g><g opacity="1" transform="translate(0,115.43333333333335)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">80</tspan></tspan></text></g><g opacity="1" transform="translate(0,43.6)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">90</tspan></tspan></text></g><text dy="-0.25em" transform="translate(-37.80000019073486,172.4) rotate(-90)" style="fill: #6c778c; font-size: 14px; font-weight: 500; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-anchor: middle;">Score</text></g><g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="opacity: 1;"><path stroke="currentColor" d="M0.5,345.3V0.5" style="opacity: 0;"/><g opacity="1" transform="translate(0,330.93333333333334)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,295.01666666666665)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,259.1)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,223.1833333333333)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,187.2666666666667)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,151.35)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,115.43333333333335)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,79.51666666666665)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,43.6)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,7.683333333333346)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g></g></g><g transform="translate(53.000000190734866,0)" style="clip-path: url(#snap-0);"><g transform="translate(47.00000000000001,0)" style="opacity: 1;"><path style="opacity: 1; fill: #6859BE; fill-opacity: 0.2; stroke: #6859BE; stroke-width: 1.5px; cursor: default;" d="M-41,71.83333333333334h82a4,4 0 0 1 4,4h0v0v78.20000000000002a4,4 0 0 1 -4,4v0h0h-82a4,4 0 0 1 -4,-4h0v0v-78.20000000000002a4,4 0 0 1 4,-4v0h0z"/><line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="158.03333333333336" y2="244.23333333333332"/><line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="71.83333333333334" y2="14.366666666666655"/><line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="244.23333333333332" y2="244.23333333333332"/><line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="14.366666666666655" y2="14.366666666666655"/><line style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-45" x2="45" y1="107.75" y2="107.75"/></g><g transform="translate(357.49999990463255,0)" style="opacity: 1;"><path style="opacity: 1; fill: #6859BE; fill-opacity: 0.2; stroke: #6859BE; stroke-width: 1.5px; cursor: default;" d="M-41,150.85h82a4,4 0 0 1 4,4h0v0v92.56666666666672a4,4 0 0 1 -4,4v0h0h-82a4,4 0 0 1 -4,-4h0v0v-92.56666666666672a4,4 0 0 1 4,-4v0h0z"/><line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="251.4166666666667" y2="344.8"/><line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="150.85" y2="0"/><line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="344.8" y2="344.8"/><line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="0" y2="0"/><line style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-45" x2="45" y1="201.13333333333333" y2="201.13333333333333"/></g><g transform="translate(667.9999998092651,0)" style="opacity: 1;"><path style="opacity: 1; fill: #6859BE; fill-opacity: 0.2; stroke: #6859BE; stroke-width: 1.5px; cursor: default;" d="M-41,64.65h82a4,4 0 0 1 4,4h0v0v49.466666666666654a4,4 0 0 1 -4,4v0h0h-82a4,4 0 0 1 -4,-4h0v0v-49.466666666666654a4,4 0 0 1 4,-4v0h0z"/><line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="122.11666666666666" y2="186.7666666666667"/><line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="64.65" y2="28.73333333333335"/><line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="186.7666666666667" y2="186.7666666666667"/><line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="28.73333333333335" y2="28.73333333333335"/><line style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-45" x2="45" y1="86.2" y2="86.2"/></g></g><clipPath id="snap-0"><rect x="-2" y="-2" width="718.9999998092651" height="348.8"/></clipPath><defs><filter id="snap-1" filterUnits="objectBoundingBox"><feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/></filter></defs><defs/></g></svg>
+<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="400" width="800" viewBox="0 0 800 400" role="img">
+<g transform="translate(16,12)">
+<g axis-type="x" transform="translate(53.000000190734866,344.8)">
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="user-select: none;">
+<path stroke="currentColor" d="M0.5, 0 V0.5 H715.4999998092651 V0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/>
+<g opacity="1" transform="translate(47.50000000000001,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Class A</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(357.99999990463255,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Class B</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(668.4999998092651,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Class C</tspan></tspan></text>
+</g>
+</g>
+<g style="opacity: 0;"/>
+</g>
+<g axis-type="y" transform="translate(53.000000190734866,0)">
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="user-select: none;">
+<path stroke="currentColor" d="M0, 345.3 H0.5 V0.5 H0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/>
+<g opacity="1" transform="translate(0,330.93333333333334)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">50</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,259.1)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">60</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,187.2666666666667)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">70</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,115.43333333333335)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">80</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,43.6)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">90</tspan></tspan></text>
+</g>
+<text dy="-0.25em" transform="translate(-37.80000019073486,172.4) rotate(-90)" style="fill: #6c778c; font-size: 14px; font-weight: 500; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-anchor: middle;">Score</text>
+</g>
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="opacity: 1;">
+<path stroke="currentColor" d="M0.5,345.3V0.5" style="opacity: 0;"/>
+<g opacity="1" transform="translate(0,330.93333333333334)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,295.01666666666665)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,259.1)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,223.1833333333333)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,187.2666666666667)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,151.35)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,115.43333333333335)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,79.51666666666665)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,43.6)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,7.683333333333346)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+</g>
+</g>
+<g transform="translate(53.000000190734866,0)" style="clip-path: url(#snap-0);">
+<g transform="translate(47.00000000000001,0)" style="opacity: 1;">
+<path style="opacity: 1; fill: #6859BE; fill-opacity: 0.2; stroke: #6859BE; stroke-width: 1.5px; cursor: default;" d="M-41,71.83333333333334h82a4,4 0 0 1 4,4h0v0v78.20000000000002a4,4 0 0 1 -4,4v0h0h-82a4,4 0 0 1 -4,-4h0v0v-78.20000000000002a4,4 0 0 1 4,-4v0h0z"/>
+<line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="158.03333333333336" y2="244.23333333333332"/>
+<line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="71.83333333333334" y2="14.366666666666655"/>
+<line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="244.23333333333332" y2="244.23333333333332"/>
+<line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="14.366666666666655" y2="14.366666666666655"/>
+<line style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-45" x2="45" y1="107.75" y2="107.75"/>
+</g>
+<g transform="translate(357.49999990463255,0)" style="opacity: 1;">
+<path style="opacity: 1; fill: #6859BE; fill-opacity: 0.2; stroke: #6859BE; stroke-width: 1.5px; cursor: default;" d="M-41,150.85h82a4,4 0 0 1 4,4h0v0v92.56666666666672a4,4 0 0 1 -4,4v0h0h-82a4,4 0 0 1 -4,-4h0v0v-92.56666666666672a4,4 0 0 1 4,-4v0h0z"/>
+<line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="251.4166666666667" y2="344.8"/>
+<line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="150.85" y2="0"/>
+<line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="344.8" y2="344.8"/>
+<line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="0" y2="0"/>
+<line style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-45" x2="45" y1="201.13333333333333" y2="201.13333333333333"/>
+</g>
+<g transform="translate(667.9999998092651,0)" style="opacity: 1;">
+<path style="opacity: 1; fill: #6859BE; fill-opacity: 0.2; stroke: #6859BE; stroke-width: 1.5px; cursor: default;" d="M-41,64.65h82a4,4 0 0 1 4,4h0v0v49.466666666666654a4,4 0 0 1 -4,4v0h0h-82a4,4 0 0 1 -4,-4h0v0v-49.466666666666654a4,4 0 0 1 4,-4v0h0z"/>
+<line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="122.11666666666666" y2="186.7666666666667"/>
+<line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="0" x2="0" y1="64.65" y2="28.73333333333335"/>
+<line data-end="lower" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="186.7666666666667" y2="186.7666666666667"/>
+<line data-end="upper" style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-22.5" x2="22.5" y1="28.73333333333335" y2="28.73333333333335"/>
+<line style="opacity: 1; stroke: #6859BE; stroke-width: 1.5px;" x1="-45" x2="45" y1="86.2" y2="86.2"/>
+</g>
+</g>
+<clipPath id="snap-0">
+<rect x="-2" y="-2" width="718.9999998092651" height="348.8"/>
+</clipPath>
+<defs>
+<filter id="snap-1" filterUnits="objectBoundingBox">
+<feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/>
+</filter>
+</defs>
+<defs/>
+</g>
+</svg>

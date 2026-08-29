@@ -1,1 +1,231 @@
-<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="586" width="800" viewBox="0 0 800 586" role="img"><title>GDP per Capita vs Life Expectancy</title><g><text x="16" y="28" font-size="16" font-weight="600" fill="#1f2937">GDP per Capita vs Life Expectancy</text><rect x="16" y="46" width="10" height="10" rx="2" fill="#4D8CFD"/><text x="32" y="55" font-size="12" fill="#4b5563">Africa</text><rect x="81.97000122070312" y="46" width="10" height="10" rx="2" fill="#FF6B7E"/><text x="97.97000122070312" y="55" font-size="12" fill="#4b5563">Asia</text><rect x="138.23000144958496" y="46" width="10" height="10" rx="2" fill="#F4B83E"/><text x="154.23000144958496" y="55" font-size="12" fill="#4b5563">Europe</text><rect x="210.39999961853027" y="46" width="10" height="10" rx="2" fill="#A6CC74"/><text x="226.39999961853027" y="55" font-size="12" fill="#4b5563">Americas</text></g><g transform="translate(16,78)"><g axis-type="x" transform="translate(53.00000019073487,440.7)"><g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="user-select: none;"><path stroke="currentColor" d="M0.5, 0 V0.5 H715.4999998092651 V0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/><g opacity="1" transform="translate(195.28529406771938,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">20,000</tspan></tspan></text></g><g opacity="1" transform="translate(380.1676469527973,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">40,000</tspan></tspan></text></g><g opacity="1" transform="translate(565.0499998378751,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">60,000</tspan></tspan></text></g><text dy="0.75em" transform="translate(357.49999990463255,35.2) rotate(0)" style="fill: #6c778c; font-size: 14px; font-weight: 500; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-anchor: middle;">GDP per capita (USD)</text></g><g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="opacity: 1;"><path stroke="currentColor" d="M30.74,0.5H659.339999809265" style="opacity: 0;"/><g opacity="1" transform="translate(102.8441176251804,0)"><line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" y="3" dy="0.71em"/></g><g opacity="1" transform="translate(195.28529406771938,0)"><line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" y="3" dy="0.71em"/></g><g opacity="1" transform="translate(287.7264705102583,0)"><line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" y="3" dy="0.71em"/></g><g opacity="1" transform="translate(380.1676469527973,0)"><line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" y="3" dy="0.71em"/></g><g opacity="1" transform="translate(472.60882339533623,0)"><line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" y="3" dy="0.71em"/></g><g opacity="1" transform="translate(565.0499998378751,0)"><line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" y="3" dy="0.71em"/></g><g opacity="1" transform="translate(657.4911762804143,0)"><line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" y="3" dy="0.71em"/></g></g></g><g axis-type="y" transform="translate(53.00000019073487,0)"><g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="user-select: none;"><path stroke="currentColor" d="M0, 441.2 H0.5 V0.5 H0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/><g opacity="1" transform="translate(0,394.5227928120947)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">55</tspan></tspan></text></g><g opacity="1" transform="translate(0,329.3408124266677)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">60</tspan></tspan></text></g><g opacity="1" transform="translate(0,264.15883204124066)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">65</tspan></tspan></text></g><g opacity="1" transform="translate(0,198.97685165581368)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">70</tspan></tspan></text></g><g opacity="1" transform="translate(0,133.79487127038666)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">75</tspan></tspan></text></g><g opacity="1" transform="translate(0,68.61289088495967)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">80</tspan></tspan></text></g><text dy="-0.25em" transform="translate(-37.80000019073486,220.35) rotate(-90)" style="fill: #6c778c; font-size: 14px; font-weight: 500; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-anchor: middle;">Life expectancy (years)</text></g><g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="opacity: 1;"><path stroke="currentColor" d="M0.5,408.86282849688865V9.949108538075345" style="opacity: 0;"/><g opacity="1" transform="translate(0,407.5591888891801)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,381.4863967350093)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,355.41360458083847)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,329.3408124266677)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,303.26802027249687)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,277.1952281183261)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,251.12243596415527)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,225.04964380998447)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,198.97685165581368)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,172.90405950164288)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,146.83126734747208)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,120.75847519330127)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,94.68568303913047)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,68.61289088495967)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,42.54009873078887)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,16.467306576618068)"><line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g></g></g><g transform="translate(53.00000019073487,0)" style="clip-path: url(#snap-0);"><g style="opacity: 1;"><g transform="translate(30.24,408.36282849688865) scale(1)"><path unovis-pattern-index="0" style="fill: #4D8CFD; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M9.948,0A9.948,9.948,0,1,1,-9.948,0A9.948,9.948,0,1,1,9.948,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="14.947642919259474" opacity="1">Nigeria</text></g><g transform="translate(49.65264705293318,195.86957244039655) scale(1)"><path unovis-pattern-index="0" style="fill: #4D8CFD; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M7.45,0A7.45,7.45,0,1,1,-7.45,0A7.45,7.45,0,1,1,7.45,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="12.4501985757706" opacity="0">Egypt</text></g><g transform="translate(72.76294116356792,298.8571014493713) scale(1)"><path unovis-pattern-index="0" style="fill: #4D8CFD; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M5.906,0A5.906,5.906,0,1,1,-5.906,0A5.906,5.906,0,1,1,5.906,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="10.906271180063982" opacity="1">South Africa</text></g><g transform="translate(32.08882352885078,228.46056263311004) scale(1)"><path unovis-pattern-index="0" style="fill: #FF6B7E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M22.969,0A22.969,22.969,0,1,1,-22.969,0A22.969,22.969,0,1,1,22.969,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="27.96947926044184" opacity="0">India</text></g><g transform="translate(126.37882350024054,91.57840382371336) scale(1)"><path unovis-pattern-index="0" style="fill: #FF6B7E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M23,0A23,23,0,1,1,-23,0A23,23,0,1,1,23,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="28" opacity="1">China</text></g><g transform="translate(373.19676460181955,9.449108538075345) scale(1)"><path unovis-pattern-index="0" style="fill: #FF6B7E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M7.874,0A7.874,7.874,0,1,1,-7.874,0A7.874,7.874,0,1,1,7.874,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="12.874257115062788" opacity="1">Japan</text></g><g transform="translate(55.19911763948552,229.7642022408187) scale(1)"><path unovis-pattern-index="0" style="fill: #FF6B7E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M10.953,0A10.953,10.953,0,1,1,-10.953,0A10.953,10.953,0,1,1,10.953,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="15.952900989262536" opacity="1">Indonesia</text></g><g transform="translate(483.2017645684409,56.38013441558272) scale(1)"><path unovis-pattern-index="0" style="fill: #F4B83E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M6.688,0A6.688,6.688,0,1,1,-6.688,0A6.688,6.688,0,1,1,6.688,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="11.688146500340416" opacity="0">Germany</text></g><g transform="translate(176.29705877921157,113.74027715475854) scale(1)"><path unovis-pattern-index="0" style="fill: #F4B83E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="10" opacity="1">Poland</text></g><g transform="translate(439.75441164044764,58.987413630999825) scale(1)"><path unovis-pattern-index="0" style="fill: #F4B83E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M6.158,0A6.158,6.158,0,1,1,-6.158,0A6.158,6.158,0,1,1,6.158,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="11.158050930047057" opacity="0">United Kingdom</text></g><g transform="translate(658.839999809265,115.04391676246703) scale(1)"><path unovis-pattern-index="0" style="fill: #A6CC74; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M11.909,0A11.909,11.909,0,1,1,-11.909,0A11.909,11.909,0,1,1,11.909,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="16.908663935999503" opacity="1">United States</text></g><g transform="translate(92.17558821650111,161.97494263997459) scale(1)"><path unovis-pattern-index="0" style="fill: #A6CC74; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M9.85,0A9.85,9.85,0,1,1,-9.85,0A9.85,9.85,0,1,1,9.85,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="14.850280176042215" opacity="1">Brazil</text></g><g transform="translate(103.26852938960579,195.86957244039655) scale(1)"><path unovis-pattern-index="0" style="fill: #A6CC74; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M7.925,0A7.925,7.925,0,1,1,-7.925,0A7.925,7.925,0,1,1,7.925,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="12.925306751245554" opacity="1">Mexico</text></g><g transform="translate(491.52147044826944,51.165575984748656) scale(1)"><path unovis-pattern-index="0" style="fill: #A6CC74; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0"/><text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="10" opacity="1">Canada</text></g></g></g><clipPath id="snap-0"><rect x="-2" y="-2" width="718.9999998092651" height="444.7"/></clipPath><defs><filter id="snap-1" filterUnits="objectBoundingBox"><feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/></filter></defs><defs/></g></svg>
+<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="586" width="800" viewBox="0 0 800 586" role="img">
+<title>GDP per Capita vs Life Expectancy</title>
+<g>
+<text x="16" y="28" font-size="16" font-weight="600" fill="#1f2937">GDP per Capita vs Life Expectancy</text>
+<rect x="16" y="46" width="10" height="10" rx="2" fill="#4D8CFD"/>
+<text x="32" y="55" font-size="12" fill="#4b5563">Africa</text>
+<rect x="81.97000122070312" y="46" width="10" height="10" rx="2" fill="#FF6B7E"/>
+<text x="97.97000122070312" y="55" font-size="12" fill="#4b5563">Asia</text>
+<rect x="138.23000144958496" y="46" width="10" height="10" rx="2" fill="#F4B83E"/>
+<text x="154.23000144958496" y="55" font-size="12" fill="#4b5563">Europe</text>
+<rect x="210.39999961853027" y="46" width="10" height="10" rx="2" fill="#A6CC74"/>
+<text x="226.39999961853027" y="55" font-size="12" fill="#4b5563">Americas</text>
+</g>
+<g transform="translate(16,78)">
+<g axis-type="x" transform="translate(53.00000019073487,440.7)">
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="user-select: none;">
+<path stroke="currentColor" d="M0.5, 0 V0.5 H715.4999998092651 V0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/>
+<g opacity="1" transform="translate(195.28529406771938,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">20,000</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(380.1676469527973,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">40,000</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(565.0499998378751,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">60,000</tspan></tspan></text>
+</g>
+<text dy="0.75em" transform="translate(357.49999990463255,35.2) rotate(0)" style="fill: #6c778c; font-size: 14px; font-weight: 500; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-anchor: middle;">GDP per capita (USD)</text>
+</g>
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="opacity: 1;">
+<path stroke="currentColor" d="M30.74,0.5H659.339999809265" style="opacity: 0;"/>
+<g opacity="1" transform="translate(102.8441176251804,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+<g opacity="1" transform="translate(195.28529406771938,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+<g opacity="1" transform="translate(287.7264705102583,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+<g opacity="1" transform="translate(380.1676469527973,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+<g opacity="1" transform="translate(472.60882339533623,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+<g opacity="1" transform="translate(565.0499998378751,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+<g opacity="1" transform="translate(657.4911762804143,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+</g>
+</g>
+<g axis-type="y" transform="translate(53.00000019073487,0)">
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="user-select: none;">
+<path stroke="currentColor" d="M0, 441.2 H0.5 V0.5 H0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/>
+<g opacity="1" transform="translate(0,394.5227928120947)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">55</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,329.3408124266677)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">60</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,264.15883204124066)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">65</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,198.97685165581368)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">70</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,133.79487127038666)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">75</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,68.61289088495967)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">80</tspan></tspan></text>
+</g>
+<text dy="-0.25em" transform="translate(-37.80000019073486,220.35) rotate(-90)" style="fill: #6c778c; font-size: 14px; font-weight: 500; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-anchor: middle;">Life expectancy (years)</text>
+</g>
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="opacity: 1;">
+<path stroke="currentColor" d="M0.5,408.86282849688865V9.949108538075345" style="opacity: 0;"/>
+<g opacity="1" transform="translate(0,407.5591888891801)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,381.4863967350093)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,355.41360458083847)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,329.3408124266677)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,303.26802027249687)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,277.1952281183261)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,251.12243596415527)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,225.04964380998447)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,198.97685165581368)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,172.90405950164288)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,146.83126734747208)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,120.75847519330127)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,94.68568303913047)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,68.61289088495967)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,42.54009873078887)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,16.467306576618068)">
+<line stroke="currentColor" x2="714.9999998092651" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+</g>
+</g>
+<g transform="translate(53.00000019073487,0)" style="clip-path: url(#snap-0);">
+<g style="opacity: 1;">
+<g transform="translate(30.24,408.36282849688865) scale(1)">
+<path unovis-pattern-index="0" style="fill: #4D8CFD; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M9.948,0A9.948,9.948,0,1,1,-9.948,0A9.948,9.948,0,1,1,9.948,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="14.947642919259474" opacity="1">Nigeria</text>
+</g>
+<g transform="translate(49.65264705293318,195.86957244039655) scale(1)">
+<path unovis-pattern-index="0" style="fill: #4D8CFD; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M7.45,0A7.45,7.45,0,1,1,-7.45,0A7.45,7.45,0,1,1,7.45,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="12.4501985757706" opacity="0">Egypt</text>
+</g>
+<g transform="translate(72.76294116356792,298.8571014493713) scale(1)">
+<path unovis-pattern-index="0" style="fill: #4D8CFD; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M5.906,0A5.906,5.906,0,1,1,-5.906,0A5.906,5.906,0,1,1,5.906,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="10.906271180063982" opacity="1">South Africa</text>
+</g>
+<g transform="translate(32.08882352885078,228.46056263311004) scale(1)">
+<path unovis-pattern-index="0" style="fill: #FF6B7E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M22.969,0A22.969,22.969,0,1,1,-22.969,0A22.969,22.969,0,1,1,22.969,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="27.96947926044184" opacity="0">India</text>
+</g>
+<g transform="translate(126.37882350024054,91.57840382371336) scale(1)">
+<path unovis-pattern-index="0" style="fill: #FF6B7E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M23,0A23,23,0,1,1,-23,0A23,23,0,1,1,23,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="28" opacity="1">China</text>
+</g>
+<g transform="translate(373.19676460181955,9.449108538075345) scale(1)">
+<path unovis-pattern-index="0" style="fill: #FF6B7E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M7.874,0A7.874,7.874,0,1,1,-7.874,0A7.874,7.874,0,1,1,7.874,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="12.874257115062788" opacity="1">Japan</text>
+</g>
+<g transform="translate(55.19911763948552,229.7642022408187) scale(1)">
+<path unovis-pattern-index="0" style="fill: #FF6B7E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M10.953,0A10.953,10.953,0,1,1,-10.953,0A10.953,10.953,0,1,1,10.953,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="15.952900989262536" opacity="1">Indonesia</text>
+</g>
+<g transform="translate(483.2017645684409,56.38013441558272) scale(1)">
+<path unovis-pattern-index="0" style="fill: #F4B83E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M6.688,0A6.688,6.688,0,1,1,-6.688,0A6.688,6.688,0,1,1,6.688,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="11.688146500340416" opacity="0">Germany</text>
+</g>
+<g transform="translate(176.29705877921157,113.74027715475854) scale(1)">
+<path unovis-pattern-index="0" style="fill: #F4B83E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="10" opacity="1">Poland</text>
+</g>
+<g transform="translate(439.75441164044764,58.987413630999825) scale(1)">
+<path unovis-pattern-index="0" style="fill: #F4B83E; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M6.158,0A6.158,6.158,0,1,1,-6.158,0A6.158,6.158,0,1,1,6.158,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="11.158050930047057" opacity="0">United Kingdom</text>
+</g>
+<g transform="translate(658.839999809265,115.04391676246703) scale(1)">
+<path unovis-pattern-index="0" style="fill: #A6CC74; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M11.909,0A11.909,11.909,0,1,1,-11.909,0A11.909,11.909,0,1,1,11.909,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="16.908663935999503" opacity="1">United States</text>
+</g>
+<g transform="translate(92.17558821650111,161.97494263997459) scale(1)">
+<path unovis-pattern-index="0" style="fill: #A6CC74; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M9.85,0A9.85,9.85,0,1,1,-9.85,0A9.85,9.85,0,1,1,9.85,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="14.850280176042215" opacity="1">Brazil</text>
+</g>
+<g transform="translate(103.26852938960579,195.86957244039655) scale(1)">
+<path unovis-pattern-index="0" style="fill: #A6CC74; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M7.925,0A7.925,7.925,0,1,1,-7.925,0A7.925,7.925,0,1,1,7.925,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="12.925306751245554" opacity="1">Mexico</text>
+</g>
+<g transform="translate(491.52147044826944,51.165575984748656) scale(1)">
+<path unovis-pattern-index="0" style="fill: #A6CC74; stroke-width: nullpx; cursor: default; fill-opacity: 1; stroke-opacity: 1; stroke: 'none';" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0"/>
+<text style="pointer-events: none; text-anchor: middle; dominant-baseline: hanging; font-weight: 500; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; fill: #5b5f6d; user-select: none;" x="0" y="10" opacity="1">Canada</text>
+</g>
+</g>
+</g>
+<clipPath id="snap-0">
+<rect x="-2" y="-2" width="718.9999998092651" height="444.7"/>
+</clipPath>
+<defs>
+<filter id="snap-1" filterUnits="objectBoundingBox">
+<feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/>
+</filter>
+</defs>
+<defs/>
+</g>
+</svg>

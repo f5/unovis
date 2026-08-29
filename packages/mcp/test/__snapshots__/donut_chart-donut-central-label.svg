@@ -1,1 +1,32 @@
-<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="546" width="800" viewBox="0 0 800 546" role="img"><title>Browser Market Share</title><g><text x="16" y="28" font-size="16" font-weight="600" fill="#1f2937">Browser Market Share</text><rect x="16" y="46" width="10" height="10" rx="2" fill="#4D8CFD"/><text x="32" y="55" font-size="12" fill="#4b5563">Chrome</text><rect x="92.88000106811523" y="46" width="10" height="10" rx="2" fill="#FF6B7E"/><text x="108.88000106811523" y="55" font-size="12" fill="#4b5563">Safari</text><rect x="157.85000228881836" y="46" width="10" height="10" rx="2" fill="#F4B83E"/><text x="173.85000228881836" y="55" font-size="12" fill="#4b5563">Other</text><rect x="221.56000137329102" y="46" width="10" height="10" rx="2" fill="#A6CC74"/><text x="237.56000137329102" y="55" font-size="12" fill="#4b5563">Edge</text><rect x="282.48000144958496" y="46" width="10" height="10" rx="2" fill="#00C19A"/><text x="298.48000144958496" y="55" font-size="12" fill="#4b5563">Firefox</text></g><g transform="translate(16,78)"><g transform="translate(0,0)"><path visibility="hidden" transform="translate(384,226)" d="M0,-226A226,226,0,1,1,0,226A226,226,0,1,1,0,-226M0,-178A178,178,0,1,0,0,178A178,178,0,1,0,0,-178Z" style="fill: #E7E9F3;"/><g transform="translate(384,226)"><path unovis-pattern-index="0" style="fill: #4D8CFD; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-226A226,226,0,1,1,-183.669,131.688L-144.66,103.719A178,178,0,1,0,0,-178Z"/><path unovis-pattern-index="1" style="fill: #FF6B7E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M-183.669,131.688A226,226,0,0,1,-193.067,-117.479L-152.061,-92.527A178,178,0,0,0,-144.66,103.719Z"/><path unovis-pattern-index="2" style="fill: #F4B83E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M-193.067,-117.479A226,226,0,0,1,-111.356,-196.662L-87.705,-154.893A178,178,0,0,0,-152.061,-92.527Z"/><path unovis-pattern-index="3" style="fill: #A6CC74; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M-111.356,-196.662A226,226,0,0,1,-39.555,-222.512L-31.154,-175.252A178,178,0,0,0,-87.705,-154.893Z"/><path unovis-pattern-index="4" style="fill: #00C19A; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M-39.555,-222.512A226,226,0,0,1,0,-226L0,-178A178,178,0,0,0,-31.154,-175.252Z"/></g><text dy="-0.55em" style="text-anchor: middle; dominant-baseline: middle; font-size: 16px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 600; fill: #5b5f6d;" transform="translate(384,226)">4.9B</text><text dy="0.55em" style="text-anchor: middle; dominant-baseline: middle; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 500; fill: #5b5f6d;" transform="translate(384,226)"><tspan x="0">internet users</tspan></text></g><defs/><defs/></g></svg>
+<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="546" width="800" viewBox="0 0 800 546" role="img">
+<title>Browser Market Share</title>
+<g>
+<text x="16" y="28" font-size="16" font-weight="600" fill="#1f2937">Browser Market Share</text>
+<rect x="16" y="46" width="10" height="10" rx="2" fill="#4D8CFD"/>
+<text x="32" y="55" font-size="12" fill="#4b5563">Chrome</text>
+<rect x="92.88000106811523" y="46" width="10" height="10" rx="2" fill="#FF6B7E"/>
+<text x="108.88000106811523" y="55" font-size="12" fill="#4b5563">Safari</text>
+<rect x="157.85000228881836" y="46" width="10" height="10" rx="2" fill="#F4B83E"/>
+<text x="173.85000228881836" y="55" font-size="12" fill="#4b5563">Other</text>
+<rect x="221.56000137329102" y="46" width="10" height="10" rx="2" fill="#A6CC74"/>
+<text x="237.56000137329102" y="55" font-size="12" fill="#4b5563">Edge</text>
+<rect x="282.48000144958496" y="46" width="10" height="10" rx="2" fill="#00C19A"/>
+<text x="298.48000144958496" y="55" font-size="12" fill="#4b5563">Firefox</text>
+</g>
+<g transform="translate(16,78)">
+<g transform="translate(0,0)">
+<path visibility="hidden" transform="translate(384,226)" d="M0,-226A226,226,0,1,1,0,226A226,226,0,1,1,0,-226M0,-178A178,178,0,1,0,0,178A178,178,0,1,0,0,-178Z" style="fill: #E7E9F3;"/>
+<g transform="translate(384,226)">
+<path unovis-pattern-index="0" style="fill: #4D8CFD; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-226A226,226,0,1,1,-183.669,131.688L-144.66,103.719A178,178,0,1,0,0,-178Z"/>
+<path unovis-pattern-index="1" style="fill: #FF6B7E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M-183.669,131.688A226,226,0,0,1,-193.067,-117.479L-152.061,-92.527A178,178,0,0,0,-144.66,103.719Z"/>
+<path unovis-pattern-index="2" style="fill: #F4B83E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M-193.067,-117.479A226,226,0,0,1,-111.356,-196.662L-87.705,-154.893A178,178,0,0,0,-152.061,-92.527Z"/>
+<path unovis-pattern-index="3" style="fill: #A6CC74; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M-111.356,-196.662A226,226,0,0,1,-39.555,-222.512L-31.154,-175.252A178,178,0,0,0,-87.705,-154.893Z"/>
+<path unovis-pattern-index="4" style="fill: #00C19A; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M-39.555,-222.512A226,226,0,0,1,0,-226L0,-178A178,178,0,0,0,-31.154,-175.252Z"/>
+</g>
+<text dy="-0.55em" style="text-anchor: middle; dominant-baseline: middle; font-size: 16px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 600; fill: #5b5f6d;" transform="translate(384,226)">4.9B</text>
+<text dy="0.55em" style="text-anchor: middle; dominant-baseline: middle; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 500; fill: #5b5f6d;" transform="translate(384,226)"><tspan x="0">internet users</tspan></text>
+</g>
+<defs/>
+<defs/>
+</g>
+</svg>

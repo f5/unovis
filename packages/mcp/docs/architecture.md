@@ -180,8 +180,12 @@ reviewer can look at the charts instead of trusting a green check.
 Inter is cached at `~/.cache/unovis-ssr` (keyed on `@unovis/ssr`'s `src/env/fonts.ts`, which
 holds the pinned version and checksum). That keeps the suite off the network and
 keeps text metrics — and therefore the SVG snapshots — reproducible between
-runs. Baselines are SVG text: reviewable diffs, and git stores deltas instead
-of binary copies. Both the baseline and the fresh render rasterize through
+runs. Baselines are SVG text, one element per line: a visual change reviews
+as a few changed lines instead of one unreadable kilometer, and git stores
+deltas instead of binary copies. The formatter is parse-aware and provably
+pixel-neutral — a control test requires zero differing pixels between the
+compact and formatted forms, because whitespace inside SVG text content is
+significant and "formatting is safe" is a claim, not a given. Both the baseline and the fresh render rasterize through
 the same resvg on the same machine at compare time, so platform differences
 cancel — the tight pixel tolerance only absorbs sub-pixel jitter from
 harmless baseline drift.

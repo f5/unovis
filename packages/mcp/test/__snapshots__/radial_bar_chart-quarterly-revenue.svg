@@ -1,1 +1,27 @@
-<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="458" width="800" viewBox="0 0 800 458" role="img"><g><rect x="16" y="18" width="10" height="10" rx="2" fill="#4D8CFD"/><text x="32" y="27" font-size="12" fill="#4b5563">Q1</text><rect x="62.0600004196167" y="18" width="10" height="10" rx="2" fill="#FF6B7E"/><text x="78.0600004196167" y="27" font-size="12" fill="#4b5563">Q2</text><rect x="110.55000019073486" y="18" width="10" height="10" rx="2" fill="#F4B83E"/><text x="126.55000019073486" y="27" font-size="12" fill="#4b5563">Q3</text><rect x="159.14000034332275" y="18" width="10" height="10" rx="2" fill="#A6CC74"/><text x="175.14000034332275" y="27" font-size="12" fill="#4b5563">Q4</text></g><g transform="translate(16,50)"><g transform="translate(0,0)"><g transform="translate(384,196)"/><g transform="translate(384,196)"><path style="fill: #4D8CFD; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-196A196,196,0,0,1,82.833,177.636L76.071,163.135A180,180,0,0,0,0,-180Z"/><path style="fill: #FF6B7E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-176A176,176,0,1,1,-134.824,113.131L-122.567,102.846A160,160,0,1,0,0,-160Z"/><path style="fill: #F4B83E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-156A156,156,0,1,1,-156,0L-140,0A140,140,0,1,0,0,-140Z"/><path style="fill: #A6CC74; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-136A136,136,0,1,1,0,136A136,136,0,1,1,0,-136M0,-120A120,120,0,1,0,0,120A120,120,0,1,0,0,-120Z"/></g><text transform="translate(384,196)" style="text-anchor: middle; dominant-baseline: middle; font-size: 24px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 600; fill: #5b5f6d;"/><text transform="translate(384,196)" style="text-anchor: middle; dominant-baseline: middle; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 500; fill: #5b5f6d;"/></g><defs/><defs/></g></svg>
+<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="458" width="800" viewBox="0 0 800 458" role="img">
+<g>
+<rect x="16" y="18" width="10" height="10" rx="2" fill="#4D8CFD"/>
+<text x="32" y="27" font-size="12" fill="#4b5563">Q1</text>
+<rect x="62.0600004196167" y="18" width="10" height="10" rx="2" fill="#FF6B7E"/>
+<text x="78.0600004196167" y="27" font-size="12" fill="#4b5563">Q2</text>
+<rect x="110.55000019073486" y="18" width="10" height="10" rx="2" fill="#F4B83E"/>
+<text x="126.55000019073486" y="27" font-size="12" fill="#4b5563">Q3</text>
+<rect x="159.14000034332275" y="18" width="10" height="10" rx="2" fill="#A6CC74"/>
+<text x="175.14000034332275" y="27" font-size="12" fill="#4b5563">Q4</text>
+</g>
+<g transform="translate(16,50)">
+<g transform="translate(0,0)">
+<g transform="translate(384,196)"/>
+<g transform="translate(384,196)">
+<path style="fill: #4D8CFD; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-196A196,196,0,0,1,82.833,177.636L76.071,163.135A180,180,0,0,0,0,-180Z"/>
+<path style="fill: #FF6B7E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-176A176,176,0,1,1,-134.824,113.131L-122.567,102.846A160,160,0,1,0,0,-160Z"/>
+<path style="fill: #F4B83E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-156A156,156,0,1,1,-156,0L-140,0A140,140,0,1,0,0,-140Z"/>
+<path style="fill: #A6CC74; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-136A136,136,0,1,1,0,136A136,136,0,1,1,0,-136M0,-120A120,120,0,1,0,0,120A120,120,0,1,0,0,-120Z"/>
+</g>
+<text transform="translate(384,196)" style="text-anchor: middle; dominant-baseline: middle; font-size: 24px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 600; fill: #5b5f6d;"/>
+<text transform="translate(384,196)" style="text-anchor: middle; dominant-baseline: middle; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 500; fill: #5b5f6d;"/>
+</g>
+<defs/>
+<defs/>
+</g>
+</svg>
