@@ -64,7 +64,7 @@ Type | Scope | Subscope: Sentence-case subject
 ```
 
 - **Type** (required) — one of: `React`, `Angular`, `Vue`, `Svelte`, `Solid`, `Website`, `Dev`,
-  `Shared`, `Core`, `Component`, `Container`, `Release`, `CI`, `Misc`.
+  `Shared`, `Core`, `Component`, `Container`, `Release`, `CI`, `Misc`, `MCP`, `SSR`.
 - **Scope** — PascalCase; omit only for `Release`/`CI`. For type `Component` it should be a
   registered component name. **Subject** — sentence case, no trailing period.
 - The `commit-msg` hook validates every message. Don't use `--no-verify` unless asked.
