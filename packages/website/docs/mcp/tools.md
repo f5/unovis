@@ -76,7 +76,7 @@ Generate a bar chart: single-series, grouped, or stacked; vertical or horizontal
 | `type` | `grouped` \| `stacked` | `"grouped"` | How multiple series are arranged: side-by-side groups or stacks |
 | `orientation` | `vertical` \| `horizontal` | `"vertical"` | Bar direction. Horizontal puts categories on the Y axis |
 | `seriesLabels` | string[] | — | Display names for the series (legend). Defaults to field names |
-| `roundedCorners` | boolean | `true` | Round the outer bar corners |
+| `roundedCorners` | boolean \| number | `2` | Outer bar corner radius in pixels (default 2, matching the library), or true for fully rounded pill tops |
 | `barPadding` | number | — | Padding between bars within a group, 0..0.9 |
 | `referenceLines` | { axis, value, label, color, lineWidth, style }[] | — | Reference lines for thresholds/targets, e.g. an SLA or goal |
 | `referenceBands` | { axis, from, to, label, color }[] | — | Shaded ranges drawn behind the data, e.g. an acceptable range |
