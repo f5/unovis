@@ -31,7 +31,7 @@ Type | Scope | Subscope | Subscope2: Sentence-case subject
 
 - **`type` (required, error)** — must be one of exactly:
   `React`, `Angular`, `Vue`, `Svelte`, `Solid`, `Website`, `Dev`, `Shared`, `Core`, `Component`,
-  `Container`, `Release`, `CI`, `Misc`.
+  `Container`, `Release`, `CI`, `Misc`, `MCP`, `SSR`.
 - **`subject` (error)** — **sentence case** (first word capitalized, the rest lowercase unless a
   proper noun or `code`), must not be empty, no trailing period. Backtick code/prop names:
   `` `brushHeightExtend` ``.

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+// eslint-disable-next-line import/no-unresolved -- resolves via pnpm's hidden hoist when commitlint runs; the plain root resolver can't see it
 const componentScopes = require('@unovis/shared/integrations/components')
   .getComponentList()
   .map(c => c.name)
@@ -16,6 +17,7 @@ module.exports = {
     'type-enum': [2, 'always', [
       'React', 'Angular', 'Vue', 'Svelte', 'Website', 'Dev', 'Shared',
       'Core', 'Component', 'Container', 'Release', 'CI', 'Misc', 'Solid',
+      'MCP', 'SSR',
     ]],
     'subject-case': [2, 'always', 'sentence-case'],
     'subject-empty': [2, 'never'],
@@ -27,7 +29,7 @@ module.exports = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'validate-scope': c => {
           // Allow empty scopes for CI and Release types
-          if (!c.scope) return [['Release', 'CI'].includes(c.type), 'scope should not be empty']
+          if (!c.scope) return [['Release', 'CI', 'MCP', 'SSR'].includes(c.type), 'scope should not be empty']
 
           // Check if scope is one of the component scopes
           if (c.type === 'Component') {
