@@ -371,7 +371,7 @@ export class Graph<
     const { config, datamodel: { links } } = this
 
     const linkGroups = this._linksGroup
-      .selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}:not(.${linkSelectors.gLinkExit}`)
+      .selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}:not(.${linkSelectors.gLinkExit})`)
       .data(links, (d: GraphLink<N, L>) => String(d._id))
 
     const linkGroupsEnter = linkGroups.enter().append('g')
@@ -1139,7 +1139,7 @@ export class Graph<
     const { config } = this
     const animDuration = isNumber(duration) ? duration : config.duration
 
-    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}:not(.${linkSelectors.gLinkExit}`)
+    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}:not(.${linkSelectors.gLinkExit})`)
     updateLinkLines(linkElements, config, animDuration, this._scale, this._getLinkArrowDefId, this._linkPathLengthMap)
 
     const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}:not(.${nodeSelectors.gNodeExit})`)
