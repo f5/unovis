@@ -30,7 +30,10 @@ export const barInputShape = {
   orientation: z.enum(['vertical', 'horizontal']).default('vertical')
     .describe('Bar direction. Horizontal puts categories on the Y axis'),
   seriesLabels: z.array(z.string()).optional().describe('Display names for the series (legend). Defaults to field names'),
-  roundedCorners: z.boolean().default(true).describe('Round the outer bar corners'),
+  // Number = radius in px (the library default is 2); boolean true = fully
+  // rounded pill caps (width/2), kept for callers who want that look
+  roundedCorners: z.union([z.boolean(), z.number().min(0).max(50)]).default(2)
+    .describe('Outer bar corner radius in pixels (default 2, matching the library), or true for fully rounded pill tops'),
   barPadding: z.number().min(0).max(0.9).optional().describe('Padding between bars within a group, 0..0.9'),
   ...xyDecorations,
   ...xyInput,
