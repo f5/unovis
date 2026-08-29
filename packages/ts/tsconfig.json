@@ -19,7 +19,9 @@
   },
   "exclude": [
     "index.ts",
+    "index.d.ts",
     "maps.ts",
+    "maps.d.ts",
     "**/*.spec.ts"
   ]
 }
