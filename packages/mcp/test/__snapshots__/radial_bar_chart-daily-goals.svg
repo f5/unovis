@@ -1,1 +1,30 @@
-<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="506" width="480" viewBox="0 0 480 506" role="img"><title>Daily Goals</title><g><text x="16" y="28" font-size="16" font-weight="600" fill="#1f2937">Daily Goals</text><rect x="16" y="46" width="10" height="10" rx="2" fill="#4D8CFD"/><text x="32" y="55" font-size="12" fill="#4b5563">Move</text><rect x="79.30999946594238" y="46" width="10" height="10" rx="2" fill="#FF6B7E"/><text x="95.30999946594238" y="55" font-size="12" fill="#4b5563">Exercise</text><rect x="159.2100009918213" y="46" width="10" height="10" rx="2" fill="#F4B83E"/><text x="175.2100009918213" y="55" font-size="12" fill="#4b5563">Stand</text></g><g transform="translate(16,78)"><g transform="translate(0,0)"><g transform="translate(224,206)"><path style="opacity: 1; fill: #E7E9F3;" d="M0,-206A206,206,0,1,1,0,206A206,206,0,1,1,0,-206M0,-184A184,184,0,1,0,0,184A184,184,0,1,0,0,-184Z"/><path style="opacity: 1; fill: #E7E9F3;" d="M0,-178A178,178,0,1,1,0,178A178,178,0,1,1,0,-178M0,-156A156,156,0,1,0,0,156A156,156,0,1,0,0,-156Z"/><path style="opacity: 1; fill: #E7E9F3;" d="M0,-150A150,150,0,1,1,0,150A150,150,0,1,1,0,-150M0,-128A128,128,0,1,0,0,128A128,128,0,1,0,0,-128Z"/></g><g transform="translate(224,206)"><path style="fill: #4D8CFD; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-194.689A11,11,0,0,1,11.621,-205.672A206,206,0,1,1,-179.881,-100.393A11,11,0,0,1,-164.382,-104.32L-164.382,-104.32A11,11,0,0,1,-160.671,-89.671A184,184,0,1,0,10.379,-183.707A11,11,0,0,1,0,-194.689Z"/><path style="fill: #FF6B7E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-166.637A11,11,0,0,1,11.725,-177.613A178,178,0,1,1,-113.038,137.501A11,11,0,0,1,-114.071,121.473L-114.071,121.473A11,11,0,0,1,-99.067,120.506A156,156,0,1,0,10.275,-155.661A11,11,0,0,1,0,-166.637Z"/><path style="fill: #F4B83E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-138.564A11,11,0,0,1,11.871,-149.53A150,150,0,1,1,-48.684,-141.88A11,11,0,0,1,-34.459,-134.211L-34.459,-134.211A11,11,0,0,1,-41.544,-121.071A128,128,0,1,0,10.129,-127.599A11,11,0,0,1,0,-138.564Z"/></g><text y="-7.5" transform="translate(224,206)" style="text-anchor: middle; dominant-baseline: middle; font-size: 24px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 600; fill: #5b5f6d;">81%</text><text y="13.5" transform="translate(224,206)" style="text-anchor: middle; dominant-baseline: middle; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 500; fill: #5b5f6d;"><tspan x="0">overall</tspan></text></g><defs/><defs/></g></svg>
+<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="506" width="480" viewBox="0 0 480 506" role="img">
+<title>Daily Goals</title>
+<g>
+<text x="16" y="28" font-size="16" font-weight="600" fill="#1f2937">Daily Goals</text>
+<rect x="16" y="46" width="10" height="10" rx="2" fill="#4D8CFD"/>
+<text x="32" y="55" font-size="12" fill="#4b5563">Move</text>
+<rect x="79.30999946594238" y="46" width="10" height="10" rx="2" fill="#FF6B7E"/>
+<text x="95.30999946594238" y="55" font-size="12" fill="#4b5563">Exercise</text>
+<rect x="159.2100009918213" y="46" width="10" height="10" rx="2" fill="#F4B83E"/>
+<text x="175.2100009918213" y="55" font-size="12" fill="#4b5563">Stand</text>
+</g>
+<g transform="translate(16,78)">
+<g transform="translate(0,0)">
+<g transform="translate(224,206)">
+<path style="opacity: 1; fill: #E7E9F3;" d="M0,-206A206,206,0,1,1,0,206A206,206,0,1,1,0,-206M0,-184A184,184,0,1,0,0,184A184,184,0,1,0,0,-184Z"/>
+<path style="opacity: 1; fill: #E7E9F3;" d="M0,-178A178,178,0,1,1,0,178A178,178,0,1,1,0,-178M0,-156A156,156,0,1,0,0,156A156,156,0,1,0,0,-156Z"/>
+<path style="opacity: 1; fill: #E7E9F3;" d="M0,-150A150,150,0,1,1,0,150A150,150,0,1,1,0,-150M0,-128A128,128,0,1,0,0,128A128,128,0,1,0,0,-128Z"/>
+</g>
+<g transform="translate(224,206)">
+<path style="fill: #4D8CFD; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-194.689A11,11,0,0,1,11.621,-205.672A206,206,0,1,1,-179.881,-100.393A11,11,0,0,1,-164.382,-104.32L-164.382,-104.32A11,11,0,0,1,-160.671,-89.671A184,184,0,1,0,10.379,-183.707A11,11,0,0,1,0,-194.689Z"/>
+<path style="fill: #FF6B7E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-166.637A11,11,0,0,1,11.725,-177.613A178,178,0,1,1,-113.038,137.501A11,11,0,0,1,-114.071,121.473L-114.071,121.473A11,11,0,0,1,-99.067,120.506A156,156,0,1,0,10.275,-155.661A11,11,0,0,1,0,-166.637Z"/>
+<path style="fill: #F4B83E; opacity: 1; transition: fill 0ms; stroke-width: 0; stroke: #E7E9F3;" d="M0,-138.564A11,11,0,0,1,11.871,-149.53A150,150,0,1,1,-48.684,-141.88A11,11,0,0,1,-34.459,-134.211L-34.459,-134.211A11,11,0,0,1,-41.544,-121.071A128,128,0,1,0,10.129,-127.599A11,11,0,0,1,0,-138.564Z"/>
+</g>
+<text y="-7.5" transform="translate(224,206)" style="text-anchor: middle; dominant-baseline: middle; font-size: 24px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 600; fill: #5b5f6d;">81%</text>
+<text y="13.5" transform="translate(224,206)" style="text-anchor: middle; dominant-baseline: middle; font-size: 12px; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-weight: 500; fill: #5b5f6d;"><tspan x="0">overall</tspan></text>
+</g>
+<defs/>
+<defs/>
+</g>
+</svg>

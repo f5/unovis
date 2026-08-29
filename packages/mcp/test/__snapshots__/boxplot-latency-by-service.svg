@@ -1,1 +1,194 @@
-<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="524" width="800" viewBox="0 0 800 524" role="img"><title>API Latency by Service</title><g><text x="16" y="28" font-size="16" font-weight="600" fill="#1f2937">API Latency by Service</text></g><g transform="translate(16,56)"><g axis-type="x" transform="translate(61.0700008392334,424.8)"><g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="user-select: none;"><path stroke="currentColor" d="M0.5, 0 V0.5 H707.4299991607666 V0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/><g opacity="1" transform="translate(46.6831249475479,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Auth</tspan></tspan></text></g><g opacity="1" transform="translate(200.3240622639656,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Search</tspan></tspan></text></g><g opacity="1" transform="translate(353.9649995803833,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Checkout</tspan></tspan></text></g><g opacity="1" transform="translate(507.605936896801,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Profile</tspan></tspan></text></g><g opacity="1" transform="translate(661.2468742132187,0)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Billing</tspan></tspan></text></g></g><g style="opacity: 0;"/></g><g axis-type="y" transform="translate(61.0700008392334,0)"><g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="user-select: none;"><path stroke="currentColor" d="M0, 425.3 H0.5 V0.5 H0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/><g opacity="1" transform="translate(0,372.4933701657459)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">100</tspan></tspan></text></g><g opacity="1" transform="translate(0,313.8193370165746)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">150</tspan></tspan></text></g><g opacity="1" transform="translate(0,255.1453038674033)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">200</tspan></tspan></text></g><g opacity="1" transform="translate(0,196.47127071823203)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">250</tspan></tspan></text></g><g opacity="1" transform="translate(0,137.79723756906077)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">300</tspan></tspan></text></g><g opacity="1" transform="translate(0,79.12320441988952)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">350</tspan></tspan></text></g><g opacity="1" transform="translate(0,20.449171270718253)" style="stroke: none; font-size: 12px; font-weight: 500;"><line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/><text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">400</tspan></tspan></text></g><text dy="-0.25em" transform="translate(-45.8700008392334,212.4) rotate(-90)" style="fill: #6c778c; font-size: 14px; font-weight: 500; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-anchor: middle;">Latency (ms)</text></g><g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="opacity: 1;"><path stroke="currentColor" d="M0.5,425.3V0.5" style="opacity: 0;"/><g opacity="1" transform="translate(0,419.4325966850829)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,395.9629834254144)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,372.4933701657459)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,349.0237569060773)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,325.5541436464088)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,302.08453038674037)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,278.61491712707186)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,255.1453038674033)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,231.67569060773482)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,208.20607734806632)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,184.73646408839778)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,161.26685082872928)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,137.79723756906077)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,114.32762430939228)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,90.85801104972374)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,67.38839779005525)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,43.91878453038675)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g><g opacity="1" transform="translate(0,20.449171270718253)"><line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/><text fill="currentColor" x="-3" dy="0.32em"/></g></g></g><g transform="translate(61.0700008392334,0)" style="clip-path: url(#snap-0);"><g transform="translate(46.1831249475479,0)" style="opacity: 1;"><path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,346.1767955801105h84.3662498950958a2,2 0 0 1 2,2h0v0v40.005524861878484a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-40.005524861878484a2,2 0 0 1 2,-2v0h0z"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="390.18232044198896" y2="424.8"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="346.1767955801105" y2="280.1685082872928"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="424.8" y2="424.8"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="280.1685082872928" y2="280.1685082872928"/><line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="361.4320441988951" y2="361.4320441988951"/></g><g transform="translate(199.8240622639656,0)" style="opacity: 1;"><path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,287.2093922651934h84.3662498950958a2,2 0 0 1 2,2h0v0v49.10000000000002a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-49.10000000000002a2,2 0 0 1 2,-2v0h0z"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="340.3093922651934" y2="388.4220994475138"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="287.2093922651934" y2="207.55939226519337"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="388.4220994475138" y2="388.4220994475138"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="207.55939226519337" y2="207.55939226519337"/><line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="309.21215469613264" y2="309.21215469613264"/></g><g transform="translate(353.4649995803833,0)" style="opacity: 1;"><path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,231.17569060773482h84.3662498950958a2,2 0 0 1 2,2h0v0v62.88839779005522a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-62.88839779005522a2,2 0 0 1 2,-2v0h0z"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="298.06408839779004" y2="356.73812154696134"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="231.17569060773482" y2="133.7767955801105"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="356.73812154696134" y2="356.73812154696134"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="133.7767955801105" y2="133.7767955801105"/><line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="259.92596685082873" y2="259.92596685082873"/></g><g transform="translate(507.105936896801,0)" style="opacity: 1;"><path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,173.3817679558011h84.3662498950958a2,2 0 0 1 2,2h0v0v69.63591160220997a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-69.63591160220997a2,2 0 0 1 2,-2v0h0z"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="247.01767955801108" y2="323.88066298342545"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="173.3817679558011" y2="62.927900552486165"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="323.88066298342545" y2="323.88066298342545"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="62.927900552486165" y2="62.927900552486165"/><line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="197.14475138121549" y2="197.14475138121549"/></g><g transform="translate(660.7468742132187,0)" style="opacity: 1;"><path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,117.34806629834253h84.3662498950958a2,2 0 0 1 2,2h0v0v96.3325966850829a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-96.3325966850829a2,2 0 0 1 2,-2v0h0z"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="217.68066298342544" y2="286.3292817679558"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="117.34806629834253" y2="0"/><line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="286.3292817679558" y2="286.3292817679558"/><line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="0" y2="0"/><line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="156.07292817679559" y2="156.07292817679559"/></g></g><clipPath id="snap-0"><rect x="-2" y="-2" width="710.9299991607666" height="428.8"/></clipPath><defs><filter id="snap-1" filterUnits="objectBoundingBox"><feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/></filter></defs><defs/></g></svg>
+<svg style="font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;" xmlns="http://www.w3.org/2000/svg" height="524" width="800" viewBox="0 0 800 524" role="img">
+<title>API Latency by Service</title>
+<g>
+<text x="16" y="28" font-size="16" font-weight="600" fill="#1f2937">API Latency by Service</text>
+</g>
+<g transform="translate(16,56)">
+<g axis-type="x" transform="translate(61.0700008392334,424.8)">
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="user-select: none;">
+<path stroke="currentColor" d="M0.5, 0 V0.5 H707.4299991607666 V0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/>
+<g opacity="1" transform="translate(46.6831249475479,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Auth</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(200.3240622639656,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Search</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(353.9649995803833,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Checkout</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(507.605936896801,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Profile</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(661.2468742132187,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">Billing</tspan></tspan></text>
+</g>
+</g>
+<g style="opacity: 0;"/>
+</g>
+<g axis-type="y" transform="translate(61.0700008392334,0)">
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="user-select: none;">
+<path stroke="currentColor" d="M0, 425.3 H0.5 V0.5 H0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/>
+<g opacity="1" transform="translate(0,372.4933701657459)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">100</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,313.8193370165746)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">150</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,255.1453038674033)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">200</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,196.47127071823203)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">250</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,137.79723756906077)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">300</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,79.12320441988952)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">350</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(0,20.449171270718253)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" x2="-6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" x="-14" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="-6"><tspan x="-14" dy="0em" dominant-baseline="hanging">400</tspan></tspan></text>
+</g>
+<text dy="-0.25em" transform="translate(-45.8700008392334,212.4) rotate(-90)" style="fill: #6c778c; font-size: 14px; font-weight: 500; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-anchor: middle;">Latency (ms)</text>
+</g>
+<g fill="none" font-size="10" font-family="sans-serif" text-anchor="end" style="opacity: 1;">
+<path stroke="currentColor" d="M0.5,425.3V0.5" style="opacity: 0;"/>
+<g opacity="1" transform="translate(0,419.4325966850829)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,395.9629834254144)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,372.4933701657459)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,349.0237569060773)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,325.5541436464088)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,302.08453038674037)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,278.61491712707186)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,255.1453038674033)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,231.67569060773482)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,208.20607734806632)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,184.73646408839778)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,161.26685082872928)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,137.79723756906077)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,114.32762430939228)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,90.85801104972374)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,67.38839779005525)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,43.91878453038675)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+<g opacity="1" transform="translate(0,20.449171270718253)">
+<line stroke="currentColor" x2="706.9299991607666" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" x="-3" dy="0.32em"/>
+</g>
+</g>
+</g>
+<g transform="translate(61.0700008392334,0)" style="clip-path: url(#snap-0);">
+<g transform="translate(46.1831249475479,0)" style="opacity: 1;">
+<path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,346.1767955801105h84.3662498950958a2,2 0 0 1 2,2h0v0v40.005524861878484a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-40.005524861878484a2,2 0 0 1 2,-2v0h0z"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="390.18232044198896" y2="424.8"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="346.1767955801105" y2="280.1685082872928"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="424.8" y2="424.8"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="280.1685082872928" y2="280.1685082872928"/>
+<line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="361.4320441988951" y2="361.4320441988951"/>
+</g>
+<g transform="translate(199.8240622639656,0)" style="opacity: 1;">
+<path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,287.2093922651934h84.3662498950958a2,2 0 0 1 2,2h0v0v49.10000000000002a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-49.10000000000002a2,2 0 0 1 2,-2v0h0z"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="340.3093922651934" y2="388.4220994475138"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="287.2093922651934" y2="207.55939226519337"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="388.4220994475138" y2="388.4220994475138"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="207.55939226519337" y2="207.55939226519337"/>
+<line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="309.21215469613264" y2="309.21215469613264"/>
+</g>
+<g transform="translate(353.4649995803833,0)" style="opacity: 1;">
+<path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,231.17569060773482h84.3662498950958a2,2 0 0 1 2,2h0v0v62.88839779005522a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-62.88839779005522a2,2 0 0 1 2,-2v0h0z"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="298.06408839779004" y2="356.73812154696134"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="231.17569060773482" y2="133.7767955801105"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="356.73812154696134" y2="356.73812154696134"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="133.7767955801105" y2="133.7767955801105"/>
+<line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="259.92596685082873" y2="259.92596685082873"/>
+</g>
+<g transform="translate(507.105936896801,0)" style="opacity: 1;">
+<path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,173.3817679558011h84.3662498950958a2,2 0 0 1 2,2h0v0v69.63591160220997a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-69.63591160220997a2,2 0 0 1 2,-2v0h0z"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="247.01767955801108" y2="323.88066298342545"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="173.3817679558011" y2="62.927900552486165"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="323.88066298342545" y2="323.88066298342545"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="62.927900552486165" y2="62.927900552486165"/>
+<line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="197.14475138121549" y2="197.14475138121549"/>
+</g>
+<g transform="translate(660.7468742132187,0)" style="opacity: 1;">
+<path style="opacity: 1; fill: #4D8CFD; fill-opacity: 0.2; stroke: #4D8CFD; stroke-width: 1.5px; cursor: default;" d="M-42.1831249475479,117.34806629834253h84.3662498950958a2,2 0 0 1 2,2h0v0v96.3325966850829a2,2 0 0 1 -2,2v0h0h-84.3662498950958a2,2 0 0 1 -2,-2h0v0v-96.3325966850829a2,2 0 0 1 2,-2v0h0z"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="217.68066298342544" y2="286.3292817679558"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="0" x2="0" y1="117.34806629834253" y2="0"/>
+<line data-end="lower" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="286.3292817679558" y2="286.3292817679558"/>
+<line data-end="upper" style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-22.09156247377395" x2="22.09156247377395" y1="0" y2="0"/>
+<line style="opacity: 1; stroke: #4D8CFD; stroke-width: 1.5px;" x1="-44.1831249475479" x2="44.1831249475479" y1="156.07292817679559" y2="156.07292817679559"/>
+</g>
+</g>
+<clipPath id="snap-0">
+<rect x="-2" y="-2" width="710.9299991607666" height="428.8"/>
+</clipPath>
+<defs>
+<filter id="snap-1" filterUnits="objectBoundingBox">
+<feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/>
+</filter>
+</defs>
+<defs/>
+</g>
+</svg>

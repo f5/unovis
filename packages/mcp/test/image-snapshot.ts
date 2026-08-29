@@ -18,10 +18,46 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { JSDOM } from 'jsdom'
 import { PNG } from 'pngjs'
 import pixelmatch from 'pixelmatch'
 
 import { svgToPng, themeBackground } from '@unovis/ssr'
+
+/** Elements whose inner whitespace is rendered — never reformat inside them */
+const TEXT_CONTENT_ELEMENTS = new Set(['text', 'tspan', 'title', 'desc', 'style'])
+
+/** One element per line, no indentation. Newline text nodes go only between
+ * element-only children (inter-element whitespace is insignificant there),
+ * and never inside text-content elements, where a stray newline renders as a
+ * space. Parse-aware on purpose: a `>`+`<` string replace would corrupt `><`
+ * sequences inside attribute values. No-indentation keeps diffs minimal —
+ * indentation re-touches every descendant line when nesting depth shifts.
+ * Idempotent, and pixel-identical to the compact form (asserted by a test). */
+export function formatSvg (svg: string): string {
+  const dom = new JSDOM(svg, { contentType: 'image/svg+xml' })
+  const { document } = dom.window
+  const walk = (el: Element): void => {
+    if (TEXT_CONTENT_ELEMENTS.has(el.localName)) return
+    const children = Array.from(el.childNodes)
+    const elementsOnly = children.length > 0 && children.every(node =>
+      node.nodeType === 1 || (node.nodeType === 3 && !(node.textContent ?? '').trim()))
+    if (elementsOnly) {
+      for (const node of children) {
+        if (node.nodeType === 3) el.removeChild(node) // re-format: drop old separators
+      }
+      for (const child of Array.from(el.children)) {
+        el.insertBefore(document.createTextNode('\n'), child)
+        walk(child)
+      }
+      el.appendChild(document.createTextNode('\n'))
+    } else {
+      Array.from(el.children).forEach(walk)
+    }
+  }
+  walk(document.documentElement)
+  return new dom.window.XMLSerializer().serializeToString(document.documentElement)
+}
 
 const baselineDir = join(dirname(fileURLToPath(import.meta.url)), '__snapshots__')
 const diffDir = join(dirname(fileURLToPath(import.meta.url)), '__image_diffs__')
@@ -44,15 +80,16 @@ export interface ImageMatchResult {
 export async function matchImageSnapshot (svg: string, name: string, options: ImageMatch = {}): Promise<ImageMatchResult> {
   const baselinePath = join(baselineDir, `${name}.svg`)
 
+  const formatted = formatSvg(svg)
   if (process.env.UPDATE_IMAGES === '1' || !existsSync(baselinePath)) {
     mkdirSync(baselineDir, { recursive: true })
-    writeFileSync(baselinePath, svg)
+    writeFileSync(baselinePath, formatted)
     return { ok: true, message: `${name}: baseline written` }
   }
 
   const baselineSvg = readFileSync(baselinePath, 'utf8')
   // Identical text is identical pixels — skip the double rasterization
-  if (baselineSvg === svg) return { ok: true, message: `${name}: identical` }
+  if (baselineSvg === formatted) return { ok: true, message: `${name}: identical` }
 
   const background = themeBackground(options.theme ?? 'light')
   const [actualBuffer, expectedBuffer] = await Promise.all([
@@ -75,7 +112,7 @@ export async function matchImageSnapshot (svg: string, name: string, options: Im
 
   if (ratio > maxRatio) {
     mkdirSync(diffDir, { recursive: true })
-    writeFileSync(join(diffDir, `${name}.actual.svg`), svg)
+    writeFileSync(join(diffDir, `${name}.actual.svg`), formatted)
     writeFileSync(join(diffDir, `${name}.actual.png`), actualBuffer)
     writeFileSync(join(diffDir, `${name}.diff.png`), PNG.sync.write(diff))
     return { ok: false, message: `${name}: ${(ratio * 100).toFixed(2)}% of pixels differ (allowed ${(maxRatio * 100).toFixed(2)}%) — actual and diff written to test/__image_diffs__ (UPDATE_IMAGES=1 to accept)` }
