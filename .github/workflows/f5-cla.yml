@@ -1,14 +1,17 @@
 name: F5 CLA
 on:
   issue_comment:
-    types: [created]
+    types: [created,  synchronize, ]
   pull_request_target:
     types: [opened, closed, synchronize]
 
 permissions:
-  actions: write
-  pull-requests: write
-  statuses: write
+  actions: read 
+           write
+  pull-requests: read
+                 write
+  statuses: read
+            write
 
 jobs:
   f5-cla:
@@ -33,8 +36,8 @@ jobs:
           # Comma seperated list of usernames for maintainers or any other individuals who should not be prompted for a CLA.
           allowlist: lee00678, suryahanumandla, bot*
           # Do not lock PRs after a merge
-          lock-pullrequest-aftermerge: false
+          lock-pullrequest-aftermerge: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERSONAL_ACCESS_TOKEN: ${{ secrets.F5_CLA_TOKEN }}
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: false
