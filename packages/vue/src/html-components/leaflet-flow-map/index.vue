@@ -1,13 +1,13 @@
-<script setup lang="ts" generic="PointDatum extends GenericDataRecord,FlowDatum extends GenericDataRecord">
+<script setup lang="ts" generic="PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord">
 // !!! This code was automatically generated. You should not change it !!!
-import { LeafletFlowMap, LeafletFlowMapConfigInterface, GenericDataRecord, MapLibreStyleSpecs } from '@unovis/ts'
-import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue'
+import type { GenericDataRecord, LeafletFlowMapConfigInterface } from '@unovis/ts'
+import { LeafletFlowMap } from '@unovis/ts'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 
-
-// data and required props 
+// data and required props
 type Props = LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
-const props = defineProps<Props & { data?: { points: PointDatum[]; flows?: FlowDatum[] } }>()
+const props = defineProps<Props & { data?: { points: PointDatum[], flows?: FlowDatum[] } }>()
 
 const data = computed(() => props.data)
 // config
@@ -19,16 +19,13 @@ const elRef = ref<HTMLDivElement>()
 
 onMounted(() => {
   nextTick(() => {
-    if(elRef.value)
-    component.value = new LeafletFlowMap<PointDatum, FlowDatum>(elRef.value, config.value, data.value)
-    
-    
+    if (elRef.value)
+      component.value = new LeafletFlowMap<PointDatum, FlowDatum>(elRef.value, config.value, data.value)
   })
 })
 
 onUnmounted(() => {
   component.value?.destroy()
-  
 })
 
 watch(config, (curr, prev) => {
@@ -43,7 +40,7 @@ watch(data, () => {
 })
 
 defineExpose({
-  component
+  component,
 })
 </script>
 
@@ -52,9 +49,8 @@ export const VisLeafletFlowMapSelectors = LeafletFlowMap.selectors
 </script>
 
 <template>
-  <div data-vis-leaflet-flow-map ref="elRef"/>
+  <div ref="elRef" data-vis-leaflet-flow-map />
 </template>
-
 
 <style>
   [data-vis-leaflet-flow-map] {

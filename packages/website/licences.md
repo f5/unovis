@@ -3,7 +3,6 @@
 | @docsearch/core                           | perpetual      | MIT          | 4.6.0             | Algolia, Inc. https://www.algolia.com                    |
 | @docsearch/react                          | perpetual      | MIT          | 4.6.0             | Algolia, Inc. https://www.algolia.com                    |
 | @docusaurus/core                          | perpetual      | MIT          | 3.9.2             | n/a                                                      |
-| @docusaurus/plugin-client-redirects       | perpetual      | MIT          | 3.9.2             | n/a                                                      |
 | @docusaurus/plugin-debug                  | perpetual      | MIT          | 3.9.2             | n/a                                                      |
 | @docusaurus/plugin-sitemap                | perpetual      | MIT          | 3.9.2             | n/a                                                      |
 | @docusaurus/preset-classic                | perpetual      | MIT          | 3.9.2             | n/a                                                      |

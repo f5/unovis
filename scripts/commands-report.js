@@ -64,6 +64,7 @@ const ROOT_SKIP_EXACT = new Set([
   'install:clean',
   'dev',
   'dev:gallery',
+  'dev:gallery:csp',
   'website',
   'postinstall',
   'audit-report',
