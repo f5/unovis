@@ -2,7 +2,7 @@ import type L from 'leaflet'
 import type Maplibre from 'maplibre-gl'
 import type { Map } from 'maplibre-gl'
 
-import { injectGlobal } from '@emotion/css'
+import { injectGlobal } from 'styles/emotion'
 
 // Utils
 import { isObject } from 'utils/data'
