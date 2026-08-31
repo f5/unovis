@@ -188,9 +188,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
         d => d.stackIndex // Key function for proper transitions
       )
 
+    const enteringGroupNodes = new Set(barGroupsEnter.nodes())
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
-      .attr('d', d => this._getBarPath(d, true))
+      .attr('d', (d, i, els) => this._getBarPath(d, true, enteringGroupNodes.has(els[i].parentNode as SVGGElement)))
       .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d.stackIndex)
       .style('fill', d => this._getBarStyle(d)?.fill ?? getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))
       .style('mask', d => this._getBarStyle(d)?.mask ?? getFillPatternValue(getPattern(d.datum, config.pattern, d.stackIndex)))
@@ -271,7 +272,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     return getValue<Datum, StyleDeclaration>(d.datum, this.config.barStyle, d.stackIndex)
   }
 
-  _getBarPath (d: StackedBarDataRecord<Datum>, isEntering = false): string {
+  _getBarPath (d: StackedBarDataRecord<Datum>, isEntering = false, isNewGroup = true): string {
     const { config } = this
     const yAccessors = this.getAccessors()
     const barWidth = this._getBarWidth()
@@ -283,10 +284,13 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const value = getNumber(d.datum, yAccessors[d.stackIndex], d.index)
     const height = isEntering ? 0 : Math.abs(this.valueScale(d.stacked[0]) - this.valueScale(d.stacked[1]))
     const h = !isEntering && config.barMinHeight1Px && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
-    // Entering bars collapse onto the stack's origin (the baseline, zero by default), so the whole
-    // stack grows out of it instead of each segment growing from the start of its own span
+    // Entering bars collapse onto their growth origin. For a brand-new group that's the stack's
+    // origin (the baseline, zero by default), so the whole stack grows out of it. For a segment
+    // entering an already-rendered group it's the start of its own span, so it grows in place
+    // instead of flying from the baseline through its siblings
+    const baselineValue = config.baseline ? getNumber(d.datum, config.baseline, d.index) || 0 : 0
     const y = isEntering
-      ? this.valueScale(config.baseline ? getNumber(d.datum, config.baseline, d.index) || 0 : 0)
+      ? this.valueScale(isNewGroup ? baselineValue : d.stacked[0])
       : this.valueScale(isNegative ? d.stacked[0] : d.stacked[1]) - (height < 1 && config.barMinHeight1Px ? 1 : 0)
 
     const x = -barWidth / 2
