@@ -22,7 +22,6 @@ export const globalStyles = injectGlobal`
   }
 
   ${darkThemeCssSelectors} ${`.${root}`} {
-    --vis-area-fill-opacity: 0.5;
     --vis-area-stroke-color: var(--vis-dark-area-stroke-color);
   }
 
