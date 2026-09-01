@@ -38,15 +38,19 @@ describe('spec versioning', () => {
     expect(spec?.specVersion).toBe(SPEC_VERSION)
   })
 
-  it('accepts same-major specs and specs with no version', () => {
+  it('accepts the current version and specs with no version', () => {
     expect(() => materializeChart(stubLib, lineSpec({ specVersion: SPEC_VERSION }))).not.toThrow()
     expect(() => materializeChart(stubLib, lineSpec())).not.toThrow()
   })
 
-  it('refuses a newer major with an actionable error', () => {
-    expect(() => materializeChart(stubLib, lineSpec({ specVersion: SPEC_VERSION + 1 })))
+  it('refuses newer versions under the semver-0.x rule, with an actionable error', () => {
+    // while the major is 0, a newer minor IS a breaking change
+    expect(() => materializeChart(stubLib, lineSpec({ specVersion: '0.2' })))
+      .toThrow(/newer than this renderer supports/)
+    expect(() => materializeChart(stubLib, lineSpec({ specVersion: '1.0' })))
       .toThrow(ChartInputError)
-    expect(() => materializeChart(stubLib, lineSpec({ specVersion: SPEC_VERSION + 1 })))
+    // unparseable versions are treated as newer, not silently accepted
+    expect(() => materializeChart(stubLib, lineSpec({ specVersion: 'bananas' as never })))
       .toThrow(/newer than this renderer supports/)
   })
 })

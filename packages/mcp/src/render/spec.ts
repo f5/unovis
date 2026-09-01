@@ -58,14 +58,19 @@ export interface AxisSpec {
 // keeps its full IR vocabulary
 export type { LegendItemSpec } from '@unovis/ssr'
 
-/** Version of the ChartSpec contract. Bump the integer on breaking IR
- * changes only; additions are non-breaking. Consumers that persist specs or
+/** Version of the ChartSpec contract, as `major.minor`.
+ *
+ * While the major is 0 the contract is explicitly unstable: breaking changes
+ * are allowed and bump the minor (0.1 → 0.2), each with a freshly frozen
+ * schema baseline. Additions never require a bump. Declaring 1.0 is the
+ * deliberate act of adopting the additive-only promise — from then on the
+ * major moves only on breaking changes. Consumers that persist specs or
  * embed documents compare it via the `unovis:ready` handshake. */
-export const SPEC_VERSION = 1
+export const SPEC_VERSION = '0.1'
 
 export interface ChartSpec {
   /** ChartSpec contract version this spec was written against (see SPEC_VERSION) */
-  specVersion?: number;
+  specVersion?: string;
   container: 'xy' | 'single';
   width: number;
   height: number;

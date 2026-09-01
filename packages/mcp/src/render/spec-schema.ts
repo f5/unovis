@@ -45,8 +45,8 @@ const axisSchema = z.object({
 }).catchall(z.unknown())
 
 export const chartSpecSchema = z.object({
-  specVersion: z.number().int().min(1).optional()
-    .describe('ChartSpec contract version (see SPEC_VERSION); additions are non-breaking, the integer moves only on breaking changes'),
+  specVersion: z.string().regex(/^\d+\.\d+$/).optional()
+    .describe('ChartSpec contract version as major.minor (see SPEC_VERSION). While the major is 0, breaking changes bump the minor; from 1.0 on, minors are additive and only the major breaks'),
   container: z.enum(['xy', 'single']),
   width: z.number().positive(),
   height: z.number().positive(),

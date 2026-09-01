@@ -53,7 +53,7 @@ jobs:
     - name: Check website docs are in sync
       run: |
         cd packages/website && pnpm run sync:mcp-docs
-        git diff --exit-code -- docs/mcp \
+        git diff --exit-code -- docs/mcp static/schema \
           || (echo "::error::packages/website/docs/mcp is stale — run 'pnpm --filter @unovis/website sync:mcp-docs' and commit the result" && exit 1)
     # Covers the env shims, every recipe (SVG snapshots), post-processing, the
     # MCP surface over a real client, the browser widget bundle, and

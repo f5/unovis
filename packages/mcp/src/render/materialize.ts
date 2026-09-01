@@ -140,10 +140,21 @@ function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: Mat
 }
 
 export function materializeChart (lib: UnovisLib, spec: ChartSpec, options: MaterializeOptions = {}): MaterializedChart {
-  // Additions to the IR are non-breaking, so only a newer major is refused —
-  // with a reason, instead of the blank chart version drift produces otherwise
-  if (spec.specVersion !== undefined && Math.floor(spec.specVersion) > SPEC_VERSION) {
-    throw new ChartInputError(`Chart spec version ${spec.specVersion} is newer than this renderer supports (${SPEC_VERSION}) — upgrade @unovis/mcp`)
+  // Refused with a reason instead of the blank chart version drift produces
+  // otherwise. Semver-0.x rule: while the major is 0 the minor is the
+  // breaking-change counter, so a newer minor is refused too; from 1.0 on,
+  // minors are additive and only a newer major is refused.
+  if (spec.specVersion !== undefined) {
+    const parse = (value: unknown): [number, number] => {
+      const match = /^(\d+)\.(\d+)$/.exec(String(value))
+      return match ? [Number(match[1]), Number(match[2])] : [Number.POSITIVE_INFINITY, 0]
+    }
+    const [major, minor] = parse(spec.specVersion)
+    const [supportedMajor, supportedMinor] = parse(SPEC_VERSION)
+    const newer = major > supportedMajor || (major === 0 && supportedMajor === 0 && minor > supportedMinor)
+    if (newer) {
+      throw new ChartInputError(`Chart spec version ${spec.specVersion} is newer than this renderer supports (${SPEC_VERSION}) — upgrade @unovis/mcp`)
+    }
   }
   const locale = spec.locale
   const base = materializeValue(spec.containerConfig ?? {}, locale) as Record<string, unknown>

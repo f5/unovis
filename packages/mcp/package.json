@@ -1,6 +1,6 @@
 {
   "name": "@unovis/mcp",
-  "description": "MCP server that renders Unovis charts to SVG locally in Node — no browser, no remote services",
+  "description": "MCP server that renders Unovis charts to SVG locally in Node \u2014 no browser, no remote services",
   "version": "1.7.0-mcp.2",
   "packageManager": "pnpm@10.23.0",
   "repository": {
@@ -43,7 +43,7 @@
       "default": "./dist/render/spec.js"
     },
     "./package.json": "./package.json",
-    "./chart-spec.schema.json": "./schema/chart-spec.v1.json"
+    "./chart-spec.schema.json": "./schema/chart-spec.v0.1.json"
   },
   "engines": {
     "node": ">=20"

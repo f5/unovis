@@ -46,7 +46,7 @@ describe('react native webview hosting', () => {
     const ready = bridgeMessages(page).find(m => m.type === 'unovis:ready')
     expect(ready, 'ready arrived on the RN bridge, not window.parent').toBeTruthy()
     expect(typeof ready!.version).toBe('string')
-    expect(typeof ready!.specVersion).toBe('number')
+    expect(ready!.specVersion).toMatch(/^\d+\.\d+$/) // major.minor contract version
   })
 
   it('accepts a string render message delivered on document (Android)', async () => {
