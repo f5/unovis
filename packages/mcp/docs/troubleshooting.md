@@ -29,21 +29,10 @@ used for measuring must match the font used for drawing.
 ## The client rejects the whole tool list
 
 If a client refuses to start with something like `input_schema: JSON schema is
-invalid. It must match JSON Schema draft 2020-12`, a tool schema is using a
-construct that only exists in draft-07. One bad schema takes down every tool,
-not just its own, because the tool list is validated as a unit.
-
-The SDK converts Zod v3 through `zod-to-json-schema`, which targets draft-07.
-Most of that output is valid 2020-12 as well; two things are not, and both are
-enforced by `test/tool-schemas.test.ts`:
-
-- **`z.tuple([a, b])`** lowers to the draft-07 array form of `items`, where
-  2020-12 requires `items` to be a schema. Use `z.array(a).length(2)`.
-- **Reusing one schema instance** inside a tool makes the converter emit
-  `$ref: #/properties/…`. That's valid, but clients that flatten refs drop the
-  subschema, leaving a property with no type — an array argument then arrives as
-  a string. Shared leaves (`fieldName()`, `hexColor()`) are factories so every
-  use site gets a fresh instance.
+invalid. It must match JSON Schema draft 2020-12`, one tool schema is invalid —
+and it takes down every tool, not just its own, because clients validate the
+tool list as a unit. Released versions guard against this, so if you see it,
+please report it with the client name and the full error message.
 
 ## A chart is blank
 
@@ -86,16 +75,12 @@ it would mean `outputType: "html"` silently producing a broken chart.
 > `@unovis/dagre-layout` ≥ 0.8.8-3. Earlier releases shipped extensionless ESM
 > imports that no standards-compliant Node loader could resolve.
 
-## The `tsx` loader can't load graph layouts
+## Graph charts time out under the `tsx` loader
 
-Running this package's **source** through `tsx` fails on the dynamic imports
-inside Unovis's graph layouts: the layout promise never settles, so the render
-times out after 20 seconds with "component layout never completed". Plain Node
-and vitest both work.
-
-That's why `pnpm dev` and `pnpm samples` build first and run the compiled
-output. `pnpm dev:tsx` is available for fast iteration, with the caveat that
-graph charts will not render under it.
+Running your script with `tsx` breaks the dynamic imports inside Unovis's
+graph layouts: the layout promise never settles, so a graph render times out
+after 20 seconds with "component layout never completed". Every other chart
+type is unaffected. Compile first and run plain Node (vitest also works).
 
 ## PNG has a transparent background
 
@@ -140,22 +125,5 @@ that safe. If you need byte-stable output (snapshot tests), pass a constant
 ## Something renders differently than in the browser
 
 Report it. The headless environment reimplements browser geometry, so a mismatch
-is a real bug in this package (or occasionally in Unovis, where several have
-already been found and fixed upstream). Useful details: the chart spec, the
+is a real bug in this package. Useful details: the chart spec, the
 output, and what you expected.
-
-## What the tests don't cover
-
-Worth knowing before you trust a green suite:
-
-- **Touch devices.** The Chromium smoke lane (`pnpm test:browser`) covers real
-  layout, paint, mouse hover and clicks — added after a crosshair bug passed
-  every jsdom test — but taps, drags and tooltip-linger semantics on actual
-  touch hardware remain untested.
-- **MCP Apps rendering in a commercial host.** The lifecycle is verified against the official AppBridge host implementation in the Chromium lane (sandboxed iframe, real handshake) — Claude/ChatGPT-specific behavior is not.
-- **Pixel baselines are light-theme.** Visual regression rasterizes every
-  fixture against committed baselines; dark theme is exercised structurally and
-  in `pnpm samples`, not pixel-compared.
-- **Non-`ts` code targets aren't compiled.** The vanilla-TypeScript output is
-  type-checked against `@unovis/ts`; the JSX and template targets are checked
-  structurally only.

@@ -19,23 +19,17 @@ tool call ──► recipe ──► ChartSpec ──► materializer ──► 
         SVG post-processing ──► standalone SVG ──► PNG (resvg)
 ```
 
-## Layers
+The work is split across two packages:
 
-| Package / directory | Responsibility |
-|---|---|
-| **`@unovis/ssr`** `src/env/` | The headless browser: jsdom plus the shims Unovis needs |
-| **`@unovis/ssr`** `src/svg/` | Turning a live SVG element into a standalone document |
-| **`@unovis/ssr`** `src/headless.ts`, `src/rasterize.ts` | `renderToSvg` (the SSR primitive) and SVG → PNG |
-| `src/render/` | `materialize.ts` (spec → components), `renderer.ts` (spec → SVG via `renderToSvg`) |
-| `src/recipes/` | Tool inputs → `ChartSpec` (one file per chart type) |
-| `src/codegen/` | `ChartSpec` → framework source |
-| `src/widget/` + `src/html/` | The browser bundle and the documents that host it |
-| `src/tools/`, `src/server.ts`, `src/cli.ts` | The MCP surface |
+- **[`@unovis/ssr`](https://www.npmjs.com/package/@unovis/ssr)** — the headless
+  browser environment, the `renderToSvg` SSR primitive, SVG post-processing and
+  SVG → PNG rasterization. It knows nothing about chart specs or MCP.
+- **`@unovis/mcp`** — the chart spec and the recipes that build it, the code
+  generator, the browser widget, and the MCP surface itself.
 
-The dependency arrows only point one way: [`@unovis/ssr`](https://www.npmjs.com/package/@unovis/ssr)
-knows nothing about specs, and `render` knows nothing about MCP. `renderToSvg`
-is the package boundary: this server consumes it exactly the way any other
-SSR consumer would, and re-exports it unchanged.
+The dependency arrows only point one way: `renderToSvg` is the package
+boundary, and this server consumes it exactly the way any other SSR consumer
+would, and re-exports it unchanged.
 
 ## The environment shims
 
@@ -99,8 +93,7 @@ The interactive outputs bundle the **same materializer** the headless renderer
 uses, so one code path turns a spec into a chart on both sides. esbuild keeps
 the bundle at ~670kB by importing components individually — the package barrel
 statically pulls in Leaflet, MapLibre and Three — and by excluding elkjs, whose
-1.4MB engine would dwarf everything else. A size budget in the build script
-fails the build if the barrel creeps back in.
+1.4MB engine would dwarf everything else.
 
 Documents don't carry those bytes raw, twice over. Two prebuilt variants split
 along the dependency line — `standard` (~330kB: XY and radial charts) and
@@ -110,85 +103,10 @@ that covers the spec. The chosen bundle is then inlined as a gzip+base64
 payload with a ~5kB synchronous self-extracting bootstrap. Net effect: a line
 chart document is ~140kB on disk, a graph document ~290kB, and the spec and
 styles stay readable in both. A spec rendered against a bundle that lacks its
-component fails with an explicit error, and size budgets fail the build if
-either bundle outgrows its reason to exist.
+component fails with an explicit error instead of drawing a blank chart.
 
 Interactions are derived from the spec: per-chart-type tooltip templates, a
 crosshair for continuous XY charts, and the real HTML legend. Hosts that opt
 in also receive clicks as normalized events, and native WebViews get the same
 protocol over their own bridge ([Interactive charts](./interactive.md),
 [Native WebViews](./webview.md)).
-
-## Upstream changes
-
-A handful of fixes belong in `@unovis/ts` rather than in shims, and were made
-there:
-
-- `ContainerCore` falls back to the configured width/height when `clientWidth`
-  is 0 (detached or non-layouting environments).
-- `getPixelsPerInch` pre-seeds its cache before measuring — without layout,
-  `getComputedStyle` returns the specified value (`'128in'`), which recursed
-  infinitely.
-- Root `index.js` / `maps.js` entries so `@unovis/ts` resolves in plain Node.
-
-The trend matters: as the core becomes SSR-friendlier, `@unovis/ssr`'s shim
-layer shrinks. Three upstream issues track the next deletions:
-[#888](https://github.com/f5/unovis/issues/888) (text measurement via canvas
-instead of getBBox — retires the hardest shim),
-[#889](https://github.com/f5/unovis/issues/889) (event binding without the
-500ms throttle window), and
-[#890](https://github.com/f5/unovis/issues/890) — already fixed upstream: the
-diagnostics are cleared and the core build now fails if the entry
-declarations are missing, which retired this package's post-build workaround.
-One down, two to go.
-
-## Testing strategy
-
-| Layer | What it proves |
-|---|---|
-| Env unit tests | Bbox math, variable resolution, frame flushing |
-| Visual regression | Every fixture compared as pixels against a text-stored SVG baseline (both sides rasterized at test time) — attribute noise passes, visual changes fail with a reviewable diff image |
-| Spec contract | Version gating, locale-aware formatting, derived time-axis ticks |
-| Post-processing tests | Id rewriting, variable baking, header synthesis, theme |
-| MCP integration | Real SDK client over an in-memory transport: schemas, every output type, error paths, tool filtering, concurrency |
-| Tool schemas | Every advertised schema validated against the draft 2020-12 meta-schema, with no `$ref`s — the shape a client must accept before any chart can render ([why](./troubleshooting.md#the-client-rejects-the-whole-tool-list)) |
-| Widget tests | The **real browser bundle** executed in jsdom: rendering, a simulated hover producing tooltip content, the embed protocol with its version handshake, clicks surfacing as normalized events, the React Native bridge and runtime theme switching |
-| Widget matrix | All 15 chart types rendered interactively with a clean console |
-| Browser smoke lane | Headless Chromium (real layout, paint and input): every family renders with a clean console, hover produces the crosshair readout, a click travels the embed protocol, the theme message re-renders — the interactions jsdom cannot exercise |
-| Codegen | Generated TypeScript **type-checked against `@unovis/ts`** |
-| `pnpm samples` | Every fixture rendered to SVG + PNG, light and dark, as a contact sheet for eyeball review |
-
-Graph charts are deliberately not snapshotted — even as pixels. They keep
-settling for a few frames after their layout reports completion — fit-view,
-label collision passes — so exact geometry depends on machine load, and
-`force` layouts additionally call `Math.random()`. The renderer waits out a
-short grace period so real output doesn't lose those late frames, but a
-snapshot would still be a false signal that fails randomly under CI load.
-Structural assertions, the widget matrix and the async-layout probe cover
-graphs instead.
-
-`pnpm test` builds the widget bundle first, so a fresh clone can run the suite
-without a manual build step.
-
-## Continuous integration
-
-The `mcp` job in `.github/workflows/pull_request.yml` runs on every pull
-request: build (`@unovis/ts` then this package), type-check, lint, the full test
-suite, and the sample gallery — which is uploaded as a build artifact so a
-reviewer can look at the charts instead of trusting a green check.
-
-Inter is cached at `~/.cache/unovis-ssr` (keyed on `@unovis/ssr`'s `src/env/fonts.ts`, which
-holds the pinned version and checksum). That keeps the suite off the network and
-keeps text metrics — and therefore the SVG snapshots — reproducible between
-runs. Baselines are SVG text, one element per line: a visual change reviews
-as a few changed lines instead of one unreadable kilometer, and git stores
-deltas instead of binary copies. The formatter is parse-aware and provably
-pixel-neutral — a control test requires zero differing pixels between the
-compact and formatted forms, because whitespace inside SVG text content is
-significant and "formatting is safe" is a claim, not a given. Both the baseline and the fresh render rasterize through
-the same resvg on the same machine at compare time, so platform differences
-cancel — the tight pixel tolerance only absorbs sub-pixel jitter from
-harmless baseline drift.
-
-What the suite can't prove is covered in
-[Troubleshooting](./troubleshooting.md#what-the-tests-dont-cover).

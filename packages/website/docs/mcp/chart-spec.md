@@ -26,7 +26,7 @@ reach Unovis options the tool schemas deliberately don't expose.
 
 ```ts
 interface ChartSpec {
-  specVersion?: number                         // contract version (see below)
+  specVersion?: string                         // contract version, e.g. "0.1" (see below)
   container: 'xy' | 'single'
   width: number
   height: number
@@ -76,22 +76,18 @@ documents — so it carries a version: `SPEC_VERSION` (importable from
 produce as `major.minor`.
 
 The 0 major is deliberate: the contract is still settling, and **while the
-major is 0, breaking changes are allowed and bump the minor** (0.1 → 0.2),
-each with a freshly frozen schema baseline. Additions never require a bump.
-Declaring 1.0 will be the deliberate act of adopting the additive-only
-promise — from then on, only the major breaks. A renderer or widget given a
-newer spec refuses with an explicit error instead of drawing a wrong or blank
-chart, and the widget reports `{ version, specVersion }` in its
+major is 0, breaking changes are allowed and bump the minor** (0.1 → 0.2).
+Additions never require a bump. Declaring 1.0 will be the deliberate act of
+adopting the additive-only promise — from then on, only the major breaks. A
+renderer or widget given a newer spec refuses with an explicit error instead
+of drawing a wrong or blank chart, and the widget reports
+`{ version, specVersion }` in its
 [`unovis:ready` handshake](./interactive.md#protocol) so hosts can assert
 compatibility up front. Specs without `specVersion` are treated as current.
 
-The policy is enforced, not promised: a frozen baseline of the current schema
-is committed next to it, and CI fails if the schema removes a property,
-changes a type, drops an enum value, or adds a new requirement — the four ways
-an "additive" change quietly isn't. Breaking on purpose means bumping the
-minor (while at 0.x) and freezing a new baseline, so breaks are chosen, never
-stumbled into. The schema also resolves at its `$id`:
-<https://unovis.dev/schema/chart-spec.v0.1.json>.
+A version bump is always a deliberate act, never an accident — the published
+schema is guarded against silent contract changes. It also resolves at its
+`$id`: <https://unovis.dev/schema/chart-spec.v0.1.json>.
 
 ## A complete example
 
