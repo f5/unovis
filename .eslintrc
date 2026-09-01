@@ -134,6 +134,12 @@
     "rules": {
       "@typescript-eslint/explicit-function-return-type": "off"
     }
+  },
+  {
+    "files": ["packages/mcp/**"],
+    "settings": {
+      "import/core-modules": ["@unovis/ssr"]
+    }
   }
 ]
 }
