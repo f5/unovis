@@ -146,7 +146,7 @@ export default function Chart (): JSX.Element {
   return (
     <>
       <VisXYContainer height={480}>
-        <VisGroupedBar data={data} x={(d, i) => i} y={[d => d.rev]} orientation="vertical" roundedCorners={true} />
+        <VisGroupedBar data={data} x={(d, i) => i} y={[d => d.rev]} orientation="vertical" roundedCorners={2} />
         <VisAxis type="x" gridLine={false} tickFormat={(index: number | Date) => categories[Math.round(Number(index))]} tickValues={[0, 1]} />
         <VisAxis type="y" gridLine={true} tickFormat={formatNumber} />
       </VisXYContainer>
@@ -166,6 +166,5 @@ Notes on the generated code:
   string, which wouldn't type-check.
 - Map charts import their topojson (`import { WorldMapTopoJSON } from
   '@unovis/ts/maps'`) instead of inlining megabytes of geometry.
-- The vanilla-TypeScript target is type-checked against `@unovis/ts` in this
-  package's test suite, so the emitted imports, generics and prop names are
-  known to be real.
+- The emitted imports, generics and prop names are verified against
+  `@unovis/ts`, so the vanilla-TypeScript output compiles as-is.

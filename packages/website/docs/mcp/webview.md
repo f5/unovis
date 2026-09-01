@@ -80,14 +80,12 @@ app builds.
 ## Security posture
 
 The bundle contains no `fetch`, `XMLHttpRequest`, `WebSocket` or dynamic
-imports — asserted by a test on the built artifact — so the WebView needs no
-network access at all. Combined with local-asset loading, the chart surface
-adds zero egress.
+imports, so the WebView needs no network access at all. Combined with
+local-asset loading, the chart surface adds zero egress.
 
 ## Touch behavior
 
 Interaction events (`events: true`) report taps the same way clicks are
 reported in a browser. Two knowns: lines and areas have no per-datum element
-(the crosshair is their readout — it tracks touch-drag), and Unovis binds
-user event handlers through a throttled pass, active within ~500ms of the
-render settling.
+(the crosshair is their readout — it tracks touch-drag), and tap handlers
+become active within ~500ms of the render settling.

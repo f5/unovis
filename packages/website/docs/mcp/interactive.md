@@ -68,7 +68,7 @@ official since the 2026-07-28 protocol revision. Every chart tool declares its
 template ahead of time (`_meta.ui.resourceUri: "ui://unovis/chart"`), so hosts
 can prefetch, cache and security-review the widget before any call — and the
 review is easy: the resource ships with **empty CSP allowlists**, because the
-widget's no-network property is a tested guarantee, not a promise. The widget implements
+widget makes no network requests at all. The widget implements
 the full view lifecycle — it initiates `ui/initialize`, signals
 `ui/notifications/initialized`, renders on `ui/notifications/tool-result`,
 adopts the host's theme (including live `host-context-changed` switches),
@@ -151,10 +151,9 @@ Sankey and graph links report `{ source, target, value }`; treemap and nested
 donut segments report `{ key, value }`.
 
 Two shapes don't click: **lines and areas** have no per-datum element (the
-crosshair is their readout), and Unovis attaches user event listeners through
-a throttled setup pass, so handlers become active **within ~500ms of the
-render settling** — relevant only to automated tests that click immediately
-(tracked upstream as [f5/unovis#889](https://github.com/f5/unovis/issues/889)).
+crosshair is their readout), and click handlers become active **within ~500ms
+of the render settling** — relevant only if you automate clicks immediately
+after rendering.
 
 Using the widget API directly, pass a callback instead:
 
