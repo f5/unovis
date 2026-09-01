@@ -1,14 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://unovis.dev/schema/chart-spec.v1.json",
+  "$id": "https://unovis.dev/schema/chart-spec.v0.1.json",
   "title": "Unovis ChartSpec",
-  "description": "The @unovis/mcp chart spec contract, version 1. Additions are non-breaking; the version moves only on breaking changes.",
+  "description": "The @unovis/mcp chart spec contract, version 0.1. While the major is 0, breaking changes bump the minor; from 1.0 on, additions are non-breaking and only the major breaks.",
   "type": "object",
   "properties": {
     "specVersion": {
-      "type": "integer",
-      "minimum": 1,
-      "description": "ChartSpec contract version (see SPEC_VERSION); additions are non-breaking, the integer moves only on breaking changes"
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "ChartSpec contract version as major.minor (see SPEC_VERSION). While the major is 0, breaking changes bump the minor; from 1.0 on, minors are additive and only the major breaks"
     },
     "container": {
       "type": "string",

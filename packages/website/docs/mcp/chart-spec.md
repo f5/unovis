@@ -71,20 +71,27 @@ options the tools don't expose.
 ## Versioning
 
 The spec is a persistence format — apps store specs and commit generated embed
-documents — so it carries a version. `SPEC_VERSION` (importable from
-`@unovis/mcp/spec`) is the current contract; the recipes stamp it into every
-spec they produce. The policy: **additions are non-breaking; the integer bumps
-only on breaking changes.** A renderer or widget given a spec with a newer
-major refuses with an explicit error instead of drawing a wrong or blank
+documents — so it carries a version: `SPEC_VERSION` (importable from
+`@unovis/mcp/spec`), currently **0.1**, stamped into every spec the recipes
+produce as `major.minor`.
+
+The 0 major is deliberate: the contract is still settling, and **while the
+major is 0, breaking changes are allowed and bump the minor** (0.1 → 0.2),
+each with a freshly frozen schema baseline. Additions never require a bump.
+Declaring 1.0 will be the deliberate act of adopting the additive-only
+promise — from then on, only the major breaks. A renderer or widget given a
+newer spec refuses with an explicit error instead of drawing a wrong or blank
 chart, and the widget reports `{ version, specVersion }` in its
 [`unovis:ready` handshake](./interactive.md#protocol) so hosts can assert
 compatibility up front. Specs without `specVersion` are treated as current.
 
-The policy is enforced, not promised: a frozen baseline of the v1 schema is
-committed next to it, and CI fails if the current schema removes a property,
+The policy is enforced, not promised: a frozen baseline of the current schema
+is committed next to it, and CI fails if the schema removes a property,
 changes a type, drops an enum value, or adds a new requirement — the four ways
-an "additive" change quietly isn't. Breaking on purpose means bumping
-`SPEC_VERSION` and freezing a new baseline.
+an "additive" change quietly isn't. Breaking on purpose means bumping the
+minor (while at 0.x) and freezing a new baseline, so breaks are chosen, never
+stumbled into. The schema also resolves at its `$id`:
+<https://unovis.dev/schema/chart-spec.v0.1.json>.
 
 ## A complete example
 

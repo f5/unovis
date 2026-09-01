@@ -7,7 +7,7 @@
  * Run: pnpm sync:mcp-docs (chained from the website's start and build scripts)
  * Check for drift in CI with: pnpm sync:mcp-docs && git diff --exit-code docs/mcp
  */
-import { mkdirSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'node:fs'
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -72,4 +72,13 @@ PAGES.forEach(([from, to, description], index) => {
   writeFileSync(join(target, to), frontmatter + addBanner(rewriteLinks(markdown)))
 })
 
-console.error(`✓ wrote ${PAGES.length} pages to docs/mcp`)
+// The chart-spec schema's $id points at unovis.dev/schema/… — serve it there
+const schemaSource = join(websiteRoot, '..', 'mcp', 'schema')
+const schemaTarget = join(websiteRoot, 'static', 'schema')
+rmSync(schemaTarget, { recursive: true, force: true })
+mkdirSync(schemaTarget, { recursive: true })
+for (const file of readdirSync(schemaSource).filter(f => f.endsWith('.json') && !f.includes('baseline'))) {
+  copyFileSync(join(schemaSource, file), join(schemaTarget, file))
+}
+
+console.error(`✓ wrote ${PAGES.length} pages to docs/mcp (+ static/schema)`)

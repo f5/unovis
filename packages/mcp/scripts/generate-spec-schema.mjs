@@ -21,7 +21,7 @@ const schema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: `https://unovis.dev/schema/chart-spec.v${SPEC_VERSION}.json`,
   title: 'Unovis ChartSpec',
-  description: `The @unovis/mcp chart spec contract, version ${SPEC_VERSION}. Additions are non-breaking; the version moves only on breaking changes.`,
+  description: `The @unovis/mcp chart spec contract, version ${SPEC_VERSION}. While the major is 0, breaking changes bump the minor; from 1.0 on, additions are non-breaking and only the major breaks.`,
   ...zodToJsonSchema(chartSpecSchema, { target: 'jsonSchema7' }),
 }
 
