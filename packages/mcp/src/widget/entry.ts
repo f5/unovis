@@ -14,6 +14,15 @@ import type { ChartEvent } from './events.js'
 import { SPEC_VERSION } from '../render/spec.js'
 import type { ChartSpec } from '../render/spec.js'
 
+/** Error text comes from exceptions that can echo spec content, so it is
+ * rendered as a text node rather than markup */
+function showError (root: HTMLElement, message: string): void {
+  const el = document.createElement('div')
+  el.className = 'uv-error'
+  el.textContent = message
+  root.replaceChildren(el)
+}
+
 // Injected by scripts/build-widget.mjs; 'dev' when running unbundled (tests)
 // eslint-disable-next-line @typescript-eslint/naming-convention
 declare const __UNOVIS_MCP_VERSION__: string
@@ -191,7 +200,7 @@ function startEmbedMode (): void {
       lastOptions = rawOptions
       postSize()
     } catch (e) {
-      root.innerHTML = `<div class="uv-error">${String(e instanceof Error ? e.message : e)}</div>`
+      showError(root, String(e instanceof Error ? e.message : e))
     }
   }
 
@@ -292,7 +301,7 @@ function renderInlineSpec (): void {
     const options = optionsEl?.textContent ? JSON.parse(optionsEl.textContent) as RenderOptions : {}
     render(JSON.parse(specEl.textContent) as ChartSpec, root, options)
   } catch (e) {
-    root.innerHTML = `<div class="uv-error">Failed to render chart: ${String(e instanceof Error ? e.message : e)}</div>`
+    showError(root, `Failed to render chart: ${String(e instanceof Error ? e.message : e)}`)
   }
 }
 

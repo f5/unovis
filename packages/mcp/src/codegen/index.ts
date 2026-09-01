@@ -40,14 +40,28 @@ const camelToKebab = (name: string): string =>
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
 const json = (value: unknown, spaces = 2): string => requote(JSON.stringify(value, null, spaces))
 
-/** Swap JSON's double quotes for single quotes, leaving escaped content intact */
+/** Swap JSON's double quotes for single quotes. Works on the already-escaped
+ * string bodies, so `\n`, `\u2028` and friends survive untouched; a string
+ * that itself contains a single quote keeps its double quotes (the
+ * `avoidEscape` style) instead of growing backslashes. The scan is a single
+ * pass — JSON.stringify output is well-formed, but the data inside it is
+ * caller-supplied. */
 function requote (jsonText: string): string {
-  return jsonText.replace(/"(?:[^"\\]|\\.)*"/g, (match) => {
-    const text = JSON.parse(match) as string
-    return /^[A-Za-z_$][\w$]*$/.test(text) || !/['\\]/.test(text)
-      ? `'${text.replace(/'/g, "\\'")}'`
-      : match
-  }).replace(/'([A-Za-z_$][\w$]*)':/g, '$1:') // unquote plain object keys
+  let out = ''
+  let i = 0
+  while (i < jsonText.length) {
+    if (jsonText[i] !== '"') {
+      out += jsonText[i]
+      i += 1
+      continue
+    }
+    let end = i + 1
+    while (end < jsonText.length && jsonText[end] !== '"') end += jsonText[end] === '\\' ? 2 : 1
+    const body = jsonText.slice(i + 1, end)
+    out += body.includes("'") ? `"${body}"` : `'${body.replace(/\\"/g, '"')}'`
+    i = end + 1
+  }
+  return out.replace(/'([A-Za-z_$][\w$]*)':/g, '$1:') // unquote plain object keys
 }
 
 /** One record per line — readable for the dozens of rows charts usually carry */
@@ -56,7 +70,7 @@ function dataLiteralFor (data: unknown): string {
   const rows = data.map(record => {
     if (typeof record !== 'object' || record === null) return `  ${json(record, 0)},`
     const fields = Object.entries(record)
-      .map(([key, value]) => `${/^[A-Za-z_$][\w$]*$/.test(key) ? key : `'${key}'`}: ${json(value, 0)}`)
+      .map(([key, value]) => `${/^[A-Za-z_$][\w$]*$/.test(key) ? key : json(key)}: ${json(value, 0)}`)
     return `  { ${fields.join(', ')} },`
   })
   return `[\n${rows.join('\n')}\n]`

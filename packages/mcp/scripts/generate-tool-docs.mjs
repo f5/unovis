@@ -18,7 +18,7 @@ const COMMON = new Set([
   'outputType', 'outputPath', 'scale', 'framework', 'locale',
 ])
 
-const escape = (text) => String(text).replace(/\|/g, '\\|').replace(/\n+/g, ' ')
+const escape = (text) => String(text).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\n+/g, ' ')
 
 /** Human-readable type for a zod schema, unwrapping optional/default layers */
 function typeOf (schema) {

@@ -98,4 +98,37 @@ describe('hostile specs stay inert', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((page.window as any).__pwned).toBeUndefined()
   })
+
+  it('render failures echo the offending value as text, never as markup', async () => {
+    // The error message quotes the spec's component type; rendered through
+    // innerHTML that quote would have been live HTML
+    const spec = { ...hostileSpec(), components: [{ type: PAYLOADS[1], config: {} }] }
+    const page = await loadPage(buildChartDocument(spec, { duration: 0 }))
+
+    const error = page.window.document.querySelector('.uv-error')
+    expect(error?.textContent).toContain('Failed to render chart')
+    expect(error?.textContent).toContain('<img')
+    expect(error?.children.length, 'message rendered as a text node').toBe(0)
+    expect(page.window.document.querySelectorAll('img').length).toBe(0)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((page.window as any).__pwned).toBeUndefined()
+  })
+
+  it('spec-controlled names cannot reach inherited object members', async () => {
+    // `MapProjection['constructor']` is Object — callable, and not a projection
+    for (const name of ['constructor', 'toString', '__proto__']) {
+      const spec: ChartSpec = {
+        container: 'single',
+        width: 400,
+        height: 200,
+        theme: 'light',
+        components: [{
+          type: 'TopoJSONMap',
+          config: { topojson: { $unovisMap: 'WorldMapTopoJSON' }, projection: { $mapProjection: name } },
+        }],
+        data: { areas: [] },
+      }
+      await expect(renderChart(spec)).rejects.toThrow(`Unknown map projection: ${name}`)
+    }
+  })
 })
