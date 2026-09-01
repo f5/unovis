@@ -14,7 +14,7 @@ export interface VarContext {
   overrides?: Map<string, string>;
 }
 
-const VAR_PATTERN = /var\(\s*(--[\w-]+)\s*(?:,\s*([^()]*(?:\([^()]*\)[^()]*)*))?\)/
+const VAR_PATTERN = /var\(\s*(--[\w-]+)\s*(?:,([^()]*(?:\([^()]*\)[^()]*)*))?\)/
 
 export function lookupVar (name: string, el: Element | null, ctx: VarContext): string | undefined {
   // Inline definitions on the element chain win (matches browser behavior)
