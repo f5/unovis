@@ -5,6 +5,7 @@
  * that has a tooltip also reports clicks, normalized to the caller's own flat
  * data records — never Unovis's internal render wrappers.
  */
+import { hasOwn } from '../render/own-property.js'
 import type { ComponentSpec } from '../render/spec.js'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -107,7 +108,7 @@ export function componentEvents (
 ): Record<string, Record<string, (d: Datum) => void>> | undefined {
   const selectors = clickableSelectors(lib, component.type)
   if (!selectors.length) return undefined
-  const extract = extractors[component.type] ?? flatRecord
+  const extract = hasOwn(extractors, component.type) ? extractors[component.type] : flatRecord
 
   const events: Record<string, Record<string, (d: Datum) => void>> = {}
   for (const selector of selectors) {

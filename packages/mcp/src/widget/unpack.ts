@@ -22,6 +22,9 @@ if (payload?.textContent) {
     script.textContent = source
     document.head.appendChild(script)
   } catch (e) {
-    document.body.innerHTML = `<div class="uv-error">Failed to unpack the chart bundle: ${String(e instanceof Error ? e.message : e)}</div>`
+    const el = document.createElement('div')
+    el.className = 'uv-error'
+    el.textContent = `Failed to unpack the chart bundle: ${String(e instanceof Error ? e.message : e)}`
+    document.body.replaceChildren(el)
   }
 }
