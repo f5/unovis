@@ -202,10 +202,12 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       ? (isVertical ? VERTICAL_X : HORIZONTAL_X)
       : (isVertical ? VERTICAL_Y : HORIZONTAL_Y)
     // `position` is typed as the enum but can hold any string when the config
-    // comes from JSON; fall back to the default instead of calling whatever
-    // the lookup happens to reach
-    const layoutFn = layoutMap[position]
-    const layout: PlotlineLayoutValue = (typeof layoutFn === 'function' ? layoutFn : layoutMap[PlotlineLabelPosition.TopRight])({ width, height, offsetX, offsetY })
+    // comes from JSON; only own keys of the map are valid positions, anything
+    // else (including inherited names like '__proto__') falls back to the default
+    const layoutFn = Object.prototype.hasOwnProperty.call(layoutMap, position)
+      ? layoutMap[position]
+      : layoutMap[PlotlineLabelPosition.TopRight]
+    const layout: PlotlineLayoutValue = layoutFn({ width, height, offsetX, offsetY })
 
     return {
       ...layout,
