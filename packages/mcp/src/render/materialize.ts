@@ -5,7 +5,6 @@
  */
 import type { UnovisLib } from '@unovis/ssr'
 import { isAccessorRef, SPEC_VERSION } from './spec.js'
-import { hasOwn } from './own-property.js'
 import { timeTickValuesFromData } from './time-ticks.js'
 import type { AccessorRef, ChartSpec, ComponentSpec } from './spec.js'
 
@@ -120,7 +119,9 @@ export interface MaterializeOptions {
 function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: MaterializeOptions, locale?: string): unknown {
   const allowed = XY_COMPONENTS.has(spec.type) || SINGLE_COMPONENTS.has(spec.type)
   if (!allowed) throw new ChartInputError(`Unsupported component type: ${spec.type}`)
-  const componentClass = hasOwn(lib, spec.type)
+  // Own-property checks stay inline (not in a helper) so static analysis can
+  // see that spec-controlled names never reach inherited members
+  const componentClass = Object.prototype.hasOwnProperty.call(lib, spec.type)
     ? (lib as unknown as Record<string, new (config: Record<string, unknown>) => unknown>)[spec.type]
     : undefined
   if (typeof componentClass !== 'function') throw new ChartInputError(`Component ${spec.type} is not available in this bundle — regenerate the document for this chart type`)
@@ -134,7 +135,9 @@ function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: Mat
   if (projection?.$mapProjection) {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const projections = (lib as unknown as { MapProjection?: Record<string, () => unknown> }).MapProjection
-    const factory = projections && hasOwn(projections, projection.$mapProjection) ? projections[projection.$mapProjection] : undefined
+    const factory = projections && Object.prototype.hasOwnProperty.call(projections, projection.$mapProjection)
+      ? projections[projection.$mapProjection]
+      : undefined
     if (typeof factory !== 'function') throw new ChartInputError(`Unknown map projection: ${projection.$mapProjection}`)
     config.projection = factory()
   }
