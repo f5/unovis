@@ -68,7 +68,9 @@ const ROOT_SKIP_EXACT = new Set([
   'audit-report',
   'lint:fix', // temporarily disabled
   'lint', // temporarily disabled
-  'cmds-report'
+  'cmds-report',
+  'test:mcp',
+  'test:ssr'
 ])
 const ROOT_SKIP_CONTAINS = ['publish', 'update-version', 'gallery']
 const ROOT_SKIP_STARTS = ['build'] // 'build' and 'build:*'
@@ -98,6 +100,9 @@ const WS_SPECIFIC_SKIP = {
   // standalone `lint` in parallel causes it to see unfixed generated files.
   '@unovis/solid': new Set(['lint']),
 }
+
+// Whole workspaces to skip entirely (not part of the standard build/lint chain)
+const WORKSPACE_SKIP = new Set(['@unovis/mcp', '@unovis/ssr'])
 
 // ─── Task setup ───────────────────────────────────────────────────────────────
 
@@ -157,6 +162,7 @@ wsDirs.forEach(wsDir => {
   if (!fs.existsSync(wsPkgPath)) return
   const wsPkg = JSON.parse(fs.readFileSync(wsPkgPath, 'utf8'))
   const wsLabel = wsPkg.name || path.basename(wsDir)
+  if (WORKSPACE_SKIP.has(wsLabel)) return
   Object.entries(wsPkg.scripts || {}).forEach(([name, script]) => {
     if (WS_SKIP_EXACT.has(name)) return
     if (WS_SKIP_CONTAINS.some(p => name.includes(p))) return
