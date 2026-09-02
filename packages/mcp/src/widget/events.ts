@@ -108,7 +108,8 @@ export function componentEvents (
 ): Record<string, Record<string, (d: Datum) => void>> | undefined {
   const selectors = clickableSelectors(lib, component.type)
   if (!selectors.length) return undefined
-  const extract = hasOwn(extractors, component.type) ? extractors[component.type] : flatRecord
+  const candidate = hasOwn(extractors, component.type) ? extractors[component.type] : undefined
+  const extract = typeof candidate === 'function' ? candidate : flatRecord
 
   const events: Record<string, Record<string, (d: Datum) => void>> = {}
   for (const selector of selectors) {

@@ -123,7 +123,7 @@ function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: Mat
   const componentClass = hasOwn(lib, spec.type)
     ? (lib as unknown as Record<string, new (config: Record<string, unknown>) => unknown>)[spec.type]
     : undefined
-  if (!componentClass) throw new ChartInputError(`Component ${spec.type} is not available in this bundle — regenerate the document for this chart type`)
+  if (typeof componentClass !== 'function') throw new ChartInputError(`Component ${spec.type} is not available in this bundle — regenerate the document for this chart type`)
   const config = materializeValue(spec.config, locale) as Record<string, unknown>
   config.duration = options.duration ?? 0
   if (ASYNC_COMPONENTS.has(spec.type) && options.onComponentComplete) config.onRenderComplete = options.onComponentComplete
@@ -135,7 +135,7 @@ function instantiateComponent (lib: UnovisLib, spec: ComponentSpec, options: Mat
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const projections = (lib as unknown as { MapProjection?: Record<string, () => unknown> }).MapProjection
     const factory = projections && hasOwn(projections, projection.$mapProjection) ? projections[projection.$mapProjection] : undefined
-    if (!factory) throw new ChartInputError(`Unknown map projection: ${projection.$mapProjection}`)
+    if (typeof factory !== 'function') throw new ChartInputError(`Unknown map projection: ${projection.$mapProjection}`)
     config.projection = factory()
   }
   // eslint-disable-next-line new-cap
