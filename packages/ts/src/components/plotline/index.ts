@@ -198,15 +198,14 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
     const isVertical = orientation === PlotlineLabelOrientation.Vertical
     const rotation = isVertical ? -90 : 0
 
-    let layout: PlotlineLayoutValue
-
-    if (axis === AxisType.X) {
-      const map = isVertical ? VERTICAL_X : HORIZONTAL_X
-      layout = map[position]({ width, height, offsetX, offsetY })
-    } else {
-      const map = isVertical ? VERTICAL_Y : HORIZONTAL_Y
-      layout = map[position]({ width, height, offsetX, offsetY })
-    }
+    const layoutMap = axis === AxisType.X
+      ? (isVertical ? VERTICAL_X : HORIZONTAL_X)
+      : (isVertical ? VERTICAL_Y : HORIZONTAL_Y)
+    // `position` is typed as the enum but can hold any string when the config
+    // comes from JSON; fall back to the default instead of calling whatever
+    // the lookup happens to reach
+    const layoutFn = layoutMap[position]
+    const layout: PlotlineLayoutValue = (typeof layoutFn === 'function' ? layoutFn : layoutMap[PlotlineLabelPosition.TopRight])({ width, height, offsetX, offsetY })
 
     return {
       ...layout,
