@@ -131,4 +131,24 @@ describe('hostile specs stay inert', () => {
       await expect(renderChart(spec)).rejects.toThrow(`Unknown map projection: ${name}`)
     }
   })
+
+  it('unknown label positions on plot decorations fall back instead of crashing the render', async () => {
+    // `labelPosition` indexes a layout map; '__proto__' used to reach
+    // Object.prototype and throw "is not a function" mid-render
+    for (const position of ['__proto__', 'constructor', 'not-a-position']) {
+      const spec: ChartSpec = {
+        ...hostileSpec(),
+        title: 'decorations',
+        components: [
+          { type: 'Line', config: { x: { $field: 'x', as: 'number' }, y: { $field: 'y', as: 'number' } } },
+          { type: 'Plotband', config: { from: 1, to: 2, labelText: 'band label', labelPosition: position } },
+          { type: 'Plotline', config: { value: 2.5, labelText: 'line label', labelPosition: position } },
+        ],
+        data: [{ x: 0, y: 1 }, { x: 1, y: 3 }],
+      }
+      const { svg } = await renderChart(spec)
+      expect(svg).toContain('band label')
+      expect(svg).toContain('line label')
+    }
+  })
 })
