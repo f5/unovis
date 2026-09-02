@@ -217,13 +217,14 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
     const rotation = isVertical ? -90 : 0
     const args = { startX, startY, width, height, offsetX, offsetY }
 
-    let layoutPartial: Omit<PlotbandLabelLayout, 'rotation'>
-
-    if (axis === AxisType.X) {
-      layoutPartial = (isVertical ? VERTICAL_X : HORIZONTAL_X)[position](args)
-    } else {
-      layoutPartial = (isVertical ? VERTICAL_Y : HORIZONTAL_Y)[position](args)
-    }
+    const layoutMap = axis === AxisType.X
+      ? (isVertical ? VERTICAL_X : HORIZONTAL_X)
+      : (isVertical ? VERTICAL_Y : HORIZONTAL_Y)
+    // `position` is typed as the enum but can hold any string when the config
+    // comes from JSON; fall back to the default instead of calling whatever
+    // the lookup happens to reach
+    const layoutFn = layoutMap[position]
+    const layoutPartial = (typeof layoutFn === 'function' ? layoutFn : layoutMap[PlotbandLabelPosition.TopLeftOutside])(args)
 
     return { ...layoutPartial, rotation }
   }
