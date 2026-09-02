@@ -97,7 +97,7 @@ export function updateShape<T> (
 
   selection.filter('g')
     .filter(() => !isStringSvg(getString(d, shape, index) as GraphNodeShape))
-    .html(getString(d, shape, index))
+    .html(sanitizeSvgString(getString(d, shape, index)))
 
   selection.filter('g')
     .each((d, i, elements) => {
