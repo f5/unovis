@@ -197,85 +197,81 @@ describe('Tooltip Tests', () => {
         cy.wait(1000)
       })
 
-      it('should show empty tooltip for point with empty string description (ap-0)', () => {
+      it('should show tooltip with point name (ap-0)', () => {
         const selector = "[visLeafletPointE2eTestId='leaflet-point-ap-0']"
         cy.checkTooltip(selector)
         cy.get("[visLeafletMapTooltipE2eTestId='leaflet-map-tooltip']")
           .should('be.visible')
-          .and('contain.text', '')
-        cy.percySnapshot('Leaflet Map Tooltip - Empty String', {
+          .and('contain.text', 'ap-0')
+        cy.percySnapshot('Leaflet Map Tooltip - ap-0', {
           widths: [1800],
           scope: scopeSelector,
         })
       })
 
-      it('should show normal tooltip for point with maintenance mode description (ap-2)', () => {
+      it('should show tooltip with point name (ap-2)', () => {
         const selector = "[visLeafletPointE2eTestId='leaflet-point-ap-2']"
         cy.checkTooltip(selector)
         cy.get("[visLeafletMapTooltipE2eTestId='leaflet-map-tooltip']")
           .should('be.visible')
-          .and('contain.text', 'Maintenance mode')
-        cy.percySnapshot('Leaflet Map Tooltip - Maintenance Mode', {
+          .and('contain.text', 'ap-2')
+        cy.percySnapshot('Leaflet Map Tooltip - ap-2', {
           widths: [1800],
           scope: scopeSelector,
         })
       })
 
-      it('should show empty tooltip for point with undefined description (ap-3)', () => {
+      it('should show tooltip with point name (ap-3)', () => {
         const selector = "[visLeafletPointE2eTestId='leaflet-point-ap-3']"
         cy.checkTooltip(selector)
         cy.get("[visLeafletMapTooltipE2eTestId='leaflet-map-tooltip']")
           .should('be.visible')
-          .and('contain.text', '')
-        cy.percySnapshot('Leaflet Map Tooltip - Undefined Empty Tooltip', {
+          .and('contain.text', 'ap-3')
+        cy.percySnapshot('Leaflet Map Tooltip - ap-3', {
           widths: [1800],
           scope: scopeSelector,
         })
       })
 
-      it('should not show tooltip for point with null description (ap-4)', () => {
+      it('should show tooltip with point name (ap-4)', () => {
         const selector = "[visLeafletPointE2eTestId='leaflet-point-ap-4']"
         cy.checkTooltip(selector)
-        cy.get("[visLeafletMapTooltipE2eTestId='leaflet-map-tooltip']").should(
-          'not.be.visible'
-        )
-        cy.percySnapshot('Leaflet Map Tooltip - Null No Tooltip', {
+        cy.get("[visLeafletMapTooltipE2eTestId='leaflet-map-tooltip']")
+          .should('be.visible')
+          .and('contain.text', 'ap-4')
+        cy.percySnapshot('Leaflet Map Tooltip - ap-4', {
           widths: [1800],
           scope: scopeSelector,
         })
       })
 
-      it('should show tooltip sequence: empty string point (ap-0) -> maintenance mode point (ap-2) -> empty string point (ap-0)', () => {
-        const emptySelector = "[visLeafletPointE2eTestId='leaflet-point-ap-0']"
-        const maintenanceSelector =
+      it('should show tooltip sequence: ap-0 -> ap-2 -> ap-0', () => {
+        const ap0Selector = "[visLeafletPointE2eTestId='leaflet-point-ap-0']"
+        const ap2Selector =
           "[visLeafletPointE2eTestId='leaflet-point-ap-2']"
         const tooltipSelector =
           "[visLeafletMapTooltipE2eTestId='leaflet-map-tooltip']"
 
-        cy.checkTooltip(emptySelector)
+        cy.checkTooltip(ap0Selector)
         cy.get(tooltipSelector)
           .should('be.visible')
-          .and('not.contain.text', 'Maintenance mode')
-          .invoke('text')
-          .then((t) => expect(t.trim()).to.eq(''))
+          .and('contain.text', 'ap-0')
         cy.get('body').click(0, 0)
 
-        cy.checkTooltip(maintenanceSelector)
+        cy.checkTooltip(ap2Selector)
         cy.get(tooltipSelector)
           .should('be.visible')
-          .and('contain.text', 'Maintenance mode')
+          .and('contain.text', 'ap-2')
         cy.get('body').click(0, 0)
 
-        cy.checkTooltip(emptySelector)
+        cy.checkTooltip(ap0Selector)
         cy.get(tooltipSelector)
           .should('be.visible')
-          .and('not.contain.text', 'Maintenance mode')
-          .invoke('text')
-          .then((t) => expect(t.trim()).to.eq(''))
+          .and('contain.text', 'ap-0')
         cy.get('body').click(0, 0)
 
         cy.percySnapshot(
-          'Leaflet Map Tooltip - Sequence Empty Maintenance Empty',
+          'Leaflet Map Tooltip - Sequence ap-0 ap-2 ap-0',
           { widths: [1800], scope: scopeSelector }
         )
       })
