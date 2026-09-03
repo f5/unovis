@@ -47,18 +47,24 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     `${(((d.blocked || 0) + (d.normal || 0)) / 1000).toFixed(1)}K`
   const clusterBottomLabel = (d: LeafletMapClusterDatum<MapPointDataRecord>): string => `${d.point_count} sites`
 
-  // Update color map and data to make sure the map re-renders accordingly
+  // Update color map and data to make sure the map re-renders accordingly.
+  // Skipped when `?staticData=1` is present so visual tests get a deterministic view.
   useEffect(() => {
-    // Will be called twice under the dev mode
-    setTimeout(() => {
-      points.push({ latitude: 51.53857, longitude: -0.2520208, name: 'lon-test', normal: 2758, blocked: 642 })
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('staticData') === '1') return
 
-      setData(points)
+    // Will be called twice under the dev mode
+    const timeoutId = setTimeout(() => {
+      // Build a new array instead of mutating the shared imported `points`,
+      // which would otherwise accumulate duplicate entries across remounts.
+      setData([...points, { latitude: 51.53857, longitude: -0.2520208, name: 'lon-test', normal: 2758, blocked: 642 }])
       setColorMap({
         normal: { color: '#26BDA4' },
         blocked: { color: '#9876AA' },
       })
     }, 5000)
+
+    return () => clearTimeout(timeoutId)
   }, [])
 
 
@@ -94,7 +100,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     <div style={{ position: 'absolute', top: 32, right: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
       <button onClick={onZoomIn}>Zoom In</button>
       <button onClick={onZoomOut}>Zoom Out</button>
-      <button onClick={onFit}>Fit View</button>
+      <button onClick={onFit} data-e2e-test-id="leaflet-fit-view">Fit View</button>
     </div>
   </>)
 }
