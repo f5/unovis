@@ -54,7 +54,7 @@
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.7",
+    "@unovis/ts": "workspace:*",
     "vue": "^3"
   },
   "devDependencies": {
