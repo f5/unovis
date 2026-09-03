@@ -4,24 +4,6 @@ import { Rect } from '@/types/misc'
 import { rectIntersect } from '@/utils/misc'
 import { resolveRectsOverlap } from '@/utils/text-overlap'
 
-/**
- * Resolves visibility for `LabelOverflow.Stack` labels as a batch.
- *
- * Labels stay at their preferred anchor when there is no collision.
- * When a label overlaps an already-placed one it is shifted along the
- * perpendicular axis just enough to clear it (+ `gap` px of breathing room):
- * - non-rotated labels shift in **y** (up for Bottom-aligned, down for Top-aligned)
- * - 90°/270°-rotated labels shift in **x**  (left for Right-aligned, right otherwise)
- *
- * Processing order matches the order of `layouts` — pass labels in the
- * visual order that makes semantic sense (e.g. sorted by plotline value).
- *
- * @param layouts  Preferred layout for each label.
- * @param rects    Projected rects aligned to `layouts` (`null` = unmeasured, no shift applied).
- * @param fixed    Already-placed rects that stack labels should clear.
- * @param gap      Minimum clear gap in pixels between stacked labels.
- * @returns        Adjusted layouts (only `x` / `y` may change).
- */
 export function resolveStackOverflow (
   layouts: PlotLabelLayout[],
   rects: (Rect | null)[],
@@ -47,9 +29,7 @@ export function resolveStackOverflow (
       if (overlapX <= 0 || overlapY <= 0) continue
 
       if (isQuarter) {
-        // For rotated labels shift horizontally.
-        // textAlign acts along the visual y-axis for rotated labels;
-        // Right means the text extends left → prefer shifting further left.
+        // textAlign acts along the rotated visual axis; Right → text extends left → shift further left.
         const goLeft = layout.textAlign === TextAlign.Right
         const shift = overlapX + gap
         if (goLeft) {
@@ -60,8 +40,7 @@ export function resolveStackOverflow (
           rect = { ...rect, x: rect.x + shift }
         }
       } else {
-        // For horizontal labels shift vertically.
-        // verticalAlign.Bottom → text hangs above the anchor → shift upward.
+        // verticalAlign.Bottom → anchor is at the text bottom → shift upward to clear.
         const goUp = layout.verticalAlign !== VerticalAlign.Top
         const shift = overlapY + gap
         if (goUp) {
@@ -145,8 +124,6 @@ export function rectInside (r: Rect, bounds: Rect): boolean {
 export function resolveHideOverflow (candidateRects: (Rect | null)[], fixed: Rect[], bounds: Rect): boolean[] {
   const visible = candidateRects.map(() => true)
 
-  // Drop candidates that can't be shown regardless of their peers: unmeasured labels
-  // stay visible (nothing to test), out-of-bounds or fixed-clashing ones are hidden.
   const participants: number[] = []
   candidateRects.forEach((rect, i) => {
     if (!rect) return
@@ -157,7 +134,6 @@ export function resolveHideOverflow (candidateRects: (Rect | null)[], fixed: Rec
     participants.push(i)
   })
 
-  // Resolve the remaining candidates against each other with the shared util.
   const rects = participants.map(i => candidateRects[i] as Rect)
   const priorities = participants.map((_, k) => participants.length - k) // earlier → higher priority
   const kept = resolveRectsOverlap(rects, { priorities })

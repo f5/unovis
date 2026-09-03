@@ -28,8 +28,6 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
   value: number | null | undefined
   plotline: Selection<SVGLineElement, unknown, null, undefined>
   label: Selection<SVGTextElement, unknown, null, undefined>
-  // Cached so `getLabelLayoutInfo()` can recompute layouts for alternative
-  // anchors without re-deriving the line endpoints.
   private _labelLayoutBounds: { width: number; height: number } | undefined
 
   constructor (config: PlotlineConfigInterface<Datum>) {
@@ -117,7 +115,6 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
         .attr('x', labelProps.x)
         .attr('y', labelProps.y)
 
-      // Clamp the label inside the chart bounds, then apply rotation around the clamped anchor
       const bbox = this.label.node()?.getBBox()
       const cx = bbox ? labelProps.x + Math.max(0, -bbox.x) - Math.max(0, bbox.x + bbox.width - this._width) : labelProps.x
       const cy = bbox ? labelProps.y + Math.max(0, -bbox.y) - Math.max(0, bbox.y + bbox.height - this._height) : labelProps.y

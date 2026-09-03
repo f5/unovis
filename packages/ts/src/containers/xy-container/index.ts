@@ -498,7 +498,6 @@ export class XYContainer<Datum> extends ContainerCore {
     const placed: Rect[] = []
     const bounds: Rect = { x: 0, y: 0, width: this.width, height: this.height }
 
-    // Collect Stack and Hide labels separately; non-auto labels are registered immediately.
     const stackDeferred: { info: PlotLabelLayoutInfo; layout: PlotLabelLayout; baseRect: Rect | null }[] = []
     const hideDeferred: { info: PlotLabelLayoutInfo; layout: PlotLabelLayout; rect: Rect | null }[] = []
 
@@ -520,7 +519,6 @@ export class XYContainer<Datum> extends ContainerCore {
       stackDeferred.push({ info, layout, baseRect })
     }
 
-    // Resolve Stack labels: shift colliding labels off each other.
     if (stackDeferred.length) {
       const stackLayouts = stackDeferred.map(s => s.layout)
       const stackRects = stackDeferred.map(s =>
@@ -533,7 +531,6 @@ export class XYContainer<Datum> extends ContainerCore {
       })
     }
 
-    // Hide labels are resolved last so they yield to Stack labels.
     if (hideDeferred.length) {
       const visibility = resolveHideOverflow(hideDeferred.map(h => h.rect), placed, bounds)
       hideDeferred.forEach((h, i) => this._applyLabelLayout(h.info.labelEl, h.layout, visibility[i]))

@@ -29,8 +29,6 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
   to: number | null | undefined
   plotband: Selection<SVGRectElement, unknown, null, undefined>
   label: Selection<SVGTextElement, unknown, null, undefined>
-  // Cached so `getLabelLayoutInfo()` can recompute layouts for alternative
-  // anchors without re-deriving the band rect.
   private _labelLayoutBounds: { startX: number; startY: number; width: number; height: number } | undefined
 
   constructor (config: PlotbandConfigInterface<Datum>) {
