@@ -19,6 +19,7 @@ import { AxisType } from '@/components/axis/types'
 import { ScaleDimension } from '@/types/scale'
 import { Direction } from '@/types/direction'
 import { LabelOverflow, PlotLabelLayout, PlotLabelLayoutInfo } from '@/types/plot-label'
+import { getTextAnchorFromTextAlign } from '@/types/svg'
 import { Rect } from '@/types/misc'
 
 // Utils
@@ -492,7 +493,7 @@ export class XYContainer<Datum> extends ContainerCore {
       }
     }
 
-    if (infos.length < 2) return
+    if (infos.length === 0) return
 
     const placed: Rect[] = []
     const bounds: Rect = { x: 0, y: 0, width: this.width, height: this.height }
@@ -556,9 +557,8 @@ export class XYContainer<Datum> extends ContainerCore {
     sel
       .attr('x', layout.x)
       .attr('y', layout.y)
-      .attr('transform', layout.transform || '')
-      .attr('dominant-baseline', layout.dominantBaseline)
-      .style('text-anchor', layout.textAnchor)
+      .attr('transform', layout.rotation ? `rotate(${layout.rotation}, ${layout.x}, ${layout.y})` : null)
+      .style('text-anchor', getTextAnchorFromTextAlign(layout.textAlign))
       .style('opacity', visible ? null : 0)
   }
 }

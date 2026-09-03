@@ -117,14 +117,21 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
 
       this.label
         .text(config.labelText)
-        .attr('transform', labelProps.rotation ? `rotate(${labelProps.rotation}, ${labelProps.x}, ${labelProps.y})` : null)
+        .attr('transform', null)
         .style('text-anchor', getTextAnchorFromTextAlign(labelProps.textAlign))
         .style('fill', config.labelColor)
         .style('font-size', config.labelSize ? `${config.labelSize}px` : undefined)
-
-      smartTransition(this.label, config.duration)
         .attr('x', labelProps.x)
         .attr('y', labelProps.y)
+
+      const bbox = this.label.node()?.getBBox()
+      const cx = bbox ? labelProps.x + Math.max(0, -bbox.x) - Math.max(0, bbox.x + bbox.width - this._width) : labelProps.x
+      const cy = bbox ? labelProps.y + Math.max(0, -bbox.y) - Math.max(0, bbox.y + bbox.height - this._height) : labelProps.y
+
+      smartTransition(this.label, config.duration)
+        .attr('x', cx)
+        .attr('y', cy)
+        .attr('transform', labelProps.rotation ? `rotate(${labelProps.rotation}, ${cx}, ${cy})` : null)
     } else {
       // Wipe stale text from a prior render where labelText was set.
       this._labelLayoutBounds = undefined
