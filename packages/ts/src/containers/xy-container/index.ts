@@ -28,7 +28,7 @@ import { guid } from '@/utils/misc'
 
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
-import { projectLabelRect, resolveHideOverflow } from './plot-label-resolver'
+import { projectLabelRect, resolveHideOverflow, resolveStackOverflow } from './plot-label-resolver'
 import {
   AreaConfigInterface,
   BrushConfigInterface,
@@ -498,7 +498,8 @@ export class XYContainer<Datum> extends ContainerCore {
     const placed: Rect[] = []
     const bounds: Rect = { x: 0, y: 0, width: this.width, height: this.height }
 
-    // Hide labels are deferred so they yield to Stack labels that take precedence.
+    // Collect Stack and Hide labels separately; non-auto labels are registered immediately.
+    const stackDeferred: { info: PlotLabelLayoutInfo; layout: PlotLabelLayout; baseRect: Rect | null }[] = []
     const hideDeferred: { info: PlotLabelLayoutInfo; layout: PlotLabelLayout; rect: Rect | null }[] = []
 
     for (const info of infos) {
@@ -506,7 +507,6 @@ export class XYContainer<Datum> extends ContainerCore {
       const layout = info.computeLayout(info.preferredAnchor)
 
       if (!info.participatesInAuto) {
-        // Non-auto labels: just register their rect so Hide labels can yield to them.
         if (baseRect) placed.push(projectLabelRect(layout, baseRect.width, baseRect.height))
         continue
       }
@@ -517,11 +517,23 @@ export class XYContainer<Datum> extends ContainerCore {
         continue
       }
 
-      // Stack: apply the preferred layout directly, register rect for Hide to yield to.
-      this._applyLabelLayout(info.labelEl, layout, true)
-      if (baseRect) placed.push(projectLabelRect(layout, baseRect.width, baseRect.height))
+      stackDeferred.push({ info, layout, baseRect })
     }
 
+    // Resolve Stack labels: shift colliding labels off each other.
+    if (stackDeferred.length) {
+      const stackLayouts = stackDeferred.map(s => s.layout)
+      const stackRects = stackDeferred.map(s =>
+        s.baseRect ? projectLabelRect(s.layout, s.baseRect.width, s.baseRect.height) : null
+      )
+      const resolved = resolveStackOverflow(stackLayouts, stackRects, placed)
+      stackDeferred.forEach((s, i) => {
+        this._applyLabelLayout(s.info.labelEl, resolved[i], true)
+        if (s.baseRect) placed.push(projectLabelRect(resolved[i], s.baseRect.width, s.baseRect.height))
+      })
+    }
+
+    // Hide labels are resolved last so they yield to Stack labels.
     if (hideDeferred.length) {
       const visibility = resolveHideOverflow(hideDeferred.map(h => h.rect), placed, bounds)
       hideDeferred.forEach((h, i) => this._applyLabelLayout(h.info.labelEl, h.layout, visibility[i]))

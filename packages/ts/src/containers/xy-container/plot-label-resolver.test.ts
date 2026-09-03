@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { Rect } from '../../types/misc'
 import { TextAlign, VerticalAlign } from '../../types/text'
-import { projectLabelRect, rectInside, resolveHideOverflow } from './plot-label-resolver'
+import { projectLabelRect, resolveHideOverflow } from './plot-label-resolver'
 
 describe('projectLabelRect', () => {
   it('Left/Top: rect anchored at (x, y)', () => {

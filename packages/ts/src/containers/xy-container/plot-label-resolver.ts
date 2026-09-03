@@ -1,8 +1,83 @@
-import { PlotLabelLayout, PlotLabelLayoutInfo } from '@/types/plot-label'
+import { PlotLabelLayout } from '@/types/plot-label'
 import { TextAlign, VerticalAlign } from '@/types/text'
 import { Rect } from '@/types/misc'
 import { rectIntersect } from '@/utils/misc'
 import { resolveRectsOverlap } from '@/utils/text-overlap'
+
+/**
+ * Resolves visibility for `LabelOverflow.Stack` labels as a batch.
+ *
+ * Labels stay at their preferred anchor when there is no collision.
+ * When a label overlaps an already-placed one it is shifted along the
+ * perpendicular axis just enough to clear it (+ `gap` px of breathing room):
+ * - non-rotated labels shift in **y** (up for Bottom-aligned, down for Top-aligned)
+ * - 90°/270°-rotated labels shift in **x**  (left for Right-aligned, right otherwise)
+ *
+ * Processing order matches the order of `layouts` — pass labels in the
+ * visual order that makes semantic sense (e.g. sorted by plotline value).
+ *
+ * @param layouts  Preferred layout for each label.
+ * @param rects    Projected rects aligned to `layouts` (`null` = unmeasured, no shift applied).
+ * @param fixed    Already-placed rects that stack labels should clear.
+ * @param gap      Minimum clear gap in pixels between stacked labels.
+ * @returns        Adjusted layouts (only `x` / `y` may change).
+ */
+export function resolveStackOverflow (
+  layouts: PlotLabelLayout[],
+  rects: (Rect | null)[],
+  fixed: Rect[],
+  gap = 2
+): PlotLabelLayout[] {
+  const placed: Rect[] = [...fixed]
+
+  return layouts.map((layout, i) => {
+    const baseRect = rects[i]
+    if (!baseRect) return layout
+
+    const deg = ((layout.rotation % 360) + 360) % 360
+    const isQuarter = deg === 90 || deg === 270
+
+    let rect = { ...baseRect }
+    let xDelta = 0
+    let yDelta = 0
+
+    for (const p of placed) {
+      const overlapX = Math.min(rect.x + rect.width, p.x + p.width) - Math.max(rect.x, p.x)
+      const overlapY = Math.min(rect.y + rect.height, p.y + p.height) - Math.max(rect.y, p.y)
+      if (overlapX <= 0 || overlapY <= 0) continue
+
+      if (isQuarter) {
+        // For rotated labels shift horizontally.
+        // textAlign acts along the visual y-axis for rotated labels;
+        // Right means the text extends left → prefer shifting further left.
+        const goLeft = layout.textAlign === TextAlign.Right
+        const shift = overlapX + gap
+        if (goLeft) {
+          xDelta -= shift
+          rect = { ...rect, x: rect.x - shift }
+        } else {
+          xDelta += shift
+          rect = { ...rect, x: rect.x + shift }
+        }
+      } else {
+        // For horizontal labels shift vertically.
+        // verticalAlign.Bottom → text hangs above the anchor → shift upward.
+        const goUp = layout.verticalAlign !== VerticalAlign.Top
+        const shift = overlapY + gap
+        if (goUp) {
+          yDelta -= shift
+          rect = { ...rect, y: rect.y - shift }
+        } else {
+          yDelta += shift
+          rect = { ...rect, y: rect.y + shift }
+        }
+      }
+    }
+
+    placed.push(rect)
+    return { ...layout, x: layout.x + xDelta, y: layout.y + yDelta }
+  })
+}
 
 /**
  * For a 90°/270° rotation, glyphs run perpendicular to the anchor — visual
