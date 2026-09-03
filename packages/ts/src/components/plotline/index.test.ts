@@ -33,7 +33,7 @@ describe('Plotline.getLabelLayoutInfo', () => {
     expect(p.getLabelLayoutInfo()).toBeNull()
   })
 
-  it('preferredAnchor + candidates start with the configured labelPosition', () => {
+  it('preferredAnchor starts with the configured labelPosition', () => {
     const p = makePlotline({
       labelPosition: PlotlineLabelPosition.BottomLeft,
       labelAutoPosition: true,
@@ -41,9 +41,6 @@ describe('Plotline.getLabelLayoutInfo', () => {
     const info = p.getLabelLayoutInfo()
     expect(info).not.toBeNull()
     expect(info!.preferredAnchor).toBe(PlotlineLabelPosition.BottomLeft)
-    expect(info!.candidates[0]).toBe(PlotlineLabelPosition.BottomLeft)
-    expect(info!.candidates).toHaveLength(8)
-    expect(new Set(info!.candidates).size).toBe(8) // no duplicates
   })
 
   it('participatesInAuto reflects labelAutoPosition', () => {
@@ -51,8 +48,8 @@ describe('Plotline.getLabelLayoutInfo', () => {
     expect(makePlotline({ labelAutoPosition: true }).getLabelLayoutInfo()!.participatesInAuto).toBe(true)
   })
 
-  it('overflow defaults to BestEffort and respects override', () => {
-    expect(makePlotline().getLabelLayoutInfo()!.overflow).toBe(LabelOverflow.Smart)
+  it('overflow defaults to Stack and respects override', () => {
+    expect(makePlotline().getLabelLayoutInfo()!.overflow).toBe(LabelOverflow.Stack)
     expect(makePlotline({ labelOverflow: LabelOverflow.Hide }).getLabelLayoutInfo()!.overflow).toBe(LabelOverflow.Hide)
   })
 
@@ -65,9 +62,9 @@ describe('Plotline.getLabelLayoutInfo', () => {
     expect(layoutPreferred).toMatchObject({
       x: expect.any(Number),
       y: expect.any(Number),
-      transform: expect.any(String),
-      textAnchor: expect.any(String),
-      dominantBaseline: expect.any(String),
+      rotation: expect.any(Number),
+      textAlign: expect.any(String),
+      verticalAlign: expect.any(String),
     })
   })
 })

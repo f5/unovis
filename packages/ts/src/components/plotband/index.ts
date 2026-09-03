@@ -19,26 +19,6 @@ import { PlotbandLabelOrientation, PlotbandLabelPosition, PlotbandLabelLayout } 
 // Styles
 import * as s from './style'
 
-// Outside ring clockwise, then inside ring clockwise. Used as the candidate
-// order (preferred anchor first, then walk this list).
-const PLOTBAND_CLOCKWISE: readonly PlotbandLabelPosition[] = [
-  PlotbandLabelPosition.TopLeftOutside,
-  PlotbandLabelPosition.TopOutside,
-  PlotbandLabelPosition.TopRightOutside,
-  PlotbandLabelPosition.RightOutside,
-  PlotbandLabelPosition.BottomRightOutside,
-  PlotbandLabelPosition.BottomOutside,
-  PlotbandLabelPosition.BottomLeftOutside,
-  PlotbandLabelPosition.LeftOutside,
-  PlotbandLabelPosition.TopLeftInside,
-  PlotbandLabelPosition.TopInside,
-  PlotbandLabelPosition.TopRightInside,
-  PlotbandLabelPosition.RightInside,
-  PlotbandLabelPosition.BottomRightInside,
-  PlotbandLabelPosition.BottomInside,
-  PlotbandLabelPosition.BottomLeftInside,
-  PlotbandLabelPosition.LeftInside,
-] as const
 
 export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterface<Datum>> {
   static selectors = s
@@ -166,9 +146,9 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
       : layoutMap[PlotbandLabelPosition.TopLeftOutside]
     const layoutPartial = layoutFn(args)
 
-    const { x, y, textAlign } = layoutPartial
+    const { x, y, textAlign, verticalAlign } = layoutPartial
 
-    return { x, y, rotation, textAlign }
+    return { x, y, rotation, textAlign, verticalAlign }
   }
 
   // Read by `XYContainer` to coordinate auto label positioning across
@@ -179,11 +159,6 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
 
     const labelEl = this.label.node()
     const preferred = config.labelPosition ?? PlotbandLabelPosition.TopLeftOutside
-    const preferredIdx = PLOTBAND_CLOCKWISE.indexOf(preferred)
-    const candidates = preferredIdx >= 0
-      ? [...PLOTBAND_CLOCKWISE.slice(preferredIdx), ...PLOTBAND_CLOCKWISE.slice(0, preferredIdx)]
-      : [preferred, ...PLOTBAND_CLOCKWISE]
-
     const bounds = this._labelLayoutBounds
     const computeLayout = (anchor: string): PlotLabelLayout => {
       const layout = this.computeLabel(
@@ -209,9 +184,8 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
     return {
       labelEl,
       preferredAnchor: preferred,
-      candidates,
       participatesInAuto: !!config.labelAutoPosition,
-      overflow: config.labelOverflow ?? LabelOverflow.Smart,
+      overflow: config.labelOverflow ?? LabelOverflow.Stack,
       computeLayout,
     }
   }

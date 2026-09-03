@@ -90,10 +90,10 @@ export interface PlotbandConfigInterface<Datum> extends Partial<XYComponentConfi
   labelAutoPosition?: boolean;
 
   /**
-   * Strategy when no candidate anchor passes bounds + collision.
+   * Strategy when the preferred anchor collides with another label.
    * Only meaningful when `labelAutoPosition` is `true`.
    *
-   * @default LabelOverflow.Smart
+   * @default LabelOverflow.Stack
    */
   labelOverflow?: LabelOverflow;
 }
@@ -110,5 +110,5 @@ export const PlotbandDefaultConfig: PlotbandConfigInterface<unknown> = {
   labelOffsetY: 14,
   labelOrientation: PlotbandLabelOrientation.Horizontal,
   labelAutoPosition: false,
-  labelOverflow: LabelOverflow.Smart,
+  labelOverflow: LabelOverflow.Stack,
 }

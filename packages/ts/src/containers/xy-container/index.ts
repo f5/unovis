@@ -28,7 +28,7 @@ import { guid } from '@/utils/misc'
 
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
-import { projectLabelRect, resolveHideOverflow, tryPlaceLabel } from './plot-label-resolver'
+import { projectLabelRect, resolveHideOverflow } from './plot-label-resolver'
 import {
   AreaConfigInterface,
   BrushConfigInterface,
@@ -498,33 +498,28 @@ export class XYContainer<Datum> extends ContainerCore {
     const placed: Rect[] = []
     const bounds: Rect = { x: 0, y: 0, width: this.width, height: this.height }
 
-    // `LabelOverflow.Hide` labels are deferred and resolved together at the end so they
-    // yield to the positioned (Stack / auto-positioned) labels instead of displacing them.
+    // Hide labels are deferred so they yield to Stack labels that take precedence.
     const hideDeferred: { info: PlotLabelLayoutInfo; layout: PlotLabelLayout; rect: Rect | null }[] = []
 
     for (const info of infos) {
       const baseRect = this._labelBBoxRect(info.labelEl)
+      const layout = info.computeLayout(info.preferredAnchor)
+
       if (!info.participatesInAuto) {
-        // The component's `_render` may still be animating x/y via d3
-        // transitions when this resolver runs, so we project from the preferred
-        // anchor instead of trusting the in-flight bbox position.
-        if (baseRect) {
-          const layout = info.computeLayout(info.preferredAnchor)
-          placed.push(projectLabelRect(layout, baseRect.width, baseRect.height))
-        }
+        // Non-auto labels: just register their rect so Hide labels can yield to them.
+        if (baseRect) placed.push(projectLabelRect(layout, baseRect.width, baseRect.height))
         continue
       }
 
       if (info.overflow === LabelOverflow.Hide) {
-        const layout = info.computeLayout(info.preferredAnchor)
         const rect = baseRect ? projectLabelRect(layout, baseRect.width, baseRect.height) : null
         hideDeferred.push({ info, layout, rect })
         continue
       }
 
-      const result = tryPlaceLabel(info, baseRect, placed, bounds)
-      this._applyLabelLayout(info.labelEl, result.layout, result.visible)
-      if (result.visible && result.rect) placed.push(result.rect)
+      // Stack: apply the preferred layout directly, register rect for Hide to yield to.
+      this._applyLabelLayout(info.labelEl, layout, true)
+      if (baseRect) placed.push(projectLabelRect(layout, baseRect.width, baseRect.height))
     }
 
     if (hideDeferred.length) {

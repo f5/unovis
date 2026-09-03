@@ -62,7 +62,7 @@ const legendStyle: React.CSSProperties = { fontSize: '11px', color: '#888', text
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [autoPosition, setAutoPosition] = useState(true)
-  const [overflow, setOverflow] = useState<LabelOverflow>(LabelOverflow.Smart)
+  const [overflow, setOverflow] = useState<LabelOverflow>(LabelOverflow.Stack)
   const [count, setCount] = useState(5)
   const [spacing, setSpacing] = useState(0.06)
   const [linePos, setLinePos] = useState<PlotlineLabelPosition>(PlotlineLabelPosition.TopRight)
@@ -95,9 +95,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
             <label>
               labelOverflow:{' '}
               <select value={overflow} onChange={(e) => setOverflow(e.target.value as LabelOverflow)}>
-                <option value={LabelOverflow.Smart}>smart</option>
-                <option value={LabelOverflow.Hide}>hide</option>
                 <option value={LabelOverflow.Stack}>stack</option>
+                <option value={LabelOverflow.Hide}>hide</option>
               </select>
             </label>
           </fieldset>
@@ -163,7 +162,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         </div>
 
         <span style={{ fontSize: '12px', color: '#888' }}>
-          Drop spacing → 0 to force labels onto the same y. <code>hide</code> clears overflow, <code>stack</code> collapses to preferred, <code>smart</code> picks min-overlap. Plotbands participate in the same resolver.
+          Drop spacing → 0 to force labels onto the same y. <code>stack</code> keeps labels at their preferred anchor; <code>hide</code> hides colliding ones. Plotbands participate in the same resolver.
         </span>
       </div>
 

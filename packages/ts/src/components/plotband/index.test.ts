@@ -28,7 +28,7 @@ describe('Plotband.getLabelLayoutInfo', () => {
     expect(p.getLabelLayoutInfo()).toBeNull()
   })
 
-  it('preferredAnchor + candidates start with the configured labelPosition', () => {
+  it('preferredAnchor starts with the configured labelPosition', () => {
     const p = makePlotband({
       labelPosition: PlotbandLabelPosition.BottomRightInside,
       labelAutoPosition: true,
@@ -36,9 +36,6 @@ describe('Plotband.getLabelLayoutInfo', () => {
     const info = p.getLabelLayoutInfo()
     expect(info).not.toBeNull()
     expect(info!.preferredAnchor).toBe(PlotbandLabelPosition.BottomRightInside)
-    expect(info!.candidates[0]).toBe(PlotbandLabelPosition.BottomRightInside)
-    expect(info!.candidates).toHaveLength(16)
-    expect(new Set(info!.candidates).size).toBe(16) // no duplicates
   })
 
   it('participatesInAuto reflects labelAutoPosition', () => {
@@ -46,8 +43,8 @@ describe('Plotband.getLabelLayoutInfo', () => {
     expect(makePlotband({ labelAutoPosition: true }).getLabelLayoutInfo()!.participatesInAuto).toBe(true)
   })
 
-  it('overflow defaults to BestEffort and respects override', () => {
-    expect(makePlotband().getLabelLayoutInfo()!.overflow).toBe(LabelOverflow.Smart)
+  it('overflow defaults to Stack and respects override', () => {
+    expect(makePlotband().getLabelLayoutInfo()!.overflow).toBe(LabelOverflow.Stack)
     expect(makePlotband({ labelOverflow: LabelOverflow.Hide }).getLabelLayoutInfo()!.overflow).toBe(LabelOverflow.Hide)
   })
 

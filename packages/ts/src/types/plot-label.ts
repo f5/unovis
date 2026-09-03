@@ -5,11 +5,9 @@ import { TextAlign, VerticalAlign } from '@/types/text'
  * collide with another label.
  */
 export enum LabelOverflow {
-  /** Try alternate anchors and pick the lowest-overlap fit (default). */
-  Smart = 'smart',
-  /** Hide the label (`opacity: 0`, DOM kept) instead of moving it. */
+  /** Hide the label (`opacity: 0`, DOM kept) when it would collide. */
   Hide = 'hide',
-  /** Stay at the preferred anchor regardless of collisions. */
+  /** Stay at the preferred anchor regardless of collisions (default). */
   Stack = 'stack',
 }
 
@@ -32,11 +30,9 @@ export interface PlotLabelLayoutInfo {
   labelEl: SVGTextElement | null;
   /** Preferred anchor identifier (component-specific enum value). */
   preferredAnchor: string;
-  /** Ordered candidate anchors, preferred first, closest-to-preferred next. */
-  candidates: string[];
   /** True when this label opted into auto-positioning AND has visible label text. */
   participatesInAuto: boolean;
-  /** Strategy when no candidate passes bounds + collision. */
+  /** Strategy when the preferred anchor collides with another label. */
   overflow: LabelOverflow;
   /** Recompute layout for a given anchor. Pure — does not mutate the DOM. */
   computeLayout: (anchor: string) => PlotLabelLayout;

@@ -1,4 +1,4 @@
-import { LabelOverflow, PlotLabelLayout, PlotLabelLayoutInfo } from '@/types/plot-label'
+import { PlotLabelLayout, PlotLabelLayoutInfo } from '@/types/plot-label'
 import { TextAlign, VerticalAlign } from '@/types/text'
 import { Rect } from '@/types/misc'
 import { rectIntersect } from '@/utils/misc'
@@ -53,69 +53,6 @@ export function rectInside (r: Rect, bounds: Rect): boolean {
     r.y + r.height <= bounds.y + bounds.height
 }
 
-export function totalOverlap (r: Rect, placed: Rect[]): number {
-  let total = 0
-  for (const p of placed) {
-    const dx = Math.min(r.x + r.width, p.x + p.width) - Math.max(r.x, p.x)
-    const dy = Math.min(r.y + r.height, p.y + p.height) - Math.max(r.y, p.y)
-    if (dx > 0 && dy > 0) total += dx * dy
-  }
-  return total
-}
-
-export interface PlaceResult {
-  layout: PlotLabelLayout;
-  rect: Rect | null;
-  visible: boolean;
-}
-
-export function tryPlaceLabel (
-  info: PlotLabelLayoutInfo,
-  baseRect: Rect | null,
-  placed: Rect[],
-  bounds: Rect
-): PlaceResult {
-  if (!baseRect || baseRect.width === 0 || baseRect.height === 0) {
-    return { layout: info.computeLayout(info.preferredAnchor), rect: baseRect, visible: true }
-  }
-
-  const preferredLayout = info.computeLayout(info.preferredAnchor)
-  const preferredRect = projectLabelRect(preferredLayout, baseRect.width, baseRect.height)
-
-  if (info.overflow === LabelOverflow.Stack) {
-    return { layout: preferredLayout, rect: preferredRect, visible: true }
-  }
-
-  // `LabelOverflow.Hide` is not handled here — those labels are collision-resolved
-  // together as a batch by `resolveHideOverflow` (see below).
-
-  // Tie-break under 1px² so the earlier (closer to preferred) candidate wins
-  // instead of jumping to one that's only fractionally less overlapped.
-  const OVERLAP_EPSILON = 1
-  let bestCandidate: { layout: PlotLabelLayout; rect: Rect; overlap: number } | undefined
-
-  for (const anchor of info.candidates) {
-    const layout = info.computeLayout(anchor)
-    const rect = projectLabelRect(layout, baseRect.width, baseRect.height)
-
-    const inBounds = rectInside(rect, bounds)
-    const overlap = totalOverlap(rect, placed)
-
-    if (inBounds && overlap === 0) {
-      return { layout, rect, visible: true }
-    }
-
-    if (inBounds && (!bestCandidate || overlap < bestCandidate.overlap - OVERLAP_EPSILON)) {
-      bestCandidate = { layout, rect, overlap }
-    }
-  }
-
-  if (bestCandidate) {
-    return { layout: bestCandidate.layout, rect: bestCandidate.rect, visible: true }
-  }
-  return { layout: preferredLayout, rect: preferredRect, visible: true }
-}
-
 /**
  * Resolves visibility for `LabelOverflow.Hide` labels as a batch.
  *
@@ -153,3 +90,4 @@ export function resolveHideOverflow (candidateRects: (Rect | null)[], fixed: Rec
 
   return visible
 }
+

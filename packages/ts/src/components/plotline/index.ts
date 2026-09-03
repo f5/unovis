@@ -19,17 +19,6 @@ import { PlotlineLabelPosition, PlotlineLabelOrientation, PlotlineLabelLayout, P
 // Styles
 import * as s from './style'
 
-// Used as the candidate order (preferred anchor first, then walk this list).
-const PLOTLINE_CLOCKWISE: readonly PlotlineLabelPosition[] = [
-  PlotlineLabelPosition.TopLeft,
-  PlotlineLabelPosition.Top,
-  PlotlineLabelPosition.TopRight,
-  PlotlineLabelPosition.Right,
-  PlotlineLabelPosition.BottomRight,
-  PlotlineLabelPosition.Bottom,
-  PlotlineLabelPosition.BottomLeft,
-  PlotlineLabelPosition.Left,
-] as const
 
 export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterface<Datum>> {
   static selectors = s
@@ -178,11 +167,6 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
 
     const labelEl = this.label.node()
     const preferred = config.labelPosition ?? PlotlineLabelPosition.TopRight
-    const preferredIdx = PLOTLINE_CLOCKWISE.indexOf(preferred)
-    const candidates = preferredIdx >= 0
-      ? [...PLOTLINE_CLOCKWISE.slice(preferredIdx), ...PLOTLINE_CLOCKWISE.slice(0, preferredIdx)]
-      : [preferred, ...PLOTLINE_CLOCKWISE]
-
     const bounds = this._labelLayoutBounds
     const computeLayout = (anchor: string): PlotLabelLayout => {
       const layout = this.computeLabel(
@@ -206,9 +190,8 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
     return {
       labelEl,
       preferredAnchor: preferred,
-      candidates,
       participatesInAuto: !!config.labelAutoPosition,
-      overflow: config.labelOverflow ?? LabelOverflow.Smart,
+      overflow: config.labelOverflow ?? LabelOverflow.Stack,
       computeLayout,
     }
   }
