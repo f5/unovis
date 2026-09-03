@@ -200,11 +200,11 @@ const config = {
         searchPagePath: 'search',
       },
       announcementBar: {
-        id: 'version-1.6-announcement',
+        id: 'version-1.7-svelte-announcement',
         content:
-          '⚠️ Important: Angular version support changes in <a rel="noopener noreferrer" href="/releases/1.7-angular">Unovis 1.7</a>',
-        backgroundColor: '#f4f6fc',
-        textColor: '#161328',
+          '⚠️ Announcement: Svelte 4 support is being dropped in the next minor release of Unovis',
+        backgroundColor: '#4580C0',
+        textColor: '#FFFFFF',
         isCloseable: false,
       },
     }),
