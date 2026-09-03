@@ -265,15 +265,14 @@ export const autoPositionBandProps = {
 
 ### Label Overflow
 
-When `labelAutoPosition` is `true` and **no** candidate anchor passes both bounds and collision checks, the resolver falls back per `labelOverflow`:
+When `labelAutoPosition` is `true` and a label collides with others, `labelOverflow` controls how the conflict is resolved:
 
-* `best-effort` *(default)* – pick the in-bounds candidate with the smallest total intersect area. Label stays visible, may slightly overlap.
+* `stack` *(default)* – shift the label along the perpendicular axis just enough to clear the collision. Label stays visible at its preferred anchor, displaced by the overlap amount.
 * `hide` – set the label opacity to `0`. DOM is preserved (so transitions back work when labels rearrange), but the text is not visible.
-* `stack` – keep the label at its preferred anchor — today's behavior, deliberately exposed as an opt-out.
 
-Default: `best-effort`
+Default: `stack`
 
-The example below renders eighteen overlapping plotbands. Switch `labelOverflow` to see the highlighted **MAIN BAND** (red) label move to a min-overlap anchor (*best-effort*), disappear (*hide*), or stay at its preferred anchor stacked over the others (*stack*).
+The example below renders eighteen overlapping plotbands. Switch `labelOverflow` to see the highlighted **MAIN BAND** (red) label displaced (*stack*) or hidden (*hide*).
 
 export const overflowBandExtras = (label, from, to, color) => ({
   name: 'Plotband',
@@ -321,8 +320,8 @@ export const overflowBandProps = {
   {...overflowBandProps}
   inputType="select"
   property="labelOverflow"
-  options={["smart", "hide", "stack"]}
-  defaultValue="smart"
+  options={["stack", "hide"]}
+  defaultValue="stack"
 />
 
 ### Label Color

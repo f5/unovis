@@ -326,23 +326,22 @@ The example below renders five plotlines clustered close together. Toggle `label
 
 ### Label Overflow
 
-When `labelAutoPosition` is `true` and **no** candidate anchor passes both bounds and collision checks, the resolver falls back per `labelOverflow`:
+When `labelAutoPosition` is `true` and a label collides with others, `labelOverflow` controls how the conflict is resolved:
 
-* `smart` *(default)* – pick the in-bounds candidate with the smallest total intersect area. Label stays visible, may slightly overlap.
+* `stack` *(default)* – shift the label along the perpendicular axis just enough to clear the collision. Label stays visible at its preferred anchor, displaced by the overlap amount.
 * `hide` – set the label opacity to `0`. DOM is preserved (so transitions back work when labels rearrange), but the text is not visible.
-* `stack` – keep the label at its preferred anchor — today's behavior, deliberately exposed as an opt-out.
 
-Default: `smart`
+Default: `stack`
 
-The example below packs nine plotlines against a single y-value (one more than the eight-anchor budget), forcing the **MAIN LINE** label to overflow. Switch `labelOverflow` to see it move to a min-overlap anchor (*smart*), disappear (*hide*), or stay at its preferred anchor stacked over the others (*stack*).
+The example below packs nine plotlines against a single y-value, forcing the **MAIN LINE** label to collide. Switch `labelOverflow` to see it displaced (*stack*) or hidden (*hide*).
 
 <XYWrapperWithInput
   {...overflowProps}
   showContext="minimal"
   inputType="select"
   property="labelOverflow"
-  options={["smart", "hide", "stack"]}
-  defaultValue="smart"
+  options={["stack", "hide"]}
+  defaultValue="stack"
 />
 
 ### Label Color
