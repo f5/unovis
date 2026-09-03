@@ -8,13 +8,8 @@ import { XYComponentCore } from '@/core/xy-component'
 import { AxisType } from '@/components/axis/types'
 
 // Types
-import { Rect } from '@/types/misc'
-import { Spacing } from '@/types/spacing'
-import { UnovisText } from '@/types/text'
 import { PlotLabelLayout, PlotLabelLayoutInfo, LabelOverflow } from '@/types/plot-label'
-
-// Styles
-import { UNOVIS_TEXT_DEFAULT_FONT_SIZE } from '@/styles'
+import { getTextAnchorFromTextAlign } from '@/types/svg'
 
 // Config
 import { LINE_STYLE, VERTICAL_X, HORIZONTAL_X, VERTICAL_Y, HORIZONTAL_Y } from './constants'
@@ -119,10 +114,9 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
 
       this.label
         .text(config.labelText)
-        .attr('transform', labelProps.transform)
-        .attr('dominant-baseline', labelProps.dominantBaseline)
+        .attr('transform', labelProps.rotation ? `rotate(${labelProps.rotation}, ${labelProps.x}, ${labelProps.y})` : null)
         .style('fill', config.labelColor)
-        .style('text-anchor', labelProps.textAnchor)
+        .style('text-anchor', getTextAnchorFromTextAlign(labelProps.textAlign))
         .style('font-size', config.labelSize ? `${config.labelSize}px` : undefined)
 
       smartTransition(this.label, config.duration)
@@ -162,12 +156,9 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       : layoutMap[PlotlineLabelPosition.TopRight]
     const layout: PlotlineLayoutValue = layoutFn({ width, height, offsetX, offsetY })
 
-    const transform = rotation ? `rotate(${rotation}, ${layout.x}, ${layout.y})` : ''
-
     return {
       ...layout,
       rotation,
-      transform,
     }
   }
 
@@ -198,9 +189,9 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       return {
         x: layout.x,
         y: layout.y,
-        transform: layout.transform,
-        textAnchor: layout.textAnchor,
-        dominantBaseline: layout.dominantBaseline,
+        rotation: layout.rotation,
+        textAlign: layout.textAlign,
+        verticalAlign: layout.verticalAlign,
       }
     }
 

@@ -8,13 +8,8 @@ import { XYComponentCore } from '@/core/xy-component'
 import { AxisType } from '@/components/axis/types'
 
 // Types
-import { Rect } from '@/types/misc'
-import { Spacing } from '@/types/spacing'
-import { UnovisText } from '@/types/text'
 import { PlotLabelLayout, PlotLabelLayoutInfo, LabelOverflow } from '@/types/plot-label'
-
-// Styles
-import { UNOVIS_TEXT_DEFAULT_FONT_SIZE } from '@/styles'
+import { getTextAnchorFromTextAlign } from '@/types/svg'
 
 // Config
 import { VERTICAL_X, HORIZONTAL_X, VERTICAL_Y, HORIZONTAL_Y } from './constants'
@@ -122,9 +117,8 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
 
       this.label
         .text(config.labelText)
-        .attr('dominant-baseline', labelProps.dominantBaseline)
-        .attr('transform', labelProps.transform)
-        .style('text-anchor', labelProps.textAnchor)
+        .attr('transform', labelProps.rotation ? `rotate(${labelProps.rotation}, ${labelProps.x}, ${labelProps.y})` : null)
+        .style('text-anchor', getTextAnchorFromTextAlign(labelProps.textAlign))
         .style('fill', config.labelColor)
         .style('font-size', config.labelSize ? `${config.labelSize}px` : undefined)
 
@@ -165,10 +159,9 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
       : layoutMap[PlotbandLabelPosition.TopLeftOutside]
     const layoutPartial = layoutFn(args)
 
-    const { x, y, textAnchor, dominantBaseline } = layoutPartial
-    const transform = rotation !== 0 ? `rotate(${rotation}, ${x}, ${y})` : ''
+    const { x, y, textAlign } = layoutPartial
 
-    return { x, y, rotation, textAnchor, transform, dominantBaseline }
+    return { x, y, rotation, textAlign }
   }
 
   // Read by `XYContainer` to coordinate auto label positioning across
@@ -200,9 +193,9 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
       return {
         x: layout.x,
         y: layout.y,
-        transform: layout.transform,
-        textAnchor: layout.textAnchor,
-        dominantBaseline: layout.dominantBaseline,
+        rotation: layout.rotation,
+        textAlign: layout.textAlign,
+        verticalAlign: layout.verticalAlign,
       }
     }
 

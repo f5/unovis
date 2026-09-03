@@ -1,3 +1,5 @@
+import { TextAlign, VerticalAlign } from '@/types/text'
+
 /**
  * Strategy for a Plotline / Plotband label when its preferred anchor would
  * collide with another label.
@@ -14,9 +16,9 @@ export enum LabelOverflow {
 export type PlotLabelLayout = {
   x: number;
   y: number;
-  transform: string;
-  textAnchor: string;
-  dominantBaseline: string;
+  rotation: number;
+  textAlign: TextAlign;
+  verticalAlign: VerticalAlign;
 }
 
 /**

@@ -1,20 +1,12 @@
-import { LabelOverflow, PlotLabelLayout, PlotLabelLayoutInfo } from 'types/plot-label'
-import { Rect } from 'types/misc'
-import { rectIntersect } from 'utils/misc'
-import { resolveRectsOverlap } from 'utils/text-overlap'
-
-function isRotatedQuarter (transform: string | undefined): boolean {
-  if (!transform) return false
-  const match = transform.match(/rotate\(\s*(-?\d+(?:\.\d+)?)/)
-  if (!match) return false
-  const deg = ((parseFloat(match[1]) % 360) + 360) % 360
-  return deg === 90 || deg === 270
-}
+import { LabelOverflow, PlotLabelLayout, PlotLabelLayoutInfo } from '@/types/plot-label'
+import { TextAlign, VerticalAlign } from '@/types/text'
+import { Rect } from '@/types/misc'
+import { rectIntersect } from '@/utils/misc'
+import { resolveRectsOverlap } from '@/utils/text-overlap'
 
 /**
  * For a 90°/270° rotation, glyphs run perpendicular to the anchor — visual
- * width and height swap, and `text-anchor` / `dominant-baseline` act on the
- * rotated axis. The rect math has to account for that.
+ * width and height swap, and textAlign / verticalAlign act on the rotated axis.
  */
 export function projectLabelRect (
   layout: PlotLabelLayout,
@@ -23,43 +15,32 @@ export function projectLabelRect (
 ): Rect {
   let x = layout.x
   let y = layout.y
+  const deg = ((layout.rotation % 360) + 360) % 360
+  const isQuarter = deg === 90 || deg === 270
 
-  if (isRotatedQuarter(layout.transform)) {
+  if (isQuarter) {
     const visualWidth = height
     const visualHeight = width
 
-    switch (layout.textAnchor) {
-      case 'middle': y -= visualHeight / 2; break
-      case 'start': y -= visualHeight; break
+    switch (layout.textAlign) {
+      case TextAlign.Center: y -= visualHeight / 2; break
+      case TextAlign.Right: y -= visualHeight; break
     }
-    switch (layout.dominantBaseline) {
-      case 'middle':
-      case 'central':
-        x -= visualWidth / 2
-        break
-      case 'text-before-edge':
-      case 'hanging':
-        x -= visualWidth
-        break
+    switch (layout.verticalAlign) {
+      case VerticalAlign.Middle: x -= visualWidth / 2; break
+      case VerticalAlign.Bottom: x -= visualWidth; break
     }
     return { x, y, width: visualWidth, height: visualHeight }
   }
 
-  switch (layout.textAnchor) {
-    case 'middle': x -= width / 2; break
-    case 'end': x -= width; break
+  switch (layout.textAlign) {
+    case TextAlign.Center: x -= width / 2; break
+    case TextAlign.Right: x -= width; break
   }
 
-  switch (layout.dominantBaseline) {
-    case 'middle':
-    case 'central':
-      y -= height / 2
-      break
-    case 'text-after-edge':
-    case 'alphabetic':
-    case 'ideographic':
-      y -= height
-      break
+  switch (layout.verticalAlign) {
+    case VerticalAlign.Middle: y -= height / 2; break
+    case VerticalAlign.Bottom: y -= height; break
   }
 
   return { x, y, width, height }
