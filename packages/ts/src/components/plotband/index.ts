@@ -2,6 +2,8 @@ import { Selection } from 'd3-selection'
 
 // Utils
 import { smartTransition } from '@/utils/d3'
+import { renderTextToSvgTextElement } from '@/utils/text'
+import { isString } from '@/utils/data'
 
 // Core
 import { XYComponentCore } from '@/core/xy-component'
@@ -95,8 +97,13 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
         config.labelOrientation
       )
 
+      if (isString(config.labelText)) {
+        this.label.text(config.labelText)
+      } else {
+        renderTextToSvgTextElement(this.label.node(), config.labelText, {})
+      }
+
       this.label
-        .text(config.labelText)
         .attr('transform', null)
         .style('text-anchor', getTextAnchorFromTextAlign(labelProps.textAlign))
         .style('fill', config.labelColor)

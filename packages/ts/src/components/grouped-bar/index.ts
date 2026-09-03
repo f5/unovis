@@ -162,11 +162,11 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         return this._getBarPath(x, y, width, height, false, valueAxisDirection)
       })
       .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => i)
-      .style('fill', (d, i) => this._getBarStyle(d, i)?.fill ?? getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
-      .style('mask', (d, i) => this._getBarStyle(d, i)?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)))
+      .style('fill', (d, i) => { const st = this._getBarStyle(d, i); return st?.fill ?? getColor(d, config.color, i, config.colorKeys?.[i], colorOptions) })
+      .style('mask', (d, i) => { const st = this._getBarStyle(d, i); return st?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)) })
 
     const barsMerged = barsEnter.merge(bars)
-    barsMerged.style('mask', (d, i) => this._getBarStyle(d, i)?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)))
+    barsMerged.style('mask', (d, i) => { const st = this._getBarStyle(d, i); return st?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)) })
 
     // Custom per-bar styles; the managed keys are merged into the transition below instead,
     // so they keep animating and don't get stomped by the next render
@@ -191,8 +191,8 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         }
         return this._getBarPath(x, y, width, height, isNegative, valueAxisDirection)
       })
-      .style('fill', (d, i) => this._getBarStyle(d, i)?.fill ?? getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
-      .style('cursor', (d, i) => this._getBarStyle(d, i)?.cursor ?? getString(d, config.cursor, i))
+      .style('fill', (d, i) => { const st = this._getBarStyle(d, i); return st?.fill ?? getColor(d, config.color, i, config.colorKeys?.[i], colorOptions) })
+      .style('cursor', (d, i) => { const st = this._getBarStyle(d, i); return st?.cursor ?? getString(d, config.cursor, i) })
 
     smartTransition(bars.exit(), duration).remove()
   }
