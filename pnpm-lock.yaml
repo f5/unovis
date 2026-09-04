@@ -278,6 +278,12 @@ importers:
       '@percy/cypress':
         specifier: ^3.1.3-beta.0
         version: 3.1.7(cypress@13.17.0)
+      '@percy/playwright':
+        specifier: ^1.0.6
+        version: 1.1.2(@percy/cli@1.31.9(typescript@4.9.5))(@playwright/test@1.62.1)(playwright-core@1.62.1)
+      '@playwright/test':
+        specifier: ^1.48.0
+        version: 1.62.1
       '@pmmmwh/react-refresh-webpack-plugin':
         specifier: ^0.5.10
         version: 0.5.17(react-refresh@0.14.2)(sockjs-client@1.6.1)(type-fest@4.41.0)(webpack-dev-server@6.0.0)(webpack@5.105.4)
@@ -4394,12 +4400,29 @@ packages:
     resolution: {integrity: sha512-MY9kNToVZ8NuaQBSy5uPoNt5abK0A8N7KBH+ukYPFTJoVmUSJ8al4TpgPFL/gJOEhL5XgIFf7NeQccs7z6gxuA==}
     engines: {node: '>=14'}
 
+  '@percy/playwright@1.1.2':
+    resolution: {integrity: sha512-IghZHmh1+R3gvneOd//+HbN2xg6e6qgnMy9yJ5V7vWJ49JpkHeU5Esjs1qI9EqFMHKAg0zOorDQ0mJRglQpkyw==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      '@percy/cli': '>=1.32.3'
+      '@playwright/test': '>=1.49.0'
+      playwright-core: '>=1'
+    peerDependenciesMeta:
+      '@percy/cli':
+        optional: true
+      '@playwright/test':
+        optional: true
+
   '@percy/sdk-utils@1.31.4':
     resolution: {integrity: sha512-IBzSQZ8jx1pnSyyn7tF4UX8BVffbw0xjsNsPl/MuYuFuE5rW/D8arc+sH6xI1Kog0+tECt2XdAf4hMGWij2lxw==}
     engines: {node: '>=14'}
 
   '@percy/sdk-utils@1.31.9':
     resolution: {integrity: sha512-3EddljXmCKtgUT7LjTuru0hPIupDSeSGQNbhO5SWZezAjLjyMgjrysn4oHSjs8dKWJDrCpM/ImoKuQ9Dwu3iAg==}
+    engines: {node: '>=14'}
+
+  '@percy/sdk-utils@1.32.8':
+    resolution: {integrity: sha512-RiwFbCV3M2uC+zqKskJetTax6YCnxRp7Rpt71nNrfRTur71nT4147FeLjsijqbJKEDhWtUKW9AeahZsWxzBU1A==}
     engines: {node: '>=14'}
 
   '@percy/webdriver-utils@1.31.9':
@@ -4409,6 +4432,11 @@ packages:
   '@pkgr/core@0.2.9':
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@playwright/test@1.62.1':
+    resolution: {integrity: sha512-DTcUc8qii+cpHvtOwggMtBRMjKZHXYWdw8syRYu2vtzuq4Wxphqq4NfCs5Zt44L6mA8rfDfj+PHnxFc/FeK6mQ==}
+    engines: {node: '>=20'}
+    hasBin: true
 
   '@pmmmwh/react-refresh-webpack-plugin@0.5.17':
     resolution: {integrity: sha512-tXDyE1/jzFsHXjhRZQ3hMl0IVhYe5qula43LDWIhVfjp9G/nT5OQY5AORVOrkEGAUltBJOfOWeETbmhm6kHhuQ==}
@@ -17820,6 +17848,16 @@ snapshots:
       - supports-color
       - typescript
 
+  '@percy/playwright@1.1.2(@percy/cli@1.31.9(typescript@4.9.5))(@playwright/test@1.62.1)(playwright-core@1.62.1)':
+    dependencies:
+      '@percy/sdk-utils': 1.32.8
+      playwright-core: 1.62.1
+    optionalDependencies:
+      '@percy/cli': 1.31.9(typescript@4.9.5)
+      '@playwright/test': 1.62.1
+    transitivePeerDependencies:
+      - supports-color
+
   '@percy/sdk-utils@1.31.4':
     dependencies:
       pac-proxy-agent: 7.2.0
@@ -17827,6 +17865,12 @@ snapshots:
       - supports-color
 
   '@percy/sdk-utils@1.31.9':
+    dependencies:
+      pac-proxy-agent: 7.2.0
+    transitivePeerDependencies:
+      - supports-color
+
+  '@percy/sdk-utils@1.32.8':
     dependencies:
       pac-proxy-agent: 7.2.0
     transitivePeerDependencies:
@@ -17841,6 +17885,10 @@ snapshots:
       - typescript
 
   '@pkgr/core@0.2.9': {}
+
+  '@playwright/test@1.62.1':
+    dependencies:
+      playwright: 1.62.1
 
   '@pmmmwh/react-refresh-webpack-plugin@0.5.17(react-refresh@0.14.2)(sockjs-client@1.6.1)(type-fest@4.41.0)(webpack-dev-server@6.0.0)(webpack@5.105.4)':
     dependencies:
