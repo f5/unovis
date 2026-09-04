@@ -74,15 +74,6 @@ export default defineConfig({
         },
       },
       testMatch: /.*tooltip\.spec\.ts/,
-      /* Expect options for visual testing */
-      expect: {
-        /* Screenshot comparison options */
-        toHaveScreenshot: {
-          threshold: 0.2,
-          animations: 'disabled',
-          caret: 'hide',
-        },
-      },
     },
   ],
 

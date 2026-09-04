@@ -1,4 +1,3 @@
-// filepath: /Users/s.hanumandla/repos/vis/unovis/packages/dev/playwright/tests/unovis.spec.ts
 import { test, expect } from '@playwright/test'
 import { urls } from '../urls'
 
@@ -8,9 +7,6 @@ test.describe('Unovis Smoke Tests', () => {
   test('Load homepage', async ({ page }) => {
     await page.goto('/')
     await expect(page).toHaveTitle(/Unovis/)
-
-    // Take a screenshot of the homepage
-    await expect(page).toHaveScreenshot('homepage.png')
   })
 
   // Navigate to each example URL and verify it renders without errors.

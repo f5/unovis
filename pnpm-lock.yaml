@@ -278,9 +278,6 @@ importers:
       '@percy/cypress':
         specifier: ^3.1.3-beta.0
         version: 3.1.7(cypress@13.17.0)
-      '@percy/playwright':
-        specifier: ^1.0.6
-        version: 1.1.2(@percy/cli@1.31.9(typescript@4.9.5))(@playwright/test@1.62.1)(playwright-core@1.62.1)
       '@playwright/test':
         specifier: ^1.48.0
         version: 1.62.1
@@ -546,7 +543,7 @@ importers:
         version: 7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.11.10(solid-js@1.9.11)(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
+        version: 2.11.10(solid-js@1.9.11)(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
       vue:
         specifier: ^3.5.13
         version: 3.5.30(typescript@5.8.3)
@@ -588,7 +585,7 @@ importers:
         version: 3.9.1(@types/node@22.20.1)(rollup@4.59.0)(typescript@5.6.3)(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.11.10(solid-js@1.9.11)(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
+        version: 2.11.10(solid-js@1.9.11)(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/ssr:
     dependencies:
@@ -4405,29 +4402,12 @@ packages:
     resolution: {integrity: sha512-MY9kNToVZ8NuaQBSy5uPoNt5abK0A8N7KBH+ukYPFTJoVmUSJ8al4TpgPFL/gJOEhL5XgIFf7NeQccs7z6gxuA==}
     engines: {node: '>=14'}
 
-  '@percy/playwright@1.1.2':
-    resolution: {integrity: sha512-IghZHmh1+R3gvneOd//+HbN2xg6e6qgnMy9yJ5V7vWJ49JpkHeU5Esjs1qI9EqFMHKAg0zOorDQ0mJRglQpkyw==}
-    engines: {node: '>=16'}
-    peerDependencies:
-      '@percy/cli': '>=1.32.3'
-      '@playwright/test': '>=1.49.0'
-      playwright-core: '>=1'
-    peerDependenciesMeta:
-      '@percy/cli':
-        optional: true
-      '@playwright/test':
-        optional: true
-
   '@percy/sdk-utils@1.31.4':
     resolution: {integrity: sha512-IBzSQZ8jx1pnSyyn7tF4UX8BVffbw0xjsNsPl/MuYuFuE5rW/D8arc+sH6xI1Kog0+tECt2XdAf4hMGWij2lxw==}
     engines: {node: '>=14'}
 
   '@percy/sdk-utils@1.31.9':
     resolution: {integrity: sha512-3EddljXmCKtgUT7LjTuru0hPIupDSeSGQNbhO5SWZezAjLjyMgjrysn4oHSjs8dKWJDrCpM/ImoKuQ9Dwu3iAg==}
-    engines: {node: '>=14'}
-
-  '@percy/sdk-utils@1.32.8':
-    resolution: {integrity: sha512-RiwFbCV3M2uC+zqKskJetTax6YCnxRp7Rpt71nNrfRTur71nT4147FeLjsijqbJKEDhWtUKW9AeahZsWxzBU1A==}
     engines: {node: '>=14'}
 
   '@percy/webdriver-utils@1.31.9':
@@ -17850,16 +17830,6 @@ snapshots:
       - supports-color
       - typescript
 
-  '@percy/playwright@1.1.2(@percy/cli@1.31.9(typescript@4.9.5))(@playwright/test@1.62.1)(playwright-core@1.62.1)':
-    dependencies:
-      '@percy/sdk-utils': 1.32.8
-      playwright-core: 1.62.1
-    optionalDependencies:
-      '@percy/cli': 1.31.9(typescript@4.9.5)
-      '@playwright/test': 1.62.1
-    transitivePeerDependencies:
-      - supports-color
-
   '@percy/sdk-utils@1.31.4':
     dependencies:
       pac-proxy-agent: 7.2.0
@@ -17867,12 +17837,6 @@ snapshots:
       - supports-color
 
   '@percy/sdk-utils@1.31.9':
-    dependencies:
-      pac-proxy-agent: 7.2.0
-    transitivePeerDependencies:
-      - supports-color
-
-  '@percy/sdk-utils@1.32.8':
     dependencies:
       pac-proxy-agent: 7.2.0
     transitivePeerDependencies:
@@ -27871,7 +27835,7 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-solid@2.11.10(solid-js@1.9.11)(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)):
+  vite-plugin-solid@2.11.10(solid-js@1.9.11)(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)):
     dependencies:
       '@babel/core': 7.29.0
       '@types/babel__core': 7.20.5
@@ -27880,7 +27844,7 @@ snapshots:
       solid-js: 1.9.11
       solid-refresh: 0.6.3(solid-js@1.9.11)
       vite: 7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
-      vitefu: 1.1.2(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
+      vitefu: 1.1.2(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
     transitivePeerDependencies:
       - supports-color
 
@@ -27964,7 +27928,7 @@ snapshots:
     optionalDependencies:
       vite: 7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
 
-  vitefu@1.1.2(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)):
+  vitefu@1.1.2(vite@7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)):
     optionalDependencies:
       vite: 7.3.6(@types/node@22.20.1)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.59.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
 
