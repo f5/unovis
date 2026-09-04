@@ -70,12 +70,12 @@ const ROOT_SKIP_EXACT = new Set([
   'lint', // temporarily disabled
   'cmds-report'
 ])
-const ROOT_SKIP_CONTAINS = ['publish', 'update-version', 'gallery']
+const ROOT_SKIP_CONTAINS = ['publish', 'update-version', 'gallery', 'test:mcp']
 const ROOT_SKIP_STARTS = ['build'] // 'build' and 'build:*'
 
 // Workspace: publish & gallery variants are out. Long-running servers,
 // interactive / destructive tooling, and generator pass-throughs too.
-const WS_SKIP_CONTAINS = ['publish', 'gallery', 'csp']
+const WS_SKIP_CONTAINS = ['publish', 'gallery', 'csp', 'license:check', 'test:playwright', 'test:watch']
 const WS_SKIP_EXACT = new Set([
   'dev',
   'serve',
@@ -93,6 +93,8 @@ const WS_SKIP_EXACT = new Set([
 const WS_SPECIFIC_SKIP = {
   '@unovis/angular': new Set(['test']),
   '@unovis/dev': new Set(['check', 'test']),
+  '@unovis/ts': new Set(['test:watch']),
+  '@unovis/mcp': new Set(['test:watch','test:browser', 'docs:tools', 'build:widget', 'samples', 'test:images:update']),
   '@unovis/website': new Set(['typecheck']),
   // 'generate' already runs `lint --fix` after autogeneration; running the
   // standalone `lint` in parallel causes it to see unfixed generated files.
@@ -126,14 +128,14 @@ const makeTask = (workspace, workspaceDir, scriptName, script) => ({
 
 const tasks = []
 
-// ── Root-level scripts (phase 4) ─────────────────────────────────────────────
+// ── Root-level scripts (phase 5 — run last) ──────────────────────────────────
 const rootPkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'))
 Object.entries(rootPkg.scripts || {}).forEach(([name, script]) => {
   if (ROOT_SKIP_EXACT.has(name)) return
   if (ROOT_SKIP_CONTAINS.some(p => name.includes(p))) return
   if (ROOT_SKIP_STARTS.some(p => name === p || name.startsWith(`${p}:`))) return
   const t = makeTask('root', ROOT_DIR, name, script)
-  t.phase = 4
+  t.phase = 5
   tasks.push(t)
 })
 
@@ -164,9 +166,11 @@ wsDirs.forEach(wsDir => {
     const t = makeTask(wsLabel, wsDir, name, script)
     t.phase = wsLabel === '@unovis/ts'
       ? 1
-      : (wsLabel === '@unovis/dev' || wsLabel === '@unovis/website')
-        ? 3
-        : 2
+      : wsLabel === '@unovis/mcp'
+        ? 4
+        : (wsLabel === '@unovis/dev' || wsLabel === '@unovis/website')
+          ? 3
+          : 2
     tasks.push(t)
   })
 })
@@ -386,9 +390,14 @@ const runAllTasks = async () => {
     await runPhase(3, 'Phase 3 — @unovis/dev & @unovis/website')
   }
 
-  // Phase 4: root package.json scripts (lint, gather-licenses, etc.)
+  // Phase 4: @unovis/mcp — runs after the other workspaces
   if (tasks.some(t => t.phase === 4)) {
-    await runPhase(4, 'Phase 4 — root scripts')
+    await runPhase(4, 'Phase 4 — @unovis/mcp')
+  }
+
+  // Phase 5: root package.json scripts (lint, gather-licenses, etc.) — run last
+  if (tasks.some(t => t.phase === 5)) {
+    await runPhase(5, 'Phase 5 — root scripts')
   }
 
   const success = tasks.filter(t => t.status === 'success').length
@@ -918,14 +927,16 @@ console.log(`  Workers        : ${WORKERS} parallel`)
 console.log(`  Timeout        : ${TIMEOUT_S}s per command`)
 if (CLEAN_FIRST) console.log('  Pre-run        : pnpm install:clean  (phase 1)')
 console.log(`  ${'─'.repeat(50)}`)
-;[1, 2, 3, 4].forEach(phase => {
+;[1, 2, 3, 4, 5].forEach(phase => {
   const label = phase === 1
     ? 'Phase 1 — ' + (CLEAN_FIRST ? 'install:clean + ' : '') + '@unovis/ts'
     : phase === 2
       ? 'Phase 2 — @unovis/react + others'
       : phase === 3
         ? 'Phase 3 — @unovis/dev & @unovis/website'
-        : 'Phase 4 — root scripts'
+        : phase === 4
+          ? 'Phase 4 — @unovis/mcp'
+          : 'Phase 5 — root scripts'
   const pTasks = tasks.filter(t => t.phase === phase)
   if (pTasks.length === 0) return
   const wsGroups = {}

@@ -14,6 +14,8 @@
 | d3-random                            | perpetual      | ISC          | 3.0.1             | Mike Bostock http://bost.ocks.org/mike                             |
 | @percy/cli                           | perpetual      | MIT          | 1.31.9            | n/a                                                                |
 | @percy/cypress                       | perpetual      | MIT          | 3.1.7             | Perceptual Inc.                                                    |
+| @percy/playwright                    | perpetual      | MIT          | 1.1.2             | Perceptual Inc.                                                    |
+| @playwright/test                     | perpetual      | Apache-2.0   | 1.62.1            | Microsoft Corporation                                              |
 | @pmmmwh/react-refresh-webpack-plugin | perpetual      | MIT          | 0.5.17            | Michael Mok                                                        |
 | @types/react                         | perpetual      | MIT          | 19.2.14           | n/a                                                                |
 | @types/react-dom                     | perpetual      | MIT          | 19.2.3            | n/a                                                                |
