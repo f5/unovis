@@ -1,6 +1,6 @@
 import { css } from '@/styles/emotion'
 import { extent, merge as mergeArrays } from 'd3-array'
-import { Selection } from 'd3-selection'
+import { Selection, select } from 'd3-selection'
 
 // Global CSS variables (side effects import)
 import '@/styles/index'
@@ -18,6 +18,9 @@ import { Spacing } from '@/types/spacing'
 import { AxisType } from '@/components/axis/types'
 import { ScaleDimension } from '@/types/scale'
 import { Direction } from '@/types/direction'
+import { LabelOverflow, PlotLabelLayout, PlotLabelLayoutInfo } from '@/types/plot-label'
+import { getTextAnchorFromTextAlign } from '@/types/svg'
+import { Rect } from '@/types/misc'
 
 // Utils
 import { clamp, clean, flatten, isFunction } from '@/utils/data'
@@ -25,6 +28,7 @@ import { guid } from '@/utils/misc'
 
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
+import { projectLabelRect, resolveHideOverflow, resolveStackOverflow } from './plot-label-resolver'
 import {
   AreaConfigInterface,
   BrushConfigInterface,
@@ -240,6 +244,8 @@ export class XYContainer<Datum> extends ContainerCore {
 
       c.render(customDuration)
     }
+
+    this._resolvePlotLabelPositions()
 
     this._renderAxes(this._firstRender ? 0 : customDuration)
 
@@ -475,5 +481,88 @@ export class XYContainer<Datum> extends ContainerCore {
     annotations?.destroy()
     xAxis?.destroy()
     yAxis?.destroy()
+  }
+
+  private _resolvePlotLabelPositions (): void {
+    const infos: PlotLabelLayoutInfo[] = []
+    for (const c of this.components) {
+      const get = (c as XYComponentCore<Datum> & { getLabelLayoutInfo?: () => PlotLabelLayoutInfo | null }).getLabelLayoutInfo
+      if (typeof get === 'function') {
+        const info = get.call(c)
+        if (info && info.labelEl) infos.push(info)
+      }
+    }
+
+    if (infos.length === 0) return
+
+    const placed: Rect[] = []
+    const bounds: Rect = { x: 0, y: 0, width: this.width, height: this.height }
+
+    const stackDeferred: { info: PlotLabelLayoutInfo; layout: PlotLabelLayout; baseRect: Rect | null }[] = []
+    const hideDeferred: { info: PlotLabelLayoutInfo; layout: PlotLabelLayout; rect: Rect | null }[] = []
+
+    for (const info of infos) {
+      const baseRect = this._labelBBoxRect(info.labelEl)
+      const layout = info.computeLayout(info.preferredAnchor)
+
+      if (!info.participatesInAuto) {
+        if (baseRect) placed.push(projectLabelRect(layout, baseRect.width, baseRect.height))
+        continue
+      }
+
+      if (info.overflow === LabelOverflow.Hide) {
+        const rect = baseRect ? projectLabelRect(layout, baseRect.width, baseRect.height) : null
+        hideDeferred.push({ info, layout, rect })
+        continue
+      }
+
+      stackDeferred.push({ info, layout, baseRect })
+    }
+
+    if (stackDeferred.length) {
+      const stackLayouts = stackDeferred.map(s => s.layout)
+      const stackRects = stackDeferred.map(s =>
+        s.baseRect ? projectLabelRect(s.layout, s.baseRect.width, s.baseRect.height) : null
+      )
+      const resolved = resolveStackOverflow(stackLayouts, stackRects, placed)
+      stackDeferred.forEach((s, i) => {
+        this._applyLabelLayout(s.info.labelEl, resolved[i], true)
+        if (s.baseRect) placed.push(projectLabelRect(resolved[i], s.baseRect.width, s.baseRect.height))
+      })
+    }
+
+    if (hideDeferred.length) {
+      const visibility = resolveHideOverflow(hideDeferred.map(h => h.rect), placed, bounds)
+      hideDeferred.forEach((h, i) => this._applyLabelLayout(h.info.labelEl, h.layout, visibility[i]))
+    }
+  }
+
+  private _labelBBoxRect (el: SVGTextElement | null): Rect | null {
+    if (!el) return null
+    try {
+      const bbox = el.getBBox()
+      if (!bbox || (bbox.width === 0 && bbox.height === 0)) return null
+      return { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height }
+    } catch {
+      return null
+    }
+  }
+
+  private _applyLabelLayout (
+    el: SVGTextElement | null,
+    layout: PlotLabelLayout,
+    visible: boolean
+  ): void {
+    if (!el) return
+    // Interrupt any in-flight transition from the component's `_render` so
+    // its ticks don't overwrite our x/y.
+    const sel = select(el)
+    sel.interrupt()
+    sel
+      .attr('x', layout.x)
+      .attr('y', layout.y)
+      .attr('transform', layout.rotation ? `rotate(${layout.rotation}, ${layout.x}, ${layout.y})` : null)
+      .style('text-anchor', getTextAnchorFromTextAlign(layout.textAlign))
+      .style('opacity', visible ? null : 0)
   }
 }

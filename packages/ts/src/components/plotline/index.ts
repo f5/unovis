@@ -2,23 +2,16 @@ import { Selection } from 'd3-selection'
 
 // Utils
 import { smartTransition } from '@/utils/d3'
-import { isArray, isNumber, isNumberWithinRange, isString } from '@/utils/data'
-import { getCSSVariableValueInPixels, getRectFitTranslation } from '@/utils/misc'
-import { labelBboxToBleed } from '@/utils/bleed'
-import { getWrappedText, getWrappedTextAabb, renderTextToSvgTextElement } from '@/utils/text'
-import { getCachedFontFamily } from '@/utils/text-measure'
+import { renderTextToSvgTextElement } from '@/utils/text'
+import { isString } from '@/utils/data'
 
 // Core
 import { XYComponentCore } from '@/core/xy-component'
 import { AxisType } from '@/components/axis/types'
 
 // Types
-import { Rect } from '@/types/misc'
-import { Spacing } from '@/types/spacing'
-import { UnovisText } from '@/types/text'
-
-// Styles
-import { UNOVIS_TEXT_DEFAULT_FONT_SIZE } from '@/styles'
+import { PlotLabelLayout, PlotLabelLayoutInfo, LabelOverflow } from '@/types/plot-label'
+import { getTextAnchorFromTextAlign } from '@/types/svg'
 
 // Config
 import { LINE_STYLE, VERTICAL_X, HORIZONTAL_X, VERTICAL_Y, HORIZONTAL_Y } from './constants'
@@ -28,64 +21,44 @@ import { PlotlineLabelPosition, PlotlineLabelOrientation, PlotlineLabelLayout, P
 // Styles
 import * as s from './style'
 
+
 export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = PlotlineDefaultConfig as PlotlineConfigInterface<Datum>
   value: number | null | undefined
   plotline: Selection<SVGLineElement, unknown, null, undefined>
-  labelGroup: Selection<SVGGElement, unknown, null, undefined>
   label: Selection<SVGTextElement, unknown, null, undefined>
+  private _labelLayoutBounds: { width: number; height: number } | undefined
 
   constructor (config: PlotlineConfigInterface<Datum>) {
     super()
-    this.setConfig(config)
+    if (config) this.setConfig(config)
 
     this.plotline = this.g
       .append('line')
       .attr('class', s.plotline)
 
-    // The label is rendered into a group, so that its position can be transitioned
-    // independently of the text layout
-    this.labelGroup = this.g
-      .append('g')
-
-    this.label = this.labelGroup
+    this.label = this.g
       .append('text')
       .attr('class', s.label)
-  }
-
-  /** Extra space required to fit the plotline label, which is otherwise clipped
-   * when the plotline is drawn close to the edge of the chart. */
-  get bleed (): Spacing {
-    const { config } = this
-
-    // The plotline is clipped out completely when its value is outside of the domain, so there's nothing to fit in
-    const labelTextBlocks = this._getLabelTextBlocks()
-    if (!labelTextBlocks.length || !this._isValueWithinDomain()) return { top: 0, bottom: 0, left: 0, right: 0 }
-
-    // Only the label position along the plotline's own axis follows the scale range: the other
-    // coordinate is derived from the component size, so bleeding in that direction would
-    // shrink the chart without moving the label
-    const isYAxis = config.axis === AxisType.Y
-    const scale = isYAxis ? this.yScale : this.xScale
-    return labelBboxToBleed(this._getLabelBBox(this._getLabelLayout(), labelTextBlocks), scale.range(), isYAxis)
   }
 
   _render (customDuration?: number): void {
     super._render(customDuration)
     const { config } = this
-    const duration = isNumber(customDuration) ? customDuration : config.duration
     this.value = config.value
 
-    // Hide the component when there's no value to draw the plotline at, instead of letting the
-    // scale coerce `null` into a number
-    const isValueDefined = isNumber(this.value)
-    this.g.style('display', isValueDefined ? null : 'none')
-    if (!isValueDefined) return
+    let strokeDashArray
 
-    const strokeDashArray = isString(config.lineStyle) ? LINE_STYLE[config.lineStyle]
-      : isArray(config.lineStyle) ? config.lineStyle.join(',')
-        : 'none'
+    if (typeof config?.lineStyle === 'string') {
+      strokeDashArray = LINE_STYLE[config.lineStyle]
+    } else if (Array.isArray(config.lineStyle)) {
+      strokeDashArray = config.lineStyle.join(',')
+    } else {
+      strokeDashArray = 'none'
+    }
+
+    this.value = config.value
 
     this.plotline
       .attr('stroke-opacity', 1)
@@ -93,97 +66,72 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       .style('stroke-dasharray', strokeDashArray)
       .style('stroke', config.color)
 
-    const { x1, y1, x2, y2 } = this._getLineCoordinates()
-    smartTransition(this.plotline, duration)
+    let x1 = 0
+    let x2 = 0
+    let y1 = 0
+    let y2 = 0
+
+    if (config.axis === AxisType.Y) {
+      y1 = this.yScale(this.value)
+      y2 = this.yScale(this.value)
+      x1 = 0
+      x2 = this._width
+    } else {
+      y1 = 0
+      y2 = this._height
+      x1 = this.xScale(this.value)
+      x2 = this.xScale(this.value)
+    }
+
+    smartTransition(this.plotline, config.duration)
       .attr('x1', x1)
       .attr('x2', x2)
       .attr('y1', y1)
       .attr('y2', y2)
 
-    // The label is not rendered when the value is outside of the domain, so that it doesn't
-    // float in the chart while the plotline itself is clipped out
-    const labelTextBlocks = this._getLabelTextBlocks()
-    if (labelTextBlocks.length && this._isValueWithinDomain()) {
-      const layout = this._getLabelLayout()
+    if (config.labelText) {
+      this._labelLayoutBounds = { width: x2, height: y2 }
+      const labelProps = this.computeLabel(
+        config.axis,
+        x2,
+        y2,
+        config.labelPosition,
+        config.labelOffsetX,
+        config.labelOffsetY,
+        config.labelOrientation
+      )
 
-      // Keep the label within the chart bounds: the bleed can hit its cap, and it can't help
-      // across the plotline's axis where the label doesn't follow the scale
-      const fit = getRectFitTranslation(this._getLabelBBox(layout, labelTextBlocks), { x: 0, y: 0, width: this._width, height: this._height })
+      if (isString(config.labelText)) {
+        this.label.text(config.labelText)
+      } else {
+        renderTextToSvgTextElement(this.label.node(), config.labelText, {})
+      }
 
-      renderTextToSvgTextElement(this.label.node(), labelTextBlocks, { x: 0, y: 0, textAlign: layout.textAlign, verticalAlign: layout.verticalAlign, fastMode: false }, 'hanging')
+      this.label
+        .attr('transform', null)
+        .style('fill', config.labelColor)
+        .style('text-anchor', getTextAnchorFromTextAlign(labelProps.textAlign))
+        .style('font-size', config.labelSize ? `${config.labelSize}px` : undefined)
+        .attr('x', labelProps.x)
+        .attr('y', labelProps.y)
 
-      smartTransition(this.labelGroup, duration)
-        .attr('transform', `translate(${layout.x + fit.dx},${layout.y + fit.dy}) rotate(${layout.rotation})`)
+      const bbox = this.label.node()?.getBBox()
+      const cx = bbox ? labelProps.x + Math.max(0, -bbox.x) - Math.max(0, bbox.x + bbox.width - this._width) : labelProps.x
+      const cy = bbox ? labelProps.y + Math.max(0, -bbox.y) - Math.max(0, bbox.y + bbox.height - this._height) : labelProps.y
+
+      smartTransition(this.label, config.duration)
+        .attr('x', cx)
+        .attr('y', cy)
+        .attr('transform', labelProps.rotation ? `rotate(${labelProps.rotation}, ${cx}, ${cy})` : null)
     } else {
-      this.label.text(null)
-    }
-  }
-
-  private _isValueWithinDomain (): boolean {
-    const { config } = this
-    const scale = config.axis === AxisType.Y ? this.yScale : this.xScale
-    const domain = scale.domain() as [number, number]
-    return isNumber(config.value) && isNumberWithinRange(config.value, domain)
-  }
-
-  private _getLineCoordinates (): { x1: number; y1: number; x2: number; y2: number } {
-    const { config } = this
-
-    if (config.axis === AxisType.Y) {
-      const y = this.yScale(config.value)
-      return { x1: 0, y1: y, x2: this._width, y2: y }
+      // Wipe stale text from a prior render where labelText was set.
+      this._labelLayoutBounds = undefined
+      this.label.text('')
     }
 
-    const x = this.xScale(config.value)
-    return { x1: x, y1: 0, x2: x, y2: this._height }
-  }
-
-  private _getLabelFontSize (): number {
-    const { config } = this
-    return config.labelSize ||
-      getCSSVariableValueInPixels('var(--vis-plotline-label-font-size)', this.element) ||
-      UNOVIS_TEXT_DEFAULT_FONT_SIZE
-  }
-
-  /** The label as text blocks, used for both rendering and size estimation. The config-level
-   * label options and CSS values act as defaults: values set on a text block take priority */
-  private _getLabelTextBlocks (): UnovisText[] {
-    const { config } = this
-    if (!config.labelText) return []
-
-    const defaults: Partial<UnovisText> = {
-      fontSize: this._getLabelFontSize(),
-      fontFamily: getCachedFontFamily(this.label.node()),
-      color: config.labelColor,
-    }
-
-    const blocks = isString(config.labelText)
-      ? [{ ...defaults, text: config.labelText }]
-      : (isArray(config.labelText) ? config.labelText : [config.labelText]).map(block => ({ ...defaults, ...block }))
-
-    return blocks.filter(block => block.text)
-  }
-
-  /** The label's bounding box for the given layout, in the component's coordinate system */
-  private _getLabelBBox (layout: PlotlineLabelLayout, textBlocks: UnovisText[]): Rect {
-    const wrappedText = getWrappedText(textBlocks, undefined, undefined, false)
-    const bbox = getWrappedTextAabb(wrappedText, layout.textAlign, layout.verticalAlign, layout.rotation)
-    return { ...bbox, x: layout.x + bbox.x, y: layout.y + bbox.y }
-  }
-
-  private _getLabelLayout (): PlotlineLabelLayout {
-    const { config } = this
-    const isYAxis = config.axis === AxisType.Y
-
-    return this.computeLabel(
-      config.axis,
-      isYAxis ? this._width : this.xScale(config.value),
-      isYAxis ? this.yScale(config.value) : this._height,
-      config.labelPosition,
-      config.labelOffsetX,
-      config.labelOffsetY,
-      config.labelOrientation
-    )
+    smartTransition(this.plotline.exit())
+      .style('opacity', 0)
+      .remove()
   }
 
   private computeLabel (
@@ -212,6 +160,43 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
     return {
       ...layout,
       rotation,
+    }
+  }
+
+  // Read by `XYContainer` to coordinate auto label positioning across
+  // Plotline + Plotband siblings.
+  public getLabelLayoutInfo (): PlotLabelLayoutInfo | null {
+    const { config } = this
+    if (!config.labelText || !this._labelLayoutBounds) return null
+
+    const labelEl = this.label.node()
+    const preferred = config.labelPosition ?? PlotlineLabelPosition.TopRight
+    const bounds = this._labelLayoutBounds
+    const computeLayout = (anchor: string): PlotLabelLayout => {
+      const layout = this.computeLabel(
+        config.axis,
+        bounds.width,
+        bounds.height,
+        anchor as PlotlineLabelPosition,
+        config.labelOffsetX,
+        config.labelOffsetY,
+        config.labelOrientation
+      )
+      return {
+        x: layout.x,
+        y: layout.y,
+        rotation: layout.rotation,
+        textAlign: layout.textAlign,
+        verticalAlign: layout.verticalAlign,
+      }
+    }
+
+    return {
+      labelEl,
+      preferredAnchor: preferred,
+      participatesInAuto: !!config.labelAutoPosition,
+      overflow: config.labelOverflow ?? LabelOverflow.Stack,
+      computeLayout,
     }
   }
 }

@@ -30,7 +30,7 @@ export function useContainerRenderOnUpdate (): void {
   useEffect(() => {
     if (isInitialRunRef.current) {
       isInitialRunRef.current = false
-      return
+      return () => { isInitialRunRef.current = true }
     }
     requestRender?.()
   })
