@@ -1,8 +1,7 @@
-import { test as base, expect, Page, Locator } from '@playwright/test'
+import { test as base, expect, Page } from '@playwright/test'
 
 export interface TooltipTestContext {
   tooltipUtils: TooltipUtils;
-  visualUtils: VisualUtils;
 }
 
 export class TooltipUtils {
@@ -11,8 +10,6 @@ export class TooltipUtils {
   /**
    * Triggers tooltip by hovering over an element at its center
    * Equivalent to Cypress checkTooltip command
-   */
-  /**
    * @param selector Element that triggers the tooltip on hover.
    * @param expectTooltipSelector When provided, retries the hover until this
    *   tooltip becomes visible (needed for heavy WebGL maps).
@@ -139,56 +136,10 @@ export class TooltipUtils {
   }
 }
 
-export class VisualUtils {
-  constructor (private page: Page) {}
-
-  /**
-   * Takes a screenshot with consistent naming and options
-   */
-  async takeScreenshot (
-    name: string,
-    options?: {
-      element?: Locator;
-      fullPage?: boolean;
-      clip?: { x: number; y: number; width: number; height: number };
-      mask?: Locator[];
-      maxDiffPixelRatio?: number;
-    }
-  ): Promise<void> {
-    const fileName = `${name}.png`
-
-    if (options?.element) {
-      await expect(options.element).toHaveScreenshot(fileName, {
-        mask: options.mask,
-        maxDiffPixelRatio: options.maxDiffPixelRatio,
-      })
-    } else {
-      await expect(this.page).toHaveScreenshot(fileName, {
-        fullPage: options?.fullPage ?? false,
-        clip: options?.clip,
-        mask: options?.mask,
-        maxDiffPixelRatio: options?.maxDiffPixelRatio,
-      })
-    }
-  }
-
-  /**
-   * Waits for all animations and transitions to complete
-   */
-  async waitForStability (timeout = 1000): Promise<void> {
-    await this.page.waitForTimeout(300)
-    await this.page.waitForLoadState('networkidle')
-    await this.page.waitForTimeout(timeout)
-  }
-}
-
 // Create extended test with utilities
 export const test = base.extend<TooltipTestContext>({
   tooltipUtils: async ({ page }, use) => {
     await use(new TooltipUtils(page))
-  },
-  visualUtils: async ({ page }, use) => {
-    await use(new VisualUtils(page))
   },
 })
 

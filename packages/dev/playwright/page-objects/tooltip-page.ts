@@ -180,10 +180,9 @@ export class LeafletTooltipPage {
   }
 
   /**
-   * Waits for the WebGL map to stop rendering. Percy (used by the Cypress
-   * suite) never captured the canvas so tile-load timing was irrelevant there;
-   * Playwright captures live canvas pixels, so we must wait until all tiles are
-   * fetched and the canvas stops changing before taking a screenshot.
+   * Waits for the WebGL map to stop rendering. Playwright captures live canvas
+   * pixels, so we must wait until all tiles are fetched and the canvas stops
+   * changing before taking a screenshot.
    */
   async waitForMapIdle (): Promise<void> {
     await this.page.waitForLoadState('networkidle')
