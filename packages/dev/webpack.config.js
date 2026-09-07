@@ -56,6 +56,25 @@ module.exports = {
         resourceQuery: /raw/,
         type: 'asset/source',
       },
+      {
+        // maplibre-gl's worker imports its `maplibre-gl-shared.mjs` sibling via a relative path,
+        //   so both must be emitted next to each other with their original (unhashed) file names.
+        //   Gated behind a query marker so the normal JS import of `maplibre-gl-shared.mjs` (used by
+        //   maplibre-gl.mjs itself) isn't affected.
+        test: /maplibre-gl-(worker|shared)\.mjs$/,
+        resourceQuery: /maplibreWorkerAsset/,
+        type: 'asset/resource',
+        generator: { filename: '[name][ext]' },
+      },
+      {
+        // maplibre-gl.mjs builds its worker Blob URL with `new URL(dynamicVar, import.meta.url)`,
+        //   which webpack can't statically resolve and flags as a critical dependency. Disabling
+        //   webpack's `new URL()` parsing for this module (it isn't used for asset imports here)
+        //   removes the warning at its source instead of suppressing it.
+        test: /maplibre-gl\.mjs$/,
+        type: 'javascript/esm',
+        parser: { url: false },
+      },
     ],
   },
   resolve: {

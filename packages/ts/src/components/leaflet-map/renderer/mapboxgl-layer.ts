@@ -1,6 +1,5 @@
 import type L from 'leaflet'
-import type Maplibre from 'maplibre-gl'
-import type { Map } from 'maplibre-gl'
+import type { Map, LngLat } from 'maplibre-gl'
 
 import { injectGlobal } from '@/styles/emotion'
 
@@ -23,10 +22,18 @@ import { MaplibreGLLayer } from './leaflet-maplibre-gl'
 import mapLibreStyles from './maplibre-gl.css.js'
 injectGlobal(mapLibreStyles)
 
+// The subset of the MapLibre GL module that `leaflet-maplibre-gl` consumes at runtime
+export type MaplibreModule = {
+  /* eslint-disable @typescript-eslint/naming-convention -- matches the MapLibre GL export names */
+  Map: typeof Map;
+  LngLat: typeof LngLat;
+  /* eslint-enable @typescript-eslint/naming-convention */
+}
+
 export function getMaplibreGLLayer<Datum extends GenericDataRecord> (
   config: LeafletMapConfigInterface<Datum>,
   leaflet: typeof L,
-  maplibre: typeof Maplibre
+  maplibre: MaplibreModule
 ): L.Layer & { getMaplibreMap(): Map } {
   const { accessToken, style, preserveDrawingBuffer } = config
 
