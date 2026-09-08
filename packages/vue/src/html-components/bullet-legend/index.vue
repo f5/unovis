@@ -1,11 +1,11 @@
-<script setup lang="ts" >
+<script setup lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
-import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue'
+import type { BulletLegendConfigInterface } from '@unovis/ts'
+import { BulletLegend } from '@unovis/ts'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 
-
-// data and required props 
+// data and required props
 type Props = BulletLegendConfigInterface
 const props = defineProps<Props & { data?: null }>()
 
@@ -19,16 +19,13 @@ const elRef = ref<HTMLDivElement>()
 
 onMounted(() => {
   nextTick(() => {
-    if(elRef.value)
-    component.value = new BulletLegend(elRef.value, { ...config.value, renderIntoProvidedDomNode: true })
-    
-    
+    if (elRef.value)
+      component.value = new BulletLegend(elRef.value, { ...config.value, renderIntoProvidedDomNode: true })
   })
 })
 
 onUnmounted(() => {
   component.value?.destroy()
-  
 })
 
 watch(config, (curr, prev) => {
@@ -38,9 +35,8 @@ watch(config, (curr, prev) => {
   }
 })
 
-
 defineExpose({
-  component
+  component,
 })
 </script>
 
@@ -49,9 +45,8 @@ export const VisBulletLegendSelectors = BulletLegend.selectors
 </script>
 
 <template>
-  <div data-vis-bullet-legend ref="elRef"/>
+  <div ref="elRef" data-vis-bullet-legend />
 </template>
-
 
 <style>
   [data-vis-bullet-legend] {

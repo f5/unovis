@@ -1,11 +1,11 @@
-<script setup lang="ts" >
+<script setup lang="ts">
 // !!! This code was automatically generated. You should not change it !!!
-import { RollingPinLegend, RollingPinLegendConfigInterface, RollingPinLegendItem } from '@unovis/ts'
-import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue'
+import type { RollingPinLegendConfigInterface } from '@unovis/ts'
+import { RollingPinLegend } from '@unovis/ts'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 
-
-// data and required props 
+// data and required props
 type Props = RollingPinLegendConfigInterface
 const props = defineProps<Props & { data?: null }>()
 
@@ -19,16 +19,13 @@ const elRef = ref<HTMLDivElement>()
 
 onMounted(() => {
   nextTick(() => {
-    if(elRef.value)
-    component.value = new RollingPinLegend(elRef.value, config.value)
-    
-    
+    if (elRef.value)
+      component.value = new RollingPinLegend(elRef.value, config.value)
   })
 })
 
 onUnmounted(() => {
   component.value?.destroy()
-  
 })
 
 watch(config, (curr, prev) => {
@@ -38,9 +35,8 @@ watch(config, (curr, prev) => {
   }
 })
 
-
 defineExpose({
-  component
+  component,
 })
 </script>
 
@@ -49,9 +45,8 @@ export const VisRollingPinLegendSelectors = RollingPinLegend.selectors
 </script>
 
 <template>
-  <div data-vis-rolling-pin-legend ref="elRef"/>
+  <div ref="elRef" data-vis-rolling-pin-legend />
 </template>
-
 
 <style>
   [data-vis-rolling-pin-legend] {

@@ -1,23 +1,23 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import { Brush, BrushConfigInterface } from '@unovis/ts'
-import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
-import { arePropsEqual, useForwardProps } from '../../utils/props'
+import type { BrushConfigInterface } from '@unovis/ts'
+import { Brush } from '@unovis/ts'
+import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { componentAccessorKey } from '../../utils/context'
+import { arePropsEqual, useForwardProps } from '../../utils/props'
+
+const props = defineProps<Props & { data?: Datum[] }>()
 
 const accessor = inject(componentAccessorKey)
 
-// data and required props 
+// data and required props
 type Props = BrushConfigInterface<Datum>
-const props = defineProps<Props & { data?: Datum[] }>()
-
 const data = computed(() => accessor.data.value ?? props.data)
 // config
 const config = useForwardProps(props)
 
 // component declaration
 const component = ref<Brush<Datum>>()
-
 
 onMounted(() => {
   nextTick(() => {
@@ -44,7 +44,7 @@ watch(data, () => {
 })
 
 defineExpose({
-  component
+  component,
 })
 </script>
 
@@ -55,5 +55,3 @@ export const VisBrushSelectors = Brush.selectors
 <template>
   <div data-vis-component />
 </template>
-
-
