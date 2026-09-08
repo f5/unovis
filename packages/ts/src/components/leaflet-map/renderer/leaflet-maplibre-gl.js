@@ -117,14 +117,13 @@ export function MaplibreGLLayer (leaflet, maplibre, options) {
         center: [center.lng, center.lat],
         zoom: this._map.getZoom() - 1,
         attributionControl: false,
+        // maplibre-gl >= 5 made `transform.latRange` a getter-only prop (mutating it throws), so the
+        //   old "allow GL base map to pan beyond min/max latitudes" hack no longer works. Override the
+        //   constrain hook instead, keeping maplibre-gl's own zoom clamp (its defaults, since we don't set our own).
+        transformConstrain: (mapCenter, zoom) => ({ center: mapCenter, zoom: Math.min(Math.max(zoom, -2), 22) }),
       })
 
       this._glMap = new maplibre.Map(options)
-
-      // allow GL base map to pan beyond min/max latitudes (not supported by all maplibre-gl versions)
-      const tr = getGLTransform(this._glMap)
-      try { tr.latRange = null } catch (e) { /* no-op */ }
-      try { tr.maxValidLatitude = Infinity } catch (e) { /* no-op */ }
 
       this._transformGL(this._glMap)
 
