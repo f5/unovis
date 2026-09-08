@@ -50,6 +50,7 @@
 | @types/topojson                   | perpetual      | MIT          | 3.2.6             | n/a                                                               |
 | @types/topojson-client            | perpetual      | MIT          | 3.1.5             | n/a                                                               |
 | @types/topojson-specification     | perpetual      | MIT          | 1.0.5             | n/a                                                               |
+| @maplibre/maplibre-gl-style-spec  | perpetual      | ISC          | 26.4.1            | MapLibre                                                          |
 | d3                                | perpetual      | ISC          | 7.9.0             | Mike Bostock https://bost.ocks.org/mike                           |
 | d3-collection                     | perpetual      | BSD-3-Clause | 1.0.7             | Mike Bostock http://bost.ocks.org/mike                            |
 | d3-geo-projection                 | perpetual      | ISC          | 4.0.0             | Mike Bostock https://bost.ocks.org/mike                           |
@@ -58,7 +59,7 @@
 | elkjs                             | perpetual      | EPL-2.0      | 0.10.2            | Ulf Rüegg uruurumail@gmail.com                                    |
 | geojson                           | perpetual      | MIT          | 0.5.0             | Casey Cesari                                                      |
 | leaflet                           | perpetual      | BSD-2-Clause | 1.7.1             | n/a                                                               |
-| maplibre-gl                       | perpetual      | BSD-3-Clause | 2.4.0             | n/a                                                               |
+| maplibre-gl                       | perpetual      | BSD-3-Clause | 6.7.0             | n/a                                                               |
 | striptags                         | perpetual      | MIT          | 3.2.0             | Eric Norris (https://github.com/ericnorris)                       |
 | supercluster                      | perpetual      | ISC          | 7.1.5             | Vladimir Agafonkin                                                |
 | three                             | perpetual      | MIT          | 0.135.0           | mrdoob                                                            |
