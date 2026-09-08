@@ -1,3 +1,8 @@
+// maplibre-gl >= 6 no longer exposes `Map#transform` publicly; it lives on the internal `_camera`
+function getGLTransform (gl) {
+  return gl.transform || gl._camera?.transform
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function MaplibreGLLayer (leaflet, maplibre, options) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -112,13 +117,13 @@ export function MaplibreGLLayer (leaflet, maplibre, options) {
         center: [center.lng, center.lat],
         zoom: this._map.getZoom() - 1,
         attributionControl: false,
+        // maplibre-gl >= 5 made `transform.latRange` a getter-only prop (mutating it throws), so the
+        //   old "allow GL base map to pan beyond min/max latitudes" hack no longer works. Override the
+        //   constrain hook instead, keeping maplibre-gl's own zoom clamp (its defaults, since we don't set our own).
+        transformConstrain: (mapCenter, zoom) => ({ center: mapCenter, zoom: Math.min(Math.max(zoom, -2), 22) }),
       })
 
       this._glMap = new maplibre.Map(options)
-
-      // allow GL base map to pan beyond min/max latitudes
-      this._glMap.transform.latRange = null
-      this._glMap.transform.maxValidLatitude = Infinity
 
       this._transformGL(this._glMap)
 
@@ -159,7 +164,8 @@ export function MaplibreGLLayer (leaflet, maplibre, options) {
 
       this._transformGL(gl)
 
-      if (gl.transform.width !== size.x || gl.transform.height !== size.y) {
+      const tr = getGLTransform(gl)
+      if (tr.width !== size.x || tr.height !== size.y) {
         container.style.width = `${size.x}px`
         container.style.height = `${size.y}px`
         if (gl._resize !== null && gl._resize !== undefined) {
@@ -183,9 +189,14 @@ export function MaplibreGLLayer (leaflet, maplibre, options) {
       // gl.setView([center.lat, center.lng], this._map.getZoom() - 1, 0);
       // calling setView directly causes sync issues because it uses requestAnimFrame
 
-      const tr = gl.transform
-      tr.center = maplibre.LngLat.convert([center.lng, center.lat])
-      tr.zoom = this._map.getZoom() - 1
+      const tr = getGLTransform(gl)
+      if (tr.setCenter) {
+        tr.setCenter(maplibre.LngLat.convert([center.lng, center.lat]))
+        tr.setZoom(this._map.getZoom() - 1)
+      } else {
+        tr.center = maplibre.LngLat.convert([center.lng, center.lat])
+        tr.zoom = this._map.getZoom() - 1
+      }
     },
 
     // update the map constantly during a pinch zoom
