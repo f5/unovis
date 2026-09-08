@@ -52,7 +52,8 @@ export function getMaplibreGLLayer<Datum extends GenericDataRecord> (
   const layer = MaplibreGLLayer(leaflet, maplibre, {
     style: style,
     accessToken: accessToken || 'not-needed',
-    preserveDrawingBuffer: preserveDrawingBuffer ?? false,
+    // maplibre-gl >= 5 reads canvas context options (preserveDrawingBuffer, antialias, etc.) from here, not top-level
+    canvasContextAttributes: { preserveDrawingBuffer: preserveDrawingBuffer ?? false },
   })
 
   return layer
