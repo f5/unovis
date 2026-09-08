@@ -3,6 +3,7 @@
 | @angular/core                | perpetual      | MIT          | 12.2.17           | angular                                         |
 | @angular/common              | perpetual      | MIT          | 12.2.17           | angular                                         |
 | @angular/platform-browser    | perpetual      | MIT          | 12.2.17           | angular                                         |
+| rxjs                         | perpetual      | Apache-2.0   | 6.6.7             | Ben Lesh <ben@benlesh.com>                      |
 | @sveltejs/vite-plugin-svelte | perpetual      | MIT          | 3.1.2             | dominikg                                        |
 | @types/d3-scale              | perpetual      | MIT          | 4.0.9             | n/a                                             |
 | @types/d3-selection          | perpetual      | MIT          | 3.0.11            | n/a                                             |

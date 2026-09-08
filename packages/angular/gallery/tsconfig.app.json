@@ -4,9 +4,13 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "paths": {
-     "@unovis/ts": ["../../ts/lib/index.js"],
+     "@unovis/ts": ["../../ts/dist/index.js"],
      "@unovis/shared/*": ["../../shared/*"],
      "@unovis/angular": ["../src/public-api.ts"],
+     // Angular 12 ships TypeScript 4.2, which can't parse the real
+     // `@maplibre/maplibre-gl-style-spec` declarations (they use 4.5+ syntax).
+     // Redirect to the local type stub used by the library build.
+     "@maplibre/maplibre-gl-style-spec": ["../types/maplibre-gl-style-spec.d.ts"],
     },
     "baseUrl": ".",
     "downlevelIteration": true,
