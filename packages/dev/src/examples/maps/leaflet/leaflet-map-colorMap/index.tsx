@@ -25,7 +25,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const tooltip = new Tooltip({
     triggers: {
       [LeafletMap.selectors.point]: (d: LeafletMapPoint<MapPointDataRecord>) => {
-        return 'test' //! d.isCluster && !d.clusterPoints ? d.properties?.description : null
+        return !d.isCluster && !d.clusterPoints ? d.properties?.description : null
       },
     },
     attributes: {
