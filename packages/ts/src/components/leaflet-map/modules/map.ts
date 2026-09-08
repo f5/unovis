@@ -135,6 +135,7 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
       if (!maplibre.getWorkerUrl()) {
         const workerUrl = new URL('maplibre-gl/dist/maplibre-gl-worker.mjs?maplibreWorkerAsset', import.meta.url)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // @ts-expect-error - unused by design: forces bundlers to emit the shared chunk next to the worker
         const sharedUrl = new URL('maplibre-gl/dist/maplibre-gl-shared.mjs?maplibreWorkerAsset', import.meta.url)
         maplibre.setWorkerUrl(workerUrl.toString())
       }
