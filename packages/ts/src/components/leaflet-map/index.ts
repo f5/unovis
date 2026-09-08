@@ -2,7 +2,6 @@ import { select, Selection } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import type L from 'leaflet'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
-import { StyleSpecification } from 'maplibre-gl'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -55,6 +54,13 @@ import { initialMapCenter, initialMapZoom, setupMap, updateTopoJson } from './mo
 import { collideLabels, createNodes, removeNodes, updateNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
+export type LayerSpecification = Record<string, unknown>
+export interface StyleSpecification {
+  layers: LayerSpecification[];
+  sources?: Record<string, unknown>;
+  glyphs?: string;
+  [key: string]: unknown;
+}
 
 export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<Datum[], LeafletMapConfigInterface<Datum>> {
   static selectors = s

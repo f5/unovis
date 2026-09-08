@@ -127,9 +127,21 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
     case LeafletMapRenderer.MapLibre:
       // eslint-disable-next-line no-case-declarations
       const maplibre = await import('maplibre-gl')
+      // Bundlers (e.g. webpack) can't resolve maplibre-gl's worker via `import.meta.url` on their own,
+      //   which silently breaks tile parsing (only the style background renders). Point it explicitly.
+      //   The worker imports `maplibre-gl-shared.mjs` as a relative sibling but bundlers treat the
+      //   worker as an opaque asset and don't follow that import, so we reference the sibling here too
+      //   (same query marker) to get it emitted next to the worker. Its URL is unused on purpose.
+      if (!maplibre.getWorkerUrl()) {
+        const workerUrl = new URL('maplibre-gl/dist/maplibre-gl-worker.mjs?maplibreWorkerAsset', import.meta.url)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const sharedUrl = new URL('maplibre-gl/dist/maplibre-gl-shared.mjs?maplibreWorkerAsset', import.meta.url)
+        maplibre.setWorkerUrl(workerUrl.toString())
+      }
       // eslint-disable-next-line no-case-declarations
       const { getMaplibreGLLayer } = await import('../renderer/mapboxgl-layer')
-      layer = getMaplibreGLLayer(config, L, maplibre.default)
+      layer = getMaplibreGLLayer(config, L, maplibre)
+      layer.addTo(leafletMap)
       maplibreMap = (layer as ReturnType<typeof getMaplibreGLLayer>).getMaplibreMap?.()
 
       select(mapContainer).on('wheel', (event: WheelEvent) => {

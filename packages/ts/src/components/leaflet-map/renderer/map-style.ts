@@ -1,8 +1,14 @@
-import { StyleSpecification, LayerSpecification } from 'maplibre-gl'
-
 import mapLibreBaseSettings from './mapboxgl/mapboxgl-settings.json'
 import mapLibreDarkTheme from './mapboxgl/mapboxgl-dark-theme.json'
 import mapLibreLightTheme from './mapboxgl/mapboxgl-light-theme.json'
+
+export type LayerSpecification = Record<string, unknown>
+export interface StyleSpecification {
+  layers: LayerSpecification[];
+  sources?: Record<string, unknown>;
+  glyphs?: string;
+  [key: string]: unknown;
+}
 
 
 export type MapLibreStyleSpecs = StyleSpecification
