@@ -2,7 +2,6 @@ import { select, Selection } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import type L from 'leaflet'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
-import { StyleSpecification } from '@maplibre/maplibre-gl-style-spec'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -17,6 +16,7 @@ import { GenericDataRecord } from 'types/data'
 // Utils
 import { ResizeObserver } from 'utils/resize-observer'
 import { clamp, isNil, getNumber, getString, isString } from 'utils/data'
+import { StyleSpecification } from './maplibre-style-types'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 import {
   projectPoint,
