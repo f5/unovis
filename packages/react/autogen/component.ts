@@ -65,7 +65,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
     component?.${componentName === 'BulletLegend' ? 'update ' : 'setConfig'}(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return ${isStandAlone ? 'component' : 'componentRef.current'} } }), [])
+  useImperativeHandle(fRef, () => ({ get component () { return ${isStandAlone ? 'component' : 'componentRef.current'} } }), [${isStandAlone ? 'component' : ''}])
   return <${isStandAlone ? 'div className={props.className}' : `vis-${elementSuffix}`} ref={ref} />
 }
 
