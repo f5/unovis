@@ -1,7 +1,7 @@
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
+import type { Rollup } from 'vite'
 import dts from 'vite-plugin-dts'
-import type { OutputOptions } from 'rollup'
 
 import pkg from './package.json'
 
@@ -16,13 +16,12 @@ const d3Libs = [
 
 const externals = [
   ...Object.keys(pkg.dependencies || {}),
-  ...Object.keys(pkg.peerDependencies || {}),
   ...d3Libs,
 ]
 
 const externalRegexes = externals.map(name => new RegExp(`^${name}(/.*)?`))
 
-const output: OutputOptions = {
+const output: Rollup.OutputOptions = {
   preserveModules: true,
   preserveModulesRoot: 'src',
   format: 'es',
@@ -33,7 +32,7 @@ export default defineConfig({
   plugins: [
     dts({
       tsconfigPath: './tsconfig.json',
-      exclude: ['vite.config.ts'],
+      exclude: ['vite.config.ts', 'vitest.config.ts'],
       afterBuild: (emittedFiles) => {
         // vite-plugin-dts skips entries whose type-check reports diagnostics without failing
         // the build, which would publish a dist untyped at the package root — fail loudly instead

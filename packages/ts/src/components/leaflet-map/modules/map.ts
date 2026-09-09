@@ -133,10 +133,12 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
       //   worker as an opaque asset and don't follow that import, so we reference the sibling here too
       //   (same query marker) to get it emitted next to the worker. Its URL is unused on purpose.
       if (!maplibre.getWorkerUrl()) {
-        const workerUrl = new URL('maplibre-gl/dist/maplibre-gl-worker.mjs?maplibreWorkerAsset', import.meta.url)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const sharedUrl = new URL('maplibre-gl/dist/maplibre-gl-shared.mjs?maplibreWorkerAsset', import.meta.url)
-        maplibre.setWorkerUrl(workerUrl.toString())
+        // `shared` is unused; referencing it here just makes the bundler emit the asset
+        const assets = {
+          worker: new URL('maplibre-gl/dist/maplibre-gl-worker.mjs?maplibreWorkerAsset', import.meta.url),
+          shared: new URL('maplibre-gl/dist/maplibre-gl-shared.mjs?maplibreWorkerAsset', import.meta.url),
+        }
+        maplibre.setWorkerUrl(assets.worker.toString())
       }
       // eslint-disable-next-line no-case-declarations
       const { getMaplibreGLLayer } = await import('../renderer/mapboxgl-layer')
