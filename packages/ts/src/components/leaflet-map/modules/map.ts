@@ -12,7 +12,7 @@ import { LeafletMapConfigInterface } from '../config'
 // Local Types
 
 // Utils
-import { constraintMapView, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-utils'
+import { constraintMapView, mapboxglWheelEvent } from '../renderer/mapboxgl-utils'
 
 // Styles
 import * as s from '../style'
@@ -146,15 +146,14 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
 
       select(mapContainer).on('wheel', (event: WheelEvent) => {
         event.preventDefault()
-        mapboxglWheelEventThrottled(leafletMap, layer as (L.Layer & { getMaplibreMap(): Map }), event)
+        mapboxglWheelEvent(leafletMap, layer as (L.Layer & { getMaplibreMap(): Map }), event)
       })
       break
     case LeafletMapRenderer.Raster:
       layer = L.tileLayer(style as string)
+      layer.addTo(leafletMap)
       break
   }
-  layer.addTo(leafletMap)
-
   // leaflet-mapbox-gl has a layer positioning issue on far zoom levels which leads to having wrong
   //   map points projection. We constrain the view to prevent that.
   constraintMapView(leafletMap)
