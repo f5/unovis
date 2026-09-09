@@ -297,7 +297,9 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     if (this.config.renderer === LeafletMapRenderer.MapLibre) {
       const maplibreMap = layer.getMaplibreMap()
       maplibreMap.setStyle?.(theme)
-      updateTopoJson(maplibreMap, this.config)
+      // `setStyle` reloads the style asynchronously, so we must wait until it's loaded before updating sources/layers
+      if (maplibreMap.isStyleLoaded()) updateTopoJson(maplibreMap, this.config)
+      else maplibreMap.once('styledata', () => updateTopoJson(maplibreMap, this.config))
     } else {
       if (typeof theme !== 'string') {
         console.warn('Unovis | Leaflet Map: Invalid style. Provide a URL string for raster rendering mode.')

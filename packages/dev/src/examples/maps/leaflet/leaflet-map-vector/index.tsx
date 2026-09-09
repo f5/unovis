@@ -1,13 +1,12 @@
 import React, { useRef, useState } from 'react'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 // Data
 import cities from './cities.json'
-import { mapKey } from '../constants'
 
 // Style
 import s from './style.module.css'
+import { ExampleViewerDurationProps, mapKey } from '../constants'
 
 export const title = 'Vector Map'
 export const subTitle = 'Vector rendering with MapLibre'
