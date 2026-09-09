@@ -134,9 +134,9 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
       //   (same query marker) to get it emitted next to the worker. Its URL is unused on purpose.
       if (!maplibre.getWorkerUrl()) {
         const workerUrl = new URL('maplibre-gl/dist/maplibre-gl-worker.mjs?maplibreWorkerAsset', import.meta.url)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const sharedUrl = new URL('maplibre-gl/dist/maplibre-gl-shared.mjs?maplibreWorkerAsset', import.meta.url)
         maplibre.setWorkerUrl(workerUrl.toString())
+        sharedUrl.toString()
       }
       // eslint-disable-next-line no-case-declarations
       const { getMaplibreGLLayer } = await import('../renderer/mapboxgl-layer')
