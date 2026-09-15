@@ -33,7 +33,7 @@
     "lib/styles/index.js"
   ],
   "scripts": {
-    "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
+    "build": "sha=$(tar cf - ./src package.json | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
     "forcebuild": "rimraf lib; rollup -c",
     "publish:dist": "rm -rf lib/.cache; cp ./{LICENSE,README.md,package.json} ./lib; cd ./lib; npm publish"
   },
@@ -77,7 +77,7 @@
     "elkjs": "^0.8.2",
     "geojson": "^0.5.0",
     "leaflet": "1.7.1",
-    "maplibre-gl": "6.7.0",
+    "maplibre-gl": "^6.7.0",
     "striptags": "^3.2.0",
     "supercluster": "^7.1.5",
     "three": "^0.135.0",
