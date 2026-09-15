@@ -28,7 +28,8 @@ export class Tooltip {
   private _isShown = false
   // Set when the tooltip is shown imperatively via `show()` (e.g. by Crosshair). While set, the component
   // that called `show()` owns the tooltip's visibility and position, so the delegated mousemove / mouseleave
-  // handlers below must not hide or re-place it. Released by `hide()`.
+  // handlers below must not hide or re-place it. Released once `_hide()` actually runs (not by `hide()`
+  // itself), so a `hideDelay` grace period doesn't let the delegated handlers step in before it's really hidden.
   private _isControlledExternally = false
   private _container: HTMLElement
   private _mutationObserver: MutationObserver
@@ -116,6 +117,7 @@ export class Tooltip {
   }
 
   private _hide (): void {
+    this._isControlledExternally = false
     this.div
       .classed(s.show, false) // The `show` class triggers the opacity transition
       .on('transitionend', () => {
@@ -129,7 +131,6 @@ export class Tooltip {
 
   /** Hides the tooltip after `hideDelay` */
   public hide (): void {
-    this._isControlledExternally = false
     window.clearTimeout(this._showDelayTimeoutId)
     if (this.config.hideDelay) {
       window.clearTimeout(this._hideDelayTimeoutId)
@@ -354,19 +355,25 @@ export class Tooltip {
     // We use the Event Delegation pattern to set up Tooltip events
     // Every component will have single `mousemove` and `mouseleave` event listener functions, where we'll check
     // the `path` of the event and trigger corresponding callbacks
-    // We also attach to the container itself: a gap between triggers (e.g. between bars) can be
-    // covered by a sibling component's element, which the per-component listener below never sees
-    const elements = [...this.components.map(c => c.element), this._container]
+    // We also attach to the components' owning `<svg>`: a gap between triggers (e.g. between bars) can be
+    // covered by an element that doesn't belong to any registered component (an axis, Crosshair, a brush
+    // overlay), which the per-component listeners below never see.
+    const componentElements = new Set<HTMLElement | SVGElement>(this.components.map(c => c.element))
+    const elements = new Set<HTMLElement | SVGElement>(
+      this.components
+        .flatMap(c => [c.element, (c.element as SVGGElement).ownerSVGElement])
+        .filter(Boolean)
+    )
     elements.forEach(element => {
       const selection = select(element)
+      const isComponentListener = componentElements.has(element)
       selection
         .on('mousemove.tooltip', (e: MouseEvent) => {
           const { config: currentConfig } = this // get latest config because it could have been changed after the event was triggered
           const path: (HTMLElement | SVGGElement)[] = (e.composedPath && e.composedPath()) || (e as any).path || [e.target]
 
-          // Events coming from the tooltip itself (possible when `allowHover` is enabled, because the tooltip
-          // lives inside the container) are handled by the tooltip's own hover listeners, see below
-          if (path.includes(this.element)) return
+          // Component listeners already handle events bubbling from their elements.
+          if (!isComponentListener && path.some(el => componentElements.has(el))) return
 
           // Go through all of the configured triggers
           for (const className of Object.keys(currentConfig.triggers)) {
