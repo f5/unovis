@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { DefinePlugin } = require('webpack')
+const { DefinePlugin, NormalModuleReplacementPlugin } = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const ReactRefreshTypeScript = require('react-refresh-typescript')
@@ -60,22 +60,12 @@ module.exports = {
         type: 'asset/source',
       },
       {
-        // maplibre-gl's worker imports its `maplibre-gl-shared*.mjs` sibling via a relative path,
-        //   so both must be emitted next to each other with their original (unhashed) file names.
-        //   Gated behind the `?maplibreWorkerAsset` query marker (used by the `new URL(...)` calls in
-        //   `map.ts`) so the normal ESM `import` inside maplibre-gl(-dev).mjs is unaffected and keeps
-        //   its real named exports. Matches the `-dev` builds too (see the maplibre-gl alias below).
-        test: /maplibre-gl-(worker|shared)(-dev)?\.mjs$/,
-        resourceQuery: /maplibreWorkerAsset/,
-        type: 'asset/resource',
-        generator: { filename: '[name][ext]' },
-      },
-      {
-        // maplibre-gl(-dev).mjs builds its worker Blob URL with a dynamic `new URL(var, import.meta.url)`
-        //   that webpack can't statically resolve; relaxing the `new URL()` parser removes the
-        //   "Critical dependency" warning at its source. The module type is left as webpack's default
-        //   so the ESM named exports stay intact.
-        test: /maplibre-gl(-dev)?\.mjs$/,
+        // maplibre-gl.mjs builds its worker Blob URL with `new URL(dynamicVar, import.meta.url)`,
+        //   which webpack can't statically resolve and flags as a critical dependency. Disabling
+        //   webpack's `new URL()` parsing for this module (it isn't used for asset imports here)
+        //   removes the warning at its source instead of suppressing it.
+        test: /maplibre-gl\.mjs$/,
+        type: 'javascript/esm',
         parser: { url: false },
       },
     ],
@@ -130,6 +120,13 @@ module.exports = {
     ],
   },
   plugins: [
+    // The core's Vite build serves this virtual module (see `packages/ts/vite-plugin-maplibre-worker-source.ts`).
+    //   webpack treats `virtual:` as a URL scheme, so `resolve.alias` can't map it; point it at the built copy
+    //   instead. Run `pnpm build:ts` after bumping maplibre-gl to refresh it.
+    new NormalModuleReplacementPlugin(
+      /^virtual:maplibre-worker-source$/,
+      path.resolve(__dirname, '../ts/dist/components/leaflet-map/modules/maplibre-worker-source.js')
+    ),
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       hash: true,
