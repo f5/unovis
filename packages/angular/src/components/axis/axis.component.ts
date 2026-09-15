@@ -10,7 +10,9 @@ import {
   AxisType,
   FitMode,
   TrimMode,
+  AxisTimeTickUnit,
   TextAlign,
+  AxisTickSetMode,
 } from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
@@ -122,8 +124,9 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
    * Default: `250` */
   @Input() minMaxTicksOnlyWhenWidthIsLess?: number
 
-  /** Tick label formatter function. Default: `undefined` */
-  @Input() tickFormat?: ((tick: number | Date, i: number, ticks: number[] | Date[]) => string)
+  /** Tick label formatter function. `timeUnit` is set by `tickTextAdaptiveSets: AxisTickSetMode.Uniform` only.
+   * Default: `undefined` */
+  @Input() tickFormat?: ((tick: number | Date, i: number, ticks: number[] | Date[], timeUnit?: AxisTimeTickUnit) => string)
 
   /** Explicitly set tick values. Default: `undefined` */
   @Input() tickValues?: number[]
@@ -172,12 +175,14 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() tickTextAngle?: number
 
   /** Adaptively pick the number of ticks so that their labels don't overlap: the axis renders the
-   * largest "nice" tick set that fits (measured off-screen), degrading to smaller sets on narrow
+   * largest tick set that fits (measured off-screen), degrading to smaller sets on narrow
    * charts. `numTicks` (or its width-based default) acts as the upper bound. With explicit
    * `tickValues`, every-k-th subsets of them are fitted instead.
+   * `AxisTickSetMode.Uniform` (time scales only) keeps the step constant across month boundaries, unlike
+   * the "nice" d3 sets that `true` and `AxisTickSetMode.Nice` use, and reports its calendar unit to `tickFormat`.
    * Has no effect when `minMaxTicksOnly` is set, and disables the width-based
    * `minMaxTicksOnlyWhenWidthIsLess` fallback. Default: `undefined` */
-  @Input() tickTextAdaptiveSets?: boolean
+  @Input() tickTextAdaptiveSets?: boolean | AxisTickSetMode | `${AxisTickSetMode}`
 
   /** Hide tick labels that overlap with each other.
    * To define overlapping, a simple bounding box collision detection algorithm is used.
