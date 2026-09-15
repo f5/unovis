@@ -109,7 +109,7 @@ export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>
   /** Label offset in the X direction. Default: `4` */
   @Input() labelOffsetX?: number
 
-  /** Label offset in the Y direction. Default: `4` */
+  /** Label offset in the Y direction. Default: `1` */
   @Input() labelOffsetY?: number
 
   /** How labels should fit within tiles: wrap or trim. Applicable only for leaf nodes. Default: `FitMode.Wrap` */
