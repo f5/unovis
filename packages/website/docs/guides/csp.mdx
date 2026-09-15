@@ -101,8 +101,9 @@ Notes on each directive:
   icons; _Unovis_ loads Font Awesome from `cdnjs.cloudflare.com` for the
   built-in icon set. Self-host the font to tighten this to `'self' data:`.
 - **`worker-src 'self' blob:`** — only required if you render the
-  [ELK-layered graph](../components/Graph), which spawns a Web Worker
-  from a `Blob` URL.
+  [ELK-layered graph](../components/Graph) or the
+  [Leaflet Map](../components/LeafletMap) with the MapLibre renderer; both
+  spawn a Web Worker from a `Blob` URL.
 
 ## Framework integration
 
@@ -354,8 +355,9 @@ const container = new XYContainer(document.getElementById('chart')!, {
 - **External stylesheets** — `<link rel="stylesheet">` from third-party origins
   (e.g. Google Fonts, Bootstrap Icons CDN) cannot carry your server's nonce.
   Either self-host, add the origin to `style-src-elem`, or allow `https:`.
-- **Web Workers from `Blob` URLs** — the ELK-layered graph uses one. Add
-  `worker-src 'self' blob:` if you render that component.
+- **Web Workers from `Blob` URLs** — the ELK-layered graph and the MapLibre
+  renderer of the Leaflet Map use one. Add `worker-src 'self' blob:` if you
+  render those components.
 - **Runtime style injection by other libraries** — the nonce is only applied to
   _Unovis_'s own Emotion output. If you use Angular, MUI, Vuetify, Chakra, etc.
   in the same app, follow each library's own nonce-integration guide.
