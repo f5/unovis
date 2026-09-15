@@ -324,6 +324,16 @@ Toggle the checkbox below to see how enabling `tickTextAdaptiveSets` resolves th
 
 When explicit `tickValues` are provided, the axis instead fits every-k-th subset of them (every value, then every 2nd, every 3rd, and so on), anchored at the first value so the labeled ticks stay evenly spaced.
 
+#### Uniform Time Ticks
+On time scales the "nice" d3 tick sets can be uneven: the 2-day sets reset at month boundaries, producing sequences like _Jul 27, Jul 29, Jul 31, Aug 1_, and the default multi-scale formats label the month start differently from its neighbors. Set `tickTextAdaptiveSets` to `AxisTickSetMode.Uniform` to place the labels over a calendar-unit grid (seconds, minutes, hours, days, weeks, months or years) with a constant step instead, so they stay evenly spaced across month and year boundaries. On units with a natural cycle the step snaps to the cycle's divisors or whole multiples (e.g. 1/2/3/4/6/12 hours), and the labels prefer cycle-aligned positions (_:00, :15, :30_ rather than _:05, :20, :35_). On non-time scales, and with explicit `tickValues`, `AxisTickSetMode.Uniform` behaves like `AxisTickSetMode.Nice` (same as `true`).
+
+The chosen calendar unit is passed to `tickFormat` as the fourth argument, so all the labels can share one date format matching the tick resolution:
+
+```ts
+tickFormat: (tick, i, ticks, timeUnit) =>
+  timeUnit === AxisTimeTickUnit.Day ? formatDayLabel(tick) : formatDefaultLabel(tick)
+```
+
 :::note
 `tickTextAdaptiveSets` takes over the narrow-width behavior: it disables the width-based `minMaxTicksOnlyWhenWidthIsLess` fallback, and has no effect when `minMaxTicksOnly` is enabled.
 :::
