@@ -11,6 +11,8 @@ import vue from '@vitejs/plugin-vue'
 import solid from 'vite-plugin-solid'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 
+import { MAPLIBRE_WORKER_SOURCE_DIST_PATH, MAPLIBRE_WORKER_SOURCE_ID } from '../ts/vite-plugin-maplibre-worker-source'
+
 const here = fileURLToPath(new URL('.', import.meta.url))
 const pkgSrc = (name: string): string => resolve(here, '..', name, 'src')
 const pkgDist = (name: string): string => resolve(here, '..', name, 'dist')
@@ -334,6 +336,9 @@ export default defineConfig({
       '@/styles/': `${pkgSrc('ts')}/styles/`,
       '@/data-models/': `${pkgSrc('ts')}/data-models/`,
       '@/data/': `${pkgSrc('ts')}/data/`,
+      // The worker is already bundled by @unovis/ts. Keep source aliases for HMR, but resolve its
+      // virtual module to the generated package file instead of running the build plugin in the gallery.
+      [MAPLIBRE_WORKER_SOURCE_ID]: resolve(pkgDist('ts'), MAPLIBRE_WORKER_SOURCE_DIST_PATH),
       // The react wrappers import their helpers as `src/utils/...` (tsconfig `baseUrl`)
       'src/utils/': `${pkgSrc('react')}/utils/`,
       '@unovis/ts': pkgSrc('ts'),
