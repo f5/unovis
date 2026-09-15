@@ -10,6 +10,8 @@ import solid from 'vite-plugin-solid'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import sveltePreprocess from 'svelte-preprocess'
 
+import { MAPLIBRE_WORKER_SOURCE_DIST_PATH, MAPLIBRE_WORKER_SOURCE_ID } from '../ts/vite-plugin-maplibre-worker-source.js'
+
 const here = fileURLToPath(new URL('.', import.meta.url))
 const pkgSrc = (name: string): string => resolve(here, '..', name, 'src')
 const pkgDist = (name: string): string => resolve(here, '..', name, 'dist')
@@ -188,6 +190,9 @@ export default defineConfig({
       // Used in packages/react/src/html-components/**/index.tsx
       'src/utils/react': `${pkgSrc('react')}/utils/react`,
       '@unovis/ts': pkgSrc('ts'),
+      // The worker is already bundled by @unovis/ts. Keep source aliases for HMR, but resolve its
+      // virtual module to the generated package file instead of running the build plugin in the gallery.
+      [MAPLIBRE_WORKER_SOURCE_ID]: resolve(pkgDist('ts'), MAPLIBRE_WORKER_SOURCE_DIST_PATH),
       '@unovis/react': pkgSrc('react'),
       // Vue and Svelte framework wrappers point at their built dist/ rather than
       // src/. Their source SFCs use TS generics (Vue) and `$$Generic` (Svelte)

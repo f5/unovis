@@ -78,4 +78,5 @@
 | rollup-plugin-typescript2         | perpetual      | MIT          | 0.31.2            | @ezolenko                                                         |
 | rollup-plugin-visualizer          | perpetual      | MIT          | 4.2.2             | Denis Bardadym <bardadymchik@gmail.com>                           |
 | typescript                        | perpetual      | Apache-2.0   | 4.2.4             | Microsoft Corp.                                                   |
+| vite                              | perpetual      | MIT          | 7.3.2             | Evan You                                                          |
 

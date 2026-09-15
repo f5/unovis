@@ -1,6 +1,6 @@
 declare module '*.css';
 
-// Provided by `vite-plugin-maplibre-worker-source.ts`
+// Provided by `vite-plugin-maplibre-worker-source.js`
 declare module 'virtual:maplibre-worker-source' {
   const source: string
   export default source

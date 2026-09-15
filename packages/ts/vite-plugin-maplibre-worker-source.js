@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module'
+import path from 'node:path'
 import { build } from 'vite'
-import type { Plugin, Rollup } from 'vite'
 
 // Serves `virtual:maplibre-worker-source`: maplibre-gl's web worker bundled into one self-contained
 //   script and exported as a string. `LeafletMap` starts the worker from a Blob URL of it, so the
@@ -14,7 +14,7 @@ export const MAPLIBRE_WORKER_SOURCE_DIST_PATH = 'components/leaflet-map/modules/
 const resolvedId = `\0${MAPLIBRE_WORKER_SOURCE_ID}`
 const require = createRequire(import.meta.url)
 
-async function bundleMaplibreWorker (): Promise<string> {
+async function bundleMaplibreWorker () {
   const result = await build({
     configFile: false,
     logLevel: 'warn',
@@ -32,8 +32,8 @@ async function bundleMaplibreWorker (): Promise<string> {
     },
   })
 
-  const outputs = (Array.isArray(result) ? result : [result as Rollup.RollupOutput]).flatMap(r => r.output)
-  const chunks = outputs.filter((o): o is Rollup.OutputChunk => o.type === 'chunk')
+  const outputs = (Array.isArray(result) ? result : [result]).flatMap(r => r.output)
+  const chunks = outputs.filter(o => o.type === 'chunk')
   if (chunks.length !== 1) throw new Error(`Expected a single self-contained maplibre-gl worker chunk, got ${chunks.length}`)
   const [chunk] = chunks
 
@@ -47,8 +47,8 @@ async function bundleMaplibreWorker (): Promise<string> {
   return chunk.code
 }
 
-export function maplibreWorkerSource (): Plugin {
-  let source: Promise<string>
+export function maplibreWorkerSource () {
+  let source
   return {
     name: 'unovis:maplibre-worker-source',
     resolveId (id) {
@@ -61,13 +61,30 @@ export function maplibreWorkerSource (): Plugin {
       const { version } = require('maplibre-gl/package.json')
       return source.then(code => `export default ${JSON.stringify(code)}\nexport const version = ${JSON.stringify(version)}`)
     },
-    outputOptions (options) {
-      const { entryFileNames = '[name].js' } = options
-      return {
-        ...options,
-        entryFileNames: chunk => chunk.facadeModuleId === resolvedId
-          ? MAPLIBRE_WORKER_SOURCE_DIST_PATH
-          : (typeof entryFileNames === 'string' ? entryFileNames : entryFileNames(chunk)),
+    // `preserveModules` ignores custom `entryFileNames`/`chunkFileNames` for this dynamic-import-only
+    //   virtual module and always emits it under `_virtual/` - rename the emitted chunk here instead
+    //   and patch up every import specifier that points at it.
+    generateBundle (_, bundle) {
+      const entry = Object.entries(bundle)
+        .find(([, chunkInfo]) => chunkInfo.type === 'chunk' && chunkInfo.facadeModuleId === resolvedId)
+      if (!entry) return
+      const [oldFileName, workerChunk] = entry
+      if (oldFileName === MAPLIBRE_WORKER_SOURCE_DIST_PATH) return
+
+      workerChunk.fileName = MAPLIBRE_WORKER_SOURCE_DIST_PATH
+      const relativeSpecifier = (fromFileName, toFileName) => {
+        const rel = path.posix.relative(path.posix.dirname(fromFileName), toFileName)
+        return rel.startsWith('.') ? rel : `./${rel}`
+      }
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type !== 'chunk' || chunk === workerChunk) continue
+        if (!chunk.imports.includes(oldFileName) && !chunk.dynamicImports.includes(oldFileName)) continue
+
+        const oldSpecifier = relativeSpecifier(chunk.fileName, oldFileName)
+        const newSpecifier = relativeSpecifier(chunk.fileName, MAPLIBRE_WORKER_SOURCE_DIST_PATH)
+        chunk.code = chunk.code.split(oldSpecifier).join(newSpecifier)
+        chunk.imports = chunk.imports.map(i => (i === oldFileName ? MAPLIBRE_WORKER_SOURCE_DIST_PATH : i))
+        chunk.dynamicImports = chunk.dynamicImports.map(i => (i === oldFileName ? MAPLIBRE_WORKER_SOURCE_DIST_PATH : i))
       }
     },
   }

@@ -6,6 +6,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
 import renameNodeModules from 'rollup-plugin-rename-node-modules'
 // import visualizer from 'rollup-plugin-visualizer'
+import { maplibreWorkerSource } from './vite-plugin-maplibre-worker-source.js'
 import pkg from './package.json'
 
 const d3Libs = ['d3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 'd3-color',
@@ -25,6 +26,7 @@ const regexesOfPackages = externals // To prevent having node_modules in the bui
   .map(packageName => new RegExp(`^${packageName}(/.*)?`))
 
 const plugins = [
+  maplibreWorkerSource(),
   postcss({
     plugins: [],
     inject: false,
