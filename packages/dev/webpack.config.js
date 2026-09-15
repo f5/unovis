@@ -120,7 +120,7 @@ module.exports = {
     ],
   },
   plugins: [
-    // The core's Vite build serves this virtual module (see `packages/ts/vite-plugin-maplibre-worker-source.ts`).
+    // The core's Vite build serves this virtual module (see `packages/ts/vite-plugin-maplibre-worker-source.js`).
     //   webpack treats `virtual:` as a URL scheme, so `resolve.alias` can't map it; point it at the built copy
     //   instead. Run `pnpm build:ts` after bumping maplibre-gl to refresh it.
     new NormalModuleReplacementPlugin(
