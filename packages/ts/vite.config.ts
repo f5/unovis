@@ -4,6 +4,7 @@ import type { Rollup } from 'vite'
 import dts from 'vite-plugin-dts'
 
 import pkg from './package.json'
+import { maplibreWorkerSource } from './vite-plugin-maplibre-worker-source'
 
 const d3Libs = [
   'd3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 'd3-color',
@@ -30,9 +31,10 @@ const output: Rollup.OutputOptions = {
 
 export default defineConfig({
   plugins: [
+    maplibreWorkerSource(),
     dts({
       tsconfigPath: './tsconfig.json',
-      exclude: ['vite.config.ts', 'vitest.config.ts'],
+      exclude: ['vite.config.ts', 'vitest.config.ts', 'vite-plugin-maplibre-worker-source.ts'],
       afterBuild: (emittedFiles) => {
         // vite-plugin-dts skips entries whose type-check reports diagnostics without failing
         // the build, which would publish a dist untyped at the package root — fail loudly instead
