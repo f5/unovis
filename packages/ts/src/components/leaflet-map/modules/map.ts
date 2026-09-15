@@ -21,6 +21,23 @@ import { LeafletMapRenderer } from '../types'
 export const initialMapCenter: L.LatLngExpression = [36, 14]
 export const initialMapZoom = 1.9
 
+let maplibreWorkerUrl: string
+// maplibre-gl reads the worker URL every time it (re)creates its worker pool (e.g. when a new map is
+//   initialized after all previous ones were destroyed), so the Blob URL is created once and never revoked
+async function getMaplibreWorkerUrl (maplibre: typeof import('maplibre-gl')): Promise<string> {
+  if (!maplibreWorkerUrl) {
+    const { default: workerSource, version: workerVersion } = await import('virtual:maplibre-worker-source')
+    // The worker is bundled when Unovis is built, while the main-thread maplibre-gl is resolved in the consumer's
+    //   install. Their internal message protocol isn't guaranteed to be stable across versions, so make a skew visible
+    if (maplibre.getVersion() !== workerVersion) {
+      console.warn(`Unovis | LeafletMap: maplibre-gl ${maplibre.getVersion()} is loaded, but the bundled MapLibre worker was built from ${workerVersion}. ` +
+        'If tiles don\'t render, align the versions or provide a matching worker with `setWorkerUrl()` before the map is initialized')
+    }
+    maplibreWorkerUrl = URL.createObjectURL(new Blob([workerSource], { type: 'text/javascript' }))
+  }
+  return maplibreWorkerUrl
+}
+
 export function updateTopoJson<T extends GenericDataRecord> (maplibreMap: Map, config: LeafletMapConfigInterface<T>): void {
   const { topoJSONLayer } = config
 
@@ -127,18 +144,12 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
     case LeafletMapRenderer.MapLibre:
       // eslint-disable-next-line no-case-declarations
       const maplibre = await import('maplibre-gl')
-      // Bundlers (e.g. webpack) can't resolve maplibre-gl's worker via `import.meta.url` on their own,
-      //   which silently breaks tile parsing (only the style background renders). Point it explicitly.
-      //   The worker imports `maplibre-gl-shared.mjs` as a relative sibling but bundlers treat the
-      //   worker as an opaque asset and don't follow that import, so we reference the sibling here too
-      //   (same query marker) to get it emitted next to the worker. Its URL is unused on purpose.
+      // maplibre-gl locates its worker via `import.meta.url`, which bundlers can't reliably follow for a
+      //   dependency (webpack ignores it; Vite emits `.mjs` files that stock servers won't run as a module
+      //   worker), silently breaking tile parsing so only the style background renders. Unless the consumer
+      //   has set a worker URL themselves, start the worker from a Blob of our prebuilt self-contained bundle.
       if (!maplibre.getWorkerUrl()) {
-        // `shared` is unused; referencing it here just makes the bundler emit the asset
-        const assets = {
-          worker: new URL('maplibre-gl/dist/maplibre-gl-worker.mjs?maplibreWorkerAsset', import.meta.url),
-          shared: new URL('maplibre-gl/dist/maplibre-gl-shared.mjs?maplibreWorkerAsset', import.meta.url),
-        }
-        maplibre.setWorkerUrl(assets.worker.toString())
+        maplibre.setWorkerUrl(await getMaplibreWorkerUrl(maplibre))
       }
       // eslint-disable-next-line no-case-declarations
       const { getMaplibreGLLayer } = await import('../renderer/mapboxgl-layer')
