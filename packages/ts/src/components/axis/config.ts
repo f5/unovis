@@ -78,10 +78,13 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextAdaptiveSets?: boolean;
   /** Hide tick labels that overlap with each other.
    * To define overlapping, a simple bounding box collision detection algorithm is used.
-   * Which means the result won't be accurate when `tickTextAngle` is specified.
    * Consider combining with `tickTextAdaptiveSets` to keep the shown ticks evenly spaced.
    * Default: `undefined` */
   tickTextHideOverlapping?: boolean;
+  /** Minimum gap between tick labels in pixels: labels closer than that count as overlapping for
+   * `tickTextHideOverlapping` and `tickTextAdaptiveSets`. A negative value lets labels overlap by
+   * that much before they do. Default: `0` */
+  tickTextOverlapTolerance?: number;
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   tickPadding?: number;
   /** The size of the tick marks in pixels. Accepts a single number (applies to both inner and outer ticks)
@@ -124,4 +127,5 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickSize: 6,
   tickTextAdaptiveSets: undefined,
   tickTextHideOverlapping: undefined,
+  tickTextOverlapTolerance: 0,
 }
