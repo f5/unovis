@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 // Types
 import { Rect } from '@/types/misc'
 import { ScaleDimension } from '@/types/scale'
-import { TextAlign } from '@/types/text'
+import { TextAlign, TrimMode } from '@/types/text'
 
 // Local
 import { Axis } from './index'
@@ -154,6 +154,40 @@ describe('Axis tick labels (jsdom)', () => {
     axis.setConfig({ ...axis.config, tickTextOverlapTolerance: 30 })
     renderTickLabels(axis)
     expect(readLabels(axis).filter(label => !label.hidden)).toHaveLength(5)
+  })
+
+  it('keeps trimmed labels within the rotated labels\' depth bound on a short chart', () => {
+    const axis = createAxis({
+      tickValues: failureModes.map((_, i) => i),
+      tickFormat: tick => failureModes[tick as number],
+      tickTextAngle: -90,
+      tickTextAlign: TextAlign.Right,
+      tickTextMaxLines: 2,
+      tickTextTrimType: TrimMode.Middle,
+      tickTextSeparator: [' ', '-', '.', ',', '_'],
+    }, { width: 670, height: 160, containerWidth: 728, containerHeight: 220 }, [-0.5, failureModes.length - 0.5])
+    renderTickLabels(axis)
+
+    const budget = internals(axis)._getTickTextMaxWidth(failureModes.length)
+    expect(budget).toBeCloseTo(220 / 3)
+    const lines = Array.from(axis.element.querySelectorAll('g.tick > text tspan tspan')).map(line => line.textContent)
+    lines.forEach(line => expect(line.length * FONT_SIZE * CHAR_WIDTH_RATIO).toBeLessThanOrEqual(budget))
+
+    // The predicted rects are as deep as the render: at most the budget along the rotated text
+    internals(axis)._getTickLabelRects(failureModes.map((_, i) => i))
+      .forEach(rect => expect(rect.width).toBeLessThanOrEqual(budget))
+  })
+
+  it('caps wrapped labels at `tickTextMaxLines`, trimming the rest', () => {
+    const axis = createFailureModeAxis(728, -90)
+    axis.setConfig({ ...axis.config, tickTextMaxLines: 2 })
+    renderTickLabels(axis)
+    const labels = readLabels(axis)
+
+    expect(Math.max(...labels.map(label => label.lineCount))).toBe(2)
+    expect(labels.filter(label => label.hidden)).toHaveLength(0)
+    const texts = Array.from(axis.element.querySelectorAll('g.tick > text')).map(text => text.textContent)
+    expect(texts.some(text => text.includes('…'))).toBe(true)
   })
 
   it('still thins the labels when they cannot fit', () => {
