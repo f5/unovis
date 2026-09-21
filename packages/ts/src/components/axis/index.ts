@@ -47,11 +47,6 @@ type TickTextStyle = {
   fontWeight?: number;
 }
 
-/** Minimum on-screen gap between tick labels (negative `tolerance` of `resolveRectsOverlap`
- * expands the rects). The tick fitting and the overlap safety net must use the same value,
- * otherwise the fitted sets wouldn't survive the overlap pass */
-const TICK_LABEL_OVERLAP_TOLERANCE_PX = -5
-
 export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig: AxisConfigInterface<Datum> = AxisDefaultConfig
@@ -385,7 +380,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     cancelAnimationFrame(this._collideTickLabelsAnimFrameId)
     // Colliding labels in the next frame to prevent forced reflow
     this._collideTickLabelsAnimFrameId = requestAnimationFrame(() => {
-      hideOverlappingLabels(tickTextSelection, { tolerance: TICK_LABEL_OVERLAP_TOLERANCE_PX, rotationAngle })
+      hideOverlappingLabels(tickTextSelection, { tolerance: this._getTickLabelOverlapTolerance(), rotationAngle })
     })
   }
 
@@ -405,11 +400,18 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     const candidates = configuredTickValues
       ? getTickValueSubsetCandidates(configuredTickValues)
       : getTickValueCandidates(scale, maxNumTicks)
-    const fitting = findFittingTickValues(candidates, values => this._getTickLabelRects(values), TICK_LABEL_OVERLAP_TOLERANCE_PX)
+    const fitting = findFittingTickValues(candidates, values => this._getTickLabelRects(values), this._getTickLabelOverlapTolerance())
     if (!fitting) return undefined
 
     const originalTicks = configuredTickValues ?? getNestedTickValues(scale, maxNumTicks, candidates[0])
     return { ...fitting, originalTicks }
+  }
+
+  /** `resolveRectsOverlap` tolerance enforcing `tickTextOverlapTolerance`: it expands every edge of
+   * each rect, so two rects collide within twice its gap. The tick fitting and the overlap pass
+   * must use the same value, or fitted sets wouldn't survive the pass */
+  private _getTickLabelOverlapTolerance (): number {
+    return -this.config.tickTextOverlapTolerance / 2
   }
 
   /** Width available to a tick label, along its text, before it gets wrapped or trimmed */
@@ -422,16 +424,19 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     const slotWidth = this._containerWidth / (labelCount + 1)
     if (!config.tickTextAngle) return slotWidth
 
-    // Rotated text is bounded by the slot and by the margin depth (a third of the container height)
-    // projected onto its own direction, so the wrap width stops shrinking with the label count as
-    // the text turns across the axis — otherwise more labels meant more lines and wider labels
+    // Neighbouring rotated labels keep apart either along the axis or across their lines. Once a
+    // line clears the next tick across, the text is bounded only by the margin depth (a third of the
+    // container height) projected onto it — wrapping tighter would just stack more lines across.
+    // Shallower labels can only keep apart along the axis, so their text is bounded by the slot,
+    // less the projection of a line's height on it
     const angleRad = config.tickTextAngle / 180 * Math.PI
     const sin = Math.abs(Math.sin(angleRad))
     const cos = Math.abs(Math.cos(angleRad))
     const lineHeightPx = this._getTickTextStyle().fontSize * UNOVIS_TEXT_DEFAULT.lineHeight
-    const alongSlot = (slotWidth - lineHeightPx * sin) / cos
-    const alongDepth = this._containerHeight / 3 / sin
-    return Math.max(0, Math.min(alongSlot, alongDepth))
+    const lineClearsAcross = slotWidth * sin >= lineHeightPx + config.tickTextOverlapTolerance
+    return lineClearsAcross
+      ? this._containerHeight / 3 / sin
+      : Math.max(0, (slotWidth - lineHeightPx * sin) / cos)
   }
 
   /** Label rendering options shared between `_renderAxis` and the tick fitting predictions

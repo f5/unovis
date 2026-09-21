@@ -145,6 +145,17 @@ describe('Axis tick labels (jsdom)', () => {
     expect(labels.some(label => label.lineCount > 1)).toBe(true)
   })
 
+  it('thins the labels by the configured overlap tolerance', () => {
+    // At -60° the 2-line neighbours end up 28px apart across their lines
+    const axis = createFailureModeAxis(728, -60)
+    renderTickLabels(axis)
+    expect(readLabels(axis).filter(label => !label.hidden)).toHaveLength(10)
+
+    axis.setConfig({ ...axis.config, tickTextOverlapTolerance: 30 })
+    renderTickLabels(axis)
+    expect(readLabels(axis).filter(label => !label.hidden)).toHaveLength(5)
+  })
+
   it('still thins the labels when they cannot fit', () => {
     const axis = createFailureModeAxis(400, -90)
     renderTickLabels(axis)
