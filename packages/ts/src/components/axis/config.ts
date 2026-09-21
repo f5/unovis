@@ -58,7 +58,11 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextSeparator?: string | string[];
   /** Force word break for ticks when they don't fit. Default: `false` */
   tickTextForceWordBreak?: boolean;
-  /** Tick text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
+  /** Maximum number of lines a wrapped tick label can take. Longer labels get trimmed to fit,
+   * according to `tickTextTrimType`. Default: `undefined` */
+  tickTextMaxLines?: number;
+  /** Tick text trim mode, for `FitMode.Trim` and for labels exceeding `tickTextMaxLines`:
+   * `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
   tickTextTrimType?: TrimMode | `${TrimMode}`;
   /** Font size of the tick text as CSS string. Default: `null` */
   tickTextFontSize?: string | null;
@@ -112,6 +116,7 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickTextWidth: undefined,
   tickTextSeparator: undefined,
   tickTextForceWordBreak: false,
+  tickTextMaxLines: undefined,
   tickTextTrimType: TrimMode.Middle,
   tickTextFitMode: FitMode.Wrap,
   tickTextFontSize: null,
