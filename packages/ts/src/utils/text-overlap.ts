@@ -4,7 +4,7 @@ import { select, Selection, BaseType } from 'd3-selection'
 import { Rect } from '@/types/misc'
 
 // Utils
-import { rectIntersect } from '@/utils/misc'
+import { rectIntersect, getRotatedPoint } from '@/utils/misc'
 
 export interface ResolveRectsOverlapOptions {
   /** Padding for the intersection test, forwarded to `rectIntersect`.
@@ -90,14 +90,16 @@ export function resolveRectsOverlap (rects: Rect[], options: ResolveRectsOverlap
 }
 
 /**
- * Hides overlapping label elements in a d3 selection by measuring their on-screen
- * bounding boxes and resolving collisions with {@link resolveRectsOverlap}. Visible
- * labels get `opacity: 1`, hidden ones `opacity: 0`. Call inside a `requestAnimationFrame`
- * to avoid forcing a synchronous reflow.
+ * Hides overlapping label elements in a d3 selection by measuring their bounding boxes
+ * and resolving collisions with {@link resolveRectsOverlap}. Visible labels get
+ * `opacity: 1`, hidden ones `opacity: 0`. Call inside a `requestAnimationFrame` to avoid
+ * forcing a synchronous reflow. Labels all rotated by the same `rotationAngle` (radians)
+ * are compared in their own frame, where they are axis-aligned — their on-screen bounding
+ * boxes would overlap long before the labels do.
  */
 export function hideOverlappingLabels<El extends SVGGraphicsElement, D, PEl extends BaseType, PD> (
   selection: Selection<El, D, PEl, PD>,
-  options: ResolveRectsOverlapOptions = {}
+  options: ResolveRectsOverlapOptions & { rotationAngle?: number } = {}
 ): void {
   const nodes = selection.nodes()
   if (nodes.length < 2) {
@@ -107,6 +109,13 @@ export function hideOverlappingLabels<El extends SVGGraphicsElement, D, PEl exte
   }
 
   const rects: Rect[] = nodes.map(node => {
+    if (options.rotationAngle) {
+      // The label's own box, offset by its position rotated into the labels' frame
+      const bBox = node.getBBox()
+      const { e, f } = node.getCTM()
+      const [x, y] = getRotatedPoint(e, f, -options.rotationAngle)
+      return { x: bBox.x + x, y: bBox.y + y, width: bBox.width, height: bBox.height }
+    }
     const { x, y, width, height } = node.getBoundingClientRect()
     return { x, y, width, height }
   })

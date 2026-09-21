@@ -50,6 +50,13 @@ export function getPixelValue (v: string | number): number | null {
   return typeof v === 'number' ? v : toPx(v)
 }
 
+/** Rotates a point by `angleRad` around the origin */
+export function getRotatedPoint (x: number, y: number, angleRad: number): [number, number] {
+  const sin = Math.sin(angleRad)
+  const cos = Math.cos(angleRad)
+  return [x * cos - y * sin, x * sin + y * cos]
+}
+
 /** Returns the axis-aligned bounding box of `rect` rotated by `angleRad` around the origin */
 export function getRotatedRectAabb (rect: Rect, angleRad: number): Rect {
   const sin = Math.sin(angleRad)
