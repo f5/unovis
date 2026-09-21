@@ -350,7 +350,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       const textBlock: UnovisText = { text, ...tickTextStyle }
 
       // Calculate the text offset based on the axis position, the tick size and the label's line count
-      const wrapped = getWrappedText(textBlock, textOptions.width, undefined, textOptions.fastMode, textOptions.separator, textOptions.wordBreak)
+      const wrapped = getWrappedText(textBlock, textOptions.width, undefined, textOptions.fastMode, textOptions.separator, textOptions.wordBreak, textOptions.maxLines, textOptions.trimMode)
       const lineCount = wrapped.flatMap(block => block._lines).length
       const [textOffsetX, textOffsetY] = this._getTickTextOffset(axisPosition, tickSize, tickTextStyle.fontSize, lineCount)
 
@@ -448,6 +448,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       textRotationAngle: config.tickTextAngle,
       separator: config.tickTextSeparator,
       wordBreak: config.tickTextForceWordBreak,
+      maxLines: config.tickTextMaxLines,
+      trimMode: config.tickTextTrimType as TrimMode,
       fastMode: false,
     }
   }
@@ -479,7 +481,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         height = lineHeightPx
         lineCount = 1
       } else {
-        const wrapped = getWrappedText({ text, ...style }, textOptions.width, undefined, textOptions.fastMode, textOptions.separator, textOptions.wordBreak)
+        const wrapped = getWrappedText({ text, ...style }, textOptions.width, undefined, textOptions.fastMode, textOptions.separator, textOptions.wordBreak, textOptions.maxLines, textOptions.trimMode)
         const lines = wrapped.flatMap(block => block._lines)
         const lineWidths = lines.map(line => getPreciseStringLengthPx(line, style.fontFamily, style.fontSize, style.fontWeight))
         width = Math.max(0, ...lineWidths)
