@@ -77,17 +77,19 @@ export function getRectFitTranslation (rect: Rect, bounds: Rect): { dx: number; 
   }
 }
 
+/** Checks whether two rects intersect, each shrunk by `tolerancePx` on every side
+ * (or expanded, when negative) — so a negative tolerance enforces a gap of twice its size */
 export function rectIntersect (rect1: Rect, rect2: Rect, tolerancePx = 0): boolean {
   const [left1, top1, right1, bottom1] = [
     rect1.x + tolerancePx,
-    rect1.y + rect1.height - 2 * tolerancePx,
-    rect1.x + rect1.width - 2 * tolerancePx,
+    rect1.y + rect1.height - tolerancePx,
+    rect1.x + rect1.width - tolerancePx,
     rect1.y + tolerancePx,
   ]
   const [left2, top2, right2, bottom2] = [
     rect2.x + tolerancePx,
-    rect2.y + rect2.height - 2 * tolerancePx,
-    rect2.x + rect2.width - 2 * tolerancePx,
+    rect2.y + rect2.height - tolerancePx,
+    rect2.x + rect2.width - tolerancePx,
     rect2.y + tolerancePx,
   ]
 
