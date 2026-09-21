@@ -259,8 +259,8 @@ export class Heatmap<Datum> extends ComponentCore<Datum[], HeatmapConfigInterfac
     // and never overlap one another.
     cancelAnimationFrame(this._labelCollisionAnimFrameId)
     this._labelCollisionAnimFrameId = requestAnimationFrame(() => {
-      hideOverlappingLabels(columnLabels, { tolerance: -2 })
-      hideOverlappingLabels(rowLabels, { tolerance: -2 })
+      hideOverlappingLabels(columnLabels, { tolerance: -3 })
+      hideOverlappingLabels(rowLabels, { tolerance: -3 })
     })
   }
 
