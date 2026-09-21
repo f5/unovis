@@ -56,6 +56,12 @@ export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> exte
    * with `toDataURL()` or `drawImage()`. Costs an extra buffer copy per rendered frame.
    * Has no effect when renderer is `LeafletMapRenderer.Raster`. Default: `false` */
   preserveDrawingBuffer?: boolean;
+  /** Start the MapLibre worker from a Blob URL of Unovis's prebuilt worker bundle, which works around
+   * bundlers that can't resolve maplibre-gl's own worker via `import.meta.url`. Set to `false` if your
+   * bundler serves maplibre-gl's worker files correctly and you want MapLibre to load its worker normally,
+   * or if you provide a custom worker via `setWorkerUrl()` yourself before the map is initialized.
+   * Has no effect when renderer is `LeafletMapRenderer.Raster`. Default: `true` */
+  useMaplibreWorkerBlob?: boolean;
 
   // Map events
   /** Function to be called after the map's async initialization is done. Default: `undefined` */
@@ -193,6 +199,7 @@ export const LeafletMapDefaultConfig: LeafletMapConfigInterface<GenericDataRecor
   styleDarkTheme: undefined,
   renderer: LeafletMapRenderer.MapLibre,
   preserveDrawingBuffer: false,
+  useMaplibreWorkerBlob: true,
 
   // Map events
   onMapInitialized: undefined,
