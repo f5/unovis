@@ -55,13 +55,13 @@ export function resolveRectsOverlap (rects: Rect[], options: ResolveRectsOverlap
   const order = rects.map((_, i) => i).sort((a, b) => nearStart(rects[a]) - nearStart(rects[b]))
 
   // `active` holds indices of currently-visible rects whose sweep-axis interval may still
-  // overlap upcoming rects. `rectIntersect` maps `tolerance` to a `3 * tolerance` shift of
-  // the separation boundary, so the same factor is used here to prune conservatively.
+  // overlap upcoming rects. `rectIntersect` shifts both rects' edges by `tolerance`, so the
+  // same shift is used here to prune conservatively.
   const active: number[] = []
   for (const i of order) {
     const iNear = nearStart(rects[i])
     for (let k = active.length - 1; k >= 0; k -= 1) {
-      if (farEnd(rects[active[k]]) - 3 * tolerance < iNear) active.splice(k, 1)
+      if (farEnd(rects[active[k]]) - 2 * tolerance < iNear) active.splice(k, 1)
     }
 
     // Decide `i`'s fate against every active rect it overlaps before mutating anything,
