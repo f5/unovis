@@ -64,6 +64,26 @@ export function getTickValueSubsetCandidates (values: TickValues): TickValues[] 
   return candidates
 }
 
+/** Width available to a rotated tick label, along its text, before it gets wrapped or trimmed.
+ * Neighbouring rotated labels keep apart either along the axis or across their lines. Once a line
+ * clears the next tick across, the text is bounded only by `maxDepth` projected onto it — wrapping
+ * tighter would just stack more lines across. Shallower labels can only keep apart along the axis,
+ * so their text is bounded by the slot, less the projection of a line's height on it */
+export function getRotatedTickTextMaxWidth (
+  slotWidth: number,
+  angleRad: number,
+  lineHeightPx: number,
+  maxDepth: number,
+  overlapTolerance: number
+): number {
+  const sin = Math.abs(Math.sin(angleRad))
+  const cos = Math.abs(Math.cos(angleRad))
+  const lineClearsAcross = slotWidth * sin >= lineHeightPx + overlapTolerance
+  return lineClearsAcross
+    ? maxDepth / sin
+    : Math.max(0, (slotWidth - lineHeightPx * sin) / cos)
+}
+
 /** Indices of the adjacent rect pairs that collide: `0` for the (0, 1) pair and so on.
  * The rects are expected to be ordered along one axis, the way tick labels are */
 function getCollidingAdjacentPairs (rects: Rect[], tolerance: number): number[] {
