@@ -444,24 +444,25 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
   /** Width available to a tick label, along its text, before it gets wrapped or trimmed. Fixed X tick
    * sets share the axis fairly, as nothing else keeps their labels apart; the fitted sets are spaced by
-   * the label geometry already, so a fitted label only wraps when wider than the whole axis */
+   * the label geometry already, so a fitted label only wraps when wider than the whole axis — or, when
+   * rotated, when it would grow into the margin deeper than the rotated labels' depth bound */
   private _getTickTextMaxWidth (labelCount: number, fitted: boolean): number {
     const { config } = this
     if (config.tickTextWidth) return config.tickTextWidth
     if (config.type !== AxisType.X) return this._containerWidth / 5
-    if (fitted) return this._width
 
-    // Fair share of the axis: the slot a labeled tick owns
-    const slotWidth = this._containerWidth / (labelCount + 1)
+    // The slot a labeled tick owns: a fair share of the axis, or the whole axis for fitted sets
+    const slotWidth = fitted ? this._width : this._containerWidth / (labelCount + 1)
     if (!config.tickTextAngle) return slotWidth
 
-    return getRotatedTickTextMaxWidth(
+    const rotatedWidth = getRotatedTickTextMaxWidth(
       slotWidth,
       config.tickTextAngle / 180 * Math.PI,
       this._getTickTextStyle().fontSize * UNOVIS_TEXT_DEFAULT.lineHeight,
       this._containerHeight * AXIS_ROTATED_TICK_LABEL_MAX_DEPTH_SHARE,
       config.tickTextOverlapTolerance
     )
+    return fitted ? Math.min(slotWidth, rotatedWidth) : rotatedWidth
   }
 
   /** Label rendering options shared between `_renderAxis` and the tick fitting predictions
