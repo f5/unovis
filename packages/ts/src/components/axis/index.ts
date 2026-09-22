@@ -336,8 +336,9 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     const tickSize = axisGen.tickSize()
     const axisPosition = this.getPosition()
-    // Fitted labels get the width budget the tick fitting measured them with
-    const textMaxWidth = this._getTickTextMaxWidth(tickCount, Boolean(labeledTickKeys))
+    // Fitted labels get the width budget the tick fitting measured them with. The tick values are
+    // overridden exactly for fitted sets — `preRender` doesn't pass the labeled subset
+    const textMaxWidth = this._getTickTextMaxWidth(tickCount, Boolean(tickValuesOverride))
     tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
       let text = config.tickFormat?.(value, i, tickValues as number[] | Date[], this._timeTickUnit) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
