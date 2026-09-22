@@ -9,7 +9,7 @@ import { TextAlign } from '@/types/text'
 import { Axis } from './index'
 import { AxisConfigInterface } from './config'
 import { AxisType, TickSets, TickValues } from './types'
-import { mergeTickValues, tickKey } from './tick-fit'
+import { getRotatedTickTextMaxWidth, mergeTickValues, tickKey } from './tick-fit'
 import * as s from './style'
 
 const FONT_SIZE = 12
@@ -163,6 +163,18 @@ describe('Axis tick labels (jsdom)', () => {
 
     expect(shown.length).toBeGreaterThan(0)
     expect(shown.length).toBeLessThan(10)
+  })
+
+  it('bounds rotated labels by the margin depth once a line clears the slot, by the slot otherwise', () => {
+    const vertical = -Math.PI / 2
+    expect(getRotatedTickTextMaxWidth(66, vertical, 15, 120, 0)).toBeCloseTo(120)
+    // At 30° a 20px slot doesn't clear a 15px line across, so the text is bounded along the axis
+    const shallow = -Math.PI / 6
+    expect(getRotatedTickTextMaxWidth(20, shallow, 15, 120, 0)).toBeCloseTo((20 - 15 * 0.5) / Math.cos(shallow))
+    // The overlap tolerance adds to the room a line needs across
+    const steep = -Math.PI / 3
+    expect(getRotatedTickTextMaxWidth(20, steep, 15, 120, 0)).toBeCloseTo(120 / Math.sin(-steep))
+    expect(getRotatedTickTextMaxWidth(20, steep, 15, 120, 10)).toBeCloseTo(Math.max(0, (20 - 15 * Math.sin(-steep)) / Math.cos(steep)))
   })
 
   it('does not shrink the wrap width of rotated labels with the label count', () => {
