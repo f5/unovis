@@ -29,11 +29,15 @@ import { AxisType, TickSets, TickValues } from './types'
 import {
   findFittingTickValues,
   getNestedTickValues,
+  getRotatedTickTextMaxWidth,
   getTickValueCandidates,
   getTickValueSubsetCandidates,
   mergeTickValues,
   tickKey,
 } from './tick-fit'
+
+// Constants
+import { AXIS_ROTATED_TICK_LABEL_MAX_DEPTH_SHARE } from './constants'
 
 // Config
 import { AxisDefaultConfig, AxisConfigInterface } from './config'
@@ -424,19 +428,13 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     const slotWidth = this._containerWidth / (labelCount + 1)
     if (!config.tickTextAngle) return slotWidth
 
-    // Neighbouring rotated labels keep apart either along the axis or across their lines. Once a
-    // line clears the next tick across, the text is bounded only by the margin depth (a third of the
-    // container height) projected onto it — wrapping tighter would just stack more lines across.
-    // Shallower labels can only keep apart along the axis, so their text is bounded by the slot,
-    // less the projection of a line's height on it
-    const angleRad = config.tickTextAngle / 180 * Math.PI
-    const sin = Math.abs(Math.sin(angleRad))
-    const cos = Math.abs(Math.cos(angleRad))
-    const lineHeightPx = this._getTickTextStyle().fontSize * UNOVIS_TEXT_DEFAULT.lineHeight
-    const lineClearsAcross = slotWidth * sin >= lineHeightPx + config.tickTextOverlapTolerance
-    return lineClearsAcross
-      ? this._containerHeight / 3 / sin
-      : Math.max(0, (slotWidth - lineHeightPx * sin) / cos)
+    return getRotatedTickTextMaxWidth(
+      slotWidth,
+      config.tickTextAngle / 180 * Math.PI,
+      this._getTickTextStyle().fontSize * UNOVIS_TEXT_DEFAULT.lineHeight,
+      this._containerHeight * AXIS_ROTATED_TICK_LABEL_MAX_DEPTH_SHARE,
+      config.tickTextOverlapTolerance
+    )
   }
 
   /** Label rendering options shared between `_renderAxis` and the tick fitting predictions
