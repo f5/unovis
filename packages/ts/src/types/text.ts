@@ -78,6 +78,10 @@ export type UnovisTextOptions = {
   fastMode?: boolean;
   // Force word break if they don't fit into the width
   wordBreak?: boolean;
+  // The maximum number of lines the text can wrap into. Longer text gets trimmed to fit
+  maxLines?: number;
+  // How the text is trimmed to fit `maxLines`: from the start, the middle or the end
+  trimMode?: TrimMode;
 }
 
 export type UnovisTextFrameOptions = UnovisTextOptions & {
