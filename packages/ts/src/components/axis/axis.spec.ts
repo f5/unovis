@@ -178,6 +178,31 @@ describe('Axis tick labels (jsdom)', () => {
       .forEach(rect => expect(rect.width).toBeLessThanOrEqual(budget))
   })
 
+  it('balances wrapped labels with `tickTextBalanced`, keeping the prediction in step with the render', () => {
+    const values = failureModes.map((_, i) => i)
+    const lineWidths = (axis: Axis<unknown>): number[][] => Array.from(axis.element.querySelectorAll('g.tick > text'))
+      .map(text => Array.from(text.querySelectorAll('tspan tspan')).map(line => line.textContent.length * FONT_SIZE * CHAR_WIDTH_RATIO))
+
+    const greedy = createFailureModeAxis(728, -90)
+    renderTickLabels(greedy)
+    const balanced = createFailureModeAxis(728, -90)
+    balanced.setConfig({ ...balanced.config, tickTextBalanced: true })
+    renderTickLabels(balanced)
+
+    // Same line counts, and no label's longest line gets longer
+    const greedyWidths = lineWidths(greedy)
+    const balancedWidths = lineWidths(balanced)
+    expect(balancedWidths.map(lines => lines.length)).toEqual(greedyWidths.map(lines => lines.length))
+    balancedWidths.forEach((lines, i) => expect(Math.max(...lines)).toBeLessThanOrEqual(Math.max(...greedyWidths[i])))
+    expect(balancedWidths.some((lines, i) => Math.max(...lines) < Math.max(...greedyWidths[i]))).toBe(true)
+
+    const rendered = readLabels(balanced)
+    internals(balanced)._getTickLabelRects(values).forEach((rect, i) => {
+      const [x, y] = rendered[i].frameCenter
+      expect(Math.hypot(rect.x + rect.width / 2 - x, rect.y + rect.height / 2 - y)).toBeLessThan(1)
+    })
+  })
+
   it('caps wrapped labels at `tickTextMaxLines`, trimming the rest', () => {
     const axis = createFailureModeAxis(728, -90)
     axis.setConfig({ ...axis.config, tickTextMaxLines: 2 })
