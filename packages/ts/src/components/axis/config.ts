@@ -58,7 +58,14 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextSeparator?: string | string[];
   /** Force word break for ticks when they don't fit. Default: `false` */
   tickTextForceWordBreak?: boolean;
-  /** Tick text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
+  /** Maximum number of lines a wrapped tick label can take. Longer labels get trimmed to fit,
+   * according to `tickTextTrimType`. Default: `undefined` */
+  tickTextMaxLines?: number;
+  /** Balance the lengths of a wrapped tick label's lines, so that it doesn't end with a short line,
+   * like CSS `text-wrap: balance`. The label keeps its number of lines. Default: `false` */
+  tickTextBalanced?: boolean;
+  /** Tick text trim mode, for `FitMode.Trim` and for labels exceeding `tickTextMaxLines`:
+   * `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
   tickTextTrimType?: TrimMode | `${TrimMode}`;
   /** Font size of the tick text as CSS string. Default: `null` */
   tickTextFontSize?: string | null;
@@ -78,10 +85,13 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextAdaptiveSets?: boolean;
   /** Hide tick labels that overlap with each other.
    * To define overlapping, a simple bounding box collision detection algorithm is used.
-   * Which means the result won't be accurate when `tickTextAngle` is specified.
    * Consider combining with `tickTextAdaptiveSets` to keep the shown ticks evenly spaced.
    * Default: `undefined` */
   tickTextHideOverlapping?: boolean;
+  /** Minimum gap between tick labels in pixels: labels closer than that count as overlapping for
+   * `tickTextHideOverlapping` and `tickTextAdaptiveSets`. A negative value lets labels overlap by
+   * that much before they do. Default: `0` */
+  tickTextOverlapTolerance?: number;
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   tickPadding?: number;
   /** The size of the tick marks in pixels. Accepts a single number (applies to both inner and outer ticks)
@@ -109,6 +119,8 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickTextWidth: undefined,
   tickTextSeparator: undefined,
   tickTextForceWordBreak: false,
+  tickTextMaxLines: undefined,
+  tickTextBalanced: false,
   tickTextTrimType: TrimMode.Middle,
   tickTextFitMode: FitMode.Wrap,
   tickTextFontSize: null,
@@ -124,4 +136,5 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickSize: 6,
   tickTextAdaptiveSets: undefined,
   tickTextHideOverlapping: undefined,
+  tickTextOverlapTolerance: 0,
 }
