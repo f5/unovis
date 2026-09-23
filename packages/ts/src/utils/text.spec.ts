@@ -33,6 +33,29 @@ describe('getWrappedText (jsdom)', () => {
     expect(lines(5)).toEqual(lines())
   })
 
+  describe('balanced lines', () => {
+    const wrap = (value: string, width: number, balance: boolean, maxLines?: number): string[] =>
+      getWrappedText({ ...text, text: value }, width, undefined, true, undefined, false, maxLines, TrimMode.End, balance)
+        .flatMap(block => block._lines)
+
+    it('evens out the lines, keeping their number', () => {
+      expect(wrap('Airport Duty Free Concession', 120, false)).toEqual(['Airport Duty Free', 'Concession'])
+      expect(wrap('Airport Duty Free Concession', 120, true)).toEqual(['Airport Duty', 'Free Concession'])
+    })
+
+    it('leaves single lines and already even lines alone', () => {
+      expect(wrap('Concession', 120, true)).toEqual(['Concession'])
+      expect(wrap('Northwest Regional Distribution Center', 150, true)).toEqual(wrap('Northwest Regional Distribution Center', 150, false))
+    })
+
+    it('balances trimmed text within `maxLines` and the width', () => {
+      const result = wrap('Northwest Regional Distribution Center Airport', 80, true, 2)
+      expect(result.length).toBeLessThanOrEqual(2)
+      result.forEach(line => expect(line.length * 6).toBeLessThanOrEqual(80))
+      expect(result.join(' ')).toContain('…')
+    })
+  })
+
   describe('words wider than the line', () => {
     const width = 70
     const wrap = (value: string, maxLines: number, trimMode: TrimMode, fastMode = true): string[] =>
