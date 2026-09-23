@@ -180,6 +180,32 @@ _Axis_ accepts a `TrimMode` or a string. For example, when we configure `tickTex
   options={['start', 'middle', 'end']}
   property="tickTextTrimType"/>
 
+### Tick Label Max Lines
+Wrapped tick labels can take as many lines as they need by default. Set `tickTextMaxLines` to cap them:
+longer labels get trimmed to fit the lines, according to `tickTextTrimType`.
+<XYWrapperWithInput
+  {...axisProps()}
+  inputType="range"
+  inputProps={{ min: 1, max: 4, step: 1 }}
+  tickTextWidth={40}
+  data={generateTimeSeries(10)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString(), tickTextTrimType: "end"}}
+  defaultValue={2}
+  property="tickTextMaxLines"/>
+
+### Balanced Tick Labels
+A wrapped tick label fills its lines greedily, so it can end with a short line. Set `tickTextBalanced` to `true` to even
+out the lines instead, the way CSS `text-wrap: balance` does: the label keeps its number of lines, but they break at the
+narrowest width that still fits them.
+<XYWrapperWithInput
+  {...axisProps()}
+  inputType="checkbox"
+  tickTextWidth={80}
+  data={generateTimeSeries(10)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
+  defaultValue={true}
+  property="tickTextBalanced"/>
+
 ### Force Word Break
 In addition, you can enable a forced word break for overflowing tick labels with the `tickTextForceWordBreak` property.
 <XYWrapperWithInput
@@ -275,12 +301,8 @@ To prevent overlapping tick labels on the axis, you can use the `tickTextHideOve
 property. When enabled, it hides any tick labels that would otherwise overlap with
 one another based on a simple bounding box collision detection algorithm. This
 ensures cleaner, more legible axes, particularly in cases where the available space
-is limited or when displaying many ticks.
-
-:::note
-The algorithm used for detecting overlaps may not be accurate when a `tickTextAngle` is specified,
-so results can vary depending on tick rotation.
-:::
+is limited or when displaying many ticks. Labels closer than `tickTextOverlapTolerance` pixels (`0` by default)
+count as overlapping; a negative value lets them overlap by that much.
 
 <XYWrapper {...axisProps()} numTicks={15} containerProps={{ xDomain: [0, 10000000] }} hiddenProps={{x:d=>d.x}} tickTextHideOverlapping={true}/>
 
