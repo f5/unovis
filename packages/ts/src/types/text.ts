@@ -82,6 +82,8 @@ export type UnovisTextOptions = {
   maxLines?: number;
   // How the text is trimmed to fit `maxLines`: from the start, the middle or the end
   trimMode?: TrimMode;
+  // Balance the lengths of the wrapped lines, like CSS `text-wrap: balance`
+  balance?: boolean;
 }
 
 export type UnovisTextFrameOptions = UnovisTextOptions & {
