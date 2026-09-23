@@ -182,6 +182,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
    * the "nice" d3 sets that `true` and `AxisTickSetMode.Nice` use, and reports its calendar unit to `tickFormat`.
    * The fitted labels render on a single line unless wider than the axis itself (or than
    * `tickTextWidth`, when set) — the fair-share wrapping of fixed tick sets doesn't apply to them.
+   * Rotated fitted labels also wrap when they'd grow deeper than a third of the container height.
    * Has no effect when `minMaxTicksOnly` is set, and disables the width-based
    * `minMaxTicksOnlyWhenWidthIsLess` fallback. Default: `undefined` */
   @Input() tickTextAdaptiveSets?: boolean | AxisTickSetMode | `${AxisTickSetMode}`
