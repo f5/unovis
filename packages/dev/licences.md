@@ -30,7 +30,7 @@
 | typescript-plugin-css-modules        | perpetual      | MIT          | 4.2.3             | Brody McKee <mrmckeb@hotmail.com>                                  |
 | webpack                              | perpetual      | MIT          | 5.105.4           | Tobias Koppers @sokra                                              |
 | webpack-cli                          | perpetual      | MIT          | 5.1.4             | n/a                                                                |
-| webpack-dev-server                   | perpetual      | n/a          | n/a               | n/a                                                                |
+| webpack-dev-server                   | perpetual      | MIT          | 5.2.6             | Tobias Koppers @sokra                                              |
 | style-loader                         | perpetual      | MIT          | 3.3.4             | Tobias Koppers @sokra                                              |
 | css-loader                           | perpetual      | MIT          | 6.11.0            | Tobias Koppers @sokra                                              |
 
