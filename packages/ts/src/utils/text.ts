@@ -378,9 +378,9 @@ function hasLinesWiderThan (textBlock: UnovisText, lines: string[], width: numbe
  * @param {boolean} wordBreak - Force word break if they don't fit into the width.
  * @param {number} maxLines - The maximum number of lines.
  * @param {TrimMode} trimMode - Where the text is trimmed: the start, the middle or the end.
- * @returns {string[]} - The trimmed text split into lines.
+ * @returns {string} - The trimmed text.
  */
-function trimTextIntoLines (
+function trimTextToFitLines (
   textBlock: UnovisText,
   width: number | undefined,
   fastMode: boolean,
@@ -388,7 +388,7 @@ function trimTextIntoLines (
   wordBreak: boolean,
   maxLines: number,
   trimMode: TrimMode
-): string[] {
+): string {
   const text = `${textBlock.text}`
   const breakTrimmed = (length: number): string[] =>
     breakTextIntoLines({ ...textBlock, text: trimString(text, length, trimMode) }, width, fastMode, separator, wordBreak)
@@ -410,7 +410,40 @@ function trimTextIntoLines (
   while (minLength < text.length && trimString(text, minLength, trimMode).length <= 1) minLength += 1 // A bare ellipsis
   let length = Math.max(low, minLength)
   while (length > minLength && !fits(breakTrimmed(length))) length -= 1
-  return breakTrimmed(length)
+  return trimString(text, length, trimMode)
+}
+
+/**
+ * Breaks a text block into the same number of lines it takes at `width`, but at the narrowest width
+ * still giving that many, so that the lines come out as even as possible (like CSS `text-wrap: balance`).
+ *
+ * @param {UnovisText} textBlock - The text block to break into lines.
+ * @param {number} width - The maximum width of a line in pixels.
+ * @param {boolean} fastMode - Whether to use a fast estimation method or a more accurate one.
+ * @param {string | string[]} separator - The word separators.
+ * @param {boolean} wordBreak - Force word break if they don't fit into the width.
+ * @returns {string[]} - The text split into balanced lines.
+ */
+function breakTextIntoBalancedLines (
+  textBlock: UnovisText,
+  width: number,
+  fastMode: boolean,
+  separator: string | string[],
+  wordBreak: boolean
+): string[] {
+  const breakAt = (w: number): string[] => breakTextIntoLines(textBlock, w, fastMode, separator, wordBreak)
+  const lines = breakAt(width)
+  if (lines.length < 2) return lines
+
+  // Narrower widths take as many lines or more, so the narrowest one keeping the count can be searched for
+  let low = 0
+  let high = width
+  while (high - low > 1) {
+    const middle = (low + high) / 2
+    if (breakAt(middle).length <= lines.length) high = middle
+    else low = middle
+  }
+  return breakAt(high)
 }
 
 /**
@@ -425,6 +458,7 @@ function trimTextIntoLines (
  * @param {boolean} [wordBreak=false] - Force word break if they don't fit into the width.
  * @param {number | undefined} [maxLines=undefined] - The maximum number of lines per text block. Longer text gets trimmed to fit.
  * @param {TrimMode} [trimMode=TrimMode.End] - Where the text is trimmed to fit `maxLines`: the start, the middle or the end.
+ * @param {boolean} [balance=false] - Balance the lengths of the lines, see `breakTextIntoBalancedLines`.
  * @returns {UnovisWrappedText[]} - The wrapped texts.
  */
 export function getWrappedText (
@@ -435,7 +469,8 @@ export function getWrappedText (
   separator: string | string[] = UNOVIS_TEXT_SEPARATOR_DEFAULT,
   wordBreak = false,
   maxLines: number | undefined = undefined,
-  trimMode: TrimMode = TrimMode.End
+  trimMode: TrimMode = TrimMode.End,
+  balance = false
 ): UnovisWrappedText[] {
   // Merge input text with default values and convert it to an array if it's not already
   const textArrays = Array.isArray(text) ? text.map(t => merge(UNOVIS_TEXT_DEFAULT, t)) : [merge(UNOVIS_TEXT_DEFAULT, text)]
@@ -445,10 +480,16 @@ export function getWrappedText (
   // Per-block `width`, `separator` and `wordBreak` values override the ones provided as arguments.
   const textWrapped: Array<string[]> = textArrays.map(block => {
     const blockWidth = block.width ?? width
-    const lines = breakTextIntoLines(block, blockWidth, fastMode, block.separator ?? separator, block.wordBreak ?? wordBreak)
-    return maxLines && (lines.length > maxLines || hasLinesWiderThan(block, lines, blockWidth, fastMode))
-      ? trimTextIntoLines(block, blockWidth, fastMode, block.separator ?? separator, block.wordBreak ?? wordBreak, maxLines, trimMode)
-      : lines
+    const blockSeparator = block.separator ?? separator
+    const blockWordBreak = block.wordBreak ?? wordBreak
+    const lines = breakTextIntoLines(block, blockWidth, fastMode, blockSeparator, blockWordBreak)
+    const isTrimmed = maxLines && (lines.length > maxLines || hasLinesWiderThan(block, lines, blockWidth, fastMode))
+    const fittedBlock = isTrimmed
+      ? { ...block, text: trimTextToFitLines(block, blockWidth, fastMode, blockSeparator, blockWordBreak, maxLines, trimMode) }
+      : block
+
+    if (balance && blockWidth) return breakTextIntoBalancedLines(fittedBlock, blockWidth, fastMode, blockSeparator, blockWordBreak)
+    return isTrimmed ? breakTextIntoLines(fittedBlock, blockWidth, fastMode, blockSeparator, blockWordBreak) : lines
   })
 
   let h = 0
@@ -627,7 +668,7 @@ export function renderTextToSvgTextElement (
   // shifting it vertically, irrespective of the dominant baseline.
   dominantBaseline?: string
 ): UnovisWrappedText[] {
-  const wrappedText = getWrappedText(text, options.width, undefined, options.fastMode, options.separator, options.wordBreak, options.maxLines, options.trimMode)
+  const wrappedText = getWrappedText(text, options.width, undefined, options.fastMode, options.separator, options.wordBreak, options.maxLines, options.trimMode, options.balance)
   const textElementX = options.x ?? +textElement.getAttribute('x')
   const textElementY = options.y ?? +textElement.getAttribute('y')
   const x = textElementX ?? 0
@@ -672,7 +713,10 @@ export function renderTextIntoFrame (
   text: UnovisText | UnovisText[],
   frameOptions: UnovisTextFrameOptions
 ): void {
-  const wrappedText = getWrappedText(text, frameOptions.width, frameOptions.height, frameOptions.fastMode, frameOptions.separator, frameOptions.wordBreak, frameOptions.maxLines, frameOptions.trimMode)
+  const wrappedText = getWrappedText(
+    text, frameOptions.width, frameOptions.height, frameOptions.fastMode, frameOptions.separator,
+    frameOptions.wordBreak, frameOptions.maxLines, frameOptions.trimMode, frameOptions.balance
+  )
 
   const x = frameOptions.textAlign === TextAlign.Center ? frameOptions.width / 2
     : frameOptions.textAlign === TextAlign.Right ? frameOptions.width : 0
