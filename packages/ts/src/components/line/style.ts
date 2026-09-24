@@ -36,6 +36,14 @@ export const lineSelectionHelper = css`
   stroke-width: 8px;
 `
 
+/** Carries the line pattern's marker when `markerSpacing` thins them out. It has no stroke of its own,
+ * but needs a stroke *color* because the markers are filled with `context-stroke` */
+export const markerPath = css`
+  label: markerPath;
+  fill: none;
+  stroke-width: 0;
+`
+
 export const dim = css`
   opacity: 0.2;
 `

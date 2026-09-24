@@ -132,6 +132,15 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   /** Optional link cursor. Default: `null` */
   @Input() cursor?: StringAccessor<Datum[]>
 
+  /** Distance in pixels between the markers of a line `pattern`. By default a marker is drawn on every
+   * point of the line, which the browser repaints on every frame — at a few thousand points that alone
+   * can halve the frame rate. Setting a spacing draws them on a separate, thinned out path instead, so
+   * the count follows the chart's width rather than the size of the data.
+   * Only applies when the line has at least one point per pixel; below that the markers stay on the line
+   * itself, because a smoothing `curveType` can place them noticeably off it.
+   * Default: `undefined` */
+  @Input() markerSpacing?: number
+
   /** Enable interpolated line where data points are missing or fallbackValue is used.
    * You can customize the line's appearance with `--vis-line-gapfill-stroke-dasharray`
    * and `--vis-line-gapfill-stroke-opacity` CSS variables.
@@ -158,8 +167,8 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   }
 
   private getConfig (): LineConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor, interpolateMissingData } = this
-    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor, interpolateMissingData }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor, markerSpacing, interpolateMissingData } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor, markerSpacing, interpolateMissingData }
     const keys = Object.keys(config) as (keyof LineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
