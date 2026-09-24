@@ -44,6 +44,11 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   strokeColor?: ColorAccessor<Datum>;
   /** Point stroke width. Default: `undefined` */
   strokeWidth?: NumericAccessor<Datum>;
+  /** Skip points whose centers share a pixel with another point of the same size, keeping the one
+   * drawn on top. Renders several times fewer elements on dense charts, but the skipped points sit
+   * at sub-pixel offsets, so a dense cloud comes out slightly thinner, and they stop firing pointer
+   * events. Default: `false` */
+  cullOverlappingPoints?: boolean;
 }
 
 export const ScatterDefaultConfig: ScatterConfigInterface<unknown> = {
@@ -58,6 +63,7 @@ export const ScatterDefaultConfig: ScatterConfigInterface<unknown> = {
   labelColor: undefined,
   labelPosition: Position.Bottom,
   labelHideOverlapping: true,
+  cullOverlappingPoints: false,
   cursor: null,
   labelTextBrightnessRatio: 0.65,
   strokeColor: undefined,
