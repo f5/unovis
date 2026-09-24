@@ -232,7 +232,24 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
 
         return acc
       }, []) ?? []
-    })
+    }).map(points => config.cullOverlappingPoints ? this._cullOverlappingPoints(points) : points)
+  }
+
+  /** Keeps one point per pixel, dropping the ones that would be painted underneath */
+  private _cullOverlappingPoints (points: ScatterPoint<Datum>[]): ScatterPoint<Datum>[] {
+    const seen = new Set<string>()
+    const kept: ScatterPoint<Datum>[] = []
+
+    // Backwards, because in SVG the last element is the one painted on top
+    for (let i = points.length - 1; i >= 0; i -= 1) {
+      const { xValue, yValue, sizePx } = points[i]._point
+      const key = `${Math.round(this.xScale(xValue))} ${Math.round(this.yScale(yValue))} ${Math.round(sizePx)}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      kept.push(points[i])
+    }
+
+    return kept.reverse()
   }
 
   // The D3 datum bound to each point is a `ScatterPoint<Datum>` wrapper, and the

@@ -151,6 +151,12 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
 
   /** Point stroke width. Default: `undefined` */
   @Input() strokeWidth?: NumericAccessor<Datum>
+
+  /** Skip points whose centers share a pixel with another point of the same size, keeping the one
+   * drawn on top. Renders several times fewer elements on dense charts, but the skipped points sit
+   * at sub-pixel offsets, so a dense cloud comes out slightly thinner, and they stop firing pointer
+   * events. Default: `false` */
+  @Input() cullOverlappingPoints?: boolean
   @Input() data: Datum[]
 
   component: Scatter<Datum> | undefined
@@ -172,8 +178,8 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   }
 
   private getConfig (): ScatterConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth } = this
-    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth, cullOverlappingPoints } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth, cullOverlappingPoints }
     const keys = Object.keys(config) as (keyof ScatterConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
