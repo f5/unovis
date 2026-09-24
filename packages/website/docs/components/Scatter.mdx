@@ -79,6 +79,20 @@ When there're overlapping labels, _Scatter_ will hide some of them to avoid clut
 If you want to disable hiding overlapping labels, you can set the `labelHideOverlapping` property to `false`.
 <XYWrapperWithInput {...scatterProps(45, true)} size={10} color={d => d.color} label={d => `Point ${d.label}`} property="labelHideOverlapping" inputType="checkbox" defaultValue={true}/>
 
+### Overlapping Points
+A chart with far more points than horizontal pixels draws most of its markers on top of one another,
+where they can be neither seen nor hovered. Setting `cullOverlappingPoints` to `true` keeps only the
+point that would be painted on top of each pixel, which cuts the number of rendered elements several
+times over on dense charts.
+
+```ts
+const cullOverlappingPoints = true
+```
+
+It is off by default because it isn't pixel-perfect: the skipped points sit at sub-pixel offsets rather
+than exactly behind the one that's kept, so a dense cloud comes out slightly thinner, and they no longer
+fire pointer events. Use it when individual markers can't be told apart anyway.
+
 ## Custom Cursor
 _Scatter_ also allows to set a [custom](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) `cursor` when hovering
 over a point by providing a `cursor` accessor function.
