@@ -2,6 +2,8 @@ import React from 'react'
 
 import { useAppContext } from '@src/AppContext'
 
+import { FpsMeter } from './FpsMeter'
+
 
 // Styles
 import s from './style.module.css'
@@ -19,6 +21,7 @@ export function ThemeSelector (): React.ReactNode {
 
   return (
     <div className={s.themeSelector}>
+      <FpsMeter />
       <label className={s.toolbarItem} title="Toggle light / dark theme">
         <input
           type='checkbox'
