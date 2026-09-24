@@ -26,6 +26,11 @@ export interface ContainerConfigInterface {
    * Default: `undefined`
   */
   height?: number | string;
+  /** Whether the container should redraw itself when its size changes. Default: `true` */
+  redrawOnResize?: boolean;
+  /** Delay in milliseconds before redrawing after a size change, so that a continuously resized
+   * container redraws once it settles. Set to `0` to redraw on every frame. Default: `100` */
+  resizeDebounce?: number;
   /** Custom SVG defs available to all the components within the container. Default: `undefined`. */
   svgDefs?: string;
   /** Alternative text description of the chart for accessibility purposes. It will be applied as an
@@ -58,6 +63,8 @@ export const ContainerDefaultConfig: ContainerConfigInterface = {
   sizing: Sizing.Fit,
   width: undefined,
   height: undefined,
+  redrawOnResize: true,
+  resizeDebounce: 100,
 
   svgDefs: undefined,
   ariaLabel: undefined,

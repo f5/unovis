@@ -1,5 +1,6 @@
 export { ContainerCore } from './core/container'
 export type { ContainerConfigInterface } from './core/container/config'
+export { setContainerRenderBudget, resetContainerRenderScheduler } from './core/container/render-scheduler'
 export { SingleContainer } from './containers/single-container'
 export type { SingleContainerConfigInterface } from './containers/single-container/config'
 export { XYContainer } from './containers/xy-container'
