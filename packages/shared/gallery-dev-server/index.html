@@ -13,9 +13,21 @@
       #sidebar li a { display: block; padding: 4px 8px; border-radius: 4px; color: #333; text-decoration: none; font-size: 13px; }
       #sidebar li a:hover { background: #eee; }
       #sidebar li a.active { background: #e6efff; color: #1957d6; font-weight: 600; }
-      main { overflow: auto; padding: 16px; }
-      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      main { overflow: auto; padding: 16px; background: #f5f5f5; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 16px; }
       section { border: 1px solid #e5e5e5; border-radius: 6px; padding: 12px; min-width: 0; background: #fff; }
+      /* Per-framework gradient border. `border-image` ignores `border-radius`, so the
+         gradient is painted on a pseudo-element and masked down to the border ring,
+         which keeps the rounded corners and a transparent panel background. */
+      section[data-framework] { position: relative; border: 2px solid transparent; background: transparent; transition: box-shadow 0.2s, transform 0.2s; }
+      section[data-framework]:hover { box-shadow: 0 4px 16px var(--panel-shadow); transform: translateY(-2px); }
+      section[data-framework]::before { content: ''; position: absolute; inset: -2px; padding: 2px; border-radius: inherit; background: var(--panel-border); mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); pointer-events: none; }
+      section[data-framework="angular"] { --panel-border: linear-gradient(140deg, #ff31d9, rgba(255, 91, 225, 0) 60%), linear-gradient(62deg, #e40035, #f60a48 24%, #f20755 35.2%, #dc087d 49.4%, #9717e7 74.5%, #6c00f5); --panel-shadow: rgb(220 8 125 / 35%); }
+      section[data-framework="svelte"] { --panel-border: linear-gradient(135deg, #ff3e00, #ff6b35); --panel-shadow: rgb(255 62 0 / 35%); }
+      section[data-framework="vue"] { --panel-border: linear-gradient(135deg, #42d392, #35495e); --panel-shadow: rgb(66 211 146 / 35%); }
+      section[data-framework="react"] { --panel-border: linear-gradient(135deg, #61dafb, #21a1c4); --panel-shadow: rgb(97 218 251 / 45%); }
+      section[data-framework="solid"] { --panel-border: linear-gradient(12deg, #274a86, #3864a6 25%, #497ec0 50%, #69a2d6 75%, #88bee6); --panel-shadow: rgb(67 119 187 / 35%); }
+      section[data-framework="typescript"] { --panel-border: linear-gradient(90deg, #3178c6, #6ea8e6 50%, #3178c6); --panel-shadow: rgb(49 120 198 / 35%); }
       section header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
       section header .logo { width: 20px; height: 20px; flex: none; }
       section h3 { margin: 0; font-size: 14px; font-weight: 600; }
@@ -44,12 +56,12 @@
     <aside id="sidebar"></aside>
     <main>
       <div class="grid">
-        <section><header><img class="logo" src="./assets/react.svg" alt="React logo" /><h3>React</h3><span class="label">@unovis/react</span></header><div class="panel-body" id="root-react"></div></section>
-        <section><header><img class="logo" src="./assets/vue.svg" alt="Vue logo" /><h3>Vue</h3><span class="label">@unovis/vue</span></header><div class="panel-body" id="root-vue"></div></section>
-        <section><header><img class="logo" src="./assets/solid.svg" alt="Solid logo" /><h3>Solid</h3><span class="label">@unovis/solid</span></header><div class="panel-body" id="root-solid"></div></section>
-        <section><header><img class="logo" src="./assets/svelte.svg" alt="Svelte logo" /><h3>Svelte</h3><span class="label">@unovis/svelte</span></header><div class="panel-body" id="root-svelte"></div></section>
-        <section><header><img class="logo" src="./assets/typescript.svg" alt="TypeScript logo" /><h3>TypeScript</h3><span class="label">@unovis/ts</span></header><div class="panel-body" id="root-ts"><div id="vis-container"></div></div></section>
-        <section><header><img class="logo" src="./assets/angular.svg" alt="Angular logo" /><h3>Angular</h3><span class="label">@unovis/angular</span></header><div class="panel-body" id="root-angular"></div></section>
+        <section data-framework="react"><header><img class="logo" src="./assets/react.svg" alt="React logo" /><h3>React</h3><span class="label">@unovis/react</span></header><div class="panel-body" id="root-react"></div></section>
+        <section data-framework="vue"><header><img class="logo" src="./assets/vue.svg" alt="Vue logo" /><h3>Vue</h3><span class="label">@unovis/vue</span></header><div class="panel-body" id="root-vue"></div></section>
+        <section data-framework="solid"><header><img class="logo" src="./assets/solid.svg" alt="Solid logo" /><h3>Solid</h3><span class="label">@unovis/solid</span></header><div class="panel-body" id="root-solid"></div></section>
+        <section data-framework="svelte"><header><img class="logo" src="./assets/svelte.svg" alt="Svelte logo" /><h3>Svelte</h3><span class="label">@unovis/svelte</span></header><div class="panel-body" id="root-svelte"></div></section>
+        <section data-framework="typescript"><header><img class="logo" src="./assets/typescript.svg" alt="TypeScript logo" /><h3>TypeScript</h3><span class="label">@unovis/ts</span></header><div class="panel-body" id="root-ts"><div id="vis-container"></div></div></section>
+        <section data-framework="angular"><header><img class="logo" src="./assets/angular.svg" alt="Angular logo" /><h3>Angular</h3><span class="label">@unovis/angular</span></header><div class="panel-body" id="root-angular"></div></section>
       </div>
     </main>
     <script type="module" src="/src/main.ts"></script>
