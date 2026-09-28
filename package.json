@@ -49,6 +49,7 @@
     "update-version": "sh update-version.sh",
     "audit-report": "node scripts/audit-report.js -s",
     "cmds-report": "node scripts/commands-report.js",
+    "dep-version-report": "node scripts/dependency-version-report.js",
     "build:ssr": "pnpm build:ts && cd packages/ssr && pnpm build",
     "test:ssr": "pnpm build:ssr && cd packages/ssr && pnpm test",
     "publish:ssr": "pnpm build:ssr && cd packages/ssr && pnpm publish",
