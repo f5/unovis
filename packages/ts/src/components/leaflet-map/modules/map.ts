@@ -148,7 +148,8 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
       //   dependency (webpack ignores it; Vite emits `.mjs` files that stock servers won't run as a module
       //   worker), silently breaking tile parsing so only the style background renders. Unless the consumer
       //   has set a worker URL themselves, start the worker from a Blob of our prebuilt self-contained bundle.
-      if (!maplibre.getWorkerUrl()) {
+      //   `useMaplibreWorkerBlob: false` opts out and leaves maplibre-gl's own worker resolution
+      if (!maplibre.getWorkerUrl() && config.useMaplibreWorkerBlob) {
         maplibre.setWorkerUrl(await getMaplibreWorkerUrl(maplibre))
       }
       // eslint-disable-next-line no-case-declarations
