@@ -98,8 +98,8 @@ _Sankey_ component, we will see the following result:
 </div>
 
 ### Dark Theme Usage
-Our library offers dark theme support which takes effect when the class `theme-dark` is added to the
-document's `body` element. Every component has a dark version of each color variable labeled with the
+Our library offers dark theme support which takes effect when the class `theme-dark` (or `dark-theme`) is added to the
+document's `body` or `html` element, or when `html` has `data-theme="dark"`. Every component has a dark version of each color variable labeled with the
 prefix `--vis-dark`. You can opt not to override these if you want to use our default dark theme values,
 or override them like so:
 
@@ -186,6 +186,7 @@ import { colors, colorsDark } from '@unovis/ts'
 ```
 
 The dark theme palette is slightly different from the regular one. These colors are also defined directly in our CSS variables, labeled `--vis-color0`, `--vis-dark-color0`, `--vis-color1`, `--vis-dark-color1`, etc.
+In the dark theme, `--vis-colorN` takes the value of `--vis-dark-colorN`, so override `--vis-dark-colorN` to customize the dark palette.
 The full palette looks like this:
 #### Light
 <CSSVariables className='color-vars' selector=':root' vars={Array(6).fill(0).map((_, i) => `--vis-color${i}`)} />
