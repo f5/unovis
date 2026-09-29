@@ -16,25 +16,17 @@ backward-compatible.
 
 ## Why a nonce?
 
-Every _Unovis_ component ships its styles via [Emotion](https://emotion.sh),
-which injects `<style>` elements into `document.head` at runtime. Under a
-strict `style-src` directive those tags are rejected unless they carry either
+Every _Unovis_ component ships its styles as CSS that the library adds at
+runtime to a single `<style data-unovis>` element in `document.head`. Under a
+strict `style-src` directive that element is rejected unless it carries either
 `'unsafe-inline'` (defeats the point of CSP), a matching hash, or the request's
-nonce. _Unovis_ hands its Emotion cache the nonce you provide, so every one of
-its `<style>` tags satisfies `style-src 'self' 'nonce-<value>'`.
+nonce. _Unovis_ puts the nonce you provide on its `<style>` element, so it
+satisfies `style-src 'self' 'nonce-<value>'`.
 
-Passing a `nonce` requires _Unovis_ to create its own Emotion cache instance
-rather than relying on the default `@emotion/css` singleton, and Emotion
-requires every cache sharing a page to use a distinct
-[`key`](https://emotion.sh/docs/@emotion/cache#key) — reusing the default
-`css` key risks two caches "fighting" over the same style elements. Because of
-this, when `UNOVIS_NONCE` is set, _Unovis_'s generated class names carry a
-`unovis-` prefix (e.g. `unovis-1a2b3c`) instead of the usual `css-` prefix.
-Consumers who don't set `UNOVIS_NONCE` are unaffected — _Unovis_ keeps using
-the default `@emotion/css` singleton and its `css-` prefix. Either way, this
-only affects the auto-generated, content-hashed class names Emotion assigns
-internally — the supported styling API (the `--vis-*` CSS custom properties
-documented in [Theming](./theming.mdx)) is unaffected.
+The class names _Unovis_ generates (e.g. `unovis-1q2w3e-legend-item`) are the
+same with or without a nonce. They're content-hashed and internal: the
+supported styling API is the `--vis-*` CSS custom properties documented in
+[Theming](./theming.mdx).
 
 ## Quick start — set `UNOVIS_NONCE`
 
@@ -54,13 +46,13 @@ inline `<script>` at the very top of `<head>` — same nonce as the CSP header:
 </html>
 ```
 
-That's it. Every `<style>` Emotion injects for _Unovis_ will now carry
+That's it. The `<style>` element _Unovis_ injects will now carry
 `nonce="<SERVER_NONCE>"` and be accepted by the browser.
 
 :::info Timing matters
-The nonce is captured once, when the `@unovis/ts` Emotion module first
-evaluates. Setting `window.UNOVIS_NONCE` **after** the library has loaded has no
-effect on the styles it has already injected.
+The nonce is read once, when `@unovis/ts` is first
+loaded. Setting `window.UNOVIS_NONCE` **after** the library has loaded has no
+effect.
 :::
 
 ## Recommended CSP header
@@ -88,8 +80,8 @@ Notes on each directive:
 - **`script-src-attr 'none'`** — blocks inline event-handler attributes like
   `onclick="…"`; _Unovis_ never emits any.
 - **`style-src-elem 'nonce-…'`** — enforces the nonce on `<style>` blocks and
-  `<link rel="stylesheet">` elements. This is the one that protects _Unovis_'s
-  Emotion output.
+  `<link rel="stylesheet">` elements. This is the one that covers _Unovis_'s
+  `<style>` element.
 - **`style-src-attr 'unsafe-inline'`** — **required**. Nonces cannot cover
   inline `style="…"` attributes ([CSP3 limitation](https://www.w3.org/TR/CSP3/#directive-style-src-attr)),
   and `d3-selection`, Leaflet, and other DOM libraries _Unovis_ depends on set
@@ -359,7 +351,7 @@ const container = new XYContainer(document.getElementById('chart')!, {
   renderer of the Leaflet Map use one. Add `worker-src 'self' blob:` if you
   render those components.
 - **Runtime style injection by other libraries** — the nonce is only applied to
-  _Unovis_'s own Emotion output. If you use Angular, MUI, Vuetify, Chakra, etc.
+  _Unovis_'s own `<style>` element. If you use Angular, MUI, Vuetify, Chakra, etc.
   in the same app, follow each library's own nonce-integration guide.
 
 ## Verifying locally
