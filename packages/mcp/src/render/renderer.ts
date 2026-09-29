@@ -13,7 +13,7 @@ export { ChartInputError }
 export interface RenderOptions {
   /** Deterministic id prefix (snapshot tests) */
   idPrefix?: string;
-  /** Keep emotion classes / skip style inlining (debug) */
+  /** Keep the generated classes / skip style inlining (debug) */
   keepClasses?: boolean;
 }
 

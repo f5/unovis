@@ -7,7 +7,7 @@
  * properties from stylesheets nor resolves fonts, so this wrapper:
  *
  *  - resolves `--*` properties from the element's inline-style chain, then
- *    from a variable map parsed out of the emotion-injected stylesheets
+ *    from a variable map parsed out of the Unovis stylesheet
  *    (with dark-theme overrides applied when the dark theme is active)
  *  - synthesizes font properties (size/family/weight/style) from element
  *    attributes, inline styles, and Unovis defaults, resolving `var()`

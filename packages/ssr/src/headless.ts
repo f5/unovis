@@ -5,7 +5,7 @@
  * a future `@unovis/ssr` package would follow.
  *
  * Why the callback receives `unovis` instead of importing it: the library
- * captures its environment at module load (emotion inserts stylesheets,
+ * captures its environment at module load (it inserts its stylesheet,
  * text measurement grabs a canvas context), so it must be imported *after*
  * the shims are installed. Handing the already-initialised namespace to the
  * callback is what makes that safe.
@@ -40,7 +40,7 @@ const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(r
 export interface HeadlessRenderOptions extends SvgFrame {
   /** Deterministic id prefix (snapshot tests); random per render otherwise */
   idPrefix?: string;
-  /** Keep emotion classes and skip style inlining (debug) */
+  /** Keep the generated classes and skip style inlining (debug) */
   keepClasses?: boolean;
   /** Frame drawn around the chart so content never touches the image edge.
    * The chart renders at width/height minus this padding. */
