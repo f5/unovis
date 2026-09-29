@@ -246,6 +246,29 @@ describe('Axis tick labels (jsdom)', () => {
     expect(horizontal._getTickTextMaxWidth(5)).toBeCloseTo(728 / 6)
   })
 
+  describe('fitted labels and the margins they take', () => {
+    const labeledTicksAt = (plotWidth: number, labelSpace?: [number, number, number]): TickValues => {
+      const axis = createAxis({
+        tickValues: failureModes.map((_, i) => i),
+        tickFormat: tick => failureModes[tick as number],
+        tickTextAdaptiveSets: true,
+      }, { width: plotWidth, height: 300, containerWidth: 729, containerHeight: 360 }, [-0.5, failureModes.length - 0.5])
+      if (labelSpace) axis.setLabelSpace(...labelSpace)
+      return internals(axis)._getFittingTickValues().labeledTicks
+    }
+
+    it('picks the same labels whatever margins the previous render left', () => {
+      // Without a label space the choice follows the current plot width, which the chosen labels' own
+      // margins set: the chart flips between two sets on every render
+      expect(labeledTicksAt(600)).not.toEqual(labeledTicksAt(700))
+      expect(labeledTicksAt(600, [683, 46, 0])).toEqual(labeledTicksAt(700, [683, 46, 0]))
+    })
+
+    it('lets the labels reach into the margins of the other axes without narrowing the fitting', () => {
+      expect(labeledTicksAt(600, [683, 200, 200])).toEqual(labeledTicksAt(683))
+    })
+  })
+
   describe('wrapped label block placement', () => {
     // Labels wrapping into 1, 2, 3 and 4 lines at the fixed width
     const labels = ['AB', 'AB CD', 'AB CD EF', 'AB CD EF GH']
