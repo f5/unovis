@@ -416,7 +416,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
           grid.values,
           maxNumTicks,
           values => this._getTickLabelRects(values),
-          TICK_LABEL_OVERLAP_TOLERANCE_PX,
+          this._getTickLabelOverlapTolerance(),
           grid.unit
         )
         if (tickSets) return tickSets
