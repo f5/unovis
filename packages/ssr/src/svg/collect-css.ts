@@ -1,8 +1,8 @@
-/** Harvest CSS rules from emotion's injected <style> tags.
+/** Harvest CSS rules from the page's <style> tags.
  *
- * Emotion may run in "speedy" mode where rules are inserted through the
- * CSSOM (`sheet.insertRule`) and the <style> tags have empty text content —
- * so rules are read from `sheet.cssRules` first, falling back to textContent.
+ * Unovis inserts its rules through the CSSOM (`sheet.insertRule`), so its
+ * <style> tag has empty text content — rules are read from `sheet.cssRules`
+ * first, falling back to textContent.
  */
 
 export interface CollectedRule {

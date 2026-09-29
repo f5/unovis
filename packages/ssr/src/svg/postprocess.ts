@@ -1,6 +1,6 @@
 /** Turn a rendered chart's live SVG element into a standalone SVG string.
  *
- * The rendered DOM depends on the page context: emotion classes reference
+ * The rendered DOM depends on the page context: generated classes reference
  * stylesheet rules, colors are `var(--vis-*)` references, url(#) refs may be
  * absolute, ids are random guids. This pipeline makes the SVG self-contained:
  *
@@ -40,7 +40,7 @@ export interface FinalizeContext {
   varMaps: VarMaps;
   /** Deterministic id prefix (tests); random per render by default */
   idPrefix?: string;
-  /** Keep emotion class attributes and skip style inlining (debug) */
+  /** Keep the generated class attributes and skip style inlining (debug) */
   keepClasses?: boolean;
   /** Frame padding; defaults to CHART_PADDING */
   padding?: { top: number; right: number; bottom: number; left: number };
@@ -145,7 +145,7 @@ function inlineStyles (svg: SVGSVGElement, document: Document, varCtx: VarContex
     const declarations: [string, string][] = []
     for (const match of rule.block.matchAll(/(--[\w-]+|[a-zA-Z-]+)\s*:\s*([^;]+)/g)) {
       const prop = match[1].trim()
-      if (prop === 'label') continue // emotion debug labels
+      if (prop === 'label') continue // Emotion-style debug labels
       declarations.push([prop, match[2].trim()])
     }
     if (!declarations.length) continue
