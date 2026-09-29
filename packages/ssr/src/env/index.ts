@@ -4,7 +4,7 @@
  * library needs (in the right order — some are captured at module load),
  * and only then dynamically imports '@unovis/ts'. Import order matters:
  *
- *  - emotion inserts real <style> tags only if `document` exists at import
+ *  - the styles are inserted at import, and only if `document` exists
  *  - utils/text-measure snapshots a canvas 2D context at module scope
  *  - d3-timer binds `window.requestAnimationFrame` at module load
  */
@@ -60,7 +60,7 @@ function exposeGlobals (window: DOMWindow, raf: RafQueue): void {
   g.ResizeObserver = NoopResizeObserver
 }
 
-/** Parse all emotion-injected CSS custom properties into light/dark maps */
+/** Parse all CSS custom properties Unovis injects into light/dark maps */
 function buildVarMapsFromRules (rules: ReturnType<typeof collectCssRules>): VarMaps {
   const light = new Map<string, string>()
   const dark = new Map<string, string>()
@@ -78,8 +78,8 @@ function buildVarMapsFromRules (rules: ReturnType<typeof collectCssRules>): VarM
     }
   }
 
-  // The dark palette remap (--vis-colorN → --vis-dark-colorN) is declared
-  // under selectors jsdom can't apply; reproduce it here.
+  // The dark palette remap (--vis-colorN → --vis-dark-colorN) depends on the
+  // theme selectors matching; reproduce it here.
   for (const [name, value] of light) {
     const darkEquivalent = name.replace(/^--vis-color(\d+)$/, '--vis-dark-color$1')
     if (darkEquivalent !== name && light.has(darkEquivalent)) {

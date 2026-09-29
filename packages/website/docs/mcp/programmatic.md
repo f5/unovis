@@ -124,7 +124,7 @@ const { svg } = await renderToSvg({
 Three rules, all of which the API nudges you toward:
 
 1. **Use `ctx.unovis`, don't import `@unovis/ts` yourself.** The library captures
-   its environment when it loads — emotion inserts stylesheets, text measurement
+   its environment when it loads — it inserts its stylesheet, text measurement
    grabs a canvas context — so it has to be imported *after* the shims are in
    place. `ctx.unovis` is that already-initialised namespace.
 2. **Wire `ctx.onRenderComplete` into the container config.** It's how the
@@ -162,7 +162,7 @@ await renderToSvg({ width: 800, height: 600 }, (ctx) => {
 | `colors` | — | Hex palette overriding `--vis-colorN` |
 | `padding` | 12/16/16/16 | Frame around the chart; pass zeros to disable |
 | `idPrefix` | random | Set a constant for byte-stable snapshots |
-| `keepClasses` | `false` | Keep emotion classes and skip style inlining (debug) |
+| `keepClasses` | `false` | Keep the generated classes and skip style inlining (debug) |
 
 ## PNG rasterization
 

@@ -70,7 +70,7 @@ removes all of them:
 
 1. **Import external defs** — globally injected pattern definitions the chart
    references get copied into its own `<defs>`.
-2. **Inline the stylesheet** — emotion's rules are matched with
+2. **Inline the stylesheet** — the Unovis CSS rules are matched with
    `querySelectorAll` and written as inline styles, then the class attributes are
    dropped. Author inline styles always win; later rules override earlier ones.
 3. **Bake CSS variables** — every `var(--vis-*)` becomes a literal value for the
