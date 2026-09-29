@@ -1,4 +1,4 @@
-import { css } from '@/styles/emotion'
+import { css } from '@/styles/css'
 import { getCssVarNames, injectGlobalCssVariables } from '@/utils/style'
 import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from '@/styles/index'
 

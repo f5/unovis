@@ -1,4 +1,4 @@
-import { css } from '@/styles/emotion'
+import { css } from '@/styles/css'
 
 export const styleLargeSize = css`
   label: large-size;
