@@ -135,7 +135,8 @@ export class XYContainer<Datum> extends ContainerCore {
     // because calling `updateContainer` may add new components and we need to pass them the data
     if (hasDataUpdated) {
       config.tooltip?.hide()
-      config.crosshair?.hide()
+      // Before the first render there's nothing to hide, and `hide()` would render the crosshair before it gets the fallback accessors
+      if (!this._firstRender) config.crosshair?.hide()
     }
 
     if (!preventRender) this.render()
