@@ -41,6 +41,7 @@ export const variables = injectGlobal`
       --vis-pattern-marker${i}: var(--${getPatternVariable(p)});
       --vis-pattern-dasharray${i}: ${p.dashArray?.join(' ')};
     `)}
+  }
 
     ${darkThemeCssSelectors} {
       ${colors.map((c, i) => `${getCSSColorVariable(i)}: var(--vis-dark-color${i});`)}
