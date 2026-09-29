@@ -53,6 +53,9 @@ export { VisSankeyModule } from './components/sankey/sankey.module'
 export { VisRadialBarComponent } from './components/radial-bar/radial-bar.component'
 export { VisRadialBarModule } from './components/radial-bar/radial-bar.module'
 
+export { VisCircularBarComponent } from './components/circular-bar/circular-bar.component'
+export { VisCircularBarModule } from './components/circular-bar/circular-bar.module'
+
 export { VisScatterComponent } from './components/scatter/scatter.component'
 export { VisScatterModule } from './components/scatter/scatter.module'
 
