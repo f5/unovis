@@ -1,4 +1,4 @@
-import { injectGlobal } from '@/styles/emotion'
+import { injectGlobal } from '@/styles/css'
 import { getCSSVariableValue } from '@/utils/misc'
 import { darkThemeCssSelectors } from '@/utils/theme'
 import { UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'

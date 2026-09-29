@@ -1,4 +1,4 @@
-import { css, injectGlobal } from '@/styles/emotion'
+import { css, injectGlobal } from '@/styles/css'
 import { darkThemeCssSelectors } from '@/utils/theme'
 
 export const panels = css`
