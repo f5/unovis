@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  src: url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/webfonts/fa-solid-900.woff2) format('woff2');
+  font-weight: 900;
+}
+
+.circular-bar-chart {
+  --vis-circular-bar-icon-font-family: 'Font Awesome 6 Free';
+  --vis-circular-bar-icon-font-weight: 900;
+}
