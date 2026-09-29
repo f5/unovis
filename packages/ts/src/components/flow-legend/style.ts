@@ -1,4 +1,4 @@
-import { css, injectGlobal } from '@/styles/emotion'
+import { css, injectGlobal } from '@/styles/css'
 import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from '@/styles/index'
 import { darkThemeCssSelectors } from '@/utils/theme'
 import { FlowLegendItem } from './types'
@@ -60,11 +60,11 @@ export const item = css`
   label: item;
   position: relative;
 
-  :first-child > span {
+  &:first-child > span {
     padding-left: 0;
   }
 
-  :last-child > span {
+  &:last-child > span {
     padding-right: 0;
   }
 

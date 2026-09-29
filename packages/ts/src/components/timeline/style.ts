@@ -1,4 +1,4 @@
-import { css } from '@/styles/emotion'
+import { css } from '@/styles/css'
 import type { UnovisCssVariablesDefinition } from '@/types/style'
 import { getCssVarNames, injectGlobalCssVariables } from '@/utils/style'
 
@@ -66,7 +66,7 @@ export const line = css`
     stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-odd-fill-color));
   }
 
-  :hover {
+  &:hover {
     stroke-width: var(--vis-timeline-line-hover-stroke-width);
     stroke: var(--vis-timeline-line-hover-stroke-color);
   }
