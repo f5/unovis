@@ -12,7 +12,7 @@
 | d3-array                             | perpetual      | ISC          | 3.2.4             | Mike Bostock http://bost.ocks.org/mike                             |
 | d3-format                            | perpetual      | ISC          | 3.1.2             | Mike Bostock http://bost.ocks.org/mike                             |
 | d3-random                            | perpetual      | ISC          | 3.0.1             | Mike Bostock http://bost.ocks.org/mike                             |
-| @percy/cli                           | perpetual      | MIT          | 1.31.9            | n/a                                                                |
+| @percy/cli                           | perpetual      | MIT          | 1.32.11           | n/a                                                                |
 | @percy/cypress                       | perpetual      | MIT          | 3.1.7             | Perceptual Inc.                                                    |
 | @playwright/test                     | perpetual      | Apache-2.0   | 1.62.1            | Microsoft Corporation                                              |
 | @pmmmwh/react-refresh-webpack-plugin | perpetual      | MIT          | 0.5.17            | Michael Mok                                                        |
