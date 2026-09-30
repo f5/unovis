@@ -336,8 +336,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     const tickSize = axisGen.tickSize()
     const axisPosition = this.getPosition()
-    // Fair-share label width counts labeled ticks only, matching what the tick fitting measured
-    const textMaxWidth = this._getTickTextMaxWidth(labeledTickKeys?.size ?? tickCount)
+    // Fitted labels get the width budget the tick fitting measured them with
+    const textMaxWidth = this._getTickTextMaxWidth(tickCount, Boolean(labeledTickKeys))
     tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
       let text = config.tickFormat?.(value, i, tickValues as number[] | Date[], this._timeTickUnit) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
@@ -441,11 +441,14 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     return -this.config.tickTextOverlapTolerance / 2
   }
 
-  /** Width available to a tick label, along its text, before it gets wrapped or trimmed */
-  private _getTickTextMaxWidth (labelCount: number): number {
+  /** Width available to a tick label, along its text, before it gets wrapped or trimmed. Fixed X tick
+   * sets share the axis fairly, as nothing else keeps their labels apart; the fitted sets are spaced by
+   * the label geometry already, so a fitted label only wraps when wider than the whole axis */
+  private _getTickTextMaxWidth (labelCount: number, fitted: boolean): number {
     const { config } = this
     if (config.tickTextWidth) return config.tickTextWidth
     if (config.type !== AxisType.X) return this._containerWidth / 5
+    if (fitted) return this._width
 
     // Fair share of the axis: the slot a labeled tick owns
     const slotWidth = this._containerWidth / (labelCount + 1)
@@ -485,7 +488,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     const isX = config.type === AxisType.X
     const scale = (isX ? this.xScale : this.yScale) as ContinuousScale
     const style = this._getTickTextStyle()
-    const textOptions = this._getTickTextOptions(this._getTickTextMaxWidth(values.length))
+    const textOptions = this._getTickTextOptions(this._getTickTextMaxWidth(values.length, true))
     const lineHeightPx = style.fontSize * UNOVIS_TEXT_DEFAULT.lineHeight
     const angleRad = (config.tickTextAngle ?? 0) / 180 * Math.PI
     const axisPosition = this.getPosition()
