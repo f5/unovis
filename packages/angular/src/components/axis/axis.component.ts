@@ -180,6 +180,8 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
    * `tickValues`, every-k-th subsets of them are fitted instead.
    * `AxisTickSetMode.Uniform` (time scales only) keeps the step constant across month boundaries, unlike
    * the "nice" d3 sets that `true` and `AxisTickSetMode.Nice` use, and reports its calendar unit to `tickFormat`.
+   * The fitted labels render on a single line unless wider than the axis itself (or than
+   * `tickTextWidth`, when set) — the fair-share wrapping of fixed tick sets doesn't apply to them.
    * Has no effect when `minMaxTicksOnly` is set, and disables the width-based
    * `minMaxTicksOnlyWhenWidthIsLess` fallback. Default: `undefined` */
   @Input() tickTextAdaptiveSets?: boolean | AxisTickSetMode | `${AxisTickSetMode}`
