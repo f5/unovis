@@ -51,6 +51,24 @@ to learn more about this attribute.
 Similar to [mutlti-color configuration](#for-multiple-lines), you can provide an accessor function to
 customize each line.
 
+### Marker Spacing
+A line `pattern` draws its marker on every point of the line, and the browser repaints all of them on
+every frame. On a line carrying a few thousand points that alone can more than halve the frame rate,
+while the markers are too dense to tell apart anyway.
+
+Set `markerSpacing` to draw them on a separate, thinned out path instead — roughly one marker per that
+many pixels, so the count follows the chart's width rather than the size of the data. A 400px chart gets
+far fewer markers than a 1400px one, and the count is recalculated when the chart is resized.
+
+```ts
+const markerSpacing = 40
+```
+
+The markers stay on the line itself when it has fewer points than pixels: a smoothing `curveType`
+doesn't pass through the data points, and at that density the gap between a marker and the line would
+show. Points with no neighbours are always kept — a point sitting on its own between two gaps has no
+line segment to draw, so its marker is the only thing that makes it visible.
+
 ## Dealing with missing data
 ### Fallback Value
 In the case of missing data (when the data values are `undefined`, `NaN`, `''`, etc ...), you can assign a fallback value
