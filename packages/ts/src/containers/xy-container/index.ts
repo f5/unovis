@@ -165,17 +165,19 @@ export class XYContainer<Datum> extends ContainerCore {
       crosshair.tooltip = tooltip
     }
 
-    // Sync the SVG children (axes, components, crosshair, annotations, clipping path and defs)
-    // with the updated configuration, touching only the elements that changed
+    // Sync the SVG children (clipping path, defs, axes, components, crosshair and annotations)
+    // with the updated configuration, touching only the elements that changed.
+    // The clipping path and defs go first: Safari lays out SVG children in document order, so an element placed
+    // before its <clipPath> caches bounds from the clip rect's previous (initially empty) size and isn't painted with `duration: 0`
     this._reconcileChildren([
+      this._clipPath.node(),
+      this._svgDefs.node(),
+      this._svgDefsExternal.node(),
       containerConfig.xAxis?.element,
       containerConfig.yAxis?.element,
       ...this.components.map(c => c.element),
       crosshair?.element,
       containerConfig.annotations?.element,
-      this._clipPath.node(),
-      this._svgDefs.node(),
-      this._svgDefsExternal.node(),
     ])
 
     // Rendering
