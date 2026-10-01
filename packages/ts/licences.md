@@ -1,7 +1,6 @@
 | Name                             | License period | License type | Installed version | Author                                                            |
 | :------------------------------- | :------------- | :----------- | :---------------- | :---------------------------------------------------------------- |
 | @emotion/css                     | perpetual      | MIT          | 11.13.5           | Kye Hohenberger                                                   |
-| @juggle/resize-observer          | perpetual      | Apache-2.0   | 3.4.0             | Juggle                                                            |
 | csstype                          | perpetual      | MIT          | 3.2.3             | Fredrik Nicol <fredrik.nicol@gmail.com>                           |
 | d3-array                         | perpetual      | ISC          | 3.2.4             | Mike Bostock http://bost.ocks.org/mike                            |
 | d3-shape                         | perpetual      | ISC          | 3.2.0             | Mike Bostock http://bost.ocks.org/mike                            |
