@@ -44,7 +44,4 @@ export const Scale = {
   scalePoint,
 }
 
-export enum ScaleDimension {
-  X = 'x',
-  Y = 'y',
-}
+export { ScaleDimension } from '@/types/scale-dimension'
