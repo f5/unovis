@@ -25,7 +25,7 @@ export default defineConfig({
   plugins: [
     react({ jsxRuntime: 'classic' }),
     dts({ tsconfigPath: './tsconfig.lib.json', exclude: ['vite.config.ts'] }),
-    cssInjectedByJsPlugin(),
+    cssInjectedByJsPlugin({ relativeCSSInjection: true }),
   ],
   resolve: {
     alias: [
@@ -37,6 +37,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     minify: false,
+    cssCodeSplit: true,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       formats: ['es'],
