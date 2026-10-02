@@ -8,6 +8,7 @@ import { ComponentConfigInterface } from '@/core/component/config'
 
 // Utils
 import { smartTransition } from '@/utils/d3'
+import { scheduleContainerRender } from '@/core/container/render-scheduler'
 
 // Types
 import { Sizing, ExtendedSizeComponent } from '@/types/component'
@@ -140,20 +141,15 @@ export class SingleContainer<Data> extends ContainerCore {
         .attr('viewBox', `${0} ${0} ${componentWidth} ${fitToWidth ? scaledHeight : componentHeight}`)
         .attr('preserveAspectRatio', 'xMinYMin')
     } else {
-      this.svg
-        .attr('width', this.config.width || this.containerWidth)
-        .attr('height', this.config.height || this.containerHeight)
+      this._updateSvgSize()
     }
 
     // Set up Resize Observer
     if (!this._resizeObserver) this._setUpResizeObserver()
 
-    // Schedule the actual rendering in the next frame
-    cancelAnimationFrame(this._renderAnimationFrameId)
-    this._renderAnimationFrameId = requestAnimationFrame(() => {
-      this._preRender()
-      this._render(duration)
-    })
+    // Schedule the actual rendering in one of the next frames
+    this._pendingRenderDuration = duration
+    scheduleContainerRender(this._renderTask)
   }
 
   protected _onResize (): void {

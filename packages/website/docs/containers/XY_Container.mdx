@@ -177,6 +177,57 @@ through the [`margin`](#margin) property — for example, to line several charts
 </VisXYContainer>
 ```
 
+### Redraw on Resize
+When the container is set up to fit its parent (the default `Sizing.Fit`), it watches the parent's size
+and redraws itself when it changes. A container whose size changes continuously — a chart inside a
+dashboard widget with a drag-to-resize handle, for instance — would otherwise redraw on every frame of
+the gesture.
+
+To avoid that, the redraw is debounced: it happens once the size has settled. The delay is controlled by
+`resizeDebounce` and defaults to `100` ms. The trade-off is that the chart's contents visibly lag the
+container for the duration of the gesture — the SVG box follows immediately, the marks catch up when the
+resize stops. Set `resizeDebounce` to `0` to get a redraw on every resize frame instead.
+
+```tsx
+<VisXYContainer data={data} resizeDebounce={250}>
+  {/* … */}
+</VisXYContainer>
+```
+
+The first size change is applied immediately rather than debounced. That is usually the parent's layout
+settling just after mount, so a chart never waits out the debounce before it appears at the correct size.
+
+If you want to suppress resize redraws altogether — for example to freeze the charts while the user
+drags a dashboard layout around — set `redrawOnResize` to `false`. The container's SVG element still
+follows the parent's size, but its contents are not re-rendered until something else triggers a render.
+
+```tsx
+<VisXYContainer data={data} redrawOnResize={false}>
+  {/* … */}
+</VisXYContainer>
+```
+
+## Rendering Many Charts At Once
+Containers don't render synchronously: they schedule the work into an animation frame. All containers on
+the page share a single queue with a per-frame time budget, so a dashboard that mounts a hundred charts
+at once spreads the rendering over several frames instead of packing it into one long task that freezes
+the page.
+
+The budget is a property of the frame rather than of an individual chart, so it's set globally:
+
+```ts
+import { setContainerRenderBudget } from '@unovis/ts'
+
+setContainerRenderBudget(16)
+```
+
+It defaults to `8` ms. Raising it renders more charts per frame at the cost of longer frames; setting it
+to `0` disables the splitting entirely and renders every pending container in a single frame.
+
+Note that splitting spreads the work out, it doesn't make it cheaper. A container render is atomic, so a
+single very expensive chart still blocks the frame on its own — what this avoids is many independent
+charts piling into one unbroken task.
+
 ## Domain
 You can change the domain of your data with the `xDomain` and `yDomain` properties to configure which values your `XY Component` should display.
 The result will show all data that is in this range- excluding any values that fall outside of the range, and occupying any missing values with white space.

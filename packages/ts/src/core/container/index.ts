@@ -1,4 +1,6 @@
 import { select, Selection } from 'd3-selection'
+// Adds `.interrupt()` to `Selection`, used in `destroy()`
+import 'd3-transition'
 
 // Core
 import { ComponentCore } from '@/core/component'
@@ -15,6 +17,9 @@ import { ResizeObserver } from '@/utils/resize-observer'
 // Config
 import { ContainerDefaultConfig, ContainerConfigInterface } from './config'
 
+// Render Scheduler
+import { cancelContainerRender, scheduleContainerRender } from './render-scheduler'
+
 export class ContainerCore {
   public svg: Selection<SVGSVGElement, unknown, null, undefined>
   public element: SVGSVGElement
@@ -23,19 +28,26 @@ export class ContainerCore {
 
   protected _defaultConfig: ContainerConfigInterface = ContainerDefaultConfig
   protected _container: HTMLElement
-  protected _renderAnimationFrameId: number
   protected _isFirstRender = true
+  protected _isFirstResize = true
   protected _resizeObserver: ResizeObserver | undefined
   protected _resizeObserverAnimationFrameId: number
+  protected _resizeDebounceTimeoutId: ReturnType<typeof setTimeout> | undefined
   protected _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
   protected _svgDefsExternal: Selection<SVGDefsElement, unknown, null, undefined>
   private _containerSize: { width: number; height: number }
+  protected _pendingRenderDuration: number | undefined
+
+  // An arrow function so the task identity stays stable, which is what lets the scheduler de-duplicate
+  protected _renderTask = (): void => {
+    this._preRender()
+    this._render(this._pendingRenderDuration)
+  }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   static DEFAULT_CONTAINER_HEIGHT = 300
 
   constructor (element: HTMLElement) {
-    this._renderAnimationFrameId = null
     this._container = element
 
     // Setting `role` attribute to `image` to make the container accessible
@@ -98,26 +110,18 @@ export class ContainerCore {
   // Warning: Some Containers (i.e. Single Container) may override this method, so if you introduce any changes here,
   // make sure to check that other containers didn't break after them.
   public render (duration = this.config.duration): void {
-    const width = this.config.width || this.containerWidth
-    const height = this.config.height || this.containerHeight
-
     // We set SVG size in `render()` instead of `_render()`, because the size values in pixels will become
     // available only in the next animation when being accessed via `element.clientWidth` and `element.clientHeight`,
     // and we rely on those values when setting width and size of the components.
-    this.svg
-      .attr('width', width)
-      .attr('height', height)
+    this._updateSvgSize()
 
     // Set up Resize Observer. We do it in `render()` to capture container size change if it happened
     // in the next animation frame after the initial `render` was called.
     if (!this._resizeObserver) this._setUpResizeObserver()
 
-    // Schedule the actual rendering in the next frame
-    cancelAnimationFrame(this._renderAnimationFrameId)
-    this._renderAnimationFrameId = requestAnimationFrame(() => {
-      this._preRender()
-      this._render(duration)
-    })
+    // Schedule the actual rendering in one of the next frames
+    this._pendingRenderDuration = duration
+    scheduleContainerRender(this._renderTask)
   }
 
   get containerWidth (): number {
@@ -175,25 +179,56 @@ export class ContainerCore {
     }
   }
 
+  /** Kept out of `render()` so it can also be applied when redraws are suppressed */
+  protected _updateSvgSize (): void {
+    this.svg
+      .attr('width', this.config.width || this.containerWidth)
+      .attr('height', this.config.height || this.containerHeight)
+  }
+
   protected _onResize (): void {
     const { config } = this
-    const redrawOnResize = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
-    if (redrawOnResize) this.render(0)
+    const sizingAllowsRedraw = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
+    if (!sizingAllowsRedraw) return
+
+    // Wrappers can spread these through as `undefined`, which `merge` copies over the default (#929)
+    const redrawOnResize = config.redrawOnResize ?? ContainerDefaultConfig.redrawOnResize
+    const resizeDebounce = config.resizeDebounce ?? ContainerDefaultConfig.resizeDebounce
+
+    // Resize the box now so the chart doesn't overflow its parent while the redraw is delayed
+    if (config.sizing === Sizing.Fit) this._updateSvgSize()
+
+    if (!redrawOnResize) return
+
+    clearTimeout(this._resizeDebounceTimeoutId)
+
+    // The first size change is usually the layout settling after mount, so it shouldn't wait out the debounce
+    if (!resizeDebounce || this._isFirstResize) {
+      this._isFirstResize = false
+      this.render(0)
+      return
+    }
+
+    this._resizeDebounceTimeoutId = setTimeout(() => this.render(0), resizeDebounce)
+  }
+
+  /** Rounded to whole pixels: sub-pixel jitter renders identically, so it shouldn't redraw */
+  private _getRoundedContainerRectSize (): { width: number; height: number } {
+    const rect = this._container.getBoundingClientRect()
+    return { width: Math.round(rect.width), height: Math.round(rect.height) }
   }
 
   protected _setUpResizeObserver (): void {
     if (this._resizeObserver) return
 
-    const containerRect = this._container.getBoundingClientRect()
-    this._containerSize = { width: containerRect.width, height: containerRect.height }
+    this._containerSize = this._getRoundedContainerRectSize()
 
     this._resizeObserver = new ResizeObserver((entries, observer) => {
       // Using request animation frame to avoid multiple resize events when scrollbars appear/disappear
       // See more: https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver#observation_errors
       cancelAnimationFrame(this._resizeObserverAnimationFrameId)
       this._resizeObserverAnimationFrameId = requestAnimationFrame(() => {
-        const resizedContainerRect = this._container.getBoundingClientRect()
-        const resizedContainerSize = { width: resizedContainerRect.width, height: resizedContainerRect.height }
+        const resizedContainerSize = this._getRoundedContainerRectSize()
         const hasSizeChanged = !isEqual(this._containerSize, resizedContainerSize)
         // Do resize only if element is attached to the DOM
         // will come in useful when some ancestor of container becomes detached
@@ -207,9 +242,12 @@ export class ContainerCore {
   }
 
   public destroy (): void {
-    cancelAnimationFrame(this._renderAnimationFrameId)
+    cancelContainerRender(this._renderTask)
     cancelAnimationFrame(this._resizeObserverAnimationFrameId)
+    clearTimeout(this._resizeDebounceTimeoutId)
     this._resizeObserver?.disconnect()
+    // d3 transitions run on `d3-timer` and keep tweening against the detached SVG unless interrupted
+    this.svg.interrupt().selectAll('*').interrupt()
     this.svg.remove()
   }
 }

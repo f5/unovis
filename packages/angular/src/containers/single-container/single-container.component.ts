@@ -37,6 +37,11 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   @Input() margin?: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration?: number
+  /** Whether the container should redraw itself when its size changes. Default: `true` */
+  @Input() redrawOnResize?: boolean
+  /** Delay in milliseconds before redrawing after a size change, so that a continuously resized
+   * container redraws once it settles. Set to `0` to redraw on every frame. Default: `100` */
+  @Input() resizeDebounce?: number
   /** Alternative text description of the chart for accessibility purposes. It will be applied as an
    * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
   */
@@ -74,13 +79,13 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   }
 
   getConfig (): SingleContainerConfigInterface<Data> {
-    const { width, height, duration, margin, ariaLabel, svgDefs, sizing, colorFunction } = this
+    const { width, height, duration, margin, ariaLabel, svgDefs, sizing, colorFunction, redrawOnResize, resizeDebounce } = this
 
     const component = this.visComponent?.component as C
     const tooltip = this.tooltipComponent?.component as Tooltip
     const annotations = this.annotationsComponent?.component as Annotations
 
-    return { width, height, duration, margin, component, tooltip, ariaLabel, annotations, svgDefs, sizing, colorFunction }
+    return { width, height, duration, margin, component, tooltip, ariaLabel, annotations, svgDefs, sizing, colorFunction, redrawOnResize, resizeDebounce }
   }
 
   ngOnDestroy (): void {
