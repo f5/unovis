@@ -32,8 +32,6 @@ export function createPoints<Datum> (
     .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d._point.groupIndex)
     .style('fill', d => d._point.color)
     .style('mask', d => d._point.mask)
-  selection.append('text')
-    .style('pointer-events', 'none')
 
   selection.attr('transform', d => `translate(${xScale(d._point.xValue)},${yScale(d._point.yValue)}) scale(0)`)
 }
@@ -46,10 +44,11 @@ export function updatePoints<Datum> (
   duration: number
 ): void {
   const symbolGenerator = symbol()
+  // Without a duration `smartTransition` only interrupts, so do it once instead of twice per point
+  if (!duration) selection.selectAll<SVGElement, unknown>('path, text').interrupt()
 
   selection.each((d, index, elements) => {
     const group: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]> = select(elements[index])
-    const label = group.select('text')
     const path = group.select('path')
 
     // Shape
@@ -64,50 +63,59 @@ export function updatePoints<Datum> (
       return svgPath
     })
 
-    smartTransition(path, duration)
+    // Already interrupted in bulk above, so `smartTransition` would just repeat that work per point
+    const pathTransition = duration ? smartTransition(path, duration) : path
+    pathTransition
       .style('fill', pointColor)
       .style('mask', d._point.mask)
       .style('stroke', pointStrokeColor)
       .style('stroke-width', `${pointStrokeWidth}px`)
 
-    // Label
-    const labelPosition = d._point.labelPosition
-    const isLabelPositionCenter = (labelPosition !== Position.Top) && (labelPosition !== Position.Bottom) &&
-      (labelPosition !== Position.Left) && (labelPosition !== Position.Right)
+    // Created lazily, so a chart without labels doesn't pay for a text node per point
     const pointLabelText = d._point.label ?? ''
-    const textLength = pointLabelText.length
-    const centralLabelFontSize = getCentralLabelFontSize(pointDiameter, textLength)
-
-    let labelColor = d._point.labelColor
-    if (!labelColor && isLabelPositionCenter) {
-      const c = pointColor || 'var(--vis-scatter-fill-color)'
-      const hex = color(isStringCSSVariable(c) ? getCSSVariableValue(c, group.node()) : c)?.hex()
-      const brightness = hexToBrightness(hex)
-      labelColor = brightness > config.labelTextBrightnessRatio ? 'var(--vis-scatter-point-label-text-color-dark)' : 'var(--vis-scatter-point-label-text-color-light)'
+    let label = group.select<SVGTextElement>('text')
+    if (label.empty()) {
+      if (pointLabelText) label = group.append<SVGTextElement>('text').style('pointer-events', 'none')
     }
 
-    const labelShift = getLabelShift(labelPosition, pointDiameter)
-    label.html(pointLabelText)
-      .attr('x', labelShift[0])
-      .attr('y', labelShift[1])
-      .style('font-size', isLabelPositionCenter ? centralLabelFontSize : null)
-      .style('text-anchor', () => {
-        switch (labelPosition) {
-          case Position.Right: return null
-          case Position.Left: return 'end'
-          default: return 'middle'
-        }
-      })
-      .style('dominant-baseline', () => {
-        switch (labelPosition) {
-          case Position.Top: return null
-          case Position.Bottom: return 'hanging'
-          default: return 'central'
-        }
-      })
+    if (!label.empty()) {
+      const labelPosition = d._point.labelPosition
+      const isLabelPositionCenter = (labelPosition !== Position.Top) && (labelPosition !== Position.Bottom) &&
+        (labelPosition !== Position.Left) && (labelPosition !== Position.Right)
+      const textLength = pointLabelText.length
+      const centralLabelFontSize = getCentralLabelFontSize(pointDiameter, textLength)
 
-    smartTransition(label, duration)
-      .style('fill', labelColor)
+      let labelColor = d._point.labelColor
+      if (!labelColor && isLabelPositionCenter) {
+        const c = pointColor || 'var(--vis-scatter-fill-color)'
+        const hex = color(isStringCSSVariable(c) ? getCSSVariableValue(c, group.node()) : c)?.hex()
+        const brightness = hexToBrightness(hex)
+        labelColor = brightness > config.labelTextBrightnessRatio ? 'var(--vis-scatter-point-label-text-color-dark)' : 'var(--vis-scatter-point-label-text-color-light)'
+      }
+
+      const labelShift = getLabelShift(labelPosition, pointDiameter)
+      label.html(pointLabelText)
+        .attr('x', labelShift[0])
+        .attr('y', labelShift[1])
+        .style('font-size', isLabelPositionCenter ? centralLabelFontSize : null)
+        .style('text-anchor', () => {
+          switch (labelPosition) {
+            case Position.Right: return null
+            case Position.Left: return 'end'
+            default: return 'middle'
+          }
+        })
+        .style('dominant-baseline', () => {
+          switch (labelPosition) {
+            case Position.Top: return null
+            case Position.Bottom: return 'hanging'
+            default: return 'central'
+          }
+        })
+
+      const labelTransition = duration ? smartTransition(label, duration) : label
+      labelTransition.style('fill', labelColor)
+    }
 
     path.style('cursor', d._point.cursor)
   })
