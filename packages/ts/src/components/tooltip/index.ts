@@ -26,6 +26,11 @@ export class Tooltip {
   private _setUpEventsThrottled = throttle(this._setUpEvents, 500)
   private _setContainerPositionThrottled = throttle(this._setContainerPosition, 500)
   private _isShown = false
+  // Set when the tooltip is shown imperatively via `show()` (e.g. by Crosshair). While set, the component
+  // that called `show()` owns the tooltip's visibility and position, so the delegated mousemove / mouseleave
+  // handlers below must not hide or re-place it. Released once `_hide()` actually runs (not by `hide()`
+  // itself), so a `hideDelay` grace period doesn't let the delegated handlers step in before it's really hidden.
+  private _isControlledExternally = false
   private _container: HTMLElement
   private _mutationObserver: MutationObserver
   private _hoveredElement: HTMLElement | SVGElement
@@ -106,11 +111,13 @@ export class Tooltip {
 
   /** Show the tooltip immediately by providing content and position */
   public show (html: string | HTMLElement | null | void, pos: { x: number; y: number }): void {
+    this._isControlledExternally = true
     this.render(html)
     this.place(pos)
   }
 
   private _hide (): void {
+    this._isControlledExternally = false
     this.div
       .classed(s.show, false) // The `show` class triggers the opacity transition
       .on('transitionend', () => {
@@ -135,9 +142,9 @@ export class Tooltip {
 
   private _display (): void {
     window.clearTimeout(this._hideDelayTimeoutId)
-    this.div
-      .classed(s.hidden, false) // The `hidden` class sets `display: none;`
-      .classed(s.show, true) // The `show` class triggers the opacity transition
+    this.div.classed(s.hidden, false) // The `hidden` class sets `display: none;`
+    this.element.getBoundingClientRect() // force a reflow so it has a frame to fade in from
+    this.div.classed(s.show, true) // The `show` class triggers the opacity transition
 
     this._isShown = true
   }
@@ -348,12 +355,25 @@ export class Tooltip {
     // We use the Event Delegation pattern to set up Tooltip events
     // Every component will have single `mousemove` and `mouseleave` event listener functions, where we'll check
     // the `path` of the event and trigger corresponding callbacks
-    this.components.forEach(component => {
-      const selection = select(component.element)
+    // We also attach to the components' owning `<svg>`: a gap between triggers (e.g. between bars) can be
+    // covered by an element that doesn't belong to any registered component (an axis, Crosshair, a brush
+    // overlay), which the per-component listeners below never see.
+    const componentElements = new Set<HTMLElement | SVGElement>(this.components.map(c => c.element))
+    const elements = new Set<HTMLElement | SVGElement>(
+      this.components
+        .flatMap(c => [c.element, (c.element as SVGGElement).ownerSVGElement])
+        .filter(Boolean)
+    )
+    elements.forEach(element => {
+      const selection = select(element)
+      const isComponentListener = componentElements.has(element)
       selection
         .on('mousemove.tooltip', (e: MouseEvent) => {
           const { config: currentConfig } = this // get latest config because it could have been changed after the event was triggered
           const path: (HTMLElement | SVGGElement)[] = (e.composedPath && e.composedPath()) || (e as any).path || [e.target]
+
+          // Component listeners already handle events bubbling from their elements.
+          if (!isComponentListener && path.some(el => componentElements.has(el))) return
 
           // Go through all of the configured triggers
           for (const className of Object.keys(currentConfig.triggers)) {
@@ -390,6 +410,17 @@ export class Tooltip {
             }
           }
 
+          // No triggers matched. If the tooltip is controlled externally (e.g. by Crosshair via `show()`,
+          // possibly pinned with `forceShowAt`), its owner decides when to move or hide it — not us
+          if (this._isControlledExternally) return
+
+          // No match: keep following the cursor so the tooltip doesn't freeze while it fades out
+          // `_isShown` flips false as soon as `_hide` starts the fade, so check `hidden` instead
+          if (currentConfig.followCursor && !this.div.classed(s.hidden)) {
+            const [x, y] = this.isContainerBody() ? [e.clientX, e.clientY] : pointer(e, this._container)
+            this.place({ x, y })
+          }
+
           // Hide the tooltip if the event didn't pass through any of the configured triggers.
           // We use the `this._isShown` condition as a little performance optimization tweak
           // (we don't want the tooltip to update its class on every mouse movement, see `this.hide()`).
@@ -397,6 +428,7 @@ export class Tooltip {
         })
         .on('mouseleave.tooltip', (e: MouseEvent) => {
           e.stopPropagation() // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
+          if (this._isControlledExternally) return
           this.hide()
         })
     })
