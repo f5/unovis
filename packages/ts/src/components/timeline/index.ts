@@ -646,8 +646,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     config.onScroll?.(this._scrollDistance)
 
-    // Programmatically trigger a mousemove event to update Tooltip or Crosshair if they were set up
-    const e = new Event('mousemove')
+    // Programmatically trigger a pointermove event to update Tooltip or Crosshair if they were set up
+    const e = new Event('pointermove')
     this.element.dispatchEvent(e)
   }
 
