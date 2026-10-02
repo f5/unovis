@@ -252,6 +252,9 @@ export const arrowItems = arrowData.slice(0, -1).map((d, i) => ({
 
 ## Events
 ### Scrolling
+When the rows don't fit, _Timeline_ scrolls with the mouse wheel, its scroll bar or a touch drag. When the timeline reaches its
+top or bottom, the page takes the scroll over.
+
 You can provide a callback to the `onScroll` property, which accepts a function of type:
 
 ```ts
