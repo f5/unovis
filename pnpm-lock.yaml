@@ -704,9 +704,6 @@ importers:
       '@emotion/css':
         specifier: ^11.7.1
         version: 11.13.5
-      '@juggle/resize-observer':
-        specifier: ^3.3.1
-        version: 3.4.0
       '@maplibre/maplibre-gl-style-spec':
         specifier: 26.4.1
         version: 26.4.1
@@ -3790,9 +3787,6 @@ packages:
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
-
-  '@juggle/resize-observer@3.4.0':
-    resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
   '@kessler/tableify@1.0.2':
     resolution: {integrity: sha512-e4psVV9Fe2eBfS9xK2rzQ9lE5xS4tARm7EJzDb6sVZy3F+EMyHJ67i0NdBVR9BRyQx7YhogMCbB6R1QwXuBxMg==}
@@ -17031,8 +17025,6 @@ snapshots:
       '@jsonjoy.com/buffers': 17.67.0(tslib@2.8.1)
       '@jsonjoy.com/codegen': 17.67.0(tslib@2.8.1)
       tslib: 2.8.1
-
-  '@juggle/resize-observer@3.4.0': {}
 
   '@kessler/tableify@1.0.2': {}
 
