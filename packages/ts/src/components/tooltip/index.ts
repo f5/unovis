@@ -144,6 +144,8 @@ export class Tooltip {
 
   /** Simply display the tooltip with its previous content on position, taking into account `showDelay` */
   public display (): void {
+    // Cancel a pending `hide()` (e.g. after a touch ended), otherwise it would hide the tooltip that is being displayed
+    window.clearTimeout(this._hideDelayTimeoutId)
     if (this._isShown) return
 
     if (this.config.showDelay) {
@@ -270,6 +272,12 @@ export class Tooltip {
     return this._container === document.body
   }
 
+  /** Returns `true` if the Tooltip should follow a touch drag across the chart, i.e. it has triggers and `followTouchMove` is on */
+  public followsTouchMove (): boolean {
+    const { config } = this
+    return Boolean(config.followTouchMove && Object.values(config.triggers ?? {}).some(Boolean))
+  }
+
   /** Allows to override the horizontal placement of the tooltip which is useful when you want to define custom positioning behavior.
    * This method has been added for Crosshair to allow it position tooltip left or right of the crosshair line
    * (see the `_showTooltip` method of the Crosshair component).
@@ -346,12 +354,29 @@ export class Tooltip {
     const { config } = this
 
     // We use the Event Delegation pattern to set up Tooltip events
-    // Every component will have single `mousemove` and `mouseleave` event listener functions, where we'll check
+    // Every component will have single `pointermove` and `pointerleave` event listener functions, where we'll check
     // the `path` of the event and trigger corresponding callbacks
     this.components.forEach(component => {
       const selection = select(component.element)
+
+      // A touch keeps targeting the element where it started (implicit pointer capture), so the tooltip wouldn't move on
+      // to the next element under the finger, or wouldn't show up if the touch started outside of the component (e.g. on an axis).
+      // We release the capture on the whole chart to make the browser find the element under the pointer on every move,
+      // the same way as for a mouse. It's done in the capture phase not to override an explicit capture set by the target itself
+      select((component.element as SVGElement).ownerSVGElement ?? component.element)
+        .on('pointerdown.tooltipCapture', (e: PointerEvent) => {
+          const target = e.target as Element
+          if (e.pointerType === 'touch' && target.hasPointerCapture?.(e.pointerId)) target.releasePointerCapture(e.pointerId)
+        }, { capture: true })
+
       selection
-        .on('mousemove.tooltip', (e: MouseEvent) => {
+        // A touch shows the tooltip only while the finger is down: from `pointerdown` (the finger might not move)
+        // until `pointerup` or `pointercancel` (fired when the browser takes over the gesture to scroll the page).
+        // Mouse shows it on `pointermove` the same way as on hover. A pen can't always hover, so it uses `pointerdown` too
+        .on('pointermove.tooltip pointerdown.tooltip', (e: PointerEvent) => {
+          if (e.type === 'pointerdown' && e.pointerType !== 'touch' && e.pointerType !== 'pen') return
+          if (e.pointerType === 'touch' && !e.isPrimary) return // Ignore all the fingers except the first one
+
           const { config: currentConfig } = this // get latest config because it could have been changed after the event was triggered
           const path: (HTMLElement | SVGGElement)[] = (e.composedPath && e.composedPath()) || (e as any).path || [e.target]
 
@@ -392,10 +417,15 @@ export class Tooltip {
 
           // Hide the tooltip if the event didn't pass through any of the configured triggers.
           // We use the `this._isShown` condition as a little performance optimization tweak
-          // (we don't want the tooltip to update its class on every mouse movement, see `this.hide()`).
+          // (we don't want the tooltip to update its class on every pointer movement, see `this.hide()`).
           if (this._isShown) this.hide()
         })
-        .on('mouseleave.tooltip', (e: MouseEvent) => {
+        .on('pointerup.tooltip pointercancel.tooltip', (e: PointerEvent) => {
+          // A cancelled pointer won't fire any other events, and Safari fires `pointerleave` after `pointercancel` on the target only
+          if (e.isPrimary && (e.pointerType === 'touch' || e.type === 'pointercancel')) this.hide()
+        })
+        .on('pointerleave.tooltip', (e: PointerEvent) => {
+          if (e.pointerType === 'touch' && !e.isPrimary) return
           e.stopPropagation() // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
           this.hide()
         })
@@ -404,12 +434,12 @@ export class Tooltip {
     // Set up Tooltip hover
     if (config.allowHover) {
       this.div
-        .on('mouseenter.tooltip', this._display.bind(this))
-        .on('mouseleave.tooltip', this.hide.bind(this))
+        .on('pointerenter.tooltip', this._display.bind(this))
+        .on('pointerleave.tooltip', this.hide.bind(this))
     } else {
       this.div
-        .on('mouseenter.tooltip', null)
-        .on('mouseleave.tooltip', null)
+        .on('pointerenter.tooltip', null)
+        .on('pointerleave.tooltip', null)
     }
   }
 

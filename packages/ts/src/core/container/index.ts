@@ -15,6 +15,9 @@ import { ResizeObserver } from '@/utils/resize-observer'
 // Config
 import { ContainerDefaultConfig, ContainerConfigInterface } from './config'
 
+// Styles
+import * as s from './style'
+
 export class ContainerCore {
   public svg: Selection<SVGSVGElement, unknown, null, undefined>
   public element: SVGSVGElement
@@ -44,6 +47,7 @@ export class ContainerCore {
 
     // Create SVG element for visualizations
     this.svg = container.append('svg')
+      .classed(s.root, true)
       // We set `display` to `block` because inline elements have an invisible
       //   inline space that adds 4px to the height of the container
       .style('display', 'block')

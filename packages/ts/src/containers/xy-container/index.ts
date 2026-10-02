@@ -64,9 +64,9 @@ export class XYContainer<Datum> extends ContainerCore {
     //  We have to provide tull url in order to fix that
     const highlightFilterId = 'saturate'
     const baseUrl = window.location.href.replace(window.location.hash, '')
-    this.svg.attr('class', css`
+    this.svg.classed(css`
       --highlight-filter-id: url(${baseUrl}#${highlightFilterId}); // defining a css variable
-    `)
+    `, true)
 
     this._svgDefs.append('filter')
       .attr('id', highlightFilterId)
@@ -257,6 +257,9 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Crosshair
     const crosshair = config.crosshair
+    // Let a touch drag move the Tooltip or the Crosshair instead of scrolling the page (see their `followTouchMove` options)
+    const followTouchMove = crosshair?.config.followTouchMove || config.tooltip?.followsTouchMove()
+    this.svg.style('touch-action', followTouchMove ? 'pinch-zoom' : null)
     if (crosshair) {
       const nonStackedComponents = this.components.filter(c => !c.stacked)
       const stackedComponents = this.components.filter(c => c.stacked)

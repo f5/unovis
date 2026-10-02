@@ -85,6 +85,11 @@ local-asset loading, the chart surface adds zero egress.
 
 ## Touch behavior
 
+Tooltips and the crosshair are shown only while the finger is down and hide
+when the finger is lifted. Charts keep one-finger drags to move the tooltip
+or the crosshair across them, so the WebView scrolls only from outside of the
+charts.
+
 Interaction events (`events: true`) report taps the same way clicks are
 reported in a browser. Two knowns: lines and areas have no per-datum element
 (the crosshair is their readout — it tracks touch-drag), and tap handlers
