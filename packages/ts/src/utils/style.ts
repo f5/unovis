@@ -1,4 +1,4 @@
-import { injectGlobal } from '@/styles/emotion'
+import { injectGlobal } from '@/styles/css'
 
 import { kebabCaseToCamel } from '@/utils/text'
 import type { KebabToCamelCase, RemovePrefix } from '@/utils/type'

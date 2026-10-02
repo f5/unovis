@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { getRenderEnv, defineElementSize } from '../src/env/index.js'
 
 describe('render env', () => {
-  it('imports @unovis/ts with emotion styles inserted into jsdom', async () => {
+  it('imports @unovis/ts with its styles inserted into jsdom', async () => {
     const env = await getRenderEnv()
     expect(env.lib.XYContainer).toBeDefined()
     expect(env.lib.Heatmap).toBeDefined()
