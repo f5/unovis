@@ -203,6 +203,8 @@ export async function renderToSvg (
       } catch { /* a failed render may leave a partially constructed chart */ }
       host.remove()
       if (theme === 'dark') document.documentElement.removeAttribute('data-theme')
+      // `raf.clear()` drops the scheduler's pending frame without running it
+      lib.resetContainerRenderScheduler?.()
       raf.clear()
     }
   })

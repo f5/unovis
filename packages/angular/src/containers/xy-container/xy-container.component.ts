@@ -130,6 +130,12 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
    * to the `onRenderComplete` callback. Default: `undefined` */
   @Input() bleed?: Spacing | ((components: XYComponentCore<Datum>[]) => Spacing)
 
+  /** Whether the container should redraw itself when its size changes. Default: `true` */
+  @Input() redrawOnResize?: boolean
+  /** Delay in milliseconds before redrawing after a size change, so that a continuously resized
+   * container redraws once it settles. Set to `0` to redraw on every frame. Default: `100` */
+  @Input() resizeDebounce?: number
+
   /** Alternative text description of the chart for accessibility purposes. It will be applied as an
    * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
   */
@@ -178,7 +184,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
       duration, margin, padding, scaleByDomain, autoMargin, bleed, width, height,
       xScale, xDomain, xDomainMinConstraint, xDomainMaxConstraint, xRange,
       yScale, yDomain, yDomainMinConstraint, yDomainMaxConstraint, yRange,
-      yDirection, ariaLabel, colorFunction,
+      yDirection, ariaLabel, colorFunction, redrawOnResize, resizeDebounce,
     } = this
     const visComponents = this.visComponents.toArray().map(d => d.component)
 
@@ -218,6 +224,8 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
       yDirection,
       ariaLabel,
       colorFunction,
+      redrawOnResize,
+      resizeDebounce,
     }
   }
 
