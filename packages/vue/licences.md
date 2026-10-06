@@ -12,7 +12,7 @@
 | vite                           | perpetual      | MIT          | 7.3.6             | Evan You                                                          |
 | vite-plugin-css-injected-by-js | perpetual      | MIT          | 3.5.2             | Marco Prontera                                                    |
 | vite-plugin-dts                | perpetual      | MIT          | 3.9.1             | qmhc                                                              |
-| vue                            | perpetual      | MIT          | 3.5.30            | Evan You                                                          |
+| vue                            | perpetual      | MIT          | 3.5.43            | Evan You                                                          |
 | vue-tsc                        | perpetual      | MIT          | 2.2.12            | n/a                                                               |
-| vue                            | perpetual      | MIT          | 3.5.30            | Evan You                                                          |
+| vue                            | perpetual      | MIT          | 3.5.43            | Evan You                                                          |
 
