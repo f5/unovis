@@ -1,6 +1,6 @@
 | Name                           | License period | License type | Installed version | Author                                              |
 | :----------------------------- | :------------- | :----------- | :---------------- | :-------------------------------------------------- |
-| @modelcontextprotocol/sdk      | perpetual      | MIT          | 1.26.0            | Anthropic, PBC (https://anthropic.com)              |
+| @modelcontextprotocol/sdk      | perpetual      | MIT          | 1.32.1            | Anthropic, PBC (https://anthropic.com)              |
 | zod                            | perpetual      | MIT          | 3.25.76           | Colin McDonnell <zod@colinhacks.com>                |
 | @modelcontextprotocol/ext-apps | perpetual      | MIT          | 1.7.5             | Olivier Chafik                                      |
 | @types/jsdom                   | perpetual      | MIT          | 21.1.7            | n/a                                                 |
