@@ -8,9 +8,10 @@ export function checkTooltip (selector: string): void {
     .then($el => {
       const r = $el[0].getBoundingClientRect()
       cy.wrap($el)
-        .trigger('mousemove', {
+        .trigger('pointermove', {
           clientX: r.x + r.width / 2,
           clientY: r.y + r.height / 2,
+          pointerType: 'mouse',
           force: true,
         })
         .trigger('mouseover', { force: true })
