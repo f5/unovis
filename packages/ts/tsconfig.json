@@ -24,6 +24,7 @@
   },
   "exclude": [
     "index.ts",
-    "maps.ts"
+    "maps.ts",
+    "rollup-plugin-maplibre-worker-source.js"
   ]
 }
