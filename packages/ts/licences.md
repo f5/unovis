@@ -17,6 +17,7 @@
 | d3-drag                          | perpetual      | ISC          | 3.0.0             | Mike Bostock https://bost.ocks.org/mike                           |
 | d3-zoom                          | perpetual      | ISC          | 3.0.0             | Mike Bostock https://bost.ocks.org/mike                           |
 | d3-timer                         | perpetual      | ISC          | 3.0.1             | Mike Bostock http://bost.ocks.org/mike                            |
+| d3-time                          | perpetual      | ISC          | 3.1.0             | Mike Bostock http://bost.ocks.org/mike                            |
 | d3-axis                          | perpetual      | ISC          | 3.0.0             | Mike Bostock https://bost.ocks.org/mike                           |
 | d3-transition                    | perpetual      | ISC          | 3.0.1             | Mike Bostock https://bost.ocks.org/mike                           |
 | d3-path                          | perpetual      | ISC          | 3.1.0             | Mike Bostock http://bost.ocks.org/mike                            |
@@ -38,6 +39,7 @@
 | @types/d3-drag                   | perpetual      | MIT          | 3.0.7             | n/a                                                               |
 | @types/d3-zoom                   | perpetual      | MIT          | 3.0.8             | n/a                                                               |
 | @types/d3-timer                  | perpetual      | MIT          | 3.0.2             | n/a                                                               |
+| @types/d3-time                   | perpetual      | MIT          | 3.0.4             | n/a                                                               |
 | @types/d3-axis                   | perpetual      | MIT          | 3.0.6             | n/a                                                               |
 | @types/d3-transition             | perpetual      | MIT          | 3.0.9             | n/a                                                               |
 | @types/d3-path                   | perpetual      | MIT          | 3.1.1             | n/a                                                               |
