@@ -90,7 +90,7 @@ module.exports = {
     },
   },
   devServer: {
-    port: 9500,
+    port: process.env.PORT || 9500,
     open: false,
     hot: true,
     historyApiFallback: true,
