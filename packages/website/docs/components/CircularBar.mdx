@@ -1,0 +1,172 @@
+---
+title: Circular Bar
+description: Learn how to configure a Circular Bar chart
+---
+
+import CodeBlock from '@theme/CodeBlock'
+import { PropsTable } from '@site/src/components/PropsTable'
+import { DocWrapper, InputWrapper } from '../wrappers'
+import { CircularBar } from '@unovis/ts'
+
+export const iconDefs = `
+  <symbol id="heart" viewBox="0 0 24 24"><path d="M12 21.5s-7.8-4.7-10.3-9.6C0 8.5 2.1 3.5 6.6 3.5c2.4 0 4 1.4 5.4 3.5 1.4-2.1 3-3.5 5.4-3.5 4.5 0 6.6 5 4.9 8.4-2.5 4.9-10.3 9.6-10.3 9.6z"/></symbol>
+  <symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.5"/><path d="M12 1v3.5M12 19.5V23M1 12h3.5M19.5 12H23M4.2 4.2l2.5 2.5M17.3 17.3l2.5 2.5M4.2 19.8l2.5-2.5M17.3 6.7l2.5-2.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+  <symbol id="drop" viewBox="0 0 24 24"><path d="M12 1.5S4.5 10 4.5 15.5a7.5 7.5 0 0 0 15 0C19.5 10 12 1.5 12 1.5z"/></symbol>
+  <symbol id="bolt" viewBox="0 0 24 24"><path d="M14 1 3.5 14H11l-1.5 9L20.5 9.5H13L14 1z"/></symbol>
+  <symbol id="moon" viewBox="0 0 24 24"><path d="M21.5 15.5A10 10 0 0 1 8.5 2.5a10 10 0 1 0 13 13z"/></symbol>
+  <symbol id="star" viewBox="0 0 24 24"><path d="M12 1.5l3.2 6.9 7.5.8-5.6 5.1 1.6 7.4L12 17.9l-6.7 3.8 1.6-7.4-5.6-5.1 7.5-.8z"/></symbol>
+  <symbol id="leaf" viewBox="0 0 24 24"><path d="M21.5 2.5C10 2.5 3.5 8 3.5 15.5c0 2 .5 3.8 1.3 5.3 1.7-5.2 5.4-8.8 10.2-10.3-3.8 2.3-6.8 6-8.2 10.9 1.3.7 2.8 1.1 4.4 1.1 7.5 0 10.3-7.5 10.3-20z"/></symbol>
+`
+export const iconHrefs = ['#heart', '#sun', '#drop', '#bolt', '#moon', '#star', '#leaf']
+
+export const circularBarProps = (n = 7) => ({
+  name: "CircularBar",
+  height: 300,
+  containerName: "SingleContainer",
+  configKey: "component",
+  value: d => d,
+  maxValue: 1,
+  // The default palette has six colors, the examples have seven bars: extend it with one more shade of blue
+  color: (d, i) => ['var(--vis-color0)', 'var(--vis-color1)', 'var(--vis-color2)', 'var(--vis-color3)', 'var(--vis-color4)', 'var(--vis-color5)', '#57BAFF'][i % 7],
+  dataType: "number",
+  data: Array(n).fill(0).map((_, i) => 0.5 + 0.5 * Math.abs(Math.sin(1 + 1.7 * i))),
+})
+
+## Basic Configuration
+The _Circular Bar_ chart lays its data records evenly around a circle and draws one petal-shaped **bar** per record.
+Each bar grows from the inner edge outward proportionally to its value, and a faded **background** bar behind it
+shows the maximum. The minimum configuration looks like:
+<DocWrapper {...circularBarProps()} showContext="full"/>
+
+## Max Value
+A bar with `value === maxValue` reaches the outer radius of the chart. When `maxValue` is `undefined` (the default),
+the maximum is derived from the data. Pass a number to use one max for all bars, a per-datum accessor when each bar
+should scale against its own target, or an array indexed by the datum's position in `data`:
+
+```ts
+// Auto-derive max from data (default)
+maxValue={undefined}
+
+// Single shared max
+maxValue={100}
+
+// Per-bar target
+maxValue={d => d.target}
+```
+
+<DocWrapper {...circularBarProps()} maxValue={d => d * 2}/>
+
+## Bar Shape
+The bars get their petal-like look from four properties, all in pixels. By default they are derived from the chart
+radius (inner radius 26%, outer corners 12%, gap 3%, and inner corners large enough to merge into a single rounded tip), so the proportions hold at any size.
+The corner radii are reduced automatically when a bar is too short or too narrow to fit them.
+
+### Inner Radius
+`innerRadius` is the radius of the hole in the middle of the chart. Bars start at the inner radius (unless `barPadding`
+and `innerCornerRadius` force them to start farther away from the center), and by default their inner corners merge
+into a single rounded tip touching it. Set it to `0` to make the tips converge towards the center.
+<InputWrapper {...circularBarProps()} property="innerRadius" defaultValue={40} inputType="range" inputProps={{ min: 0, max: 120 }}/>
+
+### Bar Padding
+`barPadding` is the gap between neighbouring bars. Unlike an angular padding, the gap has the same width along
+the whole side of a bar, so the sides of neighbouring bars stay parallel.
+<InputWrapper {...circularBarProps()} property="barPadding" defaultValue={16} inputType="range" inputProps={{ min: 0, max: 40 }}/>
+
+### Corner Radius
+`cornerRadius` rounds the two outer corners of a bar.
+<InputWrapper {...circularBarProps()} property="cornerRadius" defaultValue={40} inputType="range" inputProps={{ min: 0, max: 80 }}/>
+
+### Inner Corner Radius
+`innerCornerRadius` rounds the two inner corners of a bar. By default it is large enough for the two corners to merge
+into a single rounded tip touching the inner radius, with a rounding of at least a fraction of the bar's width (so
+very narrow bars or a small inner radius start slightly beyond it). Smaller values leave a piece of the inner circle
+between the corners, larger values move the tip away from the center. Bars too wide for a tip, e.g. three bars over the
+full circle, keep two rounded corners and a short inner arc.
+<InputWrapper {...circularBarProps()} property="innerCornerRadius" defaultValue={10} inputType="range" inputProps={{ min: 0, max: 60 }}/>
+
+## Angle Range
+By default the bars cover the full circle and the first bar is centered at the top. Pass a `[start, end]` tuple in
+radians to render a partial range or to rotate the chart. The bars are distributed evenly within it, and the first one
+starts at `start`. At 180° and more (i.e. one or two bars over the full circle) the padded sides of a bar never meet,
+so such bars are drawn as regular arcs instead of petals, with `cornerRadius` rounding all four corners
+(`innerCornerRadius` doesn't apply to them).
+<DocWrapper {...circularBarProps(5)} angleRange={[-Math.PI / 2, Math.PI / 2]}/>
+
+## Minimum Bar Length
+Bars representing very small values can become too small to notice. `barMinLength` sets the minimum length of a bar
+in pixels, measured from its inner edge to its outer edge, so that such bars remain visible. It defaults to `0`.
+
+`0` counts as a value, so zero bars are extended to the minimum length too. Missing data is different: when the
+`value` accessor returns `null` or `undefined`, the bar is not rendered at all and only its background remains.
+In the example below the bars are, clockwise from the top: a regular value, a tiny value, `0`, `null` and another regular value:
+<InputWrapper {...circularBarProps()}
+  data={[0.8, 0.002, 0, null, 0.5]}
+  property="barMinLength"
+  defaultValue={20}
+  inputType="range"
+  inputProps={{ min: 0, max: 80 }}
+/>
+
+## Sorting
+Provide a `sortFunction` to control the bar order independently of how the data was provided:
+<DocWrapper {...circularBarProps()} sortFunction={(a, b) => b - a}/>
+
+## Radius
+`radius` sets the outer radius of the chart in pixels. When `undefined`, the chart fills the available space.
+<InputWrapper {...circularBarProps()} property="radius" defaultValue={100} inputType="range" inputProps={{ min: 20, max: 150 }}/>
+
+## Custom Color
+Customize the colors with a `color` accessor:
+<DocWrapper {...circularBarProps()} color={(d, i) => ['#2FB8B0', '#57B24A', '#FF6A2B', '#FF3B5C', '#A53CF0', '#7A5CFF', '#1F7CFF'][i]} showContext="minimal"/>
+
+## Icons
+Use `icon` to display a small icon at the inner end of each bar. The icon is hidden when its bar is too short to fit it.
+<DocWrapper {...circularBarProps()}
+  showContext="full"
+  containerProps={{ svgDefs: iconDefs }}
+  declarations={{ svgDefs: '`<symbol id="heart" viewBox="0 0 24 24">...</symbol> ...`' }}
+  icon={(d, i) => ['#heart', '#sun', '#drop', '#bolt', '#moon', '#star', '#leaf'][i]}
+  iconSize={18}
+/>
+
+`icon` accepts either a href to an SVG symbol defined in the container's `svgDefs`, like in the example above, or text: an
+icon font glyph (e.g. `'&#xf004;'` for Font Awesome's heart, with the font set via the `--vis-circular-bar-icon-font-family`
+and `--vis-circular-bar-icon-font-weight` CSS variables) or a Unicode symbol. SVG icons are filled with the
+`--vis-circular-bar-icon-color` CSS variable, which is also available as `currentColor` for strokes. Icons don't capture
+pointer events, so hovering them triggers the events of the bar underneath (e.g. its tooltip).
+
+### Icon Size
+`iconSize` sets the size of the icons in pixels. When `undefined`, it's 8% of the chart radius.
+<InputWrapper {...circularBarProps()} containerProps={{ svgDefs: iconDefs }} icon={(d, i) => iconHrefs[i]} property="iconSize" defaultValue={18} inputType="range" inputProps={{ min: 6, max: 28 }}/>
+
+## Background
+By default each bar has a faded background of the maximum length behind it. Disable it with `showBackground={false}`:
+<InputWrapper {...circularBarProps()} property="showBackground" inputType="checkbox" defaultValue={true}/>
+
+The background color is configured via the `--vis-circular-bar-background-color` and
+`--vis-dark-circular-bar-background-color` CSS variables.
+
+## Events
+The following selectors are available for events:
+```ts
+import { CircularBar } from '@unovis/ts'
+...
+events = {
+    [CircularBar.selectors.bar]: { },
+    [CircularBar.selectors.background]: { },
+}
+```
+<DocWrapper {...circularBarProps()} excludeGraph events={{}}/>
+
+## CSS Variables
+<details open>
+  <summary>All supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+{`${
+  Object.entries(CircularBar.selectors.cssVarDefaults)
+  .map(([key, value]) => `${key}: ${value};`).join('\n')}
+`}</CodeBlock>
+</details>
+
+## Component Props
+<PropsTable name="VisCircularBar"/>

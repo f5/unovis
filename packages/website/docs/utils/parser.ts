@@ -33,6 +33,14 @@ function formatElement (prefix: string, attributes: string[] = [], suffix: strin
   return [prefix, content, breakLine ? lineBreakSuffix : suffix].join(breakLine ? '\n' : '')
 }
 
+// Pads operators with spaces for readability, leaving string literals (e.g. `'var(--vis-color0)'`) untouched
+function padOperators (code: string): string {
+  return code
+    .split(/('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`)/)
+    .map((part, i) => i % 2 ? part : part.replace(/(\+|-|\*|\/|=|&|\||\?|:)+/gm, s => ` ${s} `))
+    .join('')
+}
+
 function parseFunction (str: string, type: string): string {
   const types = type.split(',')
   const params = {
@@ -42,7 +50,7 @@ function parseFunction (str: string, type: string): string {
   }
   const fn = str.split('=>')
   const args = fn[0].match(/[a-z]/gm)?.map(p => params[p] ? [p, params[p]].join(': ') : p).join(', ') || ''
-  const body = fn[1].startsWith('`') ? fn[1] : fn[1].replace(/(\+|-|\*|\/|=|&|\||\?|:)+/gm, s => ` ${s} `)
+  const body = fn[1].startsWith('`') ? fn[1] : padOperators(fn[1])
   return `(${args}) => ${body}`
 }
 

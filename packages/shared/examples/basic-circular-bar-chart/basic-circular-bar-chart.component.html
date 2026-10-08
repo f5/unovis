@@ -1,0 +1,13 @@
+<div class="circular-bar-chart">
+  <vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+  <vis-single-container [height]="400">
+    <vis-circular-bar
+      [value]="value"
+      [color]="color"
+      [icon]="icon"
+      [data]="data"
+      [maxValue]="maxValue"
+    />
+    <vis-tooltip [triggers]="triggers"></vis-tooltip>
+  </vis-single-container>
+</div>
