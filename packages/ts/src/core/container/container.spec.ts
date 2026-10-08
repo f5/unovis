@@ -9,6 +9,9 @@ import { Tooltip } from '@/components/tooltip'
 import { Donut } from '@/components/donut'
 import { Scatter } from '@/components/scatter'
 
+// Styles
+import * as s from './style'
+
 type Datum = { x: number; y: number }
 const data: Datum[] = [{ x: 0, y: 1 }, { x: 1, y: 2 }]
 const nextFrame = (): Promise<void> => new Promise(resolve => requestAnimationFrame(() => resolve()))
@@ -52,7 +55,23 @@ describe('container resize observer (jsdom)', () => {
   })
 })
 
-describe('Container (jsdom)', () => {
+describe('Container styles (jsdom)', () => {
+  it('prevents text selection on touch screens, keeping the XY container\'s own class', () => {
+    const element = document.createElement('div')
+    document.body.appendChild(element)
+    const container = new XYContainer(element, { components: [] })
+    const svg = container.svg.node() as SVGSVGElement
+
+    expect(svg.classList).toContain(s.root)
+    expect(svg.classList.length).toBe(2)
+
+    const css = [...document.querySelectorAll('style')].map(style => style.textContent).join('').replace(/\s/g, '')
+    const touchRule = css.match(new RegExp(`@media\\(hover:none\\)and\\(pointer:coarse\\){\\.${s.root}{([^}]*)}}`))?.[1]
+    expect(touchRule).toContain('-webkit-user-select:none')
+    expect(touchRule).toContain('-webkit-touch-callout:none')
+    container.destroy()
+  })
+
   describe('touch-action', () => {
     function renderAndGetTouchAction (container: ContainerCore): string {
       container.render(0)
