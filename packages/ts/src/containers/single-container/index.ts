@@ -112,6 +112,8 @@ export class SingleContainer<Data> extends ContainerCore {
     config.annotations?.render(duration)
 
     if (config.tooltip) config.tooltip.update()
+    // Let a touch drag move the Tooltip instead of scrolling the page (see the `followTouchMove` Tooltip option)
+    this.svg.style('touch-action', config.tooltip?.followsTouchMove() ? 'pinch-zoom' : null)
     config.onRenderComplete?.(this.svg.node(), config.margin, this.containerWidth, this.containerHeight, this.width, this.height)
   }
 
