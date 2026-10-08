@@ -66,6 +66,11 @@ export interface TooltipConfigInterface {
   hideDelay?: number;
   /** Show delay in milliseconds. Default: `undefined` */
   showDelay?: number;
+  /** On touch devices, let the Tooltip follow the finger as it moves across the chart. To prevent the browser from taking
+   * over the gesture, the chart's SVG element gets `touch-action: pinch-zoom` when the Tooltip has triggers: pinch-zoom keeps
+   * working, but a swipe that starts on the chart won't scroll the page or its scrollable containers. When `false`, the browser
+   * handles touch gestures as usual and a drag hides the Tooltip once the browser takes the gesture over. Default: `true` */
+  followTouchMove?: boolean;
 }
 
 export const TooltipDefaultConfig: TooltipConfigInterface = {
@@ -82,5 +87,6 @@ export const TooltipDefaultConfig: TooltipConfigInterface = {
   className: undefined,
   showDelay: undefined,
   hideDelay: undefined,
+  followTouchMove: true,
 }
 
