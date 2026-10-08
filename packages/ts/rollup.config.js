@@ -6,6 +6,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
 import renameNodeModules from 'rollup-plugin-rename-node-modules'
 // import visualizer from 'rollup-plugin-visualizer'
+import { maplibreWorkerSource } from './rollup-plugin-maplibre-worker-source'
 import pkg from './package.json'
 
 const d3Libs = ['d3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 'd3-color',
@@ -41,6 +42,7 @@ const plugins = [
     transformers: [(service) => transformPaths(service.getProgram())],
   }),
   renameNodeModules(),
+  maplibreWorkerSource(),
   // visualizer({ sourcemap: true, template: 'network' }),
 ]
 

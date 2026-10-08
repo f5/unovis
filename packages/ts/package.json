@@ -41,6 +41,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@types/to-px": "^1.1.2",
     "@zerollup/ts-transform-paths": "^1.7.18",
+    "esbuild": "^0.14.54",
     "rimraf": "^3.0.2",
     "rollup": "^2.61.1",
     "rollup-plugin-commonjs": "^10.1.0",
