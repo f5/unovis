@@ -64,9 +64,9 @@ export class XYContainer<Datum> extends ContainerCore {
     //  We have to provide tull url in order to fix that
     const highlightFilterId = 'saturate'
     const baseUrl = window.location.href.replace(window.location.hash, '')
-    this.svg.attr('class', css`
+    this.svg.classed(css`
       --highlight-filter-id: url(${baseUrl}#${highlightFilterId}); // defining a css variable
-    `)
+    `, true)
 
     this._svgDefs.append('filter')
       .attr('id', highlightFilterId)
