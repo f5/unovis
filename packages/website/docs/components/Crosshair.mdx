@@ -80,6 +80,18 @@ With the default `snapMode` of `CrosshairSnapMode.X`, this is the horizontal dis
 The _Crosshair_ is only displayed when at least a fraction of its container is visible in the viewport, which prevents it (and its tooltip) from appearing when the chart is mostly scrolled out of view. Charts that are wider or taller than the viewport may never reach the default ratio of `0.35`, so you can lower `visibilityThreshold`, or set it to `0` to always show the _Crosshair_ regardless of how much of the container is on screen.
 <XYWrapperWithInput {...crosshairProps("StackedBar", { barWidth: 10})} property="visibilityThreshold" defaultValue={0.35} inputType="range" inputProps={{ min: 0, max: 1, step: 0.05 }}/>
 
+## Touch Devices
+On touch screens the _Crosshair_ is shown while the finger is down and follows it as it moves across the chart, in both
+`CrosshairSnapMode.X` and `CrosshairSnapMode.XY` modes. To make it possible, the _Crosshair_ sets `touch-action: pinch-zoom`
+on the chart: pinch-zoom keeps working, but a swipe that starts on the chart won't scroll the page or its scrollable
+containers. Set `followTouchMove` to `false` to keep the browser's default touch behavior. In that case, the page can be
+scrolled from the chart, and the _Crosshair_ hides as soon as the browser takes a drag over. Note that a _Tooltip_ with
+triggers keeps the drags on the chart too, unless its own `followTouchMove` is `false`.
+
+The `onCrosshairMove` callback receives the `PointerEvent` (or the `WheelEvent`) that has moved or hidden the _Crosshair_.
+_Crosshair_ listens to `pointermove` and `pointerout` events of the chart, so if you trigger it programmatically (e.g. in tests),
+dispatch them instead of `mousemove` and `mouseout`, the same way as for the [Tooltip](/docs/components/Tooltip#pointer-events).
+
 ## Horizontal Line
 Set `showHorizontalLine` to `true` to render a horizontal line in addition to the vertical crosshair.
 The line is placed at the Y position of the crosshair circle closest to the pointer (i.e. the snapped data point), or follows the pointer when there are no circles to snap to (for example, when `snapToData` is `false`).
