@@ -1,4 +1,4 @@
-import { css, injectGlobal } from '@/styles/emotion'
+import { css, injectGlobal } from '@/styles/css'
 import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from '@/styles/index'
 
 // Nodes
@@ -32,7 +32,7 @@ export const graphGroup = css`
 export const brush = css`
   label: brush;
 
-  :not(.active) {
+  &:not(.active) {
     display: none;
   }
 

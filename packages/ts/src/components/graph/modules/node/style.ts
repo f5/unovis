@@ -1,4 +1,4 @@
-import { css, injectGlobal } from '@/styles/emotion'
+import { css, injectGlobal } from '@/styles/css'
 import { darkThemeCssSelectors } from '@/utils/theme'
 
 export const nodes = css`
@@ -114,10 +114,6 @@ export const node = css`
 
   stroke: var(--vis-graph-node-stroke-color);
   fill: var(--vis-graph-node-fill-color);
-
-  :not(.${brushable}) {
-    transition: .4s fill, 4s stroke;
-  }
 `
 
 export const nodeIcon = css`
@@ -128,10 +124,6 @@ export const nodeIcon = css`
   text-anchor: middle;
   pointer-events: none;
   fill: var(--vis-graph-node-icon-fill-color);
-
-  :not(.${brushable}) {
-    transition: .4s all;
-  }
 `
 
 export const nodeBottomIcon = css`
@@ -144,10 +136,6 @@ export const nodeBottomIcon = css`
   fill: var(--vis-graph-node-bottom-icon-fill-color);
   stroke: var(--vis-graph-node-bottom-icon-stroke-color);
   stroke-width: var(--vis-graph-node-bottom-icon-stroke-width);
-
-  :not(.${brushable}) {
-    transition: .4s all;
-  }
 `
 
 export const nodeIsDragged = css`

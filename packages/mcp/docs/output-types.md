@@ -38,7 +38,7 @@ the title/legend header adds height on top.
 The default, and the most portable. The returned markup is genuinely
 standalone:
 
-- stylesheet rules are inlined as presentation attributes, and the emotion
+- stylesheet rules are inlined as presentation attributes, and the generated
   classes are stripped
 - `var(--vis-*)` theme references are baked to literal colors for the requested
   theme

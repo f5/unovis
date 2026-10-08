@@ -1,4 +1,4 @@
-import { css, injectGlobal } from '@/styles/emotion'
+import { css, injectGlobal } from '@/styles/css'
 import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from '@/styles/index'
 import { darkThemeCssSelectors } from '@/utils/theme'
 

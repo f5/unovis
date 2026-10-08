@@ -30,11 +30,11 @@ const isAngularFile = (id: string): boolean => {
 export default defineConfig({
   root: 'gallery-dev-server',
   plugins: [
-    // Opt-in Content-Security-Policy for verifying the @unovis/ts Emotion nonce
+    // Opt-in Content-Security-Policy for verifying the @unovis/ts CSP nonce
     // fix end-to-end. Enable with `UNOVIS_CSP=1 pnpm dev:gallery`. Sets a real
     // response header (browser-enforced, not just a meta tag) and injects a
-    // pre-bundle script that seeds `window.UNOVIS_NONCE` so Emotion's cache
-    // reads it before any `injectGlobal` runs.
+    // pre-bundle script that seeds `window.UNOVIS_NONCE` so the @unovis/ts
+    // style runtime reads it before any `injectGlobal` runs.
     ...(process.env.UNOVIS_CSP
       ? [{
         name: 'unovis-csp-nonce-test',
