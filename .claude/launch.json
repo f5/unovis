@@ -6,13 +6,15 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "cwd": "packages/dev",
-      "port": 9500
+      "port": 9500,
+      "autoPort": true
     },
     {
       "name": "dev:gallery",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "dev:gallery"],
-      "port": 9600
+      "port": 9600,
+      "autoPort": true
     },
     {
       "name": "website",
