@@ -222,6 +222,42 @@ This is useful for preventing tooltip flicker when users quickly move their mous
 
 <Tooltip {...tooltipProps("Line", { lineWidth: 6 })} showDelay={500} hideDelay={1000} triggers={{ "[Line.selectors.line]": () => 'This tooltip waits 500ms to appear and 1000ms to disappear' }}/>
 
+## Touch Devices
+On touch screens the _Tooltip_ is shown only while the finger is down: touching a trigger element shows it, moving
+the finger across the chart updates it, and lifting the finger hides it (after `hideDelay`, if it's set). `click` events
+configured with the `events` property keep working.
+
+To let the tooltip follow the finger, the chart gets `touch-action: pinch-zoom` when the _Tooltip_ has triggers:
+pinch-zoom keeps working, but a swipe that starts on the chart won't scroll the page or its scrollable containers. Set
+`followTouchMove` to `false` to keep the browser's default touch behavior. In that case, the page can be scrolled from the
+chart, and the tooltip hides as soon as the browser takes a drag over.
+
+On touch screens, charts also disable text selection, so a long press on a chart element doesn't start selecting
+text or bring up the system's callout.
+
+Since the tooltip hides when the finger is lifted, set `hideDelay` for [hoverable content](#hoverable-content) to
+give the users time to tap on it.
+
+To follow the finger, the _Tooltip_ releases the browser's implicit pointer capture of a touch on the chart, so
+`pointermove` and `pointerup` handlers configured with the `events` property receive the events of the element under
+the finger. If your handler needs the capture, call `setPointerCapture(e.pointerId)` in its `pointerdown` handler.
+
+## Pointer Events
+_Tooltip_ listens to [Pointer Events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events), so mouse events
+no longer trigger it. If you trigger it programmatically, for example in tests, dispatch `pointermove` and `pointerleave`
+instead of `mousemove` and `mouseleave`:
+
+```ts
+element.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: x, clientY: y, pointerType: 'mouse' }))
+```
+
+If your test environment doesn't have `PointerEvent` (e.g. older versions of jsdom), dispatch a `MouseEvent` with the
+pointer event type instead, an event without `pointerType` is handled as a mouse event:
+
+```ts
+element.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: x, clientY: y }))
+```
+
 ## Manual Configuration
 
 ### Container
