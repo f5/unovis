@@ -421,8 +421,8 @@ you can use the `[LeafletMap.selectors.point]` selector in your _Tooltip_ config
 
 ### For TopoJSON features
 If you have a TopoJSON overlay on your map, you can make the tooltip work with it by using the `[LeafletMap.selectors.map]`
-selector. In that case the tooltip callback will be called on every `mousemove` event, but the `feature` argument will
-be passed only when the mouse is above a `topoJSONLayer.featureName` feature.
+selector. In that case the tooltip callback will be called on every `pointermove` event, but the `feature` argument will
+be passed only when the pointer is above a `topoJSONLayer.featureName` feature.
 
 <BrowserOnly>
 {() => {
