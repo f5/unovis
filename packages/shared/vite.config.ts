@@ -358,7 +358,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 9600,
+    port: Number(process.env.PORT) || 9600,
     strictPort: true,
     fs: {
       allow: [resolve(here, '..', '..')],
