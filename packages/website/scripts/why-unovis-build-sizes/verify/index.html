@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>bundle smoke test</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; background: #fff; }
+    #app { width: 800px; padding: 20px; }
+  </style>
+  <!-- Resolves the externals of the measured React bundles (see build-vendor.mjs). -->
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "./vendor/react.js",
+        "react-dom": "./vendor/react-dom.js",
+        "react-dom/client": "./vendor/react-dom-client.js",
+        "react/jsx-runtime": "./vendor/react-jsx-runtime.js"
+      }
+    }
+  </script>
+  <script>
+    window.__errors = []
+    addEventListener('error', (e) => window.__errors.push(String(e.message || e)))
+    addEventListener('unhandledrejection', (e) => window.__errors.push('unhandledrejection: ' + ((e.reason && e.reason.message) || e.reason)))
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    import React from 'react'
+    import ReactDOM from 'react-dom'
+    import ReactDOMClient from 'react-dom/client'
+    import JSXRuntime from 'react/jsx-runtime'
+
+    // With react external + ESM output, esbuild leaves `require("react")` calls inside CommonJS
+    // dependencies (its __require helper uses a global `require` if one exists, and throws otherwise).
+    // Test-only shim so the unmodified measured file can run; it has no effect on the measured bytes.
+    const commonjs = { react: React, 'react-dom': ReactDOM, 'react-dom/client': ReactDOMClient, 'react/jsx-runtime': JSXRuntime }
+    window.__requireShimUsed = []
+    window.require = (id) => {
+      if (!(id in commonjs)) throw new Error(`unexpected require("${id}")`)
+      if (!window.__requireShimUsed.includes(id)) window.__requireShimUsed.push(id)
+      return commonjs[id]
+    }
+
+    // Loads the exact file that was measured: /<dir>/<id>.js
+    const params = new URLSearchParams(location.search)
+    const id = params.get('id')
+    const dir = params.get('dir') || 'dist'
+    document.title = id
+    import(`../${dir}/${id}.js`).then(
+      () => { window.__loaded = true },
+      (e) => { window.__errors.push('import failed: ' + e.message) },
+    )
+  </script>
+</body>
+</html>

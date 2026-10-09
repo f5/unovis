@@ -1,0 +1,6 @@
+node_modules/
+dist*/
+verify/vendor/
+verify/screenshots/
+verify/.chrome-profile/
+verify/results-*.json
