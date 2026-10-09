@@ -195,9 +195,12 @@ The overview and methodology pages show the minified and gzipped size of the sam
 tooltip, legend) in every library, React excluded. The harness lives in `packages/website/scripts/why-unovis-build-sizes`:
 
 - `bash measure.sh` runs `npm ci` in every `libs/<library>/` that has no `node_modules` yet. Each library is its own
-  npm project with exact versions and a lockfile, so libraries can't change each other's dependency tree. It then bundles
-  each entry with esbuild (`--bundle --minify --format=esm --platform=browser --target=es2020`, production mode, React
-  external) and writes `dist/report.md` and `dist/sizes.json`.
+  npm project with exact versions and a lockfile, so libraries can't change each other's dependency tree. The Unovis rows
+  measure the build from this repository: the script packs `packages/ts/dist` and `packages/react/dist` (run
+  `pnpm build:ts && pnpm build:react` first) into `libs/unovis-local/` and installs them there with npm, like an app
+  would; `libs/unovis/` holds the published package, measured as a reference row. It then bundles each entry with esbuild
+  (`--bundle --minify --format=esm --platform=browser --target=es2020`, production mode, React external) and writes
+  `dist/report.md` and `dist/sizes.json`.
 - `node verify/verify.mjs` loads every bundle in headless Chrome, checks that the chart draws and its tooltip opens, and
   saves screenshots to `verify/screenshots/`. `cd crosscheck && npm ci && node rollup.mjs` repeats the builds with
   Rollup.
@@ -207,10 +210,13 @@ To refresh:
 
 1. Bump the versions in `libs/<library>/package.json` and run `npm install` there to update the lockfile. For Nivo, run
    `npm dedupe` too; otherwise npm nests a second copy of a dependency and the bundle grows (RESULTS.md, finding 5).
-2. Update the version labels in the `build` lines of `measure.sh` (they are plain text).
-3. Run `bash measure.sh` and `node verify/verify.mjs`; every bundle must still render.
-4. Copy the React rows into `src/comparisons/build-sizes.ts`, update `RESULTS.md`, and update the text on `index.mdx`
-   and `methodology.mdx` if the ranking or React's own size changed.
+2. Update the version labels in the `build` lines of `measure.sh` (plain text; the Unovis labels come from the packages).
+3. Run `bash measure.sh` and `node verify/verify.mjs`; every bundle must still render. `cd crosscheck && node rollup.mjs`
+   refreshes the Rollup table.
+4. Copy the React rows into `src/comparisons/build-sizes.ts` (in ascending gzip order), update `RESULTS.md`, and update
+   the text on `index.mdx` and `methodology.mdx` if the ranking or React's own size changed.
+5. After a core change, re-run the same steps: the Unovis rows are the repository build, so they move with `packages/ts`.
+   `pnpm size` in `packages/ts` is the quick check (core only, eight charts, no React).
 
 ## Refresh everything
 
@@ -291,7 +297,7 @@ Every feature cell, placeholder, page and demo comment links somewhere. Before y
   `chartjs.tsx` demos would overwrite each other's docs JSON ("Cannot parse JSON" in
   `.docusaurus/docusaurus-plugin-react-docgen-typescript`). `docusaurus.config.js` excludes `src/comparisons/**`; keep
   demos there. After such an error, run `pnpm exec docusaurus clear` in `packages/website`.
-- **MapLibre worker.** MapLibre 6 can't find its worker in a webpack bundle, and the worker URL `@unovis/ts` 1.7.0
+- **MapLibre worker.** MapLibre 6 can't find its worker in a webpack bundle, and the worker URL `@unovis/ts` 1.7.x
   inlines is a `data:` URL webpack can't load. Without a working worker URL, maps show only the style background.
   `src/utils/maplibre-gl.ts` re-exports MapLibre and sets the URL; an alias in `docusaurus.config.js` sends every
   `maplibre-gl` import to it, and a rule there emits the worker next to `maplibre-gl-shared.mjs`, which it imports.
@@ -340,7 +346,7 @@ Keep this list current, and remove items once they're done.
 
 **Unovis issues these pages surfaced.** Fix them in `packages/ts`, then remove the site workarounds:
 
-- `@unovis/ts` 1.7.0 inlines MapLibre's worker and its shared chunk as base64 `data:` URLs (about 680 KB, in
+- `@unovis/ts` 1.7.x inlines MapLibre's worker and its shared chunk as base64 `data:` URLs (about 680 KB, in
   `components/leaflet-map/modules/map.js`). Webpack can't load them, so `LeafletMap` draws only the style background on
   webpack sites, unovis.dev included, and every page with a Unovis chart downloads them. Workaround:
   `src/utils/maplibre-gl.ts`.
@@ -351,9 +357,13 @@ Keep this list current, and remove items once they're done.
 - TopoJSONMap's flow animation has a fallback to the coordinates of the linked points (`modules/flow.ts`), but it never
   runs, because the flow coordinate accessors always have defaults; links without coordinate fields get no particles.
 - The default dark-mode grid color (`#6c778c`) is heavier than the other libraries' grids.
-- `Crosshair` logs "Y accessors have not been configured" on the first render.
-- `@unovis/react` always ships an unused CSS snippet for `VisTimeSeries`, and `@unovis/ts` always bundles a
-  `ResizeObserver` polyfill (8.3 KB).
+- `Crosshair` logs "Y accessors have not been configured" on the first render (fixed in f5/unovis#936; the smoke test
+  in the bundle harness still prints the warning until it merges).
+
+Fixed already, keep the pages in step when they merge: f5/unovis#938 (direct d3-scale imports, native `ResizeObserver`,
+the `VisTimeSeries` CSS only where it's used) and f5/unovis#937 (the built-in CSS runtime that replaced Emotion, and the
+dark palette on `html`-based dark themes) took the React line chart from 67.1 KB to 52.8 KB gzip. The bundle-size rows
+already measure the repository build, so they include both.
 
 **Claims to revisit when Unovis changes.** The overview's "When another library might suit you better" list (no wheel
 zoom on XY charts, no keyboard navigation of data points, missing chart types) and methodology rule 5 (legend toggles
