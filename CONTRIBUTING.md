@@ -21,7 +21,7 @@ and [Adding Gallery Examples](https://unovis.dev/contributing/guides/gallery-exa
 
 > **Using an AI coding agent (Claude Code, Codex, Cursor)?** Start with [`AGENTS.md`](https://github.com/f5/unovis/blob/main/AGENTS.md) at the
 > repo root. It captures our commit format, code style, and the component workflow, and ships ready-made
-> `/commit`, `/open-pr`, `/add-component`, and `/add-gallery-example` skills.
+> `/commit`, `/open-pr`, `/add-component`, `/add-gallery-example`, and `/library-comparisons` skills.
 
 ## Pull Requests
 We actively welcome pull requests. If you want to submit one, please follow the following process:
