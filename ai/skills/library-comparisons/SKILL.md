@@ -21,7 +21,7 @@ engineering side of it.** Keep both in sync when you change how comparisons work
 packages/website/
 ├── why-unovis/                       # MDX pages; a separate docs plugin instance with id "why-unovis"
 │   ├── index.mdx                     # overview: strengths, links to every page, at-a-glance table, bundle sizes, caveats
-│   ├── line-chart.mdx … tile-map.mdx # one side-by-side page per chart type (10 today)
+│   ├── line-chart.mdx … tile-map.mdx # one side-by-side page per chart type (11 today)
 │   ├── feature-comparison.mdx        # the full feature matrix
 │   ├── methodology.mdx               # library selection, the rules, feature research, bundle sizes, versions
 │   └── styles.css                    # global `why-unovis-*` classes for the overview card grids
@@ -35,7 +35,7 @@ packages/website/
 │   ├── utils/random.ts               # seeded random generator, so every library gets identical data
 │   ├── utils/code.ts                 # strips lint directives from the code shown on the page
 │   ├── features/                     # feature matrix: groups.ts (rows) + one file per library (cells)
-│   └── <comparison>/                 # line, area, grouped-bar, stacked-bar, scatter, donut, graph, sankey, choropleth, tile-map
+│   └── <comparison>/                 # line, area, grouped-bar, stacked-bar, scatter, donut, circular-bar, graph, sankey, choropleth, tile-map
 │       ├── data.ts                   # types, formatters and getData(seed)
 │       ├── <library>.tsx             # one demo per library: unovis, recharts, chartjs, echarts, nivo, ag-charts, …
 │       └── index.ts                  # the Comparison registry for the page
@@ -319,15 +319,21 @@ Every feature cell, placeholder, page and demo comment links somewhere. Before y
   `pointRadius`: the default hover radius is 4, so bigger points shrink on hover. Missing values must be `null`;
   `spanGaps: true` plus a `segment.borderDash` callback on skipped points draws dashed bridges, like Unovis.
   Without the `Colors` plugin, datasets are a transparent gray (`rgba(0,0,0,0.1)`), which is how the choropleth's
-  data centers first went invisible. In the graph plugin `borderWidth` applies to edges and nodes alike; scripted per
+  data centers first went invisible. The `polarArea` type has no hole and no background track: every dataset gets its
+  own concentric band, so a "track" dataset is drawn as an inner ring, and the rotation comes from `scales.r.startAngle`
+  (the chart-level `startAngle` in the types does nothing). In the graph plugin `borderWidth` applies to edges and nodes alike; scripted per
   edge it reads the edge from `ctx.raw`, and `pointBorderWidth` keeps the nodes as they were.
 - **AG Charts** needs `ModuleRegistry.registerModules([AllCommunityModule])` before the first chart. Animations,
   crosshairs, zoom and series such as Sankey, heatmaps and maps are Enterprise-only, so the Community demos don't animate.
 - **Nivo** charts need explicit margins for axes and legends, `toggleSerie` only exists on Line, Bar and Pie legends,
-  the network chart draws black nodes unless you pass `nodeColor`, and line gaps need `y: null`.
+  the network chart draws black nodes unless you pass `nodeColor`, and line gaps need `y: null`. `@nivo/polar-bar`
+  (a separate package) has no bar padding, scales the longest bar to the outer radius (no explicit max), and its
+  legend lists keys, so a single key gets none.
 - **ECharts** re-creates the chart when `theme` changes (through echarts-for-react) and its dark theme paints a
   background, so set `backgroundColor: 'transparent'`. Its default tooltip shows "-" for items without a value, such as
   graph nodes, so give it a `formatter` or `valueFormatter`; a `valueFormatter` gets `undefined` for missing values.
+  Its legend lists series, so a bar series with `colorBy: 'data'` (one color per bar) gets no legend entries; a
+  category `angleAxis` starts the first slot at `startAngle`, so add half a slot to center the first bar at the top.
 - **Unovis**: `GroupedBar` and `StackedBar` take a numeric `x`, so category charts use the index plus a `tickFormat`
   with `numTicks={data.length}`; time series need `xScale={Scale.scaleTime()}` for month-aligned ticks; a crosshair on
   grouped bars uses `getCircles={() => []}`; `Graph` trims labels longer than 15 characters by default.
@@ -335,7 +341,8 @@ Every feature cell, placeholder, page and demo comment links somewhere. Before y
   `Scatter` animates points by `id`, so give data stable ids. The scatter plot's crosshair
   (`snapMode: CrosshairSnapMode.XY`) gets the scatter's `x`, `y` and `color` accessors; without `color` its circle
   takes the series' palette color instead of the point's. The force layout's `forceLayoutSettings` merge into the defaults; the service map uses
-  `{ linkDistance: 80, charge: -1200 }` so the multi-line labels don't overlap.
+  `{ linkDistance: 80, charge: -1200 }` so the multi-line labels don't overlap. `CircularBar` takes `maxValue` as an
+  accessor (one goal per bar), `icon` as an `#href` into the container's `svgDefs`, and centers the first bar at the top.
 - **Maps** use the public MapTiler key from `@unovis/shared/examples/basic-leaflet-map/constants` (styles `positron` and
   `dataviz-dark`), and Unovis switches between them with `styleDarkTheme`. The choropleth needs no key: every library
   draws the TopoJSON that ships with Unovis.
@@ -378,7 +385,8 @@ and AG Charts publish one; adding one changes the Unovis `llms-txt` cell.
 
 **More pages.** Chart types with a feature row but no page: timeline, box plot, heatmap, chord diagram, treemap,
 nested donut, radial bar and flow map (`LeafletFlowMap`); the feature matrix says which
-libraries can draw each. Libraries that may join later: Plotly.js, Victory, Observable Plot and Vega-Lite.
+libraries can draw each. The circular bar page (f5/unovis#939's `CircularBar`) is the template for a page where several
+libraries get placeholders. Libraries that may join later: Plotly.js, Victory, Observable Plot and Vega-Lite.
 
 ## Before you finish
 
