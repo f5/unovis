@@ -1,6 +1,5 @@
 import { interrupt, Transition } from 'd3-transition'
-import { BaseType, Selection } from 'd3-selection'
-import { ValueFn } from 'd3'
+import { BaseType, Selection, ValueFn } from 'd3-selection'
 
 // Types
 import { StyleDeclaration } from '@/types/style'
