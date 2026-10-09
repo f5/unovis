@@ -95,6 +95,7 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   rowFillEmptySpace?: boolean;
 
   // Arrows
+  /** Arrows connecting the timeline lines, see `TimelineArrow`. Default: `undefined` */
   arrows?: TimelineArrow[];
 
   // Animation

@@ -16,7 +16,7 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
    *  Default: `NestedDonutDirection.Inwards`
   */
   direction?: NestedDonutDirection | string;
-  /* Numeric accessor for segment size value. Default: `undefined`. */
+  /** Numeric accessor for segment size value. Default: `undefined`. */
   value?: NumericAccessor<Datum>;
 
   /** Central label text. Default: `undefined` */
@@ -46,7 +46,7 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
    * }
   */
   layerSettings?: GenericAccessor<NestedDonutLayerSettings, number>;
-  /* Space between layers */
+  /** Space between layers in pixels. Default: `0` */
   layerPadding?: number;
 
   // Segments
