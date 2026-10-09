@@ -10,16 +10,12 @@ export const circularBarChart: Comparison<DataRecord[]> = {
   chartHeight: COMPARISON_TALL_CHART_HEIGHT,
   implementations: [
     { library: 'unovis', load: () => import('./unovis'), code: require('!!raw-loader!./unovis.tsx').default },
+    { library: 'recharts', load: () => import('./recharts'), code: require('!!raw-loader!./recharts.tsx').default },
     { library: 'chartjs', load: () => import('./chartjs'), code: require('!!raw-loader!./chartjs.tsx').default },
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
     { library: 'nivo', load: () => import('./nivo'), code: require('!!raw-loader!./nivo.tsx').default },
   ],
   unsupported: [
-    {
-      library: 'recharts',
-      reason: 'No polar column chart. The RadialBarChart draws concentric rings whose angle, not their length, shows the value.',
-      url: 'https://recharts.github.io/en-US/api/RadialBarChart/',
-    },
     {
       library: 'agcharts',
       reason: 'The Radial Column series that draws this chart is only in AG Charts Enterprise.',

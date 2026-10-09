@@ -32,7 +32,7 @@ export const echartsSupport: LibrarySupport = {
   donut: { status: 'yes', note: 'pie series with radius: [inner, outer]', url: 'https://echarts.apache.org/en/option.html#series-pie.radius' },
   sunburst: { status: 'yes', note: 'series-sunburst with drill-down', url: 'https://echarts.apache.org/en/option.html#series-sunburst' },
   'radial-bar': { status: 'yes', note: 'bar series with coordinateSystem \'polar\', a category radius axis and a value angle axis; roundCap for rounded ends', url: 'https://echarts.apache.org/en/option.html#series-bar.coordinateSystem' },
-  'circular-bar': { status: 'yes', note: 'bar series with `coordinateSystem: \'polar\'` on a category angle axis; `roundCap`, `showBackground`, `polar.radius` for the hole', url: 'https://echarts.apache.org/en/option.html#series-bar.coordinateSystem' },
+  'circular-bar': { status: 'yes', note: 'bar series with `coordinateSystem: \'polar\'` on a category angle axis; `itemStyle.borderRadius` (`roundCap` is for tangential bars), `showBackground`, `polar.radius` for the hole', url: 'https://echarts.apache.org/en/option.html#series-bar.coordinateSystem' },
   radar: { status: 'yes', note: 'series-radar with radar coordinate component', url: 'https://echarts.apache.org/en/option.html#series-radar' },
   treemap: { status: 'yes', note: 'series-treemap with drill-down and zoom', url: 'https://echarts.apache.org/en/option.html#series-treemap' },
   funnel: { status: 'yes', note: 'series-funnel', url: 'https://echarts.apache.org/en/option.html#series-funnel' },

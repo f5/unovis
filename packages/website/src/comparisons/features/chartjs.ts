@@ -32,7 +32,7 @@ export const chartjsSupport: LibrarySupport = {
   donut: { status: 'yes', note: '\'doughnut\'/\'pie\' types; cutout, rotation, circumference (e.g. half donut)', url: 'https://www.chartjs.org/docs/latest/charts/doughnut.html' },
   sunburst: { status: 'partial', note: 'Nested rings via multiple doughnut datasets (weight); hierarchical segment alignment must be precomputed manually', url: 'https://www.chartjs.org/docs/latest/samples/other-charts/multi-series-pie.html' },
   'radial-bar': { status: 'custom', note: 'No radial-bar type; emulate with one doughnut ring per bar (value + transparent remainder, or per-dataset circumference)', url: 'https://www.chartjs.org/docs/latest/charts/doughnut.html#general' },
-  'circular-bar': { status: 'partial', note: '\'polarArea\' type: equal-angle wedges with `borderRadius` and `spacing`; one radial scale, no hole, no background track', url: 'https://www.chartjs.org/docs/latest/charts/polar.html' },
+  'circular-bar': { status: 'partial', note: '\'polarArea\' type: equal-angle wedges with `borderRadius` and `spacing`; one radial scale, no hole, no background track', url: 'https://www.chartjs.org/docs/4.5.1/charts/polar.html' },
   radar: { status: 'yes', note: '\'radar\' chart type (radialLinear scale; fill supported)', url: 'https://www.chartjs.org/docs/latest/charts/radar.html' },
   treemap: { status: 'plugin-community', note: 'chartjs-chart-treemap, maintained by a Chart.js core developer', url: 'https://github.com/kurkle/chartjs-chart-treemap' },
   funnel: { status: 'plugin-community', note: 'chartjs-chart-funnel (sgratzl): trapezoid bars shrinking toward the next value', url: 'https://github.com/sgratzl/chartjs-chart-funnel' },

@@ -15,16 +15,25 @@ export default function EChartsCircularBarChart ({ data, isDark }: { data: DataR
         tooltip: { formatter: (params: { dataIndex: number }) => `<b>${data[params.dataIndex].label}</b>: ${formatValue(data[params.dataIndex])}` },
         polar: { radius: ['28%', '80%'] },
         // `startAngle` is where the first category begins; add half a slot to center the first bar at the top
-        angleAxis: { type: 'category', data: data.map(d => d.label), startAngle: 90 + 180 / data.length, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { show: false }, splitLine: { show: false } },
+        angleAxis: {
+          type: 'category',
+          data: data.map(d => d.label),
+          startAngle: 90 + 180 / data.length,
+          axisLine: { show: false },
+          axisTick: { show: false },
+          axisLabel: { show: false },
+          splitLine: { show: false },
+        },
         radiusAxis: { max: 100, show: false },
         series: [{
           type: 'bar',
           coordinateSystem: 'polar',
           colorBy: 'data',
-          roundCap: true,
+          // `roundCap` only rounds tangential bars; radial bars get their corners from `borderRadius`
+          itemStyle: { borderRadius: 10 },
           barCategoryGap: '25%',
           showBackground: true,
-          backgroundStyle: { color: isDark ? '#444' : '#E7E9F3' },
+          backgroundStyle: { color: isDark ? '#444' : '#E7E9F3', borderRadius: 10 },
           data: data.map(d => ({ name: d.label, value: percentOfGoal(d) })),
         }],
       }}
