@@ -84,10 +84,16 @@ Some of the components are stand-alone and don't need a container: [_LeafletMap_
 
 Go to the 👟 [Quick Start](/docs/quick-start) section to learn how to quickly build a simple Line Chart.
 
-## 🤖 Charts from an AI agent
-`@unovis/mcp` is an MCP server that renders _Unovis_ charts locally — as SVG, PNG, an interactive HTML file, or
-ready-to-paste component code for any of the supported frameworks. Connect it to Claude Code, Cursor or Codex and
-ask for a chart. See the 🤖 [MCP Server](/docs/mcp) docs.
+## 🤖 Ready for AI agents
+_Unovis_ works well with AI coding agents like Claude Code, Cursor and Codex:
+
+* Config options are documented in the type definitions that ship with `@unovis/ts`, nearly all with their default
+values, so an agent (and your editor) can read the API right from the package.
+* Components have the same names and options in every framework, so what an agent writes for React carries over to
+Angular, Svelte, Vue, Solid or plain TypeScript.
+* `@unovis/mcp` is an MCP server that renders _Unovis_ charts locally — as SVG, PNG, an interactive HTML file, or
+ready-to-paste component code for any of the supported frameworks — so an agent can look at a chart before it puts it
+in your app. See the 🤖 [MCP Server](/docs/mcp) docs.
 
 ## 🔭 Explore the docs
 Pick a component from the sidebar to learn how to configure it. Start with 📈 [_Line_](/docs/components/Line) or
