@@ -32,6 +32,7 @@ export const agChartsSupport: LibrarySupport = {
   donut: { status: 'yes', note: 'type: \'donut\'; multiple concentric donuts via innerRadiusRatio/outerRadiusRatio', url: 'https://www.ag-grid.com/charts/javascript/donut-series/#multiple-donuts' },
   sunburst: { status: 'enterprise', note: 'Sunburst series is Enterprise; Community can only layer non-hierarchical concentric donut series', url: 'https://www.ag-grid.com/charts/javascript/sunburst-series/' },
   'radial-bar': { status: 'enterprise', note: 'Radial Bar (and Radial Column, Nightingale) series are Enterprise', url: 'https://www.ag-grid.com/charts/javascript/radial-bar-series/' },
+  'circular-bar': { status: 'enterprise', note: 'Radial Column series (and Nightingale) are Enterprise', url: 'https://www.ag-grid.com/charts/javascript/radial-column-series/' },
   radar: { status: 'enterprise', note: 'Radar Line/Area series and polar angle/radius axes are Enterprise', url: 'https://www.ag-grid.com/charts/javascript/radar-line-series/' },
   treemap: { status: 'enterprise', note: 'Treemap series is Enterprise', url: 'https://www.ag-grid.com/charts/javascript/treemap-series/' },
   funnel: { status: 'enterprise', note: 'Funnel, Cone Funnel and Pyramid series are Enterprise', url: 'https://www.ag-grid.com/charts/javascript/funnel-series/' },

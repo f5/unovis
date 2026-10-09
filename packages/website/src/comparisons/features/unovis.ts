@@ -37,7 +37,8 @@ export const unovisSupport: LibrarySupport = {
   // Radial and hierarchical
   donut: { status: 'yes', note: 'Donut component (pie when `arcWidth` is 0)', url: '/docs/components/Donut#arc-width' },
   sunburst: { status: 'yes', note: 'NestedDonut component for hierarchical data', url: gallery('Sunburst Nested Donut') },
-  'radial-bar': { status: 'yes', note: 'RadialBar component', url: '/docs/components/RadialBar' },
+  'radial-bar': { status: 'yes', note: 'RadialBar component: one ring per record, the value fills the ring', url: '/docs/components/RadialBar' },
+  'circular-bar': { status: 'yes', note: 'CircularBar component: petal-shaped bars around a hole, per-bar `maxValue`, icons and a background track', url: '/docs/components/CircularBar' },
   radar: { status: 'no', note: 'No radar component' },
   treemap: { status: 'yes', note: 'Treemap component', url: '/docs/components/Treemap' },
   funnel: { status: 'no', note: 'No funnel component' },

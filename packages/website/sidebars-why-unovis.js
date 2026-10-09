@@ -15,6 +15,7 @@ const sidebars = {
         'stacked-bar-chart',
         'scatter-plot',
         'donut-chart',
+        'circular-bar-chart',
         'network-graph',
         'sankey-diagram',
         'choropleth-map',

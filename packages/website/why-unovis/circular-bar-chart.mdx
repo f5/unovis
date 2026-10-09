@@ -1,0 +1,41 @@
+---
+title: Circular Bar Chart
+description: A circular bar chart of daily goals, with per-bar targets and icons, rendered with Unovis, Chart.js, ECharts and Nivo side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { circularBarChart } from '@site/src/comparisons/circular-bar'
+
+# Circular Bar Chart
+
+Today's progress towards six daily health goals: one bar per goal, growing outward from the middle, over a faded track
+that shows the goal. Every goal has its own target, so each bar is scaled to its own maximum.
+
+<LibraryComparison comparison={circularBarChart}/>
+
+## What to look for
+
+- **One bar, one goal.** Unovis scales each bar to its own target (`maxValue` takes an accessor), so steps and sleep
+  share a chart without a shared unit. The other libraries draw every bar on one radial scale, so their data is
+  converted to percent of the goal first; open **Show the data** and **Code** to see where. Nivo then stretches the
+  longest bar to the outer radius, so its chart only shows the goals relative to each other.
+- **The shape.** The Unovis bars are petals: parallel sides with a constant gap, rounded outer corners and a rounded
+  tip, all derived from the chart radius so the proportions hold at any size, over a faded track that shows the goal.
+  ECharts draws arcs with round caps over a track. Chart.js draws wedges from the center, with rounded corners and a
+  small gap but no hole and no track. Nivo draws arcs with rounded corners, with no gap between them and no track.
+- **Icons.** Unovis places an icon at the inner end of each bar (`icon`, an SVG symbol or an icon-font glyph) and hides
+  it when the bar is too short. None of the other libraries has an option for it.
+- **The legend.** Unovis and Chart.js list the bars and hide one when you click it; the remaining Unovis bars spread out
+  to fill the circle. ECharts' legend lists series and Nivo's lists keys, so a single series of bars gets no legend
+  in either.
+- **Randomize the data.** Bar lengths animate to the new values in all four charts.
+- **Switch the site theme.** The faded tracks and icons follow the theme through CSS variables
+  (`--vis-circular-bar-background-color`, `--vis-circular-bar-icon-color`); the other charts need their dark colors in code.
+
+## Feature comparison
+
+<FeatureTable features={['circular-bar', 'radial-bar', 'donut', 'legend-toggle', 'animation', 'darkMode', 'renderer']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

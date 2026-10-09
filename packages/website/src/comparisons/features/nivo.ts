@@ -32,6 +32,7 @@ export const nivoSupport: LibrarySupport = {
   donut: { status: 'yes', note: '@nivo/pie with innerRadius > 0 (SVG/Canvas)', url: 'https://nivo.rocks/pie/' },
   sunburst: { status: 'yes', note: '@nivo/sunburst (multi-level hierarchy)', url: 'https://nivo.rocks/sunburst/' },
   'radial-bar': { status: 'yes', note: '@nivo/radial-bar (also @nivo/polar-bar)', url: 'https://nivo.rocks/radial-bar/' },
+  'circular-bar': { status: 'yes', note: '@nivo/polar-bar: bars around the angle with `innerRadius` and `cornerRadius`; the longest bar sets the scale, no background track', url: 'https://nivo.rocks/polar-bar/' },
   radar: { status: 'yes', note: '@nivo/radar', url: 'https://nivo.rocks/radar/' },
   treemap: { status: 'yes', note: '@nivo/treemap (SVG/HTML/Canvas); squarify, binary, slice, dice, sliceDice tiling', url: 'https://nivo.rocks/treemap/' },
   funnel: { status: 'yes', note: '@nivo/funnel', url: 'https://nivo.rocks/funnel/' },

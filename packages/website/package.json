@@ -58,6 +58,7 @@
     "@nivo/line": "0.99.0",
     "@nivo/network": "0.99.0",
     "@nivo/pie": "0.99.0",
+    "@nivo/polar-bar": "0.99.0",
     "@nivo/sankey": "0.99.0",
     "@nivo/scatterplot": "0.99.0",
     "@stackblitz/sdk": "1.8.0",

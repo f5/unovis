@@ -53,6 +53,7 @@ export const featureGroups: FeatureGroup[] = [
       { id: 'donut', label: 'Pie / donut' },
       { id: 'sunburst', label: 'Sunburst / nested donut' },
       { id: 'radial-bar', label: 'Radial bar' },
+      { id: 'circular-bar', label: 'Circular bar (polar columns)' },
       { id: 'radar', label: 'Radar' },
       { id: 'treemap', label: 'Treemap' },
       { id: 'funnel', label: 'Funnel' },

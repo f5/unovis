@@ -32,6 +32,7 @@ export const rechartsSupport: LibrarySupport = {
   donut: { status: 'yes', note: 'Pie with `innerRadius`', url: 'https://recharts.github.io/en-US/api/Pie/' },
   sunburst: { status: 'yes', note: '`<SunburstChart>` for hierarchical data; nested Pies for fixed two-level donuts', url: 'https://recharts.github.io/en-US/api/SunburstChart/' },
   'radial-bar': { status: 'yes', note: 'RadialBarChart + `<RadialBar>`', url: 'https://recharts.github.io/en-US/api/RadialBarChart/' },
+  'circular-bar': { status: 'no', note: 'No polar column chart; `RadialBarChart` draws rings whose angle, not length, shows the value', url: 'https://recharts.github.io/en-US/api/RadialBarChart/' },
   radar: { status: 'yes', note: 'RadarChart + `<Radar>` with PolarGrid/PolarAngleAxis/PolarRadiusAxis', url: 'https://recharts.github.io/en-US/api/RadarChart/' },
   treemap: { status: 'yes', note: '`<Treemap>`; `type="nest"` enables click-to-drill-down', url: 'https://recharts.github.io/en-US/api/Treemap/' },
   funnel: { status: 'yes', note: 'FunnelChart + `<Funnel>`', url: 'https://recharts.github.io/en-US/api/FunnelChart/' },
