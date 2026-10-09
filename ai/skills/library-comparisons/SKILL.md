@@ -329,11 +329,14 @@ Every feature cell, placeholder, page and demo comment links somewhere. Before y
   the network chart draws black nodes unless you pass `nodeColor`, and line gaps need `y: null`. `@nivo/polar-bar`
   (a separate package) has no bar padding, scales the longest bar to the outer radius (no explicit max), and its
   legend lists keys, so a single key gets none.
+- **Recharts** `RadialBarChart layout="centric"` grows the bars outward (polar columns) but is undocumented: no
+  `background` track, bars half a slot off their ticks, and only angles animate, so value changes jump.
 - **ECharts** re-creates the chart when `theme` changes (through echarts-for-react) and its dark theme paints a
   background, so set `backgroundColor: 'transparent'`. Its default tooltip shows "-" for items without a value, such as
   graph nodes, so give it a `formatter` or `valueFormatter`; a `valueFormatter` gets `undefined` for missing values.
   Its legend lists series, so a bar series with `colorBy: 'data'` (one color per bar) gets no legend entries; a
-  category `angleAxis` starts the first slot at `startAngle`, so add half a slot to center the first bar at the top.
+  category `angleAxis` starts the first slot at `startAngle`, so add half a slot to center the first bar at the top;
+  `roundCap` only rounds tangential polar bars, radial ones need `itemStyle.borderRadius`.
 - **Unovis**: `GroupedBar` and `StackedBar` take a numeric `x`, so category charts use the index plus a `tickFormat`
   with `numTicks={data.length}`; time series need `xScale={Scale.scaleTime()}` for month-aligned ticks; a crosshair on
   grouped bars uses `getCircles={() => []}`; `Graph` trims labels longer than 15 characters by default.
