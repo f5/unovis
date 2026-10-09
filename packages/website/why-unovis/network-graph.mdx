@@ -1,0 +1,45 @@
+---
+title: Network Graph
+description: A service map rendered with Unovis, ECharts, Nivo and Chart.js, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { networkGraph } from '@site/src/comparisons/graph'
+
+# Network Graph
+
+The services of a web application with their response times and open alerts, and the requests per second between
+them, grouped by the kind of service. Each update removes or brings back a few optional services.
+
+<LibraryComparison comparison={networkGraph}/>
+
+## What to look for
+
+- **Layout.** Every library uses a force layout here. Unovis also has ELK, Dagre, parallel, circular and concentric
+  layouts (`layoutType`) and panels around groups of nodes (`panels`); ECharts, Nivo and the Chart.js graph plugin have
+  no layered layout for general graphs.
+- **Icons and alerts.** Unovis draws an SVG icon inside every node (`nodeIcon`, with symbols from the container's
+  `svgDefs`) and a red badge with the number of open alerts (`nodeSideLabels`). The other demos show alerts only in
+  their tooltips.
+- **Labels.** Unovis wraps long names (`nodeLabelFitMode`) and shows the response time underneath (`nodeSubLabel`).
+  ECharts labels the nodes too, with the response time on a second line. Nivo shows names only in tooltips, and so does
+  the Chart.js demo; Chart.js can add node labels with the official datalabels plugin.
+- **Traffic.** Link width shows requests per second. Unovis curves the links (`linkCurvature`) and sends particles along
+  them (`linkFlow`), so you can see which way the traffic goes.
+- **Zoom, pan and drag.** Unovis and ECharts zoom, pan and let you drag nodes. Chart.js can zoom and pan with the
+  official zoom plugin but can't drag nodes in a force layout, and Nivo does none of these.
+- **Change the services.** Unovis animates services in and out while the rest of the graph settles into its new layout.
+- **Your own nodes.** When the built-in shapes, icons and labels aren't enough, Unovis lets you render nodes yourself:
+  `nodeEnterCustomRenderFunction`, `nodeUpdateCustomRenderFunction` and friends hand you each node's SVG group, so you
+  can draw anything and keep Unovis' layout, zoom, drag and transitions
+  ([custom rendering](/docs/components/Graph#custom-rendering-15)).
+- **Hide a group from the legend.** ECharts toggles categories on its own; Unovis takes a few lines of state. Nivo and
+  Chart.js have no legend for this chart.
+
+## Feature comparison
+
+<FeatureTable features={['network', 'dag', 'graph-zoom', 'legend-toggle', 'data-labels', 'animation', 'darkMode', 'renderer']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

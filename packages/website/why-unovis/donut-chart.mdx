@@ -1,0 +1,31 @@
+---
+title: Donut Chart
+description: A donut chart with a central label rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { donutChart } from '@site/src/comparisons/donut'
+
+# Donut Chart
+
+Website sessions in one month by traffic source, with the total in the middle.
+
+<LibraryComparison comparison={donutChart}/>
+
+## What to look for
+
+- **The label in the middle.** Unovis and AG Charts have options for it. Recharts places a `Label` and ECharts a title.
+  Chart.js needs a plugin: the official annotation plugin's `doughnutLabel`, or a few lines of custom plugin as here. Nivo
+  needs a custom layer. Open **Code** to compare.
+- **Hide a source.** The Unovis segments sweep closed and the others grow to fill the ring.
+- **Randomize the data.** Segments animate to their new angles. AG Charts Community redraws without a transition.
+- **Styling.** The ring width, the gaps between segments and rounded corners are single options in Unovis
+  (`arcWidth`, `padAngle`, `cornerRadius`), and colors come from CSS variables.
+
+## Feature comparison
+
+<FeatureTable features={['donut-central-label', 'donut-pad-angle', 'donut-corner-radius', 'arc-labels', 'sunburst', 'legend-toggle', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

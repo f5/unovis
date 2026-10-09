@@ -1,0 +1,40 @@
+---
+title: Scatter Plot
+description: A scatter plot with size encoding rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { scatterPlot } from '@site/src/comparisons/scatter'
+
+# Scatter Plot
+
+Real measurements from the [Palmer penguins](https://allisonhorst.github.io/palmerpenguins/) dataset: flipper length
+against bill length, colored by species and sized by body mass. Each click picks a different random half of the 342
+penguins.
+
+<LibraryComparison comparison={scatterPlot}/>
+
+## What to look for
+
+- **Size encoding.** Unovis scales body mass to point size with a `size` accessor and a `sizeRange`. Chart.js expects
+  sizes in pixels, so you scale the values yourself. ECharts takes pixels in `symbolSize`, or maps values to sizes with a
+  `visualMap`.
+- **Pick other penguins.** Every penguin has a stable `id`, so Unovis moves the points that stay, fades in the new ones
+  and fades out the rest, and the axes follow.
+- **Colors from CSS.** The Unovis example colors each species with the palette's CSS variables
+  (`var(--vis-color0)`…), so the same code gives dark mode colors in dark mode.
+- **Axis titles.** Unovis takes a `label` on each axis. Recharts needs label positioning and extra margins for the same
+  result.
+- **Shapes.** Each species has its own shape (`shape`), in the chart and in the legend. Recharts, Chart.js, ECharts and
+  AG Charts have the same shapes built in; Nivo's scatter plot draws circles only.
+- **Hover.** The Unovis crosshair (`snapMode: 'xy'`) snaps to the point nearest the pointer and draws guide lines to
+  both axes. Nivo and AG Charts also pick the nearest point, while Recharts shows a tooltip only when the pointer is over
+  one.
+
+## Feature comparison
+
+<FeatureTable features={['bubble', 'scatter-shapes', 'scatter-nearest', 'label-collision', 'brush', 'zoom-pan', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

@@ -1,0 +1,31 @@
+---
+title: Grouped Bar Chart
+description: A grouped bar chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { groupedBarChart } from '@site/src/comparisons/grouped-bar'
+
+# Grouped Bar Chart
+
+Annual revenue by region for three years, as grouped bars. The region names are long on purpose.
+
+<LibraryComparison comparison={groupedBarChart}/>
+
+## What to look for
+
+- **Long labels.** Unovis wraps "Middle East & Africa" onto two lines within the space of its group. Recharts and
+  ECharts hide labels that don't fit, Chart.js rotates them and Nivo lets them overlap. AG Charts wraps them too.
+- **Hover.** The Unovis crosshair shows all three years of a region in one tooltip, wherever you point within the group.
+  Nivo shows one bar at a time.
+- **Randomize the data.** Bars grow and shrink from their current height. AG Charts Community redraws without a
+  transition.
+- **Rounded corners.** Unovis rounds bar corners by default, which keeps dense bar charts soft on the eye.
+
+## Feature comparison
+
+<FeatureTable features={['bar-grouped', 'bar-horizontal', 'axis-label-fit', 'bar-rounded', 'crosshair', 'data-labels', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

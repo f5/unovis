@@ -1,0 +1,110 @@
+---
+title: How We Compare
+description: How the Unovis comparison pages were built, which libraries they include and why
+---
+
+import { libraries } from '@site/src/comparisons/libraries'
+import { lineChartBuildSizes } from '@site/src/comparisons/build-sizes'
+
+# How We Compare
+
+A comparison written by the authors of one of the libraries deserves some skepticism. Here's how we built these pages,
+so you can judge them, and check them.
+
+## Which libraries
+
+We started from the most downloaded charting libraries on npm and rendered the ones that are free to use in a
+commercial product like Unovis:
+
+| Library | Weekly downloads | License | Rendered here |
+| --- | --- | --- | --- |
+| Recharts | 42.5M | MIT | Yes |
+| Chart.js | 9.0M | MIT | Yes |
+| Apache ECharts | 3.7M | Apache-2.0 | Yes |
+| Highcharts | 1.7M | Commercial | No: commercial use needs a paid license |
+| ApexCharts | 1.5M | Dual license | No: the free license excludes companies above $2M in annual revenue and competing charting products |
+| AG Charts | 1.3M | MIT (Community), commercial (Enterprise) | Yes, the Community edition |
+| Nivo | 1.1M | MIT | Yes |
+| Unovis | 0.16M | Apache-2.0 | Yes |
+
+Downloads are from npm for September 15–21, 2026, using `@nivo/core` for Nivo and `ag-charts-community` for AG Charts.
+D3 (15M weekly downloads) is a toolkit rather than a charting library; Unovis and Nivo are built on it. Plotly.js,
+Victory, Observable Plot and Vega-Lite are popular too, and may join later.
+
+## The rules
+
+1. **Same data, same chart.** Every library draws the same data with the same series, axes, legend and tooltip.
+2. **Idiomatic React.** Each library uses its documented React integration. The code under **Code** is exactly the
+   code that renders the chart next to it, and **Show the data** shows the data it gets.
+3. **Default look.** We kept each library's default colors, fonts and spacing. Recharts has no default color palette,
+   so we used the colors from its documentation.
+4. **Only what the chart needs.** We turned off point markers where a library draws them by default, formatted axis
+   values and tooltips, and turned on shared tooltips where a library has them.
+5. **Legend toggles.** Where a library doesn't hide series from its legend on its own (Unovis and Recharts), we added the
+   few lines of state it takes.
+6. **Dark mode.** Each chart follows the site theme the way its library documents it: built-in dark themes for ECharts
+   and AG Charts, colors passed in for Chart.js, Recharts and Nivo. Unovis needs no code for it.
+7. **Free editions.** AG Charts is used in its free Community edition. Features that need AG Charts Enterprise are
+   marked *Paid edition*.
+8. **Plugins where a chart needs one.** When a library can only draw a chart with a plugin, we used the most popular
+   one: chartjs-chart-graph, chartjs-chart-sankey and chartjs-chart-geo for Chart.js. A library that can't draw a chart
+   at all, or only in a paid edition, gets a placeholder with the reason and a source.
+
+## Feature research
+
+Every cell in the feature tables was checked against the library's type definitions and source code for the version
+listed below, and against its official documentation. Where the docs and the code disagreed, we ran the code. Every cell
+links to its source.
+
+## Bundle size
+
+We bundled the same chart with every library: a line chart with three series, x and y axes, a tooltip showing all
+series and a legend, written with each library's React integration and tree-shaken imports wherever the library supports
+them. Each library was installed on its own from a lockfile, bundled with esbuild (`--bundle --minify --format=esm
+--target=es2020`, production mode, React and ReactDOM external) and checked in a browser to make sure the chart rendered.
+A second bundler, Rollup, gave the same ranking.
+
+<table>
+  <thead>
+    <tr><th>Library</th><th>What was bundled</th><th>Minified</th><th>Gzipped</th></tr>
+  </thead>
+  <tbody>
+    {lineChartBuildSizes.map(size => (
+      <tr key={size.library}>
+        <td>{libraries[size.library].name}</td>
+        <td>{size.entry}</td>
+        <td>{size.minKb} KB</td>
+        <td>{size.gzipKb} KB</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+React and ReactDOM add another 44.8 KB gzipped if your app doesn't ship them already. None of the libraries needs a
+separate stylesheet. AG Charts requires registering the modules a chart uses, but registering fewer modules barely
+changes its bundle size.
+
+## Versions tested
+
+<table>
+  <thead>
+    <tr><th>Library</th><th>Packages</th><th>Version</th><th>Default renderer</th></tr>
+  </thead>
+  <tbody>
+    {Object.values(libraries).map(library => (
+      <tr key={library.id}>
+        <td><a href={library.website}>{library.name}</a></td>
+        <td>{library.packages.join(', ')}</td>
+        <td>{library.version}</td>
+        <td>{library.renderer}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Found a mistake?
+
+Libraries change quickly, and we'd like these pages to stay accurate. If something is wrong or out of date,
+[open an issue](https://github.com/f5/unovis/issues) and we'll fix it.
+
+*Last updated in September 2026.*

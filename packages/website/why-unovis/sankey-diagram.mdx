@@ -1,0 +1,34 @@
+---
+title: Sankey Diagram
+description: A Sankey diagram rendered with Unovis, Recharts, ECharts, Nivo and Chart.js, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { sankeyDiagram } from '@site/src/comparisons/sankey'
+
+# Sankey Diagram
+
+One month of website visits: where visitors came from, which page they landed on and what they did next.
+
+<LibraryComparison comparison={sankeyDiagram}/>
+
+## What to look for
+
+- **Labels.** Unovis labels every node on its inner side (`labelPosition`), adds its value underneath (`subLabel`) and
+  trims or wraps labels that don't fit. Recharts draws no labels at all; the code adds them with a custom node, the way
+  its docs do.
+- **Hover.** Unovis shows the value of the flow under the pointer and, after a short delay, highlights every path
+  through the node it leads to (`highlightSubtreeOnHover`). ECharts highlights the nodes and flows next to the one you
+  hover.
+- **Randomize the data.** Unovis moves nodes and flows to their new sizes in one transition.
+- **Colors.** Unovis draws nodes in one color and keeps the flows neutral, so the structure reads first; `nodeColor` and
+  `linkColor` color them when you need to. ECharts and Nivo color every node, and the Chart.js sankey plugin colors
+  flows red to green unless you set colors yourself.
+
+## Feature comparison
+
+<FeatureTable features={['sankey', 'chord', 'data-labels', 'label-collision', 'animation', 'darkMode', 'renderer']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

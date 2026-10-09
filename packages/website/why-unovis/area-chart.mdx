@@ -1,0 +1,32 @@
+---
+title: Area Chart
+description: A stacked area chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { areaChart } from '@site/src/comparisons/area'
+
+# Area Chart
+
+Monthly cloud spend by service over two years, as a stacked area chart with a shared tooltip and a legend that toggles
+services.
+
+<LibraryComparison comparison={areaChart}/>
+
+## What to look for
+
+- **Stacking.** In Unovis, passing several `y` accessors to an Area stacks them. Chart.js needs the Filler plugin and a
+  fill target on every dataset, and its stacked y axis doesn't start at zero unless you set `beginAtZero`.
+- **Hide a service.** The Unovis areas above it slide down while the axis rescales, in one transition.
+- **Randomize the data.** Watch the stacks morph. AG Charts Community has no animations; they're an Enterprise feature.
+- **Blending.** Nivo draws each area from the baseline at 20% opacity by default, so the colors mix where they overlap.
+- **Stream graphs.** The Unovis `baseline` accessor sets a baseline for every data point, which is all a stream graph
+  needs. See the [Area with Baseline](/gallery/view?title=Area%20with%20Baseline) example.
+
+## Feature comparison
+
+<FeatureTable features={['area-stacked', 'stream', 'area-baseline', 'crosshair', 'animation', 'darkMode', 'curve-types', 'reference-band']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

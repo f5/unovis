@@ -1,0 +1,29 @@
+---
+title: Stacked Bar Chart
+description: A stacked bar chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { stackedBarChart } from '@site/src/comparisons/stacked-bar'
+
+# Stacked Bar Chart
+
+Support tickets opened each month in 2025, stacked by priority, with a tooltip for the whole stack.
+
+<LibraryComparison comparison={stackedBarChart}/>
+
+## What to look for
+
+- **Hover.** The Unovis crosshair marks the top of every segment in the month and lists them all in one tooltip.
+- **Hide a priority.** The remaining segments restack with a transition, and the y axis follows.
+- **Negative values.** Unovis stacks negative values below zero automatically, which makes diverging stacked bars a
+  one-liner. Recharts needs `stackOffset="sign"` for that, otherwise negative segments overlap.
+- **Randomize the data.** Watch the segments move together. AG Charts Community redraws without a transition.
+
+## Feature comparison
+
+<FeatureTable features={['bar-stacked', 'bar-negative-stack', 'bar-horizontal', 'axis-label-fit', 'crosshair', 'animation', 'darkMode', 'waterfall']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

@@ -1,0 +1,43 @@
+---
+title: Line Chart
+description: A multi-series line chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { lineChart } from '@site/src/comparisons/line'
+
+# Line Chart
+
+Monthly active users on three platforms over three years, with a few months of iOS and Android data missing. Every
+chart gets the same data, and each library is set up to draw the same chart: lines without point markers, formatted
+axes, a legend that toggles series and a tooltip on hover.
+
+<LibraryComparison comparison={lineChart}/>
+
+## What to look for
+
+- **Hover.** The Unovis crosshair snaps to the nearest month, marks every line and shows one tooltip for all three.
+  Recharts and ECharts do the same. Chart.js shows a shared tooltip without a guide line, Nivo draws the line without
+  marking the points, and AG Charts Community shows a shared tooltip without a guide line, because its crosshair is an
+  Enterprise feature.
+- **Gaps in the data.** Unovis bridges the missing months with a dashed line from one option,
+  `interpolateMissingData`, so the trend stays readable and it's clear which months have no data. Chart.js draws the
+  same dashed bridges with `spanGaps` and a segment style. Recharts, ECharts and AG Charts can only bridge gaps with the
+  same solid line, which hides that data is missing, so they leave gaps here, and Nivo can't bridge them at all.
+  Randomize the data to move the gaps.
+- **Randomize the data.** Unovis morphs the lines and the axis ticks to the new values. AG Charts Community redraws
+  without a transition, because animations are an Enterprise feature.
+- **Click the legend.** Hidden lines disappear and the y axis rescales to what's left. Unovis and Recharts need a few
+  lines of state for this; Chart.js, ECharts and AG Charts do it on their own, and Nivo with its `toggleSerie` option.
+- **Switch the site theme.** Unovis follows it through CSS. Every other chart gets its dark colors or theme from code;
+  open **Code** to see how much.
+- **The x axis.** Unovis spaces its ticks by the width available, so labels never collide. Chart.js rotates the month
+  labels and skips every other one to fit them.
+
+## Feature comparison
+
+<FeatureTable features={['crosshair', 'legend-toggle', 'animation', 'darkMode', 'line-gaps', 'line-interpolate', 'curve-types', 'reference-line', 'annotations', 'brush', 'zoom-pan']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.
