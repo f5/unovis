@@ -1,4 +1,5 @@
 import { Selection } from 'd3-selection'
+import { scaleLinear } from 'd3-scale'
 
 // Core
 import { ComponentCore } from '@/core/component'
@@ -9,7 +10,8 @@ import { filterDataByRange, getExtent, isArray } from '@/utils/data'
 
 // Types
 import { NumericAccessor } from '@/types/accessor'
-import { ContinuousScale, Scale, ScaleDimension } from '@/types/scale'
+import { ContinuousScale } from '@/types/scale'
+import { ScaleDimension } from '@/types/scale-dimension'
 
 // Config
 import { XYComponentDefaultConfig, XYComponentConfigInterface } from './config'
@@ -32,8 +34,8 @@ export class XYComponentCore<
 
   protected _defaultConfig: ConfigInterface = XYComponentDefaultConfig as ConfigInterface
 
-  private _xScale: ContinuousScale = Scale.scaleLinear()
-  private _yScale: ContinuousScale = Scale.scaleLinear()
+  private _xScale: ContinuousScale = scaleLinear()
+  private _yScale: ContinuousScale = scaleLinear()
 
   get xScale (): ContinuousScale {
     return this.config.xScale || this._xScale

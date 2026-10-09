@@ -1,8 +1,10 @@
+import { scaleSqrt } from 'd3-scale'
+
 // Core
 import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { Scale, ContinuousScale } from '@/types/scale'
+import { ContinuousScale } from '@/types/scale'
 import { SymbolType } from '@/types/symbol'
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
@@ -51,7 +53,7 @@ export const ScatterDefaultConfig: ScatterConfigInterface<unknown> = {
   color: (d: unknown): string => (d as { color: string }).color,
   pattern: undefined,
   size: 10,
-  sizeScale: Scale.scaleSqrt(),
+  sizeScale: scaleSqrt(),
   sizeRange: undefined,
   shape: SymbolType.Circle,
   label: undefined,
