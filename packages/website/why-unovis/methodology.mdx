@@ -62,7 +62,9 @@ We bundled the same chart with every library: a line chart with three series, x 
 series and a legend, written with each library's React integration and tree-shaken imports wherever the library supports
 them. Each library was installed on its own from a lockfile, bundled with esbuild (`--bundle --minify --format=esm
 --target=es2020`, production mode, React and ReactDOM external) and checked in a browser to make sure the chart rendered.
-A second bundler, Rollup, gave the same ranking.
+A second bundler, Rollup, gave the same ranking. Unovis is measured from the build in this repository, the same package
+a release publishes, so the numbers describe the version these pages document; the other libraries are the published
+packages at the versions listed below.
 
 <table>
   <thead>

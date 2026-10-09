@@ -1,6 +1,9 @@
 # Bundle size of an equivalent line chart in six JavaScript charting libraries
 
-Measured 2026-09-22. Every number here is reproduced by `./measure.sh` (see [Reproduce](#reproduce)).
+Measured 2026-09-22; the Unovis rows were re-measured on 2026-10-09 from the repository build (the stack
+`main` + [#938](https://github.com/f5/unovis/pull/938) + [#937](https://github.com/f5/unovis/pull/937), commit
+`f0820fce`), with the published 1.7.1 kept as reference rows. The other libraries are unchanged and reproduced
+byte for byte. Every number here is reproduced by `./measure.sh` (see [Reproduce](#reproduce)).
 
 **The chart:** 3 line series × 24 points, an x and a y axis (with grid lines), a hover tooltip that lists
 all three series at the hovered x, and a legend. Every library gets the same data module, the same three
@@ -15,8 +18,8 @@ counts are in [Raw numbers](#raw-numbers).
 
 | # | Library | Imports used | min (KB) | gzip (KB) | brotli (KB) | Notes |
 |---:|---|---|---:|---:|---:|---|
-| 1 | Chart.js 4.5.1 + react-chartjs-2 5.3.1 | `Line` from react-chartjs-2; `Chart.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)` | 161.8 | 56.7 | 49.7 | Canvas. `<Line>` registers `LineController` itself. The chart.js core accounts for 151.7 KB. |
-| 2 | Unovis 1.7.0 (`@unovis/react`) | `VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip, VisBulletLegend` | 206.5 | 67.1 | 59.1 | SVG. Only the 6 used components are bundled; the rest is d3 modules (99.9 KB) and emotion (15.7 KB). |
+| 1 | Unovis, repository build (`@unovis/react`) | `VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip, VisBulletLegend` | 164.0 | 52.8 | 46.7 | SVG. Only the 6 used components are bundled (76.9 KB); the rest is d3 modules (77.1 KB), the React wrapper (4.4 KB) and the built-in CSS runtime's stylis (4.0 KB). The published 1.7.1 is 206.5 / 67.1 / 59.1 (reference rows below): #938 removed the `Scale` object and the `ResizeObserver` polyfill, #937 replaced Emotion. |
+| 2 | Chart.js 4.5.1 + react-chartjs-2 5.3.1 | `Line` from react-chartjs-2; `Chart.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)` | 161.8 | 56.7 | 49.7 | Canvas. `<Line>` registers `LineController` itself. The chart.js core accounts for 151.7 KB. |
 | 3 | Nivo 0.99.0 (`@nivo/line`) | `ResponsiveLine` | 270.5 | 93.6 | 80.2 | SVG. Includes react-spring (45.0 KB), lodash (31.3 KB) and d3-scale-chromatic (17.6 KB). A plain `npm install` bundles 287.6 / 98.4 KB instead (see finding 5). |
 | 4 | Recharts 3.10.1 | `LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend` | 372.0 | 108.9 | 91.4 | SVG. Recharts' own code is 242.1 KB; it also pulls in Redux Toolkit, Immer, reselect and react-redux (32.9 KB), plus es-toolkit and decimal.js-light. The `react-is` peer dependency is bundled (2.0 KB). |
 | 5 | ECharts 6.1.0 + echarts-for-react 3.0.6 | `echarts-for-react/lib/core` + `echarts/core` with `echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer])` | 538.1 | 182.8 | 155.9 | Canvas. ECharts' documented tree-shaking approach. The wrapper adds 29.8 KB over the vanilla build (finding 4). |
@@ -29,15 +32,15 @@ For context, React 18.3.1 + ReactDOM (`react`, `react-dom/client`, `react/jsx-ru
 
 | # | Library | Imports used | min (KB) | gzip (KB) | brotli (KB) | Notes |
 |---:|---|---|---:|---:|---:|---|
-| 1 | Chart.js 4.5.1 | `Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)` | 160.4 | 56.1 | 49.2 | Canvas. |
-| 2 | Unovis 1.7.0 (`@unovis/ts`) | `XYContainer, Line, Axis, Crosshair, Tooltip, BulletLegend` from `@unovis/ts` | 201.5 | 66.2 | 58.0 | SVG. The root-barrel import tree-shakes to the same `@unovis/ts` code as the React wrapper's deep imports (76.1 KB in both). |
+| 1 | Unovis, repository build (`@unovis/ts`) | `XYContainer, Line, Axis, Crosshair, Tooltip, BulletLegend` from `@unovis/ts` | 159.5 | 52.2 | 45.8 | SVG. The root-barrel import tree-shakes to the same `@unovis/ts` code as the React wrapper's deep imports (76.9 KB in both). The published 1.7.1 is 201.5 / 66.2 / 58.0. |
+| 2 | Chart.js 4.5.1 | `Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)` | 160.4 | 56.1 | 49.2 | Canvas. |
 | 3 | ECharts 6.1.0 | `echarts/core` + `echarts.use([...])` as above, `echarts.init` | 508.3 | 172.5 | 147.3 | Canvas. |
 | 4 | AG Charts Community 14.2.0 | `AgCharts.create` + the same 4 modules | 1,320.0 | 396.6 | 318.0 | Canvas. |
 
 Recharts and Nivo are React-only.
 
 **CSS:** none of the libraries needs a separate stylesheet. esbuild emitted no `.css` file for any entry.
-Unovis (emotion), AG Charts and Nivo (through react-virtualized-auto-sizer) inject their styles from
+Unovis (its built-in CSS runtime), AG Charts and Nivo (through react-virtualized-auto-sizer) inject their styles from
 JavaScript at runtime, so that CSS is already counted above. Recharts, ECharts and Chart.js use inline
 styles or canvas.
 
@@ -49,7 +52,7 @@ styles or canvas.
 | ECharts | 508.3 / 172.5 | full `echarts`: 1,107.8 / 370.8 | −54.1% / −53.5% |
 | AG Charts | 1,320.0 / 396.6 | `AllCommunityModule`: 1,366.2 / 410.0 | **−3.4% / −3.3%** |
 | AG Charts | – | `import { ModuleRegistry }` alone, no modules, no chart: **1,303.4 / 391.6** | – |
-| Unovis | 201.5 / 66.2 | – (the metafile shows only the 6 used components; no maps, graph or other components) | – |
+| Unovis | 159.5 / 52.2 | – (the metafile shows only the 6 used components; no maps, graph or other components) | – |
 
 ## Cross-check with a second bundler (Rollup)
 
@@ -60,21 +63,24 @@ then minified with the same esbuild minifier and target (`crosscheck/rollup.mjs`
 | Variant | esbuild min / gzip (KB) | Rollup min / gzip (KB) |
 |---|---:|---:|
 | Chart.js + react-chartjs-2 | 161.8 / 56.7 | 153.1 / 53.6 |
-| Unovis (React) | 206.5 / 67.1 | 203.3 / 65.5 |
+| Unovis (React, repository build) | 164.0 / 52.8 | 161.9 / 51.7 |
 | Nivo | 270.5 / 93.6 | 265.1 / 91.9 |
 | Recharts | 372.0 / 108.9 | 360.7 / 106.0 |
 | ECharts + echarts-for-react | 538.1 / 182.8 | 531.5 / 180.2 |
 | AG Charts + ag-charts-react | 1,320.8 / 397.0 | 1,327.5 / 397.8 |
 | Chart.js (vanilla) | 160.4 / 56.1 | 151.7 / 53.0 |
-| Unovis (vanilla) | 201.5 / 66.2 | 198.9 / 64.8 |
+| Unovis (vanilla, repository build) | 159.5 / 52.2 | 157.9 / 51.2 |
 | ECharts (vanilla) | 508.3 / 172.5 | 502.6 / 170.1 |
 | AG Charts (vanilla) | 1,320.0 / 396.6 | 1,326.7 / 397.4 |
 | AG Charts, `AllCommunityModule` | 1,366.2 / 410.0 | 1,376.5 / 411.7 |
 | AG Charts, `import { ModuleRegistry }` only | 1,303.4 / 391.6 | 1,307.8 / 391.7 |
+| Unovis 1.7.1 as published (React) | 206.5 / 67.1 | 203.3 / 65.5 |
+| Unovis 1.7.1 as published (vanilla) | 201.5 / 66.2 | 198.9 / 64.8 |
 
-The ranking is identical under both bundlers. For the ten compared variants, Rollup's output is 1.1–3.0%
+The ranking is identical under both bundlers. For the ten compared variants, Rollup's output is 1.0–3.0%
 smaller for Unovis, Nivo, Recharts and ECharts, 5.4% smaller for Chart.js (min and gzip), and 0.5%
-larger for AG Charts. The `chart.js/auto` reference build is 1.2% larger.
+larger for AG Charts. Under Rollup, Unovis stays 1.9 KB gzip under Chart.js (React) and 1.8 KB (vanilla),
+while Chart.js is 8.8 KB smaller minified. The `chart.js/auto` reference build is 1.2% larger.
 Changing the esbuild target to `es2022` or `esnext` moves gzip sizes by 0.4% at most (`dist-es2022/`,
 `dist-esnext/`), so the `es2020` target doesn't favor any library.
 
@@ -87,8 +93,12 @@ Changing the esbuild target to `es2022` or `esnext` moves gzip sizes by 0.4% at 
    resolved a different `tslib`.) React 18.3.1 and ReactDOM 18.3.1 are installed in every project so
    peer dependencies resolve the way they would in a real app. The lockfiles were created with
    `npm install` followed by `npm dedupe` (npm 11.12.1). That changed only Nivo's bundle: see finding 5.
-   Unovis was measured from the published npm packages (`@unovis/ts@1.7.0`, `@unovis/react@1.7.0`), not
-   from the workspace build.
+   The Unovis rows measure the repository build: `measure.sh` packs `packages/ts/dist` and `packages/react/dist`
+   (what `pnpm publish:ts` and `publish:react` upload) into `libs/unovis-local/` and installs them there with npm,
+   without a lockfile, so their dependencies resolve the way they would for an app installing a new release. The
+   published packages (`@unovis/ts@1.7.1`, `@unovis/react@1.7.1`, `libs/unovis/`) are measured as reference rows
+   (`unovis-react-npm`, `unovis-ts-npm`); they reproduce the 1.7.0 numbers to within the 4 bytes gzip's header
+   spends on the longer file name.
 2. **One entry file per library and variant** (`libs/<library>/*.js(x)`). Each renders the chart into
    `#app` with `createRoot(...).render(...)`, `new XYContainer(...)`, `echarts.init(...)`, `new Chart(...)`
    or `AgCharts.create(...)`, so nothing can be dead-code-eliminated. Data, series names and colors come from
@@ -112,7 +122,7 @@ Changing the esbuild target to `es2022` or `esnext` moves gzip sizes by 0.4% at 
    * **Runtime smoke test** (`verify/verify.mjs`): each measured file is loaded unmodified in headless
      Chrome 153. The script checks that it runs without errors and draws SVG paths or canvas pixels. It
      then moves a real (trusted) mouse over the plot and checks that the tooltip appears, as new DOM text
-     for HTML tooltips or a canvas repaint for Chart.js. All 14 chart bundles pass, for both the esbuild
+     for HTML tooltips or a canvas repaint for Chart.js. All 16 chart bundles pass, for both the esbuild
      and Rollup builds. After-hover screenshots are in `verify/screenshots/dist/`. The legend and axes
      are visible for all six libraries.
    * **Second bundler** (Rollup, above) and **target sensitivity** (es2022/esnext, above).
@@ -122,13 +132,13 @@ Changing the esbuild target to `es2022` or `esnext` moves gzip sizes by 0.4% at 
 | Bundle | Modules | Top 5 packages |
 |---|---:|---|
 | chartjs-react | 6 | chart.js 151.7, @kurkle/color 7.4, react-chartjs-2 1.4, (entry + shared data) 0.7 |
-| unovis-react | 307 | @unovis/ts 76.1, d3-shape 17.1, d3-selection 12.3, d3-scale 12.0, d3-transition 10.7 |
+| unovis-react | 245 | @unovis/ts 76.9, d3-shape 17.1, d3-selection 12.3, d3-transition 10.7, d3-color 7.1 |
 | nivo | 376 | lodash 31.3, @react-spring/core 23.0, @nivo/line 21.2, d3-shape 18.5, d3-scale-chromatic 17.6 |
 | recharts | 372 | recharts 242.1, d3-scale 14.0, d3-shape 13.5, @reduxjs/toolkit 13.4, es-toolkit 13.1 |
 | echarts-react | 267 | echarts 344.2, zrender 175.3, tslib 7.0, echarts-for-react 4.4, size-sensor 3.6 |
 | agcharts-react | 5 | ag-charts-community 1115.4, ag-charts-core 203.9, (entry + shared data) 0.7, ag-charts-react 0.7 |
 | chartjs | 5 | chart.js 151.7, @kurkle/color 7.4, (entry + shared data) 0.7 |
-| unovis-ts | 298 | @unovis/ts 76.1, d3-shape 17.1, d3-selection 12.3, d3-scale 12.0, d3-transition 10.7 |
+| unovis-ts | 237 | @unovis/ts 76.9, d3-shape 17.1, d3-selection 12.3, d3-transition 10.7, d3-color 7.1 |
 | echarts | 241 | echarts 334.3, zrender 171.7, (entry + shared data) 0.7, tslib 0.4 |
 | agcharts | 4 | ag-charts-community 1115.4, ag-charts-core 203.9, (entry + shared data) 0.6 |
 
@@ -189,13 +199,13 @@ The full per-package and per-file breakdown for every bundle is in `dist/report.
 
 | id | min (bytes) | gzip (bytes) | brotli (bytes) |
 |---|---:|---:|---:|
-| unovis-react | 211,455 | 68,742 | 60,543 |
+| unovis-react | 167,885 | 54,068 | 47,813 |
 | recharts | 380,925 | 111,517 | 93,556 |
 | chartjs-react | 165,710 | 58,070 | 50,934 |
 | echarts-react | 551,007 | 187,200 | 159,646 |
 | agcharts-react | 1,352,491 | 406,488 | 326,051 |
 | nivo | 277,006 | 95,882 | 82,099 |
-| unovis-ts | 206,382 | 67,820 | 59,345 |
+| unovis-ts | 163,325 | 53,419 | 46,868 |
 | chartjs | 164,228 | 57,463 | 50,334 |
 | echarts | 520,537 | 176,639 | 150,877 |
 | agcharts | 1,351,720 | 406,099 | 325,636 |
@@ -205,6 +215,8 @@ The full per-package and per-file breakdown for every bundle is in `dist/report.
 | echarts-react-esm (reference) | 544,782 | 185,262 | 157,807 |
 | react-baseline (context) | 143,321 | 45,918 | 40,064 |
 | agcharts-registry-only (context) | 1,334,700 | 401,010 | 321,596 |
+| unovis-react-npm (reference) | 211,455 | 68,746 | 60,543 |
+| unovis-ts-npm (reference) | 206,382 | 67,824 | 59,345 |
 
 ## Reproduce
 
@@ -212,7 +224,8 @@ Requirements: Node ≥ 22 (measured with 24.11.1) and npm (11.12.1). The smoke t
 Chrome (set `CHROME=/path/to/chrome` if it isn't at the default macOS location).
 
 ```sh
-./measure.sh                                   # npm ci in libs/*, build dist/*.js, write dist/report.md + dist/sizes.json
+pnpm build:ts && pnpm build:react              # at the repository root: the Unovis rows measure packages/{ts,react}/dist
+./measure.sh                                   # npm ci in libs/*, pack + install the Unovis build, write dist/report.md + dist/sizes.json
 node verify/verify.mjs                         # optional: headless-Chrome smoke test + screenshots
 (cd crosscheck && npm ci && node rollup.mjs)   # optional: Rollup cross-check -> dist-rollup/report.md
 TARGET=es2022 OUT=dist-es2022 ./measure.sh     # optional: target sensitivity
@@ -226,7 +239,8 @@ The builds are deterministic: re-running `measure.sh` reproduced every byte coun
 * `analyze.mjs`: size measurement, metafile analysis and the isolation guard → `dist/report.md`, `dist/sizes.json`
 * `libs/shared/data.js`: shared data and series definitions
 * `libs/<library>/`: the pinned `package.json` + `package-lock.json` and entry files for each library
-  * `unovis/unovis-react.jsx`, `unovis/unovis-ts.js`
+  * `unovis/unovis-react.jsx`, `unovis/unovis-ts.js` (the published package, reference rows); `unovis-local/` gets the
+    repository build (only its `package.json` is committed, the tarballs and entry copies are written by `measure.sh`)
   * `recharts/recharts.jsx`
   * `chartjs/chartjs-react.jsx`, `chartjs/chartjs.js`, `chartjs/chartjs-auto.js` (reference)
   * `echarts/echarts-react.jsx`, `echarts/echarts.js`, `echarts/echarts-full.js` and `echarts/echarts-react-esm-core.jsx` (reference)
@@ -238,11 +252,14 @@ The builds are deterministic: re-running `measure.sh` reproduced every byte coun
 
 ## Notes for the Unovis team (not part of the comparison)
 
-* `@unovis/react/index.js` starts with a `vite-plugin-css-injected-by-js` IIFE that injects the
-  `VisTimeSeries` CSS. The file isn't listed in `sideEffects`, but esbuild keeps the IIFE anyway, so
-  every `@unovis/react` bundle carries 511 unused bytes and appends an unused `<style>` element at
-  startup. That is 511 B of the 5.1 KB the React variant adds over vanilla.
-* `utils/resize-observer.js` always bundles the `@juggle/resize-observer` polyfill (8.3 KB min), even
-  though it only falls back to it when `globalThis.ResizeObserver` is missing.
-* In both the React and vanilla variants, `Crosshair` logs "Y accessors have not been configured" on the
-  first render, even though the accessors come from the container and the crosshair works.
+The September run found three things in `@unovis/ts` 1.7.0 / `@unovis/react` 1.7.0; the repository build above has two
+of them fixed:
+
+* Fixed in #938: `@unovis/react/index.js` injected the `VisTimeSeries` CSS in every bundle (511 unused bytes and an
+  unused `<style>` element), and `utils/resize-observer.js` always bundled the `@juggle/resize-observer` polyfill
+  (8.3 KB min). The same PR imports d3 scales directly instead of through the `Scale` object, which had kept all 16
+  scales and all of d3-time / d3-time-format in every XY chart (−7.6 KB gzip).
+* Fixed in #937: Emotion and its vendor prefixer (15.7 KB min) are replaced by a built-in CSS runtime on stylis (4.0 KB).
+* In review (#936): `Crosshair` logs "Y accessors have not been configured" on the first render, even though the
+  accessors come from the container and the crosshair works. The smoke test still prints the warning for the
+  repository build until that PR merges.

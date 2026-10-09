@@ -1,0 +1,11 @@
+{
+  "name": "bundle-size-unovis-local",
+  "private": true,
+  "description": "The repository build of Unovis: measure.sh packs packages/ts/dist and packages/react/dist into the two tarballs and installs them here, so their dependencies resolve the way they would for an app. No lockfile on purpose: an app installing a new release gets the same resolution",
+  "dependencies": {
+    "@unovis/react": "file:unovis-react.tgz",
+    "@unovis/ts": "file:unovis-ts.tgz",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}
