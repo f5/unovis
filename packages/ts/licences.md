@@ -60,6 +60,7 @@
 | throttle-debounce                | perpetual      | MIT          | 5.0.2             | Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com)          |
 | topojson-client                  | perpetual      | ISC          | 3.1.0             | Mike Bostock https://bost.ocks.org/mike                           |
 | @types/dagre                     | perpetual      | MIT          | 0.7.54            | n/a                                                               |
+| esbuild                          | perpetual      | MIT          | 0.28.1            | n/a                                                               |
 | jsdom                            | perpetual      | MIT          | 30.0.1            | n/a                                                               |
 | rimraf                           | perpetual      | ISC          | 3.0.2             | Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)               |
 | typescript                       | perpetual      | Apache-2.0   | 5.6.3             | Microsoft Corp.                                                   |

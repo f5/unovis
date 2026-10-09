@@ -905,6 +905,9 @@ importers:
       '@types/dagre':
         specifier: ^0.7.50
         version: 0.7.54
+      esbuild:
+        specifier: ^0.28.0
+        version: 0.28.1
       jsdom:
         specifier: 'catalog:'
         version: 30.0.1

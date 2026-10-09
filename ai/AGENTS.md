@@ -53,6 +53,8 @@ wrapper is generated from it.
   - `pnpm website` — docs + gallery → http://localhost:9300
 - Build (order matters — **core first**): `pnpm build:ts`, then `pnpm build:react` / `build:angular` / `build:svelte` / `build:vue` / `build:solid` / `build:website`. `pnpm build` does all of them.
 - Lint: `pnpm lint` (check) / `pnpm lint:fix` (autofix). `pre-commit` runs `lint-staged` on staged files automatically.
+- Size: `pnpm size:ts` (after `pnpm build:ts`) bundles a few typical charts from the core `dist` and fails when one grows
+  against `packages/ts/size-baseline.json`; run it with `--update` to accept an intended change and commit the baseline.
 - CI (`.github/workflows/pull_request.yml`) runs `pnpm build && pnpm build:dev` on every PR.
 
 ## Commits
