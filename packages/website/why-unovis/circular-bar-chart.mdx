@@ -1,6 +1,6 @@
 ---
 title: Circular Bar Chart
-description: A circular bar chart of daily goals, with per-bar targets and icons, rendered with Unovis, Recharts, Chart.js, ECharts and Nivo side by side
+description: A circular bar chart of daily goals, with per-bar targets and icons, rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and Vega-Lite side by side
 hide_table_of_contents: true
 ---
 
@@ -26,14 +26,18 @@ that shows the goal. Every goal has its own target, so each bar is scaled to its
   ECharts draws rounded arcs over a track. Recharts draws them with an undocumented `layout="centric"` of its
   `RadialBarChart`, without a track: its `background` is only drawn in the ring layout. Chart.js draws wedges from the
   center, with rounded corners and a small gap but no hole and no track. Nivo draws rounded arcs with no gap between
-  them and no track.
+  them and no track. Vega-Lite has no polar bar chart, but its `arc` mark draws one, with a track, once the start and
+  end angle of every bar are computed in the data; open **Code** to see how. Observable Plot has no arc mark or polar
+  coordinates.
 - **Icons.** Unovis places an icon at the inner end of each bar (`icon`, an SVG symbol or an icon-font glyph) and hides
   it when the bar is too short. None of the other libraries has an option for it.
 - **The legend.** Unovis, Recharts and Chart.js list the bars and hide one when you click it (Unovis and Recharts
-  with a few lines of state); the remaining Unovis bars spread out to fill the circle. ECharts' legend lists series and
-  Nivo's lists keys, so a single series of bars gets no legend in either.
+  with a few lines of state); the remaining Unovis bars spread out to fill the circle. Vega-Lite's legend highlights the
+  bar you click and fades the others. ECharts' legend lists series and Nivo's lists keys, so a single series of bars
+  gets no legend in either.
 - **Randomize the data.** Bar lengths animate to the new values in Unovis, Chart.js, ECharts and Nivo. Recharts
-  animates angles only, so in this layout the bars jump to their new lengths.
+  animates angles only, so in this layout the bars jump to their new lengths, and Vega-Lite redraws without a
+  transition.
 - **Switch the site theme.** The faded tracks and icons follow the theme through CSS variables
   (`--vis-circular-bar-background-color`, `--vis-circular-bar-icon-color`); the other charts need their dark colors in code.
 

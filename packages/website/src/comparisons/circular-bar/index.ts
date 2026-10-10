@@ -14,6 +14,7 @@ export const circularBarChart: Comparison<DataRecord[]> = {
     { library: 'chartjs', load: () => import('./chartjs'), code: require('!!raw-loader!./chartjs.tsx').default },
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
     { library: 'nivo', load: () => import('./nivo'), code: require('!!raw-loader!./nivo.tsx').default },
+    { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
   ],
   unsupported: [
     {
@@ -21,6 +22,11 @@ export const circularBarChart: Comparison<DataRecord[]> = {
       reason: 'The Radial Column series that draws this chart is only in AG Charts Enterprise.',
       url: 'https://www.ag-grid.com/charts/javascript/radial-column-series/',
       paid: true,
+    },
+    {
+      library: 'plot',
+      reason: 'Plot has no arc mark and no polar coordinates, so the bars would have to be drawn as hand-written path geometry.',
+      url: 'https://observablehq.com/plot/features/marks',
     },
   ],
 }

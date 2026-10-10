@@ -1,6 +1,6 @@
 ---
 title: Grouped Bar Chart
-description: A grouped bar chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+description: A grouped bar chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot and Vega-Lite, side by side
 hide_table_of_contents: true
 ---
 
@@ -18,10 +18,13 @@ Annual revenue by region for three years, as grouped bars. The region names are 
 
 - **Long labels.** Unovis wraps "Middle East & Africa" onto two lines within the space of its group. Recharts and
   ECharts hide labels that don't fit, Chart.js rotates them and Nivo lets them overlap. AG Charts wraps them too.
+  Observable Plot centers each name under its group and lets long ones overlap; Vega-Lite turns them vertical, which
+  takes about a third of the chart's height.
 - **Hover.** The Unovis crosshair shows all three years of a region in one tooltip, wherever you point within the group.
-  Nivo shows one bar at a time.
-- **Randomize the data.** Bars grow and shrink from their current height. AG Charts Community redraws without a
-  transition.
+  Nivo shows one bar at a time. Observable Plot (`tip: 'x'`) and Vega-Lite (an extra, invisible layer per region) can
+  show the whole group too.
+- **Randomize the data.** Bars grow and shrink from their current height. AG Charts Community, Observable Plot and
+  Vega-Lite redraw without a transition.
 - **Rounded corners.** Unovis rounds bar corners by default, which keeps dense bar charts soft on the eye.
 
 ## Feature comparison

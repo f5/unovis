@@ -1,6 +1,6 @@
 ---
 title: Donut Chart
-description: A donut chart with a central label rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+description: A donut chart with a central label rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts and Vega-Lite, side by side
 hide_table_of_contents: true
 ---
 
@@ -18,9 +18,11 @@ Website sessions in one month by traffic source, with the total in the middle.
 
 - **The label in the middle.** Unovis and AG Charts have options for it. Recharts places a `Label` and ECharts a title.
   Chart.js needs a plugin: the official annotation plugin's `doughnutLabel`, or a few lines of custom plugin as here. Nivo
-  needs a custom layer. Open **Code** to compare.
-- **Hide a source.** The Unovis segments sweep closed and the others grow to fill the ring.
-- **Randomize the data.** Segments animate to their new angles. AG Charts Community redraws without a transition.
+  needs a custom layer, and Vega-Lite a text layer with its own one-row data. Open **Code** to compare.
+- **Hide a source.** The Unovis segments sweep closed and the others grow to fill the ring. Vega-Lite's legend
+  highlights a source and fades the others instead.
+- **Randomize the data.** Segments animate to their new angles. AG Charts Community and Vega-Lite redraw without a
+  transition.
 - **Styling.** The ring width, the gaps between segments and rounded corners are single options in Unovis
   (`arcWidth`, `padAngle`, `cornerRadius`), and colors come from CSS variables.
 

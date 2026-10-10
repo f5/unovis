@@ -19,5 +19,7 @@ export const networkGraph: Comparison<GraphData> = {
   unsupported: [
     { library: 'recharts', reason: 'Recharts has no network graph.', url: 'https://github.com/recharts/recharts/tree/v3.10.1/src/chart' },
     { library: 'agcharts', reason: 'No network graph in either the Community or the Enterprise edition.', url: 'https://www.ag-grid.com/charts/javascript/module-registry/#selecting-modules' },
+    { library: 'plot', reason: 'Observable Plot has no force layout: its only layout transform is the hierarchical tree, and the link mark needs precomputed coordinates.', url: 'https://github.com/observablehq/plot/tree/v0.6.17/src/transforms' },
+    { library: 'vegalite', reason: 'Vega-Lite has no force layout: Vega has a force transform, but Vega-Lite\'s transforms don\'t include it.', url: 'https://vega.github.io/vega-lite/docs/transform.html' },
   ],
 }

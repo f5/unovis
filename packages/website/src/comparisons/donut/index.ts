@@ -13,5 +13,9 @@ export const donutChart: Comparison<DataRecord[]> = {
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
     { library: 'nivo', load: () => import('./nivo'), code: require('!!raw-loader!./nivo.tsx').default },
     { library: 'agcharts', load: () => import('./ag-charts'), code: require('!!raw-loader!./ag-charts.tsx').default },
+    { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
+  ],
+  unsupported: [
+    { library: 'plot', reason: 'Observable Plot has no arc or pie mark and no polar coordinates, so the slices would have to be drawn as hand-written path geometry.', url: 'https://github.com/observablehq/plot/tree/v0.6.17/src/marks' },
   ],
 }

@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 
-export type LibraryId = 'unovis' | 'recharts' | 'chartjs' | 'echarts' | 'nivo' | 'agcharts'
+export type LibraryId = 'unovis' | 'recharts' | 'chartjs' | 'echarts' | 'nivo' | 'agcharts' | 'plot' | 'vegalite'
 
 export type ChartProps<Data> = {
   data: Data;

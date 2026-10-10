@@ -1,6 +1,6 @@
 ---
 title: Choropleth Map
-description: A choropleth world map with points and links rendered with Unovis, ECharts, Nivo and Chart.js, side by side
+description: A choropleth world map with points and links rendered with Unovis, ECharts, Nivo, Chart.js, Observable Plot and Vega-Lite, side by side
 hide_table_of_contents: true
 ---
 
@@ -20,16 +20,20 @@ and the same Blues color scheme.
 
 - **Countries, points and links in one component.** Unovis draws all three from the TopoJSON. ECharts combines a `geo`
   component with map, scatter and lines series. The Chart.js geo plugin adds the data centers as a second, `bubbleMap`
-  dataset, and Nivo draws the countries only. Neither draws links.
-- **Flows.** Unovis sends particles along the links (`enableFlowAnimation`), and ECharts does too (`effect`).
+  dataset, and Nivo draws the countries only. Neither draws links. Observable Plot layers `geo`, `dot` and `link` marks
+  on one projection, and Vega-Lite layers `geoshape`, `circle` and `rule` marks.
+- **Flows.** Unovis sends particles along the links (`enableFlowAnimation`), and ECharts does too (`effect`). Observable
+  Plot draws its links as geodesics, so the long ones bend around the edge of the globe.
 - **Fit and zoom.** Unovis fits the map to its container and lets you zoom and pan, and so does ECharts. Nivo needs a
-  projection scale that suits the container size, and neither Nivo nor Chart.js zooms.
+  projection scale that suits the container size, and neither Nivo nor Chart.js zooms. Vega-Lite fits its projection to
+  the data; neither it nor Observable Plot zooms.
 - **Color legend.** Unovis places a RollingPinLegend above the map. ECharts (`visualMap`) and the Chart.js geo plugin
   draw a color legend inside the chart, and Nivo draws one with its `legends` prop.
 - **Projections.** Unovis ships 30 projections (`MapProjection`, from d3-geo and d3-geo-projection) and takes any d3
   projection; the demo uses its default, Kavrayskiy VII. Nivo has 10 (`projectionType`, Mercator by default), and the
   Chart.js geo plugin takes any d3-geo projection (Equal Earth here, as in its docs). ECharts draws plain longitude and
-  latitude unless you pass your own projection functions, and AG Charts maps are always Mercator.
+  latitude unless you pass your own projection functions, and AG Charts maps are always Mercator. Observable Plot has 14
+  named d3-geo projections and Vega-Lite 15.
 
 ## Feature comparison
 

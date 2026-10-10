@@ -13,5 +13,7 @@ export const groupedBarChart: Comparison<DataRecord[]> = {
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
     { library: 'nivo', load: () => import('./nivo'), code: require('!!raw-loader!./nivo.tsx').default },
     { library: 'agcharts', load: () => import('./ag-charts'), code: require('!!raw-loader!./ag-charts.tsx').default },
+    { library: 'plot', load: () => import('./plot'), code: require('!!raw-loader!./plot.tsx').default },
+    { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
   ],
 }

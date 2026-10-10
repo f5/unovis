@@ -1,6 +1,6 @@
 ---
 title: Area Chart
-description: A stacked area chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+description: A stacked area chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot and Vega-Lite, side by side
 hide_table_of_contents: true
 ---
 
@@ -22,6 +22,9 @@ services.
 - **Hide a service.** The Unovis areas above it slide down while the axis rescales, in one transition.
 - **Randomize the data.** Watch the stacks morph. AG Charts Community has no animations; they're an Enterprise feature.
 - **Blending.** Nivo draws each area from the baseline at 20% opacity by default, so the colors mix where they overlap.
+- **Observable Plot and Vega-Lite.** Both stack areas on their own once the data has one row per month and service.
+  Plot's legend is static, so hiding a service takes a few lines of state; Vega-Lite's legend highlights a service
+  instead of hiding it and stacks the first legend item on top. Neither animates updates.
 - **Stream graphs.** The Unovis `baseline` accessor sets a baseline for every data point, which is all a stream graph
   needs. See the [Area with Baseline](/gallery/view?title=Area%20with%20Baseline) example.
 

@@ -68,4 +68,22 @@ export const libraries: Record<LibraryId, Library> = {
     renderer: 'Canvas',
     website: 'https://www.ag-grid.com/charts/',
   },
+  plot: {
+    id: 'plot',
+    name: 'Observable Plot',
+    version: dependencies['@observablehq/plot'],
+    packages: ['@observablehq/plot'],
+    license: 'ISC',
+    renderer: 'SVG',
+    website: 'https://observablehq.com/plot/',
+  },
+  vegalite: {
+    id: 'vegalite',
+    name: 'Vega-Lite',
+    version: dependencies['vega-lite'],
+    packages: ['vega-lite', 'vega', 'vega-embed', 'react-vega'],
+    license: 'BSD-3-Clause',
+    renderer: 'SVG',
+    website: 'https://vega.github.io/vega-lite/',
+  },
 }

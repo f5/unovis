@@ -1,6 +1,6 @@
 ---
 title: Scatter Plot
-description: A scatter plot with size encoding rendered with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts, side by side
+description: A scatter plot with size encoding rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot and Vega-Lite, side by side
 hide_table_of_contents: true
 ---
 
@@ -28,10 +28,12 @@ penguins.
 - **Axis titles.** Unovis takes a `label` on each axis. Recharts needs label positioning and extra margins for the same
   result.
 - **Shapes.** Each species has its own shape (`shape`), in the chart and in the legend. Recharts, Chart.js, ECharts and
-  AG Charts have the same shapes built in; Nivo's scatter plot draws circles only.
+  AG Charts have the same shapes built in, and so do Observable Plot (`symbol`) and Vega-Lite (`shape`); Nivo's scatter
+  plot draws circles only.
 - **Hover.** The Unovis crosshair (`snapMode: 'xy'`) snaps to the point nearest the pointer and draws guide lines to
-  both axes. Nivo and AG Charts also pick the nearest point, while Recharts shows a tooltip only when the pointer is over
-  one.
+  both axes. Nivo, AG Charts and Observable Plot (`tip`) also pick the nearest point, while Recharts shows a tooltip only
+  when the pointer is over one. So does the Vega-Lite demo, which takes the spec's default; a `nearest` selection
+  changes that.
 
 ## Feature comparison
 

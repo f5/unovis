@@ -294,6 +294,9 @@ const config = {
               // Sets MapLibre's worker URL, only on the pages that load MapLibre
               // eslint-disable-next-line @typescript-eslint/no-var-requires
               'maplibre-gl$': require('path').resolve(__dirname, 'src/utils/maplibre-gl.ts'),
+              // Vega's Node build imports node-canvas for server-side rendering; the Vega-Lite demos only render in the
+              // browser, so the server bundle doesn't need it
+              canvas: false,
             },
           },
           module: {

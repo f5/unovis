@@ -17,5 +17,7 @@ export const sankeyDiagram: Comparison<SankeyData> = {
   ],
   unsupported: [
     { library: 'agcharts', reason: 'The Sankey series is part of AG Charts Enterprise.', url: 'https://www.ag-grid.com/charts/javascript/sankey-series/', paid: true },
+    { library: 'plot', reason: 'No sankey mark. The link and arrow marks only connect points you position yourself, and the tree mark lays out hierarchies.', url: 'https://github.com/observablehq/plot/tree/v0.6.17/src/marks' },
+    { library: 'vegalite', reason: 'No sankey layout. Vega-Lite\'s transforms stop at stack, window and pivot, so the node positions and link ribbons would have to be computed by hand.', url: 'https://vega.github.io/vega-lite/docs/transform.html' },
   ],
 }

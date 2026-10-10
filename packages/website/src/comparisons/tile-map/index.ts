@@ -18,5 +18,7 @@ export const tileMap: Comparison<DataRecord[]> = {
     { library: 'echarts', reason: 'No tile map of its own. The official bmap extension draws on Baidu Maps only, needs an API key and has no clustering.', url: 'https://github.com/apache/echarts/tree/6.1.0/extension-src/bmap' },
     { library: 'nivo', reason: 'No tile maps. @nivo/geo draws GeoJSON shapes only.', url: 'https://nivo.rocks/geomap/' },
     { library: 'agcharts', reason: 'No tile maps. Its GeoJSON maps are in the paid Enterprise edition.', url: 'https://www.ag-grid.com/charts/javascript/map-topology/' },
+    { library: 'plot', reason: 'No tile maps. Its geo mark draws projected GeoJSON shapes; there is no tile layer among its marks.', url: 'https://github.com/observablehq/plot/tree/v0.6.17/src/marks' },
+    { library: 'vegalite', reason: 'No tile maps. Its geoshape mark draws projected GeoJSON shapes; there is no tile mark, tile data source or clustering transform.', url: 'https://github.com/vega/vega-lite/blob/v6.5.0/src/mark.ts' },
   ],
 }

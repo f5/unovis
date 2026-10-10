@@ -1,6 +1,6 @@
 ---
 title: Why Unovis
-description: What sets Unovis apart from other charting libraries, with live side-by-side comparisons against Recharts, Chart.js, ECharts, Nivo and AG Charts
+description: What sets Unovis apart from other charting libraries, with live side-by-side comparisons against Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot and Vega-Lite
 slug: /
 hide_table_of_contents: true
 ---
@@ -14,7 +14,7 @@ import './styles.css'
 
 Unovis is an open-source data visualization library built with care for how charts look and how they behave: when you
 hover them, when the data changes, when the theme switches and when the labels are long. Rather than taking our word
-for it, this section renders **the same data with Unovis and five of the most popular charting libraries on npm**,
+for it, this section renders **the same data with Unovis and seven of the most popular charting libraries on npm**,
 side by side, with the code for each one.
 
 ## What sets Unovis apart
@@ -97,7 +97,8 @@ side by side, with the code for each one.
 
 ## Compare side by side
 
-Each page renders one dataset with Unovis, Recharts, Chart.js, ECharts, Nivo and AG Charts. A library that can't draw
+Each page renders one dataset with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot and
+Vega-Lite. A library that can't draw
 the chart gets a placeholder that says why. Hover the charts, click the legends, randomize the data, switch the site
 theme and open the code.
 
@@ -176,6 +177,8 @@ We'd rather you pick the right tool than the wrong one:
 - **Mouse-wheel zoom on XY charts.** Unovis zooms XY charts by setting `xDomain` from a [Brush](/docs/components/Brush)
   selection ([example](/gallery/view?title=Grouped%20Bar%20with%20Brush%20and%20Interactive%20Legend)). ECharts has wheel
   zoom built in, and Chart.js offers it through an official plugin.
+- **Quick exploratory charts.** Observable Plot and Vega-Lite are grammars of graphics with faceting, binning and
+  aggregation built in, so exploring a dataset takes a few lines. Unovis has no faceting or data transforms.
 - **Keyboard navigation of data points.** AG Charts and Recharts let keyboard users move between data points; Unovis
   doesn't yet.
 

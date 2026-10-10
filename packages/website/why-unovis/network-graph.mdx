@@ -17,9 +17,10 @@ them, grouped by the kind of service. Each update removes or brings back a few o
 
 ## What to look for
 
-- **Layout.** Every library uses a force layout here. Unovis also has ELK, Dagre, parallel, circular and concentric
+- **Layout.** Every chart here uses a force layout. Unovis also has ELK, Dagre, parallel, circular and concentric
   layouts (`layoutType`) and panels around groups of nodes (`panels`); ECharts, Nivo and the Chart.js graph plugin have
-  no layered layout for general graphs.
+  no layered layout for general graphs. Observable Plot and Vega-Lite have no graph layout at all: you would compute the
+  positions yourself before drawing dots and links.
 - **Icons and alerts.** Unovis draws an SVG icon inside every node (`nodeIcon`, with symbols from the container's
   `svgDefs`) and a red badge with the number of open alerts (`nodeSideLabels`). The other demos show alerts only in
   their tooltips.

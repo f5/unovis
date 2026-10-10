@@ -61,6 +61,7 @@
     "@nivo/polar-bar": "0.99.0",
     "@nivo/sankey": "0.99.0",
     "@nivo/scatterplot": "0.99.0",
+    "@observablehq/plot": "0.6.17",
     "@stackblitz/sdk": "1.8.0",
     "ag-charts-community": "14.2.0",
     "ag-charts-react": "14.2.0",
@@ -79,8 +80,12 @@
     "react-docgen-typescript": "^2.0.0",
     "react-is": "^18.3.1",
     "react-markdown": "^10.1.0",
+    "react-vega": "8.0.0",
     "recharts": "3.10.1",
-    "topojson-client": "3.1.0"
+    "topojson-client": "3.1.0",
+    "vega": "6.4.0",
+    "vega-embed": "7.3.0",
+    "vega-lite": "6.5.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.0.0",

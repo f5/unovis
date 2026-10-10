@@ -25,17 +25,21 @@ commercial product like Unovis:
 | ApexCharts | 2.0M | Dual license | No: the free license excludes companies above $2M in annual revenue and competing charting products |
 | AG Charts | 1.8M | MIT (Community), commercial (Enterprise) | Yes, the Community edition |
 | Nivo | 1.6M | MIT | Yes |
+| Vega-Lite | 1.2M | BSD-3-Clause | Yes, through react-vega |
+| Observable Plot | 0.7M | ISC | Yes |
 | Unovis | 0.3M | Apache-2.0 | Yes |
 
 Downloads are from npm for October 1–7, 2026, using `@nivo/core` for Nivo and `ag-charts-community` for AG Charts.
-D3 (22M weekly downloads) is a toolkit rather than a charting library; Unovis and Nivo are built on it. Plotly.js,
-Victory, Observable Plot and Vega-Lite are popular too, and may join later.
+D3 (22M weekly downloads) is a toolkit rather than a charting library; Unovis, Nivo and Observable Plot are built on
+it. Plotly.js and Victory are popular too, and may join later.
 
 ## The rules
 
 1. **Same data, same chart.** Every library draws the same data with the same series, axes, legend and tooltip.
-2. **Idiomatic React.** Each library uses its documented React integration. The code under **Code** is exactly the
-   code that renders the chart next to it, and **Show the data** shows the data it gets.
+2. **Idiomatic React.** Each library uses its documented React integration. Observable Plot has no React component
+   and its docs recommend mounting the plot in an effect, so that's what we do; Vega-Lite renders through react-vega,
+   the Vega organization's wrapper around vega-embed. The code under **Code** is exactly the code that renders the
+   chart next to it, and **Show the data** shows the data it gets.
 3. **Default look.** We kept each library's default colors, fonts and spacing. Recharts has no default color palette,
    so we used the colors from its documentation.
 4. **Only what the chart needs.** We turned off point markers where a library draws them by default, formatted axis
