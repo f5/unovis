@@ -98,6 +98,9 @@ These are the rules on the methodology page, as instructions:
 
 1. **Same data, same chart.** Same series, encodings, axes, legend and tooltip content in every library.
 2. **Idiomatic and complete.** Use each library's documented React integration and its documented way to do things.
+   Observable Plot has no React component: its docs recommend `useRef` + `useEffect` (build with `Plot.plot`, append,
+   remove on cleanup), and it needs a `ResizeObserver` for the width. Vega-Lite renders through `react-vega`'s
+   `VegaEmbed` (the Vega org's wrapper around vega-embed; `width: 'container'` for responsiveness).
    The code on the page is the code that runs: no hidden helpers beyond `data.ts` and a comparison's `constants.ts`.
 3. **Default look.** Keep each library's default colors, fonts, spacing and interactions, for Unovis too. When a
    library has no default palette for a chart, take the colors from its own docs or examples and say so in a comment
@@ -111,7 +114,8 @@ These are the rules on the methodology page, as instructions:
    `BulletLegend` `onLegendItemClick` plus `inactive` items, Recharts uses `Legend` `onClick` plus `hide`.
 6. **Dark mode** uses each library's documented approach: ECharts `theme="dark"` plus `backgroundColor: 'transparent'`;
    AG Charts `ag-default-dark` plus `background: { visible: false }`; Chart.js, Recharts and Nivo get colors from
-   `isDark`; Unovis maps switch styles with `styleDarkTheme`.
+   `isDark`; Vega-Lite gets vega-embed's `theme: 'dark'` with a transparent background; Observable Plot's text uses
+   `currentColor`, so it follows the site; Unovis maps switch styles with `styleDarkTheme`.
 7. **Licenses.** Only render libraries F5 may use commercially and in a competing product. Free editions only
    (AG Charts Community). Not rendered today: Highcharts (commercial), ApexCharts (the free license excludes companies
    above $2M revenue and competing charting products), react-leaflet (Hippocratic License, not OSI-approved). Check the
@@ -150,7 +154,8 @@ These are the rules on the methodology page, as instructions:
 
 1. Check its license (rule 7) and pick its React integration.
 2. `pnpm --filter @unovis/website add --save-exact <package>@<version>`. If `@unovis/ts` depends on the same package
-   (`maplibre-gl`), use the same version so the site ships one copy.
+   (`maplibre-gl`), use the same version so the site ships one copy. `pnpm add` re-resolves unrelated peer suffixes
+   in `pnpm-lock.yaml` (dozens of deleted lines): keep only the new entries, see the lockfile note in the Gotchas.
 3. Add its id to `LibraryId` in `types.ts` and its metadata to `libraries.ts` (read the version from `package.json`).
 4. For a column in the feature tables: research every row (next section), add `features/<library>.ts`, register it in
    `features/index.ts`, and add the id to `FEATURE_TABLE_LIBRARIES` in `src/components/FeatureTable/constants.ts`.
@@ -308,6 +313,11 @@ Every feature cell, placeholder, page and demo comment links somewhere. Before y
   compare the charting libraries only, with placeholders for the ones that have no maps.
 - **TopoJSONMap flows** (`enableFlowAnimation`) read coordinates from each link (`sourceLongitude`, …) and never from
   the linked points, so the choropleth demo passes four accessors that look the points up.
+- **`pnpm add` churns the lockfile.** It re-resolves peer suffixes across the workspace (`@types/node`, ts-node,
+  typescript variants), so a one-package change shows dozens of deleted lines. Rebuild the lockfile from the committed
+  one plus only the new importer entries and the closure of their `packages`/`snapshots` (a small js-yaml script), then
+  `pnpm install --frozen-lockfile --lockfile-only` to validate; a plain `pnpm install --lockfile-only` then only
+  normalizes formatting.
 - **ESLint can't resolve package `exports` subpaths** such as `package/subpath`. Add
   `// eslint-disable-next-line import/no-unresolved`; `stripLintDirectives` hides it from the displayed code.
 - **The website's `tsc` config fails at baseline** (a missing `@docusaurus/theme-classic` type library). To type-check,
@@ -346,6 +356,22 @@ Every feature cell, placeholder, page and demo comment links somewhere. Before y
   takes the series' palette color instead of the point's. The force layout's `forceLayoutSettings` merge into the defaults; the service map uses
   `{ linkDistance: 80, charge: -1200 }` so the multi-line labels don't overlap. `CircularBar` takes `maxValue` as an
   accessor (one goal per bar), `icon` as an `#href` into the container's `svgDefs`, and centers the first bar at the top.
+- **Observable Plot** draws SVG with `currentColor` text; marks' `tip: true` (or `Plot.tip` + `Plot.pointerX`) gives
+  tooltips, `color: { legend: true }` a static swatch legend (no toggle), and it has no arc/pie marks, polar
+  coordinates, force layouts, sankey or tile maps, so those pages show placeholders.
+- **Vega-Lite** specs need `$schema` v6, `width`/`height: 'container'`; arcs do donuts and polar columns
+  (`theta` + `radius`), `geoshape` does maps; no force layout, sankey or tile maps. A `params` point selection with
+  `bind: 'legend'` highlights the clicked item and fades the rest (it doesn't hide it); shift-click adds, a click on an
+  empty spot clears, a second click on the same item does not. Shared tooltips follow its multi-series example (a
+  `pivot` transform plus a hover `rule`; the pivot gives `undefined` for missing values, so formatters must handle it).
+  The data.ts formatters go in through vega-embed's `expressionFunctions` and `config.customFormatTypes`; keep that
+  options object at module level, because react-vega deep-compares options and re-embeds when they change. The dark
+  theme doesn't recolor rules or text marks, so the demos set those from `isDark`. vega-embed 7 renders SVG by default.
+- **vega-tooltip** appends its table to `<body>`, where Infima's table styles (borders, stripes, margin) would apply;
+  `src/css/custom.css` resets them for `#vg-tooltip-element`.
+- **Recharts freezes the shared data.** Recharts 3 keeps chart data in an Immer store, which deep-freezes the row
+  objects every demo on a page shares. Vega-Lite adds ids to the objects in `data.values`, so a Vega-Lite demo must copy
+  the rows (`data.map(d => ({ ...d }))`) or it throws "object is not extensible" when Recharts rendered first.
 - **Maps** use the public MapTiler key from `@unovis/shared/examples/basic-leaflet-map/constants` (styles `positron` and
   `dataviz-dark`), and Unovis switches between them with `styleDarkTheme`. The choropleth needs no key: every library
   draws the TopoJSON that ships with Unovis.
@@ -389,7 +415,7 @@ and AG Charts publish one; adding one changes the Unovis `llms-txt` cell.
 **More pages.** Chart types with a feature row but no page: timeline, box plot, heatmap, chord diagram, treemap,
 nested donut, radial bar and flow map (`LeafletFlowMap`); the feature matrix says which
 libraries can draw each. The circular bar page (f5/unovis#939's `CircularBar`) is the template for a page where several
-libraries get placeholders. Libraries that may join later: Plotly.js, Victory, Observable Plot and Vega-Lite.
+libraries get placeholders. Libraries that may join later: Plotly.js and Victory.
 
 ## Before you finish
 
