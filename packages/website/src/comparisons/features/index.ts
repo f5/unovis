@@ -6,6 +6,8 @@ import { chartjsSupport } from './chartjs'
 import { echartsSupport } from './echarts'
 import { nivoSupport } from './nivo'
 import { agChartsSupport } from './agcharts'
+import { plotSupport } from './plot'
+import { vegaLiteSupport } from './vegalite'
 
 export { featureGroups } from './groups'
 export type { Feature, FeatureGroup, SupportCell, SupportStatus } from './types'
@@ -17,4 +19,6 @@ export const support: Record<LibraryId, LibrarySupport> = {
   echarts: echartsSupport,
   nivo: nivoSupport,
   agcharts: agChartsSupport,
+  plot: plotSupport,
+  vegalite: vegaLiteSupport,
 }

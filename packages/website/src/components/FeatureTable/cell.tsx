@@ -15,12 +15,14 @@ function formatNote (note: string): ReactNode[] {
 }
 
 export type FeatureCellProps = {
-  cell: SupportCell;
+  /** Undefined while a library hasn't been researched for this feature yet */
+  cell?: SupportCell;
   textOnly?: boolean;
   showNote?: boolean;
 }
 
 export function FeatureCell ({ cell, textOnly, showNote }: FeatureCellProps): JSX.Element {
+  if (!cell) return <td className={s.cell} title="Not researched yet">–</td>
   const { icon, label } = SUPPORT_STATUS_LABELS[cell.status]
   return (
     <td className={clsx(s.cell, !textOnly && s[cell.status])} title={showNote ? undefined : cell.note}>
