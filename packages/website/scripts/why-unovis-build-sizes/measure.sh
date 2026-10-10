@@ -12,7 +12,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 [ -d node_modules ] || npm ci --no-audit --no-fund   # tooling only (esbuild)
-for lib in unovis recharts chartjs echarts agcharts nivo react; do
+for lib in unovis recharts chartjs echarts agcharts nivo plot vegalite react; do
   [ -d "libs/$lib/node_modules" ] || (cd "libs/$lib" && npm ci --no-audit --no-fund)
 done
 
@@ -57,12 +57,16 @@ build chartjs-react  "React" "Chart.js 4.5.1 + react-chartjs-2 5.3.1"           
 build echarts-react  "React" "ECharts 6.1.0 + echarts-for-react 3.0.6"             "echarts-for-react/lib/core, tree-shaken" libs/echarts/echarts-react.jsx   "${REACT_EXTERNALS[@]}"
 build agcharts-react "React" "AG Charts Community 14.2.0 + ag-charts-react 14.2.0" "ag-charts-react, selected modules"       libs/agcharts/agcharts-react.jsx "${REACT_EXTERNALS[@]}"
 build nivo           "React" "Nivo 0.99.0"                                         "@nivo/line ResponsiveLine"               libs/nivo/nivo.jsx               "${REACT_EXTERNALS[@]}"
+build plot-react     "React" "Observable Plot 0.6.17"                              "@observablehq/plot in a useEffect"       libs/plot/plot-react.jsx         "${REACT_EXTERNALS[@]}"
+build vegalite-react "React" "Vega-Lite 6.5.0 + react-vega 8.0.0"                  "react-vega VegaEmbed (vega-embed, vega-lite, vega)" libs/vegalite/vegalite-react.jsx "${REACT_EXTERNALS[@]}"
 
 # Vanilla variants (no React)
 build unovis-ts      "Vanilla" "$UNOVIS_LOCAL"              "@unovis/ts"                        libs/unovis-local/unovis-ts.js
 build chartjs        "Vanilla" "Chart.js 4.5.1"             "chart.js, tree-shaken"             libs/chartjs/chartjs.js
 build echarts        "Vanilla" "ECharts 6.1.0"              "echarts/core, tree-shaken"         libs/echarts/echarts.js
 build agcharts       "Vanilla" "AG Charts Community 14.2.0" "AgCharts.create, selected modules" libs/agcharts/agcharts.js
+build plot           "Vanilla" "Observable Plot 0.6.17"     "Plot.plot"                         libs/plot/plot.js
+build vegalite       "Vanilla" "Vega-Lite 6.5.0"            "vega-embed (vega-lite, vega)"      libs/vegalite/vegalite.js
 
 # Reference builds (same chart, not part of the comparison): the libraries' non-tree-shaken entry
 # points, used to check that tree-shaking actually happened, and echarts-for-react's ESM build.
