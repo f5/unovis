@@ -58,7 +58,6 @@
 .table thead th {
   background: var(--ifm-background-surface-color);
   font-size: 0.85rem;
-  white-space: nowrap;
 }
 
 .version {

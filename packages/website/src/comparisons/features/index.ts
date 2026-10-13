@@ -8,6 +8,7 @@ import { nivoSupport } from './nivo'
 import { agChartsSupport } from './agcharts'
 import { plotSupport } from './plot'
 import { vegaLiteSupport } from './vegalite'
+import { tanstackSupport } from './tanstack'
 
 export { featureGroups } from './groups'
 export type { Feature, FeatureGroup, SupportCell, SupportStatus } from './types'
@@ -21,4 +22,5 @@ export const support: Record<LibraryId, LibrarySupport> = {
   agcharts: agChartsSupport,
   plot: plotSupport,
   vegalite: vegaLiteSupport,
+  tanstack: tanstackSupport,
 }

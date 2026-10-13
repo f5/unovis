@@ -1,7 +1,7 @@
 import type { SupportStatus } from '@site/src/comparisons/features'
 import type { LibraryId } from '@site/src/comparisons/types'
 
-export const FEATURE_TABLE_LIBRARIES: LibraryId[] = ['unovis', 'recharts', 'chartjs', 'echarts', 'nivo', 'agcharts', 'plot', 'vegalite']
+export const FEATURE_TABLE_LIBRARIES: LibraryId[] = ['unovis', 'recharts', 'chartjs', 'echarts', 'nivo', 'agcharts', 'plot', 'vegalite', 'tanstack']
 
 export const SUPPORT_STATUS_LABELS: Record<SupportStatus, { icon: string; label: string; description: string }> = {
   yes: { icon: '✓', label: 'Built in', description: 'Part of the library' },
