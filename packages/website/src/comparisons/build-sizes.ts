@@ -12,6 +12,7 @@ export type BuildSize = {
 // Tree-shaken imports wherever the library supports them. Unovis is the build from this repository, the others are the
 // published packages; the numbers come from `scripts/why-unovis-build-sizes` (see its RESULTS.md).
 export const lineChartBuildSizes: BuildSize[] = [
+  { library: 'tanstack', entry: '@tanstack/charts/react, straight lines and no animation, its defaults', minKb: 106.8, gzipKb: 37.5 },
   { library: 'unovis', entry: '@unovis/react, built from this repository', minKb: 164.0, gzipKb: 52.8 },
   { library: 'chartjs', entry: 'react-chartjs-2 + chart.js, registered components only', minKb: 161.8, gzipKb: 56.7 },
   { library: 'plot', entry: '@observablehq/plot in a useEffect', minKb: 262.4, gzipKb: 88.8 },

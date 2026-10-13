@@ -163,8 +163,9 @@ gzipped, React itself excluded:
 
 <BuildSizeChart/>
 
-Gzipped, Unovis is the smallest of the eight, 4 KB under Chart.js; before compression the two are within 2 KB of
-each other. Hover a bar to see what was bundled, and see [how we measured](/why-unovis/methodology#bundle-size).
+TanStack Charts comes out smallest: its compact scales replace d3, and its lines are straight and don't animate unless
+you opt in. With Unovis' defaults turned on (smooth curves, a crosshair and animation) it's 41.3 KB, or 54.7 KB when its
+`motion()` renderer animates the first render too, as Unovis does. Unovis is next, 4 KB under Chart.js. Hover a bar to see what was bundled, and see [how we measured](/why-unovis/methodology#bundle-size).
 
 ## When another library might suit you better
 
