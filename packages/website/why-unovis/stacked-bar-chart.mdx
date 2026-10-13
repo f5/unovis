@@ -1,6 +1,6 @@
 ---
 title: Stacked Bar Chart
-description: A stacked bar chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot and Vega-Lite, side by side
+description: A stacked bar chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot, Vega-Lite and TanStack Charts, side by side
 hide_table_of_contents: true
 ---
 
@@ -18,9 +18,11 @@ Support tickets opened each month in 2025, stacked by priority, with a tooltip f
 
 - **Hover.** The Unovis crosshair marks the top of every segment in the month and lists them all in one tooltip.
   Observable Plot and Vega-Lite list the whole stack too: Plot with a `Plot.tip` per month, Vega-Lite with a pivot
-  transform and a hover rule.
+  transform and a hover rule. TanStack Charts lists the stack too and shades the hovered month.
 - **Hide a priority.** The remaining segments restack with a transition, and the y axis follows. Observable Plot does
   it with a few lines of state and no transition; Vega-Lite's legend highlights a priority instead of hiding it.
+  TanStack Charts' legend hides a priority without restacking, so the segments above it float and the axis keeps its
+  range.
 - **Stack order.** Vega-Lite stacks segments by the color field's name unless you add an `order` channel, which the demo
   does to keep Low at the bottom.
 - **Negative values.** Unovis stacks negative values below zero automatically, which makes diverging stacked bars a

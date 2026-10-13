@@ -1,6 +1,6 @@
 ---
 title: Scatter Plot
-description: A scatter plot with size encoding rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot and Vega-Lite, side by side
+description: A scatter plot with size encoding rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot, Vega-Lite and TanStack Charts, side by side
 hide_table_of_contents: true
 ---
 
@@ -22,16 +22,17 @@ penguins.
   sizes in pixels, so you scale the values yourself. ECharts takes pixels in `symbolSize`, or maps values to sizes with a
   `visualMap`.
 - **Pick other penguins.** Every penguin has a stable `id`, so Unovis moves the points that stay, fades in the new ones
-  and fades out the rest, and the axes follow.
+  and fades out the rest, and the axes follow. TanStack Charts keys the points by `id`
+  too and animates them the same way (`svgAnimation`).
 - **Colors from CSS.** The Unovis example colors each species with the palette's CSS variables
   (`var(--vis-color0)`…), so the same code gives dark mode colors in dark mode.
 - **Axis titles.** Unovis takes a `label` on each axis. Recharts needs label positioning and extra margins for the same
   result.
 - **Shapes.** Each species has its own shape (`shape`), in the chart and in the legend. Recharts, Chart.js, ECharts and
   AG Charts have the same shapes built in, and so do Observable Plot (`symbol`) and Vega-Lite (`shape`); Nivo's scatter
-  plot draws circles only.
+  plot and TanStack Charts' `dot` draw circles only.
 - **Hover.** The Unovis crosshair (`snapMode: 'xy'`) snaps to the point nearest the pointer and draws guide lines to
-  both axes. Nivo, AG Charts and Observable Plot (`tip`) also pick the nearest point, while Recharts shows a tooltip only
+  both axes. Nivo, AG Charts, Observable Plot (`tip`) and TanStack Charts also pick the nearest point, while Recharts shows a tooltip only
   when the pointer is over one. So does the Vega-Lite demo, which takes the spec's default; a `nearest` selection
   changes that.
 

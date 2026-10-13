@@ -86,4 +86,13 @@ export const libraries: Record<LibraryId, Library> = {
     renderer: 'SVG',
     website: 'https://vega.github.io/vega-lite/',
   },
+  tanstack: {
+    id: 'tanstack',
+    name: 'TanStack Charts',
+    version: dependencies['@tanstack/charts'],
+    packages: ['@tanstack/charts'],
+    license: 'MIT',
+    renderer: 'SVG',
+    website: 'https://tanstack.com/charts/latest',
+  },
 }

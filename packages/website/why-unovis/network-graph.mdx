@@ -1,6 +1,6 @@
 ---
 title: Network Graph
-description: A service map rendered with Unovis, ECharts, Nivo and Chart.js, side by side
+description: A service map rendered with Unovis, ECharts, Nivo, Chart.js and TanStack Charts, side by side
 hide_table_of_contents: true
 ---
 
@@ -19,8 +19,9 @@ them, grouped by the kind of service. Each update removes or brings back a few o
 
 - **Layout.** Every chart here uses a force layout. Unovis also has ELK, Dagre, parallel, circular and concentric
   layouts (`layoutType`) and panels around groups of nodes (`panels`); ECharts, Nivo and the Chart.js graph plugin have
-  no layered layout for general graphs. Observable Plot and Vega-Lite have no graph layout at all: you would compute the
-  positions yourself before drawing dots and links.
+  no layered layout for general graphs. TanStack Charts' `forceLayout` settles a force layout once and you draw the
+  nodes, links and labels with ordinary marks: there's no drag, zoom, arrows or curved links. Observable Plot and
+  Vega-Lite have no graph layout at all: you would compute the positions yourself before drawing dots and links.
 - **Icons and alerts.** Unovis draws an SVG icon inside every node (`nodeIcon`, with symbols from the container's
   `svgDefs`) and a red badge with the number of open alerts (`nodeSideLabels`). The other demos show alerts only in
   their tooltips.

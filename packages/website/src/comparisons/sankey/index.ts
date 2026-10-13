@@ -14,6 +14,7 @@ export const sankeyDiagram: Comparison<SankeyData> = {
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
     { library: 'nivo', load: () => import('./nivo'), code: require('!!raw-loader!./nivo.tsx').default },
     { library: 'chartjs', load: () => import('./chartjs'), code: require('!!raw-loader!./chartjs.tsx').default },
+    { library: 'tanstack', load: () => import('./tanstack'), code: require('!!raw-loader!./tanstack.tsx').default },
   ],
   unsupported: [
     { library: 'agcharts', reason: 'The Sankey series is part of AG Charts Enterprise.', url: 'https://www.ag-grid.com/charts/javascript/sankey-series/', paid: true },

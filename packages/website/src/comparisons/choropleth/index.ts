@@ -16,6 +16,7 @@ export const choroplethMap: Comparison<ChoroplethData> = {
     { library: 'chartjs', load: () => import('./chartjs'), code: require('!!raw-loader!./chartjs.tsx').default },
     { library: 'plot', load: () => import('./plot'), code: require('!!raw-loader!./plot.tsx').default },
     { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
+    { library: 'tanstack', load: () => import('./tanstack'), code: require('!!raw-loader!./tanstack.tsx').default },
   ],
   unsupported: [
     { library: 'recharts', reason: 'Recharts has no maps.', url: 'https://github.com/recharts/recharts/tree/v3.10.1/src/chart' },

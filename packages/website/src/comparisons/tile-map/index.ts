@@ -20,5 +20,6 @@ export const tileMap: Comparison<DataRecord[]> = {
     { library: 'agcharts', reason: 'No tile maps. Its GeoJSON maps are in the paid Enterprise edition.', url: 'https://www.ag-grid.com/charts/javascript/map-topology/' },
     { library: 'plot', reason: 'No tile maps. Its geo mark draws projected GeoJSON shapes; there is no tile layer among its marks.', url: 'https://github.com/observablehq/plot/tree/v0.6.17/src/marks' },
     { library: 'vegalite', reason: 'No tile maps. Its geoshape mark draws projected GeoJSON shapes; there is no tile mark, tile data source or clustering transform.', url: 'https://github.com/vega/vega-lite/blob/v6.5.0/src/mark.ts' },
+    { library: 'tanstack', reason: 'No tile maps. Its geo module has a single geoShape mark that draws projected GeoJSON shapes; there is no tile layer or clustering, and its zoom control works on the x axis only.', url: 'https://github.com/TanStack/charts/blob/v1.1.0/packages/charts-core/src/geo.ts' },
   ],
 }

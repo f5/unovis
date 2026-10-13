@@ -1,6 +1,6 @@
 ---
 title: Sankey Diagram
-description: A Sankey diagram rendered with Unovis, Recharts, ECharts, Nivo and Chart.js, side by side
+description: A Sankey diagram rendered with Unovis, Recharts, ECharts, Nivo, Chart.js and TanStack Charts, side by side
 hide_table_of_contents: true
 ---
 
@@ -23,6 +23,8 @@ One month of website visits: where visitors came from, which page they landed on
   through the node it leads to (`highlightSubtreeOnHover`). ECharts highlights the nodes and flows next to the one you
   hover.
 - **Randomize the data.** Unovis moves nodes and flows to their new sizes in one transition.
+- **TanStack Charts.** Lays out the diagram (`sankeyDiagram`), but you draw the nodes, links and labels with ordinary
+  marks, and links are straight unless you pass a d3-shape curve through `d3Curve()`.
 - **Colors.** Unovis draws nodes in one color and keeps the flows neutral, so the structure reads first; `nodeColor` and
   `linkColor` color them when you need to. ECharts and Nivo color every node, and the Chart.js sankey plugin colors
   flows red to green unless you set colors yourself.

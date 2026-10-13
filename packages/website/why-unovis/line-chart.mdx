@@ -1,6 +1,6 @@
 ---
 title: Line Chart
-description: A multi-series line chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot and Vega-Lite, side by side
+description: A multi-series line chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot, Vega-Lite and TanStack Charts, side by side
 hide_table_of_contents: true
 ---
 
@@ -22,22 +22,24 @@ axes, a legend that toggles series and a tooltip on hover.
   Recharts and ECharts do the same. Chart.js shows a shared tooltip without a guide line, Nivo draws the line without
   marking the points, and AG Charts Community shows a shared tooltip without a guide line, because its crosshair is an
   Enterprise feature. Observable Plot and Vega-Lite show one tooltip per month with a guide line, without marking the
-  points: Plot with `Plot.tip` and `pointerX`, Vega-Lite with a pivot transform and a hover rule.
+  points: Plot with `Plot.tip` and `pointerX`, Vega-Lite with a pivot transform and a hover rule. TanStack Charts shows one
+  tooltip per month with a crosshair (`focus: 'group-x'`), leaving out a series that has no data that month.
 - **Gaps in the data.** Unovis bridges the missing months with a dashed line from one option,
   `interpolateMissingData`, so the trend stays readable and it's clear which months have no data. Chart.js draws the
   same dashed bridges with `spanGaps` and a segment style. Recharts, ECharts and AG Charts can only bridge gaps with the
   same solid line, which hides that data is missing, so they leave gaps here, and Nivo can't bridge them at all.
-  Observable Plot and Vega-Lite leave gaps by default too.
+  Observable Plot, Vega-Lite and TanStack Charts leave gaps by default too.
   Randomize the data to move the gaps.
 - **Randomize the data.** Unovis morphs the lines and the axis ticks to the new values. AG Charts Community redraws
   without a transition, because animations are an Enterprise feature, and so do Observable Plot and Vega-Lite, which
-  have no animations.
+  have no animations. TanStack Charts tweens the lines (`svgAnimation`), but only those without gaps; the others jump.
 - **Click the legend.** Hidden lines disappear and the y axis rescales to what's left. Unovis and Recharts need a few
   lines of state for this; Chart.js, ECharts and AG Charts do it on their own, and Nivo with its `toggleSerie` option.
   Observable Plot's legend is static, so it takes the same few lines of state. Vega-Lite's legend highlights the line you
-  click and fades the others, so the axis doesn't rescale.
-- **Switch the site theme.** Unovis follows it through CSS, and Observable Plot's text and axes follow it through
-  `currentColor`. Every other chart gets its dark colors or theme from code; open **Code** to see how much.
+  click and fades the others, so the axis doesn't rescale. TanStack Charts has its own clickable legend, but a hidden
+  line keeps its room on the y axis.
+- **Switch the site theme.** Unovis follows it through CSS, Observable Plot's text and axes follow it through
+  `currentColor`, and so does TanStack Charts' whole default theme. Every other chart gets its dark colors or theme from code; open **Code** to see how much.
 - **The x axis.** Unovis spaces its ticks by the width available, so labels never collide. Chart.js rotates the month
   labels and skips every other one to fit them.
 

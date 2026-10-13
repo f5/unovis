@@ -15,5 +15,6 @@ export const areaChart: Comparison<DataRecord[]> = {
     { library: 'agcharts', load: () => import('./ag-charts'), code: require('!!raw-loader!./ag-charts.tsx').default },
     { library: 'plot', load: () => import('./plot'), code: require('!!raw-loader!./plot.tsx').default },
     { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
+    { library: 'tanstack', load: () => import('./tanstack'), code: require('!!raw-loader!./tanstack.tsx').default },
   ],
 }

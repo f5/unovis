@@ -15,6 +15,7 @@ export const networkGraph: Comparison<GraphData> = {
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
     { library: 'nivo', load: () => import('./nivo'), code: require('!!raw-loader!./nivo.tsx').default },
     { library: 'chartjs', load: () => import('./chartjs'), code: require('!!raw-loader!./chartjs.tsx').default },
+    { library: 'tanstack', load: () => import('./tanstack'), code: require('!!raw-loader!./tanstack.tsx').default },
   ],
   unsupported: [
     { library: 'recharts', reason: 'Recharts has no network graph.', url: 'https://github.com/recharts/recharts/tree/v3.10.1/src/chart' },
