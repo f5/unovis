@@ -100,7 +100,9 @@ These are the rules on the methodology page, as instructions:
 2. **Idiomatic and complete.** Use each library's documented React integration and its documented way to do things.
    Observable Plot has no React component: its docs recommend `useRef` + `useEffect` (build with `Plot.plot`, append,
    remove on cleanup), and it needs a `ResizeObserver` for the width. Vega-Lite renders through `react-vega`'s
-   `VegaEmbed` (the Vega org's wrapper around vega-embed; `width: 'container'` for responsiveness).
+   `VegaEmbed` (the Vega org's wrapper around vega-embed; `width: 'container'` for responsiveness). TanStack Charts
+   renders through `Chart` from `@tanstack/charts/react` with a `defineChart()` memoized in `useMemo`; its `height` must
+   be a number, so its demos import the chart-area height from `comparisons/constants.ts`.
    The code on the page is the code that runs: no hidden helpers beyond `data.ts` and a comparison's `constants.ts`.
 3. **Default look.** Keep each library's default colors, fonts, spacing and interactions, for Unovis too. When a
    library has no default palette for a chart, take the colors from its own docs or examples and say so in a comment
@@ -367,6 +369,16 @@ Every feature cell, placeholder, page and demo comment links somewhere. Before y
   The data.ts formatters go in through vega-embed's `expressionFunctions` and `config.customFormatTypes`; keep that
   options object at module level, because react-vega deep-compares options and re-embeds when they change. The dark
   theme doesn't recolor rules or text marks, so the demos set those from `isDark`. vega-embed 7 renders SVG by default.
+- **TanStack Charts** (`@tanstack/charts`, one package with every adapter) picks features by import: subpaths for
+  scales (`/scales/linear`, compact, no d3), `/tooltip`, `/legend` (`interactiveColorLegend` + `controlledSignal`),
+  `/polar`, `/geo`, `/network/force`, `/network/sankey`, `/motion`, `/d3/shape`. Its theme follows `currentColor`, so dark
+  mode needs no code. Lines are straight and nothing animates by default (`svgAnimation: true` tweens updates, the
+  `motion()` renderer adds entrance animation). Its legend hides a series after the scales are resolved, so stacks don't
+  close up and axes don't rescale; it doesn't filter polar, link or text marks, which the demos filter themselves. Geo
+  marks need a projection factory from `d3-geo` and curves come from `d3-shape` via `d3Curve()`: both are website
+  dependencies at the versions `@unovis/ts` uses. ESLint can't resolve its `exports`-only subpaths, so the root
+  `.eslintrc` ignores `^@tanstack/charts` in `import/no-unresolved`. Its types use `NoInfer` (TypeScript 5.4+), so the
+  website's pinned TypeScript 5.2 mis-infers some channels; Babel builds don't care.
 - **vega-tooltip** appends its table to `<body>`, where Infima's table styles (borders, stripes, margin) would apply;
   `src/css/custom.css` resets them for `#vg-tooltip-element`.
 - **Recharts freezes the shared data.** Recharts 3 keeps chart data in an Immer store, which deep-freezes the row
