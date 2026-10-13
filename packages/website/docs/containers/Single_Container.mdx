@@ -126,6 +126,40 @@ The `sizing` property determines whether components should fit into the containe
 or the container should expand to fit to the component's size. Currently, only <a href="/docs/components/Sankey#component-sizing">
 Sankey</a> supports the `sizing` option. By default, all components will fit to the size of _Single Container_.
 
+### Redraw on Resize
+When the container is set up to fit its parent (the default `Sizing.Fit`), it watches the parent's size
+and redraws itself when it changes. A container whose size changes continuously — a chart inside a
+dashboard widget with a drag-to-resize handle, for instance — would otherwise redraw on every frame of
+the gesture.
+
+To avoid that, the redraw is debounced: it happens once the size has settled. The delay is controlled by
+`resizeDebounce` and defaults to `100` ms. The trade-off is that the chart's contents visibly lag the
+container for the duration of the gesture — the SVG box follows immediately, the marks catch up when the
+resize stops. Set `resizeDebounce` to `0` to get a redraw on every resize frame instead.
+
+```tsx
+<VisSingleContainer data={data} resizeDebounce={250}>
+  {/* … */}
+</VisSingleContainer>
+```
+
+The first size change is applied immediately rather than debounced. That is usually the parent's layout
+settling just after mount, so a chart never waits out the debounce before it appears at the correct size.
+
+If you want to suppress resize redraws altogether — for example to freeze the charts while the user
+drags a dashboard layout around — set `redrawOnResize` to `false`. The container's SVG element still
+follows the parent's size, but its contents are not re-rendered until something else triggers a render.
+
+```tsx
+<VisSingleContainer data={data} redrawOnResize={false}>
+  {/* … */}
+</VisSingleContainer>
+```
+
+Both of these apply to `Sizing.Fit`. Under <a href="#sizing-property">`Sizing.FitWidth` and `Sizing.Extend`</a>
+the SVG is sized from the component rather than from the parent, so it keeps its current size until the
+redraw happens — with `redrawOnResize` set to `false` it stops tracking the parent altogether.
+
 ## Color
 Each component in a _Single Container_ is colored through its own `color` accessor. By default, segments and
 elements cycle through the shared _Unovis_ palette (`--vis-color0`, `--vis-color1`, …); pass a `color`
