@@ -198,8 +198,12 @@ Rows live in `features/groups.ts`; cells in `features/<library>.ts`. Every cell 
 
 ## Bundle sizes
 
-The overview and methodology pages show the minified and gzipped size of the same three-series line chart (axes,
-tooltip, legend) in every library, React excluded. The harness lives in `packages/website/scripts/why-unovis-build-sizes`:
+The overview and methodology pages show the minified and gzipped size of the same line chart in every library, React
+excluded: three smooth lines, axes, a legend, a tooltip for all series, a crosshair and animation, which is what Unovis
+does by default. Every entry turns these on with its library's own options (the table in RESULTS.md's Method); a library
+that can't do one is measured without it, and `build-sizes.ts`, the page text and RESULTS.md say so. Libraries whose
+defaults are lighter (TanStack Charts) keep their defaults as a reference row. The harness lives in
+`packages/website/scripts/why-unovis-build-sizes`:
 
 - `bash measure.sh` runs `npm ci` in every `libs/<library>/` that has no `node_modules` yet. Each library is its own
   npm project with exact versions and a lockfile, so libraries can't change each other's dependency tree. The Unovis rows
@@ -209,7 +213,8 @@ tooltip, legend) in every library, React excluded. The harness lives in `package
   (`--bundle --minify --format=esm --platform=browser --target=es2020`, production mode, React external) and writes
   `dist/report.md` and `dist/sizes.json`.
 - `node verify/verify.mjs` loads every bundle in headless Chrome, checks that the chart draws and its tooltip opens, and
-  saves screenshots to `verify/screenshots/`. `cd crosscheck && npm ci && node rollup.mjs` repeats the builds with
+  saves screenshots to `verify/screenshots/`. It doesn't check the crosshair or the animation: after changing an entry, look at
+  the hover screenshots and trace a few frames after load (the lines should grow or morph in). `cd crosscheck && npm ci && node rollup.mjs` repeats the builds with
   Rollup.
 - `RESULTS.md` records the last full run, its findings and the commands.
 
