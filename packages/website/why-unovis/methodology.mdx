@@ -64,13 +64,19 @@ links to its source.
 
 ## Bundle size
 
-We bundled the same chart with every library: a line chart with three series, x and y axes, a tooltip showing all
-series and a legend, written with each library's React integration and tree-shaken imports wherever the library supports
-them. Each library was installed on its own from a lockfile, bundled with esbuild (`--bundle --minify --format=esm
---target=es2020`, production mode, React and ReactDOM external) and checked in a browser to make sure the chart rendered.
-A second bundler, Rollup, gave the same ranking. Unovis is measured from the build in this repository, the same package
-a release publishes, so the numbers describe the version these pages document; the other libraries are the published
-packages at the versions listed below.
+We bundled the same chart with every library: three smooth (monotone) lines, x and y axes, a legend, a tooltip showing
+all series, a crosshair at the hovered x and animation, which is what a Unovis line chart does out of the box. Each
+library draws it with its own options, its React integration and tree-shaken imports wherever it supports them. Where a
+library can't do part of it, we measured it without that part: Observable Plot and Vega-Lite have no animation, AG Charts
+Community has neither the crosshair nor animation (both are Enterprise modules), and Nivo animates data updates but not
+the first render. Chart.js has no crosshair option, so its bundle includes the usual few-line plugin that draws one.
+
+Each library was installed on its own from a lockfile, bundled with esbuild (`--bundle --minify --format=esm
+--target=es2020`, production mode, React and ReactDOM external) and checked in a browser to make sure the chart rendered,
+animated and drew its crosshair. A second bundler, Rollup, gave sizes within about 3 KB gzipped and the same ranking,
+except that Chart.js and TanStack Charts, 0.3 KB apart there, swap places. Unovis is measured from the build in this
+repository, the same package a release publishes, so the numbers describe the version these pages document; the other
+libraries are the published packages at the versions listed below.
 
 <table>
   <thead>
@@ -88,10 +94,10 @@ packages at the versions listed below.
   </tbody>
 </table>
 
-Libraries differ in what the same chart does by default. TanStack Charts draws straight lines and doesn't animate unless
-you opt in; with the behavior Unovis has by default (monotone curves, a crosshair with a marker per series and animated
-updates) its bundle is 118.2 KB minified / 41.3 KB gzipped, and 161.3 / 54.7 KB with its `motion()` renderer, which also
-animates the first render. The harness keeps both as reference builds.
+TanStack Charts is where the configuration matters most. Its defaults draw straight lines with no crosshair and no
+animation: 106.8 KB minified / 37.5 KB gzipped. The measured chart adds `d3Curve(curveMonotoneX)`, `focusGuideX` and the
+`motion()` renderer, which animates the first render and data updates as Unovis does. Animating only data updates, with
+the `svgAnimation` option instead of `motion()`, gives 118.2 / 41.3 KB. The harness keeps both as reference builds.
 
 React and ReactDOM add another 44.8 KB gzipped if your app doesn't ship them already. None of the libraries needs a
 separate stylesheet. AG Charts requires registering the modules a chart uses, but registering fewer modules barely

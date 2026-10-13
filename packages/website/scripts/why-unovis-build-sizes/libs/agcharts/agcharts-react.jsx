@@ -6,11 +6,12 @@ import { AgCharts } from 'ag-charts-react'
 import { ModuleRegistry, LineSeriesModule, CategoryAxisModule, NumberAxisModule, LegendModule } from 'ag-charts-community'
 import { DATA, SERIES, getContainer } from '../shared/data.js'
 
+// The crosshair and animations are Enterprise modules (CrosshairModule, AnimationModule), so this chart has neither
 ModuleRegistry.registerModules([LineSeriesModule, CategoryAxisModule, NumberAxisModule, LegendModule])
 
 const options = {
   data: DATA,
-  series: SERIES.map((s) => ({ type: 'line', xKey: 'x', yKey: s.key, yName: s.label, stroke: s.color, marker: { fill: s.color, stroke: s.color } })),
+  series: SERIES.map((s) => ({ type: 'line', xKey: 'x', yKey: s.key, yName: s.label, stroke: s.color, marker: { fill: s.color, stroke: s.color }, interpolation: { type: 'smooth' } })),
   legend: { enabled: true },
   tooltip: { mode: 'shared' },
 }

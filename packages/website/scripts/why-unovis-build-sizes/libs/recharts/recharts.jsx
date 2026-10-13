@@ -12,7 +12,7 @@ function Chart () {
       <YAxis />
       <Tooltip />
       <Legend />
-      {SERIES.map((s) => <Line key={s.key} dataKey={s.key} name={s.label} stroke={s.color} />)}
+      {SERIES.map((s) => <Line key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color} />)}
     </LineChart>
   )
 }

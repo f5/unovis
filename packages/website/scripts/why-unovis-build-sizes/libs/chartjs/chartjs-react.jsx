@@ -4,19 +4,20 @@ import { createRoot } from 'react-dom/client'
 import { Chart as ChartJS, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 import { DATA, SERIES, getContainer } from '../shared/data.js'
+import { crosshair } from './crosshair-plugin.js'
 
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)
 
 const data = {
   labels: DATA.map((d) => d.x),
-  datasets: SERIES.map((s) => ({ label: s.label, data: DATA.map((d) => d[s.key]), borderColor: s.color, backgroundColor: s.color })),
+  datasets: SERIES.map((s) => ({ label: s.label, data: DATA.map((d) => d[s.key]), borderColor: s.color, backgroundColor: s.color, cubicInterpolationMode: 'monotone' })),
 }
 const options = { maintainAspectRatio: false, interaction: { mode: 'index', intersect: false } }
 
 function Chart () {
   return (
     <div style={{ height: 300 }}>
-      <Line data={data} options={options} />
+      <Line data={data} options={options} plugins={[crosshair]} />
     </div>
   )
 }

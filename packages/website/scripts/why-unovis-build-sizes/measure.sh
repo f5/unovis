@@ -59,7 +59,7 @@ build agcharts-react "React" "AG Charts Community 14.2.0 + ag-charts-react 14.2.
 build nivo           "React" "Nivo 0.99.0"                                         "@nivo/line ResponsiveLine"               libs/nivo/nivo.jsx               "${REACT_EXTERNALS[@]}"
 build plot-react     "React" "Observable Plot 0.6.17"                              "@observablehq/plot in a useEffect"       libs/plot/plot-react.jsx         "${REACT_EXTERNALS[@]}"
 build vegalite-react "React" "Vega-Lite 6.5.0 + react-vega 8.0.0"                  "react-vega VegaEmbed (vega-embed, vega-lite, vega)" libs/vegalite/vegalite-react.jsx "${REACT_EXTERNALS[@]}"
-build tanstack-react "React" "TanStack Charts 1.1.0"                               "@tanstack/charts/react Chart"            libs/tanstack/tanstack-react.jsx "${REACT_EXTERNALS[@]}"
+build tanstack-react "React" "TanStack Charts 1.1.0"                               "@tanstack/charts/react Chart with motion(), d3Curve and focusGuideX" libs/tanstack/tanstack-react.jsx "${REACT_EXTERNALS[@]}"
 
 # Vanilla variants (no React)
 build unovis-ts      "Vanilla" "$UNOVIS_LOCAL"              "@unovis/ts"                        libs/unovis-local/unovis-ts.js
@@ -68,7 +68,7 @@ build echarts        "Vanilla" "ECharts 6.1.0"              "echarts/core, tree-
 build agcharts       "Vanilla" "AG Charts Community 14.2.0" "AgCharts.create, selected modules" libs/agcharts/agcharts.js
 build plot           "Vanilla" "Observable Plot 0.6.17"     "Plot.plot"                         libs/plot/plot.js
 build vegalite       "Vanilla" "Vega-Lite 6.5.0"            "vega-embed (vega-lite, vega)"      libs/vegalite/vegalite.js
-build tanstack       "Vanilla" "TanStack Charts 1.1.0"      "mountChart from @tanstack/charts/dom" libs/tanstack/tanstack.js
+build tanstack       "Vanilla" "TanStack Charts 1.1.0"      "mountChartRenderer with motion()"  libs/tanstack/tanstack.js
 
 # Reference builds (same chart, not part of the comparison): the libraries' non-tree-shaken entry
 # points, used to check that tree-shaking actually happened, and echarts-for-react's ESM build.
@@ -78,8 +78,8 @@ build agcharts-all      "Reference" "AG Charts Community 14.2.0"              "A
 build echarts-react-esm "Reference" "ECharts 6.1.0 + echarts-for-react 3.0.6" "echarts-for-react/esm/core, tree-shaken" libs/echarts/echarts-react-esm-core.jsx "${REACT_EXTERNALS[@]}"
 build unovis-react-npm  "Reference" "$UNOVIS_NPM"                             "@unovis/react, as published on npm"      libs/unovis/unovis-react.jsx            "${REACT_EXTERNALS[@]}"
 build unovis-ts-npm     "Reference" "$UNOVIS_NPM"                             "@unovis/ts, as published on npm"         libs/unovis/unovis-ts.js
-build tanstack-react-matched "Reference" "TanStack Charts 1.1.0" "@tanstack/charts/react with Unovis' defaults: monotone curve, crosshair markers, update tween" libs/tanstack/tanstack-react-matched.jsx "${REACT_EXTERNALS[@]}"
-build tanstack-react-motion  "Reference" "TanStack Charts 1.1.0" "the same with the motion() renderer, which also animates the first render" libs/tanstack/tanstack-react-motion.jsx "${REACT_EXTERNALS[@]}"
+build tanstack-react-tween    "Reference" "TanStack Charts 1.1.0" "the same chart animated by svgAnimation, which animates updates only" libs/tanstack/tanstack-react-tween.jsx "${REACT_EXTERNALS[@]}"
+build tanstack-react-defaults "Reference" "TanStack Charts 1.1.0" "library defaults: straight lines, no crosshair, no animation" libs/tanstack/tanstack-react-defaults.jsx "${REACT_EXTERNALS[@]}"
 
 # Context builds (not charts): React itself, and an AG Charts import that uses nothing but ModuleRegistry.
 build react-baseline         "Context" "React 18.3.1 + ReactDOM 18.3.1" "react + react-dom/client + jsx-runtime (the part excluded from the React rows)" libs/react/react-baseline.jsx --jsx=automatic

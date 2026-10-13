@@ -12,7 +12,9 @@ getContainer().append(Plot.plot({
   y: { grid: true },
   color: { domain: SERIES.map((s) => s.label), range: SERIES.map((s) => s.color), legend: true },
   marks: [
-    Plot.lineY(rows, { x: 'x', y: 'value', stroke: 'series' }),
+    Plot.lineY(rows, { x: 'x', y: 'value', stroke: 'series', curve: 'monotone-x' }),
+    // The crosshair: a rule at the hovered x. Plot has no animation
+    Plot.ruleX(DATA, Plot.pointerX({ x: 'x', stroke: '#888' })),
     // One tooltip listing every series at the hovered x, as the other charts do
     Plot.tip(DATA, Plot.pointerX({ x: 'x', y: (d) => d.a, title: tooltip })),
   ],

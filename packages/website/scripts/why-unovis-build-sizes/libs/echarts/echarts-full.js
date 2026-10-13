@@ -13,6 +13,6 @@ chart.setOption({
   legend: {},
   xAxis: { type: 'category', data: DATA.map((d) => d.x) },
   yAxis: { type: 'value' },
-  series: SERIES.map((s) => ({ type: 'line', name: s.label, data: DATA.map((d) => d[s.key]) })),
+  series: SERIES.map((s) => ({ type: 'line', name: s.label, data: DATA.map((d) => d[s.key]), smooth: true })),
 })
 window.addEventListener('resize', () => chart.resize())

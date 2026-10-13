@@ -1,5 +1,6 @@
 // The Vega-Lite spec shared by the React and vanilla entries: the documented "multi-series line chart with
-// tooltip" pattern (a pivot transform and a rule that carries one tooltip for every series at the hovered x)
+// tooltip" pattern (a pivot transform and a rule, the crosshair, that carries one tooltip for every series at the
+// hovered x). Vega-Lite has no animation
 import { DATA, SERIES } from '../shared/data.js'
 
 // Vega-Lite wants one row per series and point (tidy data), the other libraries take the wide table as is
@@ -13,7 +14,7 @@ export const spec = {
   encoding: { x: { field: 'x', type: 'quantitative' } },
   layer: [
     {
-      mark: 'line',
+      mark: { type: 'line', interpolate: 'monotone' },
       encoding: {
         y: { field: 'value', type: 'quantitative' },
         color: { field: 'series', type: 'nominal', scale: { domain: SERIES.map((s) => s.label), range: SERIES.map((s) => s.color) } },

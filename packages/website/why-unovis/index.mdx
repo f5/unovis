@@ -158,14 +158,16 @@ support, building blocks and chart details) with a source for every cell.
 
 ### Bundle size
 
-The same line chart (three series, axes, a tooltip and a legend) with each library's React integration, minified and
-gzipped, React itself excluded:
+The same chart in every library: three smooth lines with axes, a legend, a tooltip for all series, a crosshair and
+animation, written with each library's React integration, minified and gzipped, React itself excluded:
 
 <BuildSizeChart/>
 
-TanStack Charts comes out smallest: its compact scales replace d3, and its lines are straight and don't animate unless
-you opt in. With Unovis' defaults turned on (smooth curves, a crosshair and animation) it's 41.3 KB, or 54.7 KB when its
-`motion()` renderer animates the first render too, as Unovis does. Unovis is next, 4 KB under Chart.js. Hover a bar to see what was bundled, and see [how we measured](/why-unovis/methodology#bundle-size).
+Unovis comes out smallest, ahead of TanStack Charts and Chart.js. TanStack Charts is lighter with its defaults: straight
+lines with no crosshair and no animation take 37.5 KB, and with the curves and the crosshair but only data updates
+animated, 41.3 KB. Observable Plot and Vega-Lite can't animate, and AG Charts Community has neither the crosshair
+nor animation (both are Enterprise features), so they're measured without them. Hover a bar to see what was bundled, and
+see [how we measured](/why-unovis/methodology#bundle-size).
 
 ## When another library might suit you better
 
