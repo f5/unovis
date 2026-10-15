@@ -421,7 +421,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         .map((value, index) => ({
           id: `stacked-${index}`,
           y: this.yScale(value + baselineValue),
-          opacity: isNumber(getNumber(datum, yStackedAccessors[index], index)) ? 1 : 0,
+          opacity: isNumber(getNumber(datum, yStackedAccessors[index], datumIndex)) ? 1 : 0,
           color: getColor(datum, config.color, index, colorKeys?.[index], colorOptions),
           strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, index, colorKeys?.[index], colorOptions) : undefined,
           strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, index) : undefined,
@@ -430,13 +430,14 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       const regularValues: CrosshairCircle[] = yAccessors
         .map((a, index) => {
           const value = getNumber(datum, a, datumIndex)
+          const circleIndex = stackedValues.length + index
           return {
             id: `regular-${index}`,
             y: this.yScale(value),
             opacity: isNumber(value) ? 1 : 0,
-            color: getColor(datum, config.color, stackedValues.length + index, colorKeys?.[stackedValues.length + index], colorOptions),
-            strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, index, colorKeys?.[index], colorOptions) : undefined,
-            strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, index) : undefined,
+            color: getColor(datum, config.color, circleIndex, colorKeys?.[circleIndex], colorOptions),
+            strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, circleIndex, colorKeys?.[circleIndex], colorOptions) : undefined,
+            strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, circleIndex) : undefined,
           }
         })
 
