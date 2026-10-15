@@ -4,7 +4,6 @@ import { ComponentCore } from '@/core/component'
 import { ComponentType } from '@/types/component'
 
 // Utils
-import { ResizeObserver } from '@/utils/resize-observer'
 import { getNumber, throttle } from '@/utils/data'
 import { getDataLatLngBounds } from '@/utils/map'
 import { getColor } from '@/utils/color'
@@ -76,10 +75,12 @@ export class LeafletFlowMap<
         this.leafletMap._onMapMoveEndInternal = this.onMapMove.bind(this)
 
         // Update renderer size on container resize
-        this.resizeObserver = new ResizeObserver(() => {
-          this.renderer.setSize(container.offsetWidth, container.offsetHeight)
-        })
-        this.resizeObserver.observe(container)
+        if (globalThis.ResizeObserver) {
+          this.resizeObserver = new ResizeObserver(() => {
+            this.renderer.setSize(container.offsetWidth, container.offsetHeight)
+          })
+          this.resizeObserver.observe(container)
+        }
 
         if (config) this.setConfig(config)
         if (data) this.setData(data)

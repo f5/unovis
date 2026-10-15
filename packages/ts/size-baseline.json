@@ -1,0 +1,34 @@
+{
+  "xy-container-line": {
+    "min": 121141,
+    "gzip": 40483
+  },
+  "line-chart": {
+    "min": 172938,
+    "gzip": 57399
+  },
+  "stacked-bar-area": {
+    "min": 158306,
+    "gzip": 52646
+  },
+  "donut": {
+    "min": 90101,
+    "gzip": 32032
+  },
+  "sankey": {
+    "min": 134296,
+    "gzip": 46485
+  },
+  "graph": {
+    "min": 183375,
+    "gzip": 60357
+  },
+  "topojson-map": {
+    "min": 183241,
+    "gzip": 63038
+  },
+  "leaflet-map": {
+    "min": 139450,
+    "gzip": 47427
+  }
+}
