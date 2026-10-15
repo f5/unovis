@@ -112,9 +112,12 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     if (this.container === containerSvg) return
 
     this.container = containerSvg
-    this.container.on('mousemove.crosshair', this._onMouseMove.bind(this))
-    this.container.on('mouseout.crosshair', this._onMouseOut.bind(this))
+    this.container.on('pointermove.crosshair', this._onPointerMove.bind(this))
+    this.container.on('pointerout.crosshair', this._onPointerOut.bind(this))
     this.container.on('wheel.crosshair', this._onWheel.bind(this))
+    // A touch shows the crosshair only while the finger is down
+    this.container.on('pointerdown.crosshair', this._onPointerDown.bind(this))
+    this.container.on('pointerup.crosshair pointercancel.crosshair', this._onPointerUp.bind(this))
   }
 
   _render (customDuration?: number): void {
@@ -287,7 +290,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     })
   }
 
-  _onMouseMove (event: MouseEvent): void {
+  _onPointerMove (event: PointerEvent): void {
+    // Ignore all the fingers except the first one
+    if (event.pointerType === 'touch' && !event.isPrimary) return
+
     const { datamodel, element } = this
     if (!this.accessors.x && datamodel.data?.length) {
       console.warn('Unovis | Crosshair: X accessor function has not been configured. Please check if it\'s present in the configuration object')
@@ -305,11 +311,30 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     })
   }
 
-  _onMouseOut (event?: MouseEvent): void {
-    // Only hide if the mouse actually left the SVG, not just moved to a child
-    if (!event || !this.container?.node().contains((event as MouseEvent).relatedTarget as Node)) {
+  _onPointerOut (event?: PointerEvent): void {
+    if (event?.pointerType === 'touch' && !event.isPrimary) return
+
+    // Safari fires the boundary events of touches and pens without `relatedTarget`, so we look up the element under the pointer
+    const root = this.container?.node().getRootNode() as Document | ShadowRoot
+    const isDirectPointer = event?.pointerType === 'touch' || event?.pointerType === 'pen'
+    const relatedTarget = event?.relatedTarget ?? (isDirectPointer && isFunction(root?.elementFromPoint)
+      ? root.elementFromPoint(event.clientX, event.clientY)
+      : null)
+
+    // Only hide if the pointer actually left the SVG, not just moved to a child
+    if (!event || !this.container?.node().contains(relatedTarget as Node)) {
       this.hide(event)
     }
+  }
+
+  _onPointerDown (event: PointerEvent): void {
+    // Mouse shows the crosshair on `pointermove` (hover), while a touch or a pen (it can't always hover) shows it right away
+    if (event.pointerType === 'touch' || event.pointerType === 'pen') this._onPointerMove(event)
+  }
+
+  _onPointerUp (event: PointerEvent): void {
+    // `pointercancel` is fired when the browser takes over the gesture, e.g. to scroll the page
+    if (event.isPrimary && (event.pointerType === 'touch' || event.type === 'pointercancel')) this.hide(event)
   }
 
   _onWheel (event: WheelEvent): void {

@@ -176,12 +176,21 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
     const canvasSelection = select(canvas).classed(s.mapboxglCanvas, true)
     const tilePaneSelection = select(leafletMap.getPanes().tilePane)
 
-    maplibreMap.on('mousemove', (event) => {
+    // We look up the feature under the pointer on the canvas' `pointermove` and `pointerdown` instead of MapLibre's `mousemove`,
+    // because Tooltip reads it on the map container's `pointermove` and `pointerdown` that happen before `mousemove`
+    // (and touches don't fire `mousemove` at all)
+    canvasSelection.on('pointermove.feature pointerdown.feature', (event: PointerEvent) => {
       const layerName = `${topoJSONLayer.featureName}-area`
       const layer = maplibreMap.getLayer(layerName)
       if (!layer) return
 
-      const features = maplibreMap.queryRenderedFeatures(event.point, { layers: [layerName] })
+      // The pointer position in the canvas coordinates, the same way as MapLibre calculates it (accounting for CSS scale)
+      const rect = canvas.getBoundingClientRect()
+      const point: [number, number] = [
+        (event.clientX - rect.left) / ((rect.width / canvas.offsetWidth) || 1) - canvas.clientLeft,
+        (event.clientY - rect.top) / ((rect.height / canvas.offsetHeight) || 1) - canvas.clientTop,
+      ]
+      const features = maplibreMap.queryRenderedFeatures(point, { layers: [layerName] })
       tilePaneSelection.datum(features[0])
       canvasSelection.classed(s.onFeatureHover, Boolean(features[0]))
     })

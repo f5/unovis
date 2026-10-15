@@ -85,6 +85,12 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
   /** Show delay in milliseconds. Default: `undefined` */
   @Input() showDelay?: number
 
+  /** On touch devices, let the Tooltip follow the finger as it moves across the chart. To prevent the browser from taking
+   * over the gesture, the chart's SVG element gets `touch-action: pinch-zoom` when the Tooltip has triggers: pinch-zoom keeps
+   * working, but a swipe that starts on the chart won't scroll the page or its scrollable containers. When `false`, the browser
+   * handles touch gestures as usual and a drag hides the Tooltip once the browser takes the gesture over. Default: `true` */
+  @Input() followTouchMove?: boolean
+
   component: Tooltip | undefined
   public componentContainer: ContainerCore | undefined
 
@@ -98,8 +104,8 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
   }
 
   private getConfig (): TooltipConfigInterface {
-    const { components, container, followCursor, allowHover, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes, className, hideDelay, showDelay } = this
-    const config = { components, container, followCursor, allowHover, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes, className, hideDelay, showDelay }
+    const { components, container, followCursor, allowHover, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes, className, hideDelay, showDelay, followTouchMove } = this
+    const config = { components, container, followCursor, allowHover, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes, className, hideDelay, showDelay, followTouchMove }
     const keys = Object.keys(config) as (keyof TooltipConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

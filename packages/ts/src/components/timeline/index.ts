@@ -70,6 +70,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _scrollBarMargin = 5
   private _maxScroll = 0
   private _scrollbarHeight = 0
+  private _touchY: number | undefined = undefined
   private _labelWidth = 0 // Will be overridden in `get bleed ()`
   private _lineIconBleed: [number, number] = [0, 0]
   private _lineBleed: [number, number] = [0, 0]
@@ -114,6 +115,11 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .on('drag', this._onScrollbarDrag.bind(this))
 
     this._scrollBarHandle.call(dragBehaviour)
+
+    // Scroll with a touch drag, the same way as with the mouse wheel
+    this.g
+      .on('touchstart.scroll', this._onTouchStart.bind(this), { passive: true })
+      .on('touchmove.scroll', this._onTouchMove.bind(this), { passive: false })
   }
 
   public setConfig (config: TimelineConfigInterface<Datum>): void {
@@ -646,9 +652,28 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     config.onScroll?.(this._scrollDistance)
 
-    // Programmatically trigger a mousemove event to update Tooltip or Crosshair if they were set up
-    const e = new Event('mousemove')
+    // Programmatically trigger a pointermove event to update Tooltip or Crosshair if they were set up
+    const e = new Event('pointermove')
     this.element.dispatchEvent(e)
+  }
+
+  private _onTouchStart (event: TouchEvent): void {
+    this._touchY = event.touches.length === 1 ? event.touches[0].clientY : undefined
+  }
+
+  private _onTouchMove (event: TouchEvent): void {
+    if (this._touchY === undefined || event.touches.length !== 1) return
+
+    const { config } = this
+    const y = event.touches[0].clientY
+    const prevScrollDistance = this._scrollDistance
+    this._updateScrollPosition(this._touchY - y)
+    this._touchY = y
+
+    // Let the browser scroll the page when the timeline has reached its top or bottom, the same way as with the wheel
+    if (this._scrollDistance === prevScrollDistance) return
+    if (event.cancelable) event.preventDefault()
+    config.onScroll?.(this._scrollDistance)
   }
 
   private _updateScrollPosition (diff: number): void {
