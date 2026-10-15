@@ -17,23 +17,29 @@ import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAl
 import { smartTransition } from '@/utils/d3'
 import { estimateWrappedTextHeight, getWrappedText, renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from '@/utils/text'
 import { getCachedComputedTextLength, getPreciseStringLengthPx } from '@/utils/text-measure'
-import { isEqual, isFunction } from '@/utils/data'
-import { getRotatedRectAabb } from '@/utils/misc'
+import { isArray, isEqual, isFunction } from '@/utils/data'
+import { getRotatedRectAabb, getRotatedPoint } from '@/utils/misc'
 import { hideOverlappingLabels } from '@/utils/text-overlap'
 import { UNOVIS_TEXT_DEFAULT } from '@/styles/index'
 
 // Local Types
-import { AxisType, TickSets, TickValues } from './types'
+import { AxisTickSetMode, AxisTimeTickUnit, AxisType, TickSets, TickValues } from './types'
 
 // Local Utils
 import {
   findFittingTickValues,
+  findUniformFittingTickValues,
   getNestedTickValues,
+  getRotatedTickTextMaxWidth,
   getTickValueCandidates,
   getTickValueSubsetCandidates,
+  getTimeTickBaseGrid,
   mergeTickValues,
   tickKey,
 } from './tick-fit'
+
+// Constants
+import { AXIS_ROTATED_TICK_LABEL_MAX_DEPTH_SHARE } from './constants'
 
 // Config
 import { AxisDefaultConfig, AxisConfigInterface } from './config'
@@ -46,11 +52,6 @@ type TickTextStyle = {
   fontFamily: string;
   fontWeight?: number;
 }
-
-/** Minimum on-screen gap between tick labels (negative `tolerance` of `resolveRectsOverlap`
- * expands the rects). The tick fitting and the overlap safety net must use the same value,
- * otherwise the fitted sets wouldn't survive the overlap pass */
-const TICK_LABEL_OVERLAP_TOLERANCE_PX = -5
 
 export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datum>> {
   static selectors = s
@@ -65,6 +66,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   private _defaultNumTicks = 3
   private _collideTickLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
   private _tickTextStyleCached: TickTextStyle
+  private _timeTickUnit: AxisTimeTickUnit | undefined
+  private _labelSpace: { width: number; left: number; right: number } | undefined
 
   protected events = {}
 
@@ -91,10 +94,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     const { config } = this
     const axisRenderHelperGroup = this.g.append('g').attr('opacity', 0)
 
-    // Measure the full fitted set, so the margins account for its label bleed. Deliberately
-    // not the `labeled` subset: margins from it would depend on the extreme-label drops, which
-    // themselves depend on the margins — an unstable feedback making layout resize-path-dependent
-    this._renderAxis(axisRenderHelperGroup, 0, this._getFittingTickValues()?.fittedTicks)
+    // Margins come from the shown labels only: the tick fitting doesn't depend on them (see `setLabelSpace`)
+    this._renderAxis(axisRenderHelperGroup, 0, this._getFittingTickValues()?.labeledTicks)
 
     // Align tick text
     if (config.tickTextAlign) this._alignTickLabels(axisRenderHelperGroup)
@@ -108,6 +109,12 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     this._requiredMargin = this._getRequiredMargin(this._axisSizeBBox)
 
     axisRenderHelperGroup.remove()
+  }
+
+  /** Called by the container before `preRender`: the plot width with no margin taken by the X tick labels,
+   * and the margins of the other axes, which the labels reach into for free */
+  public setLabelSpace (width: number, left: number, right: number): void {
+    this._labelSpace = { width, left, right }
   }
 
   public getPosition (): Position {
@@ -334,21 +341,14 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     const tickSize = axisGen.tickSize()
     const axisPosition = this.getPosition()
-    // Fair-share label width counts labeled ticks only, matching what the tick fitting measured
-    const textMaxWidth = this._getTickTextMaxWidth(labeledTickKeys?.size ?? tickCount)
+    // Fitted labels get the width budget the tick fitting measured them with. The tick values are
+    // overridden exactly for fitted sets — `preRender` doesn't pass the labeled subset
+    const textMaxWidth = this._getTickTextMaxWidth(tickCount, Boolean(tickValuesOverride))
     tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
-      let text = config.tickFormat?.(value, i, tickValues as number[] | Date[]) ?? `${value}`
+      let text = config.tickFormat?.(value, i, tickValues as number[] | Date[], this._timeTickUnit) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
       const tickTextStyle = this._getTickTextStyle(textElement)
-
-      // Calculate the text offset based on the axis position and the tick size
-      const [textOffsetX, textOffsetY] = this._getTickTextOffset(axisPosition, tickSize, tickTextStyle.fontSize)
-
-      const textOptions: UnovisTextOptions = {
-        ...this._getTickTextOptions(textMaxWidth),
-        x: textOffsetX,
-        y: textOffsetY,
-      }
+      const textOptions = this._getTickTextOptions(textMaxWidth)
 
       if (config.tickTextFitMode === FitMode.Trim) {
         const textElementSelection = select<SVGTextElement, string>(textElement).text(text)
@@ -357,8 +357,17 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       }
 
       const textBlock: UnovisText = { text, ...tickTextStyle }
+
+      // Calculate the text offset based on the axis position, the tick size and the label's line count
+      const wrapped = getWrappedText(
+        textBlock, textOptions.width, undefined, textOptions.fastMode, textOptions.separator,
+        textOptions.wordBreak, textOptions.maxLines, textOptions.trimMode, textOptions.balance
+      )
+      const lineCount = wrapped.flatMap(block => block._lines).length
+      const [textOffsetX, textOffsetY] = this._getTickTextOffset(axisPosition, tickSize, tickTextStyle.fontSize, lineCount)
+
       const dominantBaseline = config.type === AxisType.X ? 'central' : 'hanging'
-      renderTextToSvgTextElement(textElement, textBlock, textOptions, dominantBaseline)
+      renderTextToSvgTextElement(textElement, textBlock, { ...textOptions, x: textOffsetX, y: textOffsetY }, dominantBaseline)
     })
 
     selection
@@ -381,10 +390,13 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       return
     }
 
+    // Rotated X labels are compared in their own frame, like the tick fitting does (see `_getTickLabelRects`)
+    const rotationAngle = config.type === AxisType.X ? (config.tickTextAngle ?? 0) / 180 * Math.PI : 0
+
     cancelAnimationFrame(this._collideTickLabelsAnimFrameId)
     // Colliding labels in the next frame to prevent forced reflow
     this._collideTickLabelsAnimFrameId = requestAnimationFrame(() => {
-      hideOverlappingLabels(tickTextSelection, { tolerance: TICK_LABEL_OVERLAP_TOLERANCE_PX })
+      hideOverlappingLabels(tickTextSelection, { tolerance: this._getTickLabelOverlapTolerance(), rotationAngle })
     })
   }
 
@@ -394,28 +406,70 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
    * Returns `undefined` when the search is not applicable, falling back to the default tick generation. */
   private _getFittingTickValues (): TickSets | undefined {
     const { config } = this
+    this._timeTickUnit = undefined
     if (!config.tickTextAdaptiveSets) return undefined
     if (this._shouldRenderMinMaxTicksOnly()) return undefined
 
     const scale = (config.type === AxisType.X ? this.xScale : this.yScale) as ContinuousScale
-    const maxNumTicks = Math.ceil(this._getNumTicks())
+    const maxNumTicks = Math.ceil(this._getNumTicks(this._labelSpace?.width))
     const configuredTickValues = this._getConfiguredTickValues()
+
+    if (config.tickTextAdaptiveSets === AxisTickSetMode.Uniform && !configuredTickValues && scale.domain()[0] instanceof Date) {
+      const grid = getTimeTickBaseGrid(scale.domain(), maxNumTicks)
+      if (grid) {
+        this._timeTickUnit = grid.unit
+        const plotWidth = this._getFittingPlotWidth(grid.values)
+        const tickSets = findUniformFittingTickValues(
+          grid.values,
+          maxNumTicks,
+          values => this._getTickLabelRects(values, plotWidth),
+          this._getTickLabelOverlapTolerance(),
+          grid.unit
+        )
+        if (tickSets) return tickSets
+        this._timeTickUnit = undefined
+      }
+    }
 
     const candidates = configuredTickValues
       ? getTickValueSubsetCandidates(configuredTickValues)
       : getTickValueCandidates(scale, maxNumTicks)
-    const fitting = findFittingTickValues(candidates, values => this._getTickLabelRects(values), TICK_LABEL_OVERLAP_TOLERANCE_PX)
+    const plotWidth = this._getFittingPlotWidth(configuredTickValues ?? candidates[0])
+    const fitting = findFittingTickValues(candidates, values => this._getTickLabelRects(values, plotWidth), this._getTickLabelOverlapTolerance())
     if (!fitting) return undefined
 
     const originalTicks = configuredTickValues ?? getNestedTickValues(scale, maxNumTicks, candidates[0])
     return { ...fitting, originalTicks }
   }
 
-  /** Fair-share width available to a tick label before it gets wrapped or trimmed */
-  private _getTickTextMaxWidth (labelCount: number): number {
+  /** `resolveRectsOverlap` tolerance enforcing `tickTextOverlapTolerance`: it expands every edge of
+   * each rect, so two rects collide within twice its gap. The tick fitting and the overlap pass
+   * must use the same value, or fitted sets wouldn't survive the pass */
+  private _getTickLabelOverlapTolerance (): number {
+    return -this.config.tickTextOverlapTolerance / 2
+  }
+
+  /** Width available to a tick label, along its text, before it gets wrapped or trimmed. Fixed X tick
+   * sets share the axis fairly, as nothing else keeps their labels apart; the fitted sets are spaced by
+   * the label geometry already, so a fitted label only wraps when wider than the whole axis — or, when
+   * rotated, when it would grow into the margin deeper than the rotated labels' depth bound */
+  private _getTickTextMaxWidth (labelCount: number, fitted: boolean, plotWidth = this._width): number {
     const { config } = this
-    return config.tickTextWidth ||
-      (config.type === AxisType.X ? this._containerWidth / (labelCount + 1) : this._containerWidth / 5)
+    if (config.tickTextWidth) return config.tickTextWidth
+    if (config.type !== AxisType.X) return this._containerWidth / 5
+
+    // The slot a labeled tick owns: a fair share of the axis, or the whole axis for fitted sets
+    const slotWidth = fitted ? plotWidth : this._containerWidth / (labelCount + 1)
+    if (!config.tickTextAngle) return slotWidth
+
+    const rotatedWidth = getRotatedTickTextMaxWidth(
+      slotWidth,
+      config.tickTextAngle / 180 * Math.PI,
+      this._getTickTextStyle().fontSize * UNOVIS_TEXT_DEFAULT.lineHeight,
+      this._containerHeight * AXIS_ROTATED_TICK_LABEL_MAX_DEPTH_SHARE,
+      config.tickTextOverlapTolerance
+    )
+    return fitted ? Math.min(slotWidth, rotatedWidth) : rotatedWidth
   }
 
   /** Label rendering options shared between `_renderAxis` and the tick fitting predictions
@@ -429,45 +483,72 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       textRotationAngle: config.tickTextAngle,
       separator: config.tickTextSeparator,
       wordBreak: config.tickTextForceWordBreak,
+      maxLines: config.tickTextMaxLines,
+      trimMode: config.tickTextTrimType as TrimMode,
+      balance: config.tickTextWrapBalanced,
       fastMode: false,
     }
   }
 
-  /** Predicts tick label rects using the same text wrapping and cached measurements
-   * the renderer itself relies on. */
-  private _getTickLabelRects (values: TickValues): Rect[] {
+  /** Plot width the tick fitting works at: with a label space, the width left once the outermost labels of
+   * the densest candidate take their margins. Their bleed barely depends on the width, so one measurement
+   * at the label space width is enough, and the result doesn't depend on the current margins */
+  private _getFittingPlotWidth (values: TickValues): number {
+    const space = this.config.type === AxisType.X ? this._labelSpace : undefined
+    if (!space || !values?.length) return this._width
+
+    const angleRad = (this.config.tickTextAngle ?? 0) / 180 * Math.PI
+    const boxes = this._getTickLabelRects(values, space.width).map(rect => angleRad ? getRotatedRectAabb(rect, angleRad) : rect)
+    const bleedLeft = Math.max(0, ...boxes.map(box => -box.x))
+    const bleedRight = Math.max(0, ...boxes.map(box => box.x + box.width - space.width))
+    return Math.max(0, space.width - Math.max(0, bleedLeft - space.left) - Math.max(0, bleedRight - space.right))
+  }
+
+  /** Predicts tick label rects using the same text wrapping and cached measurements the renderer
+   * itself relies on, as if the plot were `plotWidth` wide. X axis rects are in the labels' own (rotated) frame */
+  private _getTickLabelRects (values: TickValues, plotWidth = this._width): Rect[] {
     const { config } = this
     const isX = config.type === AxisType.X
     const scale = (isX ? this.xScale : this.yScale) as ContinuousScale
+    const [rangeStart, rangeEnd] = scale.range()
+    const stretch = isX && rangeEnd !== rangeStart ? (rangeEnd - rangeStart + plotWidth - this._width) / (rangeEnd - rangeStart) : 1
     const style = this._getTickTextStyle()
-    const textOptions = this._getTickTextOptions(this._getTickTextMaxWidth(values.length))
+    const textOptions = this._getTickTextOptions(this._getTickTextMaxWidth(values.length, true, plotWidth))
     const lineHeightPx = style.fontSize * UNOVIS_TEXT_DEFAULT.lineHeight
     const angleRad = (config.tickTextAngle ?? 0) / 180 * Math.PI
+    const axisPosition = this.getPosition()
+    const tickSize = isArray(config.tickSize) ? config.tickSize[0] : config.tickSize
 
     return values.map((value, i) => {
-      const text = config.tickFormat?.(value, i, values as number[] | Date[]) ?? `${value}`
+      const text = config.tickFormat?.(value, i, values as number[] | Date[], this._timeTickUnit) ?? `${value}`
 
       // Label size, computed the same way _renderAxis will compute it
       let width: number
       let height: number
+      let lineCount: number
       if (config.tickTextFitMode === FitMode.Trim) {
         // Approximation of trimSVGText: a trimmed label can't be wider than its width budget
         const fullWidth = getPreciseStringLengthPx(text, style.fontFamily, style.fontSize, style.fontWeight)
         width = Math.min(fullWidth, textOptions.width)
         height = lineHeightPx
+        lineCount = 1
       } else {
-        const wrapped = getWrappedText({ text, ...style }, textOptions.width, undefined, textOptions.fastMode, textOptions.separator, textOptions.wordBreak)
+        const wrapped = getWrappedText(
+          { text, ...style }, textOptions.width, undefined, textOptions.fastMode, textOptions.separator,
+          textOptions.wordBreak, textOptions.maxLines, textOptions.trimMode, textOptions.balance
+        )
         const lines = wrapped.flatMap(block => block._lines)
         const lineWidths = lines.map(line => getPreciseStringLengthPx(line, style.fontFamily, style.fontSize, style.fontWeight))
         width = Math.max(0, ...lineWidths)
         height = estimateWrappedTextHeight(wrapped)
+        lineCount = lines.length
       }
 
       // Label extent relative to its anchor at the tick position
-      const position = scale(value as never)
+      const position = rangeStart + (scale(value as never) - rangeStart) * stretch
       const tickPosition: [number, number] = isX ? [position, 0] : [0, position]
       const textAlign = isFunction(config.tickTextAlign)
-        ? config.tickTextAlign(value, i, values as number[] | Date[], tickPosition, this._width, this._height)
+        ? config.tickTextAlign(value, i, values as number[] | Date[], tickPosition, plotWidth, this._height)
         : config.tickTextAlign
 
       let x0: number
@@ -482,9 +563,22 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         // X axis labels are center-anchored by default
         x0 = -width / 2
       }
-      const y0 = isX ? -lineHeightPx / 2 : -height / 2
 
-      const localRect = { x: x0, y: y0, width, height }
+      if (isX) {
+        // X labels are compared in their own frame, rotated by `tickTextAngle`: there they are parallel
+        // and axis-aligned, while their screen bounding boxes would overlap long before they do. The
+        // anchor (the first line's centre) is placed like `_renderAxis` does: `_alignTickLabels`
+        // rotates the label about the tick, `renderTextToSvgTextElement` about the anchor
+        const [offsetX, offsetY] = this._getTickTextOffset(axisPosition, tickSize, style.fontSize, lineCount)
+        const [tickX, tickY] = getRotatedPoint(position, 0, -angleRad)
+        const [anchorX, anchorY] = config.tickTextAlign
+          ? [tickX + offsetX, tickY + offsetY]
+          : getRotatedPoint(position + offsetX, offsetY, -angleRad)
+        // A rendered line is about a line height tall, which is what the overlap pass measures
+        return { x: anchorX + x0, y: anchorY - lineHeightPx / 2, width, height: lineCount * lineHeightPx }
+      }
+
+      const localRect = { x: x0, y: -height / 2, width, height }
       const rect = angleRad ? getRotatedRectAabb(localRect, angleRad) : localRect
       return { ...rect, x: tickPosition[0] + rect.x, y: tickPosition[1] + rect.y }
     })
@@ -511,14 +605,14 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     return this._tickTextStyleCached
   }
 
-  private _getNumTicks (): number {
+  private _getNumTicks (plotWidth = this._width): number {
     const { config: { type, numTicks, tickSpacing } } = this
 
     if (numTicks) return numTicks
 
     if (type === AxisType.X) {
       const xRange = this.xScale.range() as [number, number]
-      const width = xRange[1] - xRange[0]
+      const width = xRange[1] - xRange[0] + plotWidth - this._width
       return Math.max(1, Math.floor(width / tickSpacing))
     }
 
@@ -655,16 +749,22 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  private _getTickTextOffset (axisPosition: Position, tickSize: number, fontSize: number): [number, number] {
+  /** Offset of a tick label's anchor (its first line's centre) from the tick, in the label's rotated frame */
+  private _getTickTextOffset (axisPosition: Position, tickSize: number, fontSize: number, lineCount = 1): [number, number] {
     const { config } = this
     const angleRad = (config.tickTextAngle ?? 0) / 180 * Math.PI
     const baseOffset = tickSize + config.tickPadding
 
     if (config.type === AxisType.X) {
       const direction = axisPosition === Position.Bottom ? 1 : -1
+      // Centre the whole block (not its first line) on the tick, so a rotated block doesn't slide
+      // sideways, and push it away from the axis by the extra depth so its near edge stays put.
+      // The two cancel out for horizontal labels under the axis
+      const blockShift = (lineCount - 1) * fontSize * UNOVIS_TEXT_DEFAULT.lineHeight / 2
+      const offset = baseOffset + blockShift * Math.abs(Math.cos(angleRad))
       return [
-        direction * baseOffset * Math.sin(angleRad),
-        direction * (baseOffset + fontSize / 2) * Math.cos(angleRad),
+        direction * offset * Math.sin(angleRad),
+        direction * (offset + fontSize / 2) * Math.cos(angleRad) - blockShift,
       ]
     } else {
       const direction = axisPosition === Position.Right ? 1 : -1
