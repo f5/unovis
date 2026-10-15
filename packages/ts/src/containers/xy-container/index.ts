@@ -272,10 +272,9 @@ export class XYContainer<Datum> extends ContainerCore {
         baseline: baselineAccessor,
       }
 
-      const colorKeys = [
-        nonStackedComponents.map(c => c.config.colorKeys),
-        stackedComponents.map(c => c.config.colorKeys),
-      ].flat(2)
+      // One color key per `y` accessor, in the order of the Crosshair circles: stacked first, then regular
+      const colorKeys = [...stackedComponents, ...nonStackedComponents]
+        .flatMap(c => flatten([c.config.y]).map((_, i) => c.config.colorKeys?.[i]))
 
       crosshair.colorKeys = colorKeys
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
