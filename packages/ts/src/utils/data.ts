@@ -427,7 +427,7 @@ export function getNearest2D<Datum> (
       const baselineValue = getNumber(datum, baselineAccessor, i) || 0
       const stackedValues = getStackedValues(datum, i, ...yStackedAccessors)
       for (let j = 0; j < stackedValues.length; j++) {
-        if (!isNumber(getNumber(datum, yStackedAccessors[j], j))) continue
+        if (!isNumber(getNumber(datum, yStackedAccessors[j], i))) continue
         const y = yScale(stackedValues[j] + baselineValue)
         const distanceSq = distanceXSq + (y - pointY) ** 2
         if (distanceSq < minDistanceSq) {
