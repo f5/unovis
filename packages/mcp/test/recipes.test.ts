@@ -43,7 +43,7 @@ describe.each(recipes.map(r => [r.name, r] as const))('%s', (name, recipe) => {
       expect(result.svg, `${sample.name}: no unresolved vars`).not.toContain('var(')
       expect(result.svg, `${sample.name}: no NaN geometry`).not.toContain('NaN')
       expect(result.svg, `${sample.name}: no base URL refs`).not.toContain('localhost')
-      expect(result.svg, `${sample.name}: no emotion classes`).not.toContain('class=')
+      expect(result.svg, `${sample.name}: no generated classes`).not.toContain('class=')
       expect(result.warnings, `${sample.name}: no render warnings`).toEqual([])
 
       // Force-directed layouts call Math.random() (d3-force's jiggle), so their

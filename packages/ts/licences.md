@@ -1,6 +1,5 @@
 | Name                             | License period | License type | Installed version | Author                                                            |
 | :------------------------------- | :------------- | :----------- | :---------------- | :---------------------------------------------------------------- |
-| @emotion/css                     | perpetual      | MIT          | 11.13.5           | Kye Hohenberger                                                   |
 | @juggle/resize-observer          | perpetual      | Apache-2.0   | 3.4.0             | Juggle                                                            |
 | csstype                          | perpetual      | MIT          | 3.2.3             | Fredrik Nicol <fredrik.nicol@gmail.com>                           |
 | d3-array                         | perpetual      | ISC          | 3.2.4             | Mike Bostock http://bost.ocks.org/mike                            |
@@ -45,6 +44,7 @@
 | @types/dagre                     | perpetual      | MIT          | 0.7.54            | n/a                                                               |
 | @types/geojson                   | perpetual      | MIT          | 7946.0.16         | n/a                                                               |
 | @types/leaflet                   | perpetual      | MIT          | 1.7.6             | n/a                                                               |
+| @types/stylis                    | perpetual      | MIT          | 4.2.7             | n/a                                                               |
 | @types/supercluster              | perpetual      | MIT          | 5.0.3             | n/a                                                               |
 | @types/three                     | perpetual      | MIT          | 0.135.0           | n/a                                                               |
 | @types/throttle-debounce         | perpetual      | MIT          | 5.0.2             | n/a                                                               |
@@ -62,6 +62,7 @@
 | leaflet                          | perpetual      | BSD-2-Clause | 1.7.1             | n/a                                                               |
 | maplibre-gl                      | perpetual      | BSD-3-Clause | 6.7.0             | n/a                                                               |
 | striptags                        | perpetual      | MIT          | 3.2.0             | Eric Norris (https://github.com/ericnorris)                       |
+| stylis                           | perpetual      | MIT          | 4.2.0             | Sultan Tarimo <sultantarimo@me.com>                               |
 | supercluster                     | perpetual      | ISC          | 7.1.5             | Vladimir Agafonkin                                                |
 | three                            | perpetual      | MIT          | 0.135.0           | mrdoob                                                            |
 | throttle-debounce                | perpetual      | MIT          | 5.0.2             | Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com)          |
