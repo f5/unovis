@@ -83,6 +83,7 @@ export const examples: ExampleCollection[] = [
     examples: [
       require('./basic-donut-chart').default,
       require('./basic-radial-bar-chart').default,
+      require('./basic-circular-bar-chart').default,
       require('./hierarchical-chord-diagram').default,
       require('./sunburst-nested-donut').default,
     ],
