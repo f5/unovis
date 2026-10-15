@@ -8,7 +8,7 @@ import { SeriesDataModel } from '@/data-models/series'
 
 // Utils
 import { smartTransition } from '@/utils/d3'
-import { isNumber, clamp, getNumber } from '@/utils/data'
+import { isNumber, isArray, clamp, getNumber } from '@/utils/data'
 import { getCSSVariableValueInPixels } from '@/utils/misc'
 import { cssvar } from '@/utils/style'
 import { wrapSVGText } from '@/utils/text'
@@ -122,12 +122,12 @@ export class RadialBar<Datum> extends ComponentCore<Datum[], RadialBarConfigInte
     const dataMax = max(values) ?? 0
     const maxValues = wrapped.map((d) => {
       const mv = config.maxValue
-      if (Array.isArray(mv)) {
+      if (isArray(mv)) {
         const v = mv[d.index]
-        return (isNumber(v) ? v : dataMax) || 1
+        return isNumber(v) ? v : dataMax
       }
       const resolved = getNumber(d.datum, mv as NumericAccessor<Datum>, d.index)
-      return (resolved ?? dataMax) || 1
+      return resolved ?? dataMax
     })
 
     // Build arc datums per ring
