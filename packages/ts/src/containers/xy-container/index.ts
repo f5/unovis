@@ -46,6 +46,8 @@ export class XYContainer<Datum> extends ContainerCore {
   private _componentsBleed: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
   private _defaultTooltip: Tooltip | undefined
+  // Tick labels change size when a web font loads, so we re-render to recalculate the margins
+  private _onFontsLoaded = (): void => { if (!this._firstRender) this.render() }
 
   constructor (element: HTMLElement, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
@@ -85,10 +87,7 @@ export class XYContainer<Datum> extends ContainerCore {
       this.render()
     }
 
-    // Force re-render axes when fonts are loaded
-    (document as any).fonts?.ready.then(() => {
-      if (!this._firstRender) this._renderAxes(0)
-    })
+    document.fonts?.addEventListener('loadingdone', this._onFontsLoaded)
   }
 
   get components (): XYComponentCore<Datum>[] {
@@ -470,6 +469,7 @@ export class XYContainer<Datum> extends ContainerCore {
   public destroy (): void {
     const { components, config: { tooltip, crosshair, annotations, xAxis, yAxis } } = this
     super.destroy()
+    document.fonts?.removeEventListener('loadingdone', this._onFontsLoaded)
 
     for (const c of components) c?.destroy()
     tooltip?.destroy()
