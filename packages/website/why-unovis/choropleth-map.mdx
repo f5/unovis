@@ -8,13 +8,15 @@ import { LibraryComparison } from '@site/src/components/LibraryComparison'
 import { FeatureTable } from '@site/src/components/FeatureTable'
 import { choroplethMap } from '@site/src/comparisons/choropleth'
 
+<LibraryComparison comparison={choroplethMap}>
+
 # Choropleth Map
 
 Monthly active users of a web service by country, the data centers that serve them and the traffic between the data
 centers. Unovis draws it with [TopoJSONMap](/docs/components/TopoJSONMap). Every library gets the same country shapes
 and the same Blues color scheme.
 
-<LibraryComparison comparison={choroplethMap}/>
+</LibraryComparison>
 
 ## What to look for
 

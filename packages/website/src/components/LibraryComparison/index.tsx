@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { ReactNode, useMemo, useState } from 'react'
 import clsx from 'clsx'
 import { useColorMode } from '@docusaurus/theme-common'
 import CodeBlock from '@theme/CodeBlock'
@@ -14,9 +14,11 @@ import s from './styles.module.css'
 
 export type LibraryComparisonProps<Data> = {
   comparison: Comparison<Data>;
+  /** The page title and description, kept on screen with the toolbar while the charts scroll */
+  children?: ReactNode;
 }
 
-export function LibraryComparison<Data> ({ comparison }: LibraryComparisonProps<Data>): JSX.Element {
+export function LibraryComparison<Data> ({ comparison, children }: LibraryComparisonProps<Data>): JSX.Element {
   const [seed, setSeed] = useState(COMPARISON_INITIAL_SEED)
   const [showData, setShowData] = useState(false)
   const data = useMemo(() => comparison.getData(seed), [comparison, seed])
@@ -25,14 +27,17 @@ export function LibraryComparison<Data> ({ comparison }: LibraryComparisonProps<
 
   return (
     <div className={s.root}>
-      <div className={s.toolbar}>
-        <button className={clsx(s.button, s.primaryButton)} onClick={() => setSeed(seed + 1)}>
-          ↻ {comparison.updateLabel ?? 'Randomize data'}
-        </button>
-        <button className={s.button} onClick={() => setShowData(!showData)} aria-expanded={showData}>
-          {showData ? 'Hide the data' : 'Show the data'}
-        </button>
-        <span className={s.hint}>Hover the charts, click the legends, switch the site theme or resize the window</span>
+      <div className={s.header}>
+        {children}
+        <div className={s.toolbar}>
+          <button className={clsx(s.button, s.primaryButton)} onClick={() => setSeed(seed + 1)}>
+            ↻ {comparison.updateLabel ?? 'Randomize data'}
+          </button>
+          <button className={s.button} onClick={() => setShowData(!showData)} aria-expanded={showData}>
+            {showData ? 'Hide the data' : 'Show the data'}
+          </button>
+          <span className={s.hint}>Hover the charts, click the legends, switch the site theme or resize the window</span>
+        </div>
       </div>
       {showData && <CodeBlock className={s.code} language="ts" title="data.ts">{comparison.dataCode}</CodeBlock>}
       <div className={s.grid}>

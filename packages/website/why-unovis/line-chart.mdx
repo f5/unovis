@@ -8,13 +8,15 @@ import { LibraryComparison } from '@site/src/components/LibraryComparison'
 import { FeatureTable } from '@site/src/components/FeatureTable'
 import { lineChart } from '@site/src/comparisons/line'
 
+<LibraryComparison comparison={lineChart}>
+
 # Line Chart
 
 Monthly active users on three platforms over three years, with a few months of iOS and Android data missing. Every
 chart gets the same data, and each library is set up to draw the same chart: lines without point markers, formatted
 axes, a legend that toggles series and a tooltip on hover.
 
-<LibraryComparison comparison={lineChart}/>
+</LibraryComparison>
 
 ## What to look for
 
