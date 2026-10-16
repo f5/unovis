@@ -1,7 +1,7 @@
 // !!! This code was automatically generated. You should not change it !!!
 import type { HeatmapConfigInterface } from "@unovis/ts";
 import { Heatmap } from "@unovis/ts";
-import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
+import { createSignal, onCleanup, createEffect, on, onMount, splitProps } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 import { useVisContainer } from "../../utils/context";
 
@@ -13,11 +13,13 @@ export const VisHeatmapSelectors = Heatmap.selectors
 
 export function VisHeatmap<Datum>(props: VisHeatmapProps<Datum>) {
   const [component, setComponent] = createSignal<Heatmap<Datum>>()
+  // Separate the data prop from the config props, so the dataset doesn't end up in the component config
+  const [dataProps, config] = splitProps(props, ['data'])
    const ctx = useVisContainer();
   
   onMount(() => {
-    setComponent(new Heatmap<Datum>(props));
-    if (props.data) component()?.setData(props.data)
+    setComponent(new Heatmap<Datum>(config));
+    if (dataProps.data !== undefined) component()?.setData(dataProps.data)
     ctx.update("component", component);
   })
 
@@ -28,7 +30,7 @@ export function VisHeatmap<Datum>(props: VisHeatmapProps<Datum>) {
 
   createEffect(
     on(
-      () => ({ ...props }),
+      () => ({ ...config }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
           component()?.setConfig(curr)
@@ -44,9 +46,9 @@ export function VisHeatmap<Datum>(props: VisHeatmapProps<Datum>) {
   
   createEffect(
     on(
-      () => props.data,
+      () => dataProps.data,
       (data) => {
-        if (data) {
+        if (data !== undefined) {
           component()?.setData(data)
           ctx.dirty()
         }
