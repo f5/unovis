@@ -173,7 +173,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     const isCrosshairWithinXRange = (xPx >= xRange[0]) && (xPx <= xRange[1])
     const isCrosshairWithinYRange = (this._yPx >= Math.min(yRange[0], yRange[1])) && (this._yPx <= Math.max(yRange[0], yRange[1]))
-    let shouldShow = config.skipRangeCheck ? !!this._xPx : (this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange)
+    // When `forceShowAt` is set, the crosshair is pinned to that position, so its visibility
+    // shouldn't depend on where the pointer is — only on the pinned position being within the X range
+    let shouldShow = isForceShowAtDefined
+      ? isCrosshairWithinXRange
+      : config.skipRangeCheck ? !!this._xPx : (this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange)
 
     // Distance in pixels between the pointer and the snapped datum: the full 2D distance in
     // `CrosshairSnapMode.XY` mode (so a point that's close in X but far in Y still counts as far),
