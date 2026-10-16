@@ -3,9 +3,16 @@ import { Transition } from 'd3-transition'
 import { interpolate } from 'd3-interpolate'
 import { Arc } from 'd3-shape'
 
+// Types
+import { GradientType, GradientUnits } from '@/types/gradient'
+
+// Styles
+import { GRADIENT_RADIAL_DEFAULT_STOPS } from '@/styles/gradients'
+
 // Utils
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { getGradient, getGradientFillValue } from '@/utils/gradient'
 import { smartTransition } from '@/utils/d3'
 
 // Local Types
@@ -18,13 +25,26 @@ export interface ArcNode extends SVGElement {
   _animState?: DonutArcAnimState;
 }
 
+function getArcFill<Datum> (
+  d: DonutArcDatum<Datum>,
+  config: DonutConfigInterface<Datum>,
+  element: SVGPathElement
+): string | null {
+  return getGradientFillValue(getGradient(d.data, config.gradient, d.index), getColor(d.data, config.color, d.index), element, {
+    type: GradientType.Radial,
+    units: GradientUnits.UserSpaceOnUse,
+    stops: GRADIENT_RADIAL_DEFAULT_STOPS,
+    space: { x: -d.outerRadius, y: -d.outerRadius, width: 2 * d.outerRadius, height: 2 * d.outerRadius, innerRadius: d.innerRadius },
+  })
+}
+
 export function createArc<Datum> (
   selection: Selection<SVGPathElement, DonutArcDatum<Datum>, SVGGElement, unknown>,
   config: DonutConfigInterface<Datum>
 ): void {
   selection
     .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d.index)
-    .style('fill', d => getColor(d.data, config.color, d.index))
+    .style('fill', (d, i, els) => getArcFill(d, config, els[i]))
     .style('mask', d => getFillPatternValue(getPattern(d.data, config.pattern, d.index)))
     .style('opacity', 0)
     .each((d, i, els) => {
@@ -50,7 +70,7 @@ export function updateArc<Datum> (
   selection
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
     .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d.index)
-    .style('fill', d => getColor(d.data, config.color, d.index))
+    .style('fill', (d, i, els) => getArcFill(d, config, els[i]))
     .style('mask', d => getFillPatternValue(getPattern(d.data, config.pattern, d.index)))
 
   const setOpacity = (d: DonutArcDatum<Datum>): number => (config.showEmptySegments || d.value) ? 1 : 0

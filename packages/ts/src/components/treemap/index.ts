@@ -16,9 +16,11 @@ import { getString, getNumber, isNumber, isFunction } from '@/utils/data'
 import { smartTransition } from '@/utils/d3'
 import { trimSVGText, wrapSVGText } from '@/utils/text'
 import { cssvar } from '@/utils/style'
+import { getGradient, getGradientFillValue } from '@/utils/gradient'
 
 // Types
 import { FitMode } from '@/types/text'
+import { GradientDirection } from '@/types/gradient'
 
 // Config
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
@@ -206,7 +208,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('y', d => d.y0)
       .attr('width', this._getTileWidth)
       .attr('height', this._getTileHeight)
-      .style('fill', d => d._fill)
+      .style('fill', (d, i) => this._getTileFill(d, i))
       .style('opacity', 0)
       .style('cursor', config.showTileClickAffordance ? d => !d.children ? 'pointer' : null : null)
 
@@ -235,7 +237,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     const tileRectsMerged = tilesMerged.select(`rect.${s.tile}`)
     smartTransition(tileRectsMerged, duration)
-      .style('fill', d => d._fill)
+      .style('fill', (d, i) => this._getTileFill(d, i))
       .style('opacity', 1)
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
@@ -347,5 +349,12 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
   private _getTileWidth (d: TreemapNode<Datum>): number {
     return Math.max(d.x1 - d.x0, 0.5)
+  }
+
+  private _getTileFill (d: TreemapNode<Datum>, i: number): string {
+    return getGradientFillValue(getGradient(d, this.config.tileGradient, i), d._fill, this.element, {
+      direction: GradientDirection.TopToBottom,
+      space: { x: 0, y: 0, width: this._width, height: this._height },
+    })
   }
 }
