@@ -259,6 +259,12 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     }
   })
 
+  // Resolve the label font size CSS variable once per update instead of once per node:
+  // reading a computed style in the loop forces repeated style recalculations
+  const labelFontSize = selection.empty()
+    ? 12
+    : getCSSVariableValueInPixels('var(--vis-graph-node-label-font-size)', selection.node()) || 12
+
   // Update nodes themselves
   selection.each((d, i, elements) => {
     const groupElement = elements[i] as GraphNodeSVGGElement
@@ -295,8 +301,6 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       .attr('stroke-width', getNumber(d, nodeStrokeWidth, d._index) ?? 0)
       .style('fill', getNodeColor(d, nodeFill, d._index))
       .style('stroke', getColor(d, nodeStroke, d._index, undefined, { dontFallbackToCssVar: true }) ?? null)
-
-    const nodeBBox = (node.node() as SVGGraphicsElement).getBBox()
 
     nodeArc
       .attr('stroke-width', getNumber(d, nodeStrokeWidth, d._index))
@@ -406,7 +410,10 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
     // Position label
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
-    const nodeHeight = isStringSvg((getString(d, nodeShape, d._index)) as GraphNodeShape) ? nodeBBox.height : nodeSizeValue
+    // `getBBox` forces a synchronous layout, so we only measure custom SVG nodes whose size is not known upfront
+    const nodeHeight = isStringSvg((getString(d, nodeShape, d._index)) as GraphNodeShape)
+      ? (node.node() as SVGGraphicsElement).getBBox().height
+      : nodeSizeValue
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
     if (scale >= ZoomLevel.Level3) setLabelRect(label, nodeSelectors.labelText)
 

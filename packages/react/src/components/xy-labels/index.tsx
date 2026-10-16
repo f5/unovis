@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { XYLabels } from '@unovis/ts/components/xy-labels'
 import { XYLabelsConfigInterface } from '@unovis/ts/components/xy-labels/config'
 
@@ -25,12 +25,14 @@ export const VisXYLabelsSelectors = XYLabels.selectors
 function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>, fRef: ForwardedRef<VisXYLabelsRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<XYLabels<Datum>>>(null)
   const componentRef = useRef<XYLabels<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<XYLabels<Datum>>)
 
-    const c = new XYLabels<Datum>(props)
+    const c = new XYLabels<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,8 +45,8 @@ function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>, fRef: ForwardedRe
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data !== undefined) component?.setData(data)
+    component?.setConfig(config)
   })
 
   // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)

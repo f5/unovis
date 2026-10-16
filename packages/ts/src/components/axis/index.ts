@@ -17,7 +17,7 @@ import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAl
 import { smartTransition } from '@/utils/d3'
 import { estimateWrappedTextHeight, getWrappedText, renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from '@/utils/text'
 import { getCachedComputedTextLength, getPreciseStringLengthPx } from '@/utils/text-measure'
-import { isEqual, isFunction } from '@/utils/data'
+import { isEqual, isFunction, areArraysShallowEqual } from '@/utils/data'
 import { getRotatedRectAabb } from '@/utils/misc'
 import { hideOverlappingLabels } from '@/utils/text-overlap'
 import { UNOVIS_TEXT_DEFAULT } from '@/styles/index'
@@ -62,6 +62,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   private _axisRawBBox: DOMRect
   private _axisSizeBBox: SVGRect
   private _requiredMargin: Spacing
+  private _preRenderCacheKey: unknown[] | undefined
   private _defaultNumTicks = 3
   private _collideTickLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
   private _tickTextStyleCached: TickTextStyle
@@ -89,6 +90,16 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   /** Renders axis to an invisible grouped to calculate automatic chart margins */
   public preRender (): void {
     const { config } = this
+
+    // Building and measuring the invisible axis is expensive (a full axis render plus
+    // several getBBox calls), so we skip it when nothing affecting the axis size has changed
+    const cacheKey = [
+      config, this.datamodel.data, this._width, this._height,
+      ...this.xScale.domain(), ...this.xScale.range(),
+      ...this.yScale.domain(), ...this.yScale.range(),
+    ]
+    if (this._preRenderCacheKey && areArraysShallowEqual(cacheKey, this._preRenderCacheKey)) return
+
     const axisRenderHelperGroup = this.g.append('g').attr('opacity', 0)
 
     // Measure the full fitted set, so the margins account for its label bleed. Deliberately
@@ -108,6 +119,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     this._requiredMargin = this._getRequiredMargin(this._axisSizeBBox)
 
     axisRenderHelperGroup.remove()
+    this._preRenderCacheKey = cacheKey
   }
 
   public getPosition (): Position {

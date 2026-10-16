@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Treemap } from '@unovis/ts/components/treemap'
 import { TreemapConfigInterface } from '@unovis/ts/components/treemap/config'
 
@@ -25,12 +25,14 @@ export const VisTreemapSelectors = Treemap.selectors
 function VisTreemapFC<Datum> (props: VisTreemapProps<Datum>, fRef: ForwardedRef<VisTreemapRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Treemap<Datum>>>(null)
   const componentRef = useRef<Treemap<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Treemap<Datum>>)
 
-    const c = new Treemap<Datum>(props)
+    const c = new Treemap<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,8 +45,8 @@ function VisTreemapFC<Datum> (props: VisTreemapProps<Datum>, fRef: ForwardedRef<
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data !== undefined) component?.setData(data)
+    component?.setConfig(config)
   })
 
   // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)

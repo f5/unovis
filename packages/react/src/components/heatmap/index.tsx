@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Heatmap } from '@unovis/ts/components/heatmap'
 import { HeatmapConfigInterface } from '@unovis/ts/components/heatmap/config'
 
@@ -25,12 +25,14 @@ export const VisHeatmapSelectors = Heatmap.selectors
 function VisHeatmapFC<Datum> (props: VisHeatmapProps<Datum>, fRef: ForwardedRef<VisHeatmapRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Heatmap<Datum>>>(null)
   const componentRef = useRef<Heatmap<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Heatmap<Datum>>)
 
-    const c = new Heatmap<Datum>(props)
+    const c = new Heatmap<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,8 +45,8 @@ function VisHeatmapFC<Datum> (props: VisHeatmapProps<Datum>, fRef: ForwardedRef<
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data !== undefined) component?.setData(data)
+    component?.setConfig(config)
   })
 
   // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)

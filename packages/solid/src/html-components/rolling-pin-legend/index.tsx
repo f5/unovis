@@ -10,12 +10,13 @@ export const VisRollingPinLegendSelectors = RollingPinLegend.selectors
 
 export function VisRollingPinLegend(props: VisRollingPinLegendProps) {
   const [component, setComponent] = createSignal<RollingPinLegend>()
+  const config = props
    
   const [ref, setRef] = createSignal<HTMLDivElement>()
 
   onMount(() => {
     const r = ref()
-    if(r) setComponent(new RollingPinLegend(r, props));
+    if(r) setComponent(new RollingPinLegend(r, config));
     
     
   })
@@ -27,7 +28,7 @@ export function VisRollingPinLegend(props: VisRollingPinLegendProps) {
 
   createEffect(
     on(
-      () => ({ ...props }),
+      () => ({ ...config }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
           component()?.setConfig(curr)

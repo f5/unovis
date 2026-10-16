@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { CircularBar } from '@unovis/ts/components/circular-bar'
 import { CircularBarConfigInterface } from '@unovis/ts/components/circular-bar/config'
 
@@ -25,12 +25,14 @@ export const VisCircularBarSelectors = CircularBar.selectors
 function VisCircularBarFC<Datum> (props: VisCircularBarProps<Datum>, fRef: ForwardedRef<VisCircularBarRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<CircularBar<Datum>>>(null)
   const componentRef = useRef<CircularBar<Datum> | undefined>(undefined)
+  // Separate the config properties from the props that should not be passed to the component
+  const { data, ...config } = props
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<CircularBar<Datum>>)
 
-    const c = new CircularBar<Datum>(props)
+    const c = new CircularBar<Datum>(config)
     componentRef.current = c
     element.__component__ = c
 
@@ -43,8 +45,8 @@ function VisCircularBarFC<Datum> (props: VisCircularBarProps<Datum>, fRef: Forwa
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
-    component?.setConfig(props)
+    if (data !== undefined) component?.setData(data)
+    component?.setConfig(config)
   })
 
   // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)

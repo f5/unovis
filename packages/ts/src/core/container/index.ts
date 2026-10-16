@@ -8,7 +8,7 @@ import { Sizing } from '@/types/component'
 import { Spacing } from '@/types/spacing'
 
 // Utils
-import { isEqual, clamp, merge } from '@/utils/data'
+import { isEqual, clamp, mergeByReference } from '@/utils/data'
 import { getPixelValue } from '@/utils/misc'
 import { ResizeObserver } from '@/utils/resize-observer'
 
@@ -30,6 +30,8 @@ export class ContainerCore {
   protected _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
   protected _svgDefsExternal: Selection<SVGDefsElement, unknown, null, undefined>
   private _containerSize: { width: number; height: number }
+  private _renderPromise: Promise<void> | null = null
+  private _renderPromiseResolve: (() => void) | null = null
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   static DEFAULT_CONTAINER_HEIGHT = 300
@@ -59,7 +61,7 @@ export class ContainerCore {
   public updateContainer<T extends ContainerConfigInterface> (config: T): void {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     this.prevConfig = this.config
-    this.config = merge(this._defaultConfig, config)
+    this.config = mergeByReference(this._defaultConfig, config)
 
     // Add `svgDefs` if provided in the config
     if (config?.svgDefs !== this.prevConfig?.svgDefs) {
@@ -97,7 +99,7 @@ export class ContainerCore {
 
   // Warning: Some Containers (i.e. Single Container) may override this method, so if you introduce any changes here,
   // make sure to check that other containers didn't break after them.
-  public render (duration = this.config.duration): void {
+  public render (duration = this.config.duration): Promise<void> {
     const width = this.config.width || this.containerWidth
     const height = this.config.height || this.containerHeight
 
@@ -108,16 +110,36 @@ export class ContainerCore {
       .attr('width', width)
       .attr('height', height)
 
-    // Set up Resize Observer. We do it in `render()` to capture container size change if it happened
-    // in the next animation frame after the initial `render` was called.
+    return this._scheduleRender(duration)
+  }
+
+  /** Sets up the resize observer and schedules `_preRender` + `_render` in the next animation frame.
+   * Returns a promise that resolves once the scheduled render has completed */
+  protected _scheduleRender (duration?: number): Promise<void> {
+    // Set up Resize Observer. We do it here (and not in the constructor) to capture container size change
+    // if it happened in the next animation frame after the initial `render` was called.
     if (!this._resizeObserver) this._setUpResizeObserver()
 
-    // Schedule the actual rendering in the next frame
+    // Schedule the actual rendering in the next frame. Multiple `render()` calls within
+    // one frame are batched and share a single completion promise
     cancelAnimationFrame(this._renderAnimationFrameId)
+    if (!this._renderPromise) {
+      this._renderPromise = new Promise(resolve => { this._renderPromiseResolve = resolve })
+    }
+
     this._renderAnimationFrameId = requestAnimationFrame(() => {
       this._preRender()
       this._render(duration)
+      this._resolveRenderPromise()
     })
+
+    return this._renderPromise
+  }
+
+  private _resolveRenderPromise (): void {
+    this._renderPromiseResolve?.()
+    this._renderPromise = null
+    this._renderPromiseResolve = null
   }
 
   get containerWidth (): number {
@@ -211,5 +233,8 @@ export class ContainerCore {
     cancelAnimationFrame(this._resizeObserverAnimationFrameId)
     this._resizeObserver?.disconnect()
     this.svg.remove()
+
+    // Resolve the pending render promise (if any) so awaiting callers don't hang forever
+    this._resolveRenderPromise()
   }
 }
