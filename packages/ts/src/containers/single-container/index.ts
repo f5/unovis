@@ -64,6 +64,7 @@ export class SingleContainer<Data> extends ContainerCore {
       containerConfig.annotations?.element,
       this._svgDefs.node(),
       this._svgDefsExternal.node(),
+      this._svgDefsGradients.node(),
     ])
 
     if (!preventRender) this.render()

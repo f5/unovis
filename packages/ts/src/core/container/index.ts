@@ -7,6 +7,9 @@ import { ComponentCore } from '@/core/component'
 import { Sizing } from '@/types/component'
 import { Spacing } from '@/types/spacing'
 
+// Styles
+import { GRADIENT_DEFS_CLASS } from '@/styles/gradients'
+
 // Utils
 import { isEqual, clamp, merge } from '@/utils/data'
 import { getPixelValue } from '@/utils/misc'
@@ -29,6 +32,7 @@ export class ContainerCore {
   protected _resizeObserverAnimationFrameId: number
   protected _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
   protected _svgDefsExternal: Selection<SVGDefsElement, unknown, null, undefined>
+  protected _svgDefsGradients: Selection<SVGDefsElement, unknown, null, undefined>
   private _containerSize: { width: number; height: number }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -53,6 +57,7 @@ export class ContainerCore {
 
     this._svgDefs = this.svg.append('defs')
     this._svgDefsExternal = this.svg.append('defs')
+    this._svgDefsGradients = this.svg.append('defs').attr('class', GRADIENT_DEFS_CLASS)
     this.element = this.svg.node()
   }
 

@@ -174,6 +174,7 @@ export class XYContainer<Datum> extends ContainerCore {
       this._clipPath.node(),
       this._svgDefs.node(),
       this._svgDefsExternal.node(),
+      this._svgDefsGradients.node(),
       containerConfig.xAxis?.element,
       containerConfig.yAxis?.element,
       ...this.components.map(c => c.element),

@@ -11,12 +11,13 @@ import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValu
 import { smartTransition, Selection$Transition } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { getGradient, getGradientFillValue } from '@/utils/gradient'
 import { textAlignToAnchor, trimSVGText } from '@/utils/text'
 import { arrowPolylinePath } from '@/utils/path'
 import { guid } from '@/utils/misc'
 
 // Types
-import { TextAlign, TrimMode, Spacing, Arrangement } from '@/types'
+import { TextAlign, TrimMode, Spacing, Arrangement, GradientDirection } from '@/types'
 
 // Config
 import { TimelineDefaultConfig, TimelineConfigInterface } from './config'
@@ -362,10 +363,16 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         return `translate(${x}, ${y})`
       })
 
+    const getLineFill = (d: Datum & TimelineLineRenderState, i: number): string => {
+      const index = yOrdinalScale(this._getRecordKey(d, i))
+      const color = getColor(d, config.color, index, undefined, colorOptions)
+      return getGradientFillValue(getGradient(d, config.gradient, index), color, this.element, { direction: GradientDirection.LeftToRight })
+    }
+
     linesEnter.append('rect')
       .attr('class', s.line)
       .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => yOrdinalScale(this._getRecordKey(d, i)))
-      .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i)), undefined, colorOptions))
+      .style('fill', (d, i) => getLineFill(d, i))
       .style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, yOrdinalScale(this._getRecordKey(d, i)))))
       .call(this._renderLines.bind(this))
 
@@ -380,7 +387,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const lineRectElementsSelection = linesMerged.selectAll<SVGRectElement, Datum & TimelineLineRenderState>(`.${s.line}`)
       .data(d => [d])
     smartTransition(lineRectElementsSelection, duration)
-      .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i)), undefined, colorOptions))
+      .style('fill', (d, i) => getLineFill(d, i))
       .style('mask', (d, i) => getFillPatternValue(getPattern(d, config.pattern, yOrdinalScale(this._getRecordKey(d, i)))))
       .style('cursor', (d, i) => getString(d, config.lineCursor ?? config.cursor, i))
       .call(this._renderLines.bind(this))

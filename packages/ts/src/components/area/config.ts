@@ -4,12 +4,16 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-
 import { CurveType } from '@/types/curve'
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType, LinePatternType } from '@/styles/patterns'
+import { Gradient } from '@/types/gradient'
 
 export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Area color accessor function. The whole data array will be passed as the first argument. Default: `undefined` */
   color?: ColorAccessor<Datum[]>;
   /** Area fill pattern accessor. Resolves to a `FillPatternType`. The whole data array is passed as the first argument. Default: `undefined` */
   pattern?: GenericAccessor<FillPatternType, Datum[]>;
+  /** Fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (a top to bottom fade within each area).
+   * The whole data array is passed as the first argument. Default: `undefined` */
+  gradient?: GenericAccessor<Gradient | boolean, Datum[]>;
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   curveType?: CurveType | string;
   /** Baseline value or accessor function. Default: `undefined` */
@@ -44,6 +48,7 @@ export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<D
 export const AreaDefaultConfig: AreaConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
   color: undefined,
+  gradient: undefined,
   curveType: CurveType.MonotoneX,
   baseline: (): number => 0,
   opacity: 1,
