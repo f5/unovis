@@ -4,16 +4,19 @@ import { symbol } from 'd3-shape'
 // Types
 import { ColorAccessor, ColorFunction } from '@/types/accessor'
 import { Symbol, SymbolType } from '@/types/symbol'
+import { GradientDirection } from '@/types/gradient'
 
 // Utils
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { getGradient, getGradientFillValue } from '@/utils/gradient'
 import { ensureArray, getString } from '@/utils/data'
 import { getCSSVariableValueInPixels } from '@/utils/misc'
 import { toPx } from '@/utils/to-px'
 
 // Constants
 import { PATTERN_SIZE_PX } from '@/styles/patterns'
+import { GRADIENT_BAR_DEFAULT_STOPS } from '@/styles/gradients'
 
 // Local types
 import { BulletLegendConfigInterface } from '../config'
@@ -76,6 +79,7 @@ export function updateBullets (
     const opacity = d.inactive ? 'var(--vis-legend-bullet-inactive-opacity)' : 1
     const pattern = getPattern(d, d.pattern, i)
     const fillPattern = getFillPatternValue(pattern)
+    const gradient = getGradient(d, d.gradient, i)
     const svgNode = selection.node()
 
     // Create a path for each color
@@ -125,7 +129,10 @@ export function updateBullets (
           .style('stroke', color)
           .style('stroke-width', '1px')
           .style('opacity', null)
-          .style('fill', color)
+          .style('fill', getGradientFillValue(gradient, color, svgNode, {
+            direction: GradientDirection.TopToBottom,
+            stops: GRADIENT_BAR_DEFAULT_STOPS,
+          }))
           .style('fill-opacity', opacity)
           .style('mask', fillPattern)
       }

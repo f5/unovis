@@ -5,8 +5,13 @@ import { interpolateNumber } from 'd3-interpolate'
 // Utils
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue } from '@/utils/pattern'
+import { getGradient, getGradientFillValue } from '@/utils/gradient'
 import { getString } from '@/utils/data'
 import { smartTransition } from '@/utils/d3'
+import { cssvar } from '@/utils/style'
+
+// Types
+import { GradientDirection } from '@/types/gradient'
 
 // Local Types
 import { SankeyInputLink, SankeyInputNode, SankeyLink } from '../types'
@@ -58,6 +63,24 @@ export function getLinkPathOptions<N extends SankeyInputNode, L extends SankeyIn
   }
 }
 
+function getLinkFill<N extends SankeyInputNode, L extends SankeyInputLink> (
+  link: SankeyLink<N, L>,
+  config: SankeyConfigInterface<N, L>,
+  index: number,
+  context: Element
+): string | null {
+  const color = getColor(link, config.linkColor)
+  const gradient = getGradient(link, config.linkGradient, index)
+  if (!gradient) return color
+
+  const sourceColor = getColor(link.source, config.nodeColor) ?? cssvar(s.variables.sankeyNodeColor)
+  const targetColor = getColor(link.target, config.nodeColor) ?? cssvar(s.variables.sankeyNodeColor)
+  return getGradientFillValue(gradient, color ?? cssvar(s.variables.sankeyLinkColor), context, {
+    direction: GradientDirection.LeftToRight,
+    stops: [{ offset: 0, color: sourceColor }, { offset: 1, color: targetColor }],
+  })
+}
+
 export type LinkAnimState = { x0: number; x1: number; y0: number; y1: number; width: number }
 
 export interface LinkElement extends SVGPathElement {
@@ -88,7 +111,7 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
     .style('cursor', (d: SankeyLink<N, L>) => getString(d, config.linkCursor))
 
   const selectionTransition = smartTransition(linkSelection, duration)
-    .style('fill', (link: SankeyLink<N, L>) => getColor(link, config.linkColor))
+    .style('fill', (link: SankeyLink<N, L>, i: number, els: ArrayLike<SVGPathElement>) => getLinkFill(link, config, i, els[i]))
     .style('mask', (link: SankeyLink<N, L>) => getFillPatternValue(getPattern(link, config.linkPattern)))
 
   if (duration) {

@@ -10,6 +10,7 @@ import { roundedRectPath } from '@/utils/path'
 import { smartTransition, applyInlineStyles } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { getGradient, getGradientFillValue } from '@/utils/gradient'
 
 // Types
 import { NumericAccessor } from '@/types/accessor'
@@ -18,6 +19,10 @@ import { Direction } from '@/types/direction'
 import { Orientation } from '@/types/position'
 import { ContinuousScale } from '@/types/scale'
 import { StyleDeclaration } from '@/types/style'
+import { GradientDirection } from '@/types/gradient'
+
+// Constants
+import { GRADIENT_BAR_DEFAULT_STOPS } from '@/styles/gradients'
 
 // Config
 import { GroupedBarDefaultConfig, GroupedBarConfigInterface } from './config'
@@ -150,6 +155,18 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
       .data((d) => yAccessors.map(() => d))
 
     const valueAxisDirection = this._getValueAxisDirection()
+    const gradientOptions = {
+      direction: this.isVertical() ? GradientDirection.TopToBottom : GradientDirection.RightToLeft,
+      stops: GRADIENT_BAR_DEFAULT_STOPS,
+      space: { x: 0, y: 0, width: this._width, height: this._height },
+    }
+    const getBarFill = (d: Datum, i: number): string => getGradientFillValue(
+      getGradient(d, config.gradient, i),
+      getColor(d, config.color, i, config.colorKeys?.[i], colorOptions),
+      this.element,
+      gradientOptions
+    )
+
     const barsEnter = bars
       .enter()
       .append('path')
@@ -162,7 +179,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         return this._getBarPath(x, y, width, height, false, valueAxisDirection)
       })
       .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => i)
-      .style('fill', (d, i) => this._getBarStyle(d, i)?.fill ?? getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
+      .style('fill', (d, i) => this._getBarStyle(d, i)?.fill ?? getBarFill(d, i))
       .style('mask', (d, i) => this._getBarStyle(d, i)?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)))
 
     const barsMerged = barsEnter.merge(bars)
@@ -193,7 +210,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
       })
       // A re-entering bar can be mid exit fade; bring it back instead of leaving it semi-transparent
       .style('opacity', (d, i) => this._getBarStyle(d, i)?.opacity ?? 1)
-      .style('fill', (d, i) => this._getBarStyle(d, i)?.fill ?? getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
+      .style('fill', (d, i) => this._getBarStyle(d, i)?.fill ?? getBarFill(d, i))
       .style('cursor', (d, i) => this._getBarStyle(d, i)?.cursor ?? getString(d, config.cursor, i))
 
     // Bars of removed series collapse to the baseline in place and fade out. They keep the `bar` class,
