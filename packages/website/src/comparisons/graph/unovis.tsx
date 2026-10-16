@@ -31,6 +31,7 @@ export default function UnovisGraph ({ data }: { data: GraphData }): JSX.Element
       <VisSingleContainer data={{ nodes, links }} height={536} svgDefs={GRAPH_ICON_SYMBOLS}>
         <VisGraph
           forceLayoutSettings={forceLayoutSettings}
+          disableZoom
           nodeIcon={(n: NodeDatum) => `#graph-icon-${n.group}`}
           nodeFill={(n: NodeDatum) => `var(--vis-color${groupIndex(n)})`}
           nodeStrokeWidth={0}

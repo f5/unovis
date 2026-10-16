@@ -23,7 +23,7 @@ export default function EChartsGraph ({ data, isDark }: { data: GraphData; isDar
           type: 'graph',
           layout: 'force',
           force: { repulsion: 150, edgeLength: 50 },
-          roam: true,
+          roam: false,
           draggable: true,
           label: { show: true, position: 'right', formatter: ({ data: item }: ItemParams) => `${item.name}\n${formatLatency(item.node.latency)}` },
           edgeSymbol: ['none', 'arrow'],

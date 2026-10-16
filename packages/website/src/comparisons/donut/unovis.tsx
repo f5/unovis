@@ -16,9 +16,10 @@ export default function UnovisDonutChart ({ data }: { data: DataRecord[] }): JSX
   return (
     <>
       <VisBulletLegend items={legendItems} onLegendItemClick={toggleSource}/>
-      <VisSingleContainer data={data} height={296}>
+      <VisSingleContainer data={data} height={296} margin={{ top: 12, bottom: 12, left: 12, right: 12 }}>
         <VisDonut
           value={(d: DataRecord) => hidden[d.source] ? 0 : d.sessions}
+          arcWidth={60}
           centralLabel={formatValue(getTotal(data))}
           centralSubLabel="Total sessions"
         />

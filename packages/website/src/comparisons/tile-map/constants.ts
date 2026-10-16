@@ -1,10 +1,11 @@
-import { mapKey } from '@unovis/shared/examples/basic-leaflet-map/constants'
+import { mapStyleLight, mapStyleDark } from '@unovis/shared/examples/advanced-leaflet-map/data'
 
-// Vector map styles from MapTiler, with the key used across the Unovis docs
-export const MAP_STYLE = `https://api.maptiler.com/maps/positron/style.json?key=${mapKey}`
-export const MAP_STYLE_DARK = `https://api.maptiler.com/maps/dataviz-dark/style.json?key=${mapKey}`
+// The vector styles from the gallery's Advanced Leaflet Map example, drawn on the MapLibre demo tiles (country polygons
+// from Natural Earth, zoom levels 0 to 6), so the map needs no API key
+export const MAP_STYLE = mapStyleLight
+export const MAP_STYLE_DARK = mapStyleDark
 
 export const MAP_ATTRIBUTION = [
-  '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
-  '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
+  '<a href="https://github.com/maplibre/demotiles" target="_blank">MapLibre demo tiles</a>',
+  '<a href="https://www.naturalearthdata.com/" target="_blank">Natural Earth</a>',
 ]

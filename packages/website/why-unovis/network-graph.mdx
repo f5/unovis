@@ -8,12 +8,14 @@ import { LibraryComparison } from '@site/src/components/LibraryComparison'
 import { FeatureTable } from '@site/src/components/FeatureTable'
 import { networkGraph } from '@site/src/comparisons/graph'
 
+<LibraryComparison comparison={networkGraph}>
+
 # Network Graph
 
 The services of a web application with their response times and open alerts, and the requests per second between
 them, grouped by the kind of service. Each update removes or brings back a few optional services.
 
-<LibraryComparison comparison={networkGraph}/>
+</LibraryComparison>
 
 ## What to look for
 
@@ -30,8 +32,9 @@ them, grouped by the kind of service. Each update removes or brings back a few o
   the Chart.js demo; Chart.js can add node labels with the official datalabels plugin.
 - **Traffic.** Link width shows requests per second. Unovis curves the links (`linkCurvature`) and sends particles along
   them (`linkFlow`), so you can see which way the traffic goes.
-- **Zoom, pan and drag.** Unovis and ECharts zoom, pan and let you drag nodes. Chart.js can zoom and pan with the
-  official zoom plugin but can't drag nodes in a force layout, and Nivo does none of these.
+- **Zoom, pan and drag.** Unovis and ECharts let you drag nodes, and both can zoom and pan (turned off here with
+  `disableZoom` and `roam`, so the page keeps scrolling). Chart.js can zoom and pan with the official zoom plugin but
+  can't drag nodes in a force layout, and Nivo does none of these.
 - **Change the services.** Unovis animates services in and out while the rest of the graph settles into its new layout.
 - **Your own nodes.** When the built-in shapes, icons and labels aren't enough, Unovis lets you render nodes yourself:
   `nodeEnterCustomRenderFunction`, `nodeUpdateCustomRenderFunction` and friends hand you each node's SVG group, so you
