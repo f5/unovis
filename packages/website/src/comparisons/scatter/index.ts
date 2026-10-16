@@ -9,6 +9,7 @@ export const scatterPlot: Comparison<DataRecord[]> = {
   updateLabel: 'Pick other penguins',
   implementations: [
     { library: 'unovis', load: () => import('./unovis'), code: require('!!raw-loader!./unovis.tsx').default },
+    { library: 'tanstack', load: () => import('./tanstack'), code: require('!!raw-loader!./tanstack.tsx').default },
     { library: 'recharts', load: () => import('./recharts'), code: require('!!raw-loader!./recharts.tsx').default },
     { library: 'chartjs', load: () => import('./chartjs'), code: require('!!raw-loader!./chartjs.tsx').default },
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
@@ -16,6 +17,5 @@ export const scatterPlot: Comparison<DataRecord[]> = {
     { library: 'agcharts', load: () => import('./ag-charts'), code: require('!!raw-loader!./ag-charts.tsx').default },
     { library: 'plot', load: () => import('./plot'), code: require('!!raw-loader!./plot.tsx').default },
     { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
-    { library: 'tanstack', load: () => import('./tanstack'), code: require('!!raw-loader!./tanstack.tsx').default },
   ],
 }

@@ -13,6 +13,7 @@ export const tileMap: Comparison<DataRecord[]> = {
     { library: 'unovis', load: () => import('./unovis'), code: require('!!raw-loader!./unovis.tsx').default, renderer: 'WebGL tiles + SVG' },
   ],
   unsupported: [
+    { library: 'tanstack', reason: 'No tile maps. Its geo module has a single geoShape mark that draws projected GeoJSON shapes; there is no tile layer or clustering, and its zoom control works on the x axis only.', url: 'https://github.com/TanStack/charts/blob/v1.1.0/packages/charts-core/src/geo.ts' },
     { library: 'recharts', reason: 'Recharts has no maps.', url: 'https://github.com/recharts/recharts/tree/v3.10.1/src/chart' },
     { library: 'chartjs', reason: 'No tile maps. The community chartjs-chart-geo plugin draws projected GeoJSON shapes and bubbles, without map tiles.', url: 'https://github.com/sgratzl/chartjs-chart-geo' },
     { library: 'echarts', reason: 'No tile map of its own. The official bmap extension draws on Baidu Maps only, needs an API key and has no clustering.', url: 'https://github.com/apache/echarts/tree/6.1.0/extension-src/bmap' },
@@ -20,6 +21,5 @@ export const tileMap: Comparison<DataRecord[]> = {
     { library: 'agcharts', reason: 'No tile maps. Its GeoJSON maps are in the paid Enterprise edition.', url: 'https://www.ag-grid.com/charts/javascript/map-topology/' },
     { library: 'plot', reason: 'No tile maps. Its geo mark draws projected GeoJSON shapes; there is no tile layer among its marks.', url: 'https://github.com/observablehq/plot/tree/v0.6.17/src/marks' },
     { library: 'vegalite', reason: 'No tile maps. Its geoshape mark draws projected GeoJSON shapes; there is no tile mark, tile data source or clustering transform.', url: 'https://github.com/vega/vega-lite/blob/v6.5.0/src/mark.ts' },
-    { library: 'tanstack', reason: 'No tile maps. Its geo module has a single geoShape mark that draws projected GeoJSON shapes; there is no tile layer or clustering, and its zoom control works on the x axis only.', url: 'https://github.com/TanStack/charts/blob/v1.1.0/packages/charts-core/src/geo.ts' },
   ],
 }
