@@ -6,6 +6,11 @@ export const lineChart: Comparison<DataRecord[]> = {
   id: 'line',
   getData,
   dataCode: require('!!raw-loader!./data.ts').default,
+  presets: [
+    { id: 'step', label: 'Step line', description: 'Steps between the months instead of curves (`curveType`)' },
+    { id: 'dashed', label: 'Dashed iOS', description: 'The iOS series is drawn dashed (`lineDashArray`)' },
+    { id: 'annotations', label: 'Annotations', description: 'A band over the iOS outage and a target line (Plotband, Plotline)' },
+  ],
   implementations: [
     { library: 'unovis', load: () => import('./unovis'), code: require('!!raw-loader!./unovis.tsx').default },
     { library: 'tanstack', load: () => import('./tanstack'), code: require('!!raw-loader!./tanstack.tsx').default },

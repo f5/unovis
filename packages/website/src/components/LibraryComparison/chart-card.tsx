@@ -16,16 +16,19 @@ export type ChartCardProps<Data> = {
   implementation: ComparisonImplementation<Data>;
   data: Data;
   isDark: boolean;
+  /** The active preset's id, passed to the chart unless the library can't draw it */
+  preset?: string;
   height: number;
   /** Span the full width of the grid */
   wide?: boolean;
 }
 
-export function ChartCard<Data> ({ implementation, data, isDark, height, wide }: ChartCardProps<Data>): JSX.Element {
+export function ChartCard<Data> ({ implementation, data, isDark, preset, height, wide }: ChartCardProps<Data>): JSX.Element {
   const library = libraries[implementation.library]
   const [showCode, setShowCode] = useState(false)
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const Chart = useMemo(() => lazy(implementation.load), [implementation])
+  const unsupportedPreset = preset ? implementation.unsupportedPresets?.[preset] : undefined
 
   return (
     <article className={clsx(s.card, library.id === 'unovis' && s.cardUnovis, wide && s.cardWide)}>
@@ -42,11 +45,18 @@ export function ChartCard<Data> ({ implementation, data, isDark, height, wide }:
           {() => (
             <ChartErrorBoundary>
               <Suspense fallback={<div className={s.placeholder}>Loading {library.name}…</div>}>
-                <Chart data={data} isDark={isDark}/>
+                <Chart data={data} isDark={isDark} preset={unsupportedPreset ? undefined : preset}/>
               </Suspense>
             </ChartErrorBoundary>
           )}
         </BrowserOnly>
+        {unsupportedPreset && (
+          <div className={s.presetUnsupported}>
+            <div className={s.unavailableTitle}>Not in {library.name}</div>
+            <p className={s.unavailableReason}>{unsupportedPreset.reason}</p>
+            {unsupportedPreset.url && <a href={unsupportedPreset.url} target="_blank" rel="noopener noreferrer">Source</a>}
+          </div>
+        )}
       </div>
       {showCode && <CodeBlock className={s.code} language="tsx">{stripLintDirectives(implementation.code)}</CodeBlock>}
     </article>

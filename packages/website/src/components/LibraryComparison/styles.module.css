@@ -70,6 +70,44 @@
   color: var(--ifm-color-emphasis-600);
 }
 
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.presetButton {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.presetButtonActive,
+.presetButtonActive:hover {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary-contrast-background);
+  color: var(--ifm-color-primary);
+}
+
+/* Shown over a library's default chart when it can't draw the active preset */
+.presetUnsupported {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--ifm-background-surface-color) 85%, transparent);
+  font-size: 0.85rem;
+  text-align: center;
+  color: var(--ifm-color-emphasis-700);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
