@@ -4,6 +4,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/compone
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
+import { Gradient } from '@/types/gradient'
 import { NestedDonutDirection, NestedDonutLayerSettings, NestedDonutSegment } from './types'
 
 export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterface {
@@ -60,6 +61,9 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   segmentColor?: ColorAccessor<NestedDonutSegment<Datum>>;
   /** Fill pattern accessor for segments. Resolves to a `FillPatternType`. Default: `undefined` */
   segmentPattern?: GenericAccessor<FillPatternType, NestedDonutSegment<Datum>>;
+  /** Fill gradient accessor for segments. Resolves to a `Gradient` object, or `true` for the default gradient
+   * (radial, spanning each segment's layer from the inner to the outer radius). Default: `undefined` */
+  gradient?: GenericAccessor<Gradient | boolean, NestedDonutSegment<Datum>>;
   /** Segment label accessor function. Default `undefined` */
   segmentLabel?: StringAccessor<NestedDonutSegment<Datum>>;
   /** Color accessor function for segment labels */
@@ -88,6 +92,7 @@ export const NestedDonutDefaultConfig: NestedDonutConfigInterface<unknown> = {
   layerSettings: undefined,
   segmentColor: undefined,
   segmentPattern: undefined,
+  gradient: undefined,
   segmentLabel: undefined,
   segmentLabelColor: undefined,
   showBackground: false,

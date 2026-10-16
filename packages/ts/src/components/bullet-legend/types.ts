@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { SymbolType } from '@/types/symbol'
 import { FillPatternType, LinePatternType } from '@/styles/patterns'
+import { Gradient } from '@/types/gradient'
 
 export interface BulletLegendItemInterface {
   name: string | number;
@@ -13,6 +14,8 @@ export interface BulletLegendItemInterface {
   colorKey?: string;
   /** Pattern to render on the bullet. Matches a component's `pattern` accessor. Default: `undefined` */
   pattern?: FillPatternType | LinePatternType;
+  /** Gradient to render on the bullet. Matches a component's `gradient` accessor. Default: `undefined` */
+  gradient?: Gradient | boolean;
 }
 
 export const BulletShape = {

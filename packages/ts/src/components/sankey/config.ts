@@ -9,6 +9,7 @@ import { getNumber } from '@/utils/data'
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
+import { Gradient } from '@/types/gradient'
 import { TrimMode, VerticalAlign, FitMode } from '@/types/text'
 import { Position } from '@/types/position'
 import { Spacing } from '@/types/spacing'
@@ -99,6 +100,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   nodeColor?: ColorAccessor<SankeyNode<N, L>>;
   /** Node fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   nodePattern?: GenericAccessor<FillPatternType, SankeyNode<N, L>>;
+  /** Node fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (top to bottom, fading out the node color). Default: `undefined` */
+  nodeGradient?: GenericAccessor<Gradient | boolean, SankeyNode<N, L>>;
   /** Node `fixedValue` accessor function or constant. It defines the node value that will be used to calculate
    * the height of the nodes by d3-sankey (by default the height will be based on aggregated `linkValue`).
    * Default: `n => n.fixedValue`
@@ -112,6 +115,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   linkColor?: StringAccessor<SankeyLink<N, L>>;
   /** Link fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   linkPattern?: GenericAccessor<FillPatternType, SankeyLink<N, L>>;
+  /** Link fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (left to right, from the source node color to the target node color). Default: `undefined` */
+  linkGradient?: GenericAccessor<Gradient | boolean, SankeyLink<N, L>>;
   /** Link flow accessor function or value. Default: `l => l.value` */
   linkValue?: NumericAccessor<L>;
   /** Link cursor on hover. Default: `undefined` */
@@ -205,6 +210,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   nodeAdaptivePadding: false,
   nodeColor: (d: SankeyInputNode) => (d as { color: string }).color,
   nodePattern: undefined,
+  nodeGradient: undefined,
   nodeFixedValue: (d: SankeyInputNode) => (d as { fixedValue: number }).fixedValue,
   showSingleNode: true,
   nodeCursor: undefined,
@@ -236,6 +242,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   linkValue: (d: SankeyInputNode) => (d as { value: number }).value,
   linkColor: (d: SankeyInputNode) => (d as { color: string }).color,
   linkPattern: undefined,
+  linkGradient: undefined,
   linkCursor: undefined,
   onZoom: undefined,
   onLayoutCalculated: undefined,

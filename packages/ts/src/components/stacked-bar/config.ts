@@ -3,6 +3,7 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
+import { Gradient } from '@/types/gradient'
 import { Orientation } from '@/types/position'
 import { StyleDeclaration } from '@/types/style'
 
@@ -11,6 +12,9 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
   color?: ColorAccessor<Datum>;
   /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   pattern?: GenericAccessor<FillPatternType, Datum>;
+  /** Fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (top to bottom for
+   * vertical bars and right to left for horizontal ones, spanning each segment). Default: `undefined` */
+  gradient?: GenericAccessor<Gradient | boolean, Datum>;
   /** Per-bar inline styles accessor, called with the datum and its stack index. The returned
    * object is applied as inline styles, with camelCase keys converted to kebab-case.
    * Keys the component manages itself (`fill`, `opacity`, `cursor`, `mask`) take precedence over
@@ -49,6 +53,7 @@ export const StackedBarDefaultConfig: StackedBarConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
   color: undefined,
   pattern: undefined,
+  gradient: undefined,
   barStyle: undefined,
   baseline: undefined,
   barMaxWidth: undefined,
