@@ -48,7 +48,7 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
   numTicks?: number;
   /** Approximate spacing between ticks in pixels, used to derive the number of ticks
-   * when `numTicks` is not set. Only applies to the X axis. Default: `175` */
+   * when `numTicks` is not set. Only applies to the X axis. Default: `120` */
   tickSpacing?: number;
   /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
   tickTextFitMode?: FitMode | `${FitMode}`;
@@ -102,7 +102,7 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickLine: true,
   domainLine: true,
   numTicks: undefined,
-  tickSpacing: 175,
+  tickSpacing: 120,
   minMaxTicksOnly: false,
   minMaxTicksOnlyWhenWidthIsLess: 250,
   minMaxTicksOnlyShowGridLines: false,
