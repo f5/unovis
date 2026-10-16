@@ -67,7 +67,13 @@ packages/website/
 
 - `Comparison<Data>` (`src/comparisons/types.ts`): `id`, `getData(seed)`, `dataCode` (the raw `data.ts`, shown by
   **Show the data**), optional `updateLabel` for the update button, optional `chartHeight`, optional `wide`,
-  `implementations`, and `unsupported`.
+  `implementations`, `unsupported`, and optional `presets`.
+- **Presets** reconfigure every chart on a page to show one more thing Unovis can do (a step curve, annotations, a
+  layout, …). `presets` is a list of `{ id, label, description }`; the toolbar shows a **Default** button and one per
+  preset, and every demo gets the active id as `preset`. Each preset is a conditional prop in `unovis.tsx` (the line
+  chart is the reference) and is drawn with the other libraries' own options; a library that can't do one lists it in
+  the implementation's `unsupportedPresets[id] = { reason, url }` and `ChartCard` shows the reason over its default
+  chart while that preset is active. The page's "What to look for" has a **Presets** bullet saying who can't do what.
 - Every library in the comparison gets a card on every page. A library that can't draw the chart goes in `unsupported`
   with a full-sentence `reason` and a source `url`, and gets a placeholder card after the charts. Set `paid: true` when
   the chart exists only in a paid edition (AG Charts Enterprise): the card then says "Only in the paid edition".
@@ -83,7 +89,8 @@ packages/website/
 
 ### The demo contract
 
-Every `<library>.tsx` has a **default export** that takes `{ data, isDark }` and fills the chart area:
+Every `<library>.tsx` has a **default export** that takes `{ data, isDark, preset }` (`ChartProps`) and fills the
+chart area. The default chart must not change when `preset` is undefined:
 
 - React components from other libraries get `height: '100%'` (or their own responsive mode: `responsive` for Recharts,
   `Responsive*` components for Nivo, `maintainAspectRatio: false` for Chart.js).
@@ -140,10 +147,12 @@ These are the rules on the methodology page, as instructions:
    existing comparison.
 3. **Registry**: `src/comparisons/<id>/index.ts`, copied from an existing one (it starts with the
    `eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires` header
-   the raw-loader requires need). Put Unovis first. List every library that can't draw the chart in `unsupported`, with
+   the raw-loader requires need). Put Unovis first and TanStack Charts second, then the others in the usual order
+   (Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot, Vega-Lite). List every library that can't draw the chart in `unsupported`, with
    the reason and source URL of its `features/<library>.ts` cell for that chart type; the two must agree.
 4. **Page**: `why-unovis/<slug>.mdx`, copied from an existing page: frontmatter with `title`, `description` and
-   `hide_table_of_contents: true`, an intro that describes the data, `<LibraryComparison comparison={…}/>`,
+   `hide_table_of_contents: true`, then `<LibraryComparison comparison={…}>` wrapping the `# Title` and the intro that
+   describes the data (they're its children, so the header stays on screen with the toolbar while the charts scroll),
    "What to look for", and a `<FeatureTable features={[…]}/>` with the rows that matter for the chart. Only use rows
    whose cells answer the question for this chart type: `zoom-pan` is about XY charts, `graph-zoom` about graphs and
    `map-zoom` about maps. A row researched for one chart type shows wrong notes and links on another page.
@@ -389,9 +398,11 @@ Every feature cell, placeholder, page and demo comment links somewhere. Before y
 - **Recharts freezes the shared data.** Recharts 3 keeps chart data in an Immer store, which deep-freezes the row
   objects every demo on a page shares. Vega-Lite adds ids to the objects in `data.values`, so a Vega-Lite demo must copy
   the rows (`data.map(d => ({ ...d }))`) or it throws "object is not extensible" when Recharts rendered first.
-- **Maps** use the public MapTiler key from `@unovis/shared/examples/basic-leaflet-map/constants` (styles `positron` and
-  `dataviz-dark`), and Unovis switches between them with `styleDarkTheme`. The choropleth needs no key: every library
-  draws the TopoJSON that ships with Unovis.
+- **Maps** need no API key. The tile map draws the MapLibre demo tiles (country polygons from Natural Earth, zoom 0–6)
+  with the gallery's styles from `@unovis/shared/examples/advanced-leaflet-map/data` (`mapStyleLight`, `mapStyleDark`),
+  switched with `styleDarkTheme`; headless Chrome doesn't render the vector tiles, so check the map in a real browser.
+  The choropleth draws the TopoJSON that ships with Unovis in every library.
+- **Zoom and pan are off** in the graph demos (`disableZoom`, ECharts `roam: false`), so the page keeps scrolling.
 
 ## Open work
 
