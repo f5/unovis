@@ -4,6 +4,7 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-
 import { WithOptional } from '@/types/misc'
 import { ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
+import { Gradient } from '@/types/gradient'
 import { TextAlign, TrimMode } from '@/types/text'
 import { Arrangement } from '@/types/position'
 
@@ -26,6 +27,8 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   color?: ColorAccessor<Datum>;
   /** Timeline item fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   pattern?: GenericAccessor<FillPatternType, Datum>;
+  /** Timeline item fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (left to right, spanning each item). Default: `undefined` */
+  gradient?: GenericAccessor<Gradient | boolean, Datum>;
   /** Width of the timeline items. Default: `8` */
   lineWidth?: NumericAccessor<Datum>;
   /** Display rounded ends for timeline items. Default: `true` */
@@ -123,6 +126,7 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   length: (d: unknown): number => (d as { length: number }).length, // Deprecated (see above)
   color: (d: unknown): string => (d as { color: string }).color,
   pattern: undefined,
+  gradient: undefined,
   lineRow: undefined,
   lineDuration: undefined,
   lineWidth: 8,

@@ -21,12 +21,17 @@ import {
 import { smartTransition } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { getGradient, getGradientFillValue } from '@/utils/gradient'
 
 // Types
 import { Curve, CurveType } from '@/types/curve'
 import { NumericAccessor } from '@/types/accessor'
 import { Spacing } from '@/types/spacing'
 import { Direction } from '@/types/direction'
+import { GradientDirection } from '@/types/gradient'
+
+// Constants
+import { GRADIENT_AREA_DEFAULT_STOPS } from '@/styles/gradients'
 
 // Local Types
 import { AreaDatum } from './types'
@@ -155,12 +160,20 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
       .selectAll<SVGPathElement, AreaDatum>(`.${s.area}`)
       .data(stackedDataReversed)
 
+    const gradientSpace = { x: 0, y: 0, width: this._width, height: this._height }
+    const getAreaFill = (i: number): string => getGradientFillValue(
+      getGradient(data, config.gradient, areaMaxIdx - i),
+      getColor(data, config.color, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions),
+      this.element,
+      { direction: GradientDirection.TopToBottom, stops: GRADIENT_AREA_DEFAULT_STOPS, space: gradientSpace }
+    )
+
     const areasEnter = areas.enter().append('path')
       .attr('class', s.area)
       .attr('d', d => this._areaGen(d) || this._emptyPath())
       .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => areaMaxIdx - i)
       .style('opacity', 0)
-      .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
+      .style('fill', (d, i) => getAreaFill(i))
       .style('mask', (d, i) => getFillPatternValue(getPattern(data, config.pattern, areaMaxIdx - i)))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
@@ -168,7 +181,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
         const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
         return isDefined ? getNumber(data, config.opacity, areaMaxIdx - i) : 0
       })
-      .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
+      .style('fill', (d, i) => getAreaFill(i))
       .style('mask', (d, i) => getFillPatternValue(getPattern(data, config.pattern, areaMaxIdx - i)))
       .style('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))
 

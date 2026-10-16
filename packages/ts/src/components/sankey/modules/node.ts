@@ -4,11 +4,16 @@ import { max } from 'd3-array'
 // Utils
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue } from '@/utils/pattern'
+import { getGradient, getGradientFillValue } from '@/utils/gradient'
 import { getString, isNumber } from '@/utils/data'
 import { smartTransition } from '@/utils/d3'
+import { cssvar } from '@/utils/style'
 
 // Types
 import { Spacing } from '@/types/spacing'
+
+// Constants
+import { GRADIENT_SANKEY_NODE_DEFAULT_STOPS } from '@/styles/gradients'
 
 // Local Types
 import {
@@ -32,6 +37,20 @@ import * as s from '../style'
 
 export const NODE_SELECTION_RECT_DELTA = 3
 
+function getNodeFill<N extends SankeyInputNode, L extends SankeyInputLink> (
+  node: SankeyNode<N, L>,
+  config: SankeyConfigInterface<N, L>,
+  index: number,
+  context: Element
+): string | null {
+  const color = getColor(node, config.nodeColor)
+  const gradient = getGradient(node, config.nodeGradient, index)
+  if (!gradient) return color
+  return getGradientFillValue(gradient, color ?? cssvar(s.variables.sankeyNodeColor), context, {
+    stops: GRADIENT_SANKEY_NODE_DEFAULT_STOPS,
+  })
+}
+
 export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
   sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfigInterface<N, L>,
@@ -54,7 +73,7 @@ export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink
     .attr('class', s.node)
     .attr('width', config.nodeWidth)
     .attr('height', d => d.y1 - d.y0)
-    .style('fill', node => getColor(node, config.nodeColor))
+    .style('fill', (node, i, els) => getNodeFill(node, config, i, els[i]))
     .style('mask', node => getFillPatternValue(getPattern(node, config.nodePattern)))
 
   // Labels
@@ -141,11 +160,11 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
     .style('stroke', (d: SankeyNode<N, L>) => getColor(d, config.nodeColor))
     .style('opacity', d => config.selectedNodeIds?.includes(d.id) ? 1 : 0)
 
-  smartTransition(sel.select(`.${s.node}`), duration)
+  smartTransition(sel.select<SVGRectElement>(`.${s.node}`), duration)
     .attr('width', config.nodeWidth)
     .attr('height', (d: SankeyNode<N, L>) => d.y1 - d.y0)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.nodeCursor))
-    .style('fill', (d: SankeyNode<N, L>) => getColor(d, config.nodeColor))
+    .style('fill', (d: SankeyNode<N, L>, i: number, els: ArrayLike<SVGRectElement>) => getNodeFill(d, config, i, els[i]))
     .style('mask', (d: SankeyNode<N, L>) => getFillPatternValue(getPattern(d, config.nodePattern)))
 
   // Label Rendering
