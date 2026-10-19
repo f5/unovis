@@ -25,15 +25,11 @@
   padding: 0 2px 0 2px;
 }
 
-.headerTitle {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  color: var(--dev-text-strong);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.headerLogo {
+  display: block;
+  width: 82px;
+  height: 18px;
+  object-fit: contain;
 }
 
 .searchField {
