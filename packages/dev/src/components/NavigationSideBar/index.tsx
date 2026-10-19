@@ -13,6 +13,8 @@ import { EXPANDED_GROUPS_STORAGE_KEY, SEARCH_QUERY_PARAMETER } from './constants
 
 // Styles
 import s from './style.module.css'
+import logo from './unovis-logo.svg?raw'
+import logoDark from './unovis-logo-dark-theme.svg?raw'
 
 export type NavigationSideBarProps = {
   exampleSections: ExampleSectionGroup[];
@@ -48,7 +50,7 @@ export function NavigationSideBar (props: NavigationSideBarProps): React.ReactNo
   const activeItemRef = useRef<HTMLDivElement>(null)
   const didScrollToActiveRef = useRef(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { isCodeHidden, setIsCodeHidden } = useAppContext()
+  const { isCodeHidden, setIsCodeHidden, isDarkTheme } = useAppContext()
   const { width, isResizing, onResizeStart, onResizeReset } = useSidebarWidth()
 
   const searchTerm = searchParams.get(SEARCH_QUERY_PARAMETER) ?? ''
@@ -143,7 +145,7 @@ export function NavigationSideBar (props: NavigationSideBarProps): React.ReactNo
   return (
     <nav className={s.navSideBar} style={{ flexBasis: width, width }}>
       <div className={s.header}>
-        <span className={s.headerTitle}>UNOVIS EXAMPLES</span>
+        <img className={s.headerLogo} src={`data:image/svg+xml,${encodeURIComponent(isDarkTheme ? logoDark : logo)}`} alt="Unovis"/>
         <button
           className={`${s.codeButton} ${!isCodeHidden ? s.codeButtonActive : ''}`}
           onClick={() => setIsCodeHidden(!isCodeHidden)}
