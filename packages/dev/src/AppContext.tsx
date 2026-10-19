@@ -1,4 +1,7 @@
-import React, { createContext, useState, useContext, useLayoutEffect } from 'react'
+import React, { createContext, useState, useContext, useLayoutEffect, useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
+
+import { CODE_QUERY_PARAMETER, CODE_VISIBLE_VALUE, CODE_HIDDEN_VALUE } from './constants'
 
 type AppContextType = {
   isCodeHidden: boolean;
@@ -16,7 +19,21 @@ function readInitialDarkTheme (): boolean {
 }
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isCodeHidden, setIsCodeHidden] = useState(process.env.NODE_ENV !== 'production')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const codeQueryValue = searchParams.get(CODE_QUERY_PARAMETER)
+  const isCodeHidden = codeQueryValue === CODE_VISIBLE_VALUE || codeQueryValue === 'true'
+    ? false
+    : codeQueryValue === CODE_HIDDEN_VALUE || codeQueryValue === 'false'
+      ? true
+      : process.env.NODE_ENV !== 'production'
+
+  const setIsCodeHidden = useCallback((value: boolean): void => {
+    setSearchParams(previous => {
+      const next = new URLSearchParams(previous)
+      next.set(CODE_QUERY_PARAMETER, value ? CODE_HIDDEN_VALUE : CODE_VISIBLE_VALUE)
+      return next
+    }, { replace: true })
+  }, [setSearchParams])
   const [isDarkTheme, setIsDarkTheme] = useState(readInitialDarkTheme)
 
   useLayoutEffect(() => {

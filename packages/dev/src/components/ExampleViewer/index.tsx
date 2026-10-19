@@ -6,6 +6,10 @@ import { SandpackProvider, SandpackLayout, SandpackCodeEditor } from '@codesandb
 import { useAppContext } from '@src/AppContext'
 import { ExampleGroup } from '@src/examples'
 
+import { CodeFileTabs } from './CodeFileTabs'
+import { CodePanelToolbar } from './CodePanelToolbar'
+import { PREVIEW_BYTE_LIMIT, PREVIEW_LINE_LIMIT } from './constants'
+
 // Styles
 import s from './style.module.css'
 
@@ -27,6 +31,28 @@ export async function exampleViewerLoader ({ params }: { params: Params }): Prom
   return params
 }
 
+async function loadFilePreview (file: string): Promise<string> {
+  const url = `/examples/${file}`
+  const response = await fetch(url, { headers: { range: `bytes=0-${PREVIEW_BYTE_LIMIT - 1}` } })
+  const text = await response.text()
+
+  const totalBytes = Number(response.headers.get('Content-Range')?.split('/')[1])
+  const isPartialResponse = response.status === 206 && totalBytes > PREVIEW_BYTE_LIMIT
+  const lines = text.split('\n')
+
+  if (!isPartialResponse && lines.length <= PREVIEW_LINE_LIMIT) return text
+
+  const previewLines = lines.slice(0, PREVIEW_LINE_LIMIT)
+  // A byte range cuts mid-line, so the last line of a partial response is a fragment.
+  if (isPartialResponse && lines.length <= PREVIEW_LINE_LIMIT) previewLines.pop()
+
+  return [
+    ...previewLines,
+    '',
+    `… preview stops here at ${previewLines.length} lines. Open ${url} for the whole file.`,
+  ].join('\n')
+}
+
 export async function loadExampleFiles (exampleGroup: ExampleGroup, exampleTitle: string): Promise<Record<string, { code: string }>> {
   const exampleItem = exampleGroup.items.find(d => d.title === exampleTitle)
   if (!exampleItem) {
@@ -43,8 +69,9 @@ export async function loadExampleFiles (exampleGroup: ExampleGroup, exampleTitle
 
   for (const file of sortedFiles) {
     if (file.endsWith('.svg')) continue
-    const response = await fetch(`/examples/${file}`)
-    const content = await response.text()
+    const content = /\.(json|csv|tsv)$/.test(file)
+      ? await loadFilePreview(file)
+      : await fetch(`/examples/${file}`).then(response => response.text())
     files[file.replace(/.*\//, '')] = { code: content }
   }
   return files
@@ -60,12 +87,17 @@ export function ExampleViewer (props: ExampleViewerProps): React.ReactNode {
   const exampleItem = exampleGroup?.items.find(d => d.title === exampleTitle)
 
   const [files, setFiles] = useState<Record<string, { code: string }>>({})
-  const { isCodeHidden, isDarkTheme } = useAppContext()
+  const { isCodeHidden, setIsCodeHidden, isDarkTheme } = useAppContext()
 
   useEffect(() => {
+    let cancelled = false
+    setFiles({})
     if (exampleGroup && exampleTitle) {
-      loadExampleFiles(exampleGroup, exampleTitle).then(setFiles)
+      loadExampleFiles(exampleGroup, exampleTitle).then(files => {
+        if (!cancelled) setFiles(files)
+      })
     }
+    return () => { cancelled = true }
   }, [exampleGroup, exampleTitle])
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -76,7 +108,7 @@ export function ExampleViewer (props: ExampleViewerProps): React.ReactNode {
       { exampleItem
         ? (
           <div className={s.exampleWrapper}>
-            <PanelGroup direction="horizontal" className={s.panelGroup}>
+            <PanelGroup direction="horizontal" className={s.panelGroup} autoSaveId="unovis-dev:example-panels">
               <Panel style={{ height: '100%' }} order={1}>
                 <div className={s.example}>
                   <Component duration={urlDuration}/>
@@ -84,10 +116,11 @@ export function ExampleViewer (props: ExampleViewerProps): React.ReactNode {
               </Panel>
               {!isCodeHidden && Object.keys(files).length > 0 && (
                 <>
-                  <PanelResizeHandle />
-                  <Panel defaultSize={50} minSize={0} style={{ height: '100%' }} order={2}>
+                  <PanelResizeHandle className={s.panelResizeHandle} />
+                  <Panel defaultSize={50} minSize={20} style={{ height: '100%' }} order={2}>
                     <div className={s.codeViewer} style={{ height: '100%' }}>
                       <SandpackProvider
+                        key={`${exampleGroupTitle}/${exampleTitle}`}
                         files={files}
                         theme={isDarkTheme ? 'dark' : 'light'}
                         customSetup={{
@@ -103,8 +136,10 @@ export function ExampleViewer (props: ExampleViewerProps): React.ReactNode {
                           },
                         }}
                       >
+                        <CodePanelToolbar title={exampleTitle} subTitle={exampleItem.subTitle} onClose={() => setIsCodeHidden(true)} />
+                        <CodeFileTabs />
                         <SandpackLayout style={{ height: '100%', minHeight: 0 }}>
-                          <SandpackCodeEditor readOnly style={{ height: '100%', minHeight: 0 }} />
+                          <SandpackCodeEditor readOnly showReadOnly={false} showTabs={false} showRunButton={false} wrapContent style={{ height: '100%', minHeight: 0 }} />
                         </SandpackLayout>
                       </SandpackProvider>
                     </div>
