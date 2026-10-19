@@ -5,6 +5,8 @@ import { SandpackProvider, SandpackLayout, SandpackCodeEditor } from '@codesandb
 
 import { useAppContext } from '@src/AppContext'
 import { ExampleGroup } from '@src/examples'
+import { CaptureFrame } from '@src/capture/CaptureFrame'
+import { getCaptureSettings } from '@src/capture/settings'
 
 import { CodeFileTabs } from './CodeFileTabs'
 import { CodePanelToolbar } from './CodePanelToolbar'
@@ -78,6 +80,7 @@ export async function loadExampleFiles (exampleGroup: ExampleGroup, exampleTitle
 }
 
 export function ExampleViewer (props: ExampleViewerProps): React.ReactNode {
+  const capture = getCaptureSettings()
   const params = useLoaderData() as ExampleViewerUrlParams
   const [searchParams] = useSearchParams()
   const urlDuration = searchParams.get('duration') && !isNaN(+searchParams.get('duration')!) ? +searchParams.get('duration')! : 600
@@ -92,7 +95,7 @@ export function ExampleViewer (props: ExampleViewerProps): React.ReactNode {
   useEffect(() => {
     let cancelled = false
     setFiles({})
-    if (exampleGroup && exampleTitle) {
+    if (!capture && exampleGroup && exampleTitle) {
       loadExampleFiles(exampleGroup, exampleTitle).then(files => {
         if (!cancelled) setFiles(files)
       })
@@ -102,6 +105,14 @@ export function ExampleViewer (props: ExampleViewerProps): React.ReactNode {
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const Component = exampleItem?.component as React.FC<ExampleViewerDurationProps>
+
+  if (capture && exampleItem) {
+    return (
+      <CaptureFrame key={`${exampleGroupTitle}/${exampleTitle}`} settings={capture}>
+        <Component duration={0}/>
+      </CaptureFrame>
+    )
+  }
 
   return (
     <div className={s.exampleViewer}>

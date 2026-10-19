@@ -81,6 +81,10 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
   position: relative;
 }
 
+.root.capture {
+  padding: 0;
+}
+
 /* Toolbar stays fixed height; routed view fills remaining space and scrolls internally */
 .content > *:first-child {
   flex-shrink: 0;

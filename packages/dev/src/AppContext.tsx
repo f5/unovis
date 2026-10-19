@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useLayoutEffect, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { getCaptureSettings } from '@src/capture/settings'
 
 import { CODE_QUERY_PARAMETER, CODE_VISIBLE_VALUE, CODE_HIDDEN_VALUE } from './constants'
 
@@ -15,6 +16,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined)
 
 function readInitialDarkTheme (): boolean {
   if (typeof window === 'undefined') return false
+  const capture = getCaptureSettings()
+  if (capture) return capture.theme === 'dark'
   return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
 

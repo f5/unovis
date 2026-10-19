@@ -1,8 +1,9 @@
 import { randomLcg } from 'd3-random'
 import { GenericDataRecord } from '@unovis/ts'
+import { getCaptureSettings } from '@src/capture/settings'
 import { sample } from './array'
 
-export const randomNumberGenerator = randomLcg(0.42)
+export const randomNumberGenerator = randomLcg(getCaptureSettings()?.seed ?? 0.42)
 
 export type XYDataRecord = {
   x: number;
@@ -77,7 +78,7 @@ export function generateBoxplotDataRecords (n = 10): BoxplotDataRecord[] {
 }
 
 export function generateTimeSeriesDataRecords (numSeries = 5, n = 25, interval = 1000 * 60 * 60): TimeSeriesDataRecord[] {
-  const startTime = Date.now() - (n - 1) * interval
+  const startTime = (getCaptureSettings()?.time ?? Date.now()) - (n - 1) * interval
   return Array(n).fill(0).map((_, i) => ({
     time: startTime + i * interval,
     values: Array(numSeries).fill(0).map((_, j) => j + 5 * randomNumberGenerator()),
@@ -94,7 +95,7 @@ export function generateStackedDataRecords (n = 10, count = 6): StackedDataRecor
 export function generateTimeSeries (n = 10, types = n, lengthMultiplier = 1): TimeDataRecord[] {
   const groups = Array(types).fill(0).map((_, i) => String.fromCharCode(i + 65))
   return Array(n).fill(0).map((_, i: number) => ({
-    timestamp: Date.now() + i * 1000 * 60 * 60 * 24 + (randomNumberGenerator() - 0.5) * 5 * 1000 * 60 * 60 * 24,
+    timestamp: (getCaptureSettings()?.time ?? Date.now()) + i * 1000 * 60 * 60 * 24 + (randomNumberGenerator() - 0.5) * 5 * 1000 * 60 * 60 * 24,
     value: i / 10 + Math.sin(i / 5) + Math.cos(i / 3),
     length: Math.round(lengthMultiplier * 1000 * 60 * 60 * 24) * (0.2 + randomNumberGenerator()),
     type: groups[i % groups.length],
