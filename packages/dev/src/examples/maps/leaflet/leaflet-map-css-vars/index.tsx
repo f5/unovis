@@ -1,4 +1,6 @@
-import React, { useRef } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React, { useLayoutEffect, useRef } from 'react'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
@@ -17,11 +19,19 @@ type MapPointDatum = typeof cities[0]
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)
 
+  const [darkTheme, setDarkTheme] = useComponentState('example', 'darkTheme', document.documentElement.classList.contains('dark-theme'))
+  useLayoutEffect(() => {
+    if (document.documentElement.classList.contains('dark-theme') !== darkTheme) document.documentElement.classList.toggle('dark-theme', darkTheme)
+  }, [darkTheme])
+
   return (<>
     <div className={s.map}>
-      <button className={s.toggleButton} onClick={() => document.documentElement.classList.toggle('dark-theme')}>
+      <div className={s.toggleButton}>
+        <ExampleControls components={['example']}/>
+        <button onClick={() => setDarkTheme(value => !value)}>
         Toggle documentElement
-      </button>
+        </button>
+      </div>
       <VisLeafletMap<MapPointDatum>
         ref={mapRef}
         data={cities}

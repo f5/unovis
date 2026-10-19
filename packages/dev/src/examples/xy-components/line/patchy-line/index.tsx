@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React from 'react'
 import { VisXYContainer, VisLine, VisAxis, VisScatter, VisCrosshair, VisTooltip, VisAnnotations } from '@unovis/react'
 import { CurveType } from '@unovis/ts'
 
@@ -40,16 +42,17 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const getY = (i: number) => (d: Datum) => d[`y${i}`]
 
   const fallbacks = [undefined, 0, 5, 10]
-  const [fallbackValue, setFallbackValue] = useState(fallbacks[0])
-  const [interpolation, setInterpolation] = useState(true)
-  const [showScatter, setShowScatter] = useState(true)
+  const [fallbackValue, setFallbackValue] = useComponentState<number | undefined>('line', 'fallbackValue', fallbacks[0])
+  const [interpolation, setInterpolation] = useComponentState('line', 'interpolateMissingData', true)
+  const [showScatter, setShowScatter] = useComponentState('example', 'showScatter', true)
 
   return (
     <div className={s.patchyLineExample}>
+      <ExampleControls components={['line', 'example']}/>
       <div className={s.inputs}>
         <label>
           Fallback value:
-          <select onChange={e => setFallbackValue(fallbacks[Number(e.target.value)])}>
+          <select value={fallbacks.indexOf(fallbackValue)} onChange={e => setFallbackValue(fallbacks[Number(e.target.value)])}>
             {fallbacks.map((o, i) => <option key={i} value={i}>{String(o)}</option>)}
           </select>
         </label>

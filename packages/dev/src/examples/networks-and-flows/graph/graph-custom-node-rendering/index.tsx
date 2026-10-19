@@ -1,4 +1,6 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { GraphFitViewAlignment, GraphLink, GraphNode } from '@unovis/ts'
 import type { VisGraphRef } from '@unovis/react'
 import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
@@ -14,8 +16,8 @@ export const subTitle = 'Add Fit View methods'
 
 export const component = (): React.ReactNode => {
   const [playing, setPlaying] = usePlayback()
-  const [showLinkFlow, setShowLinkFlow] = useState(true)
-  const [fitViewAlignment, setFitViewAlignment] = useState<GraphFitViewAlignment>(GraphFitViewAlignment.Center)
+  const [showLinkFlow, setShowLinkFlow] = useComponentState('graph', 'linkFlow', true)
+  const [fitViewAlignment, setFitViewAlignment] = useComponentState<GraphFitViewAlignment>('graph', 'fitViewAlign', GraphFitViewAlignment.Center)
   const graphRef = useRef<VisGraphRef<CustomGraphNode, CustomGraphLink> | null>(null)
 
   const nodes: CustomGraphNode[] = useMemo(() => ([
@@ -62,7 +64,6 @@ export const component = (): React.ReactNode => {
 
   return (
     <>
-      <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <CustomGraph
         ref={graphRef}
         nodes={nodes}
@@ -79,6 +80,8 @@ export const component = (): React.ReactNode => {
         fitViewPadding={useMemo(() => ({ top: 50, right: 50, bottom: 100, left: 50 }), [])}
       />
       <div className={s.checkboxContainer}>
+        <ExampleControls components={['graph']}/>
+        <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
         <label>
           <input
             type="checkbox"

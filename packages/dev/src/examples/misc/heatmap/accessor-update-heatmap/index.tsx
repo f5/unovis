@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { VisSingleContainer, VisHeatmap, VisHeatmapSelectors } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
@@ -55,7 +57,7 @@ const HeatmapLayer = ({ duration }: { duration?: number }): React.ReactNode => {
 }
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const [selection, setSelection] = useState(0)
+  const [selection, setSelection] = useComponentState('example', 'selection', 0)
   const [status, setStatus] = useState('measuring…')
 
   // Read the fills actually committed to the DOM and compare them to the expected ones. The container
@@ -89,6 +91,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (
     <>
+      <ExampleControls components={['example']}/>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
         {selections.map((s, i) => (
           <button

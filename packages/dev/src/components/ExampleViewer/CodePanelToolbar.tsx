@@ -1,29 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useActiveCode, useSandpack } from '@codesandbox/sandpack-react'
+import { copyText } from '@src/utils/clipboard'
 
 // Styles
 import s from './style.module.css'
 
 import { COPIED_LABEL_DURATION } from './constants'
 
-/** `navigator.clipboard` is denied outside a focused secure context, so fall back to a detached selection. */
-async function copyText (text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text)
-    return true
-  } catch {
-    const textArea = document.createElement('textarea')
-    textArea.value = text
-    textArea.setAttribute('readonly', '')
-    textArea.style.position = 'fixed'
-    textArea.style.opacity = '0'
-    document.body.appendChild(textArea)
-    textArea.select()
-    const didCopy = document.execCommand('copy')
-    document.body.removeChild(textArea)
-    return didCopy
-  }
-}
 
 export type CodePanelToolbarProps = {
   title: string;

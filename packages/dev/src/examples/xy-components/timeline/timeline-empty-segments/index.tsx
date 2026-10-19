@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useMemo } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
 
@@ -8,9 +10,9 @@ export const title = 'Timeline: Empty Segments'
 export const subTitle = 'Small and Negative Lengths'
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const [showEmptySegments, toggleEmptySegments] = React.useState(true)
-  const [showEmptySegmentsCorrectPosition, toggleEmptySegmentsCorrectPosition] = React.useState(true)
-  const [lineCap, setLineCap] = React.useState(false)
+  const [showEmptySegments, toggleEmptySegments] = useComponentState('timeline', 'showEmptySegments', true)
+  const [showEmptySegmentsCorrectPosition, toggleEmptySegmentsCorrectPosition] = useComponentState('timeline', 'showEmptySegmentsCorrectPosition', true)
+  const [lineCap, setLineCap] = useComponentState('timeline', 'lineCap', false)
   const data = useMemo(() => generateTimeSeries(50).map((d, i) => ({
     ...d,
     length: [d.length, 0, -d.length][i % 3],
@@ -18,6 +20,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   })), [])
 
   return (<>
+    <ExampleControls components={['timeline']}/>
     <div><input type='checkbox' checked={showEmptySegments} onChange={e => toggleEmptySegments(e.target.checked)}/><label>Show empty segments</label></div>
     <div><input type='checkbox' checked={lineCap} onChange={e => setLineCap(e.target.checked)}/><label>Rounded corners</label></div>
     <div>

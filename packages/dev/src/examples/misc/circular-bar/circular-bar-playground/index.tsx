@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React from 'react'
 import { randomNumberGenerator } from '@src/utils/data'
 import { VisSingleContainer, VisCircularBar, VisCircularBarSelectors, VisTooltip } from '@unovis/react'
 import type { CircularBarArcDatum } from '@unovis/ts'
@@ -60,15 +62,15 @@ const initialShapeParams: ShapeParams = {
 const rowStyle: React.CSSProperties = { display: 'grid', gridTemplateColumns: '130px 52px 1fr 48px', gap: 8, alignItems: 'center', fontSize: 12, color: '#374151' }
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const [barCount, setBarCount] = useState(5)
-  const [presetIndex, setPresetIndex] = useState(0)
-  const [values, setValues] = useState<(number | null)[]>(dataPresets[0].getValues())
-  const [barMinLength, setBarMinLength] = useState(0)
-  const [shape, setShape] = useState<ShapeParams>(initialShapeParams)
-  const [angleRangeKey, setAngleRangeKey] = useState(Object.keys(angleRanges)[0])
-  const [showBackground, setShowBackground] = useState(true)
-  const [sorted, setSorted] = useState(false)
-  const [showIcons, setShowIcons] = useState(true)
+  const [barCount, setBarCount] = useComponentState('example', 'barCount', 5)
+  const [presetIndex, setPresetIndex] = useComponentState('example', 'presetIndex', 0)
+  const [values, setValues] = useComponentState<(number | null)[]>('example', 'values', dataPresets[0].getValues())
+  const [barMinLength, setBarMinLength] = useComponentState('circularBar', 'barMinLength', 0)
+  const [shape, setShape] = useComponentState<ShapeParams>('example', 'shape', initialShapeParams)
+  const [angleRangeKey, setAngleRangeKey] = useComponentState('example', 'angleRangeKey', Object.keys(angleRanges)[0])
+  const [showBackground, setShowBackground] = useComponentState('circularBar', 'showBackground', true)
+  const [sorted, setSorted] = useComponentState('example', 'sorted', false)
+  const [showIcons, setShowIcons] = useComponentState('example', 'showIcons', true)
 
   const data = values.slice(0, barCount)
   const resolve = (p: AutoNumber): number | undefined => p.auto ? undefined : p.value
@@ -81,6 +83,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-start', width: '100%' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 360 }}>
+        <ExampleControls components={['example', 'circularBar']}/>
         <label style={rowStyle}>
           <span>Bars</span>
           <span/>
@@ -98,7 +101,11 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         <label style={rowStyle}>
           <span>barMinLength</span>
           <span/>
-          <input type="range" min={0} max={60} step={1} value={barMinLength} onChange={e => setBarMinLength(+e.target.value)}/>
+          <input type="range"
+            min={Math.min(0, barMinLength ?? 0)}
+            max={Math.max(60, barMinLength ?? 60)}
+            step={Number.isInteger(barMinLength) ? 1 : 'any'}
+            value={barMinLength} onChange={e => setBarMinLength(+e.target.value)}/>
           <span>{barMinLength}px</span>
         </label>
         {shapeControls.map(c => (

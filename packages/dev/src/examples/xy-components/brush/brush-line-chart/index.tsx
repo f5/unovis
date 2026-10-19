@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React from 'react'
 import { VisXYContainer, VisLine, VisAxis, VisBrush } from '@unovis/react'
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
@@ -12,18 +14,20 @@ const data = generateXYDataRecords(50).map((d, i) => ({
 }))
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const [brushHeightExtend, setBrushHeightExtend] = useState(4)
+  const [brushHeightExtend, setBrushHeightExtend] = useComponentState('brush', 'brushHeightExtend', 4)
 
   return (
     <div>
+      <ExampleControls components={['brush']}/>
       <div style={{ marginBottom: 10 }}>
         <label>
           brushHeightExtend: {brushHeightExtend}
           <input
             type="range"
-            min={0}
-            max={5}
-            step={1}
+            min={Math.min(0, brushHeightExtend ?? 0)}
+            max={Math.max(5, brushHeightExtend ?? 5)}
+            step={Number.isInteger(brushHeightExtend) ? 1 : 'any'}
+
             value={brushHeightExtend}
             onChange={e => setBrushHeightExtend(Number(e.target.value))}
             style={{ marginLeft: 10, width: 200 }}

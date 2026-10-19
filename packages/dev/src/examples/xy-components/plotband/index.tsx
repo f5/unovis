@@ -1,8 +1,11 @@
+import { color } from 'd3-color'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { generateXYDataRecords, XYDataRecord, randomNumberGenerator } from '@src/utils/data'
 import { VisAxis, VisCrosshair, VisLine, VisPlotband, VisTooltip, VisXYContainer } from '@unovis/react'
 import { PlotbandLabelOrientation, PlotbandLabelPosition } from '@unovis/ts'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import s from './style.module.css'
 
 type LineDataRecord = XYDataRecord & { y3: number; y4: number }
@@ -49,34 +52,30 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     PlotbandLabelPosition.LeftInside,
     PlotbandLabelPosition.LeftOutside,
   ]
-  const [plotbandAxis, setPlotbandAxis] = useState(axis[1])
-  const [plotbandFrom, setPlotbandFrom] = useState(2)
-  const [plotbandTo, setPlotbandTo] = useState(3)
-  const [plotbandColor, setPlotbandColor] = useState('#ff8400')
-  const [plotbandColorAlpha, setPlotbandColorAlpha] = useState(0.2)
+  const [plotbandAxis, setPlotbandAxis] = useComponentState('plotband', 'axis', axis[1])
+  const [plotbandFrom, setPlotbandFrom] = useComponentState('plotband', 'from', 2)
+  const [plotbandTo, setPlotbandTo] = useComponentState('plotband', 'to', 3)
+  const [plotbandColor, setPlotbandColor] = useComponentState<string | undefined>('plotband', 'color', 'rgba(255, 132, 0, 0.2)')
 
-  const [plotbandText, setPlotbandText] = useState('x label')
-  const [plotbandTextPosition, setPlotbandTextPosition] = useState(textPosition[0])
-  const [plotbandTextOffsetX, setPlotbandTextOffsetX] = useState(14)
-  const [plotbandTextOffsetY, setPlotbandTextOffsetY] = useState(14)
-  const [plotbandTextOrientation, setPlotbandTextOrientation] = useState(textOrientation[1])
-  const [plotbandLabelColor, setPlotbandLabelColor] = useState()
-  const [plotbandLabelSize, setPlotbandLabelSize] = useState(12)
+  const [plotbandText, setPlotbandText] = useComponentState('plotband', 'labelText', 'x label')
+  const [plotbandTextPosition, setPlotbandTextPosition] = useComponentState('plotband', 'labelPosition', textPosition[0])
+  const [plotbandTextOffsetX, setPlotbandTextOffsetX] = useComponentState('plotband', 'labelOffsetX', 14)
+  const [plotbandTextOffsetY, setPlotbandTextOffsetY] = useComponentState('plotband', 'labelOffsetY', 14)
+  const [plotbandTextOrientation, setPlotbandTextOrientation] = useComponentState('plotband', 'labelOrientation', textOrientation[1])
+  const [plotbandLabelColor, setPlotbandLabelColor] = useComponentState<string | undefined>('plotband', 'labelColor', undefined)
+  const [plotbandLabelSize, setPlotbandLabelSize] = useComponentState('plotband', 'labelSize', 12)
 
-  function formPlotbandFinalColor (color: string | undefined, alpha: number): string | undefined {
-    if (!color || !/^#?[0-9A-Fa-f]{6}$/.test(color)) return undefined
-
-    const hex = color.replace('#', '')
-    const r = parseInt(hex.slice(0, 2), 16)
-    const g = parseInt(hex.slice(2, 4), 16)
-    const b = parseInt(hex.slice(4, 6), 16)
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  const parsedColor = plotbandColor ? color(plotbandColor) : null
+  const plotbandColorAlpha = parsedColor?.opacity ?? 0.2
+  const setPlotbandColorAlpha = (alpha: number): void => {
+    if (!parsedColor) return
+    parsedColor.opacity = alpha
+    setPlotbandColor(parsedColor.formatRgb())
   }
-
-  const finalColor = formPlotbandFinalColor(plotbandColor, plotbandColorAlpha)
 
   return (
     <>
+      <ExampleControls components={['plotband']}/>
       <div>
         <div>
           <h3>Plotband Props</h3>
@@ -95,8 +94,13 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
                 Color ({plotbandColor}):
                 <input
                   type='color'
-                  value={plotbandColor ?? '#000000'}
-                  onChange={e => setPlotbandColor(e.target.value)}
+                  value={parsedColor?.formatHex() ?? '#000000'}
+                  onChange={e => {
+                    const next = color(e.target.value)
+                    if (!next) return
+                    next.opacity = plotbandColorAlpha
+                    setPlotbandColor(next.formatRgb())
+                  }}
                 />
                 <button onClick={() => setPlotbandColor(undefined)}>Clear</button>
               </label>
@@ -107,11 +111,19 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
             </div>
             <label>
               From ({plotbandFrom}):
-              <input type='range' min={1} max={5} value={plotbandFrom} onChange={e => setPlotbandFrom(Number(e.target.value))}/>
+              <input type='range'
+                min={Math.min(1, plotbandFrom ?? 1)}
+                max={Math.max(5, plotbandFrom ?? 5)}
+                step={Number.isInteger(plotbandFrom) ? 1 : 'any'}
+                value={plotbandFrom} onChange={e => setPlotbandFrom(Number(e.target.value))}/>
             </label>
             <label>
               To ({plotbandTo}):
-              <input type='range' min={1} max={10} step="0.5" value={plotbandTo} onChange={e => setPlotbandTo(Number(e.target.value))}/>
+              <input type='range'
+                min={Math.min(1, plotbandTo ?? 1)}
+                max={Math.max(10, plotbandTo ?? 10)}
+                step={Number.isInteger((plotbandTo ?? 0) / 0.5) ? 0.5 : 'any'}
+                value={plotbandTo} onChange={e => setPlotbandTo(Number(e.target.value))}/>
             </label>
           </div>
         </div>
@@ -132,12 +144,20 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
             </label>
             <label>
               Offset X:
-              <input type='range' min={0} max={50} value={plotbandTextOffsetX} onChange={e => setPlotbandTextOffsetX(Number(e.target.value))}/>
+              <input type='range'
+                min={Math.min(0, plotbandTextOffsetX ?? 0)}
+                max={Math.max(50, plotbandTextOffsetX ?? 50)}
+                step={Number.isInteger(plotbandTextOffsetX) ? 1 : 'any'}
+                value={plotbandTextOffsetX} onChange={e => setPlotbandTextOffsetX(Number(e.target.value))}/>
               ({plotbandTextOffsetX})
             </label>
             <label>
               Offset Y:
-              <input type='range' min={0} max={50} value={plotbandTextOffsetY} onChange={e => setPlotbandTextOffsetY(Number(e.target.value))}/>
+              <input type='range'
+                min={Math.min(0, plotbandTextOffsetY ?? 0)}
+                max={Math.max(50, plotbandTextOffsetY ?? 50)}
+                step={Number.isInteger(plotbandTextOffsetY) ? 1 : 'any'}
+                value={plotbandTextOffsetY} onChange={e => setPlotbandTextOffsetY(Number(e.target.value))}/>
               ({plotbandTextOffsetY})
             </label>
             <label>
@@ -150,12 +170,16 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
             </label>
             <label>
               Color ({plotbandLabelColor}):
-              <input type='color' value={plotbandColor} onChange={e => setPlotbandLabelColor(e.target.value)}/>
+              <input type='color' value={plotbandLabelColor ?? '#000000'} onChange={e => setPlotbandLabelColor(e.target.value)}/>
               <button onClick={() => setPlotbandLabelColor(undefined)}>Clear</button>
             </label>
             <label>
               Label Size ({plotbandLabelSize}):
-              <input type='range' min={10} max={20} value={plotbandLabelSize} onChange={e => setPlotbandLabelSize(Number(e.target.value))}/>
+              <input type='range'
+                min={Math.min(10, plotbandLabelSize ?? 10)}
+                max={Math.max(20, plotbandLabelSize ?? 20)}
+                step={Number.isInteger(plotbandLabelSize) ? 1 : 'any'}
+                value={plotbandLabelSize} onChange={e => setPlotbandLabelSize(Number(e.target.value))}/>
             </label>
           </div>
         </div>
@@ -164,7 +188,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         <VisXYContainer<LineDataRecord> data={data}>
           <VisPlotband
             axis={plotbandAxis}
-            color={finalColor}
+            color={plotbandColor}
             from={plotbandFrom}
             to={plotbandTo}
             labelText={plotbandText}

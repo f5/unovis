@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useCallback, useState } from 'react'
 import { Spacing } from '@unovis/ts'
 import { VisXYContainer, VisScatter, VisLine, VisArea, VisStackedBar, VisAxis } from '@unovis/react'
@@ -11,7 +13,7 @@ const data = generateXYDataRecords(25)
 const xDomain: [number, number] = [1, 20]
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const [syncBleed, setSyncBleed] = useState(true)
+  const [syncBleed, setSyncBleed] = useComponentState('example', 'syncBleed', true)
   const [scatterBleed, setScatterBleed] = useState<Spacing>()
 
   const x = useCallback((d: XYDataRecord) => d.x, [])
@@ -32,6 +34,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (
     <>
+      <ExampleControls components={['example']}/>
       <label>
         <input type='checkbox' checked={syncBleed} onChange={e => setSyncBleed(e.target.checked)}/>
         Synchronize bleed

@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useState, useCallback } from 'react'
 import { format } from 'd3-format'
 import { VisSingleContainer, VisTooltip, VisTreemap } from '@unovis/react'
@@ -60,7 +62,7 @@ for (const d of data) {
 }
 
 export const component = (): React.ReactElement => {
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useComponentState('example', 'searchTerm', '')
   const [clickedNode, setClickedNode] = useState<TreemapExampleDatum | null>(null)
 
   // Match the search term against the data
@@ -81,6 +83,7 @@ export const component = (): React.ReactElement => {
 
   return (
     <div>
+      <ExampleControls components={['example']}/>
       <input
         type="text"
         placeholder="Search by name..."

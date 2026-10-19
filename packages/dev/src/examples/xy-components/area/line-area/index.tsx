@@ -1,4 +1,6 @@
-import React, { useRef, useState } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React, { useRef } from 'react'
 import { VisXYContainer, VisArea, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
 
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
@@ -9,7 +11,7 @@ export const subTitle = 'Generated Data'
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const tooltipRef = useRef(null)
   const fullData = useRef(generateXYDataRecords(15)).current
-  const [hasData, setHasData] = useState(true)
+  const [hasData, setHasData] = useComponentState('example', 'hasData', true)
 
   const accessors = [
     (d: XYDataRecord) => d.y,
@@ -19,6 +21,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (
     <div>
+      <ExampleControls components={['example']}/>
       <button onClick={() => setHasData(prev => !prev)} style={{ marginBottom: 8 }}>
         {hasData ? 'Clear data' : 'Restore data'}
       </button>

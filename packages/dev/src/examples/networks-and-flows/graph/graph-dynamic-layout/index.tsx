@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useEffect, useMemo, useState } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { GraphLayoutType } from '@unovis/ts'
@@ -13,7 +15,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const [data, setData] = useState(() => generateNodeLinkData(50))
   const layouts = Object.values(GraphLayoutType)
   const initial = GraphLayoutType.Circular
-  const [layout, setLayout] = useState<string>(initial)
+  const [layout, setLayout] = useComponentState<string>('graph', 'layoutType', initial)
 
   // Generate new data every 2 seconds
   useEffect(() => {
@@ -38,8 +40,9 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (
     <>
+      <ExampleControls components={['graph']}/>
       <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
-      <select onChange={e => setLayout(e.target.value)} defaultValue={initial}>
+      <select onChange={e => setLayout(e.target.value)} value={layout}>
         {layouts.map(l => <option key={l} value={l}>{l}</option>)}
       </select>
       <VisSingleContainer data={data} height={900}>
