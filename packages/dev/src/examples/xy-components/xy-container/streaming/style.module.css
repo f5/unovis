@@ -1,0 +1,44 @@
+.example {
+  padding: 16px;
+}
+
+.example > h2 {
+  margin: 0 0 8px;
+}
+
+.example > p {
+  margin: 0 0 16px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.chart {
+  min-width: 0;
+}
+
+.chart h3 {
+  margin: 0 0 6px;
+}
+
+.chart p {
+  margin: 0 0 8px;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .charts {
+    grid-template-columns: 1fr;
+  }
+}
