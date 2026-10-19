@@ -6,7 +6,7 @@ import { NavigationSideBar } from '@src/components/NavigationSideBar'
 import { ThemeSelector } from '@src/components/ThemeSelector'
 
 // Examples
-import { examples } from '@src/examples'
+import { exampleSections } from '@src/examples'
 
 // App Context
 import { AppProvider } from '@src/AppContext'
@@ -23,7 +23,7 @@ const App = (): React.ReactNode => {
   return (
     <AppProvider>
       <div className={s.root}>
-        <NavigationSideBar exampleGroups={examples} />
+        <NavigationSideBar exampleSections={exampleSections} />
         <div className={s.content}>
           <ThemeSelector/>
           <Outlet />

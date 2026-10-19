@@ -11,6 +11,18 @@
   --color-light-grey: #ccc;
   --color-grey: #777;
   --color-black: #222;
+  --dev-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --dev-controls-gap: 6px;
+  --dev-accent: #0089bb;
+  --dev-panel-background: #f7f8fa;
+  --dev-text: #444;
+  --dev-text-strong: #222;
+  --dev-text-muted: #777;
+  --dev-border: rgba(0, 0, 0, 0.1);
+  --dev-button-background: rgba(0, 0, 0, 0.04);
+  --dev-button-hover: rgba(0, 0, 0, 0.08);
+  --dev-tab-active: #e1e9f2;
+  --dev-highlight: rgba(0, 137, 187, 0.2);
 }
 
 html,
@@ -28,6 +40,15 @@ body.theme-dark {
   background-color: var(--color-black);
   color: var(--color-light-grey);
   color-scheme: dark;
+  --dev-panel-background: #22262a;
+  --dev-text: #ccc;
+  --dev-text-strong: #fff;
+  --dev-text-muted: #999;
+  --dev-border: rgba(255, 255, 255, 0.1);
+  --dev-button-background: rgba(255, 255, 255, 0.05);
+  --dev-button-hover: rgba(255, 255, 255, 0.13);
+  --dev-tab-active: rgb(80, 100, 130);
+  --dev-highlight: rgba(0, 137, 187, 0.4);
 }
 
 body.theme-dark select, body.theme-dark input {
@@ -46,6 +67,7 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
   height: 100%;
   display: flex;
   flex-direction: row;
+  column-gap: 12px;
   padding: 8px 8px 8px 8px;
 }
 

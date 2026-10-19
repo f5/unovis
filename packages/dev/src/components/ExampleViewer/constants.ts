@@ -1,0 +1,3 @@
+export const COPIED_LABEL_DURATION = 1400
+export const PREVIEW_BYTE_LIMIT = 64 * 1024
+export const PREVIEW_LINE_LIMIT = 200

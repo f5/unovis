@@ -9,7 +9,7 @@ import { FpsMeter } from './FpsMeter'
 import s from './style.module.css'
 
 export function ThemeSelector (): React.ReactNode {
-  const { isCodeHidden, setIsCodeHidden, isDarkTheme, setIsDarkTheme } = useAppContext()
+  const { isDarkTheme, setIsDarkTheme } = useAppContext()
 
   const onDarkModeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setIsDarkTheme(e.currentTarget.checked)
@@ -35,17 +35,6 @@ export function ThemeSelector (): React.ReactNode {
         <input type='checkbox' id='theme-patterns' onChange={onPatternsChange}/>
         <span className='fa-solid fa-magic-wand-sparkles' aria-hidden />
       </label>
-      <button
-        type='button'
-        className={s.toolbarItem}
-        data-on={isCodeHidden ? 'false' : 'true'}
-        title='See Source Code'
-        aria-label={isCodeHidden ? 'Show source code' : 'Hide source code'}
-        aria-pressed={!isCodeHidden}
-        onClick={() => setIsCodeHidden(!isCodeHidden)}
-      >
-        <span className='fa-solid fa-code' aria-hidden />
-      </button>
     </div>
   )
 }

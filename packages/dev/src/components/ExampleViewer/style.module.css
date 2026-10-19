@@ -15,7 +15,7 @@
   justify-content: center;
   font-weight: 400;
   font-size: 12pt;
-  color: var(--color-black);
+  color: var(--dev-text);
 }
 
 .exampleWrapper {
@@ -39,9 +39,8 @@
   box-sizing: border-box;
   height: 100%;
   min-height: 0;
-  padding: 5px;
   overflow: hidden;
-  background: #fff;
+  background: var(--dev-panel-background);
   border-radius: 3px;
 }
 
@@ -68,6 +67,16 @@ body.theme-dark .codeViewer {
   min-height: 0 !important;
 }
 
+.codeViewer :global(.sp-wrapper) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.codeViewer :global(.sp-layout) {
+  height: auto !important;
+}
+
 /* CodeMirror 6: keep editor within the panel and scroll inside the scroller */
 .codeViewer :global(.cm-editor) {
   height: 100%;
@@ -83,3 +92,129 @@ body.theme-dark .spHeight {
   --sp-colors-surface2: #5c5c5c55 !important;
 }
 
+.codeToolbar {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dev-controls-gap);
+  flex: 0 0 auto;
+  padding: 8px 8px 8px 12px;
+  border-bottom: 1px solid var(--dev-border);
+  font-family: var(--dev-font-mono);
+}
+
+.codeToolbarText {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.codeToolbarTitle {
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  line-height: 1.5;
+  color: var(--dev-text-strong);
+  overflow-wrap: anywhere;
+}
+
+.codeToolbarSubTitle {
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  line-height: 1.45;
+  color: var(--dev-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.codeViewer .codeToolbar .codeToolbarButton {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--dev-text);
+  background: var(--dev-button-background);
+}
+
+.codeViewer .codeToolbar .codeToolbarButton:hover:not(:disabled) {
+  background: var(--dev-button-hover);
+  color: var(--dev-text-strong);
+}
+
+.panelResizeHandle {
+  flex: 0 0 auto;
+  width: 5px;
+  position: relative;
+  background: none;
+  transition: background-color 0.15s;
+}
+
+.panelResizeHandle::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 2px;
+  width: 1px;
+  height: 100%;
+  background: transparent;
+  transition: background-color 0.15s;
+}
+
+.panelResizeHandle:hover::after,
+.panelResizeHandle[data-resize-handle-state="drag"]::after {
+  background: var(--dev-accent);
+}
+
+/* Sandpack keeps a static highlighted block until CodeMirror mounts, so wrap both. */
+.codeViewer :global(.sp-pre-placeholder),
+.codeViewer :global(.cm-content) {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere;
+  line-height: 1.45 !important;
+}
+
+.fileTabs {
+  display: flex;
+  align-items: stretch;
+  flex: 0 0 auto;
+  height: 30px;
+  border-bottom: 1px solid var(--dev-border);
+  overflow-x: auto;
+}
+
+.codeViewer .fileTabs .fileTab {
+  flex: 0 0 auto;
+  height: 100%;
+  padding: 0 12px;
+  border: none;
+  border-radius: 0;
+  background: none;
+  font-family: var(--dev-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-transform: none;
+  color: var(--dev-text-muted);
+}
+
+.codeViewer .fileTabs .fileTab:hover:not(:disabled) {
+  background: var(--dev-button-background);
+  color: var(--dev-text);
+}
+
+.codeViewer .fileTabs .fileTab:focus-visible {
+  outline: 1px solid var(--dev-accent);
+  outline-offset: -2px;
+}
+
+.codeViewer .fileTabs .fileTabActive,
+.codeViewer .fileTabs .fileTabActive:hover:not(:disabled) {
+  background: var(--dev-tab-active);
+  color: var(--dev-text-strong);
+}
+
+.codeToolbarButton,
+.fileTab {
+  cursor: pointer;
+}

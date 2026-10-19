@@ -1,101 +1,258 @@
-import React, { useLayoutEffect, useRef, useState } from 'react'
-import Fuse from 'fuse.js'
+import React, { ChangeEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useMatch, useSearchParams } from 'react-router-dom'
 
+import { useAppContext } from '@src/AppContext'
 import { NavigationItem } from '@src/components/NavigationItem'
 
 // Examples
-import { ExampleGroup } from '@src/examples'
+import { ExampleSectionGroup } from '@src/examples'
+
+import { createExampleSearch, getSearchTokens } from './search'
+import { useSidebarWidth } from './useSidebarWidth'
+import { EXPANDED_GROUPS_STORAGE_KEY, SEARCH_QUERY_PARAMETER } from './constants'
 
 // Styles
 import s from './style.module.css'
 
 export type NavigationSideBarProps = {
-  exampleGroups: ExampleGroup[];
+  exampleSections: ExampleSectionGroup[];
 }
 
-const fuseOptions = {
-  includeScore: true,
-  includeMatches: true,
-  threshold: 0.2, // Lower threshold for stricter matching
-  keys: [
-    { name: 'items.title', weight: 2 }, // Give more weight to title matches
-    { name: 'items.subTitle', weight: 1 },
-    { name: 'items.category', weight: 1 },
-  ],
+function readExpandedGroups (): string[] | null {
+  try {
+    const stored = window.localStorage.getItem(EXPANDED_GROUPS_STORAGE_KEY)
+    return stored ? JSON.parse(stored) as string[] : null
+  } catch {
+    return null
+  }
 }
 
-function readInitialSearchQuery (): string {
-  if (typeof window === 'undefined') return ''
-  return new URLSearchParams(window.location.search).get('q') ?? ''
+function writeExpandedGroups (groups: string[]): void {
+  try {
+    window.localStorage.setItem(EXPANDED_GROUPS_STORAGE_KEY, JSON.stringify(groups))
+  } catch {
+    // Storage is unavailable in private windows; expansion stays session-only.
+  }
 }
 
-function filterExampleGroups (exampleGroups: ExampleGroup[], searchTerm: string): ExampleGroup[] {
-  if (!searchTerm?.trim()) return exampleGroups
-  const fuse = new Fuse(exampleGroups, fuseOptions)
-  const result = fuse.search(searchTerm)
-  return result.map(d => ({
-    title: d.item.title,
-    items: [...new Set(d.matches?.map(match => d.item.items[match.refIndex as number]) || [])],
-  }))
+function countExamples (sections: ExampleSectionGroup[]): number {
+  return sections.reduce(
+    (total, section) => total + section.groups.reduce((count, group) => count + group.items.length, 0),
+    0
+  )
 }
 
 export function NavigationSideBar (props: NavigationSideBarProps): React.ReactNode {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const exampleMatch = useMatch({ path: '/examples/:group/:title', end: true })
   const activeItemRef = useRef<HTMLDivElement>(null)
   const didScrollToActiveRef = useRef(false)
-  const [searchParams, setSearchParams] = useSearchParams()
-  const preservedSearch = searchParams.toString()
-  const [groups, setGroups] = useState(() => filterExampleGroups(props.exampleGroups, readInitialSearchQuery()))
-  const exampleMatch = useMatch({ path: '/examples/:group/:title', end: true })
+  const inputRef = useRef<HTMLInputElement>(null)
+  const { isCodeHidden, setIsCodeHidden } = useAppContext()
+  const { width, isResizing, onResizeStart, onResizeReset } = useSidebarWidth()
 
-  const filterExamples = (): void => {
-    const searchTerm = inputRef.current?.value ?? ''
-    setSearchParams(prev => {
-      const next = new URLSearchParams(prev)
-      if (searchTerm.trim()) next.set('q', searchTerm)
-      else next.delete('q')
-      return next
-    }, { replace: true })
-    setGroups(filterExampleGroups(props.exampleGroups, searchTerm))
-  }
+  const searchTerm = searchParams.get(SEARCH_QUERY_PARAMETER) ?? ''
+  const activeGroup = exampleMatch?.params.group
+
+  const search = useMemo(() => createExampleSearch(props.exampleSections), [props.exampleSections])
+  const sections = useMemo(() => search(searchTerm), [search, searchTerm])
+  const highlightTokens = useMemo(() => getSearchTokens(searchTerm), [searchTerm])
+
+  const totalCount = useMemo(() => countExamples(props.exampleSections), [props.exampleSections])
+  const resultCount = useMemo(() => countExamples(sections), [sections])
+
+  const allGroupTitles = useMemo(
+    () => props.exampleSections.flatMap(section => section.groups.map(group => group.title)),
+    [props.exampleSections]
+  )
+
+  // Numbered off the full sidebar so a section keeps its number while search filters the list.
+  const sectionNumbers = useMemo(
+    () => new Map(props.exampleSections.map((section, index) => [section.title, String(index + 1).padStart(2, '0')])),
+    [props.exampleSections]
+  )
+
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => {
+    const stored = readExpandedGroups()
+    if (stored) return new Set([...stored, ...(activeGroup ? [activeGroup] : [])])
+    return new Set(activeGroup ? [activeGroup] : [])
+  })
+
+  useEffect(() => {
+    if (!activeGroup) return
+    setExpandedGroups(previous => (previous.has(activeGroup) ? previous : new Set([...previous, activeGroup])))
+  }, [activeGroup])
 
   useLayoutEffect(() => {
-    if (didScrollToActiveRef.current) return
-    if (!exampleMatch?.params.group || !exampleMatch.params.title) return
-    const el = activeItemRef.current
-    if (!el) return
-    el.scrollIntoView({ block: 'start', behavior: 'auto' })
+    if (didScrollToActiveRef.current || !activeItemRef.current) return
+    activeItemRef.current.scrollIntoView({ block: 'nearest', behavior: 'auto' })
     didScrollToActiveRef.current = true
-  }, [exampleMatch?.params.group, exampleMatch?.params.title, groups])
+  }, [activeGroup, sections, expandedGroups])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent): void => {
+      const target = event.target as HTMLElement | null
+      const isTyping = target?.tagName === 'INPUT' || target?.tagName === 'TEXTAREA' || target?.isContentEditable
+
+      if (event.key === 'Escape' && target === inputRef.current) {
+        inputRef.current?.blur()
+        return
+      }
+      if (isTyping) return
+      if (event.key === '/' || (event.key === 'k' && (event.metaKey || event.ctrlKey))) {
+        event.preventDefault()
+        inputRef.current?.focus()
+        inputRef.current?.select()
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  const setSearchTerm = useCallback((nextSearchTerm: string): void => {
+    const nextSearchParams = new URLSearchParams(searchParams)
+
+    if (!nextSearchTerm) nextSearchParams.delete(SEARCH_QUERY_PARAMETER)
+    else nextSearchParams.set(SEARCH_QUERY_PARAMETER, nextSearchTerm)
+
+    setSearchParams(nextSearchParams, { replace: true })
+  }, [searchParams, setSearchParams])
+
+  const toggleGroup = useCallback((groupTitle: string): void => {
+    setExpandedGroups((previous) => {
+      const next = new Set(previous)
+      if (next.has(groupTitle)) next.delete(groupTitle)
+      else next.add(groupTitle)
+      writeExpandedGroups([...next])
+      return next
+    })
+  }, [])
+
+  const isSearching = highlightTokens.length > 0
+  const areAllExpanded = allGroupTitles.every(title => expandedGroups.has(title))
+
+  const toggleAllGroups = useCallback((): void => {
+    const next = areAllExpanded ? new Set<string>() : new Set(allGroupTitles)
+    writeExpandedGroups([...next])
+    setExpandedGroups(next)
+  }, [areAllExpanded, allGroupTitles])
+
+  const isExampleOpen = Boolean(activeGroup)
 
   return (
-    <div className={s.navSideBar}>
-      <div className={s.navSideBarInput}>
-        <input ref={inputRef} defaultValue={readInitialSearchQuery()} onChange={filterExamples} type='text' placeholder="Find examples"/>
+    <nav className={s.navSideBar} style={{ flexBasis: width, width }}>
+      <div className={s.header}>
+        <span className={s.headerTitle}>UNOVIS EXAMPLES</span>
+        <button
+          className={`${s.codeButton} ${!isCodeHidden ? s.codeButtonActive : ''}`}
+          onClick={() => setIsCodeHidden(!isCodeHidden)}
+          disabled={!isExampleOpen}
+          aria-label={isCodeHidden ? 'Show source code' : 'Hide source code'}
+          aria-pressed={!isCodeHidden}
+          title={isExampleOpen
+            ? (isCodeHidden ? 'Show the source code panel' : 'Hide the source code panel')
+            : 'Open an example to see its source'}
+        >
+          <svg className={s.codeIcon} viewBox="0 0 16 16" aria-hidden="true">
+            <polyline points="5.5,4.5 2,8 5.5,11.5" />
+            <polyline points="10.5,4.5 14,8 10.5,11.5" />
+          </svg>
+          Code
+        </button>
       </div>
-      <div className={s.navItems}>
-        {groups.map(group => <div key={group.title}>
-          <div className={s.navItemGroup}>{group.title}</div>
-          {group.items.map(item => {
-            const isActive = exampleMatch?.params.group === group.title && exampleMatch?.params.title === item.title
-            return (
-              <NavigationItem
-                key={item.title}
-                ref={isActive ? activeItemRef : undefined}
-                group={group.title}
-                {...item}
-                isActive={isActive}
-                preservedSearch={preservedSearch}
-              />
-            )
-          })}
-        </div>
+
+      <div className={s.searchField}>
+        <svg className={s.searchIcon} viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="7" cy="7" r="4.5" />
+          <line x1="10.5" y1="10.5" x2="14" y2="14" />
+        </svg>
+        <input
+          ref={inputRef}
+          className={s.searchInput}
+          value={searchTerm}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => setSearchTerm(event.target.value)}
+          type="text"
+          placeholder="Search examples"
+          spellCheck={false}
+          aria-label="Search examples"
+        />
+        {searchTerm
+          ? <button className={s.searchClear} onClick={() => setSearchTerm('')} title="Clear search">✕</button>
+          : <span className={s.searchHint}>/</span>}
+      </div>
+
+      <div className={s.toolbar}>
+        <span className={s.toolbarCount}>
+          {isSearching ? `${resultCount} of ${totalCount}` : `${totalCount} examples`}
+        </span>
+        {!isSearching && (
+          <button className={s.toolbarButton} onClick={toggleAllGroups}>
+            {areAllExpanded ? 'Collapse all' : 'Expand all'}
+          </button>
         )}
-        {!groups.length && <div className={s.navNotFound}>
-          🔎 No results for "{inputRef.current?.value}"
-        </div>}
       </div>
-    </div>
+
+      <div className={s.navItems}>
+        {sections.map(section => (
+          <section key={section.title} className={s.section}>
+            <div className={s.sectionHeader}>
+              <span className={s.sectionIndex}>{sectionNumbers.get(section.title)}</span>
+              <span className={s.sectionDot}>·</span>
+              <span className={s.sectionTitle}>{section.title}</span>
+              <span className={s.sectionRule} />
+            </div>
+            {section.groups.map((group) => {
+              const isExpanded = isSearching || expandedGroups.has(group.title)
+              return (
+                <div key={group.title} className={s.group}>
+                  <button
+                    className={`${s.groupHeader} ${isExpanded ? s.groupHeaderExpanded : ''}`}
+                    onClick={() => toggleGroup(group.title)}
+                    aria-expanded={isExpanded}
+                  >
+                    <svg className={s.groupChevron} viewBox="0 0 12 12" aria-hidden="true">
+                      <polyline points="4,2 8,6 4,10" />
+                    </svg>
+                    <span className={s.groupTitle}>{group.title}</span>
+                    <span className={s.groupCount}>{group.items.length}</span>
+                  </button>
+                  {isExpanded && (
+                    <div className={s.groupItems}>
+                      {group.items.map(item => (
+                        <NavigationItem
+                          key={item.title}
+                          ref={activeGroup === group.title && exampleMatch?.params.title === item.title ? activeItemRef : undefined}
+                          isActive={activeGroup === group.title && exampleMatch?.params.title === item.title}
+                          preservedSearch={searchParams.toString()}
+                          group={group.title}
+                          title={item.title}
+                          subTitle={item.subTitle}
+                          highlight={highlightTokens}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </section>
+        ))}
+        {!sections.length && (
+          <div className={s.navNotFound}>
+            No examples match “{searchTerm}”
+          </div>
+        )}
+      </div>
+
+      <div
+        className={`${s.resizeHandle} ${isResizing ? s.resizeHandleActive : ''}`}
+        onPointerDown={onResizeStart}
+        onDoubleClick={onResizeReset}
+        role="separator"
+        aria-orientation="vertical"
+        title="Drag to resize, double-click to reset"
+      />
+    </nav>
   )
 }
