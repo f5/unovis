@@ -59,9 +59,11 @@ function renderHighlightedText (text: string, tokens: string[]): React.ReactNode
 }
 
 export const NavigationItem = React.forwardRef<HTMLDivElement, NavigationItemProps>(function navigationItem (props, ref) {
+  const search = new URLSearchParams(props.preservedSearch)
+  if (!props.isActive) search.delete('config')
   const to = {
     pathname: `/examples/${encodeURIComponent(props.group)}/${encodeURIComponent(props.title)}`,
-    search: props.preservedSearch || undefined,
+    search: search.toString() || undefined,
   }
   return (
     <div ref={ref} className={`${s.navItem}${props.isActive ? ` ${s.navItemActive}` : ''}`}>
