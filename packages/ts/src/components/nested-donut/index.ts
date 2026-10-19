@@ -113,7 +113,7 @@ NestedDonutConfigInterface<Datum>
       .remove()
 
     // Segments
-    const segments = this.arcGroup.selectAll<SVGGElement, NestedDonutSegment<Datum>>(`${s.segment}`)
+    const segments = this.arcGroup.selectAll<SVGGElement, NestedDonutSegment<Datum>>(`.${s.segment}`)
       .data(data, d => d._id)
 
     const segmentsEnter = segments.enter()
@@ -121,8 +121,7 @@ NestedDonutConfigInterface<Datum>
       .attr('class', s.segment)
 
     segments.merge(segmentsEnter)
-    smartTransition(segments.exit(), duration)
-      .attr('class', s.segmentExit)
+    smartTransition(segments.exit().attr('class', s.segmentExit), duration)
       .style('opacity', 0)
       .remove()
 
