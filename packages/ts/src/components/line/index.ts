@@ -1,12 +1,12 @@
 import { select } from 'd3-selection'
 import { Transition } from 'd3-transition'
 import { CurveFactoryLineOnly, Line as LineGenInterface, line } from 'd3-shape'
-import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
 import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
+import { interpolatePath } from '@/utils/interpolate-path'
 import { getNumber, getString, getValue, isArray, isNumber } from '@/utils/data'
 import { smartTransition } from '@/utils/d3'
 import { getColor } from '@/utils/color'
