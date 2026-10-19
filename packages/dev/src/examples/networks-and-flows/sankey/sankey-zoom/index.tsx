@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useRef, useState } from 'react'
 import { VisSingleContainer, VisSankey } from '@unovis/react'
 import {
@@ -34,11 +36,11 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const zoomStep = 1.2
 
   // State for config properties
-  const [zoomMode, setZoomMode] = useState<SankeyZoomMode>(SankeyZoomMode.Y)
-  const [zoomOrigin, setZoomOrigin] = useState<SankeyZoomOrigin>(SankeyZoomOrigin.Center)
+  const [zoomMode, setZoomMode] = useComponentState<SankeyZoomMode>('sankey', 'zoomMode', SankeyZoomMode.Y)
+  const [zoomOrigin, setZoomOrigin] = useComponentState<SankeyZoomOrigin>('example', 'zoomOrigin', SankeyZoomOrigin.Center)
   const [zoomExtent] = useState<[number, number]>([1, 5])
-  const [configZoomScale, setConfigZoomScale] = useState<[number, number] | undefined>(undefined)
-  const [configZoomPan, setConfigZoomPan] = useState<[number, number] | undefined>(undefined)
+  const [configZoomScale, setConfigZoomScale] = useComponentState<[number, number] | undefined>('sankey', 'zoomScale', undefined)
+  const [configZoomPan, setConfigZoomPan] = useComponentState<[number, number] | undefined>('sankey', 'zoomPan', undefined)
 
   const getCurrentScales = (): [number, number] => {
     const c = sankeyRef.current?.component
@@ -94,6 +96,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const shouldDisableApiControls = configZoomScale !== undefined || configZoomPan !== undefined
   return (
     <>
+      <ExampleControls components={['sankey', 'example']}/>
       <VisSingleContainer data={data} height="95vh" sizing={Sizing.Fit}>
         <VisSankey<ApiEndpointNode, ApiEndpointLink>
           ref={sankeyRef}

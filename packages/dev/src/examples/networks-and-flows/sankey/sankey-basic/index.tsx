@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React from 'react'
 import { VisSingleContainer, VisSankey } from '@unovis/react'
 import { Position } from '@unovis/ts'
@@ -24,10 +26,11 @@ const data = {
 }
 
 export const component = (): React.ReactNode => {
-  const [labelPosition, setLabelPosition] = React.useState<Position.Auto | Position.Left | Position.Right | string>(Position.Auto)
+  const [labelPosition, setLabelPosition] = useComponentState<Position.Auto | Position.Left | Position.Right | string>('sankey', 'labelPosition', Position.Auto)
 
   return (
     <>
+      <ExampleControls components={['sankey']}/>
       <div style={{ marginBottom: 8 }}>
         <label>
           Label position{' '}

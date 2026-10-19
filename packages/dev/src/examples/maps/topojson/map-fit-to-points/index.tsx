@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useEffect, useState, useRef } from 'react'
 import { VisSingleContainer, VisTopoJSONMap, VisTopoJSONMapRef } from '@unovis/react'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
@@ -33,7 +35,7 @@ export const component = (): React.ReactNode => {
     { id: 'Reykjavik', latitude: 64.1265, longitude: -21.8174 },
   ]
 
-  const [numPoints, setNumPoints] = useState(5)
+  const [numPoints, setNumPoints] = useComponentState('example', 'numPoints', 5)
   const [data, setData] = useState<{ points: typeof points[0][]; links: FlowDataRecord[] }>(() => ({
     points: points.slice(0, 5),
     links: FLOW_DATA,
@@ -51,6 +53,7 @@ export const component = (): React.ReactNode => {
 
   return (
     <div style={{ position: 'relative' }}>
+      <ExampleControls components={['example']}/>
       <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <label>
         <input

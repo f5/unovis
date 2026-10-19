@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useCallback } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { GraphLayoutType, GraphLinkArrowStyle, GraphLinkStyle } from '@unovis/ts'
@@ -45,7 +47,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   }
 
   // State and accessors
-  const [showLegend, toggleLegend] = React.useState(true)
+  const [showLegend, toggleLegend] = useComponentState('example', 'showLegend', true)
   const linkLabel = useCallback((l: LinkDatum) => ({ text: l.label }), [])
   const linkArrow = useCallback((l: LinkDatum) => l.direction, [])
   const linkStyle = useCallback((l: LinkDatum) => l.style, [])
@@ -54,6 +56,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (
     <div>
+      <ExampleControls components={['example']}/>
       <button onClick={() => toggleLegend(!showLegend)}>{ showLegend ? 'Hide' : 'Show'} Legend</button>
       <div className={showLegend ? s.container : s.hidden}>
         <div className={s.contents}>

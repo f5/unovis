@@ -6,3 +6,11 @@
 .stackBarLabels g[alert][cluster] {
   --vis-xy-label-stroke-width: 2px;
 }
+
+.xyLabelControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}

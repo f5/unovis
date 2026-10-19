@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { VisXYContainer, VisStackedBar, VisAxis } from '@unovis/react'
@@ -23,7 +25,7 @@ const datasets: Rec[][] = [
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [playing, setPlaying] = usePlayback(false)
   const [index, setIndex] = useState(0)
-  const [running, setRunning] = useState<number | false>(350)
+  const [running, setRunning] = useComponentState<number | false>('example', 'interval', 350)
   const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (
     <div>
+      <ExampleControls components={['example']}/>
       <button onClick={next}>Next dataset</button>
       <button onClick={doubleUpdate}>Double update</button>
       <button onClick={() => { setPlaying(!playing); setRunning(350) }}>{playing ? 'Stop' : 'Auto-cycle'}</button>

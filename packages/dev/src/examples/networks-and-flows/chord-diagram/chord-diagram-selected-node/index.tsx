@@ -1,4 +1,6 @@
-import React, { useCallback, useState } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React, { useCallback } from 'react'
 import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
@@ -19,8 +21,8 @@ const data = {
 }
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const [nodeId, highlightNodeId] = useState<string | undefined>()
-  const [linkIds, highlightLinkIds] = useState<number[]>()
+  const [nodeId, highlightNodeId] = useComponentState<string | undefined>('chordDiagram', 'highlightedNodeId', undefined)
+  const [linkIds, highlightLinkIds] = useComponentState<number[] | undefined>('chordDiagram', 'highlightedLinkIds', undefined)
   const highlightNode = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     const node = e.target.value.length ? e.target.value : undefined
     const links = new Array<number>()
@@ -32,7 +34,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   }, [])
   return (
     <>
-      <select onChange={highlightNode}>
+      <ExampleControls components={['chordDiagram']}/>
+      <select value={nodeId ?? ''} onChange={highlightNode}>
         <option label='--Select a node to highlight--'/>
         {data.nodes.map(n => <option key={n.id} value={n.id}>{n.id}</option>)}
       </select>

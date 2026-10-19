@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React, { useMemo } from 'react'
 import { VisXYContainer, VisAxis, VisLine } from '@unovis/react'
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
 import { Scale } from '@unovis/ts'
@@ -8,7 +10,7 @@ export const title = 'Axis with Ticks Rotation Slider'
 export const subTitle = 'All 4 axis types'
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const [tickTextAngle, setTickTextAngle] = useState(0)
+  const [tickTextAngle, setTickTextAngle] = useComponentState('axis', 'tickTextAngle', 0)
   const data = useMemo(() => generateXYDataRecords(15), [])
   const accessors = [
     (d: XYDataRecord) => d.y,
@@ -17,8 +19,13 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   ]
   return (
     <>
+      <ExampleControls components={['axis']}/>
       <div style={{ marginBottom: 10 }}>
-        <input type="range" min={-180} max={180} value={tickTextAngle} onChange={e => setTickTextAngle(Number(e.target.value))} style={{ marginRight: 10, width: 500 }}/>
+        <input type="range"
+          min={Math.min(-180, tickTextAngle ?? -180)}
+          max={Math.max(180, tickTextAngle ?? 180)}
+          step={Number.isInteger(tickTextAngle) ? 1 : 'any'}
+          value={tickTextAngle} onChange={e => setTickTextAngle(Number(e.target.value))} style={{ marginRight: 10, width: 500 }}/>
         <label> tickTextAngle: {tickTextAngle}° </label>
       </div>
       <h3>Bottom / Right Axis</h3>

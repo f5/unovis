@@ -1,4 +1,6 @@
-import React, { useRef, useState } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React, { useRef } from 'react'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
@@ -16,7 +18,7 @@ export const subTitle = 'Vector rendering with MapLibre'
 type MapPointDatum = typeof cities[0]
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)
-  const [isMapVisible, setMapVisible] = useState(true)
+  const [isMapVisible, setMapVisible] = useComponentState('example', 'isMapVisible', true)
 
   const handleClick = (): void => {
     setMapVisible(!isMapVisible)
@@ -24,6 +26,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   }
 
   return (<>
+    <ExampleControls components={['example']}/>
     <button className={s.showHideButton} onClick={handleClick}>{isMapVisible ? 'Hide' : 'Show'} Map</button>
     { isMapVisible ? <VisLeafletMap<MapPointDatum>
       ref={mapRef}

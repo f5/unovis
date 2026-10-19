@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useState, useCallback, useEffect, ChangeEvent } from 'react'
 import { BulletLegendItemInterface, BulletShape } from '@unovis/ts'
 import { VisBulletLegend, VisXYContainer, VisScatter, VisGroupedBar, VisLine, VisAxis } from '@unovis/react'
@@ -20,7 +22,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const x = (d: StackedDataRecord): number => d.x
 
   const [accessors, setAccessors] = useState<(null | ((d: StackedDataRecord) => number))[]>()
-  const [chart, setChart] = useState(chartOptions[0])
+  const [chart, setChart] = useComponentState('example', 'chart', chartOptions[0])
   const [legendItems, setLegendItems] = useState(items)
 
   const toggleItem = useCallback((_: BulletLegendItemInterface, index: number) => {
@@ -33,7 +35,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   , [legendItems])
 
   return (<>
-    <select onChange={(e: ChangeEvent<HTMLSelectElement>) => setChart(chartOptions[Number(e.target.value)])}>
+    <ExampleControls components={['example']}/>
+    <select value={chartOptions.findIndex(option => option.type === chart.type)} onChange={(e: ChangeEvent<HTMLSelectElement>) => setChart(chartOptions[Number(e.target.value)])}>
       {chartOptions.map((o, i) => <option key={o.type} value={i}>{o.type}</option>)}
     </select>
     <VisBulletLegend

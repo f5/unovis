@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React, { useMemo } from 'react'
 import { VisXYContainer, VisGroupedBar, VisAxis } from '@unovis/react'
 
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
@@ -9,7 +11,7 @@ export const subTitle = 'Custom styles via `barStyle`'
 type Rec = { x: number; y: number; y1: number }
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const [currentMonth, setCurrentMonth] = useState(6)
+  const [currentMonth, setCurrentMonth] = useComponentState('example', 'currentMonth', 6)
   const data = useMemo<Rec[]>(() => Array.from({ length: 12 }, (_, i) => ({
     x: i + 1,
     y: 6 + 4 * Math.sin(i / 2) + (i % 3),
@@ -25,6 +27,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (
     <div>
+      <ExampleControls components={['example']}/>
       <button onClick={() => setCurrentMonth(m => Math.max(1, m - 1))}>−1 month</button>
       <button onClick={() => setCurrentMonth(m => Math.min(12, m + 1))}>+1 month</button>
       <span style={{ marginLeft: 10 }}>current month: {currentMonth}</span>

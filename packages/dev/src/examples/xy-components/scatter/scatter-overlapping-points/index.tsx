@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Scatter } from '@unovis/ts'
 import { VisXYContainer, VisScatter, VisAxis } from '@unovis/react'
@@ -26,7 +28,7 @@ export const title = 'Overlapping Point Culling'
 export const subTitle = `${NUM_POINTS.toLocaleString()} points, one marker per pixel`
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const [cullOverlappingPoints, setCullOverlappingPoints] = useState(true)
+  const [cullOverlappingPoints, setCullOverlappingPoints] = useComponentState('scatter', 'cullOverlappingPoints', true)
   const data = useMemo(() => generateData(), [])
 
   const [renderedPoints, setRenderedPoints] = useState(NUM_POINTS)
@@ -45,6 +47,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   return (
     <>
+      <ExampleControls components={['scatter']}/>
       <div style={{ marginBottom: 10 }}>
         <label>
           <input

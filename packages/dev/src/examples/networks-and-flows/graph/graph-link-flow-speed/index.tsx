@@ -1,3 +1,5 @@
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
 import React, { useCallback, useEffect, useState } from 'react'
 import { randomNumberGenerator } from '@src/utils/data'
 import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
@@ -12,8 +14,8 @@ type LinkDatum = { id: string; source: string; target: string; speed: number }
 
 export const component = (): React.ReactNode => {
   const [playing, setPlaying] = usePlayback()
-  const [showFlow, setShowFlow] = useState(true)
-  const [autoChange, setAutoChange] = useState(false)
+  const [showFlow, setShowFlow] = useComponentState('graph', 'linkFlow', true)
+  const [autoChange, setAutoChange] = useComponentState('example', 'autoChange', false)
 
   // Simple node data
   const nodes: NodeDatum[] = [
@@ -73,6 +75,7 @@ export const component = (): React.ReactNode => {
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <ExampleControls components={['graph', 'example']}/>
       <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <div style={{
         padding: '20px',

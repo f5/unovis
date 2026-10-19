@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React, { useMemo } from 'react'
 import { VisXYContainer, VisArea, VisAxis } from '@unovis/react'
 
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
@@ -7,7 +9,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Area Min Height'
 export const subTitle = 'Negative stacking'
 export const component = (props: ExampleViewerDurationProps): React.ReactElement => {
-  const [useStackMinHeight, setUseStackMinHeight] = useState(false)
+  const [useStackMinHeight, setUseStackMinHeight] = useComponentState('area', 'stackMinHeight', false)
 
   const accessors = [
     (d: XYDataRecord) => d.y,
@@ -25,6 +27,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactElement
 
   return (
     <div>
+      <ExampleControls components={['area']}/>
       <div style={{ marginBottom: '10px' }}>
         <label>
           <input

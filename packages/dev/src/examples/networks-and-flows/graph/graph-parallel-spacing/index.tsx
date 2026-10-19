@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react'
+import { ExampleControls } from '@src/components/ExampleControls'
+import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import React, { useMemo } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { GraphLayoutType } from '@unovis/ts'
 import { generateNodeLinkData, LinkDatum, NodeDatum } from '@src/utils/data'
@@ -13,14 +15,15 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const { nodes } = useMemo(() => generateNodeLinkData(124), []) // Generate 124 nodes with links
 
   // State for spacing controls
-  const [horizontalNodeSpacing, setHorizontalNodeSpacing] = useState(40)
-  const [verticalNodeSpacing, setVerticalNodeSpacing] = useState(60)
-  const [subGroupSpacing, setSubGroupSpacing] = useState(80)
-  const [groupSpacing, setGroupSpacing] = useState(300)
+  const [nodeSpacing, setNodeSpacing] = useComponentState<[number, number]>('graph', 'layoutParallelNodeSpacing', [40, 60])
+  const [horizontalNodeSpacing, verticalNodeSpacing] = nodeSpacing
+  const [subGroupSpacing, setSubGroupSpacing] = useComponentState('graph', 'layoutParallelSubGroupSpacing', 80)
+  const [groupSpacing, setGroupSpacing] = useComponentState('graph', 'layoutParallelGroupSpacing', 300)
 
   return (
     <div className={s.mainContainer}>
       <div className={s.controlsContainer}>
+        <ExampleControls components={['graph']}/>
         <h4 className={s.controlsTitle}>Spacing Controls</h4>
 
         <div className={s.sliderRow}>
@@ -28,10 +31,11 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           <input
             className={s.sliderInput}
             type="range"
-            min="5"
-            max="100"
+            min={Math.min(5, horizontalNodeSpacing ?? 5)}
+            max={Math.max(100, horizontalNodeSpacing ?? 100)}
+            step={Number.isInteger(horizontalNodeSpacing) ? 1 : 'any'}
             value={horizontalNodeSpacing}
-            onChange={(e) => setHorizontalNodeSpacing(Number(e.target.value))}
+            onChange={(e) => setNodeSpacing([Number(e.target.value), verticalNodeSpacing])}
           />
           <span className={s.sliderValue}>{horizontalNodeSpacing}px</span>
         </div>
@@ -41,10 +45,11 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           <input
             className={s.sliderInput}
             type="range"
-            min="5"
-            max="100"
+            min={Math.min(5, verticalNodeSpacing ?? 5)}
+            max={Math.max(100, verticalNodeSpacing ?? 100)}
+            step={Number.isInteger(verticalNodeSpacing) ? 1 : 'any'}
             value={verticalNodeSpacing}
-            onChange={(e) => setVerticalNodeSpacing(Number(e.target.value))}
+            onChange={(e) => setNodeSpacing([horizontalNodeSpacing, Number(e.target.value)])}
           />
           <span className={s.sliderValue}>{verticalNodeSpacing}px</span>
         </div>
@@ -54,8 +59,9 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           <input
             className={s.sliderInput}
             type="range"
-            min="10"
-            max="150"
+            min={Math.min(10, subGroupSpacing ?? 10)}
+            max={Math.max(150, subGroupSpacing ?? 150)}
+            step={Number.isInteger(subGroupSpacing) ? 1 : 'any'}
             value={subGroupSpacing}
             onChange={(e) => setSubGroupSpacing(Number(e.target.value))}
           />
@@ -67,8 +73,9 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           <input
             className={s.sliderInput}
             type="range"
-            min="50"
-            max="500"
+            min={Math.min(50, groupSpacing ?? 50)}
+            max={Math.max(500, groupSpacing ?? 500)}
+            step={Number.isInteger(groupSpacing) ? 1 : 'any'}
             value={groupSpacing}
             onChange={(e) => setGroupSpacing(Number(e.target.value))}
           />
