@@ -18,7 +18,7 @@ import { Spacing } from '@/types/spacing'
 
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'
-import { CrosshairSnapMode } from './constants'
+import { CrosshairSnapMode, CROSSHAIR_CIRCLE_OVERLAP_RADII } from './constants'
 
 // Config
 import { CrosshairDefaultConfig, CrosshairConfigInterface } from './config'
@@ -294,7 +294,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     const circles = this.g
       .selectAll<SVGCircleElement, CrosshairCircle>('circle')
-      .data(circleData, (d, i) => d.id ?? i)
+      .data(this.getPaintOrder(circleData), (d, i) => d.id ?? i)
 
     const circlesEnter = circles.enter()
       .append('circle')
@@ -306,7 +306,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .style('stroke', d => d.strokeColor)
       .style('stroke-width', d => d.strokeWidth)
 
-    smartTransition(circlesEnter.merge(circles), duration, easeLinear)
+    // The join keeps the existing nodes where they are, so we re-insert them to follow the paint order
+    const circlesMerged = circlesEnter.merge(circles).order()
+    smartTransition(circlesMerged, duration, easeLinear)
       .attr('cx', xClamped)
       .attr('cy', d => d.y)
       .attr('r', config.circleRadius)
@@ -408,6 +410,37 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     return isFinite(y) ? clamp(Math.round(y), 0, this._height) : undefined
   }
 
+  /** Returns the circles in the order they should be painted. Among the circles that overlap each other
+   * (their Y positions are within `2 * circleRadius`), the one with the largest magnitude goes last,
+   * so a thin stacked segment doesn't cover the thick one. The other circles keep their order */
+  private getPaintOrder (circles: CrosshairCircle[]): CrosshairCircle[] {
+    const maxDistance = CROSSHAIR_CIRCLE_OVERLAP_RADII * this.config.circleRadius
+    const order = circles.map((_, i) => i)
+    const candidates = order
+      .filter(i => circles[i].opacity !== 0 && isFinite(circles[i].y) && isNumber(circles[i].magnitude))
+      .sort((a, b) => circles[a].y - circles[b].y)
+
+    // Group the circles into chains where each one is within `maxDistance` of the previous one
+    const clusters: number[][] = []
+    for (const i of candidates) {
+      const cluster = clusters[clusters.length - 1]
+      if (cluster && circles[i].y - circles[cluster[cluster.length - 1]].y <= maxDistance) cluster.push(i)
+      else clusters.push([i])
+    }
+
+    for (const cluster of clusters) {
+      if (cluster.length < 2) continue
+      const largest = cluster.reduce((a, b) => (circles[b].magnitude > circles[a].magnitude ? b : a))
+      const lastPosition = Math.max(...cluster.map(i => order.indexOf(i)))
+      const position = order.indexOf(largest)
+      if (position === lastPosition) continue
+      order.splice(position, 1)
+      order.splice(lastPosition, 0, largest)
+    }
+
+    return order.map(i => circles[i])
+  }
+
   private getCircleData (datum: Datum, datumIndex: number): CrosshairCircle[] {
     const { config } = this
     const colorOptions = { colorFn: this._colorFunction }
@@ -422,6 +455,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
           id: `stacked-${index}`,
           y: this.yScale(value + baselineValue),
           opacity: isNumber(getNumber(datum, yStackedAccessors[index], datumIndex)) ? 1 : 0,
+          magnitude: Math.abs(getNumber(datum, yStackedAccessors[index], datumIndex)),
           color: getColor(datum, config.color, index, colorKeys?.[index], colorOptions),
           strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, index, colorKeys?.[index], colorOptions) : undefined,
           strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, index) : undefined,
@@ -435,6 +469,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
             id: `regular-${index}`,
             y: this.yScale(value),
             opacity: isNumber(value) ? 1 : 0,
+            magnitude: Math.abs(value),
             color: getColor(datum, config.color, circleIndex, colorKeys?.[circleIndex], colorOptions),
             strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, circleIndex, colorKeys?.[circleIndex], colorOptions) : undefined,
             strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, circleIndex) : undefined,

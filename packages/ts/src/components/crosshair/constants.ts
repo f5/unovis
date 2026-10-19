@@ -6,3 +6,6 @@ export enum CrosshairSnapMode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   XY = 'xy',
 }
+
+/** Circles whose Y positions are closer than this many radii overlap each other */
+export const CROSSHAIR_CIRCLE_OVERLAP_RADII = 2
