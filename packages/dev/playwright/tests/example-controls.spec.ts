@@ -2,6 +2,23 @@ import { test, expect } from '@playwright/test'
 
 import { PLOTLINE_EXAMPLE_PATH, XY_LABELS_EXAMPLE_PATH } from './constants'
 
+test('switching examples clears config while preserving gallery preferences and history', async ({ page }) => {
+  const config = { plotline: { value: 7 }, example: { labelFontSize: 30 } }
+  const query = new URLSearchParams({ code: '0', q: 'plot', paused: '1', theme: 'light', seed: '0.73', config: JSON.stringify(config) })
+  await page.goto(`${PLOTLINE_EXAMPLE_PATH}?${query}`)
+  const active = page.locator('nav a[href*="/Plotline/Plot%20Line?"]')
+  await active.click()
+  expect(JSON.parse(new URL(page.url()).searchParams.get('config') ?? '{}')).toEqual(config)
+  const next = page.locator('nav a[href*="/Plotline/Plotline%20Label%20Bleed?"]')
+  await next.click()
+  const params = new URL(page.url()).searchParams
+  expect(params.has('config')).toBe(false)
+  expect(Object.fromEntries(params)).toEqual({ code: '0', q: 'plot', paused: '1', theme: 'light', seed: '0.73' })
+  await page.goBack()
+  await expect(page.getByLabel('Value (7):', { exact: true })).toHaveValue('7')
+  expect(JSON.parse(new URL(page.url()).searchParams.get('config') ?? '{}')).toEqual(config)
+})
+
 test('plot line controls survive copied links, reloads, and browser back', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write'])
   await page.goto(`${PLOTLINE_EXAMPLE_PATH}?capture=1&seed=0.73&width=1000&paused=1&code=1&q=line`)
