@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis } from '@unovis/react'
 
-import { generateTimeSeries } from '@src/utils/data'
+import { generateTimeSeries, randomNumberGenerator } from '@src/utils/data'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { TextAlign } from '@unovis/ts'
 
@@ -13,11 +13,11 @@ export const subTitle = 'Before text labels'
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const labels = ['English', 'Mandarin', 'Spanish', 'Hindi', 'Arabic', 'French', 'Portuguese']
-  const data = generateTimeSeries(7, 20, 10).map((d, i) => ({
+  const data = useMemo(() => generateTimeSeries(7, 20, 10).map((d, i) => ({
     ...d,
     type: labels[i],
-    lineWidth: 5 + Math.random() * 15,
-  }))
+    lineWidth: 5 + randomNumberGenerator() * 15,
+  })), [])
   type Datum = typeof data[number]
 
   const svgDefs = useMemo(() => `${icon}`, [])

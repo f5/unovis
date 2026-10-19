@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { randomNumberGenerator } from '@src/utils/data'
 import { VisSingleContainer, VisTreemap } from '@unovis/react'
 import { FitMode } from '@unovis/ts'
 
@@ -13,13 +14,13 @@ type TreemapExampleDatum = {
 }
 
 const generateData = (): TreemapExampleDatum[] => {
-  const count = 15 + Math.floor(Math.random() * 20) // 15-34 items
+  const count = 15 + Math.floor(randomNumberGenerator() * 20) // 15-34 items
   return Array.from({ length: count }, (_, i) => {
     const groupIndex = i % 3
     const subgroupIndex = Math.floor(i / 3) % 2
     return {
       name: `Item ${i + 1}`,
-      value: Math.floor(50 + Math.random() * 200),
+      value: Math.floor(50 + randomNumberGenerator() * 200),
       group: `Group ${groupIndex + 1}`,
       subgroup: `Subgroup ${subgroupIndex + 1}`,
     }

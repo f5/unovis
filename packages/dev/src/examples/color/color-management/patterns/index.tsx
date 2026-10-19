@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { VisXYContainer, VisStackedBar, VisArea, VisScatter, VisLine, VisAxis } from '@unovis/react'
 import { FillPatternType, LinePatternType, GenericAccessor, NumericAccessor } from '@unovis/ts'
 
@@ -47,7 +47,7 @@ const labelStyle: React.CSSProperties = {
 }
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const data = generateXYDataRecords(15)
+  const data = useMemo(() => generateXYDataRecords(15), [])
   const x = (d: XYDataRecord): number => d.x
 
   return (

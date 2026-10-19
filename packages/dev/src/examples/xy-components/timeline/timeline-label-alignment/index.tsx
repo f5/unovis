@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis } from '@unovis/react'
 
 import { TimeDataRecord, generateTimeSeries } from '@src/utils/data'
@@ -9,10 +9,10 @@ export const title = 'Label Alignment & Style'
 export const subTitle = 'X Domain, auto line width'
 
 export const component = (props: ExampleViewerDurationProps): JSX.Element => {
-  const data = generateTimeSeries(25, 20, 10).map((d, i) => ({
+  const data = useMemo(() => generateTimeSeries(25, 20, 10).map((d, i) => ({
     ...d,
     type: `Row ${i}`,
-  }))
+  })), [])
 
   const xDomain = [data[0].timestamp + 100000, data[data.length - 1].timestamp - 10000] as [number, number]
   return (<>

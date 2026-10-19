@@ -81,6 +81,9 @@ module.exports = {
       '@': path.resolve(__dirname, '../ts/src/'),
 
       // Unovis React
+      // Keep capture readiness and animation overrides in the dev app, outside copyable examples.
+      // The exact-match alias preserves normal @unovis/react/* subpath resolution.
+      '@unovis/react$': path.resolve(__dirname, './src/capture/react.tsx'),
       '@unovis/react': path.resolve(__dirname, '../react/src/'),
       // The react wrappers import their helpers as `src/utils/...` (tsconfig `baseUrl`)
       'src/utils': path.resolve(__dirname, '../react/src/utils'),

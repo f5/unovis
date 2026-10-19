@@ -2,6 +2,7 @@ import React, { useRef, useCallback, useState, useEffect } from 'react'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
 import { LeafletMap, LeafletMapClusterDatum, LeafletMapPoint, LeafletMapPointStyles, Tooltip } from '@unovis/ts'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 
 
 // Data
@@ -15,6 +16,7 @@ export const category = 'Leaflet Map'
 
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const mapRef = useRef<VisLeafletMapRef<MapPointDataRecord>>(null)
   const [data, setData] = useState(points)
   const [colorMap, setColorMap] = useState<LeafletMapPointStyles<MapPointDataRecord>>({
@@ -51,7 +53,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   // Skipped when `?staticData=1` is present so visual tests get a deterministic view.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('staticData') === '1') return
+    if (!playing || params.get('staticData') === '1') return
 
     // Will be called twice under the dev mode
     const timeoutId = setTimeout(() => {
@@ -65,10 +67,11 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     }, 5000)
 
     return () => clearTimeout(timeoutId)
-  }, [])
+  }, [playing])
 
 
   return (<>
+    <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
     <VisLeafletMap<MapPointDataRecord>
       ref={mapRef}
       data={data}

@@ -3,10 +3,12 @@ import { VisXYContainer, VisArea, VisAxis, VisTooltip, VisCrosshair } from '@uno
 
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 
 export const title = 'Force Show At Position'
 export const subTitle = 'Crosshair forced to show at specific position'
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const tooltipRef = useRef(null)
   const [forcePosition, setForcePosition] = useState<number>(75)
   const data = useMemo(() => generateXYDataRecords(150), [])
@@ -19,6 +21,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   // Cycle through different positions to demonstrate the forceShowAt feature
   useEffect(() => {
+    if (!playing) return
     const interval = setInterval(() => {
       setForcePosition(prev => {
         const positions = [25, 50, 75, 100, 125]
@@ -29,10 +32,11 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     }, 2000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [playing])
 
   return (
     <div>
+      <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <div style={{ marginBottom: '10px', fontSize: '14px', color: '#777' }}>
         Crosshair forced to show at position: {forcePosition}
       </div>

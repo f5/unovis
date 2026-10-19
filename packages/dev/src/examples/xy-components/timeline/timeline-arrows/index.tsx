@@ -1,7 +1,9 @@
 import React, { useMemo, useState, useEffect } from 'react'
+import { randomNumberGenerator, getCurrentTime } from '@src/utils/data'
 import { VisXYContainer, VisTimeline, VisAxis } from '@unovis/react'
 
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 import { Arrangement, TextAlign, TimelineArrow } from '@unovis/ts'
 
 // Icons
@@ -12,21 +14,23 @@ export const subTitle = 'Between the lines'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const generateData = (length: number) => Array(length).fill(0).map((_, i) => ({
-  timestamp: Date.now() + i * 1000 * 60 * 60 * 24 + Math.random() * 1000 * 60 * 60 * 24,
+  timestamp: getCurrentTime() + i * 1000 * 60 * 60 * 24 + randomNumberGenerator() * 1000 * 60 * 60 * 24,
   length: 1000 * 60 * 60 * 24,
   id: i.toString(),
   type: `Row ${i}`,
-  lineWidth: 5 + Math.random() * 15,
+  lineWidth: 5 + randomNumberGenerator() * 15,
 }))
 
 export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+  const [playing, setPlaying] = usePlayback()
   const lineIconSize = 25
   const [data, setData] = useState(() => generateData(15))
 
   useEffect(() => {
+    if (!playing) return
     const interval = setInterval(() => { setData(generateData(12)) }, 6000)
     return () => clearInterval(interval)
-  }, [])
+  }, [playing])
 
   type Datum = typeof data[number]
 
@@ -47,6 +51,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
 
   const svgDefs = useMemo(() => `${icon}`, [])
   return (<>
+    <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
     <VisXYContainer<Datum>
       data={data}
       height={400}

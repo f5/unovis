@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Scatter } from '@unovis/ts'
 import { VisXYContainer, VisAxis, VisScatter } from '@unovis/react'
+import { usePlayback } from '@src/components/PlaybackControl'
 
 export const title = 'Component Events: Stale Handlers'
 export const subTitle = 'Handler freshness after a config update'
@@ -25,7 +26,7 @@ export const component = (): React.ReactNode => {
   const data = useMemo<Datum[]>(() => Array.from({ length: 6 }, (_, i) => ({ x: i, y: 1 })), [])
 
   const [renderCount, setRenderCount] = useState(0)
-  const [reRenderBurst, setReRenderBurst] = useState(true)
+  const [reRenderBurst, setReRenderBurst] = usePlayback()
   const [selected, setSelected] = useState<number | null>(null)
   const [maxHandlerLag, setMaxHandlerLag] = useState(0)
   const [log, setLog] = useState<string[]>([])

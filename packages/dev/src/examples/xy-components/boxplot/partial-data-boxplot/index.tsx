@@ -3,6 +3,7 @@ import { VisXYContainer, VisBoxplot, VisAxis } from '@unovis/react'
 
 import { BoxplotDataRecord, generateBoxplotDataRecords } from '@src/utils/data'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 import { WithOptional } from '@unovis/ts/types/misc'
 
 export const title = 'Partial Data & Updates'
@@ -28,17 +29,20 @@ const phases: { label: string; fn: (d: BoxplotDataRecord, i: number) => PartialB
 ]
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const [phase, setPhase] = useState(0)
 
   useEffect(() => {
+    if (!playing) return
     const timer = setInterval(() => setPhase(p => (p + 1) % phases.length), 1600)
     return () => clearInterval(timer)
-  }, [])
+  }, [playing])
 
   const data = useMemo<PartialBoxplotRecord[]>(() => base.map((d, i) => phases[phase].fn(d, i)), [phase])
 
   return (
     <div>
+      <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <p style={{ marginBottom: 8 }}><b>Phase:</b> {phases[phase].label}</p>
       <VisXYContainer data={data} height={400} yDomain={yDomain} margin={{ top: 5, left: 5 }}>
         <VisBoxplot<PartialBoxplotRecord>

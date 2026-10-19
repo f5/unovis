@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { randomNumberGenerator } from '@src/utils/data'
 import { VisSingleContainer, VisCircularBar, VisCircularBarSelectors, VisTooltip } from '@unovis/react'
 import type { CircularBarArcDatum } from '@unovis/ts'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
@@ -13,7 +14,7 @@ const maxBarCount = 12
 // A regular value, a tiny value, `0`, `null` (missing), then regular values again
 const edgeCaseValues: (number | null)[] = [0.8, 0.002, 0, null, 0.5, 0.35, 0.05, 1, 0.65, 0.01, 0.4, 0.9]
 const mixedValues: number[] = Array.from({ length: maxBarCount }, (_, i) => 0.35 + 0.65 * Math.abs(Math.sin(1 + 1.7 * i)))
-const getRandomValues = (): number[] => Array.from({ length: maxBarCount }, () => Math.random())
+const getRandomValues = (): number[] => Array.from({ length: maxBarCount }, () => randomNumberGenerator())
 
 const dataPresets: { label: string; getValues: () => (number | null)[] }[] = [
   { label: 'Small, zero and missing', getValues: () => edgeCaseValues },

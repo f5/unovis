@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react'
+import { randomNumberGenerator } from '@src/utils/data'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { sample } from '@src/utils/array'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 import type { GraphCircleLabel } from '@unovis/ts'
 
 export const title = 'Graph: Multiple Link Labels'
 export const subTitle = 'Link Label Transitions'
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const getSampleLinkCircleLabels = (): GraphCircleLabel[] => {
-    const n = Math.round(Math.random() * 5 + 1)
+    const n = Math.round(randomNumberGenerator() * 5 + 1)
     return Array(n).fill(null).map(() => ({
       text: sample(['👉', '🙂', '👍', '👎', '👋', '👀', '👅', '👄', '👂', '👃', '👁️', '1', '55', '☄️😎', '🎄🥶']),
     }))
@@ -28,6 +31,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   // Re-render the component here to test how the link label updates
   useEffect(() => {
+    if (!playing) return
     const interval = setInterval(() => {
       const links = [
         {
@@ -41,9 +45,10 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     }, 2000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [playing])
 
-  return (
+  return (<>
+    <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
     <VisSingleContainer height={600}>
       <VisGraph<typeof nodes[number], typeof links[number]>
         data={data}
@@ -64,6 +69,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         duration={props.duration}
       />
     </VisSingleContainer>
+  </>
   )
 }
 

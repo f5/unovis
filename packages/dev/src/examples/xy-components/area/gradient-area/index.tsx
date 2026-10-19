@@ -31,8 +31,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   const lineColors = colors.slice(0, numSeries)
 
-  const data = generateTimeSeriesDataRecords(numSeries, 35)
-  const barData = generateTimeSeriesDataRecords(numSeries, 12)
+  const data = useMemo(() => generateTimeSeriesDataRecords(numSeries, 35), [])
+  const barData = useMemo(() => generateTimeSeriesDataRecords(numSeries, 12), [])
 
   const areaScale = useMemo(() => Scale.scaleTime(), [])
   const stackedBarScale = useMemo(() => Scale.scaleTime(), [])

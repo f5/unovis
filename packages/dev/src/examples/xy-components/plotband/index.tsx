@@ -1,14 +1,20 @@
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
+import { generateXYDataRecords, XYDataRecord, randomNumberGenerator } from '@src/utils/data'
 import { VisAxis, VisCrosshair, VisLine, VisPlotband, VisTooltip, VisXYContainer } from '@unovis/react'
 import { PlotbandLabelOrientation, PlotbandLabelPosition } from '@unovis/ts'
 import React, { useRef, useState } from 'react'
 import s from './style.module.css'
 
+type LineDataRecord = XYDataRecord & { y3: number; y4: number }
+
 export const title = 'Plotband'
 export const subTitle = 'Plot a band using the Plotband component'
 
-const data = generateXYDataRecords(15)
+const data: LineDataRecord[] = generateXYDataRecords(15).map(d => ({
+  ...d,
+  y3: randomNumberGenerator(),
+  y4: randomNumberGenerator(),
+}))
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const tooltipRef = useRef(null)
@@ -16,8 +22,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     (d: XYDataRecord) => d.y,
     (d: XYDataRecord) => d.y1,
     (d: XYDataRecord) => d.y2,
-    () => Math.random(),
-    () => Math.random(),
+    (d: LineDataRecord) => d.y3,
+    (d: LineDataRecord) => d.y4,
   ]
   const axis = ['x', 'y']
 
@@ -155,7 +161,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         </div>
       </div>
       <div>
-        <VisXYContainer<XYDataRecord> data={data}>
+        <VisXYContainer<LineDataRecord> data={data}>
           <VisPlotband
             axis={plotbandAxis}
             color={finalColor}
