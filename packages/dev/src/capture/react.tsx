@@ -23,7 +23,7 @@ function CaptureGraph<N extends GraphInputNode, L extends GraphInputLink> (props
   }, [props.onRenderComplete])
 
   return <>
-    <span ref={status} hidden aria-busy="true" />
+    <span ref={status} hidden aria-busy="true" data-capture-pending="Waiting for graph rendering" />
     <Original.VisGraph {...props} ref={ref} duration={0} linkFlow={getInitialPlaying() ? props.linkFlow : false} onRenderComplete={onRenderComplete} />
   </>
 }
