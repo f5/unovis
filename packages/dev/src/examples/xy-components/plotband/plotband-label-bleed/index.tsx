@@ -1,7 +1,8 @@
 import { ExampleControls } from '@src/components/ExampleControls'
 import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import { useComponentConfig } from '@src/components/ExampleControls/useComponentConfig'
 import React from 'react'
-import { AxisType, PlotbandLabelOrientation, PlotbandLabelPosition, UnovisText } from '@unovis/ts'
+import { AxisType, PlotbandLabelOrientation, PlotbandLabelPosition, UnovisText, isString } from '@unovis/ts'
 import { VisLine, VisPlotband, VisXYContainer } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
@@ -49,6 +50,12 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     { text: labelText, fontWeight: 600 },
     { text: 'styled sub-label', fontSize: 10, color: '#888888', marginTop: 2 },
   ]
+  const { config, hasOverride, reset } = useComponentConfig('plotband', {
+    labelText: styledLabel ? styledLabelBlocks : labelText,
+    from: undefined as number | undefined,
+    to: undefined as number | undefined,
+  })
+  const hasCustomExtent = hasOverride('from') || hasOverride('to')
 
   return (
     <>
@@ -56,11 +63,13 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
       <div className={s.controls}>
         <label>
           Label Text:
-          <input type='text' value={labelText} onChange={e => setLabelText(e.target.value)}/>
+          <input type='text' value={hasOverride('labelText') ? (isString(config.labelText) ? config.labelText : JSON.stringify(config.labelText) ?? '') : labelText}
+            onChange={e => { setLabelText(e.target.value); reset(['labelText']) }}/>
         </label>
         <label>
           Plotband Extent:
-          <select value={bandPlacement} onChange={e => setBandPlacement(e.target.value as BandPlacement)}>
+          <select value={hasCustomExtent ? 'custom' : bandPlacement} onChange={e => { setBandPlacement(e.target.value as BandPlacement); reset(['from', 'to']) }}>
+            {hasCustomExtent && <option value='custom' disabled>Custom ({config.from ?? 'preset'}, {config.to ?? 'preset'})</option>}
             {bandPlacements.map(placement => <option key={placement} value={placement}>{placement}</option>)}
           </select>
         </label>
@@ -90,7 +99,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         </label>
         <label>
           Styled Label (UnovisText):
-          <input type='checkbox' checked={styledLabel} onChange={e => setStyledLabel(e.target.checked)}/>
+          <input type='checkbox' checked={hasOverride('labelText') ? !!config.labelText && !isString(config.labelText) : styledLabel}
+            onChange={e => { setStyledLabel(e.target.checked); reset(['labelText']) }}/>
         </label>
       </div>
 

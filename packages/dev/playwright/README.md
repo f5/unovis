@@ -167,6 +167,8 @@ Example-only options use `config.example`: chart and data presets, dataset sizes
 layer visibility, function choices, search text, and the bleed matrices' label/placement
 presets. These options are consumed by the example instead of passed to library components.
 Direct component overrides take precedence over props derived from an example preset.
+Derived controls display the effective override (or a Custom option); choosing a preset clears
+the corresponding direct override. Other component settings remain intact.
 Switching examples through the sidebar clears `config`; gallery preferences remain in the URL.
 For example:
 

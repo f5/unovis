@@ -53,6 +53,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         <label>
           Fallback value:
           <select value={fallbacks.indexOf(fallbackValue)} onChange={e => setFallbackValue(fallbacks[Number(e.target.value)])}>
+            {!fallbacks.includes(fallbackValue) && <option value={-1} disabled>Custom ({fallbackValue})</option>}
             {fallbacks.map((o, i) => <option key={i} value={i}>{String(o)}</option>)}
           </select>
         </label>
