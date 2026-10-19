@@ -7,7 +7,8 @@ import { updateExampleSearchParams } from './updateSearchParams'
 export function useComponentConfig<T extends object> (component: string, props: T): {
   config: T;
   setConfig: <K extends keyof T>(key: K, value: T[K]) => void;
-  reset: () => void;
+  hasOverride: (key: keyof T) => boolean;
+  reset: (keys?: (keyof T)[]) => void;
 } {
   const [searchParams, setSearchParams] = useSearchParams()
   let components: Record<string, unknown> = {}
@@ -49,5 +50,15 @@ export function useComponentConfig<T extends object> (component: string, props: 
     })
   }
 
-  return { config, setConfig, reset: () => write(() => ({})) }
+  return {
+    config,
+    setConfig,
+    hasOverride: key => Object.prototype.hasOwnProperty.call(overrides, key),
+    reset: keys => write(values => {
+      if (!keys) return {}
+      const next = { ...values }
+      for (const key of keys) delete next[String(key)]
+      return next
+    }),
+  }
 }

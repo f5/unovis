@@ -1,5 +1,6 @@
 import { ExampleControls } from '@src/components/ExampleControls'
 import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import { useComponentConfig } from '@src/components/ExampleControls/useComponentConfig'
 import React from 'react'
 import { randomNumberGenerator } from '@src/utils/data'
 import { VisSingleContainer, VisCircularBar, VisCircularBarSelectors, VisTooltip } from '@unovis/react'
@@ -74,7 +75,21 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   const data = values.slice(0, barCount)
   const resolve = (p: AutoNumber): number | undefined => p.auto ? undefined : p.value
-  const setShapeParam = (key: keyof ShapeParams, update: Partial<AutoNumber>): void => setShape({ ...shape, [key]: { ...shape[key], ...update } })
+  const { config, reset } = useComponentConfig('circularBar', {
+    innerRadius: resolve(shape.innerRadius),
+    barPadding: resolve(shape.barPadding),
+    cornerRadius: resolve(shape.cornerRadius),
+    innerCornerRadius: resolve(shape.innerCornerRadius),
+    iconSize: resolve(shape.iconSize),
+    angleRange: angleRanges[angleRangeKey],
+    sortFunction: sorted ? (a: number | null, b: number | null): number => (b ?? -1) - (a ?? -1) : undefined,
+    icon: showIcons ? getCircularBarIcon : undefined,
+  })
+  const effectiveAngleRangeKey = Object.keys(angleRanges).find(key => JSON.stringify(angleRanges[key]) === JSON.stringify(config.angleRange)) ?? 'custom'
+  const setShapeParam = (key: keyof ShapeParams, update: Partial<AutoNumber>): void => {
+    setShape({ ...shape, [key]: { auto: config[key] === undefined, value: config[key] ?? shape[key].value, ...update } })
+    reset([key])
+  }
   const selectPreset = (index: number): void => {
     setPresetIndex(index)
     setValues(dataPresets[index].getValues())
@@ -112,17 +127,19 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           <div key={c.key} style={rowStyle}>
             <span>{c.key}</span>
             <label>
-              <input type="checkbox" checked={shape[c.key].auto} onChange={e => setShapeParam(c.key, { auto: e.target.checked })}/> auto
+              <input type="checkbox" checked={config[c.key] === undefined} onChange={e => setShapeParam(c.key, { auto: e.target.checked })}/> auto
             </label>
-            <input type="range" aria-label={c.key} min={0} max={c.max} step={1} value={shape[c.key].value} disabled={shape[c.key].auto}
+            <input type="range" aria-label={c.key} min={Math.min(0, config[c.key] ?? 0)} max={Math.max(c.max, config[c.key] ?? c.max)}
+              step={Number.isInteger(config[c.key] ?? 0) ? 1 : 'any'} value={config[c.key] ?? shape[c.key].value} disabled={config[c.key] === undefined}
               onChange={e => setShapeParam(c.key, { value: +e.target.value })}/>
-            <span>{shape[c.key].auto ? 'auto' : `${shape[c.key].value}px`}</span>
+            <span>{config[c.key] === undefined ? 'auto' : `${config[c.key]}px`}</span>
           </div>
         ))}
         <label style={rowStyle}>
           <span>angleRange</span>
           <span/>
-          <select value={angleRangeKey} onChange={e => setAngleRangeKey(e.target.value)}>
+          <select value={effectiveAngleRangeKey} onChange={e => { setAngleRangeKey(e.target.value); reset(['angleRange']) }}>
+            {effectiveAngleRangeKey === 'custom' && <option value="custom" disabled>Custom ({config.angleRange?.join(', ')})</option>}
             {Object.keys(angleRanges).map(k => <option key={k} value={k}>{k}</option>)}
           </select>
           <span/>
@@ -135,13 +152,13 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         </label>
         <label style={rowStyle}>
           <span>Sort descending</span>
-          <input type="checkbox" checked={sorted} onChange={e => setSorted(e.target.checked)}/>
+          <input type="checkbox" checked={!!config.sortFunction} onChange={e => { setSorted(e.target.checked); reset(['sortFunction']) }}/>
           <span/>
           <span/>
         </label>
         <label style={rowStyle}>
           <span>icon</span>
-          <input type="checkbox" checked={showIcons} onChange={e => setShowIcons(e.target.checked)}/>
+          <input type="checkbox" checked={!!config.icon} onChange={e => { setShowIcons(e.target.checked); reset(['icon']) }}/>
           <span/>
           <span/>
         </label>

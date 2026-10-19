@@ -1,6 +1,7 @@
 import { ExampleControls } from '@src/components/ExampleControls'
 import { useComponentState } from '@src/components/ExampleControls/useComponentState'
-import React, { useCallback } from 'react'
+import { useComponentConfig } from '@src/components/ExampleControls/useComponentConfig'
+import React from 'react'
 import { VisXYContainer, VisScatter, VisAxis, VisLine } from '@unovis/react'
 
 import { XYDataRecord } from '@src/utils/data'
@@ -21,12 +22,13 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     { x: 3, y: 0.5 },
   ]
   const [showLabels, setShowLabels] = useComponentState('example', 'showLabels', false)
-  const toggleLabels = useCallback(() => setShowLabels(!showLabels), [showLabels])
+  const { config, reset } = useComponentConfig('scatter', { label: showLabels ? (d: XYDataRecord): string => `${d.y}` : undefined })
+  const toggleLabels = (): void => { setShowLabels(!config.label); reset(['label']) }
 
   return (
     <>
-      <ExampleControls components={['example']}/>
-      <label>Labels: <input type='checkbox' checked={showLabels} onChange={toggleLabels}/></label>
+      <ExampleControls components={['example', 'scatter']}/>
+      <label>Labels: <input type='checkbox' checked={!!config.label} onChange={toggleLabels}/></label>
       <VisXYContainer<XYDataRecord> data={data} margin={{ top: 5, left: 5 }}>
         <VisLine x={d => d.x} y={accessors} duration={props.duration}/>
         <VisScatter

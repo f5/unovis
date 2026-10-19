@@ -1,7 +1,8 @@
 import { ExampleControls } from '@src/components/ExampleControls'
 import { useComponentState } from '@src/components/ExampleControls/useComponentState'
+import { useComponentConfig } from '@src/components/ExampleControls/useComponentConfig'
 import React from 'react'
-import { AxisType, PlotlineLabelOrientation, PlotlineLabelPosition, UnovisText } from '@unovis/ts'
+import { AxisType, PlotlineLabelOrientation, PlotlineLabelPosition, UnovisText, isString } from '@unovis/ts'
 import { VisLine, VisPlotline, VisXYContainer } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
@@ -46,6 +47,10 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     { text: labelText, fontWeight: 600 },
     { text: 'styled sub-label', fontSize: 10, color: '#888888', marginTop: 2 },
   ]
+  const { config, hasOverride, reset } = useComponentConfig('plotline', {
+    labelText: styledLabel ? styledLabelBlocks : labelText,
+    value: undefined as number | undefined,
+  })
 
   return (
     <>
@@ -53,11 +58,13 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
       <div className={s.controls}>
         <label>
           Label Text:
-          <input type='text' value={labelText} onChange={e => setLabelText(e.target.value)}/>
+          <input type='text' value={hasOverride('labelText') ? (isString(config.labelText) ? config.labelText : JSON.stringify(config.labelText) ?? '') : labelText}
+            onChange={e => { setLabelText(e.target.value); reset(['labelText']) }}/>
         </label>
         <label>
           Plotline Value:
-          <select value={valuePlacement} onChange={e => setValuePlacement(e.target.value as ValuePlacement)}>
+          <select value={hasOverride('value') ? 'custom' : valuePlacement} onChange={e => { setValuePlacement(e.target.value as ValuePlacement); reset(['value']) }}>
+            {hasOverride('value') && <option value='custom' disabled>Custom ({config.value ?? 'default'})</option>}
             {valuePlacements.map(placement => <option key={placement} value={placement}>{placement}</option>)}
           </select>
         </label>
@@ -87,7 +94,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         </label>
         <label>
           Styled Label (UnovisText):
-          <input type='checkbox' checked={styledLabel} onChange={e => setStyledLabel(e.target.checked)}/>
+          <input type='checkbox' checked={hasOverride('labelText') ? !!config.labelText && !isString(config.labelText) : styledLabel}
+            onChange={e => { setStyledLabel(e.target.checked); reset(['labelText']) }}/>
         </label>
       </div>
 
