@@ -114,6 +114,12 @@ plumbing in this adapter, outside copyable examples. Other async data sources, c
 rendering, and future async work need additional readiness handling in the dev app; a
 quiet DOM alone does not establish readiness.
 
+While waiting, inspect `data-capture-pending` on the frame for the current reason. Failed fonts,
+images, uncaught errors, unhandled rejections, and work that remains pending for 30 seconds set
+`data-capture-error` and keep readiness false. Check this attribute while waiting for readiness
+so a failure is reported immediately. Failures stay recorded until reload; a later DOM change
+cannot turn a failed capture into a successful one.
+
 The audit also covers the extra series in Multi Line, Plotband, and the axis demos;
 scatter stroke widths; legend colors; timeline icon widths; treemap updates; generated
 circular/radial/donut data; and graph label data. Random values are seeded and calculated
