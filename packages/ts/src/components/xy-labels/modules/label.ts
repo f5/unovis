@@ -135,7 +135,7 @@ export function getLabelRenderProps<Datum> (
     y,
     fontSize,
     labelText,
-    labelColor: isCluster ? getColor(data as XYLabel<Datum>[], config.clusterLabelColor) : getColor(data as Datum, config.color, index, config.colorKeys?.[index], colorOptions),
+    labelColor: isCluster ? getColor(data as XYLabel<Datum>[], config.clusterLabelColor) : getColor(data as Datum, config.color, index, config.colorKeys?.[index], { colorFn: () => null }),
     backgroundColor: isCluster ? getColor(data as XYLabel<Datum>[], config.clusterBackgroundColor) : getColor(data as Datum, config.backgroundColor, index, config.colorKeys?.[index], colorOptions),
     cursor: isCluster ? getString(data as XYLabel<Datum>[], config.clusterCursor) : getString(data as Datum, config.cursor),
     width: backgroundWidth,
