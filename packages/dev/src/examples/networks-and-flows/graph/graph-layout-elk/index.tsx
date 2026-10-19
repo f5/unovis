@@ -3,6 +3,7 @@ import React from 'react'
 import { VisGraph, VisSingleContainer } from '@unovis/react'
 import { GraphElkLayoutSettings, GraphNodeShape } from '@unovis/ts'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 
 export const title = 'Layout: ELK'
 export const subTitle = 'Layered hierarchical layout'
@@ -47,9 +48,11 @@ const data = {
   ],
 }
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const linkFlow = (l: LinkDatum): boolean => !!l.showFlow
+  const [playing, setPlaying] = usePlayback()
+  const linkFlow = (l: LinkDatum): boolean => playing && !!l.showFlow
   return (
     <>
+      <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <VisSingleContainer data={data} height={'100vh'}>
         <VisGraph<NodeDatum, LinkDatum>
           nodeLabel={(n: NodeDatum) => n.id}

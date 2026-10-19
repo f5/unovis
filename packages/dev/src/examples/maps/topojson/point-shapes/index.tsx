@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { VisSingleContainer, VisTooltip, VisTopoJSONMap } from '@unovis/react'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
 import { TopoJSONMap } from '@unovis/ts'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 import s from './style.module.css'
 export const title = 'Point Shapes'
 export const subTitle = 'Points with different shapes based on data field'
@@ -24,19 +25,22 @@ export const data: { points: DataRecord[] } = {
 }
 
 export const component = (): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const [ringWidth, setRingWidth] = useState(10)
 
   useEffect(() => {
+    if (!playing) return
     let toggle = false
     const interval = setInterval(() => {
       toggle = !toggle
       setRingWidth(toggle ? 30 : 10)
     }, 500)
     return () => clearInterval(interval)
-  }, [])
+  }, [playing])
 
   return (
     <div className={s.map}>
+      <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <VisSingleContainer data={data} height={'90vh'}>
         <VisTopoJSONMap<any, DataRecord, any>
           topojson={WorldMapTopoJSON}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 
 import personIcon from './person.svg?raw'
 import roleIcon from './role.svg?raw'
@@ -13,6 +14,7 @@ export const title = 'Graph: SVG Node Icons'
 export const subTitle = 'Re-render every second'
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const svgDefs = `
     ${personIcon}
     ${roleIcon}
@@ -40,16 +42,18 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const [data, setData] = useState({ nodes, links })
 
   React.useEffect(() => {
+    if (!playing) return
     const interval = setInterval(() => {
       // Re-render the component here to test the performance
       setData({ nodes, links })
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [playing])
 
   return (
     <div className={s.graph}>
+      <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <VisSingleContainer svgDefs={svgDefs} height={600}>
         <VisGraph<typeof nodes[number], typeof links[number]>
           data={data}
@@ -66,7 +70,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
             nodesep: 20,
           }}
           linkBandWidth={6}
-          linkFlow={true}
+          linkFlow={playing}
           linkCurvature={1}
           linkArrow={'single'}
           linkLabel={(l: typeof links[0]) => l.label}

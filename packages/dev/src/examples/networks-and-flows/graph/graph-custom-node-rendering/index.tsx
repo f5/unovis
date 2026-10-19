@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { GraphFitViewAlignment, GraphLink, GraphNode } from '@unovis/ts'
 import type { VisGraphRef } from '@unovis/react'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 
 import { CustomGraph } from './component'
 import { CustomGraphNodeType } from './enums'
@@ -12,6 +13,7 @@ export const title = 'Graph: Custom Nodes'
 export const subTitle = 'Add Fit View methods'
 
 export const component = (): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const [showLinkFlow, setShowLinkFlow] = useState(true)
   const [fitViewAlignment, setFitViewAlignment] = useState<GraphFitViewAlignment>(GraphFitViewAlignment.Center)
   const graphRef = useRef<VisGraphRef<CustomGraphNode, CustomGraphLink> | null>(null)
@@ -60,12 +62,13 @@ export const component = (): React.ReactNode => {
 
   return (
     <>
+      <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <CustomGraph
         ref={graphRef}
         nodes={nodes}
         links={links}
         height={'100vh'}
-        linkFlow={useCallback((l: CustomGraphLink) => showLinkFlow && l.showFlow, [showLinkFlow])}
+        linkFlow={useCallback((l: CustomGraphLink) => playing && showLinkFlow && l.showFlow, [playing, showLinkFlow])}
         onLayoutCalculated={onLayoutCalculated}
         linkFlowAnimDuration={useCallback((l: CustomGraphLink) => l.linkFlowAnimDuration, [])}
         linkFlowParticleSpeed={useCallback((l: CustomGraphLink) => l.linkFlowParticleSpeed, [])}

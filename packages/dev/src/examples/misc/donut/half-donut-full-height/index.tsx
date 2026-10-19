@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { VisSingleContainer, VisDonut } from '@unovis/react'
 import { DONUT_HALF_ANGLE_RANGES } from '@unovis/ts'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 
 export const title = 'Half Donut: Full Height'
 export const subTitle = 'Testing the resize behavior'
 export const component = (): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const data = [3, 2, 5, 4, 0, 1]
 
   const [currentAngleRange, setCurrentAngleRange] = useState(DONUT_HALF_ANGLE_RANGES[0])
 
   // Cycle through the half-donut angle ranges for testing
   useEffect(() => {
+    if (!playing) return
     const interval = setInterval(() => {
       setCurrentAngleRange((prev: [number, number]) => {
         const currentIndex = DONUT_HALF_ANGLE_RANGES.indexOf(prev)
@@ -18,9 +21,10 @@ export const component = (): React.ReactNode => {
       })
     }, 2000)
     return () => clearInterval(interval)
-  }, [])
+  }, [playing])
 
-  return (
+  return (<>
+    <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
     <VisSingleContainer style={{ height: '100%' }} >
       <VisDonut
         value={d => d}
@@ -33,5 +37,6 @@ export const component = (): React.ReactNode => {
         centralSubLabel="Sub-label"
       />
     </VisSingleContainer>
+  </>
   )
 }

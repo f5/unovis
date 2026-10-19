@@ -26,7 +26,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     { type: 'CSS Variable', value: 'var(--vis-color0)', symbol: '--', tooltip: 'This is a CSS variable' },
     { type: 'SVG Def', value: 'url(#gradient)', symbol: '<>', tooltip: 'This is an SVG definition' },
   ]
-  const data = generateNodeLinkData(colors.length)
+  const data = useMemo(() => generateNodeLinkData(colors.length), [])
 
   const tooltipTriggers = useMemo(() => ({
     [Graph.selectors.node]: (datum: ExtendedNodeDatum): string | null | undefined => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis } from '@unovis/react'
 
 import { TimeDataRecord, generateTimeSeries } from '@src/utils/data'
@@ -17,10 +17,10 @@ const longLabels = [
 ]
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const data = generateTimeSeries(15, 5, 10).map((d, i) => ({
+  const data = useMemo(() => generateTimeSeries(15, 5, 10).map((d, i) => ({
     ...d,
     type: longLabels[i % longLabels.length],
-  }))
+  })), [])
 
   const common: TimelineConfigInterface<TimeDataRecord> = {
     lineRow: (d: TimeDataRecord) => d.type as string,

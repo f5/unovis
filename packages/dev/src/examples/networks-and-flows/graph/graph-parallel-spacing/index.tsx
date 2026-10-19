@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { GraphLayoutType } from '@unovis/ts'
 import { generateNodeLinkData, LinkDatum, NodeDatum } from '@src/utils/data'
@@ -10,7 +10,7 @@ export const subTitle = 'Custom Node and Sub-group Spacing'
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   // Generate sample data with more nodes using the utility function
-  const { nodes } = generateNodeLinkData(124) // Generate 124 nodes with links
+  const { nodes } = useMemo(() => generateNodeLinkData(124), []) // Generate 124 nodes with links
 
   // State for spacing controls
   const [horizontalNodeSpacing, setHorizontalNodeSpacing] = useState(40)

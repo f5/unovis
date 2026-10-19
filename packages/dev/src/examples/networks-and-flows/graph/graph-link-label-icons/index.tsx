@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { sample } from '@src/utils/array'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 
 import personIcon from './person.svg?raw'
 import roleIcon from './role.svg?raw'
@@ -12,6 +13,7 @@ export const title = 'Graph: Link Label Icons'
 export const subTitle = 'SVG icons in link labels'
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const svgDefs = `
     ${personIcon}
     ${roleIcon}
@@ -32,6 +34,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   // Re-render the component here to test how the link label updates
   useEffect(() => {
+    if (!playing) return
     const interval = setInterval(() => {
       const links = [
         { source: 0, target: 1, label: { text: sample(['#personIcon', '#roleIcon', '#instanceIcon', '#bucketIcon', '2', 'long label']) } },
@@ -41,9 +44,10 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [playing])
 
-  return (
+  return (<>
+    <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
     <VisSingleContainer svgDefs={svgDefs} height={600}>
       <VisGraph<typeof nodes[number], typeof links[number]>
         data={data}
@@ -64,6 +68,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         duration={props.duration}
       />
     </VisSingleContainer>
+  </>
   )
 }
 

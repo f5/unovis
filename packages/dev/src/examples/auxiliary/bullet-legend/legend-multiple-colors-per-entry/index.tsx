@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useMemo } from 'react'
+import { randomNumberGenerator } from '@src/utils/data'
 import { VisBulletLegend } from '@unovis/react'
 import { BulletLegendItemInterface } from '@unovis/ts'
 
@@ -8,16 +9,16 @@ export const title = 'Bullet Legend with Multiple Colors'
 export const subTitle = 'with multiple colors per entry'
 
 const colorPalette = ['#4cc9f0', '#4361ee', '#f72585', '#7209b7', '#3a0ca3', '#f9c74f', '#f94144']
-const getRandomColor = (): string => colorPalette[Math.floor(Math.random() * colorPalette.length)]
+const getRandomColor = (): string => colorPalette[Math.floor(randomNumberGenerator() * colorPalette.length)]
 
 export const component = (): React.ReactNode => {
-  const items: BulletLegendItemInterface[] = Array(6).fill(0).map((_, i) => {
-    const numColors = Math.floor(Math.random() * 2) + 2 // 2 or 3
+  const items = useMemo<BulletLegendItemInterface[]>(() => Array(6).fill(0).map((_, i) => {
+    const numColors = Math.floor(randomNumberGenerator() * 2) + 2 // 2 or 3
     return {
       name: `y${i}`,
       color: Array(numColors).fill(0).map(getRandomColor),
     }
-  })
+  }), [])
 
   return (
     <div className={s.legendExample}>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { getCurrentTime } from '@src/utils/data'
 import { VisSingleContainer, VisHeatmap } from '@unovis/react'
 import { Sizing } from '@unovis/ts'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
@@ -22,7 +23,7 @@ type DataRecord = { date: Date; count: number }
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const numDays = 365
-  const end = new Date()
+  const end = new Date(getCurrentTime())
   end.setHours(0, 0, 0, 0)
   const start = new Date(end.getTime() - (numDays - 1) * DAY)
   // Day of week of the first datum (0 = Sun). Empty cells fill the column above it.

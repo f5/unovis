@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { FitMode, TrimMode } from '@unovis/ts'
 import { generateNodeLinkData, NodeDatum, LinkDatum, randomNumberGenerator } from '@src/utils/data'
@@ -9,12 +9,12 @@ export const title = 'Node Labels and Sub-labels'
 export const subTitle = 'Trimming and Wrapping'
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
-  const data = generateNodeLinkData(15)
+  const data = useMemo(() => generateNodeLinkData(15), [])
   const regions = ['Australian', 'South American', 'Siberian', 'European', 'Asian']
   const colors = ['Vermilion', 'Verdigris', 'Bisque', 'Cattleya']
   const animals = ['Elephant', 'Mountain Lion', 'Sea Otter', 'Bear', 'Humuhumunukunukuapuaa']
   const trimModes = Object.values(TrimMode)
-  const labels = data.nodes.map(() => ({
+  const labels = useMemo(() => data.nodes.map(() => ({
     label: `${sample(regions)} ${sample(animals)} ${sample(colors)}`,
     subLabel: `${sample(regions)} ${sample(colors)} ${sample(animals)}`,
     fitMode: sample([FitMode.Trim, FitMode.Wrap]),
@@ -24,7 +24,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     subLabelTrim: randomNumberGenerator() > 0.2,
     subLabelTrimMode: sample(trimModes),
     subLabelTrimLength: Math.round(3 + 12 * randomNumberGenerator()),
-  }))
+  })), [data])
   return (
     <VisSingleContainer data={data} height={600}>
       <VisGraph<NodeDatum, LinkDatum>

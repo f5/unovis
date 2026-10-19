@@ -1,33 +1,37 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
+import { randomNumberGenerator, getCurrentTime } from '@src/utils/data'
 import { VisXYContainer, VisTimeline } from '@unovis/react'
 
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 import { TextAlign } from '@unovis/ts'
 
 export const title = 'Animation Tweaking'
 export const subTitle = 'Control enter/exit position'
 
 export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+  const [playing, setPlaying] = usePlayback()
   const [shouldRenderData, setShouldRenderData] = React.useState(true)
-  const intervalIdRef = React.useRef<NodeJS.Timeout | null>(null)
-  const data = Array(10).fill(0).map((_, i) => ({
-    timestamp: Date.now() + i * 1000 * 60 * 60 * 24,
+  const data = useMemo(() => Array(10).fill(0).map((_, i) => ({
+    timestamp: getCurrentTime() + i * 1000 * 60 * 60 * 24,
     length: 1000 * 60 * 60 * 24,
     id: i.toString(),
     type: `Row ${i}`,
-    lineWidth: 5 + Math.random() * 15,
-  }))
+    lineWidth: 5 + randomNumberGenerator() * 15,
+  })), [])
 
   type Datum = typeof data[number]
 
   useEffect(() => {
-    clearInterval(intervalIdRef.current!)
-    intervalIdRef.current = setInterval(() => {
+    if (!playing) return
+    const interval = setInterval(() => {
       setShouldRenderData(should => !should)
     }, 2000)
-  }, [])
+    return () => clearInterval(interval)
+  }, [playing])
 
   return (<>
+    <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
     <VisXYContainer<Datum>
       data={shouldRenderData ? data : []}
       height={300}

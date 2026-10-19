@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { VisSingleContainer, VisTopoJSONMap, VisTopoJSONMapRef } from '@unovis/react'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
-import { FlowDataRecord } from '../flow-map'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
+import type { FlowDataRecord } from '../complex-demo'
 
 export const title = 'MapFitToPoints'
 export const subTitle = 'Adjust number of points to change view'
@@ -21,6 +22,7 @@ const FLOW_DATA: FlowDataRecord[] = [
 ]
 
 export const component = (): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   const points = [
     { id: 'Los Angeles', latitude: 34.0522, longitude: -118.2437 },
     { id: 'New York', latitude: 40.7128, longitude: -74.0060 },
@@ -49,6 +51,7 @@ export const component = (): React.ReactNode => {
 
   return (
     <div style={{ position: 'relative' }}>
+      <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <label>
         <input
           type='range'
@@ -68,7 +71,7 @@ export const component = (): React.ReactNode => {
           mapFitToPoints={true}
           zoomExtent={[0.5, 100]}
           pointLabel={d => d.id}
-          enableFlowAnimation={true}
+          enableFlowAnimation={playing}
           linkWidth={3}
           flowParticleRadius={1}
           flowParticleSpeed={0.08}

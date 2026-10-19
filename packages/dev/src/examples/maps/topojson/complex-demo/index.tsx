@@ -1,6 +1,7 @@
 import React from 'react'
 import { VisSingleContainer, VisTopoJSONMap } from '@unovis/react'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
+import { usePlayback, PlaybackControl } from '@src/components/PlaybackControl'
 import s from './style.module.css'
 
 export const title = 'Combined feature of topoJSON map'
@@ -67,13 +68,15 @@ export const data: { points: DataRecord[]; links?: FlowDataRecord[] } = {
 }
 
 export const component = (): React.ReactNode => {
+  const [playing, setPlaying] = usePlayback()
   return (
     <div className={s.cmap}>
+      <PlaybackControl playing={playing} onPlayingChange={setPlaying}/>
       <VisSingleContainer data={data} height={'90vh'}>
         <VisTopoJSONMap<any, DataRecord, FlowDataRecord>
           topojson={WorldMapTopoJSON}
           flowParticleSpeed={0.08}
-          enableFlowAnimation={true}
+          enableFlowAnimation={playing}
           flowParticleRadius={1}
           linkColor={'#607D8B'}
           linkWidth={0}

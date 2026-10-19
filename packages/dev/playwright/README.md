@@ -65,16 +65,56 @@ and the FPS toolbar, ignores saved panel sizes, disables CSS animations, and pas
 
 Optional URL parameters are `width` and `height` (default 1200 × 800), `theme` (`light` or
 `dark`, default `light`), `seed` (default `0.42`), and `time` (a Unix timestamp in milliseconds).
-Seed and time affect the shared data generators; they do not override `Math.random`, the
+Automatic demos also accept `paused=1` to start paused or `paused=0` to start playing,
+including outside capture mode. The Play/Pause control then holds or resumes updates.
+Without an explicit `paused` value, capture mode starts these demos paused; ordinary
+gallery mode preserves their usual playback defaults.
+Seed and time affect the shared data generators and the examples using `getCurrentTime`; they do not override `Math.random`, the
 browser clock, external data, or independent generators. Examples with random accessors or
 continuous animation may need stable data or a pause control before taking screenshots.
 
-Capture mode loads Inter before mounting the example. Wait for
+Representative examples checked for repeatable captures:
+
+| Example | Route | Capture behavior |
+| --- | --- | --- |
+| Plot Line | `/examples/Plotline/Plot%20Line` | All five series use precomputed seeded data; controls preserve the data |
+| XY Labels | `/examples/Xy%20Labels/Stacked%20Bar%20with%20Labels` | Bar data and alert positions stay fixed across renders |
+| Graph | `/examples/Graph/Graph:%20Custom%20Node%20Fills%20with%20Tooltip` | Readiness waits for the async force layout to render |
+| MapFitToPoints | `/examples/Topojson/MapFitToPoints` | Uses bundled geography; capture mode disables flow and zoom animations |
+
+Capture mode loads the gallery fonts before mounting the example. Transition demos start
+paused, and the graph adapter disables flow particles during capture. Wait for
 `[data-testid="example-capture"][data-capture-ready="true"]`, then capture that element or
 its visible region. The ready signal waits for fonts, images, and DOM/layout changes to
-settle. For async data, maps, or simulations, mark an element inside the example
-`aria-busy={loading}` until its data or layout is ready. Canvas rendering and future async
-work also need an example-specific check; a quiet DOM alone does not establish readiness.
+settle. The dev-only adapter in `src/capture/react.tsx` waits for graph rendering and
+disables graph flow particles and TopoJSON map flow and zoom animations. It preserves component refs and existing
+render callbacks; ordinary gallery mode uses the original React components. Keep capture
+plumbing in this adapter, outside copyable examples. Other async data sources, canvas
+rendering, and future async work need additional readiness handling in the dev app; a
+quiet DOM alone does not establish readiness.
+
+The audit also covers the extra series in Multi Line, Plotband, and the axis demos;
+scatter stroke widths; legend colors; timeline icon widths; treemap updates; generated
+circular/radial/donut data; and graph label data. Random values are seeded and calculated
+outside accessors. Examples with controls keep their generated data across renders.
+
+Automatic update demos share the same playback controls and URL defaults: Timeline
+Animation Tweaking and Arrows, Dynamic Layout, Graph SVG Node Icons, Graph Multiple Link
+Labels, Graph Link Label Icons, Graph Link Flow Speed, Axis Tick Label Overlap, Half Donut
+Full Height, Partial Data & Updates, Force Show At Position, Point Shapes, and the stale
+handler reproduction. Flow-only graph and TopoJSON map demos can also pause their flow.
+Existing transition and stacked-bar playback controls honor `paused` too.
+
+Readiness still has limits:
+
+- A ready signal describes the current frame; it cannot predict a future one-shot timer.
+  For example, Custom Style Brush applies its initial selection after a delay.
+- The Leaflet Color Map's delayed update honors playback; its existing `staticData=1`
+  option remains available. Leaflet examples still depend on remote tiles/styles and
+  require checking map readiness in the browser. The gallery ready signal does not
+  establish tile or WebGL completion.
+- The Heatmap Accessor Update reproduction displays measured elapsed time. Compare its
+  chart and PASS/FAIL result rather than expecting the elapsed-time text to match pixels.
 
 Review both screenshots, check browser errors, and exercise the behavior being fixed.
 Add a targeted behavioral test when appropriate. Existing Playwright tests, including

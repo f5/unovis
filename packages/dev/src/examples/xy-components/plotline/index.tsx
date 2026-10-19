@@ -1,5 +1,5 @@
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
+import { generateXYDataRecords, XYDataRecord, randomNumberGenerator } from '@src/utils/data'
 import { VisAxis, VisCrosshair, VisLine, VisPlotline, VisTooltip, VisXYContainer } from '@unovis/react'
 import { PlotlineLegendOrientation, PlotlineLegendPosition, PlotlineLineStylePresets } from '@unovis/ts'
 import React, { useRef, useState } from 'react'
@@ -9,7 +9,13 @@ import s from './style.module.css'
 export const title = 'Plot Line'
 export const subTitle = 'Plot a line using the PlotLine component'
 
-const data = generateXYDataRecords(15)
+type PlotlineDataRecord = XYDataRecord & { y3: number; y4: number }
+
+const data: PlotlineDataRecord[] = generateXYDataRecords(15).map(d => ({
+  ...d,
+  y3: randomNumberGenerator(),
+  y4: randomNumberGenerator(),
+}))
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const tooltipRef = useRef(null)
@@ -17,8 +23,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     (d: XYDataRecord) => d.y,
     (d: XYDataRecord) => d.y1,
     (d: XYDataRecord) => d.y2,
-    () => Math.random(),
-    () => Math.random(),
+    (d: PlotlineDataRecord) => d.y3,
+    (d: PlotlineDataRecord) => d.y4,
   ]
 
   const axis = ['x', 'y']
@@ -120,7 +126,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         </div>
       </div>
       <div>
-        <VisXYContainer<XYDataRecord> data={data}>
+        <VisXYContainer<PlotlineDataRecord> data={data}>
           <VisLine x={d => d.x} y={accessors} duration={props.duration}/>
           <VisAxis type='x' numTicks={15} tickFormat={(x: number) => `${x}`} duration={props.duration}/>
           <VisAxis type='y' tickFormat={(y: number) => `${y}`} duration={props.duration}/>

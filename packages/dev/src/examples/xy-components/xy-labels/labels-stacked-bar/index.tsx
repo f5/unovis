@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { XYLabels } from '@unovis/ts'
 import { VisXYContainer, VisStackedBar, VisAxis, VisTooltip, VisCrosshair, VisXYLabels } from '@unovis/react'
 
@@ -18,13 +18,13 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     (d: XYDataRecord) => d.y2,
   ]
 
-  const data = generateXYDataRecords(10)
+  const [data] = useState(() => generateXYDataRecords(10))
 
   type AlertDataRecord = { x: number; label: string }
-  const alerts: AlertDataRecord[] = Array(10).fill(null).map(() => ({
+  const [alerts] = useState<AlertDataRecord[]>(() => Array(10).fill(null).map(() => ({
     x: data[Math.floor(randomNumberGenerator() * data.length)].x,
     label: '❕',
-  }))
+  })))
 
   const labelAccessor = (d: AlertDataRecord): string => d.label
 
