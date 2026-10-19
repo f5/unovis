@@ -57,9 +57,9 @@ wrapper is generated from it.
 - Build (order matters — **core first**): `pnpm build:ts`, then `pnpm build:react` / `build:angular` / `build:svelte` / `build:vue` / `build:solid` / `build:website`. `pnpm build` does all of them.
 - Lint: `pnpm lint` (check) / `pnpm lint:fix` (autofix). `pre-commit` runs `lint-staged` on staged files automatically.
 - CI (`.github/workflows/pull_request.yml`) runs `pnpm build && pnpm build:dev` on every PR.
-- For visual fixes, use normal browser tools to take before and after screenshots of the relevant
-  dev example with the same URL and viewport. Capture mode and readiness are documented in
-  `packages/dev/playwright/README.md`. Review the screenshots and verify the behavior being fixed.
+- For visual fixes, follow the [agent workflow](../packages/dev/playwright/README.md#agent-workflow):
+  reproduce → capture before → fix → verify interactions → capture after. Use normal browser tools
+  with the same URL, viewport, and interaction state; review and share both screenshots.
 
 ## Visual fixes
 

@@ -51,6 +51,27 @@ verify Safari-specific bugs in installed Safari when available. Report which one
 
 ## Screenshots for agents
 
+### Agent workflow
+
+1. **Reproduce.** Start `pnpm dev` and reproduce the issue in the smallest relevant example.
+   Record the expected and actual behavior. Use controls or query config to make the case shareable.
+2. **Capture before.** Before editing, record the exact URL and browser viewport. Keep seed, time,
+   theme, dimensions, and playback settings fixed. Use `capture=1` for chart captures; use ordinary
+   gallery mode for navigation or code-panel fixes. Reload, wait for readiness as described below
+   (and any example-specific async work), and save a screenshot with normal browser tools.
+3. **Fix.** Make the smallest change in the responsible package (core for component logic), or
+   correct the example if its configuration is the cause. Keep capture plumbing in the dev app
+   and follow the generated-wrapper rules.
+4. **Verify interactions.** Exercise relevant hover, click, selection, brush, pan, zoom, and control
+   behavior. Also check ordinary gallery mode when capture suppresses the behavior being tested,
+   such as animations. Check browser errors and run the relevant lint, build, and targeted tests.
+5. **Capture after.** Reload the same URL at the same viewport, restore the same interaction state,
+   wait again, and capture the same region. Inspect both images for the intended fix and unintended
+   changes. Share both screenshots, the reproduction URL and viewport, and verification results;
+   state any remaining limitations.
+
+### Capture settings and readiness
+
 Start `pnpm dev` from the repository root. Open an example with `capture=1` and use
 normal browser tools to take before and after screenshots:
 
