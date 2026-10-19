@@ -3,12 +3,12 @@ import { ribbon } from 'd3-chord'
 import { ScalePower } from 'd3-scale'
 import { areaRadial } from 'd3-shape'
 import { Transition } from 'd3-transition'
-import { interpolatePath } from 'd3-interpolate-path'
 
 // Types
 import { Curve } from '@/types/curve'
 
 // Utils
+import { interpolatePath } from '@/utils/interpolate-path'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue } from '@/utils/pattern'
 import { smartTransition } from '@/utils/d3'

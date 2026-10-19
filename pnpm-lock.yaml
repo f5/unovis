@@ -868,9 +868,6 @@ importers:
       d3-interpolate:
         specifier: ~3
         version: 3.0.1
-      d3-interpolate-path:
-        specifier: ^2.2.3
-        version: 2.3.0
       d3-path:
         specifier: ~3
         version: 3.1.0
@@ -7168,9 +7165,6 @@ packages:
   d3-hierarchy@3.1.2:
     resolution: {integrity: sha512-FX/9frcub54beBdugHjDCdikxThEqjnR93Qt7PvQTOHxyiNCAlvMrHhclk3cD5VeAaq9fxmfRp+CnWw9rEMBuA==}
     engines: {node: '>=12'}
-
-  d3-interpolate-path@2.3.0:
-    resolution: {integrity: sha512-tZYtGXxBmbgHsIc9Wms6LS5u4w6KbP8C09a4/ZYc4KLMYYqub57rRBUgpUr2CIarIrJEpdAWWxWQvofgaMpbKQ==}
 
   d3-interpolate@3.0.1:
     resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
@@ -21386,8 +21380,6 @@ snapshots:
       d3-array: 3.2.4
 
   d3-hierarchy@3.1.2: {}
-
-  d3-interpolate-path@2.3.0: {}
 
   d3-interpolate@3.0.1:
     dependencies:
