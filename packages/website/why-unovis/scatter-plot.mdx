@@ -37,6 +37,13 @@ penguins.
   both axes. Nivo, AG Charts, Observable Plot (`tip`) and TanStack Charts also pick the nearest point, while Recharts shows a tooltip only
   when the pointer is over one. So does the Vega-Lite demo, which takes the spec's default; a `nearest` selection
   changes that.
+- **Presets.** *Labels* gives every penguin a body mass label (`label`) and hides the ones that would cover a point or
+  another label (`labelHideOverlapping`, on by default). ECharts (`labelLayout.hideOverlap`) and AG Charts hide
+  overlapping labels too, while Recharts, Observable Plot, Vega-Lite and TanStack Charts would draw every one, Nivo has
+  no point labels and Chart.js needs a plugin. *Rings* draws hollow points in the species colors (`strokeColor`,
+  `strokeWidth`): Chart.js and ECharts drop their palette colors once the fill is set, so those demos set the ring colors
+  by hand, Nivo's points have no stroke, and TanStack Charts' `dot` takes one stroke color for every species. *Average
+  lines* adds two `VisPlotline`s, which every library but Chart.js (it needs its annotation plugin) can draw.
 
 ## Feature comparison
 

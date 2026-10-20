@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { mean } from 'd3-array'
 import * as Plot from '@observablehq/plot'
 
+import type { ChartProps } from '../types'
 import { DataRecord, species, formatMass } from './data'
 
-export default function PlotScatterPlot ({ data, isDark }: { data: DataRecord[]; isDark: boolean }): JSX.Element {
+export default function PlotScatterPlot ({ data, isDark, preset }: ChartProps<DataRecord[]>): JSX.Element {
   const legendRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState({ width: 0, height: 0 })
@@ -18,6 +20,9 @@ export default function PlotScatterPlot ({ data, isDark }: { data: DataRecord[];
 
   useEffect(() => {
     if (!size.width || !size.height) return
+    const isRings = preset === 'rings'
+    const averageFlipper = mean(data, d => d.flipperLength)
+    const averageBill = mean(data, d => d.billLength)
     const chart = Plot.plot({
       width: size.width,
       height: size.height,
@@ -34,11 +39,20 @@ export default function PlotScatterPlot ({ data, isDark }: { data: DataRecord[];
           x: 'flipperLength',
           y: 'billLength',
           r: 'bodyMass',
-          fill: 'species',
+          // A dot with a `stroke` and no `fill` is drawn hollow
+          ...isRings ? { stroke: 'species', strokeWidth: 1.5 } : { fill: 'species' },
           symbol: 'species',
           // The symbol channel repeats the species, so the tip leaves it out
-          tip: { format: { fill: true, x: true, y: true, r: formatMass, symbol: false } },
+          tip: { format: { fill: true, stroke: true, x: true, y: true, r: formatMass, symbol: false } },
         }),
+        ...preset === 'averages'
+          ? [
+            Plot.ruleX([averageFlipper], { strokeDasharray: '6 4' }),
+            Plot.ruleY([averageBill], { strokeDasharray: '6 4' }),
+            Plot.text([averageFlipper], { x: d => d, frameAnchor: 'top', textAnchor: 'start', dx: 4, dy: 4, text: d => `Average ${d.toFixed(0)} mm` }),
+            Plot.text([averageBill], { y: d => d, frameAnchor: 'left', textAnchor: 'start', dx: 4, dy: -6, text: d => `Average ${d.toFixed(1)} mm` }),
+          ]
+          : [],
       ],
     })
     // `fill` and `symbol` encode the same field, so the symbol legend draws colored symbols. It's static: toggling a species is our own code
@@ -54,7 +68,7 @@ export default function PlotScatterPlot ({ data, isDark }: { data: DataRecord[];
       legend.remove()
       chart.remove()
     }
-  }, [data, isDark, size, hidden])
+  }, [data, isDark, size, hidden, preset])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
