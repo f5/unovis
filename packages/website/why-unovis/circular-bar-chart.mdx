@@ -44,6 +44,12 @@ that shows the goal. Every goal has its own target, so each bar is scaled to its
   transition.
 - **Switch the site theme.** The faded tracks and icons follow the theme through CSS variables
   (`--vis-circular-bar-background-color`, `--vis-circular-bar-icon-color`); the other charts need their dark colors in code.
+- **Presets.** *Half circle* (`angleRange`) lays the bars out over the top half and enlarges the chart to fill the card;
+  every library draws the half circle, ECharts and Recharts fill the card with a hand-set center and radius, and
+  Chart.js, Nivo, Vega-Lite and TanStack Charts leave the lower half empty. *Square bars* (`cornerRadius`,
+  `innerCornerRadius`) is a corner radius of 0 in every library. *Wide gaps* (`barPadding`) keeps each gap the same
+  width from the hole to the edge; the other libraries pad by an angle, so their gaps widen towards the edge, and Nivo
+  has no option for a gap at all.
 
 ## Feature comparison
 

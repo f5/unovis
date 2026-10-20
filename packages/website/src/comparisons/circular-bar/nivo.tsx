@@ -1,6 +1,7 @@
 import React from 'react'
 import { ResponsivePolarBar, PolarBarTooltipProps } from '@nivo/polar-bar'
 
+import type { ChartProps } from '../types'
 import { DataRecord, metrics, formatValue, percentOfGoal } from './data'
 
 const darkTheme = {
@@ -8,7 +9,7 @@ const darkTheme = {
   tooltip: { container: { background: '#222', color: '#ccc' } },
 }
 
-export default function NivoCircularBarChart ({ data, isDark }: { data: DataRecord[]; isDark: boolean }): JSX.Element {
+export default function NivoCircularBarChart ({ data, isDark, preset }: ChartProps<DataRecord[]>): JSX.Element {
   // Nivo scales the longest bar to the outer radius, so the values are percent of the goal and the chart still only
   // shows them relative to each other. Its legend lists keys, not bars, so one series gets no legend
   const tooltip = ({ arc }: PolarBarTooltipProps): JSX.Element => {
@@ -23,11 +24,12 @@ export default function NivoCircularBarChart ({ data, isDark }: { data: DataReco
       keys={['value']}
       theme={isDark ? darkTheme : undefined}
       margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-      // Center the first bar at the top, as in the other charts. There's no option for a gap between the bars
-      startAngle={-180 / data.length}
-      endAngle={360 - 180 / data.length}
+      // Center the first bar at the top, as in the other charts. There's no option for a gap between the bars, and the
+      // circle stays centered, so a half circle leaves the bottom of the chart empty
+      startAngle={preset === 'half' ? -90 : -180 / data.length}
+      endAngle={preset === 'half' ? 90 : 360 - 180 / data.length}
       innerRadius={0.3}
-      cornerRadius={8}
+      cornerRadius={preset === 'square' ? 0 : 8}
       colors={arc => `var(--vis-color${metrics.findIndex(m => m.label === arc.index)})`}
       enableArcLabels={false}
       enableRadialGrid={false}
