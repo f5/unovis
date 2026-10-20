@@ -36,7 +36,7 @@ export const libraries: Record<LibraryId, Library> = {
     id: 'chartjs',
     name: 'Chart.js',
     version: dependencies['chart.js'],
-    packages: ['chart.js', 'react-chartjs-2', 'chartjs-chart-graph', 'chartjs-chart-sankey', 'chartjs-chart-geo'],
+    packages: ['chart.js', 'react-chartjs-2', 'chartjs-chart-graph', 'chartjs-chart-sankey', 'chartjs-chart-geo', 'chartjs-plugin-annotation', 'chartjs-plugin-datalabels'],
     license: 'MIT',
     renderer: 'Canvas',
     website: 'https://www.chartjs.org',
