@@ -6,6 +6,7 @@ import s from './styles.module.css'
 
 export type GalleryCardProps = {
   title: string;
+  kicker?: string;
   src: string;
   srcDark?: string;
 }
@@ -21,5 +22,6 @@ export function GalleryCard (props: GalleryCardProps): JSX.Element {
       }}
     />
     <div className={s.title}>{props.title}</div>
+    {props.kicker && <div className={s.kicker}>{props.kicker}</div>}
   </div>)
 }

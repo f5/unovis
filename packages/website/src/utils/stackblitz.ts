@@ -132,6 +132,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         'src/data.ts': e.data,
         'src/App.svelte': e.codeSvelte,
         ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
+        ...(e.styles ? { 'src/styles.css': e.styles } : {}),
       }
     case Framework.Vue:
       return {
@@ -177,6 +178,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         'src/data.ts': e.data,
         'src/App.vue': e.codeVue,
         ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
+        ...(e.styles ? { 'src/styles.css': e.styles } : {}),
       }
     case Framework.Solid:
       return {
