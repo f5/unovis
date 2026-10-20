@@ -21,6 +21,9 @@ import { Direction } from '@/types/direction'
 // Local Types
 import { LineData, LineDatum } from './types'
 
+// Local Utils
+import { getThinnedMarkerPath } from './marker'
+
 // Config
 import { LineDefaultConfig, LineConfigInterface } from './config'
 
@@ -156,6 +159,9 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       .attr('d', this._emptyPath())
       .style('opacity', 0)
 
+    linesEnter.append('path')
+      .attr('class', s.markerPath)
+
     const linesMerged = linesEnter.merge(lines)
     linesMerged.style('cursor', (d, i) => getString(data, config.cursor, i))
     linesMerged.each((d, i, elements) => {
@@ -163,6 +169,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       const linePath = group.select<SVGPathElement>(`.${s.linePath}`)
       const lineSelectionHelper = group.select(`.${s.lineSelectionHelper}`)
       const lineGaps = group.select(`.${s.interpolatedPath}`)
+      const markerPath = group.select(`.${s.markerPath}`)
 
       const isLineVisible = d.visible
       const lineColor = getColor(data, config.color, i, config.colorKeys?.[i], colorOptions)
@@ -170,8 +177,18 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       // Explicit `lineDashArray` takes precedence over the resolved pattern's dash array
       const explicitDashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
       const dashArray = explicitDashArray?.join(' ') ?? linePattern?.dashArray ?? null
+      // With `markerSpacing` the markers move to their own thinned out path, so the line itself
+      // doesn't get one per point
+      const markerWidth = Math.abs(this.xScale.range()[1] - this.xScale.range()[0])
+      const thinnedMarkers = linePattern?.marker
+        ? getThinnedMarkerPath(d.values, markerWidth, config.markerSpacing)
+        : null
       linePath
-        .style('marker', linePattern?.marker ?? null)
+        .style('marker', thinnedMarkers ? null : (linePattern?.marker ?? null))
+      markerPath
+        .attr('d', thinnedMarkers)
+        .attr('stroke', thinnedMarkers ? lineColor : null)
+        .style('marker', thinnedMarkers ? linePattern?.marker ?? null : null)
       const transition = smartTransition(linePath, duration)
         .attr('stroke', lineColor)
         .attr('stroke-width', config.lineWidth)
@@ -212,6 +229,10 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       .remove()
   }
 
+  /** A `moveto`-only path that carries the pattern's marker, with roughly one marker per
+   * `markerSpacing` pixels of the chart's width. Returns `null` when the markers should stay on the
+   * line itself: without a spacing, without a marker, or when the line has fewer points than pixels —
+   * a smoothing `curveType` doesn't pass through the data points, and at that density the gap shows */
   private _emptyPath (): string {
     const xRange = this.xScale.range()
     const yRange = this.yScale.range()
