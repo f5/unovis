@@ -98,7 +98,7 @@ Use the `circleRadius` attribute to set the radius of the crosshair circles in p
 <XYWrapperWithInput {...crosshairProps()} property="circleRadius" defaultValue={4} inputType="range" inputProps={{ min: 0, max: 8 }} />
 
 ## Adding a Tooltip
-You can render text content for your _Crosshair_ component by providing it with a `template` property and a _Tooltip_ component within the same container.
+You can render text content for your _Crosshair_ component by providing it with a `template` property. _XYContainer_ creates a tooltip automatically when needed. Add a _Tooltip_ component within the same container to customize its configuration.
 
 <XYWrapper {...crosshairProps()}
   data={generateDataRecords().map(d => ({...d, y: Math.floor(d.y)}))}
