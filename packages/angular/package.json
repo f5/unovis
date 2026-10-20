@@ -40,7 +40,8 @@
   "type": "module",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "AGENTS.md"
   ],
   "dependencies": {
     "tslib": "^2.3.1"
