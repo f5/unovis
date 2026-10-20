@@ -31,6 +31,10 @@ Support tickets opened each month in 2025, stacked by priority, with a tooltip f
   one-liner. Recharts needs `stackOffset="sign"` for that, otherwise negative segments overlap.
 - **Randomize the data.** Watch the segments move together. AG Charts Community, Observable Plot and Vega-Lite redraw
   without a transition.
+- **Presets.** *Horizontal* (`orientation`) is one every library can draw, though Nivo lists the months bottom-up and
+  the Unovis crosshair only follows the x axis, so its tooltip moves to the bars. *Patterns* (`pattern`) gives each
+  priority a fill pattern, which only ECharts, Nivo and AG Charts can match. *Capacity line* (`VisPlotline`) takes the
+  separate annotation plugin in Chart.js, and the ECharts mark line belongs to the Low series, so it hides with it.
 
 ## Feature comparison
 

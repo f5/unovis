@@ -1,9 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import * as Plot from '@observablehq/plot'
 
+import type { ChartProps } from '../types'
 import { DataRecord, SeriesKey, series, formatValue } from './data'
 
-export default function PlotStackedBarChart ({ data, isDark }: { data: DataRecord[]; isDark: boolean }): JSX.Element {
+const CAPACITY = 400
+
+export default function PlotStackedBarChart ({ data, isDark, preset }: ChartProps<DataRecord[]>): JSX.Element {
   const legendRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState({ width: 0, height: 0 })
@@ -21,25 +24,41 @@ export default function PlotStackedBarChart ({ data, isDark }: { data: DataRecor
     const visible = series.filter(s => !hidden[s.key])
     // Plot stacks tidy data, one row per bar segment, in the order of the rows
     const rows = data.flatMap(d => visible.map(s => ({ month: d.month, priority: s.label, tickets: d[s.key] })))
+    const total = (d: DataRecord): number => visible.reduce((sum, s) => sum + d[s.key], 0)
+    const tip = {
+      title: (d: DataRecord) => [d.month, ...visible.map(s => `${s.label}: ${formatValue(d[s.key])}`)].join('\n'),
+      // The tip box is white by default, which would hide its text in dark mode
+      fill: isDark ? '#222' : undefined,
+    }
+    // Plot sorts ordinal domains alphabetically, this keeps the months in order
+    const monthScale = { domain: data.map(d => d.month), label: null }
+    const valueScale = { grid: true, label: null, tickFormat: formatValue }
+    const isHorizontal = preset === 'horizontal'
     const chart = Plot.plot({
       width: size.width,
       height: size.height,
-      // Plot sorts ordinal domains alphabetically, this keeps the months in order
-      x: { domain: data.map(d => d.month), label: null },
-      y: { grid: true, label: null, tickFormat: formatValue },
+      x: isHorizontal ? valueScale : monthScale,
+      y: isHorizontal ? monthScale : valueScale,
       color: { domain: series.map(s => s.label) },
-      marks: [
-        Plot.barY(rows, { x: 'month', y: 'tickets', fill: 'priority' }),
-        Plot.ruleY([0]),
-        // One tip for the whole stack: the month nearest to the pointer's x, anchored to the top of its stack
-        Plot.tip(data, Plot.pointerX({
-          x: 'month',
-          y: (d: DataRecord) => visible.reduce((total, s) => total + d[s.key], 0),
-          title: (d: DataRecord) => [d.month, ...visible.map(s => `${s.label}: ${formatValue(d[s.key])}`)].join('\n'),
-          // The tip box is white by default, which would hide its text in dark mode
-          fill: isDark ? '#222' : undefined,
-        })),
-      ],
+      marks: isHorizontal
+        ? [
+          Plot.barX(rows, { y: 'month', x: 'tickets', fill: 'priority' }),
+          Plot.ruleX([0]),
+          Plot.tip(data, Plot.pointerY({ y: 'month', x: total, ...tip })),
+        ]
+        : [
+          Plot.barY(rows, { x: 'month', y: 'tickets', fill: 'priority' }),
+          Plot.ruleY([0]),
+          // One tip for the whole stack: the month nearest to the pointer's x, anchored to the top of its stack
+          Plot.tip(data, Plot.pointerX({ x: 'month', y: total, ...tip })),
+          // A reference line is a rule mark, and its label a text mark pinned to the frame's right edge
+          preset === 'capacity'
+            ? [
+              Plot.ruleY([CAPACITY], { strokeDasharray: '6,4' }),
+              Plot.textY([CAPACITY], { frameAnchor: 'right', textAnchor: 'end', dy: -6, text: () => `Capacity ${formatValue(CAPACITY)}` }),
+            ]
+            : null,
+        ],
     })
     // Plot's legend is static: toggling a series takes a click handler on each swatch
     const legend = chart.legend('color')
@@ -54,7 +73,7 @@ export default function PlotStackedBarChart ({ data, isDark }: { data: DataRecor
       legend.remove()
       chart.remove()
     }
-  }, [data, isDark, size, hidden])
+  }, [data, isDark, preset, size, hidden])
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
