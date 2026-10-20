@@ -8,6 +8,7 @@ import type { Comparison } from '@site/src/comparisons/types'
 import { COMPARISON_CHART_HEIGHT, COMPARISON_INITIAL_SEED } from '@site/src/comparisons/constants'
 import { ChartCard } from './chart-card'
 import { UnavailableCard } from './unavailable-card'
+import { TextWithCode } from './text-with-code'
 
 // Styles
 import s from './styles.module.css'
@@ -46,7 +47,7 @@ export function LibraryComparison<Data> ({ comparison, children }: LibraryCompar
             {comparison.presets.map(p => (
               <button key={p.id} className={clsx(s.button, s.presetButton, preset === p.id && s.presetButtonActive)} onClick={() => setPreset(p.id)}>{p.label}</button>
             ))}
-            <span className={s.hint}>{activePreset ? activePreset.description : 'Pick a preset to reconfigure every chart'}</span>
+            <span className={s.hint}>{activePreset ? <TextWithCode text={activePreset.description}/> : 'Pick a preset to reconfigure every chart'}</span>
           </div>
         )}
       </div>

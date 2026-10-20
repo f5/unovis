@@ -8,6 +8,7 @@ import type { ComparisonImplementation } from '@site/src/comparisons/types'
 import { libraries } from '@site/src/comparisons/libraries'
 import { stripLintDirectives } from '@site/src/comparisons/utils/code'
 import { ChartErrorBoundary } from './error-boundary'
+import { TextWithCode } from './text-with-code'
 
 // Styles
 import s from './styles.module.css'
@@ -53,7 +54,7 @@ export function ChartCard<Data> ({ implementation, data, isDark, preset, height,
         {unsupportedPreset && (
           <div className={s.presetUnsupported}>
             <div className={s.unavailableTitle}>Not in {library.name}</div>
-            <p className={s.unavailableReason}>{unsupportedPreset.reason}</p>
+            <p className={s.unavailableReason}><TextWithCode text={unsupportedPreset.reason}/></p>
             {unsupportedPreset.url && <a href={unsupportedPreset.url} target="_blank" rel="noopener noreferrer">Source</a>}
           </div>
         )}

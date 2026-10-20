@@ -4,6 +4,7 @@ import Link from '@docusaurus/Link'
 // Internal Deps
 import type { UnsupportedImplementation } from '@site/src/comparisons/types'
 import { libraries } from '@site/src/comparisons/libraries'
+import { TextWithCode } from './text-with-code'
 
 // Styles
 import s from './styles.module.css'
@@ -24,7 +25,7 @@ export function UnavailableCard ({ item, height }: UnavailableCardProps): JSX.El
       </header>
       <div className={s.unavailable} style={{ height }}>
         <div className={s.unavailableTitle}>{item.paid ? 'Only in the paid edition' : 'Not available'}</div>
-        <p className={s.unavailableReason}>{item.reason}</p>
+        <p className={s.unavailableReason}><TextWithCode text={item.reason}/></p>
         {item.url && <Link to={item.url}>Source</Link>}
       </div>
     </article>

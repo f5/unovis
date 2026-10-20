@@ -102,7 +102,7 @@
   gap: 0.4rem;
   padding: 1rem 1.5rem;
   border-radius: 6px;
-  background: color-mix(in srgb, var(--ifm-background-surface-color) 85%, transparent);
+  background: color-mix(in srgb, var(--ifm-background-surface-color) 93%, transparent);
   font-size: 0.85rem;
   text-align: center;
   color: var(--ifm-color-emphasis-700);
