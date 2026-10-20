@@ -6,6 +6,7 @@ import { VisXYContainer, VisStackedBar, VisAxis } from '@unovis/react'
 
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { usePlayback } from '@src/components/PlaybackControl'
+import controls from '@src/controls.module.css'
 
 export const title = 'Enter & Exit Transitions'
 export const subTitle = 'Rapid data updates, negative stacks'
@@ -43,11 +44,13 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   return (
     <div>
       <ExampleControls components={['example']}/>
-      <button onClick={next}>Next dataset</button>
-      <button onClick={doubleUpdate}>Double update</button>
-      <button onClick={() => { setPlaying(!playing); setRunning(350) }}>{playing ? 'Stop' : 'Auto-cycle'}</button>
-      <button onClick={() => { setPlaying(!playing); setRunning(16) }}>Auto-fast</button>
-      <span style={{ marginLeft: 10 }}>dataset: {index % datasets.length}</span>
+      <div className={controls.devButtonRow}>
+        <button onClick={next}>Next dataset</button>
+        <button onClick={doubleUpdate}>Double update</button>
+        <button onClick={() => { setPlaying(!playing); setRunning(350) }}>{playing ? 'Stop' : 'Auto-cycle'}</button>
+        <button onClick={() => { setPlaying(!playing); setRunning(16) }}>Auto-fast</button>
+        <span style={{ marginLeft: 10 }}>dataset: {index % datasets.length}</span>
+      </div>
       <VisXYContainer<Rec> data={datasets[index % datasets.length]} height={300} xDomain={[0, 8]}>
         <VisStackedBar<Rec>
           x={d => d.x}

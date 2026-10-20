@@ -13,7 +13,8 @@ export const controlsContainer = css`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background-color: #f5f5f5;
+  background-color: var(--dev-panel-background);
+  color: var(--dev-text);
   border-radius: 8px;
   margin-bottom: 20px;
   width: max-content;
@@ -22,7 +23,7 @@ export const controlsContainer = css`
 export const controlsTitle = css`
   label: controls-title;
   margin: 0 0 15px 0;
-  font-family: monospace;
+  font-family: var(--dev-font-family);
 `
 
 export const sliderRow = css`
@@ -31,8 +32,8 @@ export const sliderRow = css`
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: monospace;
-  font-size: 12px;
+  font-family: var(--dev-font-family);
+  font-size: 13px;
 `
 
 export const sliderLabel = css`

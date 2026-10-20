@@ -124,23 +124,9 @@ body.theme-dark .spHeight {
 }
 
 .codeViewer .codeToolbar .codeToolbarButton {
-  display: flex;
-  align-items: center;
   flex: 0 0 auto;
-  padding: 5px 9px;
-  border: none;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 10px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--dev-text);
-  background: var(--dev-button-background);
-}
-
-.codeViewer .codeToolbar .codeToolbarButton:hover:not(:disabled) {
-  background: var(--dev-button-hover);
-  color: var(--dev-text-strong);
 }
 
 .panelResizeHandle {

@@ -148,9 +148,4 @@ export const graphButton = css`
   label: graph-button;
   display: block;
   margin-top: 5px;
-  color: var(--graph-control-text);
-  background: var(--graph-control-background);
-  border: 1px solid var(--graph-control-border);
-  border-radius: 4px;
-  padding: 6px 10px;
 `

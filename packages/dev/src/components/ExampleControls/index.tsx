@@ -37,6 +37,6 @@ export function ExampleControls ({ onReset, components }: { onReset?: () => void
 
   return <div className={s.exampleControls}>
     <button type="button" onClick={reset}>Reset</button>
-    <button type="button" onClick={copyLink}>{copyStatus}</button>
+    <button type="button" onClick={copyLink} data-dev-variant="primary" data-dev-status={copyStatus === 'Copied link' ? 'success' : undefined} aria-live="polite">{copyStatus}</button>
   </div>
 }

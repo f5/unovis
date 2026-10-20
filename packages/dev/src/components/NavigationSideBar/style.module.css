@@ -1,4 +1,5 @@
 .navSideBar {
+  container: dev-sidebar / inline-size;
   position: relative;
   flex: 0 0 auto;
   flex-direction: column;
@@ -26,6 +27,7 @@
 }
 
 .headerLogo {
+  flex-shrink: 0;
   display: block;
   width: 82px;
   height: 18px;
@@ -56,11 +58,12 @@
   background: var(--dev-button-background);
   color: var(--dev-text);
   font-family: inherit;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: inherit;
   border: 1px solid var(--dev-border);
-  border-radius: 4px;
+  border-radius: var(--dev-control-radius);
   padding: 6px 26px;
+  min-height: var(--dev-control-height);
   transition: border-color 0.15s, background-color 0.15s;
 }
 
@@ -124,34 +127,16 @@
 }
 
 .navSideBar .header .codeButton {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  --dev-accent: #f4b83d;
+  --dev-accent-hover: #f4b83d;
+  --dev-accent-text: #222;
   flex: 0 0 auto;
-  padding: 4px 8px;
-  border: none;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 10px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--dev-text);
-  background: var(--dev-button-background);
 }
 
-.navSideBar .header .codeButton:hover:not(:disabled) {
-  background: var(--dev-button-hover);
-  color: var(--dev-text-strong);
-}
-
-.navSideBar .header .codeButtonActive {
-  background: #f4b83d;
-  color: #222;
-}
-
-.navSideBar .header .codeButtonActive:hover:not(:disabled) {
-  background: #f4b83d;
-  color: #222;
+.navSideBar .header .codeButton[aria-pressed="true"]:focus-visible {
+  outline-color: #222;
 }
 
 .codeIcon {

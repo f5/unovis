@@ -37,7 +37,7 @@ export const component = (): React.ReactElement => {
   return (
     <div>
       <div style={{ marginBottom: 10 }}>
-        <button onClick={handleUpdate} style={{ padding: '8px 16px', fontSize: 14 }}>
+        <button onClick={handleUpdate}>
           Update Data ({data.length} items)
         </button>
       </div>

@@ -3,6 +3,7 @@ import { useActiveCode, useSandpack } from '@codesandbox/sandpack-react'
 import { copyText } from '@src/utils/clipboard'
 
 // Styles
+import controls from '@src/controls.module.css'
 import s from './style.module.css'
 
 import { COPIED_LABEL_DURATION } from './constants'
@@ -36,13 +37,14 @@ export function CodePanelToolbar (props: CodePanelToolbarProps): React.ReactElem
         {props.subTitle && <div className={s.codeToolbarSubTitle}>{props.subTitle}</div>}
       </div>
       <button
-        className={s.codeToolbarButton}
+        className={`${controls.devButton} ${s.codeToolbarButton}`}
+        data-dev-status={isCopied ? 'success' : undefined}
         onClick={copyActiveFile}
         title={`Copy ${sandpack.activeFile.replace(/^\//, '')}`}
       >
         {isCopied ? 'Copied' : 'Copy'}
       </button>
-      <button className={s.codeToolbarButton} onClick={props.onClose} title="Hide the source code panel" aria-label="Hide source code">✕</button>
+      <button className={`${controls.devButton} ${s.codeToolbarButton}`} onClick={props.onClose} title="Hide the source code panel" aria-label="Hide source code">✕</button>
     </div>
   )
 }

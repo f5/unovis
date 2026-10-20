@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom'
 
 // Internal Components
 import { NavigationSideBar } from '@src/components/NavigationSideBar'
-import { ThemeSelector } from '@src/components/ThemeSelector'
 
 // Examples
 import { exampleSections } from '@src/examples'
@@ -14,6 +13,7 @@ import { getCaptureSettings } from '@src/capture/settings'
 
 // Styles
 import s from './App.module.css'
+import controls from './controls.module.css'
 
 
 // Unovis base styles (using require to avoid tree-shaking)
@@ -24,10 +24,9 @@ const App = (): React.ReactNode => {
   const capture = getCaptureSettings()
   return (
     <AppProvider>
-      <div className={`${s.root} ${capture ? s.capture : ''}`}>
+      <div className={`${s.root} ${controls.devControls} ${capture ? s.capture : ''}`}>
         {!capture && <NavigationSideBar exampleSections={exampleSections} />}
         <div className={s.content}>
-          {!capture && <ThemeSelector/>}
           <Outlet />
         </div>
       </div>
