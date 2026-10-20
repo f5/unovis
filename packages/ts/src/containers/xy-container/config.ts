@@ -75,7 +75,7 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   yAxis?: Axis<Datum>;
   /** Enables automatic calculation of chart margins based on the size of the axes. Default: `true` */
   autoMargin?: boolean;
-  /** Tooltip component. Default: `undefined` */
+  /** Tooltip component. Created automatically when the crosshair has a custom template and no tooltip is provided. Default: `undefined` */
   tooltip?: Tooltip | undefined;
   /** Crosshair component. Default: `undefined` */
   crosshair?: Crosshair<Datum> | undefined;
