@@ -9,9 +9,9 @@ import { CurveType } from '@unovis/ts/types/curve'
 import type { LineConfigInterface } from '@unovis/ts/components/line/config'
 ```
 
-Vue subpaths use default imports; Solid uses named imports. Angular has a single flattened
-entry point; check Svelte's public exports before suggesting component paths. Follow the
-relevant package's `AGENTS.md` and verify snippets against its published layout.
+Vue and Svelte subpaths use default imports; Solid uses named imports. Angular has a single
+flattened entry point. Follow the relevant package's `AGENTS.md` and verify snippets against
+its published layout.
 
 Direct imports let bundlers and test runners load only the needed component graph instead of
 resolving every component and its map/graph dependencies before tree-shaking. Prefer them for

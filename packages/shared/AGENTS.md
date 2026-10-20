@@ -9,8 +9,8 @@ import type { LineConfigInterface } from '@unovis/ts/components/line/config'
 ```
 
 Use framework component/container subpaths where publicly exported (see each framework's
-`AGENTS.md`). Vue component subpaths use default exports. Angular has a single flattened
-entry point; verify Svelte's exports before recommending subpaths.
+`AGENTS.md`). Vue and Svelte component subpaths use default exports. Angular has a single
+flattened entry point.
 
 Direct imports let bundlers and test runners load only the needed component graph instead of
 resolving every component and its map/graph dependencies before tree-shaking. Prefer them for

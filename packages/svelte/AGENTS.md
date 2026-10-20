@@ -1,15 +1,16 @@
 # AI guide: @unovis/svelte
 
-Import core enums and types directly from their defining modules:
+Prefer direct component and container imports. Svelte subpaths export the component as the default:
 
 ```ts
+import VisLine from '@unovis/svelte/components/line'
+import VisXYContainer from '@unovis/svelte/containers/xy-container'
+import VisBulletLegend from '@unovis/svelte/html-components/bullet-legend'
 import { CurveType } from '@unovis/ts/types/curve'
 import type { LineConfigInterface } from '@unovis/ts/components/line/config'
 ```
 
-The package currently exports only its root entry point, so installed consumers must use
-`import { VisLine, VisXYContainer } from '@unovis/svelte'`. Do not invent component subpaths
-without adding and verifying public package exports. The Svelte barrel still visits all wrappers.
+Avoid root barrels (`@unovis/svelte`, `@unovis/ts`) for individual symbols.
 Wrapper implementations and generators must use direct `@unovis/ts/...` imports, with
 `import type` for config interfaces and accessor types.
 
