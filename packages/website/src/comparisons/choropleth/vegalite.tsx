@@ -2,10 +2,11 @@ import React from 'react'
 import { VegaEmbed } from 'react-vega'
 import type { TopLevelSpec } from 'vega-lite'
 
-import { ChoroplethData, countries, usersDomain, formatUsers, formatTraffic } from './data'
+import type { ChartProps } from '../types'
+import { ChoroplethData, countries, usersDomain, formatUsers, formatTraffic, getTraffic } from './data'
 import { BLUES } from './constants'
 
-export default function VegaLiteChoroplethMap ({ data, isDark }: { data: ChoroplethData; isDark: boolean }): JSX.Element {
+export default function VegaLiteChoroplethMap ({ data, isDark, preset }: ChartProps<ChoroplethData>): JSX.Element {
   const point = new Map(data.points.map(p => [p.id, p]))
   const spec: TopLevelSpec = {
     $schema: 'https://vega.github.io/schema/vega-lite/v6.json',
@@ -14,7 +15,7 @@ export default function VegaLiteChoroplethMap ({ data, isDark }: { data: Choropl
     // The dark theme paints its own background
     background: 'transparent',
     // The layers share the projection, which fits their data to the view
-    projection: { type: 'equalEarth' },
+    projection: { type: preset === 'mercator' ? 'mercator' : 'equalEarth' },
     // Tooltips take a d3-format string rather than a function, so the values are formatted before they get to the spec
     layer: [
       {
@@ -36,6 +37,20 @@ export default function VegaLiteChoroplethMap ({ data, isDark }: { data: Choropl
           tooltip: [{ field: 'properties.name', title: 'Country' }, { field: 'label', title: 'Users' }],
         },
       },
+      // The `geoCentroid` expression places the names; text marks have no collision detection, so they all show
+      ...(preset === 'labels' ? [{
+        data: { values: countries },
+        transform: [
+          { calculate: 'geoCentroid(null, datum)[0]', as: 'longitude' },
+          { calculate: 'geoCentroid(null, datum)[1]', as: 'latitude' },
+        ],
+        mark: 'text',
+        encoding: {
+          longitude: { field: 'longitude', type: 'quantitative' },
+          latitude: { field: 'latitude', type: 'quantitative' },
+          text: { field: 'properties.name' },
+        },
+      }] : []),
       {
         data: { values: data.links.map(l => ({ source: point.get(l.source), target: point.get(l.target), width: 1 + l.traffic / 100, traffic: formatTraffic(l.traffic) })) },
         // In the default black, or white with the dark theme, the links would vanish over the darkest or the lightest countries
@@ -50,13 +65,20 @@ export default function VegaLiteChoroplethMap ({ data, isDark }: { data: Choropl
         },
       },
       {
-        data: { values: data.points },
+        data: { values: data.points.map(p => ({ ...p, traffic: getTraffic(data.links, p.id) })) },
         encoding: {
           longitude: { field: 'longitude', type: 'quantitative' },
           latitude: { field: 'latitude', type: 'quantitative' },
         },
         layer: [
-          { mark: 'circle', encoding: { tooltip: [{ field: 'name', title: 'Data center' }] } },
+          {
+            mark: 'circle',
+            encoding: {
+              tooltip: [{ field: 'name', title: 'Data center' }],
+              // Vega draws a circle of `size` with a radius of √size / 2, so the traffic itself is the size
+              ...(preset === 'traffic' && { size: { field: 'traffic', type: 'quantitative', scale: null } }),
+            },
+          },
           { mark: { type: 'text', dy: 8, baseline: 'top' }, encoding: { text: { field: 'name' } } },
         ],
       },

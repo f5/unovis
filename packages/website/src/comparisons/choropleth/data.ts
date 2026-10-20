@@ -34,6 +34,9 @@ export type ChoroplethData = {
 export const usersDomain: [number, number] = [0, 50]
 export const formatUsers = (users: number): string => `${round(users)}M users`
 export const formatTraffic = (traffic: number): string => `${traffic} Gbit/s`
+// For the "Traffic bubbles" preset: the traffic through a data center, and its bubble's radius in pixels
+export const getTraffic = (links: LinkDatum[], id: string): number => links.reduce((sum, l) => l.source === id || l.target === id ? sum + l.traffic : sum, 0)
+export const trafficRadius = (traffic: number): number => Math.sqrt(traffic) / 2
 
 // The same country shapes for every library: Unovis reads the TopoJSON, the others take GeoJSON features.
 // Four shapes, such as Somaliland, have no country code, so their GeoJSON id is their name

@@ -38,6 +38,11 @@ and the same Blues color scheme.
   Chart.js geo plugin takes any d3-geo projection (Equal Earth here, as in its docs). ECharts draws plain longitude and
   latitude unless you pass your own projection functions, and AG Charts maps are always Mercator. Observable Plot has 14
   named d3-geo projections and Vega-Lite 15.
+- **Presets.** *Mercator* switches the projection (`projection`), and every library follows: ECharts takes a d3-geo
+  projection as a pair of functions, and Nivo draws Mercator already. *Country labels* names the countries
+  (`areaLabel`) and hides the names that overlap a larger country's; ECharts, Observable Plot and Vega-Lite draw every
+  name, overlapping or not, and Nivo, Chart.js and TanStack Charts have no labels on the map. *Traffic bubbles* sizes the
+  data centers by the traffic through them (`pointRadius`); every library that draws them can, and Nivo draws none.
 
 ## Feature comparison
 

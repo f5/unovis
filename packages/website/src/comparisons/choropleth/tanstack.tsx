@@ -1,22 +1,23 @@
 import React, { useMemo } from 'react'
-import { geoEqualEarth } from 'd3-geo'
+import { geoEqualEarth, geoMercator } from 'd3-geo'
 import { scaleQuantize } from 'd3-scale'
 import { colorLegend, defineChart } from '@tanstack/charts'
 import { geoShape } from '@tanstack/charts/geo'
 import { Chart } from '@tanstack/charts/react'
 import { tooltip } from '@tanstack/charts/tooltip'
 
+import type { ChartProps } from '../types'
 import { COMPARISON_TALL_CHART_HEIGHT } from '../constants'
-import { ChoroplethData, countries, usersDomain, formatUsers, formatTraffic } from './data'
+import { ChoroplethData, countries, usersDomain, formatUsers, formatTraffic, getTraffic, trafficRadius } from './data'
 import { BLUES } from './constants'
 
-// Every layer fits its own projection to the whole globe, so that the layers line up
-const projection = { type: geoEqualEarth, fit: 'sphere' as const }
 // Shapes have no outline by default, and the lightest countries would vanish on a white page
 const outline = { stroke: 'currentColor', strokeOpacity: 0.2, strokeWidth: 0.5 }
 
-export default function TanStackChoroplethMap ({ data }: { data: ChoroplethData }): JSX.Element {
+export default function TanStackChoroplethMap ({ data, preset }: ChartProps<ChoroplethData>): JSX.Element {
   const definition = useMemo(() => {
+    // Every layer fits its own projection to the whole globe, so that the layers line up
+    const projection = { type: preset === 'mercator' ? geoMercator : geoEqualEarth, fit: 'sphere' as const }
     const users = new Map(data.areas.map(a => [a.id, a.users]))
     const point = new Map(data.points.map(p => [p.id, p]))
     // The geo mark draws GeoJSON only, so the data centers become Point features and the links LineString features,
@@ -28,7 +29,7 @@ export default function TanStackChoroplethMap ({ data }: { data: ChoroplethData 
     const dataCenters = data.points.map(p => ({
       type: 'Feature' as const,
       id: p.id,
-      properties: { title: `${p.name} data center` },
+      properties: { title: `${p.name} data center`, r: trafficRadius(getTraffic(data.links, p.id)) },
       geometry: { type: 'Point' as const, coordinates: [p.longitude, p.latitude] },
     }))
     const links = data.links.map(({ source, target, traffic }) => ({
@@ -51,7 +52,7 @@ export default function TanStackChoroplethMap ({ data }: { data: ChoroplethData 
         ...links.map(l => geoShape([l], { projection, stroke: 'gray', strokeWidth: l.properties.width })),
         // There are no data center labels: `text` places labels with x and y scales, and the geo mark has no text.
         // The outline keeps the points visible over the lightest countries in dark mode, where `currentColor` is white
-        geoShape(dataCenters, { projection, fill: 'currentColor', stroke: 'gray' }),
+        geoShape(dataCenters, { projection, fill: 'currentColor', stroke: 'gray', r: preset === 'traffic' ? f => f.properties.r : undefined }),
       ],
       scales: { x: null, y: null },
       color: {
@@ -66,7 +67,7 @@ export default function TanStackChoroplethMap ({ data }: { data: ChoroplethData 
       // Tweens numeric attributes only: the link widths animate, the country colors switch at once
       svgAnimation: true,
     })
-  }, [data])
+  }, [data, preset])
 
   return <Chart definition={definition} height={COMPARISON_TALL_CHART_HEIGHT} ariaLabel="Monthly active users by country, with data centers and the traffic between them"/>
 }

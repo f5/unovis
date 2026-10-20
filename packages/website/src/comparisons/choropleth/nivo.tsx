@@ -14,7 +14,7 @@ export default function NivoChoroplethMap ({ data, isDark }: { data: ChoroplethD
       colors={BLUES}
       label="properties.name"
       valueFormat={formatUsers}
-      // The projection doesn't fit the container on its own
+      // The projection, Mercator by default, doesn't fit the container on its own
       projectionScale={85}
       projectionTranslation={[0.5, 0.65]}
       legends={[{ anchor: 'bottom-left', direction: 'column', translateX: 10, translateY: -10, itemWidth: 110, itemHeight: 16, symbolSize: 12, itemTextColor: isDark ? '#ccc' : '#444' }]}
