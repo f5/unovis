@@ -37,3 +37,22 @@ export const MIGRATED_CONTROL_EXAMPLES: { path: string; button?: string }[] = [
 ]
 
 export const LEAFLET_CONTROL_TILE_URL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg=='
+
+export const LEAFLET_VECTOR_TEST_STYLE = {
+  version: 8,
+  glyphs: 'http://localhost:9501/capture-fonts/{fontstack}/{range}.pbf',
+  sources: { capture: { type: 'geojson', data: 'http://localhost:9501/capture-map.geojson' } },
+  layers: [
+    { id: 'background', type: 'background', paint: { 'background-color': '#e6edf5' } },
+    { id: 'land', source: 'capture', type: 'fill', paint: { 'fill-color': '#96c8a2' } },
+  ],
+}
+
+export const LEAFLET_VECTOR_TEST_DATA = {
+  type: 'FeatureCollection',
+  features: [{
+    type: 'Feature',
+    properties: {},
+    geometry: { type: 'Polygon', coordinates: [[[-130, 20], [-60, 20], [-60, 60], [-130, 60], [-130, 20]]] },
+  }],
+}

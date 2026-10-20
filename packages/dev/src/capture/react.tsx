@@ -10,6 +10,7 @@ import { getInitialPlaying } from '../components/PlaybackControl'
 
 import { getCaptureSettings } from './settings'
 import { withDevConfig } from './withDevConfig'
+import { CaptureLeafletMap } from './CaptureLeafletMap'
 
 export * from '../../../react/src'
 
@@ -66,6 +67,6 @@ export const VisRadialBar = withDevConfig('radialBar', Original.VisRadialBar)
 export const VisCircularBar = withDevConfig('circularBar', Original.VisCircularBar)
 export const VisBulletLegend = withDevConfig('bulletLegend', Original.VisBulletLegend)
 export const VisRollingPinLegend = withDevConfig('rollingPinLegend', Original.VisRollingPinLegend)
-export const VisLeafletMap = withDevConfig('leafletMap', Original.VisLeafletMap)
+export const VisLeafletMap = withDevConfig('leafletMap', getCaptureSettings() ? CaptureLeafletMap : Original.VisLeafletMap)
 export const VisLeafletFlowMap = withDevConfig('leafletFlowMap', Original.VisLeafletFlowMap)
 export const VisFlowLegend = withDevConfig('flowLegend', Original.VisFlowLegend)
