@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { CurveType, FillPatternType, Scale } from '@unovis/ts'
+import { AxisType, CurveType, FillPatternType, PlotlineLineStylePresets, Scale } from '@unovis/ts'
 import { VisXYContainer, VisArea, VisAxis, VisCrosshair, VisTooltip, VisBulletLegend, VisPlotband, VisPlotline } from '@unovis/react'
 
 import type { ChartProps } from '../types'
@@ -32,8 +32,8 @@ export default function UnovisAreaChart ({ data, preset }: ChartProps<DataRecord
           curveType={preset === 'step' ? CurveType.Step : CurveType.MonotoneX}
           pattern={(_: DataRecord[], i: number) => preset === 'patterns' ? patterns[i] : undefined}
         />
-        {preset === 'annotations' && <VisPlotband axis="x" from={MIGRATION.from.getTime()} to={MIGRATION.to.getTime()} labelText="Migration"/>}
-        {preset === 'annotations' && <VisPlotline axis="y" value={BUDGET} labelText={`Budget ${formatValue(BUDGET)}`} lineStyle="dash"/>}
+        {preset === 'annotations' && <VisPlotband axis={AxisType.X} from={MIGRATION.from.getTime()} to={MIGRATION.to.getTime()} labelText="Migration"/>}
+        {preset === 'annotations' && <VisPlotline axis={AxisType.Y} value={BUDGET} labelText={`Budget ${formatValue(BUDGET)}`} lineStyle={PlotlineLineStylePresets.Dash}/>}
         <VisAxis type="x" tickFormat={(t: Date) => formatMonth(t)}/>
         <VisAxis type="y" tickFormat={formatValue}/>
         <VisCrosshair template={tooltipTemplate}/>
