@@ -39,6 +39,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
   constructor (config: PlotlineConfigInterface<Datum>) {
     super()
     this.setConfig(config)
+    this.g.style('display', 'none').style('opacity', 0)
 
     this.plotline = this.g
       .append('line')
@@ -75,13 +76,27 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
     super._render(customDuration)
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const wasVisible = isNumber(this.value)
     this.value = config.value
 
     // Hide the component when there's no value to draw the plotline at, instead of letting the
     // scale coerce `null` into a number
     const isValueDefined = isNumber(this.value)
-    this.g.style('display', isValueDefined ? null : 'none')
-    if (!isValueDefined) return
+    if (!isValueDefined) {
+      if (wasVisible || !duration) {
+        this.plotline.interrupt()
+        this.labelGroup.interrupt()
+        this.g.style('pointer-events', 'none')
+        const transition = smartTransition(this.g, duration).style('opacity', 0)
+        if (duration) transition.on('end', () => { this.g.style('display', 'none') })
+        else this.g.style('display', 'none')
+      }
+      return
+    }
+
+    this.g.style('display', null).style('pointer-events', null)
+    if (!wasVisible || !duration) smartTransition(this.g, duration).style('opacity', 1)
+    const geometryDuration = wasVisible ? duration : 0
 
     const strokeDashArray = isString(config.lineStyle) ? LINE_STYLE[config.lineStyle]
       : isArray(config.lineStyle) ? config.lineStyle.join(',')
@@ -94,7 +109,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       .style('stroke', config.color)
 
     const { x1, y1, x2, y2 } = this._getLineCoordinates()
-    smartTransition(this.plotline, duration)
+    smartTransition(this.plotline, geometryDuration)
       .attr('x1', x1)
       .attr('x2', x2)
       .attr('y1', y1)
@@ -112,7 +127,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
 
       renderTextToSvgTextElement(this.label.node(), labelTextBlocks, { x: 0, y: 0, textAlign: layout.textAlign, verticalAlign: layout.verticalAlign, fastMode: false }, 'hanging')
 
-      smartTransition(this.labelGroup, duration)
+      smartTransition(this.labelGroup, geometryDuration)
         .attr('transform', `translate(${layout.x + fit.dx},${layout.y + fit.dy}) rotate(${layout.rotation})`)
     } else {
       this.label.text(null)
