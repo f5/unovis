@@ -41,6 +41,9 @@ wrapper is generated from it.
 8. **Use the repo's type-check helpers.** For runtime type checks reach for the helpers in
    `@/utils/data` (`isString`, `isNumber`, `isFunction`, `isArray`, `isObject`, `isPlainObject`)
    instead of hand-writing `typeof x === 'string'`, `typeof x === 'function'`, or `Array.isArray(…)`.
+9. **Optimize screenshots before committing.** Run new or changed PNG screenshots and gallery
+   previews through a lossless PNG optimizer (for example, `oxipng`). Preserve their dimensions,
+   transparency, and appearance, and visually verify the optimized images before staging them.
 
 ## Setup & commands
 

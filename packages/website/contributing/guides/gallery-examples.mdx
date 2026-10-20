@@ -40,6 +40,7 @@ You can copy and paste the following:
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 // highlight-next-line
 const pathname = ''
@@ -51,9 +52,7 @@ const example: Example = {
   },
   pathname,
   // highlight-next-line
-  title: '',
-  // highlight-next-line
-  description: '',
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
@@ -74,8 +73,12 @@ export default example
 
 :::note
 - **pathname** should correspond to your directory name
-- **title** should reference the library component(s) you're using
-- **description** should be a brief description of your visualization with any data sources cited
+- Add an entry under your slug in `packages/shared/examples/metadata.json` with **title**, **kicker**, **subtitle**, **description**, and **prompt**.
+- Use a data-focused title; the kicker supplies the dataset period or chart technique. The subtitle introduces the chart, while the description records data notes and limitations. Add cited links in **sources** as `name`/`url` pairs.
+- Keep the introductory text out of framework implementations: the website renders it once above the example. Controls, legends, dynamic summaries, and chart annotations stay with the visualization.
+- The prompt should describe the required data fields, visual encodings, and interactions. Include the literal `{framework}` placeholder; the Copy prompt button fills it from the selected code tab.
+- Preserve old titles in **legacyTitles** when renaming an example. Use stable `?example=your-example` gallery links.
+- Run `pnpm --filter @unovis/website sync:gallery-prompts` to regenerate `/llm.txt`. Website start/build also runs this step.
 :::
 
 ## Testing each framework
