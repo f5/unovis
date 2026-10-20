@@ -42,6 +42,11 @@ them, grouped by the kind of service. Each update removes or brings back a few o
   ([custom rendering](/docs/components/Graph#custom-rendering-15)).
 - **Hide a group from the legend.** ECharts toggles categories on its own; Unovis takes a few lines of state. Nivo and
   Chart.js have no legend for this chart.
+- **Presets.** *Layered layout* switches Unovis to Dagre (`layoutType`, `dagreLayoutSettings`) and puts every service to
+  the right of its callers, which none of the other libraries can lay out. *Circular layout* (`layoutType`) is built
+  into ECharts too and Chart.js gets a ring from the plugin's radial force, but Nivo and TanStack Charts have no such
+  layout; Unovis and ECharts move the nodes from one layout to the other, while Chart.js draws a new chart and lets its
+  simulation settle. *Size by latency* (`nodeSize`) works in every library.
 
 ## Feature comparison
 

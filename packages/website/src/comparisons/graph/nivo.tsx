@@ -1,12 +1,14 @@
 import React from 'react'
 import { ResponsiveNetwork } from '@nivo/network'
 
+import type { ChartProps } from '../types'
 import { GraphData, NodeDatum, groups, formatLatency, formatAlerts } from './data'
 
 // Network nodes are black by default, so we take the colors of Nivo's default `nivo` scheme
 const colors = ['#e8c1a0', '#f47560', '#f1e15b', '#e8a838', '#61cdbb']
 
-export default function NivoGraph ({ data, isDark }: { data: GraphData; isDark: boolean }): JSX.Element {
+export default function NivoGraph ({ data, isDark, preset }: ChartProps<GraphData>): JSX.Element {
+  const nodeSize = (n: NodeDatum): number => preset === 'size' ? 6 + n.latency / 10 : 14
   return (
     <ResponsiveNetwork
       data={data}
@@ -14,8 +16,8 @@ export default function NivoGraph ({ data, isDark }: { data: GraphData; isDark: 
       linkDistance={50}
       repulsivity={12}
       centeringStrength={0.4}
-      nodeSize={14}
-      activeNodeSize={22}
+      nodeSize={nodeSize}
+      activeNodeSize={(n: NodeDatum) => nodeSize(n) + 8}
       nodeColor={(n: NodeDatum) => colors[groups.findIndex(g => g.key === n.group)]}
       linkThickness={link => 1 + link.data.requests / 250}
       nodeTooltip={({ node }) => (

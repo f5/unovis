@@ -1,11 +1,12 @@
 import React from 'react'
 import ReactECharts from 'echarts-for-react'
 
+import type { ChartProps } from '../types'
 import { GraphData, NodeDatum, groups, formatRequests, formatLatency, formatAlerts } from './data'
 
 type ItemParams = { dataType: string; data: { name: string; category: number; node: NodeDatum; source: string; target: string; value: number } }
 
-export default function EChartsGraph ({ data, isDark }: { data: GraphData; isDark: boolean }): JSX.Element {
+export default function EChartsGraph ({ data, isDark, preset }: ChartProps<GraphData>): JSX.Element {
   const label = new Map(data.nodes.map(n => [n.id, n.label]))
   return (
     <ReactECharts
@@ -21,7 +22,7 @@ export default function EChartsGraph ({ data, isDark }: { data: GraphData; isDar
         legend: { data: groups.map(g => g.label) },
         series: [{
           type: 'graph',
-          layout: 'force',
+          layout: preset === 'circular' ? 'circular' : 'force',
           force: { repulsion: 150, edgeLength: 50 },
           roam: false,
           draggable: true,
@@ -29,7 +30,7 @@ export default function EChartsGraph ({ data, isDark }: { data: GraphData; isDar
           edgeSymbol: ['none', 'arrow'],
           emphasis: { focus: 'adjacency' },
           categories: groups.map(g => ({ name: g.label })),
-          data: data.nodes.map(n => ({ id: n.id, name: n.label, category: groups.findIndex(g => g.key === n.group), symbolSize: 16, node: n })),
+          data: data.nodes.map(n => ({ id: n.id, name: n.label, category: groups.findIndex(g => g.key === n.group), symbolSize: preset === 'size' ? 10 + n.latency / 10 : 16, node: n })),
           links: data.links.map(l => ({ source: l.source, target: l.target, value: l.requests, lineStyle: { width: 1 + l.requests / 250 } })),
         }],
       }}

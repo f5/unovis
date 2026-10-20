@@ -9,11 +9,12 @@ import { scaleLinear } from '@tanstack/charts/scales/linear'
 import { tooltip } from '@tanstack/charts/tooltip'
 
 import { COMPARISON_GRAPH_CHART_HEIGHT } from '../constants'
-import { GraphData, NodeGroup, groups, formatRequests, formatLatency, formatAlerts } from './data'
+import type { ChartProps } from '../types'
+import { GraphData, NodeDatum, NodeGroup, groups, formatRequests, formatLatency, formatAlerts } from './data'
 
 const groupLabel = (group: NodeGroup): string => groups.find(g => g.key === group)?.label ?? group
 
-export default function TanStackGraph ({ data }: { data: GraphData }): JSX.Element {
+export default function TanStackGraph ({ data, preset }: ChartProps<GraphData>): JSX.Element {
   const [visibleGroups, setVisibleGroups] = useState<readonly NodeGroup[]>(groups.map(g => g.key))
 
   // `forceLayout` runs a fixed number of D3 force ticks up front on copies of the rows and returns settled coordinates:
@@ -35,6 +36,7 @@ export default function TanStackGraph ({ data }: { data: GraphData }): JSX.Eleme
     // The legend only proposes the visible groups: links and labels aren't color series, so the hidden groups are filtered out of every mark here
     const nodes = graph.nodes.filter(n => visibleGroups.includes(n.group))
     const links = graph.links.filter(l => visibleGroups.includes(l.sourceNode.group) && visibleGroups.includes(l.targetNode.group))
+    const r = (n: NodeDatum): number => preset === 'size' ? 3 + n.latency / 20 : 8
 
     return defineChart({
       marks: [
@@ -49,10 +51,10 @@ export default function TanStackGraph ({ data }: { data: GraphData }): JSX.Eleme
           stroke: 'currentColor',
           strokeOpacity: 0.3,
         }),
-        dot(nodes, { x: 'x', y: 'y', key: 'id', color: 'group', r: 8 }),
+        dot(nodes, { x: 'x', y: 'y', key: 'id', color: 'group', r }),
         // Labels are plain text marks (sized down from the page's inherited 16 px font); `decorative` keeps them out of the hover and keyboard focus
-        decorative(text(nodes, { x: 'x', y: 'y', key: 'id', text: 'label', fontSize: 12, anchor: 'start', dx: 12, dy: -6 })),
-        decorative(text(nodes, { x: 'x', y: 'y', key: 'id', text: n => formatLatency(n.latency), fontSize: 12, anchor: 'start', dx: 12, dy: 8 })),
+        decorative(text(nodes, { x: 'x', y: 'y', key: 'id', text: 'label', fontSize: 12, anchor: 'start', dx: n => r(n) + 4, dy: -6 })),
+        decorative(text(nodes, { x: 'x', y: 'y', key: 'id', text: n => formatLatency(n.latency), fontSize: 12, anchor: 'start', dx: n => r(n) + 4, dy: 8 })),
       ],
       // The layout works in its own coordinates, mapped to the chart with the padded domains it returns
       scales: {
@@ -72,7 +74,7 @@ export default function TanStackGraph ({ data }: { data: GraphData }): JSX.Eleme
       },
       svgAnimation: true,
     })
-  }, [graph, visibleGroups])
+  }, [graph, visibleGroups, preset])
 
   return <Chart definition={definition} height={COMPARISON_GRAPH_CHART_HEIGHT} ariaLabel="Service dependency graph"/>
 }
