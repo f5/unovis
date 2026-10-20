@@ -108,6 +108,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .style('display', 'none')
   }
 
+  public createTooltip (): Tooltip {
+    return new Tooltip()
+  }
+
   get bleed (): Spacing {
     const { config: { circleRadius } } = this
 

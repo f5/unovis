@@ -10,6 +10,10 @@ import { ContainerCore } from '@/core/container'
 import { XYComponentCore } from '@/core/xy-component'
 import { XYComponentConfigInterface } from '@/core/xy-component/config'
 
+// Components
+import type { Tooltip } from '@/components/tooltip'
+import { CrosshairDefaultConfig } from '@/components/crosshair/config'
+
 // Data Model
 import { CoreDataModel } from '@/data-models/core'
 
@@ -41,6 +45,7 @@ export class XYContainer<Datum> extends ContainerCore {
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _componentsBleed: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
+  private _defaultTooltip: Tooltip | undefined
 
   constructor (element: HTMLElement, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
@@ -135,6 +140,18 @@ export class XYContainer<Datum> extends ContainerCore {
   public updateContainer (containerConfig: XYContainerConfigInterface<Datum>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
 
+    const crosshair = containerConfig.crosshair
+    const providedTooltip = containerConfig.tooltip === this._defaultTooltip ? undefined : containerConfig.tooltip
+    const needsDefaultTooltip = !providedTooltip && !crosshair?.config.tooltip &&
+      crosshair?.config.template && crosshair.config.template !== CrosshairDefaultConfig.template
+    if (needsDefaultTooltip) {
+      this._defaultTooltip ??= crosshair.createTooltip()
+    } else {
+      this._defaultTooltip?.destroy()
+      this._defaultTooltip = undefined
+    }
+    this.config.tooltip = providedTooltip ?? this._defaultTooltip
+
     // If there were any new components added we need to pass them data
     this.setData(this.datamodel.data, true)
 
@@ -143,14 +160,13 @@ export class XYContainer<Datum> extends ContainerCore {
     if (containerConfig.yAxis) this.config.yAxis.config.type = AxisType.Y
 
     // Set up the tooltip
-    const tooltip = containerConfig.tooltip
+    const tooltip = this.config.tooltip
     if (tooltip) {
       if (!tooltip.hasContainer()) tooltip.setContainer(this._container)
       tooltip.setComponents(this.components)
     }
 
     // Set up the crosshair
-    const crosshair = containerConfig.crosshair
     if (crosshair) {
       crosshair.setContainer(this.svg)
       crosshair.tooltip = tooltip
