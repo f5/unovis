@@ -12,17 +12,29 @@
   --color-grey: #777;
   --color-black: #222;
   --dev-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --dev-font-family: Inter, sans-serif;
   --dev-controls-gap: 6px;
-  --dev-accent: #0089bb;
+  --dev-button-height: 24px;
+  --dev-control-height: 32px;
+  --dev-control-radius: 6px;
+  --dev-accent: #4d8cfd;
+  --dev-accent-hover: #457ee4;
+  --dev-accent-text: #fff;
+  --dev-success: #00c19a;
+  --dev-success-text: #222;
   --dev-panel-background: #f7f8fa;
   --dev-text: #444;
   --dev-text-strong: #222;
   --dev-text-muted: #777;
   --dev-border: rgba(0, 0, 0, 0.1);
-  --dev-button-background: rgba(0, 0, 0, 0.04);
-  --dev-button-hover: rgba(0, 0, 0, 0.08);
+  --dev-button-background: #edeef0;
+  --dev-button-hover: #e2e5e9;
+  --dev-field-background: #fff;
+  --dev-control-border: #dfe2e7;
+  --dev-slider-track: #e2e5ea;
+  --dev-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%23777' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 4 4 4-4'/%3E%3C/svg%3E");
   --dev-tab-active: #e1e9f2;
-  --dev-highlight: rgba(0, 137, 187, 0.2);
+  --dev-highlight: rgba(77, 140, 253, 0.2);
 }
 
 html,
@@ -45,20 +57,14 @@ body.theme-dark {
   --dev-text-strong: #fff;
   --dev-text-muted: #999;
   --dev-border: rgba(255, 255, 255, 0.1);
-  --dev-button-background: rgba(255, 255, 255, 0.05);
-  --dev-button-hover: rgba(255, 255, 255, 0.13);
+  --dev-button-background: #373d44;
+  --dev-button-hover: #464d55;
+  --dev-field-background: #22262a;
+  --dev-control-border: #424950;
+  --dev-slider-track: #49515b;
+  --dev-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%23aaa' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 4 4 4-4'/%3E%3C/svg%3E");
   --dev-tab-active: rgb(80, 100, 130);
-  --dev-highlight: rgba(0, 137, 187, 0.4);
-}
-
-body.theme-dark select, body.theme-dark input {
-  background-color: transparent;
-}
-
-textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
-  border-color: var(--vis-color0);
-  box-shadow: none;
-  outline: 0 none;
+  --dev-highlight: rgba(77, 140, 253, 0.4);
 }
 
 .root {
@@ -68,10 +74,11 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
   display: flex;
   flex-direction: row;
   column-gap: 12px;
-  padding: 8px 8px 8px 8px;
+  padding: 0 8px 0 0;
 }
 
 .content {
+  margin: 8px 0;
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -85,9 +92,8 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
   padding: 0;
 }
 
-/* Toolbar stays fixed height; routed view fills remaining space and scrolls internally */
-.content > *:first-child {
-  flex-shrink: 0;
+.root.capture .content {
+  margin: 0;
 }
 
 .content > *:last-child {

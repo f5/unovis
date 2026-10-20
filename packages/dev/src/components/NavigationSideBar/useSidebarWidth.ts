@@ -1,6 +1,6 @@
 import { PointerEvent as ReactPointerEvent, useCallback, useEffect, useRef, useState } from 'react'
 
-import { MIN_SIDEBAR_WIDTH, MAX_SIDEBAR_WIDTH, SIDEBAR_WIDTH_STORAGE_KEY } from './constants'
+import { DEFAULT_SIDEBAR_WIDTH, MIN_SIDEBAR_WIDTH, MAX_SIDEBAR_WIDTH, SIDEBAR_WIDTH_STORAGE_KEY } from './constants'
 
 type SidebarWidth = {
   width: number;
@@ -16,9 +16,9 @@ function clampWidth (width: number): number {
 function readStoredWidth (): number {
   try {
     const stored = window.localStorage.getItem(SIDEBAR_WIDTH_STORAGE_KEY)
-    return stored && Number.isFinite(Number(stored)) ? clampWidth(Number(stored)) : MIN_SIDEBAR_WIDTH
+    return stored && Number.isFinite(Number(stored)) ? clampWidth(Number(stored)) : DEFAULT_SIDEBAR_WIDTH
   } catch {
-    return MIN_SIDEBAR_WIDTH
+    return DEFAULT_SIDEBAR_WIDTH
   }
 }
 
@@ -64,7 +64,7 @@ export function useSidebarWidth (): SidebarWidth {
     setIsResizing(true)
   }, [width])
 
-  const onResizeReset = useCallback((): void => setWidth(MIN_SIDEBAR_WIDTH), [])
+  const onResizeReset = useCallback((): void => setWidth(DEFAULT_SIDEBAR_WIDTH), [])
 
   return { width, isResizing, onResizeStart, onResizeReset }
 }

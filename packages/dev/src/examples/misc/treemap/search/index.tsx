@@ -91,10 +91,7 @@ export const component = (): React.ReactElement => {
         onChange={(e) => setSearchTerm(e.target.value)}
         style={{
           marginBottom: '10px',
-          padding: '8px',
           width: '200px',
-          borderRadius: '4px',
-          border: '1px solid #ccc',
         }}
       />
 

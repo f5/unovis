@@ -53,7 +53,7 @@ export const component = (): React.ReactElement => {
       <select
         value={hasOverride('tileFunction') ? 'custom' : selectedKey}
         onChange={(e) => { setSelectedKey(e.target.value); reset(['tileFunction']) }}
-        style={{ marginBottom: 10, padding: '6px 10px' }}
+        style={{ marginBottom: 10 }}
       >
         {hasOverride('tileFunction') && <option value='custom' disabled>Custom config</option>}
         {TILE_OPTIONS.map(({ key, label }) => (

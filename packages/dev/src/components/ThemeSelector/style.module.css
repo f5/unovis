@@ -1,29 +1,31 @@
-:root {
-  --color-active: #2299ff;
-}
-
 .themeSelector {
-  margin-bottom: 4px;
+  flex: 1 1 auto;
+  min-width: 0;
   z-index: 999;
   border-radius: 10px;
   display: flex;
   gap: 4px;
   justify-content: end;
   align-items: center;
+  letter-spacing: normal;
 }
 
 .toolbarItem {
   position: relative;
   cursor: pointer;
-  margin: 0 2px;
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: none;
+  background: var(--dev-button-background);
+  width: var(--dev-button-height);
+  height: var(--dev-button-height);
+  border-radius: var(--dev-control-radius);
   border: none;
   padding: 0;
   color: inherit;
   font: inherit;
+  font-size: 16px;
 }
 
 /* Visually hidden but still in the tab order / label activation (display:none can break change in some cases) */
@@ -47,7 +49,24 @@
 
 .toolbarItem > input:checked + span,
 .toolbarItem[data-on='true'] > span {
-  color: var(--color-active);
+  color: var(--dev-accent-text);
+}
+
+.toolbarItem:has(input:checked) {
+  background: var(--dev-accent);
+}
+
+.toolbarItem:hover {
+  background: var(--dev-button-hover);
+}
+
+.toolbarItem:has(input:checked):hover {
+  background: var(--dev-accent-hover);
+}
+
+.toolbarItem:has(input:focus-visible) {
+  outline: 2px solid var(--dev-accent);
+  outline-offset: 2px;
 }
 
 .toolbarItem:hover > span {
@@ -59,11 +78,19 @@
 }
 
 .fpsMeter {
+  flex-shrink: 0;
   margin-right: 6px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   opacity: 0.6;
+  white-space: nowrap;
+}
+
+@container dev-sidebar (max-width: 280px) {
+  .fpsMeter {
+    display: none;
+  }
 }
 
 .fpsMeter[data-level='good'] { color: #22c55e; }

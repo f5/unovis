@@ -41,8 +41,11 @@ export function TransitionComponent<T> (props: TransitionComponentProps<T>): Rea
 
   return (<>
     <div className='controller'>
-      <i className='fa fa-rotate-right' onClick={resetData}></i>
-      <i className={`fa fa-${paused ? 'play' : 'pause'}`} onClick={() => setPlaying(!playing)}></i>
+      <button type='button' onClick={resetData} aria-label='Reset data'><i className='fa fa-rotate-right' aria-hidden /></button>
+      <button type='button' onClick={() => setPlaying(!playing)} aria-label={paused ? 'Resume updates' : 'Pause updates'} aria-pressed={paused}
+        data-dev-variant={paused ? 'primary' : undefined}>
+        <i className={`fa fa-${paused ? 'play' : 'pause'}`} aria-hidden />
+      </button>
     </div>
     {Object.keys(dataSeries).map((key) => (
       <div key={key}>

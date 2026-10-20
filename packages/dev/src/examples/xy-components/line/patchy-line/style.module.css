@@ -3,8 +3,8 @@
 }
 
 .inputs {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: smaller;
+  font-family: var(--dev-font-family);
+  font-size: 13px;
   margin-bottom: 12px;
 }
 

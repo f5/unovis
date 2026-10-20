@@ -4,6 +4,7 @@ import React, { useMemo } from 'react'
 import { VisXYContainer, VisGroupedBar, VisAxis } from '@unovis/react'
 
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import controls from '@src/controls.module.css'
 
 export const title = 'Per-Bar Styles'
 export const subTitle = 'Custom styles via `barStyle`'
@@ -28,9 +29,11 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   return (
     <div>
       <ExampleControls components={['example']}/>
-      <button onClick={() => setCurrentMonth(m => Math.max(1, m - 1))}>−1 month</button>
-      <button onClick={() => setCurrentMonth(m => Math.min(12, m + 1))}>+1 month</button>
-      <span style={{ marginLeft: 10 }}>current month: {currentMonth}</span>
+      <div className={controls.devButtonRow}>
+        <button onClick={() => setCurrentMonth(m => Math.max(1, m - 1))}>−1 month</button>
+        <button onClick={() => setCurrentMonth(m => Math.min(12, m + 1))}>+1 month</button>
+        <span style={{ marginLeft: 10 }}>current month: {currentMonth}</span>
+      </div>
       <VisXYContainer<Rec> data={data} height={300}>
         <VisGroupedBar<Rec>
           x={d => d.x}

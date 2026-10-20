@@ -24,5 +24,7 @@ export function usePlayback (initialPlaying = true): [boolean, React.Dispatch<Re
 }
 
 export function PlaybackControl ({ playing, onPlayingChange }: { playing: boolean; onPlayingChange: (playing: boolean) => void }): React.ReactElement {
-  return <button type="button" onClick={() => onPlayingChange(!playing)}>{playing ? 'Pause updates' : 'Resume updates'}</button>
+  return <button type="button" onClick={() => onPlayingChange(!playing)} aria-pressed={!playing} data-dev-variant={!playing ? 'primary' : undefined}>
+    {playing ? 'Pause updates' : 'Resume updates'}
+  </button>
 }

@@ -1,12 +1,7 @@
 .controller {
-  cursor: pointer;
-  font-size: larger;
-  font-family: 'Font Awesome';
-  color: lightslategray;
-}
-
-.controller > i {
-  margin: 0 0.25em;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .label > span {

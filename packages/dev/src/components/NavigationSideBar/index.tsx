@@ -3,6 +3,8 @@ import { useMatch, useSearchParams } from 'react-router-dom'
 
 import { useAppContext } from '@src/AppContext'
 import { NavigationItem } from '@src/components/NavigationItem'
+import { ThemeSelector } from '@src/components/ThemeSelector'
+import controls from '@src/controls.module.css'
 
 // Examples
 import { ExampleSectionGroup } from '@src/examples'
@@ -146,8 +148,10 @@ export function NavigationSideBar (props: NavigationSideBarProps): React.ReactNo
     <nav className={s.navSideBar} style={{ flexBasis: width, width }}>
       <div className={s.header}>
         <img className={s.headerLogo} src={`data:image/svg+xml,${encodeURIComponent(isDarkTheme ? logoDark : logo)}`} alt="Unovis"/>
+        <ThemeSelector/>
         <button
-          className={`${s.codeButton} ${!isCodeHidden ? s.codeButtonActive : ''}`}
+          className={`${controls.devButton} ${s.codeButton}`}
+          data-dev-variant={!isCodeHidden ? 'primary' : undefined}
           onClick={() => setIsCodeHidden(!isCodeHidden)}
           disabled={!isExampleOpen}
           aria-label={isCodeHidden ? 'Show source code' : 'Hide source code'}
