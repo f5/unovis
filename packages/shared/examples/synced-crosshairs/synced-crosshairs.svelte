@@ -2,6 +2,7 @@
   import { VisXYContainer, VisArea, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/svelte'
   import type { XYDataRecord } from './data'
   import { data, accessors } from './data'
+  import './styles.css'
 
   let forcePosition: number | undefined = 75
 
@@ -21,7 +22,7 @@
     Crosshair forced to show at position: {forcePosition}
   </div>
 
-  <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px">
+  <div class="synced-crosshair-controls" style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px">
     {#each presets as v}
       <button type="button" on:click={() => { forcePosition = v }}>{v}</button>
     {/each}

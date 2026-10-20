@@ -30,7 +30,6 @@
 
 </script>
 
-<h3>Highest Degree Earned across Country Populations as of 2020</h3>
 <VisBulletLegend items={chartLabels.map(d => ({ name: d.legend }))}/>
 <VisXYContainer height={isSmallScreen ? 600 : 800} yDirection={Direction.South}>
   <VisStackedBar {data} {x} {y} orientation={Orientation.Horizontal}/>

@@ -2,7 +2,7 @@
   Crosshair forced to show at position: {{ forcePosition }}
 </div>
 
-<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px">
+<div class="synced-crosshair-controls" style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px">
   <button *ngFor="let v of presets" type="button" (click)="setForcePosition(v)">{{ v }}</button>
   <button type="button" (click)="setForcePosition(undefined)">clear</button>
   <input

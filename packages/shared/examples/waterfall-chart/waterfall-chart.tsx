@@ -7,7 +7,6 @@ import { barTooltip, data, stepColor, WaterfallDatum } from './data'
 export default function WaterfallChart (): JSX.Element {
   return (
     <>
-      <h3>FY Income Statement Bridge</h3>
       <VisXYContainer<WaterfallDatum> data={data} height={480}>
         <VisStackedBar
           x={(d: WaterfallDatum) => d.index}

@@ -31,7 +31,6 @@ const horizontalStackedBarChart = (): JSX.Element => {
 
   return (
     <div>
-      <h3>Highest Degree Earned across Country Populations as of 2020</h3>
       <VisBulletLegend items={chartLabels.map((d) => ({ name: d.legend }))} />
       <VisXYContainer height='50dvh' yDirection={Direction.South}>
         <VisStackedBar

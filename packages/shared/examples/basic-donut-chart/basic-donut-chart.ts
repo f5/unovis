@@ -2,7 +2,6 @@ import { Donut, SingleContainer, BulletLegend } from '@unovis/ts'
 import { data, DataRecord } from './data'
 
 const container = document.getElementById('vis-container')
-container.innerHTML = '<h3>Most Common Password Categories</h3>'
 
 const legendItems = Object.entries(data).map(([_, data]) => ({
   name: data.key.charAt(0).toUpperCase() + data.key.slice(1),

@@ -31,7 +31,6 @@ const FreeBrushScatter = (): JSX.Element => {
 
   return (
     <div>
-      <h2>American College Graduates, 2010-2012</h2>
       <VisBulletLegend items={legendItems} />
       <div class='scatter-with-minimap'>
         <div>
@@ -44,7 +43,7 @@ const FreeBrushScatter = (): JSX.Element => {
           >
             <VisScatter
               {...scatterProps}
-              sizeRange={[20, 80]}
+              sizeRange={[4, 20]}
               labelPosition={Position.Bottom}
               label={(d: DataRecord) => d.major}
             />

@@ -16,7 +16,6 @@ export default function ShapedScatterPlot (): JSX.Element {
   }
   return (
     <>
-      <h2>The Rise and Rise of A.I. Large Language Models</h2>
       <VisBulletLegend items={legendItems}/>
       <VisXYContainer data={data} height={'60vh'} scaleByDomain={true}>
         <VisScatter

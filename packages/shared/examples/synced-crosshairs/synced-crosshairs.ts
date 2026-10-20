@@ -1,12 +1,13 @@
 import { Area, Axis, Crosshair, Direction, Line, Tooltip, XYContainer } from '@unovis/ts'
 import { data, accessors, XYDataRecord } from './data'
+import './styles.css'
 
 let forcePosition: number | undefined = 75
 
 const container = document.getElementById('vis-container')
 container.innerHTML = `
   <div id="sc-status" style="margin-bottom: 10px; font-size: 14px; color: #666"></div>
-  <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px">
+  <div class="synced-crosshair-controls" style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px">
     ${[0, 25, 50, 75, 100, 125].map(v => `<button type="button" data-preset="${v}">${v}</button>`).join('')}
     <button type="button" id="sc-clear">clear</button>
     <input id="sc-range" type="range" min="0" max="150" step="1" value="${forcePosition ?? 0}" style="flex: 1"/>

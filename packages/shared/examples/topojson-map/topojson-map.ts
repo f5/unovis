@@ -45,8 +45,9 @@ const mapContainer = new SingleContainer(chart, {
 }, { areas: data })
 
 // configure year slider
-const title = slider.appendChild(document.createElement('h2'))
-title.innerHTML = 'Life expectancy by Country, <em id="yearLabel">2019</em>'
+const label = slider.appendChild(document.createElement('label'))
+label.htmlFor = 'year'
+label.innerHTML = 'Year: <em id="yearLabel">2019</em>'
 
 const yearSlider = slider.appendChild(document.createElement('input'))
 yearSlider.setAttribute('type', 'range')

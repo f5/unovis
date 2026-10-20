@@ -17,7 +17,6 @@ const color = (d: ElectionDatum, i: number) => items[i].color
 </script>
 
 <template>
-  <h2>U.S. Election Popular Vote Results by Political Party</h2>
   <VisBulletLegend :items />
   <VisXYContainer :height="500">
     <VisGroupedBar :data :x :y :color />

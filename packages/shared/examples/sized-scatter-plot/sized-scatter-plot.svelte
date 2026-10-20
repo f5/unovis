@@ -23,7 +23,6 @@
   }
 </script>
 
-<h2>American College Graduates, 2010-2012</h2>
 <VisBulletLegend items={legendItems}/>
 <VisXYContainer {data} height={600} scaleByDomain={true}>
   <VisScatter {x} {y} {color} {size} {label} labelPosition={Position.Bottom} sizeRange={[10, 50]} cursor="pointer"/>

@@ -13,12 +13,54 @@ import {
   NODE_STAR_ICON_ID,
 } from './data'
 
+const darkThemeSelector = darkThemeCssSelectors.split(',').map(selector => `${selector} &`).join(',')
+
+export const svgDefs = `
+<symbol id="custom-node-user" viewBox="0 0 24 24">
+  <g fill="none" stroke="var(--unovis-graph-node-icon-color)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+  </g>
+</symbol>
+<symbol id="custom-node-role" viewBox="0 0 24 24">
+  <g fill="none" stroke="var(--unovis-graph-node-icon-color)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 21 6v6c0 5-9 10-9 10S3 17 3 12V6Z"/><path d="m8 12 3 3 5-6"/>
+  </g>
+</symbol>
+<symbol id="custom-node-server" viewBox="0 0 24 24">
+  <g fill="none" stroke="var(--unovis-graph-node-icon-color)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/>
+    <path d="M7 6.5h.01M7 17.5h.01M12 6.5h5M12 17.5h5"/>
+  </g>
+</symbol>
+<symbol id="custom-node-file" viewBox="0 0 24 24">
+  <g fill="none" stroke="var(--unovis-graph-node-icon-color)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>
+  </g>
+</symbol>
+<symbol id="custom-node-lock" viewBox="0 0 24 24">
+  <g fill="none" stroke="var(--unovis-graph-node-icon-color)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="10" width="16" height="12" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4M12 15v3"/>
+  </g>
+</symbol>
+`
+
+export const nodeIconMap = new Map([
+  ['External User', '#custom-node-user'],
+  ['Role', '#custom-node-role'],
+  ['EC2 Instance', '#custom-node-server'],
+  ['File', '#custom-node-file'],
+  ['Secret', '#custom-node-lock'],
+])
+
+export const getNodeIcon = (n: CustomGraphNode): string | undefined => nodeIconMap.get(n.subLabel ?? '')
+
 
 export const customNodesGraph = css`
   label: custom-nodes-graph;
   --unovis-background-primary: #ffffff;
   --unovis-background-secondary: #fbfbfb;
   --unovis-text-primary: #222;
+  --unovis-graph-node-icon-color: #ffffff;
   --unovis-text-secondary: #666;
 
   --unovis-graph-node-identity: color-mix(in srgb, var(--vis-color0) 70%, transparent);
@@ -54,10 +96,11 @@ export const customNodesGraph = css`
   }
 
   /* Dark theme overrides */
-  ${darkThemeCssSelectors} & {
+  ${darkThemeSelector} {
     --unovis-background-primary: #1a1a1a;
     --unovis-background-secondary: #2d2d2d;
     --unovis-text-primary: #ffffff;
+    --unovis-graph-node-icon-color: #222;
     --unovis-text-secondary: #b3b3b3;
 
     --unovis-graph-circle-label-fill: #000;
@@ -156,19 +199,65 @@ export const globalControlsContainer = css`
   label: global-controls-container;
   position: relative;
   display: flex;
-  align-items: baseline;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-start;
-  top: 10px;
-  left: 10px;
+  color: #222;
   background: white;
-  gap: 8px;
-  padding: 5px;
-  border-radius: 4px;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  font: 13px/1.5 sans-serif;
   z-index: 100;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    appearance: none;
+    position: relative;
+    flex-shrink: 0;
+    width: 32px;
+    height: 18px;
+    margin: 0;
+    border: 0;
+    border-radius: 9px;
+    background: #8b95a5;
+    cursor: pointer;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      top: 2px;
+      left: 2px;
+      border-radius: 50%;
+      background: white;
+      transition: transform 150ms;
+    }
+
+    &:checked {
+      background: var(--vis-color0);
+    }
+
+    &:checked::after {
+      transform: translateX(14px);
+    }
+  }
+
+  input:focus-visible, button:focus-visible {
+    outline: 2px solid var(--vis-color0);
+    outline-offset: 3px;
+  }
+
   /* Dark theme overrides */
-  ${darkThemeCssSelectors} & {
+  ${darkThemeSelector} {
     background: #2d2d2d;
     color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -177,8 +266,19 @@ export const globalControlsContainer = css`
 
 export const graphButton = css`
   label: graph-button;
-  display: block;
-  margin-top: 5px;
+  min-height: 32px;
+  padding: 5px 12px;
+  border: 1px solid #d7dce3;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--vis-color0) 10%, transparent);
+    border-color: var(--vis-color0);
+  }
 `
 
 export const updateSwimlanes = (g: Selection<SVGGElement, unknown, null, undefined>): void => {

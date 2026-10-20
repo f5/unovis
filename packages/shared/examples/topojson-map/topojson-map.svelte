@@ -33,8 +33,8 @@
 <div class="topojson-map">
   <!-- year slider -->
   <header class="year-slider">
-    <h2>Life expectancy by Country, <em>{year}</em></h2>
-    <input type="range" bind:value={year} min={yearRange[0]} max={yearRange[1]}/>
+    <label for="life-expectancy-year-svelte">Year: <em>{year}</em></label>
+    <input id="life-expectancy-year-svelte" type="range" bind:value={year} min={yearRange[0]} max={yearRange[1]}/>
   </header>
   <!-- topojson map -->
   <VisSingleContainer data={mapData} height={550} duration={0}>
@@ -68,7 +68,7 @@
   margin-bottom: 20px;
 }
 
-.year-slider h2 {
+.year-slider label {
   font-weight: 500;
 }
 

@@ -33,8 +33,8 @@ const gradientSteps = Array(range).fill(1)
   <div class="topojson-map">
     <!-- year slider -->
     <header class="year-slider">
-      <h2>Life expectancy by Country, <em>{{ year }}</em></h2>
-      <input type="range" v-model="year" :min="yearRange[0]" :max="yearRange[1]" />
+      <label for="life-expectancy-year-vue">Year: <em>{{ year }}</em></label>
+      <input id="life-expectancy-year-vue" type="range" v-model="year" :min="yearRange[0]" :max="yearRange[1]" />
     </header>
     <!-- topojson map -->
     <VisSingleContainer :data="mapData" :height="550" :duration="0">
@@ -64,7 +64,7 @@ const gradientSteps = Array(range).fill(1)
   margin-bottom: 20px;
 }
 
-.year-slider h2 {
+.year-slider label {
   font-weight: 500;
 }
 

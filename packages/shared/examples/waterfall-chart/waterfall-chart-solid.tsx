@@ -12,7 +12,6 @@ const WaterfallChart = (): JSX.Element => {
 
   return (
     <div>
-      <h3>FY Income Statement Bridge</h3>
       <VisXYContainer data={data} height={480}>
         <VisStackedBar
           x={x}

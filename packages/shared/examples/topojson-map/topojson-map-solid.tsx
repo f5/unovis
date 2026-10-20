@@ -37,10 +37,11 @@ const TopojsonMap = (): JSX.Element => {
     <div class="topojson-map">
       {/* Year slider */}
       <header>
-        <h2>
-          Life expectancy by Country, <em>{year()}</em>
-        </h2>
+        <label htmlFor="life-expectancy-year-solid">
+          Year: <em>{year()}</em>
+        </label>
         <input
+          id="life-expectancy-year-solid"
           type="range"
           value={year()}
           min={yearRange[0]}

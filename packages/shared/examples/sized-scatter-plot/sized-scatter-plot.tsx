@@ -16,7 +16,6 @@ export default function SizedScatterPlot (): JSX.Element {
   }
   return (
     <>
-      <h2>American College Graduates, 2010-2012</h2>
       <VisBulletLegend items={legendItems}/>
       <VisXYContainer data={data} height={'60vh'} scaleByDomain={true}>
         <VisScatter

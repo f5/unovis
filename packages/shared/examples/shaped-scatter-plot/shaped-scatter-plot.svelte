@@ -23,7 +23,6 @@
   }
 </script>
 
-<h2>The Rise and Rise of A.I. Large Language Models</h2>
 <VisBulletLegend items={legendItems}/>
 <VisXYContainer {data} height={600} scaleByDomain={true}>
   <VisScatter {x} {y} {color} {label} {shape} size={15} cursor="pointer"/>

@@ -21,7 +21,6 @@
   }
 </script>
 
-<h3>FY Income Statement Bridge</h3>
 <VisXYContainer {data} height={480}>
   <VisStackedBar {x} {y} {baseline} color={stepColor} barPadding={0.3} barMinHeight1Px/>
   <VisTooltip {triggers}/>

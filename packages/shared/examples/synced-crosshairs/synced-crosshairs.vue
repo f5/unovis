@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { VisXYContainer, VisArea, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/vue'
 import { data, accessors, XYDataRecord } from './data'
+import './styles.css'
 
 const forcePosition = ref<number | undefined>(75)
 
@@ -21,7 +22,7 @@ const tooltipContainer = typeof document !== 'undefined' ? document.body : undef
       Crosshair forced to show at position: {{ forcePosition }}
     </div>
 
-    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px">
+    <div class="synced-crosshair-controls" style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px">
       <button v-for="v in [0, 25, 50, 75, 100, 125]" :key="v" type="button" @click="forcePosition = v">
         {{ v }}
       </button>

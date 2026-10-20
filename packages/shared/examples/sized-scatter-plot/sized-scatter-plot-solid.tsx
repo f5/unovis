@@ -27,7 +27,6 @@ const SizeScatterPlot = (): JSX.Element => {
 
   return (
     <div>
-      <h2>American College Graduates, 2010-2012</h2>
       <VisBulletLegend items={legendItems} />
       <VisXYContainer data={data} height='50dvh' scaleByDomain>
         <VisScatter

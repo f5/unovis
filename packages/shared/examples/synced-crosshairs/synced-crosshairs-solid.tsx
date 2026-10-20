@@ -1,5 +1,6 @@
 import { VisXYContainer, VisArea, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/solid'
 import { createSignal, For, JSX } from 'solid-js'
+import './styles.css'
 
 import { data, accessors, XYDataRecord } from './data'
 
@@ -22,7 +23,7 @@ const SyncedCrosshairs = (): JSX.Element => {
         Crosshair forced to show at position: {forcePosition()}
       </div>
 
-      <div style='display: flex; gap: 8px; align-items: center; margin-bottom: 10px'>
+      <div class='synced-crosshair-controls' style='display: flex; gap: 8px; align-items: center; margin-bottom: 10px'>
         <For each={presets}>
           {(v) => <button type='button' onClick={() => setForcePosition(v)}>{v}</button>}
         </For>
