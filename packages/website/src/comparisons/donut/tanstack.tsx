@@ -9,9 +9,10 @@ import { scaleLinear } from '@tanstack/charts/scales/linear'
 import { tooltip } from '@tanstack/charts/tooltip'
 
 import { COMPARISON_CHART_HEIGHT } from '../constants'
+import type { ChartProps } from '../types'
 import { DataRecord, sources, formatValue, getTotal } from './data'
 
-export default function TanStackDonutChart ({ data }: { data: DataRecord[] }): JSX.Element {
+export default function TanStackDonutChart ({ data, preset }: ChartProps<DataRecord[]>): JSX.Element {
   const [visible, setVisible] = useState<readonly string[]>(sources)
 
   const definition = useMemo(() => {
@@ -24,7 +25,16 @@ export default function TanStackDonutChart ({ data }: { data: DataRecord[] }): J
     return defineChart({
       marks: [
         polar({
-          marks: [radialArc(pie(rows, { value: 'sessions' }), { innerRadius: ({ radius }) => radius * 0.6, color: 'name', key: 'name' })],
+          marks: [radialArc(
+            // Angles are in radians, clockwise from 12 o'clock
+            pie(rows, {
+              value: 'sessions',
+              startAngle: preset === 'half' ? -Math.PI / 2 : 0,
+              endAngle: preset === 'half' ? Math.PI / 2 : 2 * Math.PI,
+              gapAngle: preset === 'rounded' ? 0.03 : 0,
+            }),
+            { innerRadius: ({ radius }) => radius * 0.6, cornerRadius: preset === 'rounded' ? 6 : 0, color: 'name', key: 'name' }
+          )],
           scales: { angle: null, radius: null },
         }),
         // `decorative` keeps the label from becoming a hover and keyboard target. Text without a `fontSize` inherits the
@@ -48,7 +58,7 @@ export default function TanStackDonutChart ({ data }: { data: DataRecord[] }): J
       },
       svgAnimation: true,
     })
-  }, [data, visible])
+  }, [data, visible, preset])
 
   return <Chart definition={definition} height={COMPARISON_CHART_HEIGHT} ariaLabel="Website sessions by traffic source"/>
 }

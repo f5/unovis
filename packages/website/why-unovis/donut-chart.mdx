@@ -29,6 +29,12 @@ Website sessions in one month by traffic source, with the total in the middle.
   (`svgAnimation`). AG Charts Community and Vega-Lite redraw without a transition.
 - **Styling.** The ring width, the gaps between segments and rounded corners are single options in Unovis
   (`arcWidth`, `padAngle`, `cornerRadius`), and colors come from CSS variables.
+- **Presets.** *Rounded gaps* (`padAngle`, `cornerRadius`) is a pair of options in every library. *Half donut*
+  (`angleRange`) also recenters the ring in Unovis and moves the label under it; Chart.js and Nivo fit the half ring to the
+  card too, Recharts and ECharts need a hand-set center and radius, Vega-Lite and TanStack Charts leave the lower half
+  empty, and the AG Charts donut has no start or end angle. *Patterns* (`pattern`) gives every segment a built-in fill
+  pattern, as ECharts' decals, Nivo's `defs` and AG Charts' pattern fills do; Recharts, Chart.js, Vega-Lite and TanStack
+  Charts have none.
 
 ## Feature comparison
 
