@@ -191,10 +191,23 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
         }
         return this._getBarPath(x, y, width, height, isNegative, valueAxisDirection)
       })
+      // A re-entering bar can be mid exit fade; bring it back instead of leaving it semi-transparent
+      .style('opacity', (d, i) => this._getBarStyle(d, i)?.opacity ?? 1)
       .style('fill', (d, i) => this._getBarStyle(d, i)?.fill ?? getColor(d, config.color, i, config.colorKeys?.[i], colorOptions))
       .style('cursor', (d, i) => this._getBarStyle(d, i)?.cursor ?? getString(d, config.cursor, i))
 
-    smartTransition(bars.exit(), duration).remove()
+    // Bars of removed series collapse to the baseline in place and fade out. They keep the `bar` class,
+    // so adding the series back within the transition re-adopts them.
+    smartTransition(bars.exit<Datum>(), duration)
+      .attr('d', (d, i, els) => {
+        const box = els[i].getBBox?.()
+        if (!box) return els[i].getAttribute('d')
+        const x = this.isVertical() ? box.x : box.y
+        const width = this.isVertical() ? box.width : box.height
+        return this._getBarPath(x, this.valueScale(0), width, 0, false, valueAxisDirection)
+      })
+      .style('opacity', 0)
+      .remove()
   }
 
   private _getBarStyle (d: Datum, index: number): StyleDeclaration | null | undefined {
