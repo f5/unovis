@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'basic-annotations'
 const example: Example = {
@@ -10,10 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Chart Annotations',
-  description: <span>
-    Source: <a href="https://finance.yahoo.com/quote/BTC-USD/history/" target="_blank">Yahoo! Finance</a>
-  </span>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {

@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'waterfall-chart'
 const example: Example = {
@@ -10,12 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Waterfall Chart',
-  description: <div>
-    A <i>Stacked Bar</i> whose <code>baseline</code> carries the running total, so every step starts
-    where the previous one ended. Subtotals and totals are absolute and get drawn from zero.
-    Figures are illustrative.
-  </div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

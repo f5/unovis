@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'leaflet-flow-map'
 const example: Example = {
@@ -10,8 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Leaflet Flow Map',
-  description: <div>Flows between small US airports (synthetic data)</div>,
+  ...metadata[pathname],
   preview: require('.///preview.jpg').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,

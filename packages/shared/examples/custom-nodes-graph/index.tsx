@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 const pathname = 'custom-nodes-graph'
 const example: Example = {
   component: () => {
@@ -9,12 +10,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Custom Nodes Graph with tooltips',
-  description: (
-    <p>
-      Custom graph with nodes along with tooltips
-    </p>
-  ),
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

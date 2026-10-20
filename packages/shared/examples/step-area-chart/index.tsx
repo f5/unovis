@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'step-area-chart'
 const example: Example = {
@@ -10,11 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Step Area Chart',
-  description: <div>
-    <p>Mentions of 2016 US Presidential Candidates in Hip Hop Lyrics from 2007 - 2016</p>
-    Data obtained from <a href="https://github.com/fivethirtyeight/data/tree/master/hip-hop-candidate-lyrics" target="_blank">FiveThirtyEight</a> (source: <a href="https://genius.com/" target="_blank">Genius</a>)
-  </div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

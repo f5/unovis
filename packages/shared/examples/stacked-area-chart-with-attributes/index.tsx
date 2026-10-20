@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'stacked-area-chart-with-attributes'
 const example: Example = {
@@ -10,11 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Stacked Area Chart with attributes',
-  description: <div>
-    Food Export Trends (% of Total Merchandise of exports)
-    Data source: <a href="https://data.worldbank.org/indicator/TX.VAL.FOOD.ZS.UN" target="_blank">World Bank Open Data</a>
-  </div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

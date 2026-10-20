@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'non-stacked-area-chart'
 const example: Example = {
@@ -10,11 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Non-Stacked Area Chart',
-  description: <div>
-    Monthly Covid-19 Cases by Country
-    (Source: <a href="https://github.com/owid/covid-19-data" target="_blank">Our World in Data</a>)
-  </div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
