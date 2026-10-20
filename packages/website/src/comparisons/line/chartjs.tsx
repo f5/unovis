@@ -2,11 +2,12 @@ import React from 'react'
 import { Chart, CategoryScale, LinearScale, LineElement, PointElement, Colors, Legend, Tooltip } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 
+import type { ChartProps } from '../types'
 import { DataRecord, series, formatMonth, formatValue } from './data'
 
 Chart.register(CategoryScale, LinearScale, LineElement, PointElement, Colors, Legend, Tooltip)
 
-export default function ChartJsLineChart ({ data, isDark }: { data: DataRecord[]; isDark: boolean }): JSX.Element {
+export default function ChartJsLineChart ({ data, isDark, preset }: ChartProps<DataRecord[]>): JSX.Element {
   const textColor = isDark ? '#aaa' : '#666'
   const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
   return (
@@ -19,6 +20,8 @@ export default function ChartJsLineChart ({ data, isDark }: { data: DataRecord[]
           data: data.map(d => d[s.key] ?? null),
           pointRadius: 0,
           spanGaps: true,
+          stepped: preset === 'step' ? 'middle' : false,
+          borderDash: preset === 'dashed' && s.key === 'ios' ? [6, 4] : [],
           segment: { borderDash: ctx => ctx.p0.skip || ctx.p1.skip ? [6, 6] : undefined },
         })),
       }}

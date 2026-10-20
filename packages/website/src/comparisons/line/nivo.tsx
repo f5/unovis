@@ -1,6 +1,7 @@
 import React from 'react'
 import { ResponsiveLine } from '@nivo/line'
 
+import type { ChartProps } from '../types'
 import { DataRecord, series, formatMonth, formatValue } from './data'
 
 const darkTheme = {
@@ -9,7 +10,7 @@ const darkTheme = {
   tooltip: { container: { background: '#222', color: '#ccc' } },
 }
 
-export default function NivoLineChart ({ data, isDark }: { data: DataRecord[]; isDark: boolean }): JSX.Element {
+export default function NivoLineChart ({ data, isDark, preset }: ChartProps<DataRecord[]>): JSX.Element {
   const lines = series.map(s => ({
     id: s.label,
     // Missing months leave gaps. Nivo has no option to bridge them
@@ -24,6 +25,7 @@ export default function NivoLineChart ({ data, isDark }: { data: DataRecord[]; i
       xScale={{ type: 'time', useUTC: false }}
       yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
       yFormat={formatValue}
+      curve={preset === 'step' ? 'step' : 'linear'}
       axisBottom={{ format: formatMonth, tickValues: 'every 6 months' }}
       axisLeft={{ format: formatValue }}
       enablePoints={false}

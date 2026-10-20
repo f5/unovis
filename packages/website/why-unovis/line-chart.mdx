@@ -44,6 +44,11 @@ axes, a legend that toggles series and a tooltip on hover.
   `currentColor`, and so does TanStack Charts' whole default theme. Every other chart gets its dark colors or theme from code; open **Code** to see how much.
 - **The x axis.** Unovis spaces its ticks by the width available, so labels never collide. Chart.js rotates the month
   labels and skips every other one to fit them.
+- **Presets.** *Step line* (`curveType` in Unovis) works in every library. *Dashed iOS* (`lineDashArray`) isn't possible
+  in Nivo, and Observable Plot and TanStack Charts draw the dashed series as a second line mark, because their dash
+  pattern is one value per mark. *Annotations* adds the `VisPlotband` and `VisPlotline` components: Chart.js needs its
+  separate annotation plugin for both, Nivo's markers can't shade a band, ECharts hangs the marks on a series so they
+  hide with it, and TanStack Charts' band only covers the range of the data.
 
 ## Feature comparison
 

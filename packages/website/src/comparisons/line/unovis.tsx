@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { CurveType, Scale } from '@unovis/ts'
+import { AxisType, CurveType, PlotlineLineStylePresets, Scale } from '@unovis/ts'
 import { VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip, VisBulletLegend, VisPlotband, VisPlotline } from '@unovis/react'
 
 import type { ChartProps } from '../types'
@@ -27,7 +27,7 @@ export default function UnovisLineChart ({ data, preset }: ChartProps<DataRecord
   return (
     <>
       <VisBulletLegend items={legendItems} onLegendItemClick={toggleSeries}/>
-      <VisXYContainer data={data} height={296} xScale={xScale}>
+      <VisXYContainer data={data} height={296} xScale={xScale} yDomainMaxConstraint={preset === 'annotations' ? [TARGET, undefined] : undefined}>
         <VisLine
           x={x}
           y={y}
@@ -36,9 +36,9 @@ export default function UnovisLineChart ({ data, preset }: ChartProps<DataRecord
           lineDashArray={(_: DataRecord[], i: number) => preset === 'dashed' && series[i].key === 'ios' ? [6, 4] : undefined}
         />
         {preset === 'annotations' && outage.length > 0 && (
-          <VisPlotband axis="x" from={x(outage[0])} to={x(outage[outage.length - 1])} labelText="iOS outage"/>
+          <VisPlotband axis={AxisType.X} from={x(outage[0])} to={x(outage[outage.length - 1])} labelText="iOS outage"/>
         )}
-        {preset === 'annotations' && <VisPlotline axis="y" value={TARGET} labelText={`Target ${formatValue(TARGET)}`} lineStyle="dash"/>}
+        {preset === 'annotations' && <VisPlotline axis={AxisType.Y} value={TARGET} labelText={`Target ${formatValue(TARGET)}`} lineStyle={PlotlineLineStylePresets.Dash}/>}
         <VisAxis type="x" tickFormat={(t: Date) => formatMonth(t)}/>
         <VisAxis type="y" tickFormat={formatValue}/>
         <VisCrosshair template={tooltipTemplate}/>

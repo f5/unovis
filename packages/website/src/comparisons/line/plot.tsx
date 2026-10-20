@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import * as Plot from '@observablehq/plot'
 
+import type { ChartProps } from '../types'
 import { DataRecord, SeriesKey, series, formatMonth, formatValue } from './data'
 
 const labels = series.map(s => s.label)
 const formatTooltipValue = (value: number | undefined): string => value === undefined ? 'No data' : formatValue(value)
+const TARGET = 50
 
-export default function PlotLineChart ({ data, isDark }: { data: DataRecord[]; isDark: boolean }): JSX.Element {
+export default function PlotLineChart ({ data, isDark, preset }: ChartProps<DataRecord[]>): JSX.Element {
   const legendRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<HTMLDivElement>(null)
   const [hidden, setHidden] = useState<Partial<Record<SeriesKey, boolean>>>({})
@@ -16,6 +18,10 @@ export default function PlotLineChart ({ data, isDark }: { data: DataRecord[]; i
     // Plot draws one line per stroke color from tidy (long) data, so the wide records are unpivoted
     const rows = data.flatMap(d => visible.map(s => ({ date: d.date, platform: s.label, users: d[s.key] })))
     const tipTitle = (d: DataRecord): string => [formatMonth(d.date), ...visible.map(s => `${s.label}: ${formatTooltipValue(d[s.key])}`)].join('\n')
+    const curve = preset === 'step' ? 'step' : 'linear'
+    // The months the iOS app reported no data, for the "Annotations" preset
+    const outage = data.filter(d => d.ios === undefined)
+    const band = outage.length > 0 ? [{ start: outage[0].date, end: outage[outage.length - 1].date }] : []
 
     // Plot's legend is static HTML, so the clicks that toggle a series are wired by hand
     const legend = Plot.legend({ color: { domain: labels } })
@@ -39,8 +45,17 @@ export default function PlotLineChart ({ data, isDark }: { data: DataRecord[]; i
         y: { label: null, grid: true, tickFormat: formatValue },
         color: { domain: labels },
         marks: [
+          // A `barX` with only `x1` and `x2` spans the frame's height
+          preset === 'annotations' ? [
+            Plot.barX(band, { x1: 'start', x2: 'end', fill: 'currentColor', fillOpacity: 0.1 }),
+            Plot.text(band, { x: 'start', text: () => 'iOS outage', frameAnchor: 'top', textAnchor: 'start', dx: 4, dy: 8 }),
+            Plot.ruleY([TARGET], { strokeDasharray: '6 4' }),
+            Plot.text([TARGET], { y: Plot.identity, text: d => `Target ${formatValue(d)}`, frameAnchor: 'right', textAnchor: 'end', dy: -8 }),
+          ] : null,
           // Missing months leave gaps: the line breaks at undefined values
-          Plot.lineY(rows, { x: 'date', y: 'users', stroke: 'platform' }),
+          Plot.lineY(rows, { x: 'date', y: 'users', stroke: 'platform', curve, filter: preset === 'dashed' ? d => d.platform !== 'iOS' : undefined }),
+          // `strokeDasharray` is one value for the whole mark, so the dashed iOS line is a mark of its own
+          preset === 'dashed' ? Plot.lineY(rows, { x: 'date', y: 'users', stroke: 'platform', curve, filter: d => d.platform === 'iOS', strokeDasharray: '6 4' }) : null,
           Plot.ruleX(data, Plot.pointerX({ x: 'date' })),
           Plot.tip(data, Plot.pointerX({ x: 'date', frameAnchor: 'top', title: tipTitle })),
         ],
@@ -48,7 +63,7 @@ export default function PlotLineChart ({ data, isDark }: { data: DataRecord[]; i
     })
     observer.observe(chartRef.current)
     return () => observer.disconnect()
-  }, [data, hidden, isDark])
+  }, [data, hidden, isDark, preset])
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
