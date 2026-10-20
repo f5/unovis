@@ -24,12 +24,23 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
 
   return (<div className={s.root}>
     <div className={s.title}>
+      {example.kicker && <p className={s.kicker}>{example.kicker}</p>}
       <h1>{example.title}</h1>
+      {example.subtitle && <p className={s.subtitle}>{example.subtitle}</p>}
     </div>
     <div className={s.example} id="vis-container">
       {!useTypescriptCode && example.component()}
     </div>
-    <div className={s.description}>{example.description}</div>
+    <div className={s.description}>
+      {example.sources?.length > 0 && <>
+        {example.sources.length === 1 ? 'Source: ' : 'Sources: '}{example.sources.map((source, i) => <React.Fragment key={source.url}>
+          {i > 0 && ' · '}
+          <a href={source.url} target="_blank" rel="noreferrer">{source.name}</a>
+        </React.Fragment>)}
+        .{' '}
+      </>}
+      {example.description}
+    </div>
     <div className={s.codeBlock}>
       <Tabs groupId='framework' example={example}>
         <TabItem value={Framework.React} label="React">

@@ -3,6 +3,7 @@ import Layout from '@theme/Layout'
 import { useLocation } from '@docusaurus/router'
 import Link from '@docusaurus/Link'
 import BrowserOnly from '@docusaurus/BrowserOnly'
+import Head from '@docusaurus/Head'
 
 // Internal Deps
 import { GalleryViewer } from '@site/src/components/GalleryViewer'
@@ -19,16 +20,18 @@ export default function Home (): JSX.Element {
       title="Gallery"
       description="A modular data visualization framework for React, Angular, Svelte, Vue, Solid and vanilla TypeScript or JavaScript"
     >
+      <Head><link rel="alternate" type="text/plain" title="Unovis chart creation prompts" href="/llm.txt" /></Head>
       <BrowserOnly>
         {() => {
           const location = useLocation()
           const query = new URLSearchParams(location.search)
           const exampleTitle = query.get('title')
+          const examplePathname = query.get('example')
           const useTypescriptCode = query.get('ts') !== null
           const example = examples
             .map((c) => c.examples)
             .flat()
-            .find((e) => e.title === exampleTitle)
+            .find((e) => examplePathname ? e.pathname === examplePathname : e.title === exampleTitle || e.legacyTitles?.includes(exampleTitle))
           return (
             <div className={s.root}>
               <Link

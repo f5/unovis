@@ -1,23 +1,41 @@
 .container {
-  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
   width: 100%;
+  padding-bottom: 12px;
 }
 
 .button {
   display: block;
-  margin: 0 auto;
-  padding-bottom: 1em;
+  padding: 0;
+  height: 32px;
 }
 
-input:disabled {
+.copyButton {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ifm-color-primary);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.copyButton:hover:not(:disabled) {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.copyButton:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.button:disabled, .copyButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-@media screen and (min-width: 730px) {
-  .button {
-    position: absolute;
-    right: 0;
-    top: var(--ifm-tabs-padding-vertical);
-  }
 }
