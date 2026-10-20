@@ -38,8 +38,9 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "pnpm run check && pnpm svelte-package --input src; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
+    "build": "pnpm run check && pnpm svelte-package --input src && rm -rf dist/.cache && cp LICENSE README.md package.json ./dist",
     "check": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "svelte-check --tsconfig ./test/tsconfig.json && node --import tsx --test test/compat.test.ts",
     "generate": "tsx ./autogen/index.ts",
     "gallery": "vite",
     "publish:dist": "cd ./dist; npm publish",
@@ -47,14 +48,17 @@
   },
   "peerDependencies": {
     "@unovis/ts": "1.7.1",
-    "svelte": "^5.0.0"
+    "svelte": "^4.0.0 || ^5.0.0"
   },
   "devDependencies": {
     "@unovis/ts": "workspace:*",
     "@unovis/shared": "workspace:*",
     "@sveltejs/package": "~2.5.8",
-    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@sveltejs/vite-plugin-svelte": "^6.0.0",
     "@tsconfig/svelte": "~5.0.8",
+    "@types/jsdom": "^21.1.7",
+    "jsdom": "catalog:",
+    "svelte4": "npm:svelte@^4.2.20",
     "eslint-plugin-svelte": "^2.10.0",
     "svelte": "~5.56.9",
     "svelte-check": "~4.7.6",

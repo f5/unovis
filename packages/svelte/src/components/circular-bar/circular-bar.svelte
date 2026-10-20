@@ -1,6 +1,9 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { CircularBar, CircularBarConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { CircularBar as CircularBarCore } from '@unovis/ts/components/circular-bar'
+  import type { CircularBarConfigInterface } from '@unovis/ts/components/circular-bar/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
@@ -19,26 +22,28 @@
   $: config = { value, ...$$restProps }
 
   // component declaration
-  let component: CircularBar<Datum>
+  let component: CircularBarCore<Datum>
   const lifecycle = getContext<Lifecycle>('component')
   // Notifies the container that this component's data or config has changed, so it can re-render
   const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
-    component = new CircularBar<Datum>(config)
+    component = new CircularBarCore<Datum>(config)
     return () => component?.destroy()
   })
   $: if (data !== undefined) { component?.setData(data); dirty?.() }
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
+    // Refresh the container action when configuration changes
+    component = component
     dirty?.()
   }
 
   // component accessor
-  export function getComponent (): CircularBar<Datum> { return component }
+  export function getComponent (): CircularBarCore<Datum> { return component }
 
 </script>
 
-<vis-component use:lifecycle={component}/>
+<vis-component use:lifecycle={component}></vis-component>
 

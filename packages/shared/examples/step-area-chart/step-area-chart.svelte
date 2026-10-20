@@ -54,7 +54,7 @@
     border: 1px solid #f4f4f4;
   }
 
-  :is(.legendLabel:hover) {
+  .legendSwitch :global(.legendLabel:hover) {
     text-decoration: underline;
   }
 </style>

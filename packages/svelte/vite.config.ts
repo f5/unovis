@@ -5,10 +5,14 @@ import { resolve, dirname } from 'node:path'
 
 export default defineConfig({
   plugins: [svelte()],
+  build: {
+    outDir: 'dist-demo',
+  },
   resolve: {
     dedupe: ['svelte'],
     alias: {
       '@unovis/svelte': resolve(dirname(fileURLToPath(import.meta.url)), 'src/index.ts'),
+      '@unovis/ts': resolve(dirname(fileURLToPath(import.meta.url)), '../ts/dist'),
     },
   },
 })

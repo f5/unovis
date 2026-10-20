@@ -1,6 +1,9 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { BulletLegend, type BulletLegendConfigInterface, type BulletLegendItemInterface } from '@unovis/ts'
+  import { BulletLegend as BulletLegendCore } from '@unovis/ts/components/bullet-legend'
+  import type { BulletLegendConfigInterface } from '@unovis/ts/components/bullet-legend/config'
+  import type { BulletLegendItemInterface } from '@unovis/ts/components/bullet-legend/types'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'
@@ -16,20 +19,20 @@
   $: config = { items, ...$$restProps }
 
   // component declaration
-  let component: BulletLegend
+  let component: BulletLegendCore
   let ref: HTMLDivElement
 
   onMount(() => {
-    component = new BulletLegend(ref, { ...config, renderIntoProvidedDomNode: true })
+    component = new BulletLegendCore(ref, { ...config, renderIntoProvidedDomNode: true })
     return () => component?.destroy()
   })
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
   }
 
   // component accessor
-  export function getComponent (): BulletLegend { return component }
+  export function getComponent (): BulletLegendCore { return component }
 
 </script>
 

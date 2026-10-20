@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { TopoJSONMap, type TopoJSONMapConfigInterface } from '@unovis/ts'
+  import { TopoJSONMap as TopoJSONMapCore } from '@unovis/ts/components/topojson-map'
+  import type { TopoJSONMapConfigInterface } from '@unovis/ts/components/topojson-map/config'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
@@ -20,24 +22,26 @@
   $: config = { ...$$restProps }
 
   // component declaration
-  let component: TopoJSONMap<AreaDatum, PointDatum, LinkDatum>
+  let component: TopoJSONMapCore<AreaDatum, PointDatum, LinkDatum>
   const lifecycle = getContext<Lifecycle>('component')
   // Notifies the container that this component's data or config has changed, so it can re-render
   const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
-    component = new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(config)
+    component = new TopoJSONMapCore<AreaDatum, PointDatum, LinkDatum>(config)
     return () => component?.destroy()
   })
   $: if (data !== undefined) { component?.setData(data); dirty?.() }
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
+    // Refresh the container action when configuration changes
+    component = component
     dirty?.()
   }
 
   // component accessor
-  export function getComponent (): TopoJSONMap<AreaDatum, PointDatum, LinkDatum> { return component }
+  export function getComponent (): TopoJSONMapCore<AreaDatum, PointDatum, LinkDatum> { return component }
 
 </script>
 

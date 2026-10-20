@@ -1,6 +1,9 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { GroupedBar, type GroupedBarConfigInterface, type NumericAccessor } from '@unovis/ts'
+  import { GroupedBar as GroupedBarCore } from '@unovis/ts/components/grouped-bar'
+  import type { GroupedBarConfigInterface } from '@unovis/ts/components/grouped-bar/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
@@ -20,24 +23,26 @@
   $: config = { x, y, ...$$restProps }
 
   // component declaration
-  let component: GroupedBar<Datum>
+  let component: GroupedBarCore<Datum>
   const lifecycle = getContext<Lifecycle>('component')
   // Notifies the container that this component's data or config has changed, so it can re-render
   const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
-    component = new GroupedBar<Datum>(config)
+    component = new GroupedBarCore<Datum>(config)
     return () => component?.destroy()
   })
   $: if (data !== undefined) { component?.setData(data); dirty?.() }
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
+    // Refresh the container action when configuration changes
+    component = component
     dirty?.()
   }
 
   // component accessor
-  export function getComponent (): GroupedBar<Datum> { return component }
+  export function getComponent (): GroupedBarCore<Datum> { return component }
 
 </script>
 

@@ -1,6 +1,9 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Scatter, type ScatterConfigInterface, type NumericAccessor } from '@unovis/ts'
+  import { Scatter as ScatterCore } from '@unovis/ts/components/scatter'
+  import type { ScatterConfigInterface } from '@unovis/ts/components/scatter/config'
+  import type { NumericAccessor } from '@unovis/ts/types/accessor'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
@@ -20,24 +23,26 @@
   $: config = { x, y, ...$$restProps }
 
   // component declaration
-  let component: Scatter<Datum>
+  let component: ScatterCore<Datum>
   const lifecycle = getContext<Lifecycle>('component')
   // Notifies the container that this component's data or config has changed, so it can re-render
   const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
-    component = new Scatter<Datum>(config)
+    component = new ScatterCore<Datum>(config)
     return () => component?.destroy()
   })
   $: if (data !== undefined) { component?.setData(data); dirty?.() }
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
+    // Refresh the container action when configuration changes
+    component = component
     dirty?.()
   }
 
   // component accessor
-  export function getComponent (): Scatter<Datum> { return component }
+  export function getComponent (): ScatterCore<Datum> { return component }
 
 </script>
 

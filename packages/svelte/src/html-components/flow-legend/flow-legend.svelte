@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { FlowLegend, type FlowLegendConfigInterface } from '@unovis/ts'
+  import { FlowLegend as FlowLegendCore } from '@unovis/ts/components/flow-legend'
+  import type { FlowLegendConfigInterface } from '@unovis/ts/components/flow-legend/config'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'
@@ -12,20 +14,20 @@
   $: config = { ...$$restProps }
 
   // component declaration
-  let component: FlowLegend
+  let component: FlowLegendCore
   let ref: HTMLDivElement
 
   onMount(() => {
-    component = new FlowLegend(ref, { ...config, renderIntoProvidedDomNode: true })
+    component = new FlowLegendCore(ref, { ...config, renderIntoProvidedDomNode: true })
     return () => component?.destroy()
   })
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
   }
 
   // component accessor
-  export function getComponent (): FlowLegend { return component }
+  export function getComponent (): FlowLegendCore { return component }
 
 </script>
 

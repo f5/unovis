@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { XYContainer, XYComponentCore, type XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
+  import { XYContainer } from '@unovis/ts/containers/xy-container'
+  import type { XYContainerConfigInterface } from '@unovis/ts/containers/xy-container/config'
+  import type { XYComponentCore } from '@unovis/ts/core/xy-component'
+  import type { Tooltip } from '@unovis/ts/components/tooltip'
+  import type { Crosshair } from '@unovis/ts/components/crosshair'
+  import type { Axis } from '@unovis/ts/components/axis'
+  import type { Annotations } from '@unovis/ts/components/annotations'
   import { onMount, setContext } from 'svelte'
 
   type Datum = $$Generic
@@ -37,7 +43,7 @@
   }
   let ref: HTMLDivElement
 
-  $: if (data !== undefined) chart?.setData(data, true)
+  $: if (data !== undefined) chart?.setData(data)
 
   let animationFrame = 0
   const updateContainer = (): void => {
@@ -102,6 +108,9 @@
   }))
   setContext('axis', (e: HTMLElement & { __type__?: 'x' | 'y'}) => ({
     update: (c: Axis<Datum>) => {
+      if (e.__type__ && e.__type__ !== c.config.type && config[`${e.__type__}Axis`] === c) {
+        config[`${e.__type__}Axis`] = undefined
+      }
       if (config[`${e.__type__}Axis`] === c) return
       e.__type__ = c.config.type as 'x' | 'y'
       config[`${e.__type__}Axis`] = c

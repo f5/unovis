@@ -16,6 +16,12 @@ Learn more about **Unovis** on our website [unovis.dev](https://unovis.dev)
 npm install -P @unovis/ts @unovis/svelte
 ```
 
+## Compatibility
+
+Supports Svelte 4 and Svelte 5 with the same components and props. Svelte 5 applications can
+use runes while consuming these legacy-syntax wrappers. Published components are preprocessed
+to JavaScript so Svelte 4 consumers do not need TypeScript preprocessing for the library.
+
 ## Quick Start
 #### TypeScript
 ```sveltehtml
