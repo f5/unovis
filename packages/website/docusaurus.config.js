@@ -45,6 +45,9 @@ const config = {
   tagline: 'A modular data visualization framework for React, Angular, Svelte, Vue, Solid and vanilla TypeScript or JavaScript',
   url: 'https://unovis.dev',
   baseUrl: '/',
+  headTags: [
+    { tagName: 'link', attributes: { rel: 'describedby', type: 'text/plain', href: '/llms.txt' } },
+  ],
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/unovis-pictogram-square.svg',

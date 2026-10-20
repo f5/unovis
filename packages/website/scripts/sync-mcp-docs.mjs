@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url'
 const websiteRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const source = join(websiteRoot, '..', 'mcp', 'docs')
 const target = join(websiteRoot, 'docs', 'mcp')
+const markdownTarget = join(websiteRoot, 'static', 'docs', 'mcp')
 
 /** Sidebar order and the one-line descriptions Docusaurus shows in listings */
 const PAGES = [
@@ -46,6 +47,8 @@ const addBanner = (markdown) => {
 
 rmSync(target, { recursive: true, force: true })
 mkdirSync(target, { recursive: true })
+rmSync(markdownTarget, { recursive: true, force: true })
+mkdirSync(markdownTarget, { recursive: true })
 
 const known = new Set(PAGES.map(([from]) => from))
 const missing = readdirSync(source).filter(file => file.endsWith('.md') && !known.has(file))
@@ -70,6 +73,7 @@ PAGES.forEach(([from, to, description], index) => {
     '',
   ].join('\n')
   writeFileSync(join(target, to), frontmatter + addBanner(rewriteLinks(markdown)))
+  writeFileSync(join(markdownTarget, to), rewriteLinks(markdown))
 })
 
 // The chart-spec schema's $id points at unovis.dev/schema/… — serve it there
