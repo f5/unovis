@@ -124,10 +124,13 @@ export const nodeIcon = css`
   label: icon;
 
   font-family: var(--vis-graph-icon-font-family), var(--vis-font-family);
-  dominant-baseline: var(--vis-graph-node-dominant-baseline);
   text-anchor: middle;
   pointer-events: none;
   fill: var(--vis-graph-node-icon-fill-color);
+
+  > text {
+    dominant-baseline: var(--vis-graph-node-dominant-baseline);
+  }
 
   :not(.${brushable}) {
     transition: .4s all;
