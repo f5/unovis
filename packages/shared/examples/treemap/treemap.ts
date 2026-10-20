@@ -14,7 +14,6 @@ for (const d of sortedData) {
   }
 }
 const container = document.getElementById('vis-container')
-container.innerHTML = '<h3>Most Common Password Categories</h3>'
 
 const populationFormat = (value: number): string => `${value.toLocaleString()}B`
 const legendItems = categoryColorMap.map(c => ({ name: c.key, color: c.value }))

@@ -21,7 +21,6 @@ export default function RangePlot (): JSX.Element {
 
   return (
     <>
-      <h2>Gender Pay Gap</h2>
       <VisBulletLegend items={legendItems}/>
       <VisXYContainer height={height}>
         <VisLine

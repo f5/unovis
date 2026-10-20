@@ -5,6 +5,8 @@ import { VisSingleContainer, VisGraph, VisTooltip } from '@unovis/solid'
 import {
   globalControlsContainer,
   customNodesGraph,
+  svgDefs,
+  getNodeIcon,
   graphButton,
   nodeEnterCustomRenderFunction,
   nodeUpdateCustomRenderFunction,
@@ -123,6 +125,7 @@ const CustomNodesGraph = (): JSX.Element => {
       <VisSingleContainer
         class={customNodesGraph}
         data={data}
+        svgDefs={svgDefs}
         height="50vh"
         duration={1000}
       >
@@ -141,6 +144,7 @@ const CustomNodesGraph = (): JSX.Element => {
           linkWidth={(l: CustomGraphLink) => l.width}
           nodeFill={getNodeFillColor}
           nodeSize={DEFAULT_NODE_SIZE}
+          nodeIcon={getNodeIcon}
           nodeIconSize={DEFAULT_NODE_SIZE}
           nodeLabel={(n: CustomGraphNode) => n.label}
           nodeLabelTrimLength={30}

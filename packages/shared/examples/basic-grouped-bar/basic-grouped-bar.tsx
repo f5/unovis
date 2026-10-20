@@ -11,7 +11,6 @@ const legendItems = Object.entries(colors).map(([n, c]) => ({
 export default function BasicGroupedBar (): JSX.Element {
   return (
     <>
-      <h2>U.S. Election Popular Vote Results by Political Party</h2>
       <VisBulletLegend items={legendItems}/>
       <VisXYContainer height={'50vh'} data={data}>
         <VisGroupedBar

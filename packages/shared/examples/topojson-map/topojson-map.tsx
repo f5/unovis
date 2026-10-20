@@ -16,8 +16,8 @@ type YearSliderProps = {
 export function YearSlider ({ current, range, onUpdate }: YearSliderProps): JSX.Element {
   return (
     <header>
-      <h2>Life expectancy by Country, <em>{current}</em></h2>
-      <input type="range" value={current} min={range[0]} max={range[1]} onChange={e => onUpdate(Number(e.target.value))}/>
+      <label htmlFor="life-expectancy-year-react">Year: <em>{current}</em></label>
+      <input id="life-expectancy-year-react" type="range" value={current} min={range[0]} max={range[1]} onChange={e => onUpdate(Number(e.target.value))}/>
     </header>
   )
 }
@@ -70,7 +70,7 @@ export default function TopojsonMap (): JSX.Element {
   return (
     <div className="topojson-map">
       <YearSlider current={year} range={yearRange} onUpdate={setYear}/>
-      <VisSingleContainer data={mapData} height={550} duration={0}>
+      <VisSingleContainer data={mapData} height={550} duration={0} style={{ width: '100%' }}>
         <VisTopoJSONMap topojson={WorldMapTopoJSON} areaColor={getAreaColor} disableZoom/>
         <VisTooltip triggers={tooltipTriggers}/>
       </VisSingleContainer>

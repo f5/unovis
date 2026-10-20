@@ -13,7 +13,6 @@ function add (parent: HTMLElement, tag: string, options = {}): HTMLElement {
 
 // initialize title, legend and containers
 const container = document.getElementById('vis-container')
-const title = add(container, 'h2', { innerText: 'American College Graduates, 2010-2012' })
 const legend = new BulletLegend(container, { items: legendItems })
 const vis = add(container, 'div')
 const mainScatterContainer = add(vis, 'div')
@@ -32,7 +31,7 @@ const scatterBaseConfig = {
 // configure right/main chart
 const chart = new XYContainer(mainScatterContainer, {
   height: '55vh',
-  components: [new Scatter({ ...scatterBaseConfig, sizeRange: [20, 80], labelPosition: Position.Bottom })],
+  components: [new Scatter({ ...scatterBaseConfig, sizeRange: [4, 20], labelPosition: Position.Bottom })],
   xAxis: new Axis({ label: 'Median Salary ($)', tickFormat: formatNumber, gridLine: false }),
   yAxis: new Axis({ label: 'Average Employment Rate', gridLine: false }),
 }, data)

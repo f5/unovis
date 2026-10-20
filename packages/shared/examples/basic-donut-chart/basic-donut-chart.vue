@@ -8,7 +8,6 @@ const legendItems = Object.entries(data).map(([_, data]) => ({
 </script>
 
 <template>
-  <h3>Most Common Password Categories</h3>
   <VisBulletLegend :items="legendItems"/>
   <VisSingleContainer :height="400">
   <VisDonut

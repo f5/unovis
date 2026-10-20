@@ -6,17 +6,19 @@
 }
 
 .topojson-map > header {
-  width: max-content;
+  width: min(100%, 320px);
   position: relative;
   margin-bottom: 20px;
 }
 
-.topojson-map > header > h2 {
+.topojson-map > header > label {
+  font-size: 14px;
   font-weight: 500;
+  margin-bottom: 8px;
 }
 
 .topojson-map > header > input {
-  width: 75%;
+  width: 100%;
 }
 
 .topojson-map > header > input::before {

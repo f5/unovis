@@ -5,6 +5,7 @@ import { data, accessors, XYDataRecord } from './data'
   selector: 'synced-crosshairs',
   standalone: false,
   templateUrl: './synced-crosshairs.component.html',
+  styleUrls: ['./styles.css'],
 })
 export class SyncedCrosshairsComponent {
   data = data

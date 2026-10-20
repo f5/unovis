@@ -30,7 +30,6 @@ const BasicTimeline = (): JSX.Element => {
 
   return (
     <VisXYContainer data={data} height='50dvh'>
-      <h3>A Timeline of Abandoned Google Products, 1997 - 2022</h3>
       <VisBulletLegend items={legendItems} />
       <VisTimeline
         x={x}

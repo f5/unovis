@@ -5,6 +5,8 @@ import { VisSingleContainer, VisGraph, VisGraphRef, VisTooltip } from '@unovis/r
 import {
   globalControlsContainer,
   customNodesGraph,
+  svgDefs,
+  getNodeIcon,
   graphButton,
   nodeEnterCustomRenderFunction,
   nodeUpdateCustomRenderFunction,
@@ -128,6 +130,7 @@ export default function BasicGraph (): JSX.Element {
       <VisSingleContainer
         className={customNodesGraph}
         data={data}
+        svgDefs={svgDefs}
         height="50vh"
         duration={1000}
       >
@@ -146,6 +149,7 @@ export default function BasicGraph (): JSX.Element {
           linkWidth={useCallback((l: CustomGraphLink) => l.width, [])}
           nodeFill={getNodeFillColor}
           nodeSize={DEFAULT_NODE_SIZE}
+          nodeIcon={getNodeIcon}
           nodeIconSize={DEFAULT_NODE_SIZE}
           nodeLabel={useCallback((n: CustomGraphNode) => n.label, [])}
           nodeLabelTrimLength={30}

@@ -10,7 +10,6 @@ const BasicDonutChart = (): JSX.Element => {
 
   return (
     <div>
-      <h3>Most Common Password Categories</h3>
       <VisBulletLegend items={legendItems} />
       <VisSingleContainer height='50dvh'>
         <VisDonut

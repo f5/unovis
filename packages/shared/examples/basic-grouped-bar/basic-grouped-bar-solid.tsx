@@ -19,7 +19,6 @@ const BasicGroupBar = (): JSX.Element => {
 
   return (
     <div>
-      <h2>U.S. Election Popular Vote Results by Political Party</h2>
       <VisBulletLegend items={items} />
       <VisXYContainer height='50dvh'>
         <VisGroupedBar data={data} x={x} y={y} color={color} />

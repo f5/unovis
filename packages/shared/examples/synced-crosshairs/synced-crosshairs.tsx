@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { VisXYContainer, VisArea, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/react'
 import { data, accessors, XYDataRecord } from './data'
+import './styles.css'
 
 export default function SyncedCrosshairs (): JSX.Element {
   const [forcePosition, setForcePosition] = useState<number | undefined>(75)
@@ -21,7 +22,7 @@ export default function SyncedCrosshairs (): JSX.Element {
         Crosshair forced to show at position: {forcePosition}
       </div>
 
-      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '10px' }}>
+      <div className='synced-crosshair-controls' style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '10px' }}>
         {presets.map(v => (
           <button key={v} type='button' onClick={() => setForcePosition(v)}>{v}</button>
         ))}

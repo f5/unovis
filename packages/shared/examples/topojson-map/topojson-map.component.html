@@ -1,10 +1,10 @@
 <div class="topojson-map">
   <header>
-    <h2>Life expectancy by Country, <em>{{ currentYear }}</em></h2>
-    <input type="range" [value]="currentYear" [min]="min" [max]="max" (input)="setYear($event)">
+    <label for="life-expectancy-year-angular">Year: <em>{{ currentYear }}</em></label>
+    <input id="life-expectancy-year-angular" type="range" [value]="currentYear" [min]="min" [max]="max" (input)="setYear($event)">
   </header>
 
-  <vis-single-container [data]="mapData" [height]="550" [duration]="0">
+  <vis-single-container [data]="mapData" [height]="550" [duration]="0" style="width: 100%">
     <vis-topojson-map [topojson]="topojson" [areaColor]="getAreaColor" [disableZoom]="true"></vis-topojson-map>
     <vis-tooltip [triggers]="tooltipTriggers"></vis-tooltip>
   </vis-single-container>

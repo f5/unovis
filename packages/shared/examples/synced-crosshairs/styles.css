@@ -1,0 +1,25 @@
+.synced-crosshair-controls {
+  --synced-crosshair-control-border: #dce3ed;
+}
+:is(html[data-theme='dark'], html.dark-theme, body.dark-theme, html.theme-dark, body.theme-dark) .synced-crosshair-controls {
+  --synced-crosshair-control-border: #344258;
+}
+.synced-crosshair-controls button {
+  box-sizing: border-box;
+  height: 32px;
+  padding: 6px 12px;
+  border: 1px solid var(--synced-crosshair-control-border);
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+  font: 12px system-ui, sans-serif;
+  cursor: pointer;
+}
+.synced-crosshair-controls button:hover {
+  border-color: var(--vis-color0);
+  background: color-mix(in srgb, var(--vis-color0) 10%, transparent);
+}
+.synced-crosshair-controls button:focus-visible {
+  outline: 2px solid var(--vis-color0);
+  outline-offset: 2px;
+}

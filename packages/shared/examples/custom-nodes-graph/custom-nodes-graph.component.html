@@ -27,6 +27,7 @@
   <vis-single-container
     [ngClass]="customNodesGraphCls"
     [data]="data"
+    [svgDefs]="svgDefs"
     height="50vh"
     [duration]="1000"
   >
@@ -45,6 +46,7 @@
       [linkWidth]="linkWidth"
       [nodeFill]="getNodeFillColor"
       [nodeSize]="nodeSize"
+      [nodeIcon]="getNodeIcon"
       [nodeIconSize]="nodeSize"
       [nodeLabel]="nodeLabel"
       [nodeLabelTrimLength]="30"

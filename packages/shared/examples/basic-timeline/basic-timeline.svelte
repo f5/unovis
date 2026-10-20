@@ -26,7 +26,6 @@
 </script>
 
 <VisXYContainer {data} height={500}>
-  <h3>A Timeline of Abandoned Google Products, 1997 - 2022</h3>
   <VisBulletLegend items={legendItems}/>
   <VisTimeline {x} {lineDuration} {lineRow} {color} rowLabelWidth={labelWidth} showRowLabels={true}/>
   <VisTooltip {triggers}/>

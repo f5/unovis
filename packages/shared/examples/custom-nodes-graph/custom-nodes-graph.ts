@@ -4,6 +4,9 @@ import { data, DEFAULT_NODE_SIZE, nodeTypeColorMap, CustomGraphNodeType, CustomG
 import {
   globalControlsContainer,
   customNodesGraph,
+  graphButton,
+  svgDefs,
+  getNodeIcon,
   nodeEnterCustomRenderFunction,
   nodeUpdateCustomRenderFunction,
   renderSwimlanes,
@@ -27,6 +30,7 @@ class CustomNodesGraphExample {
   getConfig (): any {
     return {
       component: this.graph,
+      svgDefs,
       height: '50vh',
       duration: 1000,
       tooltip: new Tooltip({
@@ -55,6 +59,7 @@ class CustomNodesGraphExample {
       linkWidth: (l: CustomGraphLink) => l.width,
       nodeFill: this.getNodeFillColor.bind(this),
       nodeSize: DEFAULT_NODE_SIZE,
+      nodeIcon: getNodeIcon,
       nodeIconSize: DEFAULT_NODE_SIZE,
       nodeLabel: (n: CustomGraphNode) => n.label,
       nodeLabelTrimLength: 30,
@@ -106,7 +111,7 @@ class CustomNodesGraphExample {
 
     const tooltipFollowCursorLabel = document.createElement('label') as HTMLLabelElement
     tooltipFollowCursorLabel.htmlFor = 'tooltipFollowCursor'
-    tooltipFollowCursorLabel.textContent = 'tooltipFollowCursor'
+    tooltipFollowCursorLabel.textContent = 'Tooltip - followCursor'
 
     const tooltipAllowHoverCheckbox = document.createElement('input') as HTMLInputElement
     tooltipAllowHoverCheckbox.type = 'checkbox'
@@ -115,20 +120,22 @@ class CustomNodesGraphExample {
 
     const tooltipAllowHoverLabel = document.createElement('label') as HTMLLabelElement
     tooltipAllowHoverLabel.htmlFor = 'tooltipAllowHover'
-    tooltipAllowHoverLabel.textContent = 'tooltipAllowHover'
+    tooltipAllowHoverLabel.textContent = 'Tooltip - allowHover'
 
     const zoomToNodesButton = document.createElement('button') as HTMLButtonElement
     zoomToNodesButton.id = 'zoomToNodes'
+    zoomToNodesButton.className = graphButton
     zoomToNodesButton.textContent = 'Zoom To Identity and Network Nodes'
 
     const fitGraphButton = document.createElement('button') as HTMLButtonElement
     fitGraphButton.id = 'fitGraph'
+    fitGraphButton.className = graphButton
     fitGraphButton.textContent = 'Fit Graph'
 
     // append elements
-    globalControlsDiv.appendChild(tooltipFollowCursorCheckbox)
+    tooltipFollowCursorLabel.prepend(tooltipFollowCursorCheckbox)
     globalControlsDiv.appendChild(tooltipFollowCursorLabel)
-    globalControlsDiv.appendChild(tooltipAllowHoverCheckbox)
+    tooltipAllowHoverLabel.prepend(tooltipAllowHoverCheckbox)
     globalControlsDiv.appendChild(tooltipAllowHoverLabel)
     globalControlsDiv.appendChild(zoomToNodesButton)
     globalControlsDiv.appendChild(fitGraphButton)

@@ -25,7 +25,6 @@
 
 </script>
 
-<h2>American College Graduates, 2010-2012</h2>
 <VisBulletLegend items={legendItems} />
 <div class="scatter-with-minimap">
   <div>
@@ -36,7 +35,7 @@
       height={'55vh'}
       scaleByDomain={true}
     >
-      <VisScatter {...scatterProps} sizeRange={[20, 80]} labelPosition={Position.Bottom} />
+      <VisScatter {...scatterProps} sizeRange={[4, 20]} labelPosition={Position.Bottom} />
       <VisAxis type="x" label="Median Salary ($)" tickFormat={formatNumber} gridLine={false}/>
       <VisAxis type="y" label="Employment Rate" tickPadding={0} gridLine={false}/>
     </VisXYContainer>

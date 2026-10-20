@@ -6,6 +6,8 @@
   import {
     globalControlsContainer,
     customNodesGraph,
+    svgDefs,
+    getNodeIcon,
     graphButton,
     nodeEnterCustomRenderFunction,
     nodeUpdateCustomRenderFunction,
@@ -133,6 +135,7 @@
     <VisSingleContainer
       :class="customNodesGraph"
       :data
+      :svgDefs
       height="50vh"
       :duration="1000"
     >
@@ -151,6 +154,7 @@
         :linkWidth="getLinkWidth"
         :nodeFill="getNodeFillColor"
         :nodeSize="DEFAULT_NODE_SIZE"
+        :nodeIcon="getNodeIcon"
         :nodeIconSize="DEFAULT_NODE_SIZE"
         :nodeLabel="getNodeLabel"
         :nodeLabelTrimLength="30"

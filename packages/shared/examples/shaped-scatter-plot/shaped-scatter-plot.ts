@@ -5,10 +5,6 @@ const shapeScale = Scale.scaleOrdinal(shapes).domain(categories)
 const colorScale = Scale.scaleOrdinal(colors).domain(categories)
 const container = document.getElementById('vis-container')
 
-const title = document.createElement('h2')
-title.innerText = 'The Rise and Rise of A.I. Large Language Models'
-container.append(title)
-
 const legend = new BulletLegend(container, {
   items: categories.map(v => ({ name: v, shape: shapeScale(v) })),
 })

@@ -5,6 +5,8 @@ import { VisGraphComponent } from '@unovis/angular'
 import {
   globalControlsContainer,
   customNodesGraph,
+  svgDefs,
+  getNodeIcon,
   graphButton,
   nodeEnterCustomRenderFunction,
   nodeUpdateCustomRenderFunction,
@@ -31,6 +33,8 @@ export class CustomNodesGraphComponent {
   nodeUpdateCustomRenderFunction = nodeUpdateCustomRenderFunction
   globalControlsContainerCls = globalControlsContainer
   customNodesGraphCls = customNodesGraph
+  svgDefs = svgDefs
+  getNodeIcon = getNodeIcon
   graphButtonCls = graphButton
   nodeSelectionHighlightMode = GraphNodeSelectionHighlightMode.None
 
