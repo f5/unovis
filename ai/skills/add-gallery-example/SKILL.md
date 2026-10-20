@@ -41,6 +41,7 @@ file right.
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = '<slug>'
 const example: Example = {
@@ -50,8 +51,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: '<Title referencing the component(s)>',
-  description: '',
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
@@ -71,7 +71,11 @@ export default example
 ```
 
 - `pathname` must equal the directory name.
-- `title` references the library component(s) used; `description` can be `''` or JSX with cited data sources.
+- Add an entry keyed by the slug to `packages/shared/examples/metadata.json`: `title`, `kicker`, `subtitle`, `description`, `prompt`, and optional `sources` (`name`/`url` pairs).
+- Use a subject-based title for real data, and identify illustrative data honestly. The website owns the introductory header; framework examples contain charts, controls, legends, summaries, and chart annotations.
+- Write a chart-specific creation prompt covering data fields, encodings, interactions, and data limitations. Include `{framework}` so Copy prompt can use the selected code tab.
+- Preserve previous titles in `legacyTitles` when renaming an example. Gallery links use the stable `?example=<slug>` identifier.
+- Website start/build regenerates `static/llm.txt` from this catalog. Run `pnpm --filter @unovis/website sync:gallery-prompts` after editing metadata; do not edit the generated text directly.
 
 ## 3. Register in `examples-list.tsx`
 
@@ -83,6 +87,8 @@ gallery ordering.
 
 Add light + dark screenshots to `packages/shared/examples/_previews/<slug>.png` and
 `packages/shared/examples/_previews/<slug>-dark.png`.
+Before committing, run new or changed PNG previews through a lossless PNG optimizer such as
+`oxipng`, preserve their dimensions and appearance, and visually verify the optimized images.
 
 ## 5. Verify every framework
 
