@@ -1,6 +1,10 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { LeafletMap, type LeafletMapConfigInterface, type GenericDataRecord, type MapLibreStyleSpecs } from '@unovis/ts'
+  import { LeafletMap as LeafletMapCore } from '@unovis/ts/components/leaflet-map'
+  import type { LeafletMapConfigInterface } from '@unovis/ts/components/leaflet-map/config'
+  import type { GenericDataRecord } from '@unovis/ts/types/data'
+  import type { MapLibreStyleSpecs } from '@unovis/ts/components/leaflet-map/renderer/map-style'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'
@@ -18,21 +22,21 @@
   $: config = { style, ...$$restProps }
 
   // component declaration
-  let component: LeafletMap<Datum>
+  let component: LeafletMapCore<Datum>
   let ref: HTMLDivElement
 
   onMount(() => {
-    component = new LeafletMap<Datum>(ref, config, data)
+    component = new LeafletMapCore<Datum>(ref, config, data)
     return () => component?.destroy()
   })
   $: if (data !== undefined) component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
   }
 
   // component accessor
-  export function getComponent (): LeafletMap<Datum> { return component }
+  export function getComponent (): LeafletMapCore<Datum> { return component }
 
 </script>
 

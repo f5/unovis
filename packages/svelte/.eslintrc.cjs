@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { resolve } = require('node:path')
+
 module.exports = {
   ignorePatterns: [
     'dist/*',
@@ -9,12 +12,12 @@ module.exports = {
     settings: {
       'import/resolver': {
         typescript: {
-          project: [`${__dirname}/autogen/tsconfig.json`],
+          project: [resolve(__dirname, 'autogen/tsconfig.json')],
         },
       },
     },
   }, {
-    files: ['src/**/*.svelte', 'src/*.svelte', 'src-demo/*.svelte'],
+    files: ['src/**/*.svelte', 'src/*.svelte', 'src-demo/*.svelte', 'test/**/*.svelte'],
     extends: [
       'plugin:svelte/recommended',
       'plugin:@typescript-eslint/recommended',
@@ -23,7 +26,7 @@ module.exports = {
     parser: 'svelte-eslint-parser',
     parserOptions: {
       parser: '@typescript-eslint/parser',
-      project: ['./tsconfig.json', './autogen/tsconfig.json'],
+      project: ['./tsconfig.json', './autogen/tsconfig.json', './test/tsconfig.json'],
       extraFileExtensions: ['.svelte'],
       tsconfigRootDir: __dirname,
     },

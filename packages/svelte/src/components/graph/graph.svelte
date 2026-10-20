@@ -1,6 +1,9 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Graph, type GraphConfigInterface, type GraphInputNode, type GraphInputLink } from '@unovis/ts'
+  import { Graph as GraphCore } from '@unovis/ts/components/graph'
+  import type { GraphConfigInterface } from '@unovis/ts/components/graph/config'
+  import type { GraphInputNode, GraphInputLink } from '@unovis/ts/types/graph'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
@@ -19,24 +22,26 @@
   $: config = { ...$$restProps }
 
   // component declaration
-  let component: Graph<N, L>
+  let component: GraphCore<N, L>
   const lifecycle = getContext<Lifecycle>('component')
   // Notifies the container that this component's data or config has changed, so it can re-render
   const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
-    component = new Graph<N, L>(config)
+    component = new GraphCore<N, L>(config)
     return () => component?.destroy()
   })
   $: if (data !== undefined) { component?.setData(data); dirty?.() }
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
+    // Refresh the container action when configuration changes
+    component = component
     dirty?.()
   }
 
   // component accessor
-  export function getComponent (): Graph<N, L> { return component }
+  export function getComponent (): GraphCore<N, L> { return component }
 
 </script>
 

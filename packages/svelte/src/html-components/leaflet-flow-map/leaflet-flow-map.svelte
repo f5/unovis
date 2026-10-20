@@ -1,6 +1,10 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { LeafletFlowMap, type LeafletFlowMapConfigInterface, type GenericDataRecord, type MapLibreStyleSpecs } from '@unovis/ts'
+  import { LeafletFlowMap as LeafletFlowMapCore } from '@unovis/ts/components/leaflet-flow-map'
+  import type { LeafletFlowMapConfigInterface } from '@unovis/ts/components/leaflet-flow-map/config'
+  import type { GenericDataRecord } from '@unovis/ts/types/data'
+  import type { MapLibreStyleSpecs } from '@unovis/ts/components/leaflet-map/renderer/map-style'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'
@@ -19,21 +23,21 @@
   $: config = { style, ...$$restProps }
 
   // component declaration
-  let component: LeafletFlowMap<PointDatum, FlowDatum>
+  let component: LeafletFlowMapCore<PointDatum, FlowDatum>
   let ref: HTMLDivElement
 
   onMount(() => {
-    component = new LeafletFlowMap<PointDatum, FlowDatum>(ref, config, data)
+    component = new LeafletFlowMapCore<PointDatum, FlowDatum>(ref, config, data)
     return () => component?.destroy()
   })
   $: if (data !== undefined) component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
   }
 
   // component accessor
-  export function getComponent (): LeafletFlowMap<PointDatum, FlowDatum> { return component }
+  export function getComponent (): LeafletFlowMapCore<PointDatum, FlowDatum> { return component }
 
 </script>
 

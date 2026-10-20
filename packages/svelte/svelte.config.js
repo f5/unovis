@@ -1,4 +1,8 @@
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
+
 /** @type {import('@sveltejs/kit').Config} */
-const config = {}
+const config = {
+  preprocess: vitePreprocess({ script: true }),
+}
 
 export default config

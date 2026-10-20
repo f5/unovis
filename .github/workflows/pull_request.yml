@@ -89,6 +89,7 @@ jobs:
     - uses: pnpm/action-setup@v4
     - run: pnpm install --frozen-lockfile
     - run: pnpm run test:ts
+    - run: pnpm run build:ts && pnpm run build:svelte && pnpm --dir packages/svelte test
 
   lint:
     runs-on: ubuntu-latest
@@ -101,6 +102,7 @@ jobs:
         node-version-file: '.nvmrc'
     - uses: pnpm/action-setup@v4
     - run: pnpm install --frozen-lockfile
+    - run: pnpm run build:ts && pnpm run build:svelte
     # Enforce the commit-message convention on the PR's commits.
     - name: Validate commit messages
       run: pnpm exec commitlint --from "${{ github.event.pull_request.base.sha }}" --to "${{ github.event.pull_request.head.sha }}" --verbose

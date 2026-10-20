@@ -16,14 +16,21 @@ export function getComponentCode (
   const typeDefs = generics ? generics.map(g => `type ${g.name} = $$Generic${g.extends ? `<${g.extends}>` : ''}`) : []
   const props = requiredProps.map(c => `export let ${c.name}: ${c.type}`)
   const propDefs = dataType ? [`export let data: ${dataType} = undefined`, ...props] : props
-  const componentType = [componentName, genericsStr].join('')
+  const componentClass = `${componentName}Core`
+  const componentType = [componentClass, genericsStr].join('')
   const constructorArgs = isStandAlone
     ? `ref, ${renderIntoProvidedDomNode ? '{ ...config, renderIntoProvidedDomNode: true }' : 'config'}${dataType ? ', data' : ''}`
     : 'config'
   const lifecycleMethod = ['onMount(() => {', `component = new ${componentType}(${constructorArgs})`, 'return () => component?.destroy()', '})'].join('\n    ')
+  const renderImport = (s: { source: string; elements: string[] }): string => {
+    const keyword = s.elements.includes(componentName) ? 'import' : 'import type'
+    const elements = s.elements.map(e => e === componentName ? `${e} as ${componentClass}` : e).join(', ')
+    return `${keyword} { ${elements} } from '${s.source}'`
+  }
   return `<script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n  ')}
+  ${importStatements.map(renderImport).join('\n  ')}
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount${isStandAlone ? '' : ', getContext'} } from 'svelte'
   ${!isStandAlone ? '\n  import type { Lifecycle } from \'../../types/context\'' : ''}
   import { arePropsEqual } from '../../utils/props'
@@ -45,11 +52,11 @@ export function getComponentCode (
   ${lifecycleMethod}${dataType ? (isStandAlone ? '\n  $: if (data !== undefined) component?.setData(data)' : '\n  $: if (data !== undefined) { component?.setData(data); dirty?.() }') : ''}
   $: if(!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config${isStandAlone ? '' : '\n    dirty?.()'}
+    prevConfig = cloneDeep(config)${isStandAlone ? '' : '\n    // Refresh the container action when configuration changes\n    component = component\n    dirty?.()'}
   }
 
   // component accessor
-  export function getComponent (): ${componentName}${genericsStr} { return component }
+  export function getComponent (): ${componentClass}${genericsStr} { return component }
 
 </script>
 

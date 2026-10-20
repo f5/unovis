@@ -1,6 +1,9 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { RollingPinLegend, type RollingPinLegendConfigInterface, type RollingPinLegendItem } from '@unovis/ts'
+  import { RollingPinLegend as RollingPinLegendCore } from '@unovis/ts/components/rolling-pin-legend'
+  import type { RollingPinLegendConfigInterface } from '@unovis/ts/components/rolling-pin-legend/config'
+  import type { RollingPinLegendItem } from '@unovis/ts/components/rolling-pin-legend/types'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount } from 'svelte'
 
   import { arePropsEqual } from '../../utils/props'
@@ -16,20 +19,20 @@
   $: config = { rects, ...$$restProps }
 
   // component declaration
-  let component: RollingPinLegend
+  let component: RollingPinLegendCore
   let ref: HTMLDivElement
 
   onMount(() => {
-    component = new RollingPinLegend(ref, config)
+    component = new RollingPinLegendCore(ref, config)
     return () => component?.destroy()
   })
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
   }
 
   // component accessor
-  export function getComponent (): RollingPinLegend { return component }
+  export function getComponent (): RollingPinLegendCore { return component }
 
 </script>
 

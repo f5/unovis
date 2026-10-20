@@ -1,6 +1,8 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Brush, type BrushConfigInterface } from '@unovis/ts'
+  import { Brush as BrushCore } from '@unovis/ts/components/brush'
+  import type { BrushConfigInterface } from '@unovis/ts/components/brush/config'
+  import { cloneDeep } from '@unovis/ts/utils/data'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
@@ -18,24 +20,26 @@
   $: config = { ...$$restProps }
 
   // component declaration
-  let component: Brush<Datum>
+  let component: BrushCore<Datum>
   const lifecycle = getContext<Lifecycle>('component')
   // Notifies the container that this component's data or config has changed, so it can re-render
   const dirty = getContext<(() => void) | undefined>('dirty')
 
   onMount(() => {
-    component = new Brush<Datum>(config)
+    component = new BrushCore<Datum>(config)
     return () => component?.destroy()
   })
   $: if (data !== undefined) { component?.setData(data); dirty?.() }
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
-    prevConfig = config
+    prevConfig = cloneDeep(config)
+    // Refresh the container action when configuration changes
+    component = component
     dirty?.()
   }
 
   // component accessor
-  export function getComponent (): Brush<Datum> { return component }
+  export function getComponent (): BrushCore<Datum> { return component }
 
 </script>
 
