@@ -5,21 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Unovis · Multi-framework playground</title>
     <style>
-      html, body { margin: 0; padding: 0; height: 100%; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: #222; }
-      body { display: grid; grid-template-columns: 240px 1fr; height: 100vh; }
-      #sidebar { border-right: 1px solid #e5e5e5; overflow: auto; padding: 12px; background: #fafafa; }
-      #sidebar h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin: 0 0 8px; }
+      :root { color-scheme: light; --playground-text: #222; --playground-muted: #737b87; --playground-border: #dce0e6; --playground-sidebar: #f7f8fa; --playground-background: #eef0f3; --playground-surface: #fff; --playground-hover: #e9ecf1; --playground-active: #e6efff; --playground-accent: #4d8bff; }
+      html[data-theme="dark"] { color-scheme: dark; --playground-text: #e4e9f2; --playground-muted: #9ba5b5; --playground-border: #343b48; --playground-sidebar: #1c222d; --playground-background: #141923; --playground-surface: #1c222d; --playground-hover: #2a3240; --playground-active: #253b5c; --playground-accent: #80adff; }
+      html, body { margin: 0; padding: 0; height: 100%; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--playground-text); }
+      body { display: grid; grid-template-columns: 300px minmax(0, 1fr); height: 100vh; background: var(--playground-background); }
+      #sidebar { border-right: 1px solid var(--playground-border); display: flex; flex-direction: column; min-height: 0; padding: 14px 10px 10px; gap: 12px; background: var(--playground-sidebar); }
+      .sidebar-logo { display: block; width: 80px; height: 20px; object-fit: contain; }
+      #sidebar button, #sidebar input { font: inherit; color: inherit; }
+      #sidebar button { cursor: pointer; }
+      #sidebar button:disabled { cursor: default; opacity: 0.45; }
+      #sidebar :is(button, input, summary, a):focus-visible { outline: 2px solid var(--playground-accent); outline-offset: 2px; }
+      .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 0 4px; }
+      #sidebar .sidebar-theme { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; border: 1px solid var(--playground-border); border-radius: 6px; background: var(--playground-hover); font-size: 18px; line-height: 1; }
+      .sidebar-search { position: relative; }
+      #sidebar .sidebar-search input { display: block; width: 100%; height: 32px; box-sizing: border-box; padding: 5px 30px 5px 10px; border: 1px solid var(--playground-border); border-radius: 7px; background: var(--playground-hover); font-size: 13px; }
+      .sidebar-search input::placeholder { color: var(--playground-muted); }
+      .sidebar-search kbd { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; justify-content: center; width: 14px; height: 14px; box-sizing: border-box; border: 1px solid var(--playground-border); border-radius: 3px; font-size: 11px; line-height: 1; color: var(--playground-muted); pointer-events: none; }
+      .sidebar-search:focus-within kbd { display: none; }
+      .sidebar-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0 4px; font-size: 11px; color: var(--playground-muted); }
+      #sidebar .sidebar-toolbar button { padding: 2px 0; border: 0; background: transparent; text-transform: uppercase; font-size: 10px; letter-spacing: 0.04em; }
+      .sidebar-list { overflow: auto; min-height: 0; flex: 1; padding: 0 4px 8px 0; }
+      .sidebar-list details { margin-bottom: 7px; }
+      .sidebar-list summary { display: flex; align-items: center; gap: 8px; padding: 8px 5px; list-style: none; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; }
+      .sidebar-list summary::-webkit-details-marker { display: none; }
+      .sidebar-list summary::before { content: ''; width: 5px; height: 5px; border-right: 1.5px solid var(--playground-muted); border-bottom: 1.5px solid var(--playground-muted); transform: rotate(-45deg); }
+      .sidebar-list details[open] > summary::before { transform: rotate(45deg); }
+      .sidebar-category-count { margin-left: auto; color: var(--playground-muted); font-size: 11px; font-weight: 400; }
       #sidebar ul { list-style: none; padding: 0; margin: 0; }
-      #sidebar li a { display: block; padding: 4px 8px; border-radius: 4px; color: #333; text-decoration: none; font-size: 13px; }
-      #sidebar li a:hover { background: #eee; }
-      #sidebar li a.active { background: #e6efff; color: #1957d6; font-weight: 600; }
-      main { overflow: auto; padding: 16px; background: #f5f5f5; }
+      #sidebar details ul { margin: 2px 0 4px 9px; border-left: 1px solid var(--playground-border); }
+      #sidebar li a { display: block; padding: 7px 9px; margin-left: -1px; border-left: 2px solid transparent; border-radius: 0 5px 5px 0; color: inherit; text-decoration: none; font-size: 12px; line-height: 1.45; }
+      #sidebar li a:hover, #sidebar summary:hover, #sidebar .sidebar-theme:hover { background: var(--playground-hover); }
+      #sidebar li a[aria-current="page"] { background: var(--playground-active); border-left-color: var(--playground-accent); font-weight: 600; }
+      .sidebar-empty { color: var(--playground-muted); padding: 12px 6px; font-size: 12px; }
+      main { overflow: auto; padding: 16px; background: var(--playground-background); }
       .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 16px; }
-      section { border: 1px solid #e5e5e5; border-radius: 6px; padding: 12px; min-width: 0; background: #fff; }
+      section { border: 1px solid var(--playground-border); border-radius: 6px; padding: 12px; min-width: 0; background: var(--playground-surface); }
       /* Per-framework gradient border. `border-image` ignores `border-radius`, so the
          gradient is painted on a pseudo-element and masked down to the border ring,
          which keeps the rounded corners and a transparent panel background. */
-      section[data-framework] { position: relative; border: 2px solid transparent; background: transparent; transition: box-shadow 0.2s, transform 0.2s; }
+      section[data-framework] { position: relative; border: 2px solid transparent; background: var(--playground-surface); transition: box-shadow 0.2s, transform 0.2s; }
       section[data-framework]:hover { box-shadow: 0 4px 16px var(--panel-shadow); transform: translateY(-2px); }
       section[data-framework]::before { content: ''; position: absolute; inset: -2px; padding: 2px; border-radius: inherit; background: var(--panel-border); mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); pointer-events: none; }
       section[data-framework="angular"] { --panel-border: linear-gradient(140deg, #ff31d9, rgba(255, 91, 225, 0) 60%), linear-gradient(62deg, #e40035, #f60a48 24%, #f20755 35.2%, #dc087d 49.4%, #9717e7 74.5%, #6c00f5); --panel-shadow: rgb(220 8 125 / 35%); }
@@ -31,7 +55,7 @@
       section header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
       section header .logo { width: 20px; height: 20px; flex: none; }
       section h3 { margin: 0; font-size: 14px; font-weight: 600; }
-      section .label { font-size: 11px; color: #888; }
+      section .label { font-size: 11px; color: var(--playground-muted); }
       /* `position: relative` provides the containing block for examples that
          use `position: absolute` to stack multiple charts (e.g. dual-axis-chart).
          Without it, the absolute child escapes to the viewport. */
@@ -48,8 +72,8 @@
       .panel-error { color: #b00020; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; white-space: pre-wrap; }
       /* Controls used by interactive examples (e.g. data-reactivity) */
       .controls { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-      .controls button { font-size: 12px; padding: 4px 8px; border: 1px solid #d0d0d0; border-radius: 4px; background: #f7f7f7; cursor: pointer; }
-      .controls button:hover { background: #eee; }
+      .controls button { font-size: 12px; padding: 4px 8px; border: 1px solid var(--playground-border); border-radius: 4px; background: var(--playground-surface); color: var(--playground-text); cursor: pointer; }
+      .controls button:hover { background: var(--playground-hover); }
     </style>
   </head>
   <body>
