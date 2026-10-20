@@ -2,11 +2,12 @@ import React from 'react'
 import { Chart, CategoryScale, LinearScale, LineElement, PointElement, Filler, Colors, Legend, Tooltip } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 
+import type { ChartProps } from '../types'
 import { DataRecord, series, formatMonth, formatValue } from './data'
 
 Chart.register(CategoryScale, LinearScale, LineElement, PointElement, Filler, Colors, Legend, Tooltip)
 
-export default function ChartJsAreaChart ({ data, isDark }: { data: DataRecord[]; isDark: boolean }): JSX.Element {
+export default function ChartJsAreaChart ({ data, isDark, preset }: ChartProps<DataRecord[]>): JSX.Element {
   const textColor = isDark ? '#aaa' : '#666'
   const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
   return (
@@ -18,6 +19,7 @@ export default function ChartJsAreaChart ({ data, isDark }: { data: DataRecord[]
           data: data.map(d => d[s.key]),
           fill: i === 0 ? 'origin' : '-1', // Fill to the previous dataset to get a stacked area
           pointRadius: 0,
+          stepped: preset === 'step' ? 'middle' : false,
         })),
       }}
       options={{

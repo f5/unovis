@@ -1,12 +1,16 @@
 import React, { useMemo, useState } from 'react'
-import { Scale } from '@unovis/ts'
-import { VisXYContainer, VisArea, VisAxis, VisCrosshair, VisTooltip, VisBulletLegend } from '@unovis/react'
+import { CurveType, FillPatternType, Scale } from '@unovis/ts'
+import { VisXYContainer, VisArea, VisAxis, VisCrosshair, VisTooltip, VisBulletLegend, VisPlotband, VisPlotline } from '@unovis/react'
 
+import type { ChartProps } from '../types'
 import { DataRecord, SeriesKey, series, formatMonth, formatValue } from './data'
 
 const x = (d: DataRecord): number => d.date.getTime()
+const patterns = [FillPatternType.StripesDiagonal, FillPatternType.Dots, FillPatternType.Crosshatch, FillPatternType.Waves]
+const MIGRATION = { from: new Date(2024, 6, 1), to: new Date(2024, 8, 1) }
+const BUDGET = 100
 
-export default function UnovisAreaChart ({ data }: { data: DataRecord[] }): JSX.Element {
+export default function UnovisAreaChart ({ data, preset }: ChartProps<DataRecord[]>): JSX.Element {
   const xScale = useMemo(() => Scale.scaleTime(), [])
   const [hidden, setHidden] = useState<Partial<Record<SeriesKey, boolean>>>({})
   const toggleSeries = (_: unknown, i: number): void => setHidden({ ...hidden, [series[i].key]: !hidden[series[i].key] })
@@ -22,7 +26,14 @@ export default function UnovisAreaChart ({ data }: { data: DataRecord[] }): JSX.
     <>
       <VisBulletLegend items={legendItems} onLegendItemClick={toggleSeries}/>
       <VisXYContainer data={data} height={296} xScale={xScale}>
-        <VisArea x={x} y={y}/>
+        <VisArea
+          x={x}
+          y={y}
+          curveType={preset === 'step' ? CurveType.Step : CurveType.MonotoneX}
+          pattern={(_: DataRecord[], i: number) => preset === 'patterns' ? patterns[i] : undefined}
+        />
+        {preset === 'annotations' && <VisPlotband axis="x" from={MIGRATION.from.getTime()} to={MIGRATION.to.getTime()} labelText="Migration"/>}
+        {preset === 'annotations' && <VisPlotline axis="y" value={BUDGET} labelText={`Budget ${formatValue(BUDGET)}`} lineStyle="dash"/>}
         <VisAxis type="x" tickFormat={(t: Date) => formatMonth(t)}/>
         <VisAxis type="y" tickFormat={formatValue}/>
         <VisCrosshair template={tooltipTemplate}/>

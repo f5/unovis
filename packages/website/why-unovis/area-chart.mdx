@@ -29,6 +29,11 @@ services.
   instead of hiding it and stacks the first legend item on top. Neither animates updates.
 - **TanStack Charts.** Stacks the areas on its own, animates updates (`svgAnimation`) and has a clickable legend, but
   hiding a service removes its layer without restacking, so a gap is left and the y axis keeps its range.
+- **Presets.** *Step areas* switches `curveType`, which every library can match. *Patterns* gives each service a
+  built-in fill pattern through the `pattern` accessor; ECharts (decals), Nivo and AG Charts have built-in patterns too,
+  while TanStack Charts, Recharts, Chart.js, Observable Plot and Vega-Lite don't. *Annotations* adds a `VisPlotband`
+  and a `VisPlotline`: Chart.js needs its separate annotation plugin, Nivo has no band, and TanStack's `rect` can't span
+  the plot, so its band stops at the highest total.
 - **Stream graphs.** The Unovis `baseline` accessor sets a baseline for every data point, which is all a stream graph
   needs. See the [Area with Baseline](/gallery/view?title=Area%20with%20Baseline) example.
 
