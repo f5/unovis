@@ -40,6 +40,7 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
   constructor (config: PlotbandConfigInterface<Datum>) {
     super()
     this.setConfig(config)
+    this.g.style('display', 'none').style('opacity', 0)
 
     this.plotband = this.g.append('rect')
       .attr('class', s.plotband)
@@ -78,6 +79,7 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
     super._render(customDuration)
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const wasVisible = isNumber(this.from) && isNumber(this.to)
     this.from = config.from
     this.to = config.to
 
@@ -87,12 +89,25 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
     // Hide the component when there's no band to draw, so that the previously rendered
     // band doesn't stay on the chart
     const isBandDefined = isNumber(this.from) && isNumber(this.to)
-    this.g.style('display', isBandDefined ? null : 'none')
-    if (!isBandDefined) return
+    if (!isBandDefined) {
+      if (wasVisible || !duration) {
+        this.plotband.interrupt()
+        this.labelGroup.interrupt()
+        this.g.style('pointer-events', 'none')
+        const transition = smartTransition(this.g, duration).style('opacity', 0)
+        if (duration) transition.on('end', () => { this.g.style('display', 'none') })
+        else this.g.style('display', 'none')
+      }
+      return
+    }
+
+    this.g.style('display', null).style('pointer-events', null)
+    if (!wasVisible || !duration) smartTransition(this.g, duration).style('opacity', 1)
+    const geometryDuration = wasVisible ? duration : 0
 
     const { x, y, width, height } = this._getBandRect()
 
-    smartTransition(this.plotband, duration)
+    smartTransition(this.plotband, geometryDuration)
       .attr('x', x)
       .attr('y', y)
       .attr('width', width)
@@ -111,7 +126,7 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
 
       renderTextToSvgTextElement(this.label.node(), labelTextBlocks, { x: 0, y: 0, textAlign: layout.textAlign, verticalAlign: layout.verticalAlign, fastMode: false }, 'hanging')
 
-      smartTransition(this.labelGroup, duration)
+      smartTransition(this.labelGroup, geometryDuration)
         .attr('transform', `translate(${layout.x + fit.dx},${layout.y + fit.dy}) rotate(${layout.rotation})`)
     } else {
       this.label.text(null)
