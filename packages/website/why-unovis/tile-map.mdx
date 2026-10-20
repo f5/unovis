@@ -27,6 +27,10 @@ extension draws on Baidu Maps only.
 - **Tooltips.** One Tooltip with triggers covers single points and clusters.
 - **Legend.** The legend hides and shows magnitude classes.
 - **Zoom and pan.** Scroll to zoom smoothly on the vector tiles and click a cluster to expand it.
+- **Presets.** *No clustering* sets `clusteringDistance` to 0 and draws every earthquake on its own, including the M6+
+  ones the clusters hide. *Labels* writes each point's magnitude and each cluster's strongest one under the marker
+  (`pointBottomLabel`, `clusterBottomLabel`), and *Triangles* switches the point shape (`pointShape`) while clusters stay
+  donuts. None of the other libraries has a tile map, so the presets only change the Unovis chart.
 
 ## Feature comparison
 

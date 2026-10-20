@@ -9,6 +9,11 @@ export const tileMap: Comparison<DataRecord[]> = {
   dataCode: require('!!raw-loader!./data.ts').default,
   updateLabel: 'Pick other earthquakes',
   chartHeight: COMPARISON_TALL_CHART_HEIGHT,
+  presets: [
+    { id: 'unclustered', label: 'No clustering', description: 'Every earthquake is drawn on its own (`clusteringDistance`)' },
+    { id: 'labels', label: 'Labels', description: 'Points are labeled with their magnitude and clusters with their strongest earthquake (`pointBottomLabel`, `clusterBottomLabel`)' },
+    { id: 'triangles', label: 'Triangles', description: 'Points are drawn as triangles (`pointShape`)' },
+  ],
   implementations: [
     { library: 'unovis', load: () => import('./unovis'), code: require('!!raw-loader!./unovis.tsx').default, renderer: 'WebGL tiles + SVG' },
   ],
