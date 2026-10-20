@@ -18,6 +18,8 @@ export const cssVarDefaults = {
   '--vis-map-area-label-font-weight': '600',
   '--vis-map-area-label-font-size': '12px',
   '--vis-map-area-label-font-family': undefined as undefined,
+  '--vis-map-area-label-halo-color': 'rgba(255, 255, 255, 0.8)',
+  '--vis-map-area-label-halo-width': '3px',
 
   // Bottom label
   '--vis-map-point-bottom-label-text-color': '#5b5f6d',
@@ -43,6 +45,7 @@ export const cssVarDefaults = {
   '--vis-dark-map-point-label-text-color-dark': '#fff',
   '--vis-dark-map-point-label-text-color-light': '#5b5f6d',
   '--vis-dark-map-area-label-text-color': '#fff',
+  '--vis-dark-map-area-label-halo-color': 'rgba(41, 43, 52, 0.8)',
   '--vis-dark-map-point-bottom-label-text-color': '#fff',
   '--vis-dark-map-point-default-fill-color': '#B9BEC3',
   '--vis-dark-map-point-default-stroke-color': '#959da3',
@@ -95,6 +98,9 @@ export const areaLabel = css`
   font-family: var(${variables.mapAreaLabelFontFamily}, var(--vis-font-family));
   font-weight: var(${variables.mapAreaLabelFontWeight});
   fill: var(${variables.mapAreaLabelTextColor});
+  paint-order: stroke;
+  stroke: var(${variables.mapAreaLabelHaloColor});
+  stroke-linejoin: round;
 `
 
 export const background = css`

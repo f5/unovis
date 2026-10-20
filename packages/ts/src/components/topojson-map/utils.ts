@@ -6,7 +6,6 @@ import { Selection } from 'd3-selection'
 // Utils
 import { getNumber, getString, clamp } from '@/utils/data'
 import { getColor } from '@/utils/color'
-import { estimateStringPixelLength, getCachedFontSizePx } from '@/utils/text-measure'
 import { rectIntersect } from '@/utils/misc'
 import { smartTransition } from '@/utils/d3'
 
@@ -70,75 +69,8 @@ export function getPointPathData ({ x, y }: { x: number; y: number }, radius: nu
   }
 }
 
-// Extend SVGTextElement to track label visibility for area labels
-interface LabelSVGTextElement extends SVGTextElement {
-  _labelVisible?: boolean;
-}
-
-export function collideAreaLabels (
-  selection: Selection<SVGTextElement, AreaLabelDatum, SVGGElement, unknown>,
-  duration: number
-): void {
-  if (selection.size() === 0) return
-
-  const labelNodes = selection.nodes() as LabelSVGTextElement[]
-  const labelData = selection.data()
-
-  // Reset all labels to visible
-  labelNodes.forEach((node) => {
-    node._labelVisible = true
-  })
-
-  const actualFontSize = labelNodes.length > 0 ? getCachedFontSizePx(labelNodes[0]) : 12
-
-  const getBBox = (labelData: any): Rect => {
-    const [x, y] = labelData.centroid
-    const labelText = labelData.labelText || ''
-    const width = estimateStringPixelLength(labelText, actualFontSize, 0.6)
-    const height = actualFontSize
-
-    return {
-      x: x - width / 2,
-      y: y - height / 2,
-      width,
-      height,
-    }
-  }
-
-  labelNodes.forEach((node1, i) => {
-    const data1 = labelData[i]
-    if (!node1._labelVisible) return
-
-    const label1BoundingRect = getBBox(data1)
-
-    for (let j = 0; j < labelNodes.length; j++) {
-      if (i === j) continue
-
-      const node2 = labelNodes[j]
-      const data2 = labelData[j]
-
-      if (!node2._labelVisible) continue
-
-      const label2BoundingRect = getBBox(data2)
-      const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, 0.25)
-
-      if (intersect) {
-        if (data1.area >= data2.area) {
-          node2._labelVisible = false
-        } else {
-          node1._labelVisible = false
-          break
-        }
-      }
-    }
-  })
-
-  smartTransition<SVGTextElement, any, SVGGElement, unknown>(selection, duration)
-    .style('opacity', (_d, i) => labelNodes[i]._labelVisible ? 1 : 0)
-}
-
 /** Get bounding rect of an SVG element in screen coordinates */
-function getScreenBBox (el: SVGGraphicsElement): Rect {
+export function getScreenBBox (el: SVGGraphicsElement): Rect {
   const bbox = el.getBBox()
   const ctm = (el as SVGElement & { getScreenCTM?: () => SVGMatrix | null }).getScreenCTM?.()
   if (!ctm || !el.ownerSVGElement) {
@@ -164,6 +96,73 @@ function getScreenBBox (el: SVGGraphicsElement): Rect {
     width: Math.max(...xs) - Math.min(...xs),
     height: Math.max(...ys) - Math.min(...ys),
   }
+}
+
+// Extend SVGTextElement to track label visibility for area labels
+interface LabelSVGTextElement extends SVGTextElement {
+  _labelVisible?: boolean;
+}
+
+export function collideAreaLabels (
+  selection: Selection<SVGTextElement, AreaLabelDatum, SVGGElement, unknown>,
+  duration: number,
+  obstacles: Rect[] = [],
+  bounds?: Rect
+): void {
+  if (selection.size() === 0) return
+
+  const labelNodes = selection.nodes() as LabelSVGTextElement[]
+  const labelData = selection.data()
+
+  // Screen-space boxes, so they can be compared with the obstacles and the bounds
+  const labelRects = labelNodes.map(node => {
+    try {
+      return getScreenBBox(node)
+    } catch {
+      return undefined
+    }
+  })
+
+  // A label is hidden when it doesn't fit in the bounds or covers an obstacle (a point or a point's label)
+  labelNodes.forEach((node, i) => {
+    const rect = labelRects[i]
+    const isOutOfBounds = bounds && rect && (
+      rect.x < bounds.x || rect.y < bounds.y ||
+      rect.x + rect.width > bounds.x + bounds.width || rect.y + rect.height > bounds.y + bounds.height
+    )
+    node._labelVisible = Boolean(rect) && !isOutOfBounds && !obstacles.some(o => rectIntersect(rect, o, 0.25))
+  })
+
+  labelNodes.forEach((node1, i) => {
+    const data1 = labelData[i]
+    if (!node1._labelVisible) return
+
+    const label1BoundingRect = labelRects[i]
+
+    for (let j = 0; j < labelNodes.length; j++) {
+      if (i === j) continue
+
+      const node2 = labelNodes[j]
+      const data2 = labelData[j]
+
+      if (!node2._labelVisible) continue
+
+      const label2BoundingRect = labelRects[j]
+      const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, 0.25)
+
+      if (intersect) {
+        if (data1.area >= data2.area) {
+          node2._labelVisible = false
+        } else {
+          node1._labelVisible = false
+          break
+        }
+      }
+    }
+  })
+
+  smartTransition<SVGTextElement, any, SVGGElement, unknown>(selection, duration)
+    .style('opacity', (_d, i) => labelNodes[i]._labelVisible ? 1 : 0)
 }
 
 // Extend SVGTextElement for point bottom label collision
