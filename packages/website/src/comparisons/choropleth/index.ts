@@ -11,7 +11,7 @@ export const choroplethMap: Comparison<ChoroplethData> = {
   chartHeight: COMPARISON_TALL_CHART_HEIGHT,
   presets: [
     { id: 'mercator', label: 'Mercator', description: 'The map is drawn in the Mercator projection (`projection`)' },
-    { id: 'labels', label: 'Country labels', description: 'Country names at the country centers, hiding the ones that overlap a larger country\'s (`areaLabel`)' },
+    { id: 'labels', label: 'Country labels', description: 'Country names at the country centers, hiding the ones that would cover a larger country\'s name, a data center or the edge of the map (`areaLabel`)' },
     { id: 'traffic', label: 'Traffic bubbles', description: 'Each data center is sized by the traffic through it (`pointRadius`)' },
   ],
   implementations: [
