@@ -61,7 +61,7 @@ module.exports = {
         //   which webpack can't statically resolve and flags as a critical dependency. Disabling
         //   webpack's `new URL()` parsing for this module (it isn't used for asset imports here)
         //   removes the warning at its source instead of suppressing it.
-        test: /maplibre-gl\.mjs$/,
+        test: /maplibre-gl(?:-dev)?\.mjs$/,
         type: 'javascript/esm',
         parser: { url: false },
       },
@@ -79,6 +79,9 @@ module.exports = {
       // Unovis Core
       '@unovis/ts': path.resolve(__dirname, '../ts/src/'),
       '@': path.resolve(__dirname, '../ts/src/'),
+
+      // webpack can misbind named classes in MapLibre's minified ESM; bundle its readable ESM instead.
+      'maplibre-gl$': require.resolve('maplibre-gl/dist/maplibre-gl-dev.mjs', { paths: [path.resolve(__dirname, '../ts')] }),
 
       // Unovis React
       // Keep capture readiness and animation overrides in the dev app, outside copyable examples.

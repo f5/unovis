@@ -107,8 +107,8 @@ Capture mode loads the gallery fonts before mounting the example. Transition dem
 paused, and the graph adapter disables flow particles during capture. Wait for
 `[data-testid="example-capture"][data-capture-ready="true"]`, then capture that element or
 its visible region. The ready signal waits for fonts, images, and DOM/layout changes to
-settle. The dev-only adapter in `src/capture/react.tsx` waits for graph rendering and
-disables graph flow particles and TopoJSON map flow and zoom animations. It preserves component refs and existing
+settle. The dev-only adapter in `src/capture/react.tsx` waits for graph rendering and Leaflet
+tile/WebGL completion, and disables graph flow particles and map transitions. It preserves component refs and existing
 render callbacks; ordinary gallery mode applies query config without capture overrides. Keep capture
 plumbing in this adapter, outside copyable examples. Other async data sources, canvas
 rendering, and future async work need additional readiness handling in the dev app; a
@@ -194,11 +194,12 @@ Readiness still has limits:
 
 - A ready signal describes the current frame; it cannot predict a future one-shot timer.
   For example, Custom Style Brush applies its initial selection after a delay.
-- The Leaflet Color Map's delayed update honors playback; its existing `staticData=1`
-  option remains available. Leaflet examples still depend on remote tiles/styles and
-  require checking map readiness in the browser. The gallery ready signal does not
-  establish tile or WebGL completion. Control-state tests use raster rendering to
-  isolate URL behavior; check the MapLibre renderer separately for map changes.
+- LeafletMap capture waits for map initialization, raster tiles, MapLibre sources and rendering,
+  and map movement. Tile/source failures and WebGL context loss fail the capture. Capture mode
+  disables map transitions and preserves the WebGL drawing buffer. Remote services can still fail;
+  use a local style/source when isolating rendering or control behavior. Tests cover both renderers.
+  The Leaflet Color Map's delayed update honors playback; its existing `staticData=1` option remains
+  available. Future delayed application updates still need their own readiness handling.
 - The Heatmap Accessor Update reproduction displays measured elapsed time. Compare its
   chart and PASS/FAIL result rather than expecting the elapsed-time text to match pixels.
 
