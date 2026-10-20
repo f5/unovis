@@ -33,6 +33,18 @@
     ".": {
       "types": "./index.d.ts",
       "svelte": "./index.js"
+    },
+    "./components/*": {
+      "types": "./components/*/*.svelte.d.ts",
+      "svelte": "./components/*/*.svelte"
+    },
+    "./html-components/*": {
+      "types": "./html-components/*/*.svelte.d.ts",
+      "svelte": "./html-components/*/*.svelte"
+    },
+    "./containers/*": {
+      "types": "./containers/*/*.svelte.d.ts",
+      "svelte": "./containers/*/*.svelte"
     }
   },
   "type": "module",
