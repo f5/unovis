@@ -1,0 +1,43 @@
+import React, { useState } from 'react'
+import { VisAxis, VisBulletLegend, VisStackedBar, VisTooltip, VisXYContainer } from '@unovis/react'
+import * as c from './constants'
+import './styles.css'
+
+export default function TreeHealthBars (): React.ReactElement {
+  const [state, setState] = useState(c.initialState)
+  const update = (patch: Partial<c.ExampleState>): void => setState(previous => ({ ...previous, ...patch }))
+  const view = c.getView(state)
+  const changeSort = (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>): void => {
+    update({ sort: (event.target as HTMLInputElement | HTMLSelectElement).value })
+  }
+
+  return (
+    <div className="gallery-example">
+      <div className="gallery-controls">
+        <label className="gallery-select">
+          Sort boroughs
+          <select value={state.sort} onChange={changeSort}>
+            {c.sortOptions.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <VisBulletLegend items={c.legend} />
+      <p className="gallery-summary" aria-live="polite">
+        {view.summary}
+      </p>
+      <div className="gallery-panel">
+        <p className="gallery-caption">Share of living trees · %</p>
+        <VisXYContainer height={390} duration={600} xDomain={c.percentDomain} yDirection={'south'}>
+          <VisStackedBar data={view.data} x={c.rank} y={c.accessors} orientation={'horizontal'} color={c.healthColors} barPadding={0.35} />
+          <VisTooltip className={c.tooltipClassName} container={c.tooltipContainer} triggers={c.tooltipTriggers} />
+          <VisAxis type={'x'} label={'Share of living trees (%)'} tickValues={c.percentTicks} />
+          <VisAxis type={'y'} tickValues={c.rankTicks} tickFormat={view.boroughLabel} gridLine={false} />
+        </VisXYContainer>
+      </div>
+    </div>
+  )
+}

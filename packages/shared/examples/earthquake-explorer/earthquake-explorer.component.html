@@ -1,0 +1,58 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Minimum magnitude
+      <select [value]="state.minimum" (change)="changeMinimum($event)">
+        <option *ngFor="let option of c.magnitudeOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+    <label class="gallery-select">
+      Dates
+      <select [value]="state.half" (change)="changeHalf($event)">
+        <option *ngFor="let option of c.dateOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="[]"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Epicenters · click a point to select</p>
+    <vis-single-container [height]="300" [duration]="600">
+      <vis-topojson-map
+        [data]="view.mapData"
+        [topojson]="c.world"
+        [pointId]="c.id"
+        [pointRadius]="view.pointRadius"
+        [pointColor]="view.pointColor"
+        [pointStrokeWidth]="1"
+        [events]="view.mapEvents"
+        [disableZoom]="true"
+        [latitude]="c.latitude"
+        [longitude]="c.longitude"></vis-topojson-map>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.mapTooltipTriggers"></vis-tooltip>
+    </vis-single-container>
+  </div>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Depth and magnitude · click a point to select</p>
+    <vis-xy-container [autoMargin]="false" [margin]="c.chartMargin" [height]="230" [duration]="600">
+      <vis-scatter
+        [data]="view.data"
+        [x]="c.depth"
+        [y]="c.magnitude"
+        [size]="view.pointSize"
+        [color]="view.pointColor"
+        [events]="view.scatterEvents"></vis-scatter>
+      <vis-tooltip [className]="c.tooltipClassName" [triggers]="c.scatterTooltipTriggers"></vis-tooltip>
+      <vis-axis [type]="'x'" [label]="'Depth (km)'"></vis-axis>
+      <vis-axis [type]="'y'" [label]="'Magnitude'"></vis-axis>
+    </vis-xy-container>
+  </div>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Daily event counts · UTC</p>
+    <vis-xy-container [autoMargin]="false" [margin]="c.chartMargin" [height]="120" [duration]="600">
+      <vis-stacked-bar [data]="view.daily" [x]="c.day" [y]="c.count" [color]="'var(--vis-color0)'" [barPadding]="0.2"></vis-stacked-bar>
+      <vis-axis [type]="'x'" [tickFormat]="c.dayLabel" [numTicks]="8"></vis-axis>
+      <vis-axis [type]="'y'" [numTicks]="3"></vis-axis>
+    </vis-xy-container>
+  </div>
+</div>

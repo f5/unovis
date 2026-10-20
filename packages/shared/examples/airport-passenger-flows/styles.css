@@ -1,0 +1,120 @@
+.gallery-example {
+  --gallery-ink: #18253a;
+  --gallery-muted: #65748b;
+  --gallery-border: #dce3ed;
+  color: var(--gallery-ink);
+  font-family: Inter, system-ui, sans-serif;
+  max-width: 1100px;
+  padding: 12px 8px;
+  box-sizing: border-box;
+}
+html[data-theme='dark'] .gallery-example,
+html.dark-theme .gallery-example,
+body.dark-theme .gallery-example {
+  --gallery-ink: #e4ebf5;
+  --gallery-muted: #9baac0;
+  --gallery-border: #344258;
+}
+.gallery-example .gallery-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 0 0 18px;
+}
+.gallery-example label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--gallery-muted);
+  font-weight: 600;
+}
+.gallery-example select,
+.gallery-example input,
+.gallery-example button {
+  color: var(--gallery-ink);
+  background: transparent;
+  border: 1px solid var(--gallery-border);
+  border-radius: 5px;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 7px 10px;
+  font:
+    12px Inter,
+    system-ui,
+    sans-serif;
+}
+.gallery-example select option {
+  color: #18253a;
+  background: #fff;
+}
+.gallery-example button {
+  cursor: pointer;
+}
+.gallery-example .gallery-summary {
+  font-size: 12px;
+  color: var(--gallery-muted);
+  margin: 10px 0 16px;
+  min-height: 18px;
+}
+.gallery-example .gallery-panel {
+  margin: 14px 0;
+}
+.gallery-example .gallery-caption {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gallery-muted);
+  margin: 0 0 10px;
+}
+.gallery-example .gallery-footer a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.gallery-example .gallery-route-layout {
+  display: grid;
+  grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
+  gap: 24px;
+}
+.gallery-example .gallery-route-layout > .gallery-panel {
+  min-width: 0;
+}
+@media (max-width: 720px) {
+  .gallery-example .gallery-route-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gallery-example .gallery-select {
+  position: relative;
+}
+.gallery-example .gallery-select::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  bottom: 15px;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+.gallery-example .gallery-select select {
+  appearance: none;
+  padding-right: 32px;
+}
+.gallery-example-tooltip {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.gallery-example-tooltip b {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+.gallery-example-tooltip b + br {
+  display: none;
+}

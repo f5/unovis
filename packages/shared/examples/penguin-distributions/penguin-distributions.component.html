@@ -1,0 +1,29 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Sex
+      <select [value]="state.sex" (change)="changeSex($event)">
+        <option *ngFor="let option of c.sexOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="c.legend"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Body mass by species</p>
+    <vis-xy-container [height]="420" [duration]="600">
+      <vis-scatter [data]="view.points" [x]="c.pointX" [y]="c.pointY" [size]="5" [color]="c.pointColor"></vis-scatter>
+      <vis-boxplot
+        [data]="view.boxes"
+        [x]="c.boxX"
+        [median]="c.median"
+        [quartiles]="c.quartiles"
+        [whiskers]="c.whiskers"
+        [color]="c.boxColor"
+        [barPadding]="0.55"></vis-boxplot>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+      <vis-axis [type]="'x'" [tickValues]="c.speciesTicks" [tickFormat]="c.speciesLabel" [gridLine]="false"></vis-axis>
+      <vis-axis [type]="'y'" [label]="'Body mass (g)'"></vis-axis>
+    </vis-xy-container>
+  </div>
+</div>

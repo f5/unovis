@@ -1,0 +1,29 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Highlight a state
+      <select [value]="state.selected" (change)="changeSelected($event)">
+        <option *ngFor="let option of c.stateOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="[]"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Interstate movers · origin → destination</p>
+    <vis-single-container [height]="530" [duration]="600">
+      <vis-chord-diagram
+        [nodeWidth]="28"
+        [data]="view.data"
+        [nodeLabel]="c.nodeLabel"
+        [nodeColor]="c.nodeColor"
+        [linkColor]="c.linkColor"
+        [nodeLabelAlignment]="c.ChordLabelAlignment.Along"
+        [highlightedNodeId]="view.highlightedNodeId"
+        [highlightedLinkIds]="view.highlightedLinkIds"
+        [events]="view.events"
+        [padAngle]="0.045"></vis-chord-diagram>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+    </vis-single-container>
+  </div>
+</div>

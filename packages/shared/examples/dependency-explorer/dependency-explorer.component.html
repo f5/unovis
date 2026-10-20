@@ -1,0 +1,41 @@
+<div class="gallery-example dependency-explorer">
+  <div class="gallery-controls">
+    <label>
+      Find a package
+      <input type="search" [value]="state.query" (input)="changeQuery($event)" />
+    </label>
+    <label class="gallery-select">
+      Layout
+      <select [value]="state.layout" (change)="changeLayout($event)">
+        <option *ngFor="let option of c.layoutOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="c.legend"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Selected direct dependencies</p>
+    <vis-single-container [svgDefs]="c.svgDefs" [height]="500" [duration]="600">
+      <vis-graph
+        [nodeStroke]="c.nodeFill"
+        [nodeIconSize]="22"
+        [nodeIcon]="c.nodeIcon"
+        [data]="view.data"
+        [layoutType]="state.layout"
+        [nodeLabel]="c.nodeLabel"
+        [nodeSubLabel]="c.nodeSubLabel"
+        [nodeFill]="'var(--gallery-node-fill)'"
+        [nodeSize]="34"
+        [linkArrow]="'single'"
+        [linkWidth]="1.5"
+        [linkCurvature]="1"
+        [selectedNodeId]="state.selected"
+        [events]="view.events"
+        [fitViewPadding]="45"
+        [layoutGroupOrder]="c.groupOrder"
+        [layoutParallelNodesPerColumn]="6"
+        [layoutParallelNodeSpacing]="c.nodeSpacing"></vis-graph>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+    </vis-single-container>
+  </div>
+</div>

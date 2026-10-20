@@ -1,0 +1,27 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Sort boroughs
+      <select [value]="state.sort" (change)="changeSort($event)">
+        <option *ngFor="let option of c.sortOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="c.legend"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Share of living trees · %</p>
+    <vis-xy-container [height]="390" [duration]="600" [xDomain]="c.percentDomain" [yDirection]="'south'">
+      <vis-stacked-bar
+        [data]="view.data"
+        [x]="c.rank"
+        [y]="c.accessors"
+        [orientation]="'horizontal'"
+        [color]="c.healthColors"
+        [barPadding]="0.35"></vis-stacked-bar>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+      <vis-axis [type]="'x'" [label]="'Share of living trees (%)'" [tickValues]="c.percentTicks"></vis-axis>
+      <vis-axis [type]="'y'" [tickValues]="c.rankTicks" [tickFormat]="view.boroughLabel" [gridLine]="false"></vis-axis>
+    </vis-xy-container>
+  </div>
+</div>

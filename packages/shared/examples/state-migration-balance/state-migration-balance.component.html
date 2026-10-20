@@ -1,0 +1,23 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Show states
+      <select [value]="state.sort" (change)="changeSort($event)">
+        <option *ngFor="let option of c.sortOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="c.legend"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Interstate arrivals, departures, and net change</p>
+    <vis-xy-container [height]="460" [duration]="600">
+      <vis-stacked-bar [data]="view.data" [x]="c.rank" [y]="c.accessors" [color]="c.balanceColors" [barPadding]="0.3"></vis-stacked-bar>
+      <vis-scatter [data]="view.data" [x]="c.rank" [y]="c.net" [color]="'var(--vis-color2)'" [size]="8"></vis-scatter>
+      <vis-plotline [value]="0"></vis-plotline>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+      <vis-axis [type]="'x'" [tickValues]="c.rankTicks" [tickFormat]="view.stateLabel" [tickTextAngle]="-35" [tickTextAlign]="'right'" [gridLine]="false"></vis-axis>
+      <vis-axis [type]="'y'" [tickFormat]="c.compact" [label]="'People'"></vis-axis>
+    </vis-xy-container>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <button type="button" (click)="reset()">Reset</button>
+  </div>
+  <vis-bullet-legend [items]="c.legend"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Sunspot number</p>
+    <vis-xy-container [height]="420" [duration]="600" [xDomain]="state.domain">
+      <vis-area
+        [data]="view.prediction"
+        [x]="c.time"
+        [y]="c.bandHeight"
+        [baseline]="c.bandBaseline"
+        [color]="'var(--vis-color1)'"
+        [opacity]="0.18"></vis-area>
+      <vis-line
+        [data]="view.observed"
+        [x]="c.time"
+        [y]="c.observed"
+        [color]="'var(--vis-color0)'"
+        [lineWidth]="1.4"
+        [curveType]="c.CurveType.Linear"></vis-line>
+      <vis-line
+        [data]="view.prediction"
+        [x]="c.time"
+        [y]="c.predicted"
+        [color]="'var(--vis-color1)'"
+        [lineDashArray]="c.forecastDash"
+        [curveType]="c.CurveType.Linear"></vis-line>
+      <vis-plotline
+        [axis]="'x'"
+        [value]="view.forecastStart"
+        [labelText]="'Forecast snapshot'"
+        [labelPosition]="c.PlotlineLabelPosition.TopRight"></vis-plotline>
+      <vis-crosshair [template]="c.crosshairTemplate" [data]="view.data"></vis-crosshair>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer"></vis-tooltip>
+      <vis-axis [type]="'x'" [tickFormat]="c.yearLabel" [numTicks]="7"></vis-axis>
+      <vis-axis [type]="'y'" [label]="'Monthly sunspot number'"></vis-axis>
+    </vis-xy-container>
+  </div>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Drag the overview to explore the record</p>
+    <vis-xy-container [height]="85" [duration]="600">
+      <vis-line [data]="view.data" [x]="c.time" [y]="c.observed" [lineWidth]="1" [color]="'var(--vis-color0)'"></vis-line>
+      <vis-brush [draggable]="true" [selection]="state.domain" [onBrush]="view.onBrush"></vis-brush>
+      <vis-axis [type]="'x'" [tickFormat]="c.yearLabel" [numTicks]="8"></vis-axis>
+    </vis-xy-container>
+  </div>
+</div>

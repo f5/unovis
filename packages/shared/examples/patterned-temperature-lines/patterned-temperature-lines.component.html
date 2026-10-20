@@ -1,0 +1,28 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Appearance
+      <select [value]="state.mode" (change)="changeMode($event)">
+        <option *ngFor="let option of c.modeOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="view.legend"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Seven-day mean temperature · °C</p>
+    <vis-xy-container [height]="420" [duration]="600" [data]="c.data">
+      <vis-line
+        [x]="c.time"
+        [y]="c.accessors"
+        [pattern]="c.pattern"
+        [color]="view.colors"
+        [lineWidth]="1.6"
+        [curveType]="c.CurveType.Linear"></vis-line>
+      <vis-crosshair [template]="c.crosshairTemplate"></vis-crosshair>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer"></vis-tooltip>
+      <vis-axis [type]="'x'" [tickFormat]="c.monthLabel" [numTicks]="6"></vis-axis>
+      <vis-axis [type]="'y'" [label]="'Temperature (°C)'"></vis-axis>
+    </vis-xy-container>
+  </div>
+</div>
