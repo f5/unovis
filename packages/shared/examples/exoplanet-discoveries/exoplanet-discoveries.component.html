@@ -1,0 +1,30 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Discovery period
+      <select [value]="state.era" (change)="changeEra($event)">
+        <option *ngFor="let option of c.eraOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="view.legend"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Discovery method → facility</p>
+    <vis-single-container [height]="500" [duration]="600">
+      <vis-nested-donut
+        [data]="view.data"
+        [layers]="view.layers"
+        [value]="c.value"
+        [direction]="'outwards'"
+        [centralLabel]="view.centralLabel"
+        [centralSubLabel]="view.centralSubLabel"
+        [segmentColor]="view.segmentColor"
+        [layerSettings]="c.layerSettings"
+        [sort]="c.sort"
+        [events]="view.events"
+        [showBackground]="true"></vis-nested-donut>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+    </vis-single-container>
+  </div>
+</div>

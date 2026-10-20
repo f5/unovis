@@ -1,0 +1,48 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Riders
+      <select [value]="state.rider" (change)="changeRider($event)">
+        <option *ngFor="let option of c.riderOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+    <label class="gallery-select">
+      Visible duration
+      <select [value]="state.limit" (change)="changeLimit($event)">
+        <option *ngFor="let option of c.limitOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="[]"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Trip-duration histogram · share of rides</p>
+    <vis-xy-container [height]="270" [duration]="600" [xDomain]="view.domain">
+      <vis-grouped-bar
+        [data]="view.histogram"
+        [x]="c.minute"
+        [y]="c.share"
+        [color]="'var(--vis-color0)'"
+        [groupPadding]="0.05"></vis-grouped-bar>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.histogramTooltipTriggers"></vis-tooltip>
+      <vis-axis [type]="'x'" [label]="'Duration (minutes)'"></vis-axis>
+      <vis-axis [type]="'y'" [tickFormat]="c.percent" [label]="'Share of rides'"></vis-axis>
+    </vis-xy-container>
+  </div>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Cumulative share · rides shorter than each bin edge</p>
+    <vis-xy-container [height]="240" [duration]="600" [xDomain]="view.domain" [yDomain]="c.cumulativeDomain">
+      <vis-line
+        [data]="view.cumulative"
+        [x]="c.edge"
+        [y]="c.cumulative"
+        [color]="'var(--vis-color1)'"
+        [curveType]="c.CurveType.StepAfter"></vis-line>
+      <vis-plotline [value]="0.5" [labelText]="'50% of rides'" [labelPosition]="c.PlotlineLabelPosition.TopLeft"></vis-plotline>
+      <vis-crosshair [template]="c.cumulativeTooltip" [data]="view.cumulative"></vis-crosshair>
+      <vis-tooltip [className]="c.tooltipClassName"></vis-tooltip>
+      <vis-axis [type]="'x'" [label]="'Duration (minutes)'"></vis-axis>
+      <vis-axis [type]="'y'" [tickFormat]="c.percent" [label]="'Cumulative share'"></vis-axis>
+    </vis-xy-container>
+  </div>
+</div>

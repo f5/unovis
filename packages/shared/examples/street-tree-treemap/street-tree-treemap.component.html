@@ -1,0 +1,40 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Borough
+      <select [value]="state.borough" (change)="changeBorough($event)">
+        <option *ngFor="let option of c.boroughOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+    <label>
+      Find a species
+      <input type="search" [value]="state.query" (input)="changeQuery($event)" />
+    </label>
+  </div>
+  <vis-bullet-legend [items]="[]"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Living trees · borough → species</p>
+    <vis-single-container [svgDefs]="c.svgDefs" [height]="460" [duration]="600">
+      <vis-treemap
+        [data]="view.data"
+        [value]="c.value"
+        [layers]="c.layers"
+        [numberFormat]="c.compact"
+        [tilePadding]="3"
+        [tilePaddingTop]="22"
+        [labelInternalNodes]="true"
+        [enableTileLabelFontSizeVariation]="true"
+        [tileLabelMediumFontSize]="c.tileLabelMediumFontSize"
+        [tileLabelLargeFontSize]="c.tileLabelLargeFontSize"
+        [showTileClickAffordance]="true"
+        [events]="view.events"
+        [attributes]="view.attributes"
+        [tileColor]="view.tileColor"
+        [tileSort]="c.tileSort"
+        [enableLightnessVariance]="true"
+        [minTileSizeForLabel]="20"></vis-treemap>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+    </vis-single-container>
+  </div>
+</div>

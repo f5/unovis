@@ -1,0 +1,31 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Focus
+      <select [value]="state.focus" (change)="changeFocus($event)">
+        <option *ngFor="let option of c.focusOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="[]"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Primary sources → electricity conversion → end uses</p>
+    <vis-single-container [height]="560" [duration]="600">
+      <vis-sankey
+        [data]="view.data"
+        [nodeColor]="c.nodeColor"
+        [linkColor]="c.linkColor"
+        [subLabel]="c.subLabel"
+        [nodePadding]="18"
+        [nodeWidth]="12"
+        [labelMaxWidth]="150"
+        [labelFit]="c.FitMode.Wrap"
+        [labelForceWordBreak]="false"
+        [nodeAlign]="c.SankeyNodeAlign.Left"
+        [events]="view.events"
+        [label]="c.nodeLabel"></vis-sankey>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+    </vis-single-container>
+  </div>
+</div>

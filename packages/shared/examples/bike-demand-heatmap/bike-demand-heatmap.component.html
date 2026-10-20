@@ -1,0 +1,29 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Riders
+      <select [value]="state.rider" (change)="changeRider($event)">
+        <option *ngFor="let option of c.riderOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-rolling-pin-legend [rects]="c.colorRange" leftLabelText="0" [rightLabelText]="view.maxLabel"></vis-rolling-pin-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Average trip starts · weekday × hour</p>
+    <vis-single-container [height]="330" [duration]="600">
+      <vis-heatmap
+        [data]="view.data"
+        [value]="c.value"
+        [numRows]="7"
+        [colorRange]="c.colorRange"
+        [colorDomain]="view.colorDomain"
+        [rowLabel]="c.weekdayLabel"
+        [columnLabel]="c.hourLabel"
+        [cellPadding]="3"
+        [cellCornerRadius]="3"
+        [cursor]="'pointer'"></vis-heatmap>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+    </vis-single-container>
+  </div>
+</div>

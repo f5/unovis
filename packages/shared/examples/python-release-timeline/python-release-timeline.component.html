@@ -1,0 +1,38 @@
+<div class="gallery-example">
+  <div class="gallery-controls">
+    <label class="gallery-select">
+      Show releases
+      <select [value]="state.status" (change)="changeStatus($event)">
+        <option *ngFor="let option of c.statusOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="c.legend"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Release → end of support</p>
+    <vis-xy-container [height]="430" [duration]="600" [xDomain]="c.domain">
+      <vis-timeline
+        [data]="view.data"
+        [id]="c.id"
+        [x]="c.start"
+        [lineDuration]="c.duration"
+        [lineRow]="c.row"
+        [color]="c.color"
+        [lineWidth]="12"
+        [showRowLabels]="true"
+        [rowHeight]="38"
+        [rowLabelWidth]="100"
+        [rowLabelTextAlign]="'left'"
+        [lineCap]="true"
+        [pattern]="c.pattern"></vis-timeline>
+      <vis-plotline
+        [axis]="'x'"
+        [value]="c.snapshot"
+        [labelText]="'19 Oct 2026'"
+        [labelPosition]="view.labelPosition"></vis-plotline>
+      <vis-tooltip [className]="c.tooltipClassName" [container]="c.tooltipContainer" [triggers]="c.tooltipTriggers"></vis-tooltip>
+      <vis-axis [type]="'x'" [tickFormat]="c.yearLabel" [numTicks]="8"></vis-axis>
+    </vis-xy-container>
+  </div>
+</div>

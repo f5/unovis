@@ -1,0 +1,46 @@
+<div class="gallery-example">
+  <div class="gallery-controls electricity-grid-controls">
+    <label>
+      Grid area
+      <select [value]="state.authority" (change)="changeAuthority($event)">
+        <option *ngFor="let option of c.authorityOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+  </div>
+  <vis-bullet-legend [items]="c.legend"></vis-bullet-legend>
+  <p class="gallery-summary" aria-live="polite">{{ view.summary }}</p>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Generation by fuel · GW</p>
+    <vis-xy-container [autoMargin]="false" [height]="260" [duration]="600" [data]="view.data" [xDomain]="state.domain" [margin]="c.chartMargin">
+      <vis-area
+        [stackMinHeight]="true"
+        [minHeight]="1"
+        [x]="c.time"
+        [y]="c.fuelAccessors"
+        [color]="c.fuelColors"
+        [curveType]="c.CurveType.StepAfter"></vis-area>
+      <vis-crosshair [forceShowAt]="state.cursor" [onCrosshairMove]="view.onMove" [template]="c.generationTooltip"></vis-crosshair>
+      <vis-tooltip [container]="c.tooltipContainer"></vis-tooltip>
+      <vis-axis [type]="'x'" [tickFormat]="c.dayLabel" [numTicks]="7"></vis-axis>
+      <vis-axis [type]="'y'" [label]="'Generation (GW)'"></vis-axis>
+    </vis-xy-container>
+  </div>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Actual and day-ahead forecast demand · GW</p>
+    <vis-xy-container [autoMargin]="false" [height]="190" [duration]="600" [data]="view.data" [xDomain]="state.domain" [margin]="c.chartMargin">
+      <vis-line [x]="c.time" [y]="c.demandAccessors" [color]="c.demandColors" [curveType]="c.CurveType.Linear"></vis-line>
+      <vis-crosshair [forceShowAt]="state.cursor" [onCrosshairMove]="view.onMove" [template]="c.demandTooltip"></vis-crosshair>
+      <vis-tooltip></vis-tooltip>
+      <vis-axis [type]="'x'" [tickFormat]="c.dayLabel" [numTicks]="7"></vis-axis>
+      <vis-axis [type]="'y'" [label]="'Demand (GW)'"></vis-axis>
+    </vis-xy-container>
+  </div>
+  <div class="gallery-panel">
+    <p class="gallery-caption">Drag to select a time window</p>
+    <vis-xy-container [autoMargin]="false" [height]="75" [duration]="600" [data]="view.data" [margin]="c.chartMargin">
+      <vis-line [x]="c.time" [y]="c.demand" [color]="'var(--vis-color0)'" [lineWidth]="1"></vis-line>
+      <vis-brush [draggable]="true" [selection]="state.domain" [onBrush]="view.onBrush"></vis-brush>
+      <vis-axis [type]="'x'" [tickFormat]="c.dayLabel" [numTicks]="7"></vis-axis>
+    </vis-xy-container>
+  </div>
+</div>

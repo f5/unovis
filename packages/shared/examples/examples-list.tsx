@@ -4,10 +4,20 @@ import type { ExampleCollection } from './types'
 
 export const examples: ExampleCollection[] = [
   {
+    title: 'Composite Charts',
+    description: '',
+    examples: [
+      require('./bike-trip-distributions').default,
+      require('./electricity-grid-dashboard').default,
+      require('./range-plot').default,
+    ],
+  },
+  {
     title: 'Line Charts',
     description: '',
     examples: [
-      require('./basic-line-chart').default,
+      require('./python-release-timeline').default,
+      require('./patterned-temperature-lines').default,
       require('./multi-line-chart').default,
       require('./data-gap-line-chart').default,
       require('./patchy-line-chart').default,
@@ -18,6 +28,7 @@ export const examples: ExampleCollection[] = [
     title: 'Area Charts',
     description: '',
     examples: [
+      require('./solar-cycle-forecast').default,
       require('./non-stacked-area-chart').default,
       require('./stacked-area-chart').default,
       require('./stacked-area-chart-with-attributes').default,
@@ -29,6 +40,8 @@ export const examples: ExampleCollection[] = [
     title: 'Bar Charts',
     description: '',
     examples: [
+      require('./state-migration-balance').default,
+      require('./tree-health-bars').default,
       require('./basic-grouped-bar').default,
       require('./horizontal-stacked-bar-chart').default,
       require('./waterfall-chart').default,
@@ -38,6 +51,7 @@ export const examples: ExampleCollection[] = [
     title: 'Boxplot',
     description: '',
     examples: [
+      require('./penguin-distributions').default,
       require('./basic-boxplot').default,
     ],
   },
@@ -58,6 +72,8 @@ export const examples: ExampleCollection[] = [
         (with <a href="https://maplibre.org/" target="_blank">MapLibre</a> rendering)
     </div>,
     examples: [
+      require('./airport-passenger-flows').default,
+      require('./earthquake-explorer').default,
       require('./basic-leaflet-map').default,
       require('./leaflet-flow-map').default,
       require('./advanced-leaflet-map').default,
@@ -65,11 +81,19 @@ export const examples: ExampleCollection[] = [
     ],
   },
   {
-    title: 'Networks and Flows',
+    title: 'Sankey',
     description: '',
     examples: [
+      require('./energy-flow-sankey').default,
       require('./basic-sankey').default,
       require('./expandable-sankey').default,
+    ],
+  },
+  {
+    title: 'Network Graph',
+    description: '',
+    examples: [
+      require('./dependency-explorer').default,
       require('./dagre-graph').default,
       require('./force-graph').default,
       require('./parallel-graph').default,
@@ -81,6 +105,8 @@ export const examples: ExampleCollection[] = [
     title: 'Circular Charts',
     description: '',
     examples: [
+      require('./exoplanet-discoveries').default,
+      require('./state-migration-chord').default,
       require('./basic-donut-chart').default,
       require('./basic-radial-bar-chart').default,
       require('./basic-circular-bar-chart').default,
@@ -92,6 +118,7 @@ export const examples: ExampleCollection[] = [
     title: 'Treemap',
     description: '',
     examples: [
+      require('./street-tree-treemap').default,
       require('./treemap').default,
     ],
   },
@@ -99,15 +126,8 @@ export const examples: ExampleCollection[] = [
     title: 'Heatmaps',
     description: '',
     examples: [
+      require('./bike-demand-heatmap').default,
       require('./github-style-heatmap').default,
-    ],
-  },
-  {
-    title: 'Composite Charts',
-    description: '',
-    examples: [
-      require('./dual-axis-chart').default,
-      require('./range-plot').default,
     ],
   },
   {
