@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'force-graph'
 const example: Example = {
@@ -10,10 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Force Layout Graph',
-  description: <p>Les Misérables Character Co-occurrence Graph
-    (source: <a href='https://www-cs-faculty.stanford.edu/~knuth/sgb.html' target="_blank">The Stanford GraphBase</a>)
-  </p>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

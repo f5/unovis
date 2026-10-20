@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'basic-radial-bar-chart'
 const example: Example = {
@@ -10,8 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Radial Bar Chart',
-  description: <div>A stacked-ring chart where each datum becomes a circular track and a colored bar fills it proportionally to the value.</div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

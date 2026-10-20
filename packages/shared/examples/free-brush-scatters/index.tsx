@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 import './styles.css'
 
 const pathname = 'free-brush-scatters'
@@ -11,12 +12,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Scatter Plot with Free Brush',
-  description: <div>
-    Data from <a href="https://github.com/fivethirtyeight/data/tree/master/college-majors" target="_blank">
-    FiveThirtyEight
-    </a> (source: <em>American Community Survey 2010-2012</em>)
-  </div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

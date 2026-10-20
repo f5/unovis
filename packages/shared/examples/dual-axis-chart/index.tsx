@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'dual-axis-chart'
 const example: Example = {
@@ -10,11 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Dual Axis Chart',
-  description: <div>
-    Randomly Generated Data
-    <div style={{ fontSize: '15px' }}>This example shows how to create dual axis chart by overlapping two charts. Dual Axis chart maybe good at showing correlations, or compare two datasets with different measurement units. But we suggest using it with caution. Here are some good articles from <a href="https://blog.datawrapper.de/dualaxis/" target="_blank">Datawrapper</a> and <a href="https://flourish.studio/blog/dual-axis-charts/" target="_blank">Florish</a>.</div>
-  </div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

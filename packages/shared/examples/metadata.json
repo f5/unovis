@@ -1,0 +1,848 @@
+{
+  "python-release-timeline": {
+    "title": "Python release lifecycles",
+    "kicker": "Python 3.7–3.15 · status on 19 October 2026",
+    "subtitle": "Compare completed and scheduled support windows for recent Python releases.",
+    "description": "Striped segments are scheduled support. Month-only end-of-life dates are placed at the start of that month. Current status and release schedules come from the official guide.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Build a Timeline of Python releases with release date, bugfix end, security end, and status. Color support phases, stripe scheduled future periods, add a snapshot-date Plotline, and let users filter active or end-of-life releases. Position the date label so it does not overlap completed bars.\n\nData context: Striped segments are scheduled support. Month-only end-of-life dates are placed at the start of that month. Current status and release schedules come from the official guide.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=python-release-timeline\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/python-release-timeline\nData/source references: Python Developer’s Guide — https://devguide.python.org/versions/",
+    "sources": [
+      {
+        "name": "Python Developer’s Guide",
+        "url": "https://devguide.python.org/versions/"
+      }
+    ]
+  },
+  "patterned-temperature-lines": {
+    "title": "Three cities, readable without color",
+    "kicker": "Seven-day mean temperatures · 2021",
+    "subtitle": "Line markers and dashes identify the same cities in color and monochrome.",
+    "description": "Seven-day means of the gallery’s existing daily city-temperature observations; missing values are excluded and the final interval is shorter. Series patterns and legend markers carry the identity when color is removed.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Plot seven-day mean temperatures for Austin, New York, and San Francisco with Line patterns using triangles, diamonds, and squares as well as distinct dashes. Provide color and monochrome modes, a matching legend, a shared-date Crosshair tooltip, labeled axes.\n\nData context: Seven-day means of the gallery’s existing daily city-temperature observations; missing values are excluded and the final interval is shorter. Series patterns and legend markers carry the identity when color is removed.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=patterned-temperature-lines\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/patterned-temperature-lines\nData/source references: NOAA National Centers for Environmental Information — https://www.ncei.noaa.gov/",
+    "sources": [
+      {
+        "name": "NOAA National Centers for Environmental Information",
+        "url": "https://www.ncei.noaa.gov/"
+      }
+    ]
+  },
+  "basic-line-chart": {
+    "title": "A line in three points",
+    "kicker": "Line chart · illustrative data",
+    "subtitle": "Connect three observations to see the essentials of an XY line chart.",
+    "description": "Three illustrative x/y pairs demonstrate accessors and numeric axes; the values have no real-world units.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw a simple line through x/y records (0,0), (1,2), and (2,1), with numeric axes and a responsive XY container.\n\nData context: Three illustrative x/y pairs demonstrate accessors and numeric axes; the values have no real-world units.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-line-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-line-chart",
+    "legacyTitles": [
+      "Basic Line Chart"
+    ]
+  },
+  "multi-line-chart": {
+    "title": "A year of temperatures in three cities",
+    "kicker": "Daily temperatures · 2021",
+    "subtitle": "Compare seasonal temperature patterns in Austin, New York, and San Francisco.",
+    "description": "The bundled NOAA snapshot contains daily temperatures in degrees Celsius, including missing observations.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Plot date, austin, ny, and sf fields as three lines on shared time and Celsius axes. Add a city legend and preserve missing observations rather than inventing values.\n\nData context: The bundled NOAA snapshot contains daily temperatures in degrees Celsius, including missing observations.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=multi-line-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/multi-line-chart\nData/source references: NOAA — https://www.ncei.noaa.gov/",
+    "legacyTitles": [
+      "Multi Line Chart"
+    ],
+    "sources": [
+      {
+        "name": "NOAA",
+        "url": "https://www.ncei.noaa.gov/"
+      }
+    ]
+  },
+  "data-gap-line-chart": {
+    "title": "What happens when observations are missing?",
+    "kicker": "Cereal production · China and the United States",
+    "subtitle": "Switch fallback values to see how missing observations change a line chart.",
+    "description": "The bundled World Bank cereal-production series is expressed in millions of metric tons. Some observations are omitted to demonstrate gaps and fallback behavior.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Plot year, cn, and us cereal-production series as lines. Provide controls for leaving gaps, substituting zero, or substituting 300 million metric tons; add direct country labels and a clearly labeled value axis.\n\nData context: The bundled World Bank cereal-production series is expressed in millions of metric tons. Some observations are omitted to demonstrate gaps and fallback behavior.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=data-gap-line-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/data-gap-line-chart\nData/source references: World Bank Open Data — https://data.worldbank.org",
+    "legacyTitles": [
+      "Line Chart with Data Gaps"
+    ],
+    "sources": [
+      {
+        "name": "World Bank Open Data",
+        "url": "https://data.worldbank.org"
+      }
+    ]
+  },
+  "patchy-line-chart": {
+    "title": "Electricity consumption across data gaps",
+    "kicker": "India and Brazil · kWh per person",
+    "subtitle": "Compare observed points, interpolation, and fallback values for incomplete time series.",
+    "description": "The bundled World Bank electricity-consumption snapshot includes deliberate missing values for the gap-handling demonstration.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Plot year, in, and br electricity-consumption data using linear lines, optional scatter markers, and a crosshair tooltip. Add controls for interpolation, marker visibility, and fallback values without treating missing observations as measured zeros.\n\nData context: The bundled World Bank electricity-consumption snapshot includes deliberate missing values for the gap-handling demonstration.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=patchy-line-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/patchy-line-chart\nData/source references: World Bank Open Data — https://data.worldbank.org",
+    "legacyTitles": [
+      "Patchy Line Chart with Data Gaps"
+    ],
+    "sources": [
+      {
+        "name": "World Bank Open Data",
+        "url": "https://data.worldbank.org"
+      }
+    ]
+  },
+  "basic-timeline": {
+    "title": "The lifetimes of retired Google products",
+    "kicker": "Google Graveyard · historical snapshot",
+    "subtitle": "Compare how long discontinued apps, hardware, and services remained available.",
+    "description": "Each record supplies a product name, type, start date, end date, and description. This is a historical snapshot, not a current inventory of Google products.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw a horizontal Timeline with one labeled row per retired Google product, startDate as the start, and endDate minus startDate as duration. Color by product type, add a legend and date axis, and show product descriptions on hover.\n\nData context: Each record supplies a product name, type, start date, end date, and description. This is a historical snapshot, not a current inventory of Google products.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-timeline\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-timeline\nData/source references: Google Graveyard — https://killedbygoogle.com/",
+    "legacyTitles": [
+      "Basic Timeline"
+    ],
+    "sources": [
+      {
+        "name": "Google Graveyard",
+        "url": "https://killedbygoogle.com/"
+      }
+    ]
+  },
+  "solar-cycle-forecast": {
+    "title": "The solar cycle, observed and predicted",
+    "kicker": "Solar Cycle 25 · snapshot 19 October 2026",
+    "subtitle": "Monthly sunspot observations meet a forecast with a published uncertainty envelope.",
+    "description": "The band is NOAA’s middle (50%) prediction range, not a confidence interval fitted by this example. Unavailable -1 values remain missing.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Combine monthly sunspot observations with a forecast Line and an Area uncertainty envelope. Keep observations and forecast distinguishable, show a time axis and sunspot-count axis, add a shared Crosshair tooltip, and offer a time-window control and reset.\n\nData context: The band is NOAA’s middle (50%) prediction range, not a confidence interval fitted by this example. Unavailable -1 values remain missing.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=solar-cycle-forecast\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/solar-cycle-forecast\nData/source references: NOAA Space Weather Prediction Center — https://www.spaceweather.gov/products/solar-cycle-progression",
+    "sources": [
+      {
+        "name": "NOAA Space Weather Prediction Center",
+        "url": "https://www.spaceweather.gov/products/solar-cycle-progression"
+      }
+    ]
+  },
+  "non-stacked-area-chart": {
+    "title": "COVID-19 waves in the U.S. and India",
+    "kicker": "Monthly case counts · historical snapshot",
+    "subtitle": "Overlay two translucent areas to compare the timing and scale of reported cases.",
+    "description": "The bundled Our World in Data case counts and month labels are a historical example snapshot, not live surveillance data.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Overlay two independent Area components for monthly U.S. and Indian case counts. Use translucent fills, shared axes, compact count ticks, and a country legend; do not stack the two series.\n\nData context: The bundled Our World in Data case counts and month labels are a historical example snapshot, not live surveillance data.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=non-stacked-area-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/non-stacked-area-chart\nData/source references: Our World in Data — https://github.com/owid/covid-19-data",
+    "legacyTitles": [
+      "Non-Stacked Area Chart"
+    ],
+    "sources": [
+      {
+        "name": "Our World in Data",
+        "url": "https://github.com/owid/covid-19-data"
+      }
+    ]
+  },
+  "stacked-area-chart": {
+    "title": "From vinyl to streaming",
+    "kicker": "U.S. recorded music · revenue by format",
+    "subtitle": "Follow the changing mix of vinyl, cassettes, CDs, downloads, and streaming.",
+    "description": "The bundled RIAA snapshot stores annual revenues in billions of U.S. dollars; each format is a separate numeric field.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a stacked Area chart with year on x and vinyl, cassette, cd, download, and streaming revenue on y. Add direct white labels near each format's peak, a year axis, and a revenue axis in USD billions.\n\nData context: The bundled RIAA snapshot stores annual revenues in billions of U.S. dollars; each format is a separate numeric field.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=stacked-area-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/stacked-area-chart\nData/source references: RIAA — https://www.riaa.com/u-s-sales-database/",
+    "legacyTitles": [
+      "Stacked Area Chart with XYLabels"
+    ],
+    "sources": [
+      {
+        "name": "RIAA",
+        "url": "https://www.riaa.com/u-s-sales-database/"
+      }
+    ]
+  },
+  "stacked-area-chart-with-attributes": {
+    "title": "Food exports in three economies",
+    "kicker": "World Bank · 1990–2023",
+    "subtitle": "Use custom area attributes to emphasize one series in a stacked chart.",
+    "description": "Each country's value is food exports as a percentage of its own merchandise exports. Stacking demonstrates the component API; the combined height is not a share of a common total.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Stack the us, in, and cn food-export percentage fields by year with an Area component. Attach custom attributes to area paths to style the first series differently and assign stable test identifiers. Include a country legend and explain that these are separate national percentages.\n\nData context: Each country's value is food exports as a percentage of its own merchandise exports. Stacking demonstrates the component API; the combined height is not a share of a common total.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=stacked-area-chart-with-attributes\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/stacked-area-chart-with-attributes\nData/source references: World Bank Open Data — https://data.worldbank.org/indicator/TX.VAL.FOOD.ZS.UN",
+    "legacyTitles": [
+      "Stacked Area Chart with attributes"
+    ],
+    "sources": [
+      {
+        "name": "World Bank Open Data",
+        "url": "https://data.worldbank.org/indicator/TX.VAL.FOOD.ZS.UN"
+      }
+    ]
+  },
+  "baseline-area-chart": {
+    "title": "How MoMA's collection grew",
+    "kicker": "Acquisitions by department · historical snapshot",
+    "subtitle": "A centered streamgraph reveals changes in the mix of museum acquisitions.",
+    "description": "The bundled MoMA collection snapshot counts works acquired each year in six departments. A variable baseline centers the stacked areas.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a streamgraph from records with year and a six-value art array. Stack departments with an Area component, center each year's total using a variable baseline, and add department legends and acquisition-count labels.\n\nData context: The bundled MoMA collection snapshot counts works acquired each year in six departments. A variable baseline centers the stacked areas.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=baseline-area-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/baseline-area-chart\nData/source references: MoMA collection — https://github.com/MuseumofModernArt/collection",
+    "legacyTitles": [
+      "Area with Baseline"
+    ],
+    "sources": [
+      {
+        "name": "MoMA collection",
+        "url": "https://github.com/MuseumofModernArt/collection"
+      }
+    ]
+  },
+  "step-area-chart": {
+    "title": "Presidential candidates in hip-hop lyrics",
+    "kicker": "FiveThirtyEight · 2007–2016",
+    "subtitle": "Switch candidates to compare positive, neutral, and negative lyrical mentions.",
+    "description": "The bundled FiveThirtyEight dataset, sourced from Genius, contains yearly mention counts for 2016 U.S. presidential candidates.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a stacked step-after Area chart of annual neutral, negative, and positive mentions. Let the user switch between Hillary Clinton and Donald Trump through a legend; keep a shared vertical domain for comparison.\n\nData context: The bundled FiveThirtyEight dataset, sourced from Genius, contains yearly mention counts for 2016 U.S. presidential candidates.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=step-area-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/step-area-chart\nData/source references: FiveThirtyEight — https://github.com/fivethirtyeight/data/tree/master/hip-hop-candidate-lyrics, Genius — https://genius.com/",
+    "legacyTitles": [
+      "Step Area Chart"
+    ],
+    "sources": [
+      {
+        "name": "FiveThirtyEight",
+        "url": "https://github.com/fivethirtyeight/data/tree/master/hip-hop-candidate-lyrics"
+      },
+      {
+        "name": "Genius",
+        "url": "https://genius.com/"
+      }
+    ]
+  },
+  "state-migration-balance": {
+    "title": "Which states gain and lose residents?",
+    "kicker": "2024 ACS · 50 states and DC",
+    "subtitle": "Arrivals above zero, departures below, and a dot marking the net interstate change.",
+    "description": "Interstate arrivals and departures exclude within-state moves, Puerto Rico, and moves from abroad. Negative departures are a plotting convention. Values are survey estimates; this chart does not show margins of error.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw interstate arrivals above zero and departures below zero with StackedBar, then overlay Scatter dots for net change. Let users view the largest gains, largest losses, or all states. Label states with correctly aligned angled ticks, use compact people counts, and add a legend, tooltips.\n\nData context: Interstate arrivals and departures exclude within-state moves, Puerto Rico, and moves from abroad. Negative departures are a plotting convention. Values are survey estimates; this chart does not show margins of error.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=state-migration-balance\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/state-migration-balance\nData/source references: U.S. Census Bureau — https://www.census.gov/topics/population/migration/guidance/state-to-state-migration-flows.html",
+    "sources": [
+      {
+        "name": "U.S. Census Bureau",
+        "url": "https://www.census.gov/topics/population/migration/guidance/state-to-state-migration-flows.html"
+      }
+    ]
+  },
+  "tree-health-bars": {
+    "title": "Tree health across boroughs",
+    "kicker": "TreesCount! · 2015 historical census",
+    "subtitle": "Compare the health mix of living street trees with a common 100% denominator.",
+    "description": "Each borough sums to 100% of its living trees. Unknown health remains a separate category, and tooltips include both counts and percentages.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create normalized horizontal StackedBar charts of living NYC street trees by borough and health condition. Offer species filtering, show each borough on a common 0–100% scale, and include health legends, both counts and proportions in tooltips.\n\nData context: Each borough sums to 100% of its living trees. Unknown health remains a separate category, and tooltips include both counts and percentages.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=tree-health-bars\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/tree-health-bars\nData/source references: NYC Parks street-tree census — https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data",
+    "sources": [
+      {
+        "name": "NYC Parks street-tree census",
+        "url": "https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data"
+      }
+    ]
+  },
+  "basic-grouped-bar": {
+    "title": "The U.S. popular vote by party",
+    "kicker": "Presidential elections · 1980–2020",
+    "subtitle": "Compare party vote totals side by side across eleven presidential elections.",
+    "description": "The bundled MIT Election Data and Science Lab snapshot groups popular votes into Republican, Democratic, Libertarian, and other parties.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw grouped bars by election year using republican, democrat, libertarian, and other vote counts. Keep party colors consistent with the legend and format the vertical axis in millions of votes.\n\nData context: The bundled MIT Election Data and Science Lab snapshot groups popular votes into Republican, Democratic, Libertarian, and other parties.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-grouped-bar\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-grouped-bar\nData/source references: MIT Election Data and Science Lab — https://dataverse.harvard.edu/",
+    "legacyTitles": [
+      "Basic Grouped Bar Chart"
+    ],
+    "sources": [
+      {
+        "name": "MIT Election Data and Science Lab",
+        "url": "https://dataverse.harvard.edu/"
+      }
+    ]
+  },
+  "horizontal-stacked-bar-chart": {
+    "title": "Which degrees do adults hold?",
+    "kicker": "Educational attainment · 2020 snapshot",
+    "subtitle": "Compare bachelor's, master's, and doctoral attainment across countries.",
+    "description": "The World Bank snapshot is converted into non-overlapping highest-degree categories for adults aged 25 and above. The bar total represents those with at least a bachelor's degree.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw horizontal stacked bars from country, bachelors, masters, and doctoral percentages. Use non-overlapping highest-degree categories, country row labels, a percent axis, a legend, and a tooltip with category values and the combined total.\n\nData context: The World Bank snapshot is converted into non-overlapping highest-degree categories for adults aged 25 and above. The bar total represents those with at least a bachelor's degree.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=horizontal-stacked-bar-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/horizontal-stacked-bar-chart\nData/source references: World Bank Open Data — https://data.worldbank.org",
+    "legacyTitles": [
+      "Horizontal Stacked Bar Chart with Tooltip and Legend"
+    ],
+    "sources": [
+      {
+        "name": "World Bank Open Data",
+        "url": "https://data.worldbank.org"
+      }
+    ]
+  },
+  "waterfall-chart": {
+    "title": "From revenue to net income",
+    "kicker": "Income statement bridge · illustrative figures",
+    "subtitle": "See how costs, income, and taxes contribute to the final result.",
+    "description": "Figures are illustrative, in millions of dollars. Subtotals and totals start at zero; other bars start at the previous running total.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a waterfall with StackedBar using index, value, and start fields. Float each contribution from its running-total baseline, draw totals from zero, color increases and decreases differently, wrap category labels, and show signed currency tooltips.\n\nData context: Figures are illustrative, in millions of dollars. Subtotals and totals start at zero; other bars start at the previous running total.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=waterfall-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/waterfall-chart",
+    "legacyTitles": [
+      "Waterfall Chart"
+    ]
+  },
+  "penguin-distributions": {
+    "title": "Penguin body-mass distributions",
+    "kicker": "Palmer Archipelago · 2007–2009",
+    "subtitle": "Every dot is one penguin. Compare individual observations with the distribution summary.",
+    "description": "Missing measurements are excluded. Boxes show the median and middle 50%; whiskers use the 1.5 × IQR rule. Horizontal jitter is deterministic.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Combine Boxplot summaries with individual penguin Scatter points grouped by species and sex. Plot body mass in grams, compute medians, quartiles, and whiskers from the supplied observations, add filters, a legend, tooltips, and exclude missing mass values.\n\nData context: Missing measurements are excluded. Boxes show the median and middle 50%; whiskers use the 1.5 × IQR rule. Horizontal jitter is deterministic.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=penguin-distributions\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/penguin-distributions\nData/source references: Palmer Penguins — https://github.com/allisonhorst/palmerpenguins",
+    "sources": [
+      {
+        "name": "Palmer Penguins",
+        "url": "https://github.com/allisonhorst/palmerpenguins"
+      }
+    ]
+  },
+  "basic-boxplot": {
+    "title": "Compare twelve distributions",
+    "kicker": "Boxplot · illustrative summaries",
+    "subtitle": "Read medians, quartiles, and whiskers across a dozen groups.",
+    "description": "These are illustrative precomputed summaries, not raw observations or measurements from a named population.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw twelve Boxplots from x, median, quartiles, and whiskers fields. Bind the precomputed summary arrays directly and add shared numeric axes without recalculating statistics from nonexistent raw samples.\n\nData context: These are illustrative precomputed summaries, not raw observations or measurements from a named population.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-boxplot\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-boxplot",
+    "legacyTitles": [
+      "Basic Boxplot"
+    ]
+  },
+  "basic-scatter-plot": {
+    "title": "Penguin beaks and flippers",
+    "kicker": "Palmer Archipelago · individual measurements",
+    "subtitle": "Compare beak length and flipper length, colored by recorded sex.",
+    "description": "The bundled Palmer penguins data contains individual measurements in millimeters; missing sex is shown as a separate legend category.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a Scatter plot with beakLength on x and flipperLength on y. Use equal-sized points colored by Male, Female, or No Data, add a legend, and label both axes in millimeters.\n\nData context: The bundled Palmer penguins data contains individual measurements in millimeters; missing sex is shown as a separate legend category.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-scatter-plot\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-scatter-plot\nData/source references: K.Gorman, LTER Network — https://github.com/allisonhorst/palmerpenguins",
+    "legacyTitles": [
+      "Basic Scatter Plot"
+    ],
+    "sources": [
+      {
+        "name": "K.Gorman, LTER Network",
+        "url": "https://github.com/allisonhorst/palmerpenguins"
+      }
+    ]
+  },
+  "sized-scatter-plot": {
+    "title": "College majors: pay and employment",
+    "kicker": "American Community Survey · 2010–2012",
+    "subtitle": "Compare graduate outcomes with point size showing the number of graduates.",
+    "description": "The bundled FiveThirtyEight college-majors snapshot supplies major, category, graduate count, employment rate, and median salary.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Plot medianSalary against employmentRate. Scale Scatter point diameter by total graduates, color by major category, show compact count labels, and reveal the major and graduate count in a tooltip.\n\nData context: The bundled FiveThirtyEight college-majors snapshot supplies major, category, graduate count, employment rate, and median salary.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=sized-scatter-plot\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/sized-scatter-plot\nData/source references: FiveThirtyEight — https://github.com/fivethirtyeight/data/tree/master/college-majors",
+    "legacyTitles": [
+      "Scatter Plot with Varied Size"
+    ],
+    "sources": [
+      {
+        "name": "FiveThirtyEight",
+        "url": "https://github.com/fivethirtyeight/data/tree/master/college-majors"
+      }
+    ]
+  },
+  "shaped-scatter-plot": {
+    "title": "Language models by release date and size",
+    "kicker": "Historical compilation · through March 2024",
+    "subtitle": "Use shapes and colors to distinguish model developers in a parameter-count comparison.",
+    "description": "This bundled Information is Beautiful compilation contains reported or estimated parameter counts. Values, including closed-model estimates, are historical claims from that compilation, not independently verified model specifications.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Plot model release date against trainedParam in billions using a Scatter component. Encode developer with both shape and color, label model names while hiding overlaps, and add owner and size tooltips. Identify estimated parameter counts explicitly and do not present this historical compilation as current verified specifications.\n\nData context: This bundled Information is Beautiful compilation contains reported or estimated parameter counts. Values, including closed-model estimates, are historical claims from that compilation, not independently verified model specifications.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=shaped-scatter-plot\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/shaped-scatter-plot\nData/source references: information is beautiful — https://informationisbeautiful.net/visualizations/the-rise-of-generative-ai-large-language-models-llms-like-chatgpt/",
+    "legacyTitles": [
+      "Scatter Plot with Varied Shape"
+    ],
+    "sources": [
+      {
+        "name": "information is beautiful",
+        "url": "https://informationisbeautiful.net/visualizations/the-rise-of-generative-ai-large-language-models-llms-like-chatgpt/"
+      }
+    ]
+  },
+  "airport-passenger-flows": {
+    "title": "Where do passengers fly?",
+    "kicker": "BTS T-100 · scheduled passenger segments · May 2014",
+    "subtitle": "Real passenger volumes drive the routes from three major U.S. hubs.",
+    "description": "Top 12 destinations in the 50 U.S. states per selected origin, summed across carriers. Animated particles show relative passenger volume, not individual aircraft or flight times. Coordinates: OurAirports.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Use a TopoJSONMap with weighted links for scheduled passenger segments from selected U.S. airports. Put a narrow destination-ranking bar chart to the left of the map, share destination highlighting, add an origin-airport selector, passenger-count tooltips, a legend.\n\nData context: Top 12 destinations in the 50 U.S. states per selected origin, summed across carriers. Animated particles show relative passenger volume, not individual aircraft or flight times. Coordinates: OurAirports.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=airport-passenger-flows\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/airport-passenger-flows\nData/source references: Bureau of Transportation Statistics — https://www.transtats.bts.gov/DatabaseInfo.asp?DB_URL=&QO_VQ=EEE",
+    "sources": [
+      {
+        "name": "Bureau of Transportation Statistics",
+        "url": "https://www.transtats.bts.gov/DatabaseInfo.asp?DB_URL=&QO_VQ=EEE"
+      }
+    ]
+  },
+  "earthquake-explorer": {
+    "title": "Earthquakes across linked views",
+    "kicker": "Worldwide M4.5+ earthquakes · January 2024",
+    "subtitle": "Select an event on the map or scatter plot to locate it in the other view.",
+    "description": "Magnitude is a logarithmic measure; marker radius is used only for visual emphasis. Depth is in kilometers. The date filter and daily counts use UTC.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Link a TopoJSONMap of epicenters to a depth-versus-magnitude Scatter and daily-count bars for January 2024 earthquakes. Size map points by magnitude, add magnitude and date filters, highlight a selected event in both views, align Cartesian plots with fixed margins, and include tooltips.\n\nData context: Magnitude is a logarithmic measure; marker radius is used only for visual emphasis. Depth is in kilometers. The date filter and daily counts use UTC.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=earthquake-explorer\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/earthquake-explorer\nData/source references: USGS earthquake catalog — https://earthquake.usgs.gov/fdsnws/event/1/",
+    "sources": [
+      {
+        "name": "USGS earthquake catalog",
+        "url": "https://earthquake.usgs.gov/fdsnws/event/1/"
+      }
+    ]
+  },
+  "basic-leaflet-map": {
+    "title": "Earthquake epicenters around the world",
+    "kicker": "USGS · historical location snapshot",
+    "subtitle": "Explore earthquake locations on a zoomable map.",
+    "description": "The bundled records contain event identifiers and coordinates only; point size does not encode magnitude or recency.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Map earthquake id, latitude, and longitude with LeafletMap. Use equal-sized markers, allow zooming and panning, and include basemap attribution without inventing magnitude values.\n\nData context: The bundled records contain event identifiers and coordinates only; point size does not encode magnitude or recency.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-leaflet-map\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-leaflet-map\nData/source references: https://earthquake.usgs.gov — https://earthquake.usgs.gov",
+    "legacyTitles": [
+      "Basic Leaflet Map"
+    ],
+    "sources": [
+      {
+        "name": "https://earthquake.usgs.gov",
+        "url": "https://earthquake.usgs.gov"
+      }
+    ]
+  },
+  "leaflet-flow-map": {
+    "title": "Animated routes between U.S. airports",
+    "kicker": "Flow map · synthetic connections",
+    "subtitle": "Use moving particles to show direction between airport locations.",
+    "description": "Airport coordinates are bundled with illustrative connections and particle densities; these are not observed passenger volumes.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Use LeafletFlowMap to draw synthetic directed routes between airport coordinates. Animate flow particles with configurable density, show endpoint markers, and make clear that route connections are illustrative.\n\nData context: Airport coordinates are bundled with illustrative connections and particle densities; these are not observed passenger volumes.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=leaflet-flow-map\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/leaflet-flow-map",
+    "legacyTitles": [
+      "Leaflet Flow Map"
+    ]
+  },
+  "advanced-leaflet-map": {
+    "title": "Network events across global sites",
+    "kicker": "Clustered map · illustrative telemetry",
+    "subtitle": "Zoom from regional clusters into sites to inspect normal and blocked events.",
+    "description": "Bundled site names, coordinates, and event counts demonstrate map styling and interactions; they are illustrative telemetry.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Build a LeafletMap of named sites with normal and blocked event counts. Show proportions as pie markers, aggregate nearby sites into clusters, size markers by event volume, display cluster counts, expand clusters on click, and support light and dark basemap styles with attribution.\n\nData context: Bundled site names, coordinates, and event counts demonstrate map styling and interactions; they are illustrative telemetry.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=advanced-leaflet-map\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/advanced-leaflet-map\nData/source references: Leaflet Map component documentation — https://unovis.dev/docs/components/LeafletMap",
+    "legacyTitles": [
+      "Advanced Leaflet Map"
+    ],
+    "sources": [
+      {
+        "name": "Leaflet Map component documentation",
+        "url": "https://unovis.dev/docs/components/LeafletMap"
+      }
+    ]
+  },
+  "topojson-map": {
+    "title": "Life expectancy around the world",
+    "kicker": "Country estimates · 1950–2019",
+    "subtitle": "Move through seven decades of life expectancy with a shared color scale.",
+    "description": "The bundled Our World in Data snapshot stores a country code and annual life-expectancy values. The legend uses the same fixed 50–85 year scale throughout.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a TopoJSONMap choropleth from country ids and annual age arrays for 1950–2019. Add a year slider, country/value tooltips, and a custom horizontal gradient legend with a fixed 50–85 year domain so colors remain comparable.\n\nData context: The bundled Our World in Data snapshot stores a country code and annual life-expectancy values. The legend uses the same fixed 50–85 year scale throughout.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=topojson-map\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/topojson-map\nData/source references: Our World in Data — https://ourworldindata.org/life-expectancy",
+    "legacyTitles": [
+      "Choropleth World Map with Custom Legend"
+    ],
+    "sources": [
+      {
+        "name": "Our World in Data",
+        "url": "https://ourworldindata.org/life-expectancy"
+      }
+    ]
+  },
+  "energy-flow-sankey": {
+    "title": "Where does U.S. energy go?",
+    "kicker": "United States · 2024 · quadrillion Btu",
+    "subtitle": "Energy sources split across sectors; electricity combines sources and redistributes energy.",
+    "description": "Published trillion-Btu values are converted to quadrillion Btu. Electrical system losses remain explicit. Tiny differences at nodes reflect source rounding; unreported residential coal is omitted.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Build a Sankey of U.S. energy sources, electricity generation, and end-use sectors from the 2024 EIA snapshot, in quadrillion Btu. Color sources with the Unovis palette, retain source/target/value links, provide filtering and tooltips, and explain the flow accounting rather than implying every energy stream is useful delivered energy.\n\nData context: Published trillion-Btu values are converted to quadrillion Btu. Electrical system losses remain explicit. Tiny differences at nodes reflect source rounding; unreported residential coal is omitted.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=energy-flow-sankey\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/energy-flow-sankey\nData/source references: EIA Monthly Energy Review, tables 2.2–2.6 — https://www.eia.gov/totalenergy/data/monthly/",
+    "sources": [
+      {
+        "name": "EIA Monthly Energy Review, tables 2.2–2.6",
+        "url": "https://www.eia.gov/totalenergy/data/monthly/"
+      }
+    ]
+  },
+  "dependency-explorer": {
+    "title": "Inside the Unovis dependency graph",
+    "kicker": "Unovis 1.7.1 · declared dependency snapshot",
+    "subtitle": "Select a package to highlight its connections, or search to inspect a smaller neighborhood.",
+    "description": "This selected graph includes framework wrappers, the TypeScript core, and visualization dependencies. Version labels are declared package versions or dependency ranges; wrapper peer dependencies on the core are included; development dependencies are excluded.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Build a Graph from Unovis package manifests, with package nodes, dependency links, and distinct package-type icons. Add package selection and search, highlight connections around the chosen package, and include dependency details in tooltips.\n\nData context: This selected graph includes framework wrappers, the TypeScript core, and visualization dependencies. Version labels are declared package versions or dependency ranges; wrapper peer dependencies on the core are included; development dependencies are excluded.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=dependency-explorer\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/dependency-explorer\nData/source references: Unovis package manifests — https://github.com/f5/unovis/tree/main/packages",
+    "sources": [
+      {
+        "name": "Unovis package manifests",
+        "url": "https://github.com/f5/unovis/tree/main/packages"
+      }
+    ]
+  },
+  "basic-sankey": {
+    "title": "A household's weekly consumables budget",
+    "kicker": "United Kingdom · 2019 expenditure snapshot",
+    "subtitle": "Follow spending from consumables into food, drinks, and other categories.",
+    "description": "The bundled Office for National Statistics snapshot supplies spending values and source/target links. The example displays the consumables branch of a household budget.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Build a Sankey with nodes containing id, label, value, and subgroups, and links containing source, target, and value. Show the UK household consumables branch, label nodes with spending values, and keep the flow widths proportional to expenditure.\n\nData context: The bundled Office for National Statistics snapshot supplies spending values and source/target links. The example displays the consumables branch of a household budget.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-sankey\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-sankey\nData/source references: Office for National Statistics — https://www.ons.gov.uk/",
+    "legacyTitles": [
+      "Basic Sankey"
+    ],
+    "sources": [
+      {
+        "name": "Office for National Statistics",
+        "url": "https://www.ons.gov.uk/"
+      }
+    ]
+  },
+  "expandable-sankey": {
+    "title": "Unpack a household budget",
+    "kicker": "United Kingdom · weekly expenditure",
+    "subtitle": "Click spending categories to reveal or collapse the detail beneath them.",
+    "description": "The bundled household budget uses Office for National Statistics expenditure categories. Expanded nodes show subcategories; collapsed nodes retain the aggregate.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create an expandable Sankey of household weekly expenditure. Start with top-level spending categories, expand or collapse a category on node click, preserve its aggregate value, and display percentages of total expenditure in node sublabels.\n\nData context: The bundled household budget uses Office for National Statistics expenditure categories. Expanded nodes show subcategories; collapsed nodes retain the aggregate.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=expandable-sankey\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/expandable-sankey\nData/source references: Office for National Statistics — https://www.ons.gov.uk/",
+    "legacyTitles": [
+      "Expandable Sankey"
+    ],
+    "sources": [
+      {
+        "name": "Office for National Statistics",
+        "url": "https://www.ons.gov.uk/"
+      }
+    ]
+  },
+  "dagre-graph": {
+    "title": "Inside an online shop's service mesh",
+    "kicker": "Online Boutique · directed service graph",
+    "subtitle": "Follow the connections between services with a layered Dagre layout.",
+    "description": "The bundled graph is based on the Online Boutique sample application, with node shapes, link colors, and active-flow flags.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Use Graph with a Dagre layout to display service-mesh nodes and directed links from the Online Boutique sample. Bind node labels, shapes, and colors, animate links marked active, and keep the layout readable without requiring zoom.\n\nData context: The bundled graph is based on the Online Boutique sample application, with node shapes, link colors, and active-flow flags.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=dagre-graph\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/dagre-graph\nData/source references: Online Boutique sample application — https://cloud.google.com/service-mesh/docs/onlineboutique-install-kpt",
+    "legacyTitles": [
+      "Dagre Layout Graph"
+    ],
+    "sources": [
+      {
+        "name": "Online Boutique sample application",
+        "url": "https://cloud.google.com/service-mesh/docs/onlineboutique-install-kpt"
+      }
+    ]
+  },
+  "force-graph": {
+    "title": "Who connects Les Misérables?",
+    "kicker": "Character co-occurrence · Stanford GraphBase",
+    "subtitle": "A force-directed network reveals relationships among the novel's characters.",
+    "description": "Nodes are characters and links record co-occurrence with a chapter label in the bundled Stanford GraphBase-derived graph.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw a force-directed Graph of Les Misérables characters using id/color nodes and source/target/chapter links. Label nodes by character, label links by chapter, and tune repulsion and centering forces to spread the network.\n\nData context: Nodes are characters and links record co-occurrence with a chapter label in the bundled Stanford GraphBase-derived graph.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=force-graph\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/force-graph\nData/source references: The Stanford GraphBase — https://www-cs-faculty.stanford.edu/~knuth/sgb.html",
+    "legacyTitles": [
+      "Force Layout Graph"
+    ],
+    "sources": [
+      {
+        "name": "The Stanford GraphBase",
+        "url": "https://www-cs-faculty.stanford.edu/~knuth/sgb.html"
+      }
+    ]
+  },
+  "parallel-graph": {
+    "title": "Service traffic across sites",
+    "kicker": "Parallel graph · synthetic telemetry",
+    "subtitle": "Expand a site to inspect service health and the traffic between groups.",
+    "description": "The dataset is synthetic. Node scores, status badges, and animated links illustrate monitoring and grouped-network interactions.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Use Graph with a parallel layout to arrange service sites into columns. Clicking a site expands its services; show status-colored links, animated traffic, node gauges, badges, and panels around expanded groups.\n\nData context: The dataset is synthetic. Node scores, status badges, and animated links illustrate monitoring and grouped-network interactions.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=parallel-graph\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/parallel-graph",
+    "legacyTitles": [
+      "Parallel Layout Graph"
+    ]
+  },
+  "elk-layered-graph": {
+    "title": "From a VPC to its workloads",
+    "kicker": "ELK layered layout · illustrative topology",
+    "subtitle": "Organize network and workload nodes into nested groups.",
+    "description": "The bundled identifiers and connections form an illustrative topology, not a validated network configuration.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Use Graph with an ELK layered layout directed rightwards. Group illustrative VPC, subnet, and workload nodes by group and subGroup accessors, draw nested labeled panels, and configure spacing to make the hierarchy clear.\n\nData context: The bundled identifiers and connections form an illustrative topology, not a validated network configuration.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=elk-layered-graph\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/elk-layered-graph\nData/source references: The Eclipse Layout Kernel (ELK) — https://www.eclipse.org/elk/, ELK Demonstrators — https://rtsys.informatik.uni-kiel.de/elklive/",
+    "legacyTitles": [
+      "ELK Layered Graph Layout"
+    ],
+    "sources": [
+      {
+        "name": "The Eclipse Layout Kernel (ELK)",
+        "url": "https://www.eclipse.org/elk/"
+      },
+      {
+        "name": "ELK Demonstrators",
+        "url": "https://rtsys.informatik.uni-kiel.de/elklive/"
+      }
+    ]
+  },
+  "custom-nodes-graph": {
+    "title": "From identity to sensitive resources",
+    "kicker": "Custom graph nodes · illustrative access paths",
+    "subtitle": "Trace access through roles and compute instances to files and secrets.",
+    "description": "This synthetic access graph demonstrates custom SVG icons, finding badges, node panels, tooltips, and zoom controls.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Build a parallel Graph showing users and roles connected through compute instances to files and secrets. Render distinct SVG icons, finding-count badges, labels and sublabels, and group panels. Add tooltip follow-cursor and hover toggles plus fit and zoom controls; use white icons in light mode and dark icons in dark mode.\n\nData context: This synthetic access graph demonstrates custom SVG icons, finding badges, node panels, tooltips, and zoom controls.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=custom-nodes-graph\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/custom-nodes-graph",
+    "legacyTitles": [
+      "Custom Nodes Graph with tooltips"
+    ]
+  },
+  "exoplanet-discoveries": {
+    "title": "How did we discover exoplanets?",
+    "kicker": "Discoveries through 2024 · archive snapshot 19 October 2026",
+    "subtitle": "Explore discovery methods and the facilities behind them, weighted by confirmed planet counts.",
+    "description": "The composite-parameters table contains one row per planet. Counts describe confirmed discoveries in this snapshot, not the underlying abundance of planets. Click a segment to explore it.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create an animated NestedDonut hierarchy of confirmed exoplanet counts by discovery method and facility through 2024. Use the Unovis palette, configurable time filters, count and share tooltips. Keep facility contributions weighted by planet count and animate changes between filtered views.\n\nData context: The composite-parameters table contains one row per planet. Counts describe confirmed discoveries in this snapshot, not the underlying abundance of planets. Click a segment to explore it.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=exoplanet-discoveries\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/exoplanet-discoveries\nData/source references: NASA Exoplanet Archive — https://exoplanetarchive.ipac.caltech.edu/docs/API_TD_columns.html",
+    "sources": [
+      {
+        "name": "NASA Exoplanet Archive",
+        "url": "https://exoplanetarchive.ipac.caltech.edu/docs/API_TD_columns.html"
+      }
+    ]
+  },
+  "state-migration-chord": {
+    "title": "Where do Americans move?",
+    "kicker": "2024 ACS · people aged one and over",
+    "subtitle": "Follow interstate moves between eight selected states and the rest of the country.",
+    "description": "Links run from previous residence to current residence. Other states includes the remaining 42 states and DC; moves within that aggregated group are omitted. Values are survey estimates.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw a ChordDiagram of origin-to-destination interstate moves between eight selected states and an other-states group. Use the Unovis palette, put readable labels inside the arcs, show directional move counts on hover, and add a state-highlighting selector.\n\nData context: Links run from previous residence to current residence. Other states includes the remaining 42 states and DC; moves within that aggregated group are omitted. Values are survey estimates.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=state-migration-chord\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/state-migration-chord\nData/source references: U.S. Census Bureau — https://www.census.gov/topics/population/migration/guidance/state-to-state-migration-flows.html",
+    "sources": [
+      {
+        "name": "U.S. Census Bureau",
+        "url": "https://www.census.gov/topics/population/migration/guidance/state-to-state-migration-flows.html"
+      }
+    ]
+  },
+  "basic-donut-chart": {
+    "title": "What makes a common password?",
+    "kicker": "Password categories · historical compilation",
+    "subtitle": "Compare the relative weight of names, alphanumeric strings, and other password categories.",
+    "description": "The bundled category counts come from Information is Beautiful's common-password visualization. They describe that historical compilation, not current password use.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a Donut from key/value password-category counts with a matching legend, separated arcs, and a fixed arc width. Size slices by count and preserve category order.\n\nData context: The bundled category counts come from Information is Beautiful's common-password visualization. They describe that historical compilation, not current password use.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-donut-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-donut-chart\nData/source references: information is beautiful — https://informationisbeautiful.net/visualizations/top-500-passwords-visualized/",
+    "legacyTitles": [
+      "Basic Donut Chart"
+    ],
+    "sources": [
+      {
+        "name": "information is beautiful",
+        "url": "https://informationisbeautiful.net/visualizations/top-500-passwords-visualized/"
+      }
+    ]
+  },
+  "basic-circular-bar-chart": {
+    "title": "Seven readings, seven reference values",
+    "kicker": "Wellness readings · illustrative data",
+    "subtitle": "Compare sample readings in different units as fractions of their own reference values.",
+    "description": "The seven readings and reference maxima are illustrative. Each petal uses its own scale, so lengths show fractions of separate reference values rather than directly comparable raw quantities.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Use CircularBar to display seven illustrative readings with key, value, unit, icon, and color fields. Normalize each petal with its corresponding maxValue, add a matching BulletLegend and icons at the inner ends, and show the reading, reference maximum, and unit in a tooltip. Use theme-aware palette colors and explain that the readings have different units and separate scales.\n\nData context: The seven readings and reference maxima are illustrative. Each petal uses its own scale, so lengths show fractions of separate reference values rather than directly comparable raw quantities.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-circular-bar-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-circular-bar-chart",
+    "legacyTitles": [
+      "Circular Bar Chart"
+    ]
+  },
+  "basic-radial-bar-chart": {
+    "title": "Progress toward three daily goals",
+    "kicker": "Radial bars · illustrative activity",
+    "subtitle": "Compare steps, calories, and movement against their own daily targets.",
+    "description": "The illustrative values are 8,300 of 10,000 steps, 420 of 600 kcal, and 25 of 30 movement minutes. The center summarizes average completion.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw three concentric RadialBar tracks for steps, calories, and movement. Give each datum its own maximum, show rounded colored progress arcs and a category legend, put average completion in the center, and show current/target/unit tooltips.\n\nData context: The illustrative values are 8,300 of 10,000 steps, 420 of 600 kcal, and 25 of 30 movement minutes. The center summarizes average completion.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-radial-bar-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-radial-bar-chart",
+    "legacyTitles": [
+      "Radial Bar Chart"
+    ]
+  },
+  "hierarchical-chord-diagram": {
+    "title": "Switching phone brands",
+    "kicker": "2014 mobile consumer survey",
+    "subtitle": "Follow brand-to-brand switching, grouped by headquarters country.",
+    "description": "The bundled switching matrix contains proportions for eight phone-brand groups. Country groups describe company headquarters, not customer locations.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw a ChordDiagram from phone-brand nodes, country groups, and a weighted switching matrix. Use country-based colors, group brands with nodeLevels, and show perpendicular labels for both brand and country levels.\n\nData context: The bundled switching matrix contains proportions for eight phone-brand groups. Country groups describe company headquarters, not customer locations.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=hierarchical-chord-diagram\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/hierarchical-chord-diagram\nData/source references: 2014 Mobile Consumer Survey Data — https://observablehq.com/@d3/chord-diagram#data",
+    "legacyTitles": [
+      "Hierarchical Chord Diagram"
+    ],
+    "sources": [
+      {
+        "name": "2014 Mobile Consumer Survey Data",
+        "url": "https://observablehq.com/@d3/chord-diagram#data"
+      }
+    ]
+  },
+  "sunburst-nested-donut": {
+    "title": "A wheel of coffee flavors",
+    "kicker": "Coffee taxonomy · aromas and tastes",
+    "subtitle": "Move outward from broad flavor families to specific sensory notes.",
+    "description": "This is a categorical flavor taxonomy; segment sizes reflect the hierarchy's entries, not measured flavor intensity.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create an outward NestedDonut with five layers: type, group, subgroup, description, and item. Use a coffee-flavor taxonomy, keep related branches in coordinated colors, and label the hierarchy without implying measured flavor strength.\n\nData context: This is a categorical flavor taxonomy; segment sizes reflect the hierarchy's entries, not measured flavor intensity.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=sunburst-nested-donut\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/sunburst-nested-donut\nData/source references: Aculocity — https://www.aculocity.com/labs/sunburst-chart",
+    "legacyTitles": [
+      "Sunburst Nested Donut"
+    ],
+    "sources": [
+      {
+        "name": "Aculocity",
+        "url": "https://www.aculocity.com/labs/sunburst-chart"
+      }
+    ]
+  },
+  "street-tree-treemap": {
+    "title": "What grows on New York’s streets?",
+    "kicker": "TreesCount! · 2015 historical census",
+    "subtitle": "Explore the species that make up a borough’s living street-tree population.",
+    "description": "Areas encode counts of living trees, grouped by borough and species. Search changes the displayed total; this is a historical census, not today’s inventory.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a Treemap of living NYC street trees with borough and species layers and count as tile value. Show all boroughs by default, add borough and species-search controls, and link species selection across boroughs. Preserve selected tile colors and lighten other tiles from their normal fills. Use compact labels, tooltips.\n\nData context: Areas encode counts of living trees, grouped by borough and species. Search changes the displayed total; this is a historical census, not today’s inventory.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=street-tree-treemap\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/street-tree-treemap\nData/source references: NYC Parks street-tree census — https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data",
+    "sources": [
+      {
+        "name": "NYC Parks street-tree census",
+        "url": "https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data"
+      }
+    ]
+  },
+  "treemap": {
+    "title": "Putting billions in perspective",
+    "kicker": "The Billion Dollar Gram · historical compilation",
+    "subtitle": "Compare the scale of spending, earnings, losses, debt, and wealth.",
+    "description": "The bundled records mix years and different kinds of quantities. Tile area compares reported dollar amounts; category sums should not be interpreted as a single coherent budget.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Build a Treemap from name, category, and billions fields. Group tiles by category, size by billions, vary label size with tile size, include category legends, and show name/category/value tooltips. Explain that the historical compilation combines different years and kinds of financial quantities.\n\nData context: The bundled records mix years and different kinds of quantities. Tile area compares reported dollar amounts; category sums should not be interpreted as a single coherent budget.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=treemap\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/treemap\nData/source references: information is beautiful — https://informationisbeautiful.net/visualizations/the-billion-dollar-gram/",
+    "legacyTitles": [
+      "Treemap"
+    ],
+    "sources": [
+      {
+        "name": "information is beautiful",
+        "url": "https://informationisbeautiful.net/visualizations/the-billion-dollar-gram/"
+      }
+    ]
+  },
+  "bike-demand-heatmap": {
+    "title": "When does New York ride?",
+    "kicker": "New York City · January 2024",
+    "subtitle": "Average trip starts per hour reveal weekday commutes and weekend rhythms.",
+    "description": "All January CSV parts are included. Each cell is divided by the number of matching weekdays in the month; times are local New York time.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a weekday-by-hour Heatmap of Citi Bike trip starts for January 2024. Average each weekday/hour cell by the number of matching dates rather than comparing raw weekday totals. Include ride-type selection, a color legend, count tooltips.\n\nData context: All January CSV parts are included. Each cell is divided by the number of matching weekdays in the month; times are local New York time.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=bike-demand-heatmap\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/bike-demand-heatmap\nData/source references: Citi Bike system data — https://citibikenyc.com/system-data",
+    "sources": [
+      {
+        "name": "Citi Bike system data",
+        "url": "https://citibikenyc.com/system-data"
+      }
+    ]
+  },
+  "github-style-heatmap": {
+    "title": "A year of daily activity",
+    "kicker": "Calendar heatmap · synthetic counts",
+    "subtitle": "Read activity patterns across weeks and weekdays in a GitHub-style calendar.",
+    "description": "Counts are deterministically generated for a rolling 364-day window; they are not a person's actual contribution history.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a Heatmap of daily date/count records with seven weekday rows and weeks as columns. Use offset for the first partial week, compact rounded cells, month labels, alternating weekday labels, and empty cells for zero activity. Label the dataset as synthetic.\n\nData context: Counts are deterministically generated for a rolling 364-day window; they are not a person's actual contribution history.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=github-style-heatmap\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/github-style-heatmap",
+    "legacyTitles": [
+      "GitHub-Style Heatmap"
+    ]
+  },
+  "bike-trip-distributions": {
+    "title": "How long is a bike ride?",
+    "kicker": "New York City · January 2024",
+    "subtitle": "A histogram and cumulative distribution reveal the shape and long tail of ride durations.",
+    "description": "Durations are derived from local timestamps. Non-positive durations are excluded. One-minute aggregates preserve all positive rides; the last bucket contains rides of 120 minutes or longer. Cumulative shares use all positive rides.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create linked ride-duration views: a histogram and a cumulative distribution Line. Let users filter Citi Bike rides by membership and ride type, show a shared duration cursor, and display sample counts and duration units. Keep the cumulative proportion denominator consistent with the filtered records and explain the handling of the long tail.\n\nData context: Durations are derived from local timestamps. Non-positive durations are excluded. One-minute aggregates preserve all positive rides; the last bucket contains rides of 120 minutes or longer. Cumulative shares use all positive rides.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=bike-trip-distributions\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/bike-trip-distributions\nData/source references: Citi Bike system data — https://citibikenyc.com/system-data",
+    "sources": [
+      {
+        "name": "Citi Bike system data",
+        "url": "https://citibikenyc.com/system-data"
+      }
+    ]
+  },
+  "electricity-grid-dashboard": {
+    "title": "A week on the electricity grid",
+    "kicker": "EIA-930 · 17–23 June 2024 · UTC",
+    "subtitle": "Generation mix and demand share one time window, crosshair, and overview brush.",
+    "description": "Hourly power is shown in GW. Generation and demand differ because of interchange and other balancing quantities; they are not forced to match. Fuel colors stay consistent. Stepped areas show hourly values, including negative net generation; 1px minimum bands keep small series visible.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a dashboard with stacked step Areas for hourly generation by fuel, Lines for actual and day-ahead forecast demand, and an overview Brush. Share the time domain and Crosshair across views, use fixed matching plot margins, support grid-area selection, preserve missing values and signed generation, and show GW tooltips mounted in document.body.\n\nData context: Hourly power is shown in GW. Generation and demand differ because of interchange and other balancing quantities; they are not forced to match. Fuel colors stay consistent. Stepped areas show hourly values, including negative net generation; 1px minimum bands keep small series visible.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=electricity-grid-dashboard\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/electricity-grid-dashboard\nData/source references: U.S. Energy Information Administration — https://www.eia.gov/electricity/930-content/about.html",
+    "sources": [
+      {
+        "name": "U.S. Energy Information Administration",
+        "url": "https://www.eia.gov/electricity/930-content/about.html"
+      }
+    ]
+  },
+  "dual-axis-chart": {
+    "title": "Two signals on separate scales",
+    "kicker": "Dual-axis chart · synthetic series",
+    "subtitle": "Align traffic and signal strength on one timeline while keeping their units separate.",
+    "description": "Both series are generated sample data. The independently scaled axes demonstrate layout and do not establish a correlation.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Overlay two XYContainers with identical fixed margins and x domains. Draw an Area for illustrative traffic on the left axis and a Line for illustrative signal strength on the right, color each axis to match its series, and label distinct units clearly.\n\nData context: Both series are generated sample data. The independently scaled axes demonstrate layout and do not establish a correlation.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=dual-axis-chart\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/dual-axis-chart\nData/source references: Datawrapper — https://blog.datawrapper.de/dualaxis/, Florish — https://flourish.studio/blog/dual-axis-charts/",
+    "legacyTitles": [
+      "Dual Axis Chart"
+    ],
+    "sources": [
+      {
+        "name": "Datawrapper",
+        "url": "https://blog.datawrapper.de/dualaxis/"
+      },
+      {
+        "name": "Florish",
+        "url": "https://flourish.studio/blog/dual-axis-charts/"
+      }
+    ]
+  },
+  "range-plot": {
+    "title": "The pay gap across occupations",
+    "kicker": "Paired salary comparison · historical snapshot",
+    "subtitle": "Connect women's and men's reported yearly pay within each occupation.",
+    "description": "The bundled Information is Beautiful snapshot compares reported average salaries by occupation. It is a descriptive comparison, not an estimate adjusted for other factors.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a horizontal dumbbell chart using paired Scatter points joined by Line segments. Map salary to x and occupation to y, color points for women and men, add an occupation axis and salary labels, and show both salaries and their difference on hover.\n\nData context: The bundled Information is Beautiful snapshot compares reported average salaries by occupation. It is a descriptive comparison, not an estimate adjusted for other factors.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=range-plot\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/range-plot\nData/source references: Information is Beautiful — https://informationisbeautiful.net/visualizations/gender-pay-gap/",
+    "legacyTitles": [
+      "Range Plot"
+    ],
+    "sources": [
+      {
+        "name": "Information is Beautiful",
+        "url": "https://informationisbeautiful.net/visualizations/gender-pay-gap/"
+      }
+    ]
+  },
+  "basic-annotations": {
+    "title": "Bitcoin's price cycles, annotated",
+    "kicker": "Weekly price and volume · 2010–2023 snapshot",
+    "subtitle": "Use callouts to put major peaks in a long price history into context.",
+    "description": "The bundled Yahoo Finance snapshot supplies weekly dates, USD prices, and trading volumes. Annotations demonstrate text layout and connectors on a logarithmic price chart.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Plot weekly Bitcoin price as a Line on a logarithmic y scale, with subdued volume bars and a time axis. Use Annotations to add connector callouts near the 2011, 2013, 2017, and 2021 peaks, with readable positioning and clear currency labels.\n\nData context: The bundled Yahoo Finance snapshot supplies weekly dates, USD prices, and trading volumes. Annotations demonstrate text layout and connectors on a logarithmic price chart.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=basic-annotations\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/basic-annotations\nData/source references: Yahoo! Finance — https://finance.yahoo.com/quote/BTC-USD/history/",
+    "legacyTitles": [
+      "Chart Annotations"
+    ],
+    "sources": [
+      {
+        "name": "Yahoo! Finance",
+        "url": "https://finance.yahoo.com/quote/BTC-USD/history/"
+      }
+    ]
+  },
+  "crosshair-stacked-bar": {
+    "title": "Inspect the changing music market",
+    "kicker": "U.S. recorded music · stacked bars and crosshair",
+    "subtitle": "Hover a year to compare revenues across physical and digital formats.",
+    "description": "The bundled RIAA records supply year and five format revenues. The crosshair summarizes one year with category icons and currency values.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Stack annual vinyl, cassette, cd, download, and streaming revenues with StackedBar. Add a format legend and a Crosshair tooltip that shows the selected year and each nonzero format with an icon and currency formatting.\n\nData context: The bundled RIAA records supply year and five format revenues. The crosshair summarizes one year with category icons and currency values.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=crosshair-stacked-bar\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/crosshair-stacked-bar\nData/source references: RIAA — https://www.riaa.com/u-s-sales-database/, Bootstrap Icons — https://icons.getbootstrap.com/#install",
+    "legacyTitles": [
+      "Stacked Bar Chart with Crosshair"
+    ],
+    "sources": [
+      {
+        "name": "RIAA",
+        "url": "https://www.riaa.com/u-s-sales-database/"
+      },
+      {
+        "name": "Bootstrap Icons",
+        "url": "https://icons.getbootstrap.com/#install"
+      }
+    ]
+  },
+  "synced-crosshairs": {
+    "title": "One cursor, two linked charts",
+    "kicker": "Synchronized crosshairs · illustrative series",
+    "subtitle": "Hover either chart or use presets and a slider to inspect the same x position.",
+    "description": "The bundled seeded series is synthetic. Both charts share forceShowAt state so pointer and programmatic selections stay synchronized.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create two vertically stacked XY charts from the same x/y series, with an Area view above and a Line view below. Share the Crosshair position through forceShowAt and onMove, and add preset buttons, a slider, and a clear action.\n\nData context: The bundled seeded series is synthetic. Both charts share forceShowAt state so pointer and programmatic selections stay synchronized.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=synced-crosshairs\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/synced-crosshairs",
+    "legacyTitles": [
+      "Synced Crosshairs"
+    ]
+  },
+  "brush-grouped-bar": {
+    "title": "Decades of cereal production",
+    "kicker": "World Bank · overview and detail",
+    "subtitle": "Drag the overview brush and toggle countries to compare a selected period.",
+    "description": "The bundled cereal-production series is expressed in millions of metric tons; unavailable country-year observations remain missing.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Build grouped bars of annual cereal production by country, with a compact overview and draggable Brush controlling the main x domain. Add a clickable country legend and update the detail view immediately during brushing.\n\nData context: The bundled cereal-production series is expressed in millions of metric tons; unavailable country-year observations remain missing.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=brush-grouped-bar\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/brush-grouped-bar\nData/source references: World Bank Open Data — https://data.worldbank.org",
+    "legacyTitles": [
+      "Grouped Bar with Brush and Interactive Legend"
+    ],
+    "sources": [
+      {
+        "name": "World Bank Open Data",
+        "url": "https://data.worldbank.org"
+      }
+    ]
+  },
+  "free-brush-scatters": {
+    "title": "Explore college outcomes with a brush",
+    "kicker": "American Community Survey · 2010–2012",
+    "subtitle": "Brush the overview to focus on majors in a salary and employment range.",
+    "description": "The bundled FiveThirtyEight college-majors snapshot supplies median salary, employment rate, graduate count, and subject category.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Create a Scatter of medianSalary versus employmentRate, color by major category, and size points by graduate count using a 4–20px diameter range. Add a small overview Scatter with an XY FreeBrush that updates the main chart's x and y domains; label axes and selected majors.\n\nData context: The bundled FiveThirtyEight college-majors snapshot supplies median salary, employment rate, graduate count, and subject category.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=free-brush-scatters\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/free-brush-scatters\nData/source references: FiveThirtyEight — https://github.com/fivethirtyeight/data/tree/master/college-majors",
+    "legacyTitles": [
+      "Scatter Plot with Free Brush"
+    ],
+    "sources": [
+      {
+        "name": "FiveThirtyEight",
+        "url": "https://github.com/fivethirtyeight/data/tree/master/college-majors"
+      }
+    ]
+  },
+  "plotband-plotline": {
+    "title": "Highlight ranges and reference values",
+    "kicker": "Plot bands and lines · illustrative data",
+    "subtitle": "Mark intervals and thresholds on both axes of a line chart.",
+    "description": "The fifteen x/y pairs are illustrative. Colored bands and reference lines demonstrate annotations in data coordinates.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Draw a Line through x/y records. Add an x Plotband from 4 to 6, a y Plotband from 1 to 3, a y Plotline at 6, and an x Plotline at 10, with distinct colors and readable labels in different positions.\n\nData context: The fifteen x/y pairs are illustrative. Colored bands and reference lines demonstrate annotations in data coordinates.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=plotband-plotline\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/plotband-plotline",
+    "legacyTitles": [
+      "Plot bands and plot lines"
+    ]
+  }
+}

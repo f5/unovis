@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'elk-layered-graph'
 const example: Example = {
@@ -10,12 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'ELK Layered Graph Layout',
-  description: <p>
-    This example shows how to use <a href="https://www.eclipse.org/elk/" target="_blank">The Eclipse Layout Kernel (ELK)</a> with Graph.
-    ELK is a powerful layout engine with many different types of graph layouts available.
-    Check out the <a href="https://rtsys.informatik.uni-kiel.de/elklive/" target="_blank">ELK Demonstrators</a> page to learn more.
-  </p>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

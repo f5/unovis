@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'synced-crosshairs'
 const example: Example = {
@@ -10,11 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Synced Crosshairs',
-  description: <div>
-    Two stacked XY charts sharing a single crosshair position via <code>forceShowAt</code>.
-    Hover either chart, click a preset, or drag the slider — both crosshairs stay in sync.
-  </div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
@@ -26,6 +23,7 @@ const example: Example = {
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   codeVue: require(`!!raw-loader!./${pathname}.vue`).default,
   data: require('!!raw-loader!./data').default,
+  styles: require('!!raw-loader!./styles.css').default,
   preview: require(`../_previews/${pathname}.png`).default,
   previewDark: require(`../_previews/${pathname}-dark.png`).default,
 }

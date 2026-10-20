@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'horizontal-stacked-bar-chart'
 const example: Example = {
@@ -10,8 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Horizontal Stacked Bar Chart with Tooltip and Legend',
-  description: <small>Data obtained from <a href="https://data.worldbank.org">World Bank Open Data</a></small>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

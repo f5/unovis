@@ -1,5 +1,10 @@
 export type Example = {
   title: string;
+  kicker?: string;
+  subtitle?: string;
+  prompt: string;
+  legacyTitles?: string[];
+  sources?: { name: string; url: string }[];
   pathname: string;
   description: string | JSX.Element;
   component: () => JSX.Element;

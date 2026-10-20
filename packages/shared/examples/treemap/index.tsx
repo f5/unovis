@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
 import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'treemap'
 const example: Example = {
@@ -10,12 +11,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Treemap',
-  description: <div>
-    Data from <a href="https://informationisbeautiful.net/visualizations/the-billion-dollar-gram/" target="_blank">
-      information is beautiful
-    </a> (source: <em>The billion dollar gram</em>)
-  </div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

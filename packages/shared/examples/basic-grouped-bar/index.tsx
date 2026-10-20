@@ -1,5 +1,6 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */import React from 'react'
 import type { Example } from '../types'
+import metadata from '../metadata.json'
 
 const pathname = 'basic-grouped-bar'
 const example: Example = {
@@ -9,8 +10,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Basic Grouped Bar Chart',
-  description: <div>U.S. Presidential election data obtained from <a href="https://dataverse.harvard.edu/" target="_blank">MIT Election Data and Science Lab</a></div>,
+  ...metadata[pathname],
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
