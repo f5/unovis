@@ -34,7 +34,8 @@
     "dist/composites/time-series/style.module.css.js"
   ],
   "scripts": {
-    "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
+    "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md AGENTS.md package.json ./dist",
+    "tsc": "tsc",
     "generate": "tsx ./autogen/index.ts",
     "publish:dist": "cd ./dist; npm publish",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"

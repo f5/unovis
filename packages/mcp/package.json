@@ -53,6 +53,7 @@
     "schema",
     "docs",
     "README.md",
+    "AGENTS.md",
     "LICENSE"
   ],
   "scripts": {
