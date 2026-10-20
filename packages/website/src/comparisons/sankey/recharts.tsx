@@ -2,9 +2,10 @@ import React from 'react'
 import { Sankey, Tooltip, Layer, Rectangle } from 'recharts'
 import type { SankeyNodeProps } from 'recharts'
 
+import type { ChartProps } from '../types'
 import { SankeyData, formatVisits } from './data'
 
-export default function RechartsSankey ({ data, isDark }: { data: SankeyData; isDark: boolean }): JSX.Element {
+export default function RechartsSankey ({ data, isDark, preset }: ChartProps<SankeyData>): JSX.Element {
   // Recharts links nodes by their index in the nodes array
   const index = new Map(data.nodes.map((n, i) => [n.id, i]))
   const sankeyData = {
@@ -33,7 +34,8 @@ export default function RechartsSankey ({ data, isDark }: { data: SankeyData; is
       height="100%"
       data={sankeyData}
       node={renderNode}
-      nodePadding={12}
+      nodeWidth={preset === 'thin' ? 6 : 10}
+      nodePadding={preset === 'thin' ? 24 : 12}
       link={{ stroke: isDark ? '#555' : '#ccc' }}
       margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
     >
