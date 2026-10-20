@@ -1,0 +1,33 @@
+# Unovis
+
+> Modular data visualization for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript. Compose charts, maps, and networks from typed components; generate charts locally through the Unovis MCP server.
+
+For application code, choose the user's framework and read the library fundamentals, framework bindings, and the relevant generated component reference. Install `@unovis/ts` plus the matching framework package. Browser-library accessors are functions or constants; MCP inputs usually use field-name strings. Do not interchange the two APIs.
+
+The API references below are generated from the TypeScript core, including inherited properties, documented defaults, and supporting enums/types. Check the installed package's types when its version differs from the reference. For MCP, call `get_unovis_info` and inspect the connected server's `tools/list` schemas before choosing a tool or its arguments.
+
+## Library implementation
+
+- [Fundamentals](https://unovis.dev/llms/fundamentals.md): Package selection, choosing containers, accessors, data binding, configuration, updates, sizing, and common pitfalls.
+- [Framework bindings](https://unovis.dev/llms/frameworks.md): Complete line-chart examples and binding differences for all six integrations.
+- [Generated API index](https://unovis.dev/llms/api/index.md): Exact properties for every registered component and both containers, with linked public types and enums.
+- [XYContainer](https://unovis.dev/llms/api/XYContainer.md): Shared Cartesian scales, domains, axes, margins, sizing, and animation duration.
+- [SingleContainer](https://unovis.dev/llms/api/SingleContainer.md): One non-Cartesian visualization plus optional tooltip and annotations.
+
+## MCP chart generation
+
+- [MCP workflow](https://unovis.dev/llms/mcp.md): Discover available tools, choose output formats, distinguish tool fields from core accessors, and generate framework source.
+- [Connect the server](https://unovis.dev/docs/mcp/getting-started.md): Install `@unovis/mcp`; configure stdio or a self-hosted HTTP deployment.
+- [Chart-tool reference](https://unovis.dev/docs/mcp/tools.md): Generated tool names, input fields, types, defaults, examples, and `get_unovis_info`.
+- [Output types](https://unovis.dev/docs/mcp/output-types.md): SVG, PNG, HTML, inline interactive charts, JSON configuration, and framework code.
+- [ChartSpec](https://unovis.dev/docs/mcp/chart-spec.md): The serializable chart specification and its field-accessor syntax.
+- [ChartSpec JSON Schema](https://unovis.dev/schema/chart-spec.v0.1.json): Machine-readable structure; use component references for configuration properties beyond the schema's extensible objects.
+- [Programmatic rendering](https://unovis.dev/docs/mcp/programmatic.md): `renderChart`, the `@unovis/ssr` rendering primitive, and embedding chart tools in another server.
+
+## Optional
+
+- [Gallery prompt catalog](https://unovis.dev/llm.txt): Full creation prompts, data notes, source links, and all gallery examples. This is the larger, legacy singular-path catalog; load it only when looking for an example or a reusable prompt. Replace `{framework}` with the desired framework.
+- [Interactive output](https://unovis.dev/docs/mcp/interactive.md): MCP Apps support, browser widgets, and HTML embedding.
+- [Troubleshooting](https://unovis.dev/docs/mcp/troubleshooting.md): Fonts, rendering failures, timeouts, and output limitations.
+- [Theming guide](https://unovis.dev/docs/guides/theming): Human-facing examples of CSS variables, colors, and light/dark themes.
+- [Source repository](https://github.com/f5/unovis): Core implementation, framework wrappers, and bundled examples.
