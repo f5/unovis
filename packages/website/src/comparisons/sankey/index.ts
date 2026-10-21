@@ -21,8 +21,8 @@ export const sankeyDiagram: Comparison<SankeyData> = {
       load: () => import('./recharts'),
       code: require('!!raw-loader!./recharts.tsx').default,
       unsupportedPresets: {
-        colors: { reason: 'The `link` prop applies one set of SVG attributes to every link. Coloring each flow by its source node takes a custom link function that draws the path itself.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/chart/Sankey.tsx' },
-        sorted: { reason: 'No way to order the nodes by value: the `sort` prop only switches between the layout\'s order and the input order.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/chart/Sankey.tsx' },
+        colors: { reason: 'As an object, the `link` prop applies one set of SVG attributes to every link. Coloring each flow by its source node takes a custom `link` function that draws the path itself.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/chart/Sankey.tsx#L901-L976' },
+        sorted: { reason: 'No option to order the nodes by value. `sort` orders each column by where the layout places the nodes and `sort={false}` keeps the input order, so ordering them by value means summing their flows, sorting the nodes array and re-indexing the links yourself.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/chart/Sankey.tsx#L880-L884' },
       },
     },
     {
@@ -30,7 +30,7 @@ export const sankeyDiagram: Comparison<SankeyData> = {
       load: () => import('./echarts'),
       code: require('!!raw-loader!./echarts.tsx').default,
       unsupportedPresets: {
-        sorted: { reason: 'No node sorting option. `layoutIterations: 0` keeps the input order, so ordering the nodes by value means summing and sorting them yourself.', url: 'https://github.com/apache/echarts/blob/6.1.0/src/chart/sankey/SankeySeries.ts' },
+        sorted: { reason: 'No node sorting option. `layoutIterations: 0` keeps the input order, so ordering the nodes by value means summing and sorting them yourself.', url: 'https://echarts.apache.org/en/option.html#series-sankey.layoutIterations' },
       },
     },
     { library: 'nivo', load: () => import('./nivo'), code: require('!!raw-loader!./nivo.tsx').default },

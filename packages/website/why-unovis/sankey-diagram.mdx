@@ -30,9 +30,12 @@ One month of website visits: where visitors came from, which page they landed on
 - **Colors.** Unovis draws nodes in one color and keeps the flows neutral, so the structure reads first; `nodeColor` and
   `linkColor` color them when you need to. ECharts and Nivo color every node, and the Chart.js sankey plugin colors
   flows red to green unless you set colors yourself.
-- **Presets.** *Colored flows* paints the nodes with the palette and each flow with its source node's color (`nodeColor`,
-  `linkColor`); every library but Recharts, whose `link` prop styles all links alike, can do it. *Sorted nodes* orders
-  each column biggest first (`nodeSort`), which only Nivo and TanStack Charts can also do, and *Thin nodes* (`nodeWidth`,
+- **Presets.** *Colored flows* paints the nodes with the palette and each flow with its source node's color
+  (`nodeColor`, `linkColor`). ECharts, Chart.js and TanStack Charts have options for it and Nivo does it by default;
+  Recharts' `link` object styles every link alike, so coloring each flow takes a custom `link` function that draws the
+  path itself. *Sorted nodes* orders each column biggest first (`nodeSort`), which only Nivo and TanStack Charts also
+  have an option for; Recharts (`sort={false}`), ECharts (`layoutIterations: 0`) and Chart.js (`priority`) keep an order
+  you give them, so there you sum each node's flows and sort the nodes yourself. *Thin nodes* (`nodeWidth`,
   `nodePadding`) works everywhere.
 
 ## Feature comparison
