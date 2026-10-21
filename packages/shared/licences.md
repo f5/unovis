@@ -30,5 +30,5 @@
 | @emotion/css                      | perpetual      | MIT          | 11.13.5           | Kye Hohenberger                                                  |
 | vite                              | perpetual      | MIT          | 7.3.6             | Evan You                                                         |
 | vite-plugin-solid                 | perpetual      | MIT          | 2.11.10           | Alexandre Mouton-Brady <amoutonbrady@gmail.com>                  |
-| vue                               | perpetual      | MIT          | 3.5.30            | Evan You                                                         |
+| vue                               | perpetual      | MIT          | 3.5.43            | Evan You                                                         |
 
