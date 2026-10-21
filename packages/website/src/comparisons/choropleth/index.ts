@@ -11,7 +11,11 @@ export const choroplethMap: Comparison<ChoroplethData> = {
   chartHeight: COMPARISON_TALL_CHART_HEIGHT,
   presets: [
     { id: 'mercator', label: 'Mercator', description: 'The map is drawn in the Mercator projection (`projection`)' },
-    { id: 'labels', label: 'Country labels', description: 'Country names at the country centers, hiding the ones that would cover a larger country\'s name, a data center or the edge of the map (`areaLabel`)' },
+    {
+      id: 'labels',
+      label: 'Country labels',
+      description: 'Country names at the country centers, hiding the ones that would cover a larger country\'s name, a data center or the edge of the map (`areaLabel`)',
+    },
     { id: 'traffic', label: 'Traffic bubbles', description: 'Each data center is sized by the traffic through it (`pointRadius`)' },
   ],
   implementations: [
@@ -22,8 +26,8 @@ export const choroplethMap: Comparison<ChoroplethData> = {
       code: require('!!raw-loader!./tanstack.tsx').default,
       unsupportedPresets: {
         labels: {
-          reason: 'No labels on the map. The geo module has a single geoShape mark, and the text mark places labels with the x and y scales, not with a projection.',
-          url: 'https://github.com/TanStack/charts/blob/v1.1.0/packages/charts-core/src/geo.ts',
+          reason: 'No labels on the map. The text mark places labels with the x and y scales and takes no projection, and geoShape, the one mark that does, draws no text.',
+          url: 'https://github.com/TanStack/charts/blob/v1.1.0/packages/charts-core/src/text.ts#L34-L38',
         },
       },
     },
@@ -38,22 +42,12 @@ export const choroplethMap: Comparison<ChoroplethData> = {
           url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/geo/src/Choropleth.js',
         },
         traffic: {
-          reason: 'No data centers to size. The choropleth draws the countries only.',
-          url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/geo/src/Choropleth.js',
+          reason: 'No option to size the data centers. The choropleth draws any GeoJSON `features`, points too, but d3-geo gives every point a 4.5 px radius, and Nivo doesn\'t expose `pointRadius`.',
+          url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/geo/src/hooks.js#L67',
         },
       },
     },
-    {
-      library: 'chartjs',
-      load: () => import('./chartjs'),
-      code: require('!!raw-loader!./chartjs.tsx').default,
-      unsupportedPresets: {
-        labels: {
-          reason: 'No labels on the map. The geo plugin draws the countries as plain shapes, and Chart.js has no labels on data without another plugin.',
-          url: 'https://github.com/sgratzl/chartjs-chart-geo/blob/v4.3.6/src/elements/GeoFeature.ts',
-        },
-      },
-    },
+    { library: 'chartjs', load: () => import('./chartjs'), code: require('!!raw-loader!./chartjs.tsx').default },
     { library: 'plot', load: () => import('./plot'), code: require('!!raw-loader!./plot.tsx').default },
     { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
   ],

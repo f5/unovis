@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactECharts from 'echarts-for-react'
 import { registerMap } from 'echarts'
-import { geoMercator } from 'd3-geo'
+import { geoArea, geoCentroid, geoMercator } from 'd3-geo'
 
 import type { ChartProps } from '../types'
 import { ChoroplethData, countries, usersDomain, formatUsers, formatTraffic, getTraffic, trafficRadius } from './data'
@@ -11,6 +11,9 @@ import { BLUES } from './constants'
 registerMap('world', { type: 'FeatureCollection', features: countries })
 // Without a projection the map is plain longitude and latitude; `projection` takes a pair of functions, here from d3-geo
 const mercator = geoMercator()
+// For the "Country labels" preset. Of two overlapping labels, `hideOverlap` keeps the one whose symbol is larger, and these
+// symbols are all size 0, so it keeps the one that comes first: the countries go largest first
+const countryLabels = [...countries].sort((a, b) => geoArea(b) - geoArea(a)).map(f => ({ name: f.properties.name, value: geoCentroid(f) }))
 
 export default function EChartsChoroplethMap ({ data, isDark, preset }: ChartProps<ChoroplethData>): JSX.Element {
   const point = new Map(data.points.map(p => [p.id, p]))
@@ -26,9 +29,6 @@ export default function EChartsChoroplethMap ({ data, isDark, preset }: ChartPro
           map: 'world',
           roam: true,
           projection: preset === 'mercator' ? { project: ([lon, lat]) => mercator([lon, lat]), unproject: ([x, y]) => mercator.invert([x, y]) } : undefined,
-          // The map series draws its countries on this component, so the labels are set here. `labelLayout: { hideOverlap }`
-          // is a series option and doesn't reach them: every country gets its name, overlapping or not
-          label: { show: preset === 'labels' },
         },
         series: [
           {
@@ -63,6 +63,20 @@ export default function EChartsChoroplethMap ({ data, isDark, preset }: ChartPro
               lineStyle: { width: 1 + l.traffic / 100 },
             })),
             tooltip: { valueFormatter: formatTraffic },
+          },
+          {
+            // The geo component draws the countries, and its labels skip `labelLayout`, so the names are a series of bare labels
+            // at the country centers. It's emptied rather than left out, as the option merges into the previous one
+            type: 'scatter',
+            name: 'Countries',
+            coordinateSystem: 'geo',
+            silent: true,
+            symbolSize: 0,
+            data: preset === 'labels' ? countryLabels : [],
+            // A label `inside` its symbol, the default, is outlined in the symbol's color in the dark theme. Given the center as a
+            // position of its own, it gets the same halo as the data centers' labels
+            label: { show: true, formatter: '{b}', position: ['50%', '50%'], align: 'center', verticalAlign: 'middle' },
+            labelLayout: { hideOverlap: true },
           },
         ],
       }}

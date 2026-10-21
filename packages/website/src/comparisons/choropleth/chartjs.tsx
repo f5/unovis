@@ -1,12 +1,17 @@
 import React from 'react'
 import { Chart, PointElement, Tooltip } from 'chart.js'
 import { ChoroplethController, BubbleMapController, GeoFeature, ColorScale, ProjectionScale, SizeScale } from 'chartjs-chart-geo'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { Chart as ReactChart } from 'react-chartjs-2'
+import { geoArea } from 'd3-geo'
 
 import type { ChartProps } from '../types'
 import { ChoroplethData, countries, formatUsers, getTraffic, trafficRadius } from './data'
 
 Chart.register(ChoroplethController, BubbleMapController, GeoFeature, ColorScale, ProjectionScale, SizeScale, PointElement, Tooltip)
+// For the "Country labels" preset: of two overlapping labels, `display: 'auto'` hides the one later in the data, so the
+// countries go largest first
+const countriesByArea = [...countries].sort((a, b) => geoArea(b) - geoArea(a))
 
 // The geo plugin draws the countries and the data centers as two datasets, and has no links between points
 export default function ChartJsChoroplethMap ({ data, isDark, preset }: ChartProps<ChoroplethData>): JSX.Element {
@@ -16,13 +21,15 @@ export default function ChartJsChoroplethMap ({ data, isDark, preset }: ChartPro
   return (
     <ReactChart
       type="choropleth"
+      // Registered for this chart only: with `Chart.register`, every Chart.js chart on the site would get data labels
+      plugins={[ChartDataLabels]}
       data={{
-        labels: countries.map(f => f.properties.name),
+        labels: countriesByArea.map(f => f.properties.name),
         datasets: [
           {
             label: 'Monthly active users',
             outline: countries,
-            data: countries.map(f => ({ feature: f, value: users.get(`${f.id}`) })),
+            data: countriesByArea.map(f => ({ feature: f, value: users.get(`${f.id}`) })),
           },
           {
             type: 'bubbleMap',
@@ -46,6 +53,14 @@ export default function ChartJsChoroplethMap ({ data, isDark, preset }: ChartPro
         showOutline: true,
         plugins: {
           legend: { display: false },
+          // The plugin anchors a label at the element's `x` and `y`, which the geo plugin sets to the country's center
+          datalabels: {
+            display: ctx => preset === 'labels' && ctx.datasetIndex === 0 ? 'auto' : false,
+            formatter: (_, ctx) => ctx.chart.data.labels[ctx.dataIndex],
+            color: isDark ? '#ddd' : '#444',
+            textStrokeColor: isDark ? '#222' : '#fff',
+            textStrokeWidth: 2,
+          },
           tooltip: {
             callbacks: {
               label: ctx => ctx.datasetIndex === 1

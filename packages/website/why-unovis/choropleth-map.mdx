@@ -22,7 +22,8 @@ and the same Blues color scheme.
 
 - **Countries, points and links in one component.** Unovis draws all three from the TopoJSON. ECharts combines a `geo`
   component with map, scatter and lines series. The Chart.js geo plugin adds the data centers as a second, `bubbleMap`
-  dataset, and Nivo draws the countries only. Neither draws links. Observable Plot layers `geo`, `dot` and `link` marks
+  dataset; the Nivo demo draws the countries only, since its choropleth would draw the data centers as GeoJSON points
+  of one fixed size. Neither draws links. Observable Plot layers `geo`, `dot` and `link` marks
   on one projection, and Vega-Lite layers `geoshape`, `circle` and `rule` marks. TanStack Charts draws each layer with a
   `geoShape` mark and has no text marks for maps, so the data centers are unlabeled.
 - **Flows.** Unovis sends particles along the links (`enableFlowAnimation`), and ECharts does too (`effect`). Observable
@@ -39,11 +40,15 @@ and the same Blues color scheme.
   latitude unless you pass your own projection functions, and AG Charts maps are always Mercator. Observable Plot has 14
   named d3-geo projections and Vega-Lite 15.
 - **Presets.** *Mercator* switches the projection (`projection`), and every library follows: ECharts takes a d3-geo
-  projection as a pair of functions, and Nivo draws Mercator already. *Country labels* names the countries
-  (`areaLabel`) and hides the names that would cover a larger country's name, a data center or its label, or run off the
-  map; ECharts, Observable Plot and Vega-Lite draw every name, overlapping or not, and Nivo, Chart.js and TanStack Charts
-  have no labels on the map. *Traffic bubbles* sizes the
-  data centers by the traffic through them (`pointRadius`); every library that draws them can, and Nivo draws none.
+  projection as a pair of functions, and Nivo draws Mercator already. *Country labels* names the countries (`areaLabel`)
+  and hides the names that would cover a larger country's name, a data center or its label, or run off the map. ECharts
+  and Chart.js hide a name that would cover another. Chart.js, with the official datalabels plugin (`display: 'auto'`),
+  keeps the one earlier in the data, so the countries go largest first. ECharts keeps the one on the larger shape
+  (`labelLayout: { hideOverlap: true }`), but its `geo` component's own labels skip label layout, so the names are a
+  series of bare labels; these all tie, and it too keeps the earlier one. In both, a name can still cover a data center
+  or run off the map. Observable Plot and Vega-Lite draw every name, overlapping or not, and Nivo and TanStack Charts
+  have no labels on the map. *Traffic bubbles* sizes the data centers by the traffic through them (`pointRadius`); every
+  library that draws them can, but Nivo has no option to size a GeoJSON point.
 
 ## Feature comparison
 
