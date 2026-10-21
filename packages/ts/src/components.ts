@@ -5,7 +5,8 @@ export { XYComponentCore } from '@/core/xy-component'
 export type { XYComponentConfigInterface } from '@/core/xy-component/config'
 
 // Components
-export { Tooltip } from './components/tooltip'
+export { Tooltip, getTooltipContentTargets } from './components/tooltip'
+export type { TooltipContent, TooltipContentRenderer, TooltipContentMap, TooltipContentTemplate } from './components/tooltip/types'
 export { Line } from './components/line'
 export { StackedBar } from './components/stacked-bar'
 export { Boxplot } from './components/boxplot'

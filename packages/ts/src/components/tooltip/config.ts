@@ -3,6 +3,7 @@ import { ComponentCore } from '@/core/component'
 
 // Types
 import { Position } from '@/types/position'
+import { TooltipContentMap } from './types'
 
 export interface TooltipConfigInterface {
   /** An array of visualization components to interact with. Default: `[]` */
@@ -25,7 +26,11 @@ export interface TooltipConfigInterface {
    * `verticalPlacement` set to `Position.Top` or `Position.Bottom`.
    * Default: `0` */
   verticalShift?: number;
-  /** Defines the content of the tooltip and hovering over which elements should trigger it.
+  /** Content keyed by component selector. Vanilla callbacks receive
+   * a TooltipContent context and return HTML, an HTMLElement, or null to hide. Default: undefined */
+  content?: TooltipContentMap;
+  /** @deprecated Use content with context-object callbacks instead.
+   * Defines the content of the tooltip and hovering over which elements should trigger it.
    * An object containing properties in the following format:
    *
    * ```
@@ -41,7 +46,7 @@ export interface TooltipConfigInterface {
    * ```
    */
   triggers?: {
-    [selector: string]: ((data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null | void) | undefined | null;
+    [selector: string]: ((data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null | void) | null | undefined;
   };
   /** Custom DOM attributes for the tooltip. Useful when you need to refer to a specific tooltip instance
    * by using a CSS selector. Attributes configuration object has the following structure:
@@ -79,6 +84,7 @@ export const TooltipDefaultConfig: TooltipConfigInterface = {
   verticalShift: 0,
   attributes: {},
   triggers: {},
+  content: undefined,
   className: undefined,
   showDelay: undefined,
   hideDelay: undefined,
