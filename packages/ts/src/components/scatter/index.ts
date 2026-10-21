@@ -5,10 +5,10 @@ import { max, min } from 'd3-array'
 import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue, areArraysShallowEqual } from '@/utils/data'
+import { isNumber, getExtent, getNumber, getSeriesKeys, getString, isArray, flatten, getValue, areArraysShallowEqual } from '@/utils/data'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue } from '@/utils/pattern'
-import { smartTransition } from '@/utils/d3'
+import { smartTransition, seriesJoinKey, UNOVIS_SERIES_KEY_ATTR } from '@/utils/d3'
 import { getCSSVariableValueInPixels } from '@/utils/misc'
 
 // Types
@@ -132,16 +132,19 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     this._updatePointData()
 
     // Groups
+    const seriesKeys = getSeriesKeys(this._pointData.length, config.colorKeys)
+    const getSeriesKey = (d: ScatterPoint<Datum>[], i: number): string => seriesKeys[i]
     const pointGroups = this.g
       .selectAll<SVGGElement, ScatterPoint<Datum>[]>(`.${s.pointGroup}`)
-      .data(this._pointData)
+      .data(this._pointData, seriesJoinKey(getSeriesKey))
 
     const pointGroupsEnter = pointGroups
       .enter()
       .append('g')
       .attr('class', s.pointGroup)
 
-    const pointGroupsMerged = pointGroupsEnter.merge(pointGroups)
+    const pointGroupsMerged = pointGroupsEnter.merge(pointGroups).order()
+      .attr(UNOVIS_SERIES_KEY_ATTR, getSeriesKey)
     smartTransition(pointGroupsMerged, duration)
       .style('opacity', 1)
 

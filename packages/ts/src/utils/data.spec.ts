@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { scaleLinear } from 'd3-scale'
-import { cloneDeep, getNearest2D, isAClassInstance, merge } from '@/utils/data'
+import { cloneDeep, getNearest2D, getSeriesKeys, isAClassInstance, merge } from '@/utils/data'
 
 type Datum = { x: number; a: number }
 
@@ -56,5 +56,27 @@ describe('null-prototype objects', () => {
     expect(() => { result = merge({ b: 2 }, { obj }) }).not.toThrow()
     expect(result?.b).toBe(2)
     expect(result?.obj.a).toBe(1)
+  })
+})
+
+describe('getSeriesKeys', () => {
+  it('keys every series by its index without colorKeys', () => {
+    expect(getSeriesKeys(3)).toEqual(['index:0', 'index:1', 'index:2'])
+  })
+
+  it('keys a series by its colour key when the key is unique', () => {
+    expect(getSeriesKeys(3, ['a', 'b', 'c'])).toEqual(['key:a', 'key:b', 'key:c'])
+  })
+
+  it('falls back to the index for series without a colour key', () => {
+    expect(getSeriesKeys(3, ['a', 'b'])).toEqual(['key:a', 'key:b', 'index:2'])
+  })
+
+  it('falls back to the index for series sharing a colour key', () => {
+    expect(getSeriesKeys(3, ['a', 'b', 'a'])).toEqual(['index:0', 'key:b', 'index:2'])
+  })
+
+  it('ignores colour keys beyond the series count', () => {
+    expect(getSeriesKeys(2, ['a', 'b', 'a'])).toEqual(['key:a', 'key:b'])
   })
 })
