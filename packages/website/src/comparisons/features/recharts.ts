@@ -11,7 +11,7 @@ export const rechartsSupport: LibrarySupport = {
   responsive: { status: 'yes', note: 'One prop: `responsive` (3.3+), or wrap the chart in `ResponsiveContainer`', url: 'https://recharts.github.io/en-US/guide/sizes/' },
   animation: { status: 'yes', note: 'On by default; updates morph from the old values to the new ones, and reduced motion is respected', url: 'https://recharts.github.io/en-US/guide/animations/' },
   ssr: { status: 'no', note: 'Not supported: server rendering outputs an empty wrapper in 3.x (issue #5997); no PNG export', url: 'https://github.com/recharts/recharts/issues/5997' },
-  a11y: { status: 'partial', note: '`accessibilityLayer` on by default: role/tabIndex, arrow-key navigation, aria-live tooltip, `title`/`desc`; no pattern fills/decals', url: 'https://github.com/recharts/recharts/wiki/Recharts-and-accessibility' },
+  a11y: { status: 'partial', note: '`accessibilityLayer` on by default: role/tabIndex, arrow-key navigation, aria-live tooltip, `title`/`desc`; no built-in pattern fills', url: 'https://github.com/recharts/recharts/wiki/Recharts-and-accessibility' },
   'mcp-server': { status: 'no', note: 'No MCP server from the Recharts team; the feature request is still open', url: 'https://github.com/recharts/recharts/issues/5982' },
   'typed-docs': { status: 'yes', note: 'About 95% of Line, axis, Tooltip and Legend props have JSDoc, about 60% with `@defaultValue`', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/cartesian/Line.tsx' },
   'llms-txt': { status: 'no', note: 'No llms.txt on recharts.github.io' },
