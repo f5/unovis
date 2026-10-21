@@ -509,3 +509,10 @@ export const ensureArray = <T>(value: T | T[] | null): T[] => {
 
   return [value]
 }
+
+/** Data join keys for the series of an XY component: `colorKeys` when there's a distinct one for every series, the series indices otherwise */
+export function getSeriesKeys (seriesCount: number, colorKeys?: string[]): string[] {
+  const keys = colorKeys?.slice(0, seriesCount)
+  const isKeyed = keys?.length === seriesCount && unique(keys).length === seriesCount
+  return isKeyed ? keys : Array.from({ length: seriesCount }, (_, i) => `${i}`)
+}

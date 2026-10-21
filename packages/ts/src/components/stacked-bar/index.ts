@@ -15,9 +15,10 @@ import {
   getValue,
   getStackedData,
   getExtent,
+  getSeriesKeys,
 } from '@/utils/data'
 import { roundedRectPath } from '@/utils/path'
-import { smartTransition, applyInlineStyles } from '@/utils/d3'
+import { smartTransition, applyInlineStyles, seriesJoinKey, UNOVIS_SERIES_KEY_ATTR } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 
@@ -144,6 +145,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
       )
 
     // Render Bars
+    const seriesKeys = getSeriesKeys(yAccessors.length, config.colorKeys)
+    const getSeriesKey = (d: StackedBarDataRecord<Datum>): string => seriesKeys[d.stackIndex]
     const bars = barGroupsMerged
       .selectAll<SVGPathElement, StackedBarDataRecord<Datum>>(`.${s.bar}`)
       .data(
@@ -185,7 +188,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
           })
           return groupData
         },
-        d => d.stackIndex // Key function for proper transitions
+        seriesJoinKey(getSeriesKey)
       )
 
     const enteringGroupNodes = new Set(barGroupsEnter.nodes())
@@ -198,7 +201,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
 
     const barsMerged = barsEnter.merge(bars)
 
-    barsMerged.style('mask', d => this._getBarStyle(d)?.mask ?? getFillPatternValue(getPattern(d.datum, config.pattern, d.stackIndex)))
+    barsMerged
+      .attr(UNOVIS_SERIES_KEY_ATTR, getSeriesKey)
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d.stackIndex)
+      .style('mask', d => this._getBarStyle(d)?.mask ?? getFillPatternValue(getPattern(d.datum, config.pattern, d.stackIndex)))
 
     // Custom per-bar styles; the managed keys are merged into the transitions below instead,
     // so they keep animating and don't get stomped by the next render

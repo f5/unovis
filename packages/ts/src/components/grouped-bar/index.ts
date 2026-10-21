@@ -5,9 +5,9 @@ import { min, max, range } from 'd3-array'
 import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { clamp, getExtent, getMax, getMin, getNumber, getString, getValue, isArray, isEmpty, isNumber } from '@/utils/data'
+import { clamp, getExtent, getMax, getMin, getNumber, getSeriesKeys, getString, getValue, isArray, isEmpty, isNumber } from '@/utils/data'
 import { roundedRectPath } from '@/utils/path'
-import { smartTransition, applyInlineStyles } from '@/utils/d3'
+import { smartTransition, applyInlineStyles, seriesJoinKey, UNOVIS_SERIES_KEY_ATTR } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 
@@ -145,9 +145,11 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
       })
 
     const barWidth = innerBandScale.bandwidth()
+    const seriesKeys = getSeriesKeys(yAccessors.length, config.colorKeys)
+    const getSeriesKey = (d: Datum, i: number): string => seriesKeys[i]
     const bars = barGroupsMerged
       .selectAll<SVGPathElement, Datum>(`.${s.bar}`)
-      .data((d) => yAccessors.map(() => d))
+      .data((d) => yAccessors.map(() => d), seriesJoinKey(getSeriesKey))
 
     const valueAxisDirection = this._getValueAxisDirection()
     const barsEnter = bars
@@ -166,7 +168,10 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
       .style('mask', (d, i) => this._getBarStyle(d, i)?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)))
 
     const barsMerged = barsEnter.merge(bars)
-    barsMerged.style('mask', (d, i) => this._getBarStyle(d, i)?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)))
+    barsMerged
+      .attr(UNOVIS_SERIES_KEY_ATTR, getSeriesKey)
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => i)
+      .style('mask', (d, i) => this._getBarStyle(d, i)?.mask ?? getFillPatternValue(getPattern(d, config.pattern, i)))
 
     // Custom per-bar styles; the managed keys are merged into the transition below instead,
     // so they keep animating and don't get stomped by the next render
