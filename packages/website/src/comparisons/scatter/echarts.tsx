@@ -8,7 +8,7 @@ import { DataRecord, species, formatMass } from './data'
 // `symbolSize` takes pixels, so we scale the body mass ourselves (a `visualMap` could map it instead)
 const symbolSize = (value: number[]): number => 4 + (value[2] - 2700) / 225
 const symbols = ['circle', 'triangle', 'rect']
-// A transparent fill replaces the series color and the border has no palette color of its own, so the rings take ECharts' palette by hand
+// A transparent fill replaces the series color, and no documented `borderColor` value takes the palette (the undocumented `'auto'` does), so the rings take it by hand
 const ringColors = ['#5070dd', '#b6d634', '#505372']
 
 export default function EChartsScatterPlot ({ data, isDark, preset }: ChartProps<DataRecord[]>): JSX.Element {

@@ -21,8 +21,8 @@ penguins.
 ## What to look for
 
 - **Size encoding.** Unovis scales body mass to point size with a `size` accessor and a `sizeRange`. Chart.js expects
-  sizes in pixels, so you scale the values yourself. ECharts takes pixels in `symbolSize`, or maps values to sizes with a
-  `visualMap`.
+  sizes in pixels, so you scale the values yourself. ECharts takes pixels in `symbolSize`, or maps values to sizes with
+  a `visualMap`.
 - **Pick other penguins.** Every penguin has a stable `id`, so Unovis moves the points that stay, fades in the new ones
   and fades out the rest, and the axes follow. TanStack Charts keys the points by `id`
   too and animates them the same way (`svgAnimation`).
@@ -34,16 +34,17 @@ penguins.
   AG Charts have the same shapes built in, and so do Observable Plot (`symbol`) and Vega-Lite (`shape`); Nivo's scatter
   plot and TanStack Charts' `dot` draw circles only.
 - **Hover.** The Unovis crosshair (`snapMode: 'xy'`) snaps to the point nearest the pointer and draws guide lines to
-  both axes. Nivo, AG Charts, Observable Plot (`tip`) and TanStack Charts also pick the nearest point, while Recharts shows a tooltip only
-  when the pointer is over one. So does the Vega-Lite demo, which takes the spec's default; a `nearest` selection
-  changes that.
+  both axes. Nivo, AG Charts, Observable Plot (`tip`) and TanStack Charts also pick the nearest point, while Recharts
+  shows a tooltip only when the pointer is over one. So do the Chart.js and Vega-Lite demos, which keep their defaults;
+  Chart.js' `interaction: { mode: 'nearest', intersect: false }` and a Vega-Lite `nearest` selection change that.
 - **Presets.** *Labels* gives every penguin a body mass label (`label`) and hides the ones that would cover a point or
-  another label (`labelHideOverlapping`, on by default). ECharts (`labelLayout.hideOverlap`) and AG Charts hide
-  overlapping labels too, while Recharts, Observable Plot, Vega-Lite and TanStack Charts would draw every one, Nivo has
-  no point labels and Chart.js needs a plugin. *Rings* draws hollow points in the species colors (`strokeColor`,
-  `strokeWidth`): Chart.js and ECharts drop their palette colors once the fill is set, so those demos set the ring colors
-  by hand, Nivo's points have no stroke, and TanStack Charts' `dot` takes one stroke color for every species. *Average
-  lines* adds two `VisPlotline`s, which every library but Chart.js (it needs its annotation plugin) can draw.
+  another label (`labelHideOverlapping`, on by default). AG Charts hides those too; ECharts (`labelLayout.hideOverlap`)
+  and Chart.js (chartjs-plugin-datalabels, `display: 'auto'`) hide only the labels that overlap another label and keep
+  the ones that cover a point; Recharts, Observable Plot, Vega-Lite and TanStack Charts would draw every one; and Nivo
+  has no point labels. *Rings* draws hollow points in the species colors (`strokeColor`, `strokeWidth`): ECharts'
+  documented `borderColor` values don't take its palette (the undocumented `'auto'` does), so that demo sets the ring
+  colors by hand; Nivo's points have no stroke; and TanStack Charts' `dot` takes one stroke color for every species.
+  *Average lines* adds two `VisPlotline`s, which every library can draw, Chart.js with chartjs-plugin-annotation.
 
 ## Feature comparison
 
