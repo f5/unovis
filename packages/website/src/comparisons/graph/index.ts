@@ -17,15 +17,7 @@ export const networkGraph: Comparison<GraphData> = {
   ],
   implementations: [
     { library: 'unovis', load: () => import('./unovis'), code: require('!!raw-loader!./unovis.tsx').default },
-    {
-      library: 'tanstack',
-      load: () => import('./tanstack'),
-      code: require('!!raw-loader!./tanstack.tsx').default,
-      unsupportedPresets: {
-        layered: { reason: '`forceLayout` is the only layout for a graph: the tidy `treeLayout` takes one parent per node, and a service with several callers doesn\'t fit in it.', url: 'https://tanstack.com/charts/latest/docs/examples/networks-and-hierarchies#show-a-strict-hierarchy' },
-        circular: { reason: 'No circular layout: `forceLayout` has link, many-body, center, collide, x and y forces, and a ring needs D3\'s radial force passed in as a custom force.', url: 'https://github.com/TanStack/charts/blob/v1.1.0/packages/charts-core/src/network-force.ts#L428-L503' },
-      },
-    },
+    { library: 'tanstack', load: () => import('./tanstack'), code: require('!!raw-loader!./tanstack.tsx').default },
     {
       library: 'echarts',
       load: () => import('./echarts'),
