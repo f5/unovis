@@ -50,6 +50,7 @@
     "@unovis/shared": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
     "@types/react": "^17.0.22",
+    "@types/react-dom": "^17.0.26",
     "@types/node": "^16.11.17",
     "@types/d3-dispatch": "3.0.6",
     "buffer-from": "^1.1.2",

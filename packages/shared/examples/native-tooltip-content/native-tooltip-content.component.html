@@ -1,0 +1,12 @@
+<div class="native-tooltip-content">
+  <h4>Daily revenue</h4>
+  <p class="hint">Move across the chart to inspect daily revenue.</p>
+  <vis-xy-container [data]="data" [height]="height">
+    <vis-line [x]="x" [y]="y"></vis-line>
+    <vis-scatter [x]="x" [y]="y" [size]="8"></vis-scatter>
+    <vis-crosshair [x]="x" [y]="y" [template]="tooltipTemplate"></vis-crosshair>
+    <vis-axis type="x" [tickFormat]="formatDay" [numTicks]="7"></vis-axis>
+    <vis-axis type="y" [tickFormat]="formatTick"></vis-axis>
+    <vis-tooltip className="native-tooltip-content-popup"></vis-tooltip>
+  </vis-xy-container>
+</div>

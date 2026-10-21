@@ -1,59 +1,63 @@
-// !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef } from 'react'
-import { Tooltip } from '@unovis/ts/components/tooltip'
+import React, { ForwardedRef, ReactElement, ReactNode, Ref, useImperativeHandle, useEffect, useRef, useState, useContext } from 'react'
+import { createPortal } from 'react-dom'
+import { Tooltip, TooltipContent, TooltipContentMap, getTooltipContentTargets } from '@unovis/ts/components/tooltip'
 import { TooltipConfigInterface } from '@unovis/ts/components/tooltip/config'
+import { isEqual } from '@unovis/ts/utils/data'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
-import { useContainerRenderOnUpdate } from 'src/utils/container'
+import { VisContainerContext } from 'src/utils/container'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisTooltipRef = {
-  component?: Tooltip;
-}
-
-export type VisTooltipProps = TooltipConfigInterface & {
+export type VisTooltipRef = { component?: Tooltip }
+export type VisTooltipProps<Datum = any> = Omit<TooltipConfigInterface, 'content'> & {
+  content?: TooltipContentMap<(context: TooltipContent<Datum>) => ReactNode>;
   ref?: Ref<VisTooltipRef>;
 }
 
 export const VisTooltipSelectors = Tooltip.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisTooltipFC (props: VisTooltipProps, fRef: ForwardedRef<VisTooltipRef>): ReactElement {
+function VisTooltipFC<Datum> (props: VisTooltipProps<Datum>, fRef: ForwardedRef<VisTooltipRef>): ReactElement {
   const ref = useRef<VisComponentElement<Tooltip>>(null)
   const componentRef = useRef<Tooltip | undefined>(undefined)
-  const config = props
+  const prevConfig = useRef<TooltipConfigInterface | undefined>(undefined)
+  const [context, setContext] = useState<TooltipContent<Datum> | null>(null)
+  const requestRender = useContext(VisContainerContext)?.requestRender
+  const { content, ...config } = props
+  const renderContent = (value: TooltipContent | null): void => setContext(value as TooltipContent<Datum> | null)
 
-  // On Mount
   useEffect(() => {
-    const element = (ref.current as VisComponentElement<Tooltip>)
-
-    const c = new Tooltip(config)
-    componentRef.current = c
-    element.__component__ = c
-
+    const component = new Tooltip(config)
+    componentRef.current = component
+    if (ref.current) ref.current.__component__ = component
+    component.setContentRenderer(renderContent, getTooltipContentTargets(content))
     return () => {
+      component.setContentRenderer(undefined)
       componentRef.current = undefined
-      c.destroy()
+      component.destroy()
     }
   }, [])
 
-  // On Props Update
   useEffect(() => {
     const component = componentRef.current
-
-    component?.setConfig(config)
+    component?.setContentRenderer(renderContent, getTooltipContentTargets(content))
+    if (!isEqual(prevConfig.current, config)) {
+      component?.setConfig(config)
+      prevConfig.current = config
+      requestRender?.()
+    }
   })
-
-  // Ask the container to re-render when this component's config changes (see `useContainerRenderOnUpdate`)
-  useContainerRenderOnUpdate()
-
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
-  return <vis-tooltip ref={ref} />
+
+  const renderer = context?.trigger !== undefined ? content?.[context.trigger] : undefined
+  return <>
+    <vis-tooltip ref={ref} />
+    {context && renderer && componentRef.current && createPortal(renderer(context), componentRef.current.contentElement)}
+  </>
 }
 
-// We export a memoized component to avoid unnecessary re-renders
-//  and define its type explicitly to help react-docgen-typescript to extract information about props
-export const VisTooltip: ((props: VisTooltipProps) => JSX.Element | null) = React.memo(React.forwardRef(VisTooltipFC), arePropsEqual)
+export const VisTooltip = React.memo(React.forwardRef(VisTooltipFC), (prev, next) => prev.content === next.content && arePropsEqual(prev, next)) as
+  <Datum = any>(props: VisTooltipProps<Datum>) => ReactElement | null

@@ -37,7 +37,7 @@ export function runComponentGenerator<T extends ComponentInput> (config: Compone
   const barrelExports: string[] = [...(config.barrelHeader ?? [])]
 
   for (const component of components) {
-    for (const file of config.generateComponentFiles(component)) {
+    for (const file of component.manual ? [] : config.generateComponentFiles(component)) {
       mkdirSync(dirname(file.path), { recursive: true })
       writeFileSync(file.path, file.content)
       generatedPaths.push(file.path)
