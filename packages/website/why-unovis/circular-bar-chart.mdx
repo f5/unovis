@@ -39,17 +39,21 @@ that shows the goal. Every goal has its own target, so each bar is scaled to its
   bar you click and fades the others. TanStack Charts' legend doesn't hide polar marks itself, so the demo filters the
   bars. ECharts' legend lists series and Nivo's lists keys, so a single series of bars
   gets no legend in either.
-- **Randomize the data.** Bar lengths animate to the new values in Unovis, Chart.js, ECharts and Nivo. Recharts
-  animates angles only, so in this layout the bars jump to their new lengths, and Vega-Lite redraws without a
-  transition.
+- **Randomize the data.** Bar lengths animate to the new values in Unovis, Chart.js, ECharts, Nivo and TanStack Charts
+  (`svgAnimation`). Recharts animates angles only, so in this layout the bars jump to their new lengths, and Vega-Lite
+  redraws without a transition.
 - **Switch the site theme.** The faded tracks and icons follow the theme through CSS variables
-  (`--vis-circular-bar-background-color`, `--vis-circular-bar-icon-color`); the other charts need their dark colors in code.
-- **Presets.** *Half circle* (`angleRange`) lays the bars out over the top half and enlarges the chart to fill the card;
-  every library draws the half circle, ECharts and Recharts fill the card with a hand-set center and radius, and
-  Chart.js, Nivo, Vega-Lite and TanStack Charts leave the lower half empty. *Square bars* (`cornerRadius`,
-  `innerCornerRadius`) is a corner radius of 0 in every library. *Wide gaps* (`barPadding`) keeps each gap the same
-  width from the hole to the edge; the other libraries pad by an angle, so their gaps widen towards the edge, and Nivo
-  has no option for a gap at all.
+  (`--vis-circular-bar-background-color`, `--vis-circular-bar-icon-color`). TanStack Charts' default theme and the
+  demo's track follow it through `currentColor`; the other charts need their dark colors in code.
+- **Presets.** *Half circle* (`angleRange`) lays the bars out over the top half and enlarges the chart to fill the card.
+  Every library draws the half circle; ECharts, Recharts and Vega-Lite fill the card with a hand-set center and radius
+  (in Vega-Lite, the `arc` mark's `y` and the radius scale's `rangeMax`); TanStack Charts has no center option and
+  needs a locked top `margin` and a hand-set radius; and Chart.js and Nivo leave the lower half empty. *Square bars*
+  (`cornerRadius`, `innerCornerRadius`) is a corner radius of 0 in every library. *Wide gaps* (`barPadding`) keeps each
+  gap the same width from the hole to the edge. Vega-Lite does the same with its `arc` mark's `padAngle`, set per bar by
+  an expression from the bar's length, and TanStack Charts with D3's `padAngle` and a fixed `padRadius` on its
+  `radialArc` mark, whose `generator` option takes a D3 arc for bars of different lengths. ECharts, Recharts and
+  Chart.js pad by an angle, so their gaps widen towards the edge, and Nivo has no option for a gap at all.
 
 ## Feature comparison
 
