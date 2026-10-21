@@ -383,15 +383,15 @@ We have five wrappers for our library for usage in other frameworks: `@unovis/an
 Before your component is complete you will have to add it to each wrapper. Luckily we've streamlined
 this process: the wrappers are generated from a single shared registry. You will just need to do the following steps:
 
-1. Add an entry for your component to the `getComponentList()` array in `packages/shared/integrations/components.ts`. This registry is the source of truth for all of the wrapper generators (it's also what validates `Component` commit scopes).
+1. Add an entry for your component to the `getComponentList()` array in `packages/shared/integrations/components.ts`. This registry is the source of truth for all of the wrapper generators (it's also what validates `Component` commit scopes). For wrappers with custom framework logic, set `manual: true` (see Tooltip). Generation will retain their barrel exports and leave their implementation files untouched.
 2. In each wrapper's root directory (`packages/react`, `packages/angular`, `packages/svelte`, `packages/vue`, `packages/solid`), run the following command:
   
   ```bash
   pnpm generate
   ```
-3. Take a look at the generated component to see if it looks right. The Solid, Svelte and Vue barrels
-(`src/components.ts`) are updated automatically; for React and Angular, add the export line to
-`src/components.ts` by hand. Never edit the generated component files directly (they carry a
+3. Take a look at the generated component to see if it looks right. Barrel exports (`src/components.ts`)
+are generated for all five frameworks, including `manual: true` entries. Never edit the generated
+component files directly (they carry a
 "do not change" banner) — if the output is wrong, fix the core config or the shared TS parser
 (`packages/shared/integrations`) and regenerate.
 
