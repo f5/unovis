@@ -23,8 +23,8 @@ export const groupedBarChart: Comparison<DataRecord[]> = {
           url: 'https://tanstack.com/charts/latest/docs/reference/scales-guides-and-color#axis-options',
         },
         patterns: {
-          reason: 'No pattern fills: a bar\'s `fill` is a CSS color.',
-          url: 'https://tanstack.com/charts/latest/docs/guides/accessibility',
+          reason: 'No pattern option: chart specs declare linear and radial gradients, but not pattern resources.',
+          url: 'https://tanstack.com/charts/latest/docs/examples/themes-and-motion#current-limits',
         },
       },
     },
@@ -38,8 +38,8 @@ export const groupedBarChart: Comparison<DataRecord[]> = {
           url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/cartesian/CartesianAxis.tsx',
         },
         patterns: {
-          reason: 'No pattern fills: a bar\'s `fill` can point at an SVG `<pattern>`, but you draw the pattern yourself.',
-          url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/cartesian/Bar.tsx',
+          reason: 'No built-in patterns: a bar\'s `fill` can point at an SVG `<pattern>`, but you draw the pattern yourself.',
+          url: 'https://github.com/recharts/recharts/blob/v3.10.1/storybook/stories/Examples/cartesian/Bar/FillPatternOrGradient.stories.tsx',
         },
       },
     },
@@ -50,10 +50,10 @@ export const groupedBarChart: Comparison<DataRecord[]> = {
       unsupportedPresets: {
         'trim-labels': {
           reason: 'No option to trim tick labels: Chart.js skips and rotates them (`autoSkip`, `maxRotation`), and shortening one takes your own `ticks.callback`.',
-          url: 'https://github.com/chartjs/Chart.js/blob/v4.5.1/docs/axes/cartesian/index.md#tick-configuration',
+          url: 'https://www.chartjs.org/docs/4.5.1/axes/cartesian/#tick-configuration',
         },
         patterns: {
-          reason: 'No built-in patterns: a fill can be a `CanvasPattern`, but you draw each one on a canvas yourself or add the community patternomaly package.',
+          reason: 'No built-in patterns: a fill can be a `CanvasPattern`, but you create each one yourself from an image or canvas, or add the community Patternomaly package.',
           url: 'https://github.com/chartjs/Chart.js/blob/v4.5.1/docs/general/colors.md#patterns-and-gradients',
         },
       },
@@ -67,8 +67,8 @@ export const groupedBarChart: Comparison<DataRecord[]> = {
       code: require('!!raw-loader!./plot.tsx').default,
       unsupportedPresets: {
         patterns: {
-          reason: 'No pattern fills: `fill` is a color, and a pattern means writing your own SVG `<pattern>` for it to point at.',
-          url: 'https://github.com/observablehq/plot/blob/v0.6.17/docs/features/marks.md#mark-options',
+          reason: 'No built-in patterns: a mark\'s `fill` can be a `url(#…)` that points at your own SVG `<defs>`, so you write each `<pattern>` yourself.',
+          url: 'https://github.com/observablehq/plot/blob/v0.6.17/docs/features/marks.md#marks-are-layered',
         },
       },
     },
@@ -78,8 +78,8 @@ export const groupedBarChart: Comparison<DataRecord[]> = {
       code: require('!!raw-loader!./vegalite.tsx').default,
       unsupportedPresets: {
         patterns: {
-          reason: 'No pattern fills: a mark\'s `fill` is a color or a gradient.',
-          url: 'https://vega.github.io/vega-lite/docs/gradient.html',
+          reason: 'No pattern option: a mark\'s `fill` is documented as a color or a gradient.',
+          url: 'https://vega.github.io/vega-lite/docs/mark.html#color',
         },
       },
     },

@@ -33,7 +33,12 @@ Annual revenue by region for three years, as grouped bars. The region names are 
 - **Presets.** *Horizontal* (`orientation`) is one every library can draw. *Trimmed labels* (`tickTextFitMode`,
   `tickTextWidth`) keeps each region name on one line and cuts the middle out of the long one; Recharts, Chart.js and
   TanStack Charts have no option for it. *Patterns* (`pattern`) gives each year a fill pattern in the bars and the
-  legend, which only ECharts, Nivo and AG Charts can match.
+  legend. ECharts (`aria.decal`) and AG Charts (`fill: { type: 'pattern' }`) have patterns built in. Nivo has them too
+  (`defs`, `fill`), but only for the bars: its legend keeps plain color squares unless you pass it your own `data`.
+  Chart.js takes a `CanvasPattern` as a fill, which you create yourself from an image or canvas, or make with the
+  Patternomaly package its docs suggest. Recharts and Observable Plot take a `url(#…)` fill that points at an SVG
+  `<pattern>` you write yourself. Vega-Lite and TanStack Charts have no pattern option and document only colors and
+  gradients for a fill.
 
 ## Feature comparison
 
