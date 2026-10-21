@@ -18,7 +18,7 @@ export const donutChart: Comparison<DataRecord[]> = {
       load: () => import('./tanstack'),
       code: require('!!raw-loader!./tanstack.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'TanStack Charts has no pattern fills: `radialArc` takes a CSS color as `fill`, so every SVG `<pattern>` would have to be drawn by hand.', url: 'https://github.com/TanStack/charts/blob/v1.1.0/packages/charts-core/src/polar.ts#L394' },
+        patterns: { reason: 'TanStack Charts has no pattern option: a chart spec can declare linear and radial gradients but no patterns, so every SVG `<pattern>` would have to be drawn by hand.', url: 'https://github.com/TanStack/charts/blob/v1.1.0/docs/examples/themes-and-motion.md#current-limits' },
       },
     },
     {
@@ -26,7 +26,7 @@ export const donutChart: Comparison<DataRecord[]> = {
       load: () => import('./recharts'),
       code: require('!!raw-loader!./recharts.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'Recharts has no pattern fills: a slice\'s `fill` takes a color, so every SVG `<pattern>` would have to be drawn by hand.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/polar/Pie.tsx' },
+        patterns: { reason: 'Recharts has no built-in pattern fills: a slice\'s `fill` is an SVG paint string, so every `<pattern>` would have to be drawn by hand and referenced with `url(#id)`.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/polar/Pie.tsx#L829-L833' },
       },
     },
     {
@@ -34,7 +34,7 @@ export const donutChart: Comparison<DataRecord[]> = {
       load: () => import('./chartjs'),
       code: require('!!raw-loader!./chartjs.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'Chart.js has no built-in patterns: `backgroundColor` takes a `CanvasPattern` you draw yourself, and its docs point to the third-party Patternomaly library.', url: 'https://github.com/chartjs/Chart.js/blob/v4.5.1/docs/general/colors.md#patterns-and-gradients' },
+        patterns: { reason: 'Chart.js has no built-in patterns: `backgroundColor` can be a `CanvasPattern`, but you create each one yourself from an image or canvas, or add the third-party Patternomaly library its docs point to.', url: 'https://github.com/chartjs/Chart.js/blob/v4.5.1/docs/general/colors.md#patterns-and-gradients' },
       },
     },
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
@@ -52,7 +52,7 @@ export const donutChart: Comparison<DataRecord[]> = {
       load: () => import('./vegalite'),
       code: require('!!raw-loader!./vegalite.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'Vega-Lite has no pattern fills: a mark\'s `fill` takes a color or a linear or radial gradient.', url: 'https://github.com/vega/vega-lite/blob/v6.5.0/src/mark.ts#L216' },
+        patterns: { reason: 'Vega-Lite has no pattern option: a mark\'s `fill` is typed as a color or a linear or radial gradient.', url: 'https://github.com/vega/vega-lite/blob/v6.5.0/src/mark.ts#L216' },
       },
     },
   ],

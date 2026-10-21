@@ -11,6 +11,10 @@ export default function VegaLiteDonutChart ({ data, isDark, preset }: ChartProps
   // Vega-Lite formats numbers with d3-format strings, so the shared formatter runs before the data goes in. The index
   // keeps the slices in data order: Vega-Lite stacks the arcs in the alphabetical order of the color field otherwise
   const values = data.map((d, i) => ({ ...d, index: i, label: formatValue(d.sessions) }))
+  // The arcs and the label sit in the middle of the view by default, so the half ring gets a hand-set center (the marks'
+  // `y`) and outer radius, as expressions of the view size, to fill the view
+  const halfRadius = 'min(width / 2, height)'
+  const halfCenterY = { expr: `(height + ${halfRadius}) / 2` }
 
   const spec: TopLevelSpec = {
     $schema: 'https://vega.github.io/schema/vega-lite/v6.json',
@@ -24,7 +28,9 @@ export default function VegaLiteDonutChart ({ data, isDark, preset }: ChartProps
         // The arcs' outer radius defaults to half the smaller side, so the hole is 60% of it
         mark: {
           type: 'arc',
-          innerRadius: { expr: 'min(width, height) * 0.3' },
+          y: isHalf ? halfCenterY : undefined,
+          outerRadius: isHalf ? { expr: halfRadius } : undefined,
+          innerRadius: { expr: isHalf ? `${halfRadius} * 0.6` : 'min(width, height) * 0.3' },
           padAngle: preset === 'rounded' ? 0.03 : 0,
           cornerRadius: preset === 'rounded' ? 6 : 0,
         },
@@ -42,8 +48,8 @@ export default function VegaLiteDonutChart ({ data, isDark, preset }: ChartProps
       },
       {
         data: { values: [{ total: `${formatValue(getTotal(data))} total` }] },
-        // A text mark without x and y sits in the middle of the view. The dark theme recolors guides, not text marks
-        mark: { type: 'text', fontSize: 16, fontWeight: 'bold', color: isDark ? '#fff' : 'black', baseline: isHalf ? 'bottom' : 'middle' },
+        // The dark theme recolors guides, not text marks
+        mark: { type: 'text', y: isHalf ? halfCenterY : undefined, fontSize: 16, fontWeight: 'bold', color: isDark ? '#fff' : 'black', baseline: isHalf ? 'bottom' : 'middle' },
         encoding: { text: { field: 'total' } },
       },
     ],

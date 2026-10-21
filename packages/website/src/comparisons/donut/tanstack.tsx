@@ -3,7 +3,7 @@ import { defineChart } from '@tanstack/charts'
 import { controlledSignal } from '@tanstack/charts/interaction/signal'
 import { interactiveColorLegend } from '@tanstack/charts/legend'
 import { decorative } from '@tanstack/charts/mark/decorative'
-import { pie, polar, radialArc, radialText } from '@tanstack/charts/polar'
+import { pie, polar, radialArc, radialText, PolarLayoutContext } from '@tanstack/charts/polar'
 import { Chart } from '@tanstack/charts/react'
 import { scaleLinear } from '@tanstack/charts/scales/linear'
 import { tooltip } from '@tanstack/charts/tooltip'
@@ -17,10 +17,14 @@ export default function TanStackDonutChart ({ data, preset }: ChartProps<DataRec
 
   const definition = useMemo(() => {
     // `pie` adds a `source` field of its own (the row each slice comes from), so the traffic source moves to `name`.
-    // It also allocates the angles before the legend filters the slices: a hidden source gets a zero value instead
+    // The interactive legend doesn't hide polar marks by itself, so a hidden source gets a zero value and the others close the ring
     const rows = data.map(d => ({ name: d.source, sessions: visible.includes(d.source) ? d.sessions : 0 }))
     // radialText places its anchor through angle and radius scales, so the center label gets fixed ones
     const unit = { scale: scaleLinear().domain([0, 1]) }
+    const isHalf = preset === 'half'
+    // There's no center option: the ring sits in the middle of the plot area, so the half ring moves down with a locked top
+    // `margin` (see below) and gets a radius that reaches up to the top of the chart, or half the plot width when that's smaller
+    const halfRadius = ({ centerY, chart }: PolarLayoutContext): number => Math.min(chart.width / 2, centerY)
 
     return defineChart({
       marks: [
@@ -29,11 +33,17 @@ export default function TanStackDonutChart ({ data, preset }: ChartProps<DataRec
             // Angles are in radians, clockwise from 12 o'clock
             pie(rows, {
               value: 'sessions',
-              startAngle: preset === 'half' ? -Math.PI / 2 : 0,
-              endAngle: preset === 'half' ? Math.PI / 2 : 2 * Math.PI,
+              startAngle: isHalf ? -Math.PI / 2 : 0,
+              endAngle: isHalf ? Math.PI / 2 : 2 * Math.PI,
               gapAngle: preset === 'rounded' ? 0.03 : 0,
             }),
-            { innerRadius: ({ radius }) => radius * 0.6, cornerRadius: preset === 'rounded' ? 6 : 0, color: 'name', key: 'name' }
+            {
+              innerRadius: isHalf ? layout => halfRadius(layout) * 0.6 : ({ radius }) => radius * 0.6,
+              outerRadius: isHalf ? halfRadius : undefined,
+              cornerRadius: preset === 'rounded' ? 6 : 0,
+              color: 'name',
+              key: 'name',
+            }
           )],
           scales: { angle: null, radius: null },
         }),
@@ -41,12 +51,14 @@ export default function TanStackDonutChart ({ data, preset }: ChartProps<DataRec
         // page's 16px, which overflows the hole once the legend wraps on a narrow card
         decorative(polar({
           marks: [
-            radialText([formatValue(getTotal(data))], { angle: 0, radius: 0, dy: -9, fontSize: 20, fontWeight: 700 }),
-            radialText(['Total sessions'], { angle: 0, radius: 0, dy: 12, fontSize: 12 }),
+            radialText([formatValue(getTotal(data))], { angle: 0, radius: 0, dy: isHalf ? -30 : -9, fontSize: 20, fontWeight: 700 }),
+            radialText(['Total sessions'], { angle: 0, radius: 0, dy: isHalf ? -9 : 12, fontSize: 12 }),
           ],
           scales: { angle: unit, radius: unit },
         })),
       ],
+      // The bottom margin stays automatic, so it keeps making room for the legend
+      margin: isHalf ? { top: 140 } : undefined,
       scales: { x: null, y: null },
       color: {
         // The legend reports the next set of visible sources; the component keeps it in state
