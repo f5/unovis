@@ -14,7 +14,7 @@ export const isNil = <T>(a: T): a is null | undefined => a == null
 export const isString = <T>(a: T): a is T extends string ? T : never => typeof a === 'string'
 export const isArray = <T>(a: T): a is T extends any[] ? T : never => Array.isArray(a)
 export const isObject = <T>(a: T): boolean => (a instanceof Object)
-export const isAClassInstance = <T>(a: T): boolean => a.constructor.name !== 'Function' && a.constructor.name !== 'Object'
+export const isAClassInstance = <T>(a: T): boolean => !!a?.constructor?.name && a.constructor.name !== 'Function' && a.constructor.name !== 'Object'
 export const isPlainObject = <T>(a: T): boolean => isObject(a) && !isArray(a) && !isFunction(a) && !isAClassInstance(a)
 
 export const isEmpty = <T>(obj: T): boolean => {
