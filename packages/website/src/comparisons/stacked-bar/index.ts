@@ -18,7 +18,7 @@ export const stackedBarChart: Comparison<DataRecord[]> = {
       load: () => import('./tanstack'),
       code: require('!!raw-loader!./tanstack.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No fill patterns: chart specs declare linear and radial gradients, but not pattern resources.', url: 'https://tanstack.com/charts/latest/docs/examples/themes-and-motion#current-limits' },
+        patterns: { reason: 'No pattern option: chart specs declare linear and radial gradients, but not pattern resources.', url: 'https://tanstack.com/charts/latest/docs/examples/themes-and-motion#current-limits' },
       },
     },
     {
@@ -26,7 +26,7 @@ export const stackedBarChart: Comparison<DataRecord[]> = {
       load: () => import('./recharts'),
       code: require('!!raw-loader!./recharts.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No fill patterns: a bar\'s `fill` can point to an SVG `<pattern>`, but you write the pattern\'s SVG yourself.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/cartesian/Bar.tsx' },
+        patterns: { reason: 'No built-in fill patterns: a bar\'s `fill` can be a `url(#id)` pointing at an SVG `<pattern>`, but you draw the pattern in `<defs>` yourself.', url: 'https://recharts.github.io/en-US/examples/AreaChartFillByValue/' },
       },
     },
     {
@@ -34,8 +34,7 @@ export const stackedBarChart: Comparison<DataRecord[]> = {
       load: () => import('./chartjs'),
       code: require('!!raw-loader!./chartjs.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No fill patterns: `backgroundColor` takes a CanvasPattern that you draw yourself or get from a third-party library such as Patternomaly.', url: 'https://www.chartjs.org/docs/4.5.1/general/colors.html#patterns-and-gradients' },
-        capacity: { reason: 'No reference lines in Chart.js itself: a labeled line at a value takes the separate chartjs-plugin-annotation package.', url: 'https://www.chartjs.org/chartjs-plugin-annotation/latest/guide/types/line.html' },
+        patterns: { reason: 'No built-in fill patterns: `backgroundColor` can be a `CanvasPattern`, but you create each one yourself from an image or canvas, or add the third-party Patternomaly library its docs point to.', url: 'https://www.chartjs.org/docs/4.5.1/general/colors.html#patterns-and-gradients' },
       },
     },
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
@@ -46,7 +45,7 @@ export const stackedBarChart: Comparison<DataRecord[]> = {
       load: () => import('./plot'),
       code: require('!!raw-loader!./plot.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No fill patterns: a mark\'s `fill` takes a color, so an SVG `<pattern>` would have to be written by hand.', url: 'https://observablehq.com/plot/features/marks#mark-options' },
+        patterns: { reason: 'No built-in fill patterns: a bar\'s `fill` can be a `url(#id)`, but you write the SVG `<pattern>` yourself, e.g. in a function mark that returns `<defs>`.', url: 'https://observablehq.com/plot/features/marks#marks-are-layered' },
       },
     },
     {
@@ -54,7 +53,7 @@ export const stackedBarChart: Comparison<DataRecord[]> = {
       load: () => import('./vegalite'),
       code: require('!!raw-loader!./vegalite.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No fill patterns: a mark\'s `fill` takes a color or a gradient.', url: 'https://vega.github.io/vega-lite/docs/mark.html#color' },
+        patterns: { reason: 'No pattern option: a mark\'s `fill` is documented as a color or a gradient.', url: 'https://vega.github.io/vega-lite/docs/mark.html#color' },
       },
     },
   ],

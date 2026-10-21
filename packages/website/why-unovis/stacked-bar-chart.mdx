@@ -33,8 +33,11 @@ Support tickets opened each month in 2025, stacked by priority, with a tooltip f
   without a transition.
 - **Presets.** *Horizontal* (`orientation`) is one every library can draw, though Nivo lists the months bottom-up and
   the Unovis crosshair only follows the x axis, so its tooltip moves to the bars. *Patterns* (`pattern`) gives each
-  priority a fill pattern, which only ECharts, Nivo and AG Charts can match. *Capacity line* (`VisPlotline`) takes the
-  separate annotation plugin in Chart.js, and the ECharts mark line belongs to the Low series, so it hides with it.
+  priority a fill pattern, which only ECharts (decals), Nivo and AG Charts have built in. Recharts and Observable Plot
+  can point a bar's `fill` at an SVG `<pattern>` you write yourself, Chart.js takes a `CanvasPattern` that you draw
+  yourself or get from the third-party Patternomaly library, and TanStack Charts and Vega-Lite have no pattern fills.
+  *Capacity line* (`VisPlotline`) takes the official chartjs-plugin-annotation package in Chart.js, and ECharts draws it
+  as a `markLine`, which has to belong to a series, so the demo puts it on Low.
 
 ## Feature comparison
 
