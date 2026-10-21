@@ -18,7 +18,7 @@ export const areaChart: Comparison<DataRecord[]> = {
       load: () => import('./tanstack'),
       code: require('!!raw-loader!./tanstack.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No fill patterns: chart specs declare linear and radial gradients, but not pattern resources.', url: 'https://tanstack.com/charts/latest/docs/examples/themes-and-motion#current-limits' },
+        patterns: { reason: 'No pattern option: chart specs declare linear and radial gradients, but not pattern resources.', url: 'https://tanstack.com/charts/latest/docs/examples/themes-and-motion#current-limits' },
       },
     },
     {
@@ -26,7 +26,7 @@ export const areaChart: Comparison<DataRecord[]> = {
       load: () => import('./recharts'),
       code: require('!!raw-loader!./recharts.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No built-in fill patterns: an Area\'s `fill` takes a color, or a `url(#id)` pointing at an SVG `<pattern>` you draw yourself in `<defs>`.', url: 'https://recharts.github.io/en-US/api/Area/' },
+        patterns: { reason: 'No built-in fill patterns: an Area\'s `fill` takes a color, or a `url(#id)` pointing at an SVG `<pattern>` you draw yourself in `<defs>`.', url: 'https://recharts.github.io/en-US/examples/AreaChartFillByValue/' },
       },
     },
     {
@@ -34,8 +34,7 @@ export const areaChart: Comparison<DataRecord[]> = {
       load: () => import('./chartjs'),
       code: require('!!raw-loader!./chartjs.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No built-in fill patterns: `backgroundColor` takes a `CanvasPattern` you draw yourself, and the docs point to the third-party patternomaly library.', url: 'https://www.chartjs.org/docs/latest/general/colors.html#patterns-and-gradients' },
-        annotations: { reason: 'Bands and reference lines aren\'t part of Chart.js; they come from the separate chartjs-plugin-annotation package.', url: 'https://www.chartjs.org/chartjs-plugin-annotation/latest/guide/types/box.html' },
+        patterns: { reason: 'No built-in fill patterns: `backgroundColor` can be a `CanvasPattern`, but you create each one yourself from an image or canvas, or add the third-party Patternomaly library its docs point to.', url: 'https://www.chartjs.org/docs/latest/general/colors.html#patterns-and-gradients' },
       },
     },
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
@@ -53,7 +52,7 @@ export const areaChart: Comparison<DataRecord[]> = {
       load: () => import('./plot'),
       code: require('!!raw-loader!./plot.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No fill patterns: `fill` takes a color, so a pattern means drawing an SVG `<pattern>` yourself and adding it with a custom function mark.', url: 'https://observablehq.com/plot/features/marks#mark-options' },
+        patterns: { reason: 'No built-in fill patterns: an area\'s `fill` can be a `url(#id)`, but you write the SVG `<pattern>` yourself, e.g. in a function mark that returns `<defs>`.', url: 'https://observablehq.com/plot/features/marks#marks-are-layered' },
       },
     },
     {
@@ -61,7 +60,7 @@ export const areaChart: Comparison<DataRecord[]> = {
       load: () => import('./vegalite'),
       code: require('!!raw-loader!./vegalite.tsx').default,
       unsupportedPresets: {
-        patterns: { reason: 'No fill patterns: a mark\'s `fill` takes a color or a gradient, and the `color` encoding maps the services to colors only.', url: 'https://vega.github.io/vega-lite/docs/mark.html#color' },
+        patterns: { reason: 'No pattern option: a mark\'s `fill` is documented as a color or a gradient, and the `color` encoding maps the services to colors only.', url: 'https://vega.github.io/vega-lite/docs/mark.html#color' },
       },
     },
   ],

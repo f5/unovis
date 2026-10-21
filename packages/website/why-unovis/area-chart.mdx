@@ -32,8 +32,9 @@ services.
 - **Presets.** *Step areas* switches `curveType`, which every library can match. *Patterns* gives each service a
   built-in fill pattern through the `pattern` accessor; ECharts (decals), Nivo and AG Charts have built-in patterns too,
   while TanStack Charts, Recharts, Chart.js, Observable Plot and Vega-Lite don't. *Annotations* adds a `VisPlotband`
-  and a `VisPlotline`: Chart.js needs its separate annotation plugin, Nivo has no band, and TanStack's `rect` can't span
-  the plot, so its band stops at the highest total.
+  and a `VisPlotline`: Chart.js draws both with the official chartjs-plugin-annotation, and Nivo has no band. TanStack's
+  `rect` has no plot-spanning mode, so the demo gives the band both y ends: zero and the top of TanStack's inferred y
+  domain.
 - **Stream graphs.** The Unovis `baseline` accessor sets a baseline for every data point, which is all a stream graph
   needs. See the [Area with Baseline](/gallery/view?title=Area%20with%20Baseline) example.
 

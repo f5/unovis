@@ -26,18 +26,19 @@ export default function TanStackAreaChart ({ data, preset }: ChartProps<DataReco
     // Areas stack by the color channel, so the records are unpivoted into one row per month and service
     const rows = data.flatMap(d => series.map(s => ({ date: d.date, series: s.label, value: d[s.key] })))
     const annotated = preset === 'annotations'
-    // `rect` has no plot-spanning mode: it needs both y ends, so the band runs from zero to the highest monthly total
-    const maxTotal = Math.max(...data.map(d => series.reduce((total, s) => total + d[s.key], 0)))
+    // `rect` has no plot-spanning mode: it needs both y ends, so the band runs from zero to the top of the inferred y domain,
+    // which is the highest monthly total or the budget line
+    const yMax = Math.max(BUDGET, ...data.map(d => series.reduce((total, s) => total + d[s.key], 0)))
 
     return defineChart({
       marks: [
         // Annotations are decorative, so they don't add points to the tooltip and the keyboard focus
-        ...(annotated ? [decorative(rect([MIGRATION], { id: 'migration', x1: 'from', x2: 'to', y1: () => 0, y2: () => maxTotal, fill: 'gray', fillOpacity: 0.2 }))] : []),
+        ...(annotated ? [decorative(rect([MIGRATION], { id: 'migration', x1: 'from', x2: 'to', y1: () => 0, y2: () => yMax, fill: 'gray', fillOpacity: 0.2 }))] : []),
         // Areas are straight between the points unless a d3-shape curve is passed through the adapter
         areaY(rows, { x: 'date', y: 'value', color: 'series', curve: preset === 'step' ? d3Curve(curveStep) : undefined }),
         ...(annotated
           ? [
-            decorative(text([MIGRATION], { id: 'migration-label', x: 'from', y: () => maxTotal, text: () => 'Migration', anchor: 'start', dx: 4, dy: 10 })),
+            decorative(text([MIGRATION], { id: 'migration-label', x: 'from', y: () => yMax, text: () => 'Migration', anchor: 'start', dx: 4, dy: 10 })),
             ruleY([BUDGET], { id: 'budget', stroke: 'red', strokeDasharray: '6 4' }),
             decorative(text([BUDGET], { id: 'budget-label', x: () => data[data.length - 1].date, y: d => d, text: d => `Budget ${formatValue(d)}`, anchor: 'end', dy: -10 })),
           ]
