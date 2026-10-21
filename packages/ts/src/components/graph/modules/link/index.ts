@@ -1,6 +1,7 @@
 import { select, Selection } from 'd3-selection'
 import { range, sum } from 'd3-array'
 import { Transition } from 'd3-transition'
+import { line as d3Line } from 'd3-shape'
 
 // Utils
 import { throttle, getValue, getNumber, getBoolean, ensureArray } from '@/utils/data'
@@ -11,6 +12,7 @@ import { toPx } from '@/utils/to-px'
 
 // Types
 import { GraphInputLink, GraphInputNode } from '@/types/graph'
+import { Curve, CurveType } from '@/types/curve'
 
 // Local Types
 import { GraphCircleLabel, GraphLink, GraphLinkArrowStyle, GraphLinkStyle } from '../../types'
@@ -121,7 +123,11 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
     const cp2x = x1 + (x2 - x1) * 0.5 * curvature
     const cp2y = y1 + (y2 - y1) * 1.0 * curvature
 
-    const pathData = `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
+    const curveType = config.linkCurveType as CurveType
+    const curveFactory = Curve[curveType]
+    const pathData = curveFactory
+      ? d3Line().curve(curveFactory)([[x1, y1], [cp1x, cp1y], [cp2x, cp2y], [x2, y2]])
+      : `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
     const linkPathElement = linkSupport.attr('d', pathData).node()
     const cachedLinkPathLength = linkPathLengthMap.get(pathData)
     const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
