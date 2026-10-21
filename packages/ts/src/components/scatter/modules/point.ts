@@ -5,7 +5,7 @@ import { Position } from '@/types/position'
 import { Symbol, SymbolType } from '@/types/symbol'
 
 // Utils
-import { smartTransition } from '@/utils/d3'
+import { smartTransition, setAttrIfChanged } from '@/utils/d3'
 import { UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 import { getCSSVariableValue, isStringCSSVariable } from '@/utils/misc'
 import { hexToBrightness } from '@/utils/color'
@@ -49,7 +49,8 @@ export function updatePoints<Datum> (
 
   selection.each((d, index, elements) => {
     const group: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]> = select(elements[index])
-    const path = group.select('path')
+    const path = group.select<SVGPathElement>('path')
+      .call(setAttrIfChanged, UNOVIS_PATTERN_INDEX_ATTR, () => d._point.groupIndex)
 
     // Shape
     const pointDiameter = d._point.sizePx
