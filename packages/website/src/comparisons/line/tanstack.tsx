@@ -26,18 +26,17 @@ export default function TanStackLineChart ({ data, preset }: ChartProps<DataReco
     const isIos = (row: typeof rows[number]): boolean => row.platform === 'iOS'
 
     // The months the iOS app reported no data and the target, for the "Annotations" preset. A `rect` takes both y
-    // endpoints in data units, so the band spans the range of the data rather than the whole plot
+    // endpoints in data units, so the band is bound to a hidden `frame` scale fixed to [0, 1] to span the plot's height
     const outage = data.filter(d => d.ios === undefined)
-    const values = rows.map(r => r.users).filter(v => v !== undefined)
-    const band = outage.length > 0 ? [{ start: outage[0].date, end: outage[outage.length - 1].date, minimum: Math.min(...values), maximum: Math.max(...values) }] : []
+    const band = outage.length > 0 ? [{ start: outage[0].date, end: outage[outage.length - 1].date, bottom: 0, top: 1 }] : []
     const target = [{ date: data[data.length - 1].date, users: TARGET }]
 
     return defineChart({
       marks: [
         // `decorative()` keeps the labels and the band out of the tooltip
         ...(preset === 'annotations' ? [
-          decorative(rect(band, { x1: 'start', x2: 'end', y1: 'minimum', y2: 'maximum', fill: 'currentColor', fillOpacity: 0.1, inset: 0 })),
-          decorative(text(band, { x: 'start', y: 'maximum', text: () => 'iOS outage', fontSize: 12, anchor: 'start', dx: 4, dy: 10 })),
+          decorative(rect(band, { x1: 'start', x2: 'end', y1: 'bottom', y2: 'top', yScale: 'frame', fill: 'currentColor', fillOpacity: 0.1, inset: 0 })),
+          decorative(text(band, { x: 'start', y: 'top', yScale: 'frame', text: () => 'iOS outage', fontSize: 12, anchor: 'start', dx: 4, dy: 10 })),
           ruleY(target, { y: 'users', strokeDasharray: '6 4' }),
           decorative(text(target, { x: 'date', y: 'users', text: d => `Target ${formatValue(d.users)}`, fontSize: 12, anchor: 'end', dy: -8 })),
         ] : []),
@@ -51,6 +50,7 @@ export default function TanStackLineChart ({ data, preset }: ChartProps<DataReco
         // The compact scales cover numbers and categories; dates take D3's time scale
         x: { scale: scaleTime, axis: { ticks: { format: formatMonth } } },
         y: { scale: scaleLinear, nice: true, grid: true, axis: { ticks: { format: formatValue } } },
+        frame: { channel: 'y', scale: scaleLinear().domain([0, 1]), axis: false },
       },
       color: {
         // Fixes the colors' order, which would otherwise follow the order the marks list the series in

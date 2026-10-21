@@ -9,23 +9,13 @@ export const lineChart: Comparison<DataRecord[]> = {
   presets: [
     { id: 'step', label: 'Step line', description: 'Steps between the months instead of curves (`curveType`)' },
     { id: 'dashed', label: 'Dashed iOS', description: 'The iOS series is drawn dashed (`lineDashArray`)' },
-    { id: 'annotations', label: 'Annotations', description: 'A band over the iOS outage and a target line (Plotband, Plotline)' },
+    { id: 'annotations', label: 'Annotations', description: 'A band over the iOS outage and a target line (`VisPlotband`, `VisPlotline`)' },
   ],
   implementations: [
     { library: 'unovis', load: () => import('./unovis'), code: require('!!raw-loader!./unovis.tsx').default },
     { library: 'tanstack', load: () => import('./tanstack'), code: require('!!raw-loader!./tanstack.tsx').default },
     { library: 'recharts', load: () => import('./recharts'), code: require('!!raw-loader!./recharts.tsx').default },
-    {
-      library: 'chartjs',
-      load: () => import('./chartjs'),
-      code: require('!!raw-loader!./chartjs.tsx').default,
-      unsupportedPresets: {
-        annotations: {
-          reason: 'Chart.js has no bands or reference lines of its own: both come from the separate chartjs-plugin-annotation package.',
-          url: 'https://www.chartjs.org/chartjs-plugin-annotation/latest/guide/types/box.html',
-        },
-      },
-    },
+    { library: 'chartjs', load: () => import('./chartjs'), code: require('!!raw-loader!./chartjs.tsx').default },
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
     {
       library: 'nivo',
@@ -37,7 +27,7 @@ export const lineChart: Comparison<DataRecord[]> = {
           url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/line/src/LinesItem.tsx',
         },
         annotations: {
-          reason: 'Its markers are reference lines only: the target line works, but there\'s no band to shade the iOS outage.',
+          reason: 'Its markers are reference lines only: the target line works, but there\'s no band, so shading the iOS outage takes a custom layer that draws the rectangle.',
           url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/core/src/components/cartesian/markers/CartesianMarkersItem.js',
         },
       },
