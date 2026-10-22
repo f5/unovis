@@ -47,8 +47,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           },
         }}
         layerSettings={useCallback((i: number) => i < currentLevel
-          ? { width: 30, labelAlignment: 'straight' }
-          : { width: (250 - currentLevel * 30) / (3 - currentLevel) },
+          ? { width: '10%', labelAlignment: 'straight' }
+          : { width: `${(80 - currentLevel * 10) / (3 - currentLevel)}%` },
         [currentLevel])}
         showBackground={true}
         duration={props.duration} />
