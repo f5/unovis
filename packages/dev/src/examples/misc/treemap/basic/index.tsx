@@ -47,7 +47,7 @@ export const component = (): React.ReactElement => {
         tilePadding={10}
         tilePaddingTop={24}
         labelOffsetX={6}
-        labelOffsetY={6}
+        labelOffsetY={3}
         labelInternalNodes={true}
         tileLabelLargeFontSize={16}
         minTileSizeForLabel={40}
