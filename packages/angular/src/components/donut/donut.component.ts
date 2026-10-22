@@ -10,6 +10,7 @@ import {
   ColorAccessor,
   GenericAccessor,
   FillPatternType,
+  StringAccessor,
 } from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 
@@ -104,6 +105,16 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
    * When unset and `theme-patterns` is active, a default pattern is applied by segment index. Default: `undefined` */
   @Input() pattern?: GenericAccessor<FillPatternType, Datum>
 
+  /** Icon accessor function or constant value. The icon is displayed in the middle of the segment. Provide a href to an SVG
+   * symbol defined in the container's `svgDefs` (e.g. `'#heart'`), or text, which is inserted as HTML with all tags stripped: an icon font glyph (e.g. `'&#xf004;'`, set the font
+   * with the `--vis-donut-icon-font-family` CSS variable) or a Unicode symbol. The icon is hidden when its segment is too
+   * small to fit it. Default: `undefined` */
+  @Input() icon?: StringAccessor<Datum>
+
+  /** Icon size in pixels. When `undefined`, the size is 50% of the arc width, but no more than 15% of the donut radius
+   * and no more than 20 pixels. Default: `undefined` */
+  @Input() iconSize?: NumericAccessor<Datum>
+
   /** Explicitly set the donut outer radius. Default: `undefined` */
   @Input() radius?: number
 
@@ -160,8 +171,8 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   }
 
   private getConfig (): DonutConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, angleRange, padAngle, minSegmentAngle, sortFunction, cornerRadius, color, pattern, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY } = this
-    const config = { duration, events, attributes, id, value, angleRange, padAngle, minSegmentAngle, sortFunction, cornerRadius, color, pattern, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY }
+    const { duration, events, attributes, id, value, angleRange, padAngle, minSegmentAngle, sortFunction, cornerRadius, color, pattern, icon, iconSize, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY } = this
+    const config = { duration, events, attributes, id, value, angleRange, padAngle, minSegmentAngle, sortFunction, cornerRadius, color, pattern, icon, iconSize, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY }
     const keys = Object.keys(config) as (keyof DonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
