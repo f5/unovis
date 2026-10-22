@@ -55,6 +55,14 @@ wrapper is generated from it.
 - Lint: `pnpm lint` (check) / `pnpm lint:fix` (autofix). `pre-commit` runs `lint-staged` on staged files automatically.
 - CI (`.github/workflows/pull_request.yml`) runs `pnpm build && pnpm build:dev` on every PR.
 
+## Visual fixes
+
+Reproduce in the affected browser engine first. Compare branch-base and final screenshots with
+matching data, fonts, viewport, theme, and interaction state. Confirm servers and imports use the
+intended worktree. Prefer CSS over new measurements; check representative examples and actual
+clipping bounds before refreshing snapshots. Report exactly what was tested. For SVG text and
+clipping changes, check WebKit early; see the [visual-testing workflow](../packages/dev/playwright/README.md#agent-workflow).
+
 ## Commits
 
 Commitlint (`commitlint.config.ts`) enforces a **custom format — not Conventional Commits**:
