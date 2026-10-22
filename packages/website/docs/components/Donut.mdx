@@ -22,6 +22,14 @@ export const donutProps = () => ({
   data: Array(4).fill(25).map(d => Math.floor(d * Math.random()))
 })
 
+export const iconDefs = `
+  <symbol id="heart" viewBox="0 0 24 24"><path d="M12 21.5s-7.8-4.7-10.3-9.6C0 8.5 2.1 3.5 6.6 3.5c2.4 0 4 1.4 5.4 3.5 1.4-2.1 3-3.5 5.4-3.5 4.5 0 6.6 5 4.9 8.4-2.5 4.9-10.3 9.6-10.3 9.6z"/></symbol>
+  <symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.5"/><path d="M12 1v3.5M12 19.5V23M1 12h3.5M19.5 12H23M4.2 4.2l2.5 2.5M17.3 17.3l2.5 2.5M4.2 19.8l2.5-2.5M17.3 6.7l2.5-2.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+  <symbol id="drop" viewBox="0 0 24 24"><path d="M12 1.5S4.5 10 4.5 15.5a7.5 7.5 0 0 0 15 0C19.5 10 12 1.5 12 1.5z"/></symbol>
+  <symbol id="bolt" viewBox="0 0 24 24"><path d="M14 1 3.5 14H11l-1.5 9L20.5 9.5H13L14 1z"/></symbol>
+`
+export const iconHrefs = ['#heart', '#sun', '#drop', '#bolt']
+
 ## Basic Configuration
 The minimum configuration for the _Donut_ component looks like:
 <DocWrapper {...donutProps()} showContext="full"/>
@@ -134,6 +142,28 @@ For example, setting `emptySegmentAngle` to `Math.PI / 12` looks like:
 ####
 Note that this property will have no effect if `showEmptySegments` is `false`.
 
+## Icons
+Use `icon` to display a small icon in the middle of each segment. The icon is hidden when its segment is too small to fit it.
+<DocWrapper {...donutProps()}
+  data={[12, 9, 7, 5]}
+  arcWidth={40}
+  showContext="full"
+  containerProps={{ svgDefs: iconDefs }}
+  declarations={{ svgDefs: '`<symbol id="heart" viewBox="0 0 24 24">...</symbol> ...`' }}
+  icon={(d, i) => ['#heart', '#sun', '#drop', '#bolt'][i]}
+/>
+
+`icon` accepts either a href to an SVG symbol defined in the container's `svgDefs`, like in the example above, or text: an
+icon font glyph (e.g. `'&#xf004;'` for Font Awesome's heart, with the font set via the `--vis-donut-icon-font-family`
+and `--vis-donut-icon-font-weight` CSS variables) or a Unicode symbol. SVG icons are filled with the
+`--vis-donut-icon-color` CSS variable, which is also available as `currentColor` for strokes. Icons don't capture
+pointer events, so hovering them triggers the events of the segment underneath (e.g. its tooltip).
+
+### Icon Size
+`iconSize` sets the size of the icons in pixels. When `undefined`, it's 50% of the arc width, but no more than 15% of
+the donut radius and no more than 20 pixels.
+<InputWrapper {...donutProps()} data={[12, 9, 7, 5]} arcWidth={40} containerProps={{ svgDefs: iconDefs }} icon={(d, i) => iconHrefs[i]} property="iconSize" defaultValue={20} inputType="range" inputProps={{ min: 6, max: 32 }}/>
+
 ## Background
 By default, _Donut_ has a background underneath the segments, which is useful when your chart is empty. You can turn it off by setting
 `showBackground` to `false`.
@@ -178,9 +208,14 @@ All supported CSS variables and their default values
 
 --vis-donut-background-color: #E7E9F3;
 
+--vis-donut-icon-color: rgba(255, 255, 255, 0.9);
+--vis-donut-icon-font-family
+--vis-donut-icon-font-weight: normal;
+
 --vis-dark-donut-central-label-text-color: #C2BECE;
 --vis-dark-donut-central-sub-label-text-color: #C2BECE;
 --vis-dark-donut-background-color: #18160C;
+--vis-dark-donut-icon-color: rgba(255, 255, 255, 0.9);
 ```
 
 ## Component Props
