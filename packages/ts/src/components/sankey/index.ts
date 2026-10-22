@@ -186,7 +186,7 @@ export class Sankey<
   setData (data: { nodes: N[]; links?: L[] }): void {
     super.setData(data)
 
-    // Pre-calculate component size for Sizing.EXTEND
+    // Pre-calculate component size for `Sizing.Extend` and `Sizing.FitWidth` (layouts without links need it for `Sizing.Fit` too)
     if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
     this._bleedCached = null
   }
@@ -209,7 +209,7 @@ export class Sankey<
       this._pan = [0, 0]
     }
 
-    // Pre-calculate component size for Sizing.EXTEND
+    // Pre-calculate component size for `Sizing.Extend` and `Sizing.FitWidth` (layouts without links need it for `Sizing.Fit` too)
     if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
 
     const nodeId = ((d: SankeyInputNode, i: number) => getString(d, this.config.id, i)) as any
@@ -230,6 +230,14 @@ export class Sankey<
     }
 
     this._bleedCached = null
+  }
+
+  setSizing (sizing: Sizing | string): void {
+    const prevSizing = this.sizing
+    super.setSizing(sizing)
+
+    // Pre-calculate component size for `Sizing.Extend` and `Sizing.FitWidth` (`setData` and `setConfig` skip it while the sizing is `Sizing.Fit`)
+    if (sizing !== prevSizing && sizing !== Sizing.Fit) this._preCalculateComponentSize()
   }
 
   _render (customDuration?: number): void {
