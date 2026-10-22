@@ -75,5 +75,7 @@ EOF
 
 - Attach **light and dark** screenshots (and a short recording for interactive components). If you
   can't produce images, leave a placeholder line in the body and tell the user to drop them in.
-- Before pushing, confirm `pnpm lint` is clean and the build passes (CI runs
-  `pnpm build && pnpm build:dev`).
+- Immediately before PR submission, run `pnpm cmds-report` from the repo root after final changes
+  and review the report. Fix failures introduced by the PR; document remaining failures and skipped
+  checks in the PR description. The runner has exclusions, so also complete the required CI checks
+  (`pnpm build && pnpm build:dev` and applicable lint/tests).

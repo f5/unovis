@@ -98,6 +98,9 @@ Full rules, the parser regex, the type-picking cheatsheet, and ~25 real examples
 - Branch from `main` (don't commit to `main` directly). The **F5 CLA bot** comments on first-time
   contributions; there is no DCO/sign-off requirement.
 - PR body uses a checklist (Dev examples / Wrappers / Gallery example / Docs) with screenshots.
+- Immediately before PR submission, run `pnpm cmds-report` from the repo root after final changes
+  and review the report. Fix failures introduced by the PR; document remaining failures and skipped
+  checks in the PR description. The runner has exclusions, so also complete the required CI checks.
 - Full procedure, the commit-grouping convention, and the body template: **`/open-pr`**.
 - Reference PRs: [#821 Boxplot](https://github.com/f5/unovis/pull/821),
   [#812 RadialBar](https://github.com/f5/unovis/pull/812).
