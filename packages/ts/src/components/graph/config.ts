@@ -176,8 +176,9 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * Default: `0` */
   linkCurvature?: NumericAccessor<L>;
   /** D3 curve type to interpolate the link path with, see the `CurveType` enum for the full list of options.
+   * Also accepts `'smoothStep'`, which draws the link as a right-angle step with rounded corners.
    * Default: `undefined` (links are drawn as cubic Bezier curves shaped by `linkCurvature`) */
-  linkCurveType?: CurveType | string;
+  linkCurveType?: CurveType | 'smoothStep' | `${CurveType}`;
   /** Highlight links on hover. Default: `true` */
   linkHighlightOnHover?: boolean;
   /** Offset [x,y] in pixels from the source node's center point where the link should start. Default: `undefined` */
