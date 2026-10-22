@@ -60,13 +60,17 @@ export const tileForeground = css`
 export const label = css`
   label: label;
   text-anchor: start;
-  dominant-baseline: hanging;
+  dominant-baseline: text-before-edge;
   user-select: none;
   pointer-events: none;
   font-size: var(${variables.treemapLabelFontSize});
   opacity: var(${variables.treemapLabelOpacity});
   fill: var(${variables.treemapLabelTextColor});
   font-weight: var(${variables.treemapLabelFontWeight});
+
+  & tspan {
+    dominant-baseline: inherit;
+  }
 `
 
 export const internalLabel = css`

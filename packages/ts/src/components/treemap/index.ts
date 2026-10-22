@@ -182,7 +182,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     /* Render tiles */
     const tiles = this.tiles
       .selectAll<SVGGElement, TreemapNode<Datum>>(`g.${s.tileGroup}:not(.${s.tileExiting})`)
-      .data(visibleTiles, d => `${d.data.key}-${d.depth}`)
+      .data(visibleTiles, d => JSON.stringify(d.ancestors().map(node => node.data.key)))
 
     const tilesEnter = tiles.enter()
       .append('g')
@@ -223,7 +223,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('y', 0)
 
     /* Update */
-    const tilesMerged = tiles.merge(tilesEnter)
+    const tilesMerged = tiles.merge(tilesEnter).order()
 
     // Update clipPath elements
     tilesMerged.select<SVGClipPathElement>('clipPath')
@@ -281,9 +281,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
       const text = select(el)
       const maxLabelWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
+      const shouldWrap = config.labelFit === FitMode.Wrap && isLeafNode
 
-      if (config.labelFit === FitMode.Wrap && isLeafNode) {
+      if (shouldWrap) {
         wrapSVGText(text, maxLabelWidth)
+        text.select('tspan').attr('y', 0)
       } else {
         trimSVGText(text, maxLabelWidth, config.labelTrimMode)
       }
