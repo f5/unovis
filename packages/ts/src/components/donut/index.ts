@@ -9,14 +9,17 @@ import { SeriesDataModel } from '@/data-models/series'
 
 // Utils
 import { smartTransition } from '@/utils/d3'
-import { isNumber, clamp, getNumber } from '@/utils/data'
+import { isNumber, clamp, getNumber, getString } from '@/utils/data'
 import { wrapSVGText } from '@/utils/text'
 
 // Types
 import { Spacing } from '@/types/spacing'
 
+// Circular Bar Modules
+import { createIcon, updateIcon, removeIcon } from '@/components/circular-bar/modules/icon'
+
 // Local Types
-import { DonutArcDatum, DonutArcAnimState, DonutDatum } from './types'
+import { DonutArcDatum, DonutArcAnimState, DonutDatum, DonutIconDatum } from './types'
 
 // Config
 import { DonutDefaultConfig, DonutConfigInterface } from './config'
@@ -25,10 +28,16 @@ import { DonutDefaultConfig, DonutConfigInterface } from './config'
 import { createArc, updateArc, removeArc, ArcNode } from './modules/arc'
 
 // Local Utils
-import { applyMinSegmentAngle } from './utils'
+import { applyMinSegmentAngle, getArcBisectorClearance } from './utils'
 
 // Constants
-import { DONUT_HALF_ANGLE_RANGES } from './constants'
+import {
+  DONUT_HALF_ANGLE_RANGES,
+  DONUT_DEFAULT_ICON_SIZE_RATIO,
+  DONUT_DEFAULT_MAX_ICON_SIZE_RATIO,
+  DONUT_DEFAULT_MAX_ICON_SIZE,
+  DONUT_ICON_CLEARANCE_RATIO,
+} from './constants'
 
 // Styles
 import * as s from './style'
@@ -42,6 +51,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
 
   arcBackground: Selection<SVGPathElement, unknown, SVGGElement, unknown>
   arcGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  iconGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   centralLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
   centralSubLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
   arcGen = arc<DonutArcAnimState>()
@@ -57,6 +67,8 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     this.setConfig(config)
     this.arcBackground = this.g.append('path')
     this.arcGroup = this.g.append('g')
+    this.iconGroup = this.g.append('g')
+      .attr('class', s.iconGroup)
     this.centralLabel = this.g.append('text')
       .attr('class', s.centralLabel)
     this.centralSubLabel = this.g.append('text')
@@ -113,6 +125,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     // Animate position together with the arcs. Otherwise switching between
     // full and half jumps to the new layout first and animates after.
     smartTransition(this.arcGroup, positionDuration).attr('transform', translate)
+    smartTransition(this.iconGroup, positionDuration).attr('transform', translate)
 
     this.arcGen
       .startAngle(d => d.startAngle)
@@ -169,6 +182,8 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     arcsSelection.exit<DonutArcDatum<Datum>>()
       .attr('class', s.segmentExit)
       .call(removeArc, duration)
+
+    this._renderIcons(arcData, duration)
 
     // Label
     const labelTextAnchor = isHalfDonutRight ? 'start' : isHalfDonutLeft ? 'end' : 'middle'
@@ -236,6 +251,47 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     }
 
     this._firstRender = false
+  }
+
+  private _renderIcons (arcData: DonutArcDatum<Datum>[], duration: number): void {
+    const { config } = this
+
+    // Icons sit on the segment's bisector in the middle of the arc, where d3 places the arc's centroid
+    const iconData: DonutIconDatum<Datum>[] = config.icon ? arcData.map(d => {
+      const icon = getString(d.data, config.icon, d.index)
+      if (!icon) return undefined
+      const defaultIconSize = Math.min(
+        (d.outerRadius - d.innerRadius) * DONUT_DEFAULT_ICON_SIZE_RATIO,
+        d.outerRadius * DONUT_DEFAULT_MAX_ICON_SIZE_RATIO,
+        DONUT_DEFAULT_MAX_ICON_SIZE
+      )
+      const iconSize = getNumber(d.data, config.iconSize, d.index) ?? defaultIconSize
+      const radius = (d.innerRadius + d.outerRadius) / 2
+      const clearance = getArcBisectorClearance(d.startAngle, d.endAngle, d.padAngle, d.innerRadius, d.outerRadius, radius)
+
+      return {
+        data: d.data,
+        index: d.index,
+        icon,
+        iconSize,
+        angle: (d.startAngle + d.endAngle) / 2,
+        radius,
+        visible: clearance >= iconSize * DONUT_ICON_CLEARANCE_RATIO,
+      }
+    }).filter(Boolean) : []
+
+    const iconsSelection = this.iconGroup
+      .selectAll<SVGGElement, DonutIconDatum<Datum>>(`.${s.icon}`)
+      .data(iconData, (d: DonutIconDatum<Datum>) => config.id(d.data, d.index))
+
+    const iconsEnter = iconsSelection.enter().append('g')
+      .attr('class', s.icon)
+      .call(createIcon)
+
+    iconsSelection.merge(iconsEnter).call(updateIcon, duration)
+    iconsSelection.exit<DonutIconDatum<Datum>>()
+      .attr('class', s.iconExit)
+      .call(removeIcon, duration)
   }
 }
 
