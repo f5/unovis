@@ -25,15 +25,22 @@ export const variables = injectGlobal`
     // to allow it to fallback to the donut background color
     /* --vis-donut-segment-stroke-color: none; */
 
+    --vis-donut-icon-color: rgba(255, 255, 255, 0.9);
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-donut-icon-font-family: */
+    --vis-donut-icon-font-weight: normal;
+
     --vis-dark-donut-central-label-text-color: #C2BECE;
     --vis-dark-donut-central-sub-label-text-color: #C2BECE;
     --vis-dark-donut-background-color: #18160C;
+    --vis-dark-donut-icon-color: rgba(255, 255, 255, 0.9);
   }
 
   ${darkThemeCssSelectors} ${`.${root}`} {
     --vis-donut-central-label-text-color: var(--vis-dark-donut-central-label-text-color);
     --vis-donut-central-sub-label-text-color: var(--vis-dark-donut-central-sub-label-text-color);
     --vis-donut-background-color: var(--vis-dark-donut-background-color);
+    --vis-donut-icon-color: var(--vis-dark-donut-icon-color);
   }
 `
 export const background = css`
@@ -49,6 +56,34 @@ export const segment = css`
 
 export const segmentExit = css`
   label: segment-exit;
+`
+
+export const iconGroup = css`
+  label: icon-group;
+  pointer-events: none;
+`
+
+const iconStyles = `
+  fill: var(--vis-donut-icon-color);
+  color: var(--vis-donut-icon-color);
+
+  text {
+    font-family: var(--vis-donut-icon-font-family, var(--vis-font-family));
+    font-weight: var(--vis-donut-icon-font-weight);
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+`
+
+export const icon = css`
+  label: icon;
+  ${iconStyles}
+`
+
+// Exiting icons get their own class, so that an icon coming back during its fade-out is re-created instead of reused
+export const iconExit = css`
+  label: icon-exit;
+  ${iconStyles}
 `
 
 export const centralLabel = css`
