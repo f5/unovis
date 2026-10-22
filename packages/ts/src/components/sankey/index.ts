@@ -209,9 +209,6 @@ export class Sankey<
       this._pan = [0, 0]
     }
 
-    // Pre-calculate component size for `Sizing.Extend` and `Sizing.FitWidth` (layouts without links need it for `Sizing.Fit` too)
-    if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
-
     const nodeId = ((d: SankeyInputNode, i: number) => getString(d, this.config.id, i)) as any
     this._sankey.linkSort(this.config.linkSort)
     this._sankey
@@ -221,6 +218,9 @@ export class Sankey<
       .nodeAlign(SankeyLayout[this.config.nodeAlign])
       .nodeSort(this.config.nodeSort)
       .iterations(this.config.iterations)
+
+    // Pre-calculate component size for `Sizing.Extend` and `Sizing.FitWidth` (layouts without links need it for `Sizing.Fit` too)
+    if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
 
     // Update zoom behavior if already initialized
     if (this._zoomBehavior) {
@@ -517,6 +517,10 @@ export class Sankey<
     const height = max(values) || config.nodeMinHeight
     this._extendedHeight = height + bleed.top + bleed.bottom
     this._extendedWidth = Math.max(0, (config.nodeWidth + config.nodeHorizontalSpacing) * Object.keys(groupedByColumn).length - config.nodeHorizontalSpacing + bleed.left + bleed.right)
+
+    // The layout can exceed the pre-calculated size (e.g. when zoomed), so we calculate it right away to report the actual size
+    // to the container instead of the one left from the previous layout
+    if (this.sizing !== Sizing.Fit) this._prepareLayout()
   }
 
   private _prepareLayout (): void {
@@ -604,6 +608,9 @@ export class Sankey<
       const width = max(nodes, d => d.x1) || 0
       this._extendedHeightIncreased = height + bleed.top + bleed.bottom
       this._extendedWidthIncreased = width + bleed.left + bleed.right
+    } else {
+      this._extendedHeightIncreased = undefined
+      this._extendedWidthIncreased = undefined
     }
   }
 
