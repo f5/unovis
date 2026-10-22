@@ -50,13 +50,6 @@ export class SingleContainer<Data> extends ContainerCore {
     super.updateContainer(containerConfig)
 
     this.component = containerConfig.component
-    if (containerConfig.sizing) {
-      const sizing = this._getEffectiveSizing()
-      if (sizing !== containerConfig.sizing) {
-        console.warn(`Unovis | Single Container: The component doesn't support the '${containerConfig.sizing}' sizing mode because it doesn't report its own size. Falling back to '${sizing}'`)
-      }
-      this.component.sizing = sizing
-    }
 
     const tooltip = containerConfig.tooltip
     if (tooltip) {
@@ -71,6 +64,15 @@ export class SingleContainer<Data> extends ContainerCore {
       this._svgDefs.node(),
       this._svgDefsExternal.node(),
     ])
+
+    // Setting the sizing after the component's element has been attached because components can measure their DOM when it changes
+    if (containerConfig.sizing && this.component) {
+      const sizing = this._getEffectiveSizing()
+      if (sizing !== containerConfig.sizing) {
+        console.warn(`Unovis | Single Container: The component doesn't support the '${containerConfig.sizing}' sizing mode because it doesn't report its own size. Falling back to '${sizing}'`)
+      }
+      this.component.setSizing(sizing)
+    }
 
     if (!preventRender) this.render()
   }
