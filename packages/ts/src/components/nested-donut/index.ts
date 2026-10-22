@@ -2,7 +2,7 @@ import { Selection } from 'd3-selection'
 import { arc, pie } from 'd3-shape'
 import { hierarchy, HierarchyNode, partition } from 'd3-hierarchy'
 import { scaleLinear, ScaleLinear } from 'd3-scale'
-import { group, InternMap } from 'd3-array'
+import { group, min, InternMap } from 'd3-array'
 
 // Core
 import { ComponentCore } from '@/core/component'
@@ -44,6 +44,7 @@ NestedDonutConfigInterface<Datum>
 
   arcBackground: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  centralBackground: Selection<SVGCircleElement, unknown, SVGGElement, unknown>
   centralLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
   centralSubLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
 
@@ -58,6 +59,8 @@ NestedDonutConfigInterface<Datum>
     this.arcBackground = this.g.append('g')
     this.arcGroup = this.g.append('g')
       .attr('class', s.segmentsGroup)
+    this.centralBackground = this.g.append('circle')
+      .attr('class', s.centralBackground)
     this.centralLabel = this.g.append('text')
       .attr('class', s.centralLabel)
     this.centralSubLabel = this.g.append('text')
@@ -84,6 +87,7 @@ NestedDonutConfigInterface<Datum>
 
     this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     this.arcBackground.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.centralBackground.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     this.centralLabel.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     this.centralSubLabel.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
@@ -111,6 +115,9 @@ NestedDonutConfigInterface<Datum>
     smartTransition(backgrounds.exit(), duration)
       .style('opacity', 0)
       .remove()
+
+    smartTransition(this.centralBackground, duration)
+      .attr('r', min(layers, d => d._innerRadius))
 
     // Segments
     const segments = this.arcGroup.selectAll<SVGGElement, NestedDonutSegment<Datum>>(`.${s.segment}`)
