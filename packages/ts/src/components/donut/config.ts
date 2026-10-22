@@ -2,7 +2,7 @@
 import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
-import { ColorAccessor, GenericAccessor, NumericAccessor } from '@/types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
 
 export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
@@ -30,6 +30,16 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   /** Fill pattern accessor. Resolves to a `FillPatternType`.
    * When unset and `theme-patterns` is active, a default pattern is applied by segment index. Default: `undefined` */
   pattern?: GenericAccessor<FillPatternType, Datum>;
+  /** Icon accessor function or constant value. The icon is displayed in the middle of the segment. Provide a href to an SVG
+   * symbol defined in the container's `svgDefs` (e.g. `'#heart'`), or text, which is inserted as HTML with all tags stripped: an icon font glyph (e.g. `'&#xf004;'`, set the font
+   * with the `--vis-donut-icon-font-family` CSS variable) or a Unicode symbol. The icon is hidden when its segment is too
+   * small to fit it. Default: `undefined`
+   */
+  icon?: StringAccessor<Datum>;
+  /** Icon size in pixels. When `undefined`, the size is 50% of the arc width, but no more than 15% of the donut radius
+   * and no more than 20 pixels. Default: `undefined`
+   */
+  iconSize?: NumericAccessor<Datum>;
   /** Explicitly set the donut outer radius. Default: `undefined` */
   radius?: number;
   /** Arc width in pixels. Set to `0` if you want to have a pie chart. Default: `20` */
@@ -72,6 +82,8 @@ export const DonutDefaultConfig: DonutConfigInterface<unknown> = {
   cornerRadius: 0,
   color: undefined,
   pattern: undefined,
+  icon: undefined,
+  iconSize: undefined,
   radius: undefined,
   arcWidth: 20,
   centralLabel: undefined,
