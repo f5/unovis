@@ -60,4 +60,22 @@ describe('NestedDonut', () => {
     container.destroy()
     element.remove()
   })
+
+  it('shrinks the layers when they do not fit into the available radius', async () => {
+    const element = document.createElement('div')
+    document.body.appendChild(element)
+    const component = new NestedDonut<Datum>({
+      layers: [d => d.group, d => d.item],
+      layerSettings: { width: 100 },
+      value: d => d.value,
+      showSegmentLabels: false,
+      duration: 0,
+    })
+    const container = new SingleContainer<Datum>(element, { component, width: 200, height: 200 }, data)
+    await nextFrame()
+
+    expect(element.querySelector(`.${NestedDonut.selectors.centralBackground}`).getAttribute('r')).toBe('0')
+    container.destroy()
+    element.remove()
+  })
 })

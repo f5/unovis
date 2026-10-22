@@ -272,6 +272,16 @@ NestedDonutConfigInterface<Datum>
       return arr
     }, new Array<NestedDonutLayer>())
 
+    // Shrink the layers proportionally when they don't fit into the available radius
+    const innerRadius = layerItems[0]._innerRadius
+    if (innerRadius < 0) {
+      const radiusScale = scaleLinear().domain([innerRadius, outerRadius]).range([0, outerRadius])
+      layerItems.forEach(layer => {
+        layer._innerRadius = radiusScale(layer._innerRadius)
+        layer._outerRadius = radiusScale(layer._outerRadius)
+      })
+    }
+
     return direction === NestedDonutDirection.Inwards ? layerItems.reverse() : layerItems
   }
 }
