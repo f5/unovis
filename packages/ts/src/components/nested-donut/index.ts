@@ -9,18 +9,26 @@ import { ComponentCore } from '@/core/component'
 import { SeriesDataModel } from '@/data-models/series'
 
 // Types
+import { LengthUnit } from '@/types/misc'
 import { VerticalAlign } from '@/types/text'
 
 // Utils
 import { getColor } from '@/utils/color'
 import { smartTransition } from '@/utils/d3'
-import { getNumber, getString, getValue, isNumber, isNumberWithinRange, merge } from '@/utils/data'
-import { getPixelValue } from '@/utils/misc'
+import { getNumber, getString, getValue, isNumber, isNumberWithinRange, isString, merge } from '@/utils/data'
+import { getPixelValue, parseUnit } from '@/utils/misc'
 import { cssvar } from '@/utils/style'
 import { wrapSVGText } from '@/utils/text'
 
 // Local Types
-import { NestedDonutArcAnimState, NestedDonutDirection, NestedDonutSegment, NestedDonutLayer, NestedDonutSegmentLabelAlignment } from './types'
+import {
+  NestedDonutArcAnimState,
+  NestedDonutDirection,
+  NestedDonutSegment,
+  NestedDonutLayer,
+  NestedDonutLayerSettings,
+  NestedDonutSegmentLabelAlignment,
+} from './types'
 
 // Config
 import { NestedDonutDefaultConfig, NestedDonutConfigInterface } from './config'
@@ -257,9 +265,11 @@ NestedDonutConfigInterface<Datum>
     }
     const layerItems = layers.reduceRight((arr, _, i) => {
       const layerId = direction === NestedDonutDirection.Outwards ? i : arr.length
-      const layerConfig = merge(defaultLayerSettings, getValue(layerId, layerSettings))
+      const layerConfig: NestedDonutLayerSettings = merge(defaultLayerSettings, getValue(layerId, layerSettings))
       const radius = arr.length ? arr[0]._innerRadius - layerPadding : outerRadius
-      const layerWidth = getPixelValue(layerConfig.width)
+      const layerWidth = isString(layerConfig.width) && layerConfig.width.endsWith('%')
+        ? parseUnit(layerConfig.width as LengthUnit, outerRadius)
+        : getPixelValue(layerConfig.width)
       if (layerWidth === null) {
         console.warn(`Unovis | Nested Donut: Could not parse width ${layerConfig.width}. Setting to default.`)
       }
