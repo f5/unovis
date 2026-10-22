@@ -4,11 +4,13 @@ import { data, DataRecord } from './data'
 @Component({
   selector: 'basic-donut-chart',
   templateUrl: './basic-donut-chart.component.html',
+  styleUrls: ['./styles.css'],
   standalone: false,
 })
 
 export class BasicDonutChartComponent {
   value = (d: DataRecord): number => d.value
+  icon = (d: DataRecord): string => d.icon
   data = data
   legendItems = Object.entries(data).map(([_, data]) => ({
     name: data.key.charAt(0).toUpperCase() + data.key.slice(1),

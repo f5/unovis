@@ -1,11 +1,14 @@
 
-<vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
-<vis-single-container [height]="400">
-  <vis-donut
-    [value]="value"
-    [data]="data"
-    [showEmptySegments]="true"
-    [padAngle]="0.01"
-    [arcWidth]="100"
-  />
-</vis-single-container>
+<div class="donut-chart">
+  <vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+  <vis-single-container [height]="400">
+    <vis-donut
+      [value]="value"
+      [icon]="icon"
+      [data]="data"
+      [showEmptySegments]="true"
+      [padAngle]="0.01"
+      [arcWidth]="100"
+    />
+  </vis-single-container>
+</div>
