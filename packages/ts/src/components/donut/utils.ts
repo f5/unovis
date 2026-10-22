@@ -61,3 +61,22 @@ export function applyMinSegmentAngle<Datum> (
     currentAngle = arc.endAngle
   }
 }
+
+/** Distance from the point at `radius` on the bisector of an arc to the closest edge of the arc,
+ * as it's drawn by d3's arc generator with the default pad radius */
+export function getArcBisectorClearance (
+  startAngle: number,
+  endAngle: number,
+  padAngle: number,
+  innerRadius: number,
+  outerRadius: number,
+  radius: number
+): number {
+  const halfAngle = Math.abs(endAngle - startAngle) / 2
+  // d3 moves the sides of a padded arc inwards by a constant distance, so that the gap between the arcs has the same width
+  const padRadius = Math.sqrt(innerRadius * innerRadius + outerRadius * outerRadius)
+  const sideInset = padRadius * Math.sin((padAngle || 0) / 2)
+  // The sides of arcs of 180° and more don't converge towards the bisector, so only the inner and outer edges limit the space
+  const sideClearance = halfAngle >= Math.PI / 2 ? Infinity : radius * Math.sin(halfAngle) - sideInset
+  return Math.min(radius - innerRadius, outerRadius - radius, sideClearance)
+}
