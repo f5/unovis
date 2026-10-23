@@ -1,0 +1,50 @@
+---
+title: Box Plot
+description: A box plot rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, Observable Plot, Vega-Lite and TanStack Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { boxPlot } from '@site/src/comparisons/boxplot'
+
+<LibraryComparison comparison={boxPlot}>
+
+# Box Plot
+
+Response times of 40 sampled requests to each of six API endpoints over the last hour, as boxes with the quartiles,
+the median, whiskers and outliers.
+
+</LibraryComparison>
+
+## What to look for
+
+- **What goes in.** The Unovis `Boxplot` draws the statistics you give it (`median`, `quartiles` and `whiskers`), so
+  the demo computes them from the samples with the helper in `data.ts`, and the boxes can show any summary you like.
+  Recharts has no box plot: its docs example draws one from the same precomputed statistics, with a ranged bar, an
+  error bar and a scatter. Chart.js (with the @sgratzl/chartjs-chart-boxplot plugin), ECharts (with its `boxplot`
+  dataset transform), Nivo, Observable Plot, Vega-Lite and TanStack Charts compute the statistics from the raw samples.
+- **Whiskers.** Unovis, Recharts, Chart.js, Observable Plot, Vega-Lite and TanStack Charts end the whiskers at the
+  last sample within 1.5 × IQR of the box. ECharts ends them at the 1.5 × IQR bound itself, so some of its whiskers are
+  longer than the data they cover. Nivo's whiskers are fixed quantiles, the 10th and 90th percentiles by default, and
+  it draws no outliers.
+- **Outliers.** The Unovis `Boxplot` doesn't draw outliers: a `Scatter` in the same container does. ECharts and
+  Recharts draw them as a separate scatter series too; Chart.js, Observable Plot, Vega-Lite and TanStack Charts draw
+  them as part of the box plot.
+- **Hover.** The Unovis crosshair shows a box's statistics anywhere in its column. Chart.js, ECharts, Nivo, Vega-Lite
+  and TanStack Charts show them over the box itself. Vega-Lite's box tooltip lists the min and max of all the samples,
+  outliers included, and the whiskers have a tooltip of their own. Observable Plot's `boxY` would open one tip per part
+  of the box, each with a single value, so its demo adds one `Plot.tip` per box with the statistics from the
+  `data.ts` helper.
+- **Presets.** *Colors* (`color`) is one every library but TanStack Charts can draw: its `boxY` takes a single fill
+  for all the boxes. ECharts and Recharts keep the outliers in one color, since they're a separate series.
+  *Min–max whiskers* (`whiskers`) takes `extent: 'min-max'` in Vega-Lite, `boundIQR: 'none'` in ECharts, `coef: 0` in
+  the Chart.js plugin and quantiles of 0 and 1 in Nivo; Observable Plot and TanStack Charts always draw Tukey whiskers.
+  *Rounded boxes* (`roundedCorners`) works in Recharts, Nivo, Observable Plot (`rx`) and Vega-Lite (`cornerRadius`);
+  the Chart.js plugin, ECharts and TanStack Charts have no corner radius for boxes.
+
+## Feature comparison
+
+<FeatureTable features={['boxplot', 'tooltip', 'axis-label-fit', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.
