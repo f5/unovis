@@ -67,7 +67,7 @@ export const unovisSupport: LibrarySupport = {
   'zoom-pan': { status: 'custom', note: 'No wheel zoom or pan; a Brush selection sets the container `xDomain` to zoom in', url: gallery('Grouped Bar with Brush and Interactive Legend') },
   'reference-line': { status: 'yes', note: 'Plotline component', url: '/docs/components/Plotline' },
   'reference-band': { status: 'yes', note: 'Plotband component', url: '/docs/components/Plotband' },
-  annotations: { status: 'yes', note: 'Annotations component, positioned in data or pixel coordinates', url: '/docs/components/Annotations#positioning' },
+  annotations: { status: 'yes', note: 'Annotations component: text in pixels or percent of the chart, subjects in data coordinates through scale callbacks', url: '/docs/components/Annotations#positioning' },
   'data-labels': { status: 'yes', note: 'XYLabels component; Scatter, Sankey, Graph and Treemap labels', url: '/docs/components/XYLabels' },
   'label-collision': { status: 'yes', note: 'XYLabels clusters overlapping labels; Scatter and Axis hide overlapping ones', url: '/docs/components/XYLabels#label-clustering' },
   'axis-label-fit': { status: 'yes', note: 'Axis wraps or trims tick labels to the available width by default', url: '/docs/components/Axis#tick-label-fit-mode' },

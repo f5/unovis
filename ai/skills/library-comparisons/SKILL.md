@@ -21,7 +21,7 @@ engineering side of it.** Keep both in sync when you change how comparisons work
 packages/website/
 ├── why-unovis/                       # MDX pages; a separate docs plugin instance with id "why-unovis"
 │   ├── index.mdx                     # overview: strengths, links to every page, at-a-glance table, bundle sizes, caveats
-│   ├── line-chart.mdx … tile-map.mdx # one side-by-side page per chart type (11 today)
+│   ├── line-chart.mdx … annotations.mdx # one side-by-side page per chart type or building block (20 today)
 │   ├── feature-comparison.mdx        # the full feature matrix
 │   ├── methodology.mdx               # library selection, the rules, feature research, bundle sizes, versions
 │   └── styles.css                    # global `why-unovis-*` classes for the overview card grids
@@ -35,7 +35,8 @@ packages/website/
 │   ├── utils/random.ts               # seeded random generator, so every library gets identical data
 │   ├── utils/code.ts                 # strips lint directives from the code shown on the page
 │   ├── features/                     # feature matrix: groups.ts (rows) + one file per library (cells)
-│   └── <comparison>/                 # line, area, grouped-bar, stacked-bar, scatter, donut, circular-bar, graph, sankey, choropleth, tile-map
+│   └── <comparison>/                 # line, area, grouped-bar, stacked-bar, scatter, donut, circular-bar, nested-donut, radial-bar,
+│       │                             # heatmap, treemap, boxplot, timeline, graph, sankey, chord, choropleth, tile-map, brush, annotations
 │       ├── data.ts                   # types, formatters and getData(seed)
 │       ├── <library>.tsx             # one demo per library: unovis, recharts, chartjs, echarts, nivo, ag-charts, …
 │       └── index.ts                  # the Comparison registry for the page
@@ -67,7 +68,7 @@ packages/website/
 
 - `Comparison<Data>` (`src/comparisons/types.ts`): `id`, `getData(seed)`, `dataCode` (the raw `data.ts`, shown by
   **Show the data**), optional `updateLabel` for the update button, optional `chartHeight`, optional `wide`,
-  `implementations`, `unsupported`, and optional `presets`.
+  `implementations`, `unsupported`, optional `presets` and an optional toolbar `hint` (for pages without legends).
 - **Presets** reconfigure every chart on a page to show one more thing Unovis can do (a step curve, annotations, a
   layout, …). `presets` is a list of `{ id, label, description }`; the toolbar shows a **Default** button and one per
   preset, and every demo gets the active id as `preset`. Each preset is a conditional prop in `unovis.tsx` (the line
@@ -440,9 +441,16 @@ documented in the type definitions, nearly all with defaults, and describe what 
 share when a version changes, and update the prose with the cells. unovis.dev has no `llms.txt` yet, while ECharts
 and AG Charts publish one; adding one changes the Unovis `llms-txt` cell.
 
-**More pages.** Chart types with a feature row but no page: timeline, box plot, heatmap, chord diagram, treemap,
-nested donut, radial bar and flow map (`LeafletFlowMap`); the feature matrix says which
-libraries can draw each. The circular bar page (f5/unovis#939's `CircularBar`) is the template for a page where several
+**More pages.** Chart types with a feature row but no page: flow map (`LeafletFlowMap`); building blocks with no page:
+`XYLabels`, `FlowLegend`, `VisControls`. The feature matrix says which libraries can draw each.
+
+**Unovis issues the newer pages work around** (fix in core, then drop the workaround): NestedDonut crashes on an
+`undefined` `angleRange`, never shows a label again once it hid it for overflowing, and tweens its layer backgrounds as
+path strings ("Expected arc flag" errors); RadialBar tweens its tracks as path strings and breaks on an `undefined`
+`trackWidth`/`trackPadding`; Heatmap's overlapping-label hiding keeps an uneven set of column labels and clips the last one
+at phone width; Boxplot takes only precomputed statistics, draws no outliers and has no orientation option; ChordDiagram
+draws every node in one color by default. Passing `undefined` for a React prop replaces the component's default
+(`merge` copies it), so demos pass defaults explicitly. The circular bar page (f5/unovis#939's `CircularBar`) is the template for a page where several
 libraries get placeholders. Libraries that may join later: Plotly.js and Victory.
 
 ## Before you finish
