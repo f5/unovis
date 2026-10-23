@@ -11,4 +11,3 @@ declare module 'virtual:maplibre-worker-source' {
   export const version: string
 }
 declare module 'd3-geo-projection'
-declare module 'd3-interpolate-path'
