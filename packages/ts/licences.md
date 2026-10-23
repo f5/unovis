@@ -42,7 +42,6 @@
 | @types/d3-transition             | perpetual      | MIT          | 3.0.9             | n/a                                                               |
 | @types/d3-path                   | perpetual      | MIT          | 3.1.1             | n/a                                                               |
 | @types/d3-geo                    | perpetual      | MIT          | 3.1.0             | n/a                                                               |
-| @types/dagre                     | perpetual      | MIT          | 0.7.54            | n/a                                                               |
 | @types/geojson                   | perpetual      | MIT          | 7946.0.16         | n/a                                                               |
 | @types/leaflet                   | perpetual      | MIT          | 1.7.6             | n/a                                                               |
 | @types/supercluster              | perpetual      | MIT          | 5.0.3             | n/a                                                               |
@@ -52,6 +51,7 @@
 | @types/topojson-client           | perpetual      | MIT          | 3.1.5             | n/a                                                               |
 | @types/topojson-specification    | perpetual      | MIT          | 1.0.5             | n/a                                                               |
 | @maplibre/maplibre-gl-style-spec | perpetual      | ISC          | 26.4.1            | MapLibre                                                          |
+| @dagrejs/dagre                   | perpetual      | MIT          | 3.1.2             | Chris Pettitt <cpettitt@gmail.com>                                |
 | d3                               | perpetual      | ISC          | 7.9.0             | Mike Bostock https://bost.ocks.org/mike                           |
 | d3-collection                    | perpetual      | BSD-3-Clause | 1.0.7             | Mike Bostock http://bost.ocks.org/mike                            |
 | d3-geo-projection                | perpetual      | ISC          | 4.0.0             | Mike Bostock https://bost.ocks.org/mike                           |
