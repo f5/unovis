@@ -42,6 +42,8 @@ export type Comparison<Data> = {
   getData: (seed: number) => Data;
   dataCode: string;
   updateLabel?: string;
+  /** The toolbar hint. Default: "Hover the charts, click the legends, switch the site theme or resize the window" */
+  hint?: string;
   /** Height of the chart area in pixels. Default: `COMPARISON_CHART_HEIGHT` */
   chartHeight?: number;
   /** Show every chart across the full width of the page, for charts that need the room */

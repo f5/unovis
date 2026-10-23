@@ -39,7 +39,7 @@ export function LibraryComparison<Data> ({ comparison, children }: LibraryCompar
           <button className={s.button} onClick={() => setShowData(!showData)} aria-expanded={showData}>
             {showData ? 'Hide the data' : 'Show the data'}
           </button>
-          <span className={s.hint}>Hover the charts, click the legends, switch the site theme or resize the window</span>
+          <span className={s.hint}>{comparison.hint ?? 'Hover the charts, click the legends, switch the site theme or resize the window'}</span>
         </div>
         {comparison.presets && (
           <div className={s.presets}>
