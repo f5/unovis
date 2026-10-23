@@ -697,6 +697,9 @@ importers:
 
   packages/ts:
     dependencies:
+      '@dagrejs/dagre':
+        specifier: ^3.1.2
+        version: 3.1.2
       '@emotion/css':
         specifier: ^11.7.1
         version: 11.13.5
@@ -769,9 +772,6 @@ importers:
       '@types/d3-zoom':
         specifier: ~3.0.8
         version: 3.0.8
-      '@types/dagre':
-        specifier: ^0.7.50
-        version: 0.7.54
       '@types/geojson':
         specifier: ^7946.0.8
         version: 7946.0.16
@@ -796,12 +796,6 @@ importers:
       '@types/topojson-specification':
         specifier: ^1.0.2
         version: 1.0.5
-      '@unovis/dagre-layout':
-        specifier: 0.8.8-3
-        version: 0.8.8-3
-      '@unovis/graphlibrary':
-        specifier: 2.2.0-3
-        version: 2.2.0-3
       csstype:
         specifier: ^3.2.3
         version: 3.2.3
@@ -2639,6 +2633,12 @@ packages:
 
   '@cypress/xvfb@1.2.4':
     resolution: {integrity: sha512-skbBzPggOVYCbnGgV+0dmBdW/s77ZkAOXIC1knS8NagwDjBrNC1LuXtQJeiN6l+m7lzmHtaoUw/ctJKdqkG57Q==}
+
+  '@dagrejs/dagre@3.1.2':
+    resolution: {integrity: sha512-RdPzG77xlWvILaXKsMMKGe51DBtHLgMbY4sIukgAqJeAe25wMr9+3Ae+uyJaV4xOaK8k6Rn96fbHm5rT3johfA==}
+
+  '@dagrejs/graphlib@4.0.6':
+    resolution: {integrity: sha512-Hjv7hbfmSBMP4nVXMFt4gusqWWHghQF0qNT4V5KHo4Jatvd+2L5VHKFnnIjXVuDnaHIRz7ZuHSnlf0RuZkOwWA==}
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -5283,9 +5283,6 @@ packages:
   '@types/d3@7.4.3':
     resolution: {integrity: sha512-lZXZ9ckh5R8uiFVt8ogUNf+pIrK4EsWrx2Np75WvF/eTpJ0FMHNhjXk8CKEx/+gpHbNQyJWehbFaTvqmHWB3ww==}
 
-  '@types/dagre@0.7.54':
-    resolution: {integrity: sha512-QjcRY+adGbYvBFS7cwv5txhVIwX1XXIUswWl+kSQTbI6NjgZydrZkEKX/etzVd7i+bCsCb40Z/xlBY5eoFuvWQ==}
-
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
@@ -5639,12 +5636,6 @@ packages:
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
     deprecated: Potential CWE-502 - Update to 1.3.1 or higher
-
-  '@unovis/dagre-layout@0.8.8-3':
-    resolution: {integrity: sha512-RAL2fhQN1acO5QS82oe/yz0npSe80nDYWbxDpcTKWmb+4x2/WMwmgr8ScdiySkwmK7oDvEN72RIvzJkx5A3pUA==}
-
-  '@unovis/graphlibrary@2.2.0-3':
-    resolution: {integrity: sha512-ReEjk/cDih+q+z0U0EluHpPWlfj31v+nIglmfCNUuNuTv5FtGOKTYHbUSISX6SxHR1RZMLfP/kNniPr0H9KRIw==}
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
@@ -15860,6 +15851,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@dagrejs/dagre@3.1.2':
+    dependencies:
+      '@dagrejs/graphlib': 4.0.6
+
+  '@dagrejs/graphlib@4.0.6': {}
+
   '@discoveryjs/json-ext@0.5.7': {}
 
   '@discoveryjs/json-ext@0.6.3': {}
@@ -19172,8 +19169,6 @@ snapshots:
       '@types/d3-transition': 3.0.9
       '@types/d3-zoom': 3.0.8
 
-  '@types/dagre@0.7.54': {}
-
   '@types/debug@4.1.12':
     dependencies:
       '@types/ms': 2.1.0
@@ -19611,15 +19606,6 @@ snapshots:
       eslint-visitor-keys: 5.0.1
 
   '@ungap/structured-clone@1.3.0': {}
-
-  '@unovis/dagre-layout@0.8.8-3':
-    dependencies:
-      '@unovis/graphlibrary': 2.2.0-3
-      lodash-es: 4.18.1
-
-  '@unovis/graphlibrary@2.2.0-3':
-    dependencies:
-      lodash-es: 4.18.1
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     optional: true
