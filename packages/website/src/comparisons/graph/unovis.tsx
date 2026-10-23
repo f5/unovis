@@ -10,8 +10,10 @@ const groupIndex = (n: NodeDatum): number => groups.findIndex(g => g.key === n.g
 // Compact layouts with room for the two- and three-line labels: the graph zooms in to fit the card, so the nodes come out bigger
 const forceLayoutSettings = { linkDistance: 60, charge: -850 }
 // Left to right, to use the width of the card
-const dagreLayoutSettings = { rankdir: 'LR', nodesep: 8, ranksep: 80 }
+const dagreLayoutSettings = { rankdir: 'LR', nodesep: 0, ranksep: 80 }
 const zoomScaleExtent: [number, number] = [0.35, 2]
+// Dagre reserves room for each node's labels, so the tallest column limits the zoom; bigger nodes make up for it
+const layeredNodeSize = 44
 // A little less padding than the default 50 around the fitted graph, still enough for the labels under the bottom nodes
 const fitViewPadding = 40
 const tooltipTriggers = {
@@ -45,7 +47,7 @@ export default function UnovisGraph ({ data, preset }: ChartProps<GraphData>): J
           nodeIcon={(n: NodeDatum) => `#graph-icon-${n.group}`}
           nodeFill={(n: NodeDatum) => `var(--vis-color${groupIndex(n)})`}
           nodeStrokeWidth={0}
-          nodeSize={(n: NodeDatum) => preset === 'size' ? 20 + n.latency / 8 : 36}
+          nodeSize={(n: NodeDatum) => preset === 'size' ? 20 + n.latency / 8 : preset === 'layered' ? layeredNodeSize : 36}
           nodeLabel={(n: NodeDatum) => n.label}
           nodeLabelFitMode={FitMode.Wrap}
           nodeSubLabel={(n: NodeDatum) => formatLatency(n.latency)}
