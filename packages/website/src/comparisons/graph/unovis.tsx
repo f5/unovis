@@ -7,10 +7,13 @@ import { GraphData, NodeDatum, LinkDatum, NodeGroup, groups, formatRequests, for
 import { GRAPH_ICON_SYMBOLS, ALERT_COLOR } from './constants'
 
 const groupIndex = (n: NodeDatum): number => groups.findIndex(g => g.key === n.group)
-// More spacing than the default, to leave room for the two- and three-line labels
-const forceLayoutSettings = { linkDistance: 80, charge: -1200 }
+// Compact layouts with room for the two- and three-line labels: the graph zooms in to fit the card, so the nodes come out bigger
+const forceLayoutSettings = { linkDistance: 60, charge: -850 }
 // Left to right, to use the width of the card
-const dagreLayoutSettings = { rankdir: 'LR', nodesep: 20, ranksep: 160 }
+const dagreLayoutSettings = { rankdir: 'LR', nodesep: 8, ranksep: 80 }
+const zoomScaleExtent: [number, number] = [0.35, 2]
+// A little less padding than the default 50 around the fitted graph, still enough for the labels under the bottom nodes
+const fitViewPadding = 40
 const tooltipTriggers = {
   [Graph.selectors.node]: (n: NodeDatum) => `
     <b>${n.label}</b><br/>${groups[groupIndex(n)].label}<br/>${formatLatency(n.latency)}${n.alerts ? `<br/>${formatAlerts(n.alerts)}` : ''}
@@ -37,10 +40,12 @@ export default function UnovisGraph ({ data, preset }: ChartProps<GraphData>): J
           forceLayoutSettings={forceLayoutSettings}
           dagreLayoutSettings={dagreLayoutSettings}
           disableZoom
+          zoomScaleExtent={zoomScaleExtent}
+          fitViewPadding={fitViewPadding}
           nodeIcon={(n: NodeDatum) => `#graph-icon-${n.group}`}
           nodeFill={(n: NodeDatum) => `var(--vis-color${groupIndex(n)})`}
           nodeStrokeWidth={0}
-          nodeSize={(n: NodeDatum) => preset === 'size' ? 20 + n.latency / 8 : 30}
+          nodeSize={(n: NodeDatum) => preset === 'size' ? 20 + n.latency / 8 : 36}
           nodeLabel={(n: NodeDatum) => n.label}
           nodeLabelFitMode={FitMode.Wrap}
           nodeSubLabel={(n: NodeDatum) => formatLatency(n.latency)}
