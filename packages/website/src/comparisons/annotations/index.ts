@@ -23,10 +23,6 @@ export const annotations: Comparison<Data> = {
       load: () => import('./nivo'),
       code: require('!!raw-loader!./nivo.tsx').default,
       unsupportedPresets: {
-        rings: {
-          reason: 'Points are all or nothing: `enablePoints` draws a point on every day, so ringing three of them takes a custom `pointSymbol` or a custom layer.',
-          url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/line/src/types.ts#L197-L199',
-        },
         rich: {
           reason: 'A marker\'s `legend` is one string in one `<text>` with one `textStyle`. A bold headline takes your own SVG in the untyped `legendNode` prop, or a custom layer.',
           url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/core/src/components/cartesian/markers/CartesianMarkersItem.js#L214-L234',
@@ -37,15 +33,8 @@ export const annotations: Comparison<Data> = {
         },
       },
     },
+    { library: 'agcharts', load: () => import('./ag-charts'), code: require('!!raw-loader!./ag-charts.tsx').default },
     { library: 'plot', load: () => import('./plot'), code: require('!!raw-loader!./plot.tsx').default },
     { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
-  ],
-  unsupported: [
-    {
-      library: 'agcharts',
-      reason: 'Text, callout and note annotations come from the Annotations module, which is Enterprise-only. AG Charts Community has cross lines and ranges, but no text pinned to a data point.',
-      url: 'https://www.ag-grid.com/charts/javascript/annotations/',
-      paid: true,
-    },
   ],
 }

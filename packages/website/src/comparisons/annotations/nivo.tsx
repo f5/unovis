@@ -11,9 +11,10 @@ const darkTheme = {
   tooltip: { container: { background: '#222', color: '#ccc' } },
 }
 
-export default function NivoAnnotationsChart ({ data, isDark }: ChartProps<Data>): JSX.Element {
+export default function NivoAnnotationsChart ({ data, isDark, preset }: ChartProps<Data>): JSX.Element {
   const { days, events } = data
   const textColor = isDark ? '#ccc' : '#333'
+  const eventDays = new Set(events.map(e => e.date.getTime()))
 
   return (
     <ResponsiveLine
@@ -25,7 +26,12 @@ export default function NivoAnnotationsChart ({ data, isDark }: ChartProps<Data>
       yFormat={formatValue}
       axisBottom={{ format: formatDay, tickValues: 'every month' }}
       axisLeft={{ format: formatValue }}
-      enablePoints={false}
+      // Points are drawn on every day, so the rings are the borders of the event days' points; the others are transparent
+      enablePoints={preset === 'rings'}
+      pointSize={12}
+      pointBorderWidth={1}
+      pointColor="transparent"
+      pointBorderColor={point => eventDays.has(days[point.indexInSeries].date.getTime()) ? textColor : 'transparent'}
       enableSlices="x"
       // Line charts have no annotations: `markers` are lines across the whole plot at a value, with one line of text.
       // Vertical text keeps the long labels from overlapping
@@ -35,7 +41,7 @@ export default function NivoAnnotationsChart ({ data, isDark }: ChartProps<Data>
         legend: formatEvent(e),
         legendOrientation: 'vertical',
         legendPosition: 'top-left',
-        lineStyle: { stroke: textColor, strokeWidth: 1 },
+        lineStyle: { stroke: textColor, strokeWidth: 1, strokeDasharray: preset === 'rings' ? '2 2' : undefined },
         textStyle: { fill: textColor, fontSize: 11 },
       }))}
     />
