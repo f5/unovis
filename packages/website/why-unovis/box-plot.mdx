@@ -36,12 +36,13 @@ the median, whiskers and outliers.
   outliers included, and the whiskers have a tooltip of their own. Observable Plot's `boxY` would open one tip per part
   of the box, each with a single value, so its demo adds one `Plot.tip` per box with the statistics from the
   `data.ts` helper.
-- **Presets.** *Colors* (`color`) is one every library but TanStack Charts can draw: its `boxY` takes a single fill
-  for all the boxes. ECharts and Recharts keep the outliers in one color, since they're a separate series.
-  *Min–max whiskers* (`whiskers`) takes `extent: 'min-max'` in Vega-Lite, `boundIQR: 'none'` in ECharts, `coef: 0` in
-  the Chart.js plugin and quantiles of 0 and 1 in Nivo; Observable Plot and TanStack Charts always draw Tukey whiskers.
-  *Rounded boxes* (`roundedCorners`) works in Recharts, Nivo, Observable Plot (`rx`) and Vega-Lite (`cornerRadius`);
-  the Chart.js plugin, ECharts and TanStack Charts have no corner radius for boxes.
+- **Presets.** *Colors* (`color`) is one every library but TanStack Charts can draw: its `boxY` takes a single fill for
+  all the boxes. The ECharts and Recharts demos keep the outliers in one color: they're a separate series, so coloring
+  them per box takes a color callback (ECharts' `itemStyle.color`) or a `Cell` per outlier (Recharts). *Min–max
+  whiskers* (`whiskers`) takes `extent: 'min-max'` in Vega-Lite, `boundIQR: 'none'` in ECharts, `coef: 0` in the
+  Chart.js plugin and quantiles of 0 and 1 in Nivo; Observable Plot and TanStack Charts always draw Tukey whiskers.
+  *Rounded boxes* (`roundedCorners`) works in Recharts, Nivo, Observable Plot (`rx`) and Vega-Lite (`cornerRadius`); the
+  Chart.js plugin, ECharts and TanStack Charts have no corner radius for boxes.
 
 ## Feature comparison
 
