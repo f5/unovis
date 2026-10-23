@@ -1,6 +1,6 @@
 ---
 title: Radial Bar Chart
-description: A radial bar chart of usage against plan quotas, one ring per quota, rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, Vega-Lite and TanStack Charts side by side
+description: A radial bar chart of usage against plan quotas, one ring per quota, rendered with Unovis, TanStack Charts, Recharts, Chart.js, ECharts, Nivo, AG Charts and Vega-Lite side by side
 hide_table_of_contents: true
 ---
 
@@ -25,31 +25,41 @@ a faded track, with the average share used in the middle. Every quota has its ow
 - **The rings.** Unovis sizes the rings in pixels from the outer edge inward (`trackWidth`, `trackPadding`), so the
   hole for the label grows with the chart, and draws a faded track behind each one by default. Vega-Lite and TanStack
   Charts match it with a band radius scale whose range the demos compute in pixels. Recharts' `barSize` and ECharts'
-  `barWidth` are pixels too, but their rings spread out between two radii set as shares of the chart, and ECharts'
-  `showBackground` fills the whole band, so its tracks touch and form one gray disc. Nivo sizes rings and gaps as
-  shares of the radius. Chart.js has no radial bar type: every ring is a doughnut dataset of the used share and a gray
-  remainder as the track, the rings fill the space between `cutout` and the edge, and there's no option for a gap.
+  `barWidth` are pixels too, but their rings spread out between two radii set as shares of the chart, and ECharts caps
+  `barWidth` at the width of a ring's band, which is narrower than 16 pixels at this size, so the bars fill their bands
+  and the tracks touch and form one gray disc. Nivo sizes rings and gaps as shares of the radius. Chart.js has no
+  radial bar type, and AG Charts has one only in Enterprise: in both, every ring is a doughnut of the used share and a
+  gray remainder as the track. Chart.js' rings fill the space between `cutout` and the edge, with no option for a gap;
+  AG Charts stacks one Donut series per ring, placed in pixels with `outerRadiusOffset` and `innerRadiusOffset`.
 - **The label in the middle.** Unovis has options for a label and a sub-label (`centralLabel`, `centralSubLabel`) and
-  wraps the sub-label to fit the hole. Recharts places a `Label` in its radius axis, ECharts a title, Chart.js needs a
-  custom plugin, Nivo a custom layer, Vega-Lite a text layer and TanStack Charts two `radialText` marks in a
-  `decorative()` layer.
+  wraps the sub-label to fit the hole. AG Charts has `innerLabels` on the innermost donut. Recharts places a `Label`
+  in its radius axis, ECharts a title, Chart.js needs a custom plugin, Nivo a custom layer, Vega-Lite a text layer and
+  TanStack Charts two `radialText` marks in a `decorative()` layer.
 - **The legend.** Click an item to hide a ring. Unovis drops it and the remaining rings move outward to close the gap
   (a few lines of state). ECharts toggles it out of the box, because the demo makes every ring its own series; its
   legend lists series. Chart.js' doughnut legend lists data points, so the demo rebuilds it from the rings and hides a
   ring on click. Recharts and Nivo hide the bar with a few lines of state and keep its track; Nivo's legend has no
   toggle, and it lists the rings inside out, because Nivo draws its first series innermost and the demo reverses them.
   TanStack Charts' legend doesn't hide polar marks itself, so the demo filters the bars. Vega-Lite's legend highlights
-  the ring you click and fades the others.
-- **Randomize the data.** The bars sweep to their new values in every library but Vega-Lite, which redraws without a
-  transition; TanStack Charts animates with `svgAnimation`.
+  the ring you click and fades the others. AG Charts' donut legend lists every sector, so each track gets an "Unused"
+  item too, and a click hides the sector at that position in every donut; the demo gives each ring zero-value sectors
+  for the other quotas (`hideZeroValueSectorsInLegend`), so a quota's item hides only its bar and keeps the track.
+  Hiding a track makes its ring's bar fill the circle, because a donut's sectors always add up to it.
+- **Randomize the data.** The bars sweep to their new values in every library but Vega-Lite and AG Charts, which
+  redraw without a transition (AG Charts' animations are Enterprise); TanStack Charts animates with `svgAnimation`.
+- **Tooltips.** A tooltip can't be turned off for one sector of an AG Charts donut, so hovering a track shows its
+  ring's usage too; Chart.js leaves the remainder out with `tooltip.filter`.
 - **Presets.** *Rounded ends* (`cornerRadius`) is one option in every library: `roundCap` in ECharts,
   `cornerRadius: 'full'` in TanStack Charts, and a `borderRadius` on the used share only in Chart.js, which rounds every
-  arc of a doughnut. *Gauge* (`angleRange`) opens the rings at the bottom. Unovis and Chart.js fit the open circle to the card;
-  the others keep it centered at its full-circle size, and ECharts' track stays a full circle. *Thick rings*
-  (`trackWidth`, `trackPadding`) widens the rings to 28 px. Vega-Lite and TanStack Charts match the pixel sizes; TanStack
+  arc of a doughnut. AG Charts' `cornerRadius` rounds the track too: one returned by an `itemStyler` for the used share
+  only isn't drawn. *Gauge* (`angleRange`) opens the rings at the bottom. Unovis and Chart.js fit the open circle to the
+  card; the others keep it centered at its full-circle size, and ECharts' track stays a full circle. AG Charts' donut
+  has a `rotation` but no option for the angle it covers, so it shows no gauge. *Thick rings* (`trackWidth`,
+  `trackPadding`) widens the rings to 28 px. Vega-Lite, TanStack Charts and AG Charts match the pixel sizes. TanStack
   Charts' circle is smaller, because its legend sits under it, so the thick rings nearly close its hole and the label
-  overflows. Recharts and ECharts widen the bars in pixels inside their shares of the chart, and Chart.js and Nivo
-  change the shares (`cutout`, `innerRadius`, `padding`).
+  overflows; AG Charts' circle, also above its legend, has no room for the fifth ring, which closes into a pie and
+  covers the label. Recharts and ECharts widen the bars in pixels inside their shares of the chart, and Chart.js
+  and Nivo change the shares (`cutout`, `innerRadius`, `padding`).
 
 ## Feature comparison
 

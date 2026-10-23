@@ -20,19 +20,24 @@ export const radialBarChart: Comparison<DataRecord[]> = {
     { library: 'chartjs', load: () => import('./chartjs'), code: require('!!raw-loader!./chartjs.tsx').default },
     { library: 'echarts', load: () => import('./echarts'), code: require('!!raw-loader!./echarts.tsx').default },
     { library: 'nivo', load: () => import('./nivo'), code: require('!!raw-loader!./nivo.tsx').default },
+    {
+      library: 'agcharts',
+      load: () => import('./ag-charts'),
+      code: require('!!raw-loader!./ag-charts.tsx').default,
+      unsupportedPresets: {
+        gauge: {
+          reason: 'The Donut series has a `rotation` but no option for the angle it covers, so every ring closes the full circle; a transparent filler sector would get a legend item and a tooltip.',
+          url: 'https://www.ag-grid.com/charts/javascript/donut-series/',
+        },
+      },
+    },
     { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
   ],
   unsupported: [
     {
-      library: 'agcharts',
-      reason: 'The Radial Bar series that draws this chart is only in AG Charts Enterprise.',
-      url: 'https://www.ag-grid.com/charts/javascript/radial-bar-series/',
-      paid: true,
-    },
-    {
       library: 'plot',
-      reason: 'Plot has no arc mark and no polar coordinates, so the rings would have to be drawn as hand-written path geometry.',
-      url: 'https://observablehq.com/plot/features/marks',
+      reason: 'Plot has no arc mark and no polar scales; the rings could only be emulated as thick `line` marks along parallels of an `azimuthal-equidistant` projection.',
+      url: 'https://github.com/observablehq/plot/issues/133#issuecomment-1607373580',
     },
   ],
 }
