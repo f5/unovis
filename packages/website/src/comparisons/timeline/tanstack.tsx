@@ -19,7 +19,7 @@ export default function TanStackTimeline ({ data, preset }: ChartProps<TimelineE
 
   const definition = useMemo(() => {
     const rows = data.map(d => ({ ...d, kindLabel: getKindLabel(d.kind) }))
-    // Its legend hides a kind's rectangles but no other marks, so the arrows to hidden items are filtered here
+    // Its legend filters only marks whose color is a series (lines, areas, grouped bars), not rectangles or arrows, so the items of hidden kinds and their arrows are filtered here
     const shown = rows.filter(d => visible.includes(d.kindLabel))
     const links = shown.flatMap(d => {
       const cause = shown.find(c => c.id === d.causeId)
@@ -28,7 +28,7 @@ export default function TanStackTimeline ({ data, preset }: ChartProps<TimelineE
 
     return defineChart({
       marks: [
-        rect(rows, { x1: 'start', x2: 'end', y: 'service', color: 'kindLabel', key: 'id', radius: preset === 'rounded' ? 999 : undefined }),
+        rect(shown, { x1: 'start', x2: 'end', y: 'service', color: 'kindLabel', key: 'id', radius: preset === 'rounded' ? 999 : undefined }),
         ...(preset === 'arrows' ? [arrow(links, { x1: 'x1', y1: 'y1', x2: 'x2', y2: 'y2', stroke: 'currentColor' })] : []),
       ],
       scales: {

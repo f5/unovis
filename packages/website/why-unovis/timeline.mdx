@@ -29,15 +29,17 @@ follows a deployment to another service, which caused it.
   with `shared={false}`, so the demo renders a custom `content` in the default style.
 - **Hide a kind.** Unovis, Recharts, Chart.js, ECharts, Observable Plot and TanStack Charts hide it; Vega-Lite's legend
   highlights a kind instead. The added marks don't follow every legend: Chart.js annotations check the dataset's
-  visibility themselves, and TanStack Charts' legend hides only the rectangles, so the demo filters the arrows.
-- **Randomize the data.** Unovis moves every item to its new place, matched by `id`. Observable Plot and Vega-Lite redraw
-  without a transition.
+  visibility themselves, and TanStack Charts' legend filters lines, areas and grouped bars but not rectangles or arrows,
+  so the demo filters both itself.
+- **Randomize the data.** Unovis moves every item to its new place, matched by `id`. Observable Plot and Vega-Lite
+  redraw without a transition.
 - **Presets.** *Rounded* (`lineCap`) is one every library can draw; TanStack Charts draws the short items as ovals.
-  *Arrows* (`arrows`) are elbows in Unovis, down from the cause and along the incident's lane into it. Chart.js (with the official annotation plugin), ECharts (a `lines` series), Observable Plot and TanStack
-  Charts (`arrow` marks) draw straight arrows; Recharts and Vega-Lite have no arrowheads. *Icons* (`lineStartIcon`,
-  `lineEndIcon`) are SVG symbols in Unovis. ECharts and Vega-Lite take the same SVG path as a symbol, Chart.js (a point
-  annotation) and Observable Plot (an `image` mark) take it as an image in a hard-coded color, and Recharts and
-  TanStack Charts have no icon or custom symbol option.
+  *Arrows* (`arrows`) are elbows in Unovis, down from the cause and along the incident's lane into it. Chart.js (with
+  the official annotation plugin), ECharts (a `lines` series), Observable Plot and TanStack Charts (`arrow` marks) draw
+  straight arrows; Recharts and Vega-Lite have no arrowheads. *Icons* (`lineStartIcon`, `lineEndIcon`) are SVG symbols
+  in Unovis. ECharts and Vega-Lite take the same SVG path as a symbol, Chart.js (a point annotation) and Observable Plot
+  (an `image` mark) take it as an image in a hard-coded color, and Recharts and TanStack Charts have no icon or custom
+  symbol option.
 
 ## Feature comparison
 
