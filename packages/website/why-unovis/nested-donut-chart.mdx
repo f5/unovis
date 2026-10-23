@@ -1,0 +1,51 @@
+---
+title: Nested Donut
+description: A nested donut (sunburst) chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, Vega-Lite and TanStack Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { nestedDonut } from '@site/src/comparisons/nested-donut'
+
+<LibraryComparison comparison={nestedDonut}>
+
+# Nested Donut
+
+Website sessions in one month by platform, operating system and browser, from a flat table with one row per browser.
+
+</LibraryComparison>
+
+## What to look for
+
+- **The data goes in as a table.** Unovis takes the rows and one accessor per ring (`layers`), and TanStack Charts a
+  path per row. Recharts, ECharts and Nivo take a tree, so their demos build one first; Recharts also needs a value on
+  every node, the root too, and Nivo and Recharts need unique ids or names, which the repeated browser names aren't.
+  Chart.js has no hierarchical chart: each ring is a doughnut dataset of its own that lines up with the others because
+  the demo adds up each ring in the same order. Vega-Lite has no hierarchy layout either: every ring is a layer that
+  sums its groups and runs a cumulative sum for the angles. Open **Code** to compare.
+- **Segment labels.** Unovis labels every segment by default and hides the labels that don't fit
+  (`hideOverflowingSegmentLabels`). ECharts labels every segment too, small ones included. Nivo's arc labels are off by
+  default and `arcLabelsSkipAngle` hides them on narrow segments. Recharts always labels the value, not the name.
+  Chart.js needs chartjs-plugin-datalabels and Vega-Lite a text layer per ring, and the TanStack Charts sunburst mark has
+  no labels.
+- **Colors.** Unovis colors each platform and draws its operating systems and browsers in lighter shades of it. ECharts,
+  Nivo and TanStack Charts (`color: 'branchId'`) give the children their parent's color. Recharts has no palette, so the
+  platforms get colors from its docs; Chart.js would give every segment of every ring a color of its own, so the demo
+  colors them by platform.
+- **Randomize the data.** Unovis, Chart.js, ECharts and Nivo animate the segments to their new angles, and TanStack
+  Charts tweens them (`svgAnimation`). Recharts' sunburst and Vega-Lite redraw without a transition.
+- **Drill down.** Clicking a segment in ECharts zooms into it, on by default (`nodeClick`). TanStack Charts has a
+  `rootId` option for it, with the navigation state in your app. Unovis has no drill-down.
+- **Presets.** *Inwards* (`direction`) puts the platforms on the outer ring, which is Unovis' default; TanStack Charts
+  swaps its inner and outer radius, Chart.js its datasets, and ECharts and Vega-Lite set every ring's radius, while
+  Recharts and Nivo always draw from the center out. *Half circle* (`angleRange`) works in Recharts, Chart.js,
+  Vega-Lite and TanStack Charts; the ECharts sunburst has a start angle but no end angle, and Nivo's has neither. *Ring
+  widths* (`layerSettings`) gives every ring its own width, like ECharts' `levels`, Chart.js' `weight` and Vega-Lite's
+  radii; Recharts, Nivo and TanStack Charts divide the radius into rings themselves.
+
+## Feature comparison
+
+<FeatureTable features={['sunburst', 'tooltip', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.
