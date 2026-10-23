@@ -11,6 +11,7 @@ import { getNumber, getString, getValue, isArray, isNumber } from '@/utils/data'
 import { smartTransition } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { hasSamePathStructure } from '@/utils/path'
 
 // Types
 import { NumericAccessor } from '@/types/accessor'
@@ -187,7 +188,10 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
         const t = transition as Transition<SVGPathElement, LineData, SVGGElement, LineData>
         t.attrTween('d', () => interpolatePath(previous, next))
       } else if (d.visible) {
-        transition.attr('d', svgPathD)
+        // A path with gaps is only tweened when its structure stays the same (e.g. not when the curve type
+        // or the gaps change), otherwise the interpolation would draw garbage until the transition ends
+        if (duration && hasSamePathStructure(linePath.attr('d'), svgPathD)) transition.attr('d', svgPathD)
+        else linePath.attr('d', svgPathD)
       }
 
       lineSelectionHelper
@@ -195,8 +199,10 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
         .attr('visibility', isLineVisible ? null : 'hidden')
 
       if (hasUndefinedSegments && config.interpolateMissingData) {
+        const gapsPathD = this.lineGen(d.gaps)
+        if (!hasSamePathStructure(lineGaps.attr('d'), gapsPathD)) lineGaps.attr('d', gapsPathD)
         smartTransition(lineGaps, duration)
-          .attr('d', this.lineGen(d.gaps))
+          .attr('d', gapsPathD)
           .attr('stroke', getColor(data, config.color, i, config.colorKeys?.[i], colorOptions))
           .attr('stroke-width', config.lineWidth - 1)
           .style('opacity', 1)
