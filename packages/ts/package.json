@@ -80,7 +80,6 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@emotion/css": "^11.7.1",
     "@juggle/resize-observer": "^3.3.1",
     "csstype": "^3.2.3",
     "d3-array": "~3",
@@ -125,6 +124,7 @@
     "@types/dagre": "^0.7.50",
     "@types/geojson": "^7946.0.8",
     "@types/leaflet": "1.7.6",
+    "@types/stylis": "~4.2.0",
     "@types/supercluster": "^5.0.2",
     "@types/three": "^0.135.0",
     "@types/throttle-debounce": "^5.0.0",
@@ -144,6 +144,7 @@
     "leaflet": "1.7.1",
     "maplibre-gl": "^6.7.0",
     "striptags": "^3.2.0",
+    "stylis": "~4.2.0",
     "supercluster": "^7.1.5",
     "three": "^0.135.0",
     "throttle-debounce": "^5.0.0",

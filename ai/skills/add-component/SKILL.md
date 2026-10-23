@@ -24,10 +24,10 @@ Create `packages/ts/src/components/<kebab-name>/` (kebab-case dir + files):
 - **`index.ts`** — the component class. Extends `XYComponentCore` / `ComponentCore` (or stands
   alone). Declares `static selectors = s`, `static cssVariables = s.variables`, `config`, `events`,
   and a `_render(customDuration?)` (or `render`) with clear **enter / update / exit** D3 selections.
-- **`style.ts`** — emotion `css` selectors + a `cssVarDefaults` map. CSS variables are named
+- **`style.ts`** — `css` class selectors + a `cssVarDefaults` map. CSS variables are named
   `--vis-<component>-<selector>-<property>`; every color var needs a `--vis-dark-...` counterpart.
-  Import `css` / `injectGlobal` from `@/styles/emotion` (not `@emotion/css` directly) so styles
-  respect the `globalThis.UNOVIS_NONCE` CSP nonce. Export `variables = getCssVarNames(cssVarDefaults)`
+  Import `css` / `injectGlobal` from `@/styles/css` so styles respect the `globalThis.UNOVIS_NONCE`
+  CSP nonce. Nested rules need `&` to attach to the class (`&:hover`), like native CSS nesting. Export `variables = getCssVarNames(cssVarDefaults)`
   and call `injectGlobalCssVariables(...)`.
 - **`types.ts`** — component-specific types (optional).
 - **`modules/`** — extract long render logic into `call`-able helpers (optional).
