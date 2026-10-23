@@ -2,25 +2,33 @@ import { Selection } from 'd3-selection'
 import { arc, pie } from 'd3-shape'
 import { hierarchy, HierarchyNode, partition } from 'd3-hierarchy'
 import { scaleLinear, ScaleLinear } from 'd3-scale'
-import { group, InternMap } from 'd3-array'
+import { group, min, InternMap } from 'd3-array'
 
 // Core
 import { ComponentCore } from '@/core/component'
 import { SeriesDataModel } from '@/data-models/series'
 
 // Types
+import { LengthUnit } from '@/types/misc'
 import { VerticalAlign } from '@/types/text'
 
 // Utils
 import { getColor } from '@/utils/color'
 import { smartTransition } from '@/utils/d3'
-import { getNumber, getString, getValue, isNumber, isNumberWithinRange, merge } from '@/utils/data'
-import { getPixelValue } from '@/utils/misc'
+import { getNumber, getString, getValue, isNumber, isNumberWithinRange, isString, merge } from '@/utils/data'
+import { getPixelValue, parseUnit } from '@/utils/misc'
 import { cssvar } from '@/utils/style'
 import { wrapSVGText } from '@/utils/text'
 
 // Local Types
-import { NestedDonutArcAnimState, NestedDonutDirection, NestedDonutSegment, NestedDonutLayer, NestedDonutSegmentLabelAlignment } from './types'
+import {
+  NestedDonutArcAnimState,
+  NestedDonutDirection,
+  NestedDonutSegment,
+  NestedDonutLayer,
+  NestedDonutLayerSettings,
+  NestedDonutSegmentLabelAlignment,
+} from './types'
 
 // Config
 import { NestedDonutDefaultConfig, NestedDonutConfigInterface } from './config'
@@ -44,6 +52,7 @@ NestedDonutConfigInterface<Datum>
 
   arcBackground: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  centralBackground: Selection<SVGCircleElement, unknown, SVGGElement, unknown>
   centralLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
   centralSubLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
 
@@ -58,6 +67,8 @@ NestedDonutConfigInterface<Datum>
     this.arcBackground = this.g.append('g')
     this.arcGroup = this.g.append('g')
       .attr('class', s.segmentsGroup)
+    this.centralBackground = this.g.append('circle')
+      .attr('class', s.centralBackground)
     this.centralLabel = this.g.append('text')
       .attr('class', s.centralLabel)
     this.centralSubLabel = this.g.append('text')
@@ -84,6 +95,7 @@ NestedDonutConfigInterface<Datum>
 
     this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     this.arcBackground.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.centralBackground.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     this.centralLabel.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     this.centralSubLabel.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
@@ -111,6 +123,9 @@ NestedDonutConfigInterface<Datum>
     smartTransition(backgrounds.exit(), duration)
       .style('opacity', 0)
       .remove()
+
+    smartTransition(this.centralBackground, duration)
+      .attr('r', min(layers, d => d._innerRadius))
 
     // Segments
     const segments = this.arcGroup.selectAll<SVGGElement, NestedDonutSegment<Datum>>(`.${s.segment}`)
@@ -250,9 +265,11 @@ NestedDonutConfigInterface<Datum>
     }
     const layerItems = layers.reduceRight((arr, _, i) => {
       const layerId = direction === NestedDonutDirection.Outwards ? i : arr.length
-      const layerConfig = merge(defaultLayerSettings, getValue(layerId, layerSettings))
+      const layerConfig: NestedDonutLayerSettings = merge(defaultLayerSettings, getValue(layerId, layerSettings))
       const radius = arr.length ? arr[0]._innerRadius - layerPadding : outerRadius
-      const layerWidth = getPixelValue(layerConfig.width)
+      const layerWidth = isString(layerConfig.width) && layerConfig.width.endsWith('%')
+        ? parseUnit(layerConfig.width as LengthUnit, outerRadius)
+        : getPixelValue(layerConfig.width)
       if (layerWidth === null) {
         console.warn(`Unovis | Nested Donut: Could not parse width ${layerConfig.width}. Setting to default.`)
       }
@@ -264,6 +281,16 @@ NestedDonutConfigInterface<Datum>
       })
       return arr
     }, new Array<NestedDonutLayer>())
+
+    // Shrink the layers proportionally when they don't fit into the available radius
+    const innerRadius = layerItems[0]._innerRadius
+    if (innerRadius < 0) {
+      const radiusScale = scaleLinear().domain([innerRadius, outerRadius]).range([0, outerRadius])
+      layerItems.forEach(layer => {
+        layer._innerRadius = radiusScale(layer._innerRadius)
+        layer._outerRadius = radiusScale(layer._outerRadius)
+      })
+    }
 
     return direction === NestedDonutDirection.Inwards ? layerItems.reverse() : layerItems
   }

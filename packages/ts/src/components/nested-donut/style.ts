@@ -73,6 +73,11 @@ export const segmentLabel = css`
   font-size: var(--vis-nested-donut-segment-label-font-size);
 `
 
+export const centralBackground = css`
+  label: central-background;
+  fill: transparent;
+`
+
 export const centralLabel = css`
   label: central-label;
   text-anchor: middle;

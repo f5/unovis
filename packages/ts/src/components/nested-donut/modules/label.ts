@@ -99,6 +99,7 @@ export function updateLabel<Datum> (
       if (config.hideOverflowingSegmentLabels && (width > bounds.width || height > bounds.height) && 'hidden') {
         label.attr('visibility', 'hidden')
       } else {
+        label.attr('visibility', null)
         const fontSize = getCSSVariableValueInPixels(cssvar(variables.nestedDonutSegmentLabelFontSize), els[i])
         const len = label.selectChildren().size() - 1
         label.attr('dy', -fontSize / 2 * len)
