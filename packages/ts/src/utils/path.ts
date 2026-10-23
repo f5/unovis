@@ -343,3 +343,11 @@ export function arrowPolylinePath (
 
   return pathParts.join(' ')
 }
+
+/** Whether two SVG path strings have the same commands and number of values, so a transition
+ * that interpolates their numbers one by one (like d3's default string interpolation) stays a valid shape */
+export function hasSamePathStructure (path1: string | null | undefined, path2: string | null | undefined): boolean {
+  if (!path1 || !path2) return false
+  const numberRegex = /-?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?/gi
+  return path1.replace(numberRegex, '#') === path2.replace(numberRegex, '#')
+}
