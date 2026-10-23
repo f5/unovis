@@ -18,7 +18,7 @@ export const treemap: Comparison<DataRecord[]> = {
       load: () => import('./tanstack'),
       code: require('!!raw-loader!./tanstack.tsx').default,
       unsupportedPresets: {
-        groups: { reason: 'The treemap mark renders only the leaves: there are no parent cells to label and no padding to make room for a header.', url: 'https://github.com/TanStack/charts/blob/v1.1.0/docs/reference/marks/treemap.md#nodes-labels-and-interaction' },
+        groups: { reason: 'The treemap mark renders only the leaves: there are no parent cells to label, and `paddingOuter` pads all four sides alike, so there\'s no top padding to make room for a header.', url: 'https://github.com/TanStack/charts/blob/v1.1.0/docs/reference/marks/treemap.md#nodes-labels-and-interaction' },
         shades: { reason: 'No option to shade tiles by value: `fill` is a per-node channel, so every shade would be a color you compute yourself.', url: 'https://github.com/TanStack/charts/blob/v1.1.0/docs/reference/marks/treemap.md#options' },
       },
     },
@@ -27,7 +27,7 @@ export const treemap: Comparison<DataRecord[]> = {
       load: () => import('./recharts'),
       code: require('!!raw-loader!./recharts.tsx').default,
       unsupportedPresets: {
-        groups: { reason: 'No group header option: the default content writes every name in the middle of its node, so a header above the services takes a custom `content` renderer and a layout that leaves room for it.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/chart/Treemap.tsx#L631-L694' },
+        groups: { reason: 'No group header option: the default content writes every name halfway down its node, at its left edge, so a header above the services takes a custom `content` renderer and a layout that leaves room for it.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/chart/Treemap.tsx#L631-L694' },
         rounded: { reason: '`nodeGap` and `nodeInset` add the gaps, but the default content has no corner radius, so rounded tiles take a custom `content` renderer.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/chart/Treemap.tsx#L631-L694' },
         shades: { reason: 'No option to shade tiles by value: the default content fills the top-level nodes from `colorPanel` and draws the leaves transparent over them.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/chart/Treemap.tsx#L678-L682' },
       },
@@ -47,7 +47,7 @@ export const treemap: Comparison<DataRecord[]> = {
       code: require('!!raw-loader!./nivo.tsx').default,
       unsupportedPresets: {
         rounded: { reason: '`innerPadding` and `outerPadding` add the gaps, but the TreeMap has no corner radius option, so rounded tiles take a custom `nodeComponent`.', url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/treemap/src/types.ts#L114-L172' },
-        shades: { reason: 'No option to shade tiles by value: `colors` assigns a color per `colorBy` group and `nodeOpacity` is one number for every node.', url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/treemap/src/types.ts#L149-L151' },
+        shades: { reason: 'No option to shade tiles by value: `colors` picks one color per `colorBy` group (or takes a function, so every shade would be a color you compute yourself) and `nodeOpacity` is one number for every node.', url: 'https://github.com/plouc/nivo/blob/v0.99.0/packages/treemap/src/types.ts#L149-L151' },
       },
     },
   ],

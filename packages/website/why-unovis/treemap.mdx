@@ -22,7 +22,8 @@ Monthly cloud spend of five teams, split into the services each team runs: every
   (`enableTileLabelFontSizeVariation`, on by default) and skips tiles under 20px (`minTileSizeForLabel`). TanStack
   Charts draws a label only where it fits. ECharts shortens labels with an ellipsis, Chart.js cuts them at the tile's
   edge, and Nivo turns them sideways in tall tiles (`orientLabel`) and lets them run past small ones. Recharts' default
-  content shows names only and writes each team's name in the middle of its group, under the service names.
+  content shows names only and writes each team's name halfway down its group, at its left edge, under the service
+  names.
 - **Team colors.** Unovis draws every service in a lighter shade of its team's palette color. TanStack Charts and
   ECharts give a team's services one color, Recharts fills the teams and draws the services transparent on top of them,
   and Nivo draws every node at a third of its opacity, so the services get darker where they overlap their team. The
