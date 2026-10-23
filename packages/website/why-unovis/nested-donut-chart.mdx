@@ -1,6 +1,6 @@
 ---
 title: Nested Donut
-description: A nested donut (sunburst) chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, Vega-Lite and TanStack Charts, side by side
+description: A nested donut (sunburst) chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Vega-Lite and TanStack Charts, side by side
 hide_table_of_contents: true
 ---
 
@@ -21,28 +21,34 @@ Website sessions in one month by platform, operating system and browser, from a 
 - **The data goes in as a table.** Unovis takes the rows and one accessor per ring (`layers`), and TanStack Charts a
   path per row. Recharts, ECharts and Nivo take a tree, so their demos build one first; Recharts also needs a value on
   every node, the root too, and Nivo and Recharts need unique ids or names, which the repeated browser names aren't.
-  Chart.js has no hierarchical chart: each ring is a doughnut dataset of its own that lines up with the others because
-  the demo adds up each ring in the same order. Vega-Lite has no hierarchy layout either: every ring is a layer that
+  Chart.js has no hierarchical chart and the AG Charts Sunburst series is Enterprise-only: each ring is a doughnut
+  dataset (Chart.js) or donut series (AG Charts) of its own that lines up with the others because the demo adds up each
+  ring in the same order. Vega-Lite has no hierarchy layout either: every ring is a layer that
   sums its groups and runs a cumulative sum for the angles. Open **Code** to compare.
 - **Segment labels.** Unovis labels every segment by default and hides the labels that don't fit
-  (`hideOverflowingSegmentLabels`). ECharts labels every segment too, small ones included. Nivo's arc labels are off by
-  default and `arcLabelsSkipAngle` hides them on narrow segments. Recharts always labels the value, not the name.
-  Chart.js needs chartjs-plugin-datalabels and Vega-Lite a text layer per ring, and the TanStack Charts sunburst mark has
-  no labels.
+  (`hideOverflowingSegmentLabels`). ECharts labels every segment too, small ones included, unless `label.minAngle` sets
+  the narrowest segment that gets a label. Nivo's arc labels are off by default and `arcLabelsSkipAngle` hides them on
+  narrow segments. Recharts always labels the value, not the name. AG Charts draws a donut's `sectorLabel` on every
+  segment and hides it where it doesn't fit. Chart.js needs chartjs-plugin-datalabels and Vega-Lite a text layer per
+  ring, and the TanStack Charts sunburst mark has no labels (its polar `radialText` mark could add them at angles the
+  app computes).
 - **Colors.** Unovis colors each platform and draws its operating systems and browsers in lighter shades of it. ECharts,
   Nivo and TanStack Charts (`color: 'branchId'`) give the children their parent's color. Recharts has no palette, so the
-  platforms get colors from its docs; Chart.js would give every segment of every ring a color of its own, so the demo
-  colors them by platform.
+  platforms get colors from its docs; Chart.js and AG Charts would give every segment of every ring a color of its own,
+  so the demos color them by platform.
 - **Randomize the data.** Unovis, Chart.js, ECharts and Nivo animate the segments to their new angles, and TanStack
-  Charts tweens them (`svgAnimation`). Recharts' sunburst and Vega-Lite redraw without a transition.
+  Charts tweens them (`svgAnimation`). Recharts' sunburst, Vega-Lite and AG Charts
+  (animations are Enterprise) redraw without a transition.
 - **Drill down.** Clicking a segment in ECharts zooms into it, on by default (`nodeClick`). TanStack Charts has a
   `rootId` option for it, with the navigation state in your app. Unovis has no drill-down.
 - **Presets.** *Inwards* (`direction`) puts the platforms on the outer ring, which is Unovis' default; TanStack Charts
-  swaps its inner and outer radius, Chart.js its datasets, and ECharts and Vega-Lite set every ring's radius, while
-  Recharts and Nivo always draw from the center out. *Half circle* (`angleRange`) works in Recharts, Chart.js,
-  Vega-Lite and TanStack Charts; the ECharts sunburst has a start angle but no end angle, and Nivo's has neither. *Ring
-  widths* (`layerSettings`) gives every ring its own width, like ECharts' `levels`, Chart.js' `weight` and Vega-Lite's
-  radii; Recharts, Nivo and TanStack Charts divide the radius into rings themselves.
+  swaps its inner and outer radius, Chart.js its datasets, AG Charts its series' radius ratios, and ECharts and
+  Vega-Lite set every ring's radius, while Recharts and Nivo always draw from the center out. *Half circle*
+  (`angleRange`) works in Recharts, Chart.js, Vega-Lite and TanStack Charts; the ECharts sunburst and AG Charts' donut
+  series have a start angle (`rotation` in AG Charts) but no end angle, and Nivo's sunburst has neither. *Ring widths*
+  (`layerSettings`) gives every ring its own width, like ECharts' `levels`, Chart.js' `weight`, AG Charts'
+  `innerRadiusRatio` and `outerRadiusRatio` and Vega-Lite's radii; Recharts, Nivo and TanStack Charts divide the radius
+  into rings themselves.
 
 ## Feature comparison
 

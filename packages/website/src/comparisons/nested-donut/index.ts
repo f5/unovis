@@ -32,7 +32,7 @@ export const nestedDonut: Comparison<DataRecord[]> = {
       load: () => import('./recharts'),
       code: require('!!raw-loader!./recharts.tsx').default,
       unsupportedPresets: {
-        inwards: { reason: 'SunburstChart always draws the first level around `innerRadius` and every deeper level outside it, so the top level can\'t be the outer ring.', url: rechartsRings },
+        inwards: { reason: 'SunburstChart always draws the first level around `innerRadius` and every deeper level outside it, so the top level can\'t be the outer ring.', url: 'https://github.com/recharts/recharts/blob/v3.10.1/src/chart/SunburstChart.tsx#L385-L399' },
         widths: { reason: 'SunburstChart gives every ring the same thickness, the span from `innerRadius` to `outerRadius` divided by the depth of the tree.', url: rechartsRings },
       },
     },
@@ -55,10 +55,17 @@ export const nestedDonut: Comparison<DataRecord[]> = {
         widths: { reason: 'The sunburst sizes the rings itself, so that every depth covers the same area, with no option for the width of a ring.', url: nivoLayout },
       },
     },
+    {
+      library: 'agcharts',
+      load: () => import('./ag-charts'),
+      code: require('!!raw-loader!./ag-charts.tsx').default,
+      unsupportedPresets: {
+        half: { reason: 'A donut series has a `rotation` for its start but no end angle or sweep: its sectors always fill the full circle.', url: 'https://github.com/ag-grid/ag-charts/blob/release-14.2.0/packages/ag-charts-types/src/series/polar/donutOptions.ts#L137-L138' },
+      },
+    },
     { library: 'vegalite', load: () => import('./vegalite'), code: require('!!raw-loader!./vegalite.tsx').default },
   ],
   unsupported: [
-    { library: 'agcharts', reason: 'The Sunburst series is only in AG Charts Enterprise; Community can only layer donut series that don\'t follow a hierarchy.', url: 'https://www.ag-grid.com/charts/javascript/sunburst-series/', paid: true },
     { library: 'plot', reason: 'Observable Plot has no arc mark, no partition layout and no polar coordinates, so the rings would have to be drawn as hand-written path geometry.', url: 'https://github.com/observablehq/plot/tree/v0.6.17/src/marks' },
   ],
 }
