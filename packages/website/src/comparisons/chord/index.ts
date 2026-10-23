@@ -22,7 +22,6 @@ export const chordDiagram: Comparison<ChordData> = {
       code: require('!!raw-loader!./echarts.tsx').default,
       unsupportedPresets: {
         grouped: { reason: 'The chord series takes a flat list of nodes, so the regions can\'t be grouped into continents drawn as a second ring of arcs.', url: 'https://echarts.apache.org/en/option.html#series-chord.data' },
-        radial: { reason: 'The chord series always draws its labels horizontally: after applying the label options, it sets each label\'s rotation to 0 and replaces its text config, so `label.rotate` has no effect.', url: 'https://github.com/apache/echarts/blob/6.1.0/src/chart/chord/ChordPiece.ts#L125-L185' },
       },
     },
     {

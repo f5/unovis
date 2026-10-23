@@ -31,8 +31,9 @@ region, sized by all of its traffic, and each ribbon is the traffic between two 
   tooltip lists the value at both ends.
 - **Randomize the data.** The arcs and ribbons of all three animate to their new sizes.
 - **Presets.** *Grouped by continent* (`nodeLevels`) adds a ring of continent arcs, which only Unovis can draw:
-  ECharts and Nivo take a flat list of nodes. *Radial labels* (`nodeLabelAlignment`) is Nivo's `labelRotation`; the
-  ECharts chord series always draws its labels horizontally. *Thick arcs* (`nodeWidth`, `padAngle`) is a pair of
+  ECharts and Nivo take a flat list of nodes. *Radial labels* (`nodeLabelAlignment`) is Nivo's `labelRotation`. ECharts'
+  chord series ignores `label.rotate`, so its demo turns each label with a `labelLayout` callback and computes the arc
+  angles from the data itself. *Thick arcs* (`nodeWidth`, `padAngle`) is a pair of
   options in all three.
 
 ## Feature comparison
