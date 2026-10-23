@@ -27,6 +27,7 @@ export default function UnovisLeafletMap ({ data, preset }: ChartProps<DataRecor
 
   const points = data.filter(d => !hidden[getMagnitudeClass(d)]).map(d => ({ ...d, [getMagnitudeClass(d)]: 1 }))
   const tooltip = useMemo(() => new Tooltip({
+    container: document.body,
     triggers: {
       [LeafletMap.selectors.point]: (d: { isCluster: boolean; clusterPoints?: DataRecord[]; properties: DataRecord }) => d.isCluster
         ? `${d.clusterPoints.length} earthquakes`

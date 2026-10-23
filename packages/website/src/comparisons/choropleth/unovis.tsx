@@ -50,7 +50,7 @@ export default function UnovisChoroplethMap ({ data, preset }: ChartProps<Chorop
           targetLongitude={(l: LinkDatum) => points.get(l.target).longitude}
           targetLatitude={(l: LinkDatum) => points.get(l.target).latitude}
         />
-        <VisTooltip triggers={tooltipTriggers}/>
+        <VisTooltip container={document.body} triggers={tooltipTriggers}/>
       </VisSingleContainer>
     </>
   )

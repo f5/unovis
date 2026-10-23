@@ -32,7 +32,7 @@ export default function UnovisCircularBarChart ({ data, preset }: ChartProps<Dat
           innerCornerRadius={preset === 'square' ? 0 : undefined}
           barPadding={preset === 'gaps' ? 24 : undefined}
         />
-        <VisTooltip triggers={tooltipTriggers}/>
+        <VisTooltip container={document.body} triggers={tooltipTriggers}/>
       </VisSingleContainer>
     </>
   )

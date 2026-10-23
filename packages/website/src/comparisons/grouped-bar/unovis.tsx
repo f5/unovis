@@ -44,7 +44,7 @@ export default function UnovisGroupedBarChart ({ data, preset }: ChartProps<Data
         <VisAxis type="y" {...(horizontal ? regionAxis : valueAxis)}/>
         {/* The crosshair moves along the x axis, so horizontal bars show the region's tooltip on hover instead */}
         {!horizontal && <VisCrosshair template={tooltipTemplate} getCircles={() => []}/>}
-        <VisTooltip triggers={horizontal ? { [GroupedBar.selectors.bar]: tooltipTemplate } : {}}/>
+        <VisTooltip container={document.body} triggers={horizontal ? { [GroupedBar.selectors.bar]: tooltipTemplate } : {}}/>
       </VisXYContainer>
     </>
   )

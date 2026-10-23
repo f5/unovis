@@ -27,7 +27,7 @@ export function BuildSizeBars (): JSX.Element {
       <VisStackedBar x={x} y={y} color={color} orientation={Orientation.Horizontal} barPadding={0.3}/>
       <VisAxis type="x" tickFormat={(value: number) => `${value} KB`}/>
       <VisAxis type="y" numTicks={lineChartBuildSizes.length} tickFormat={formatLibrary} gridLine={false}/>
-      <VisTooltip triggers={tooltipTriggers}/>
+      <VisTooltip container={document.body} triggers={tooltipTriggers}/>
     </VisXYContainer>
   )
 }

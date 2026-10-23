@@ -31,7 +31,7 @@ export default function UnovisDonutChart ({ data, preset }: ChartProps<DataRecor
           angleRange={preset === 'half' ? DONUT_HALF_ANGLE_RANGE_TOP : undefined}
           pattern={preset === 'patterns' ? (_: DataRecord, i: number) => patterns[i % patterns.length] : undefined}
         />
-        <VisTooltip triggers={tooltipTriggers}/>
+        <VisTooltip container={document.body} triggers={tooltipTriggers}/>
       </VisSingleContainer>
     </>
   )

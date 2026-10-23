@@ -56,7 +56,7 @@ export default function UnovisScatterPlot ({ data, preset }: ChartProps<DataReco
         <VisAxis type="x" label="Flipper length (mm)"/>
         <VisAxis type="y" label="Bill length (mm)"/>
         <VisCrosshair x={x} y={y} color={color} snapMode={CrosshairSnapMode.XY} showHorizontalLine template={tooltipTemplate}/>
-        <VisTooltip/>
+        <VisTooltip container={document.body}/>
       </VisXYContainer>
     </>
   )

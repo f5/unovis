@@ -30,7 +30,7 @@ export default function UnovisSankey ({ data, preset }: ChartProps<SankeyData>):
         nodeSort={preset === 'sorted' ? (a: { value: number }, b: { value: number }) => b.value - a.value : undefined}
         highlightSubtreeOnHover
       />
-      <VisTooltip triggers={tooltipTriggers}/>
+      <VisTooltip container={document.body} triggers={tooltipTriggers}/>
     </VisSingleContainer>
   )
 }

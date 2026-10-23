@@ -50,7 +50,7 @@ export default function UnovisGraph ({ data, preset }: ChartProps<GraphData>): J
           linkArrow={GraphLinkArrowStyle.Single}
           linkFlow
         />
-        <VisTooltip triggers={tooltipTriggers}/>
+        <VisTooltip container={document.body} triggers={tooltipTriggers}/>
       </VisSingleContainer>
     </>
   )

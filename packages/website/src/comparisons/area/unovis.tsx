@@ -37,7 +37,7 @@ export default function UnovisAreaChart ({ data, preset }: ChartProps<DataRecord
         <VisAxis type="x" tickFormat={(t: Date) => formatMonth(t)}/>
         <VisAxis type="y" tickFormat={formatValue}/>
         <VisCrosshair template={tooltipTemplate}/>
-        <VisTooltip/>
+        <VisTooltip container={document.body}/>
       </VisXYContainer>
     </>
   )

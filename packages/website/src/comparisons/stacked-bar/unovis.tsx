@@ -41,7 +41,7 @@ export default function UnovisStackedBarChart ({ data, preset }: ChartProps<Data
         <VisAxis type="x" {...(isHorizontal ? valueAxis : monthAxis)}/>
         <VisAxis type="y" {...(isHorizontal ? monthAxis : valueAxis)}/>
         {!isHorizontal && <VisCrosshair template={tooltipTemplate}/>}
-        <VisTooltip triggers={isHorizontal ? { [StackedBar.selectors.bar]: (bar: { datum: DataRecord }) => tooltipTemplate(bar.datum) } : {}}/>
+        <VisTooltip container={document.body} triggers={isHorizontal ? { [StackedBar.selectors.bar]: (bar: { datum: DataRecord }) => tooltipTemplate(bar.datum) } : {}}/>
       </VisXYContainer>
     </>
   )
