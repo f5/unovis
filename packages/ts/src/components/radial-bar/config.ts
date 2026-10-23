@@ -2,7 +2,8 @@
 import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
-import { ColorAccessor, NumericAccessor } from '@/types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor } from '@/types/accessor'
+import { Gradient } from '@/types/gradient'
 
 export interface RadialBarConfigInterface<Datum> extends ComponentConfigInterface {
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
@@ -32,6 +33,9 @@ export interface RadialBarConfigInterface<Datum> extends ComponentConfigInterfac
   cornerRadius?: number;
   /** Color accessor function. Default: `undefined` */
   color?: ColorAccessor<Datum>;
+  /** Fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient
+   * (radial, fading in from the inner edge of each bar's ring to its outer edge). Default: `undefined` */
+  gradient?: GenericAccessor<Gradient | boolean, Datum>;
   /** Explicitly set the outer radius of the outermost ring. Default: `undefined` */
   radius?: number;
   /** Width of each ring (track) in pixels. Default: `16` */
@@ -71,6 +75,7 @@ export const RadialBarDefaultConfig: RadialBarConfigInterface<unknown> = {
   sortFunction: undefined,
   cornerRadius: 0,
   color: undefined,
+  gradient: undefined,
   radius: undefined,
   trackWidth: 16,
   trackPadding: 4,
