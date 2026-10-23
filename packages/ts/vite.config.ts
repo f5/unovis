@@ -34,7 +34,7 @@ export default defineConfig({
     maplibreWorkerSource(),
     dts({
       tsconfigPath: './tsconfig.json',
-      exclude: ['vite.config.ts', 'vitest.config.ts', 'vite-plugin-maplibre-worker-source.ts'],
+      exclude: ['vite.config.ts', 'vitest.config.ts', 'vite-plugin-maplibre-worker-source.ts', 'size-check.ts'],
       afterBuild: (emittedFiles) => {
         // vite-plugin-dts skips entries whose type-check reports diagnostics without failing
         // the build, which would publish a dist untyped at the package root — fail loudly instead

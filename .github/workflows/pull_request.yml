@@ -13,6 +13,8 @@ jobs:
     - uses: pnpm/action-setup@v4
     - run: pnpm install --frozen-lockfile
     - run: pnpm run build && pnpm run build:dev
+    # Fail when a typical chart's gzip size grows; see packages/ts/size-check.ts
+    - run: pnpm run size:ts
 
   mcp:
     name: SSR + MCP (types, lint, tests)

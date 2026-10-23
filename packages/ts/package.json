@@ -69,9 +69,12 @@
     "build:package-json": "node -e \"const p=JSON.parse(require('fs').readFileSync('package.json','utf8')); delete p.typesVersions; require('fs').writeFileSync('./dist/package.json', JSON.stringify(p, null, 2))\"",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "size": "node size-check.ts"
   },
   "devDependencies": {
+    "@types/dagre": "^0.7.50",
+    "esbuild": "^0.28.0",
     "jsdom": "catalog:",
     "rimraf": "^3.0.2",
     "typescript": "catalog:",
@@ -81,7 +84,6 @@
   },
   "dependencies": {
     "@emotion/css": "^11.7.1",
-    "@juggle/resize-observer": "^3.3.1",
     "csstype": "^3.2.3",
     "d3-array": "~3",
     "d3-shape": "~3",
@@ -101,8 +103,6 @@
     "d3-transition": "~3",
     "d3-path": "~3",
     "d3-geo": "~3",
-    "@types/d3": "^7.4.0",
-    "@types/d3-collection": "^1.0.10",
     "@types/d3-sankey": "^0.12.4",
     "@types/d3-array": "~3.2.2",
     "@types/d3-shape": "~3.1.7",
@@ -122,7 +122,6 @@
     "@types/d3-transition": "~3.0.9",
     "@types/d3-path": "~3.1.1",
     "@types/d3-geo": "~3.1.0",
-    "@types/dagre": "^0.7.50",
     "@types/geojson": "^7946.0.8",
     "@types/leaflet": "1.7.6",
     "@types/supercluster": "^5.0.2",
@@ -134,20 +133,16 @@
     "@maplibre/maplibre-gl-style-spec": "26.4.1",
     "@unovis/dagre-layout": "0.8.8-3",
     "@unovis/graphlibrary": "2.2.0-3",
-    "d3": "^7.2.1",
-    "d3-collection": "^1.0.7",
     "d3-geo-projection": "^4.0.0",
     "d3-interpolate-path": "^2.2.3",
     "d3-sankey": "^0.12.3",
     "elkjs": "^0.10.0",
-    "geojson": "^0.5.0",
     "leaflet": "1.7.1",
     "maplibre-gl": "^6.7.0",
     "striptags": "^3.2.0",
     "supercluster": "^7.1.5",
     "three": "^0.135.0",
     "throttle-debounce": "^5.0.0",
-    "topojson-client": "^3.1.0",
-    "tslib": "^2.3.1"
+    "topojson-client": "^3.1.0"
   }
 }
