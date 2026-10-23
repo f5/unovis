@@ -7,8 +7,8 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { getNumber, getString, getValue, isArray, isNumber } from '@/utils/data'
-import { smartTransition } from '@/utils/d3'
+import { getNumber, getSeriesKeys, getString, getValue, isArray, isNumber } from '@/utils/data'
+import { smartTransition, seriesJoinKey, UNOVIS_SERIES_KEY_ATTR } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 
@@ -131,9 +131,11 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       }
     })
 
+    const seriesKeys = getSeriesKeys(yAccessors.length, config.colorKeys)
+    const getSeriesKey = (d: LineData, i: number): string => seriesKeys[i]
     const lines = this.g
       .selectAll<SVGGElement, LineData>(`.${s.line}`)
-      .data(lineData)
+      .data(lineData, seriesJoinKey(getSeriesKey))
 
     const linesEnter = lines.enter().append('g')
       .attr('class', s.line)
@@ -156,7 +158,10 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       .attr('d', this._emptyPath())
       .style('opacity', 0)
 
-    const linesMerged = linesEnter.merge(lines)
+    const linesMerged = linesEnter.merge(lines).order()
+      .attr(UNOVIS_SERIES_KEY_ATTR, getSeriesKey)
+    // A line re-entering mid exit fade: stop the exit and let the CSS transition bring its opacity back
+    linesMerged.filter((d, i, els) => !!els[i].style.opacity).interrupt().style('opacity', null)
     linesMerged.style('cursor', (d, i) => getString(data, config.cursor, i))
     linesMerged.each((d, i, elements) => {
       const group = select(elements[i])
@@ -171,6 +176,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       const explicitDashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
       const dashArray = explicitDashArray?.join(' ') ?? linePattern?.dashArray ?? null
       linePath
+        .attr(UNOVIS_PATTERN_INDEX_ATTR, i)
         .style('marker', linePattern?.marker ?? null)
       const transition = smartTransition(linePath, duration)
         .attr('stroke', lineColor)

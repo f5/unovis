@@ -17,8 +17,9 @@ import {
   filterDataByRange,
   getValue,
   clamp,
+  getSeriesKeys,
 } from '@/utils/data'
-import { smartTransition } from '@/utils/d3'
+import { smartTransition, seriesJoinKey, UNOVIS_SERIES_KEY_ATTR } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, getLinePatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
 
@@ -151,9 +152,11 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     //   for better visibility when they're close to zero
     const areaMaxIdx = stackedData.length - 1
     const stackedDataReversed = [...stackedData].reverse()
+    const seriesKeys = getSeriesKeys(stackedData.length, config.colorKeys)
+    const getSeriesKey = (d: AreaDatum[], i: number): string => seriesKeys[areaMaxIdx - i]
     const areas = this.g
-      .selectAll<SVGPathElement, AreaDatum>(`.${s.area}`)
-      .data(stackedDataReversed)
+      .selectAll<SVGPathElement, AreaDatum[]>(`.${s.area}`)
+      .data(stackedDataReversed, seriesJoinKey(getSeriesKey))
 
     const areasEnter = areas.enter().append('path')
       .attr('class', s.area)
@@ -163,7 +166,10 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions))
       .style('mask', (d, i) => getFillPatternValue(getPattern(data, config.pattern, areaMaxIdx - i)))
 
-    const areasMerged = smartTransition(areasEnter.merge(areas), duration)
+    const areasJoined = areasEnter.merge(areas).order()
+      .attr(UNOVIS_SERIES_KEY_ATTR, getSeriesKey)
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => areaMaxIdx - i)
+    const areasMerged = smartTransition(areasJoined, duration)
       .style('opacity', (d, i) => {
         const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
         return isDefined ? getNumber(data, config.opacity, areaMaxIdx - i) : 0
@@ -187,20 +193,20 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
       .style('opacity', 0)
       .remove()
 
-    this._renderLines(duration, config.line ? stackedData : [])
+    this._renderLines(duration, config.line ? stackedData : [], areasJoined.nodes())
   }
 
-  _renderLines (duration: number, stackedData: AreaDatum[][]): void {
+  _renderLines (duration: number, stackedData: AreaDatum[][], areas: SVGPathElement[]): void {
     const { config, datamodel: { data } } = this
     const colorOptions = { colorFn: this._colorFunction }
     const areaMaxIdx = stackedData.length - 1
     const stackedDataReversed = [...stackedData].reverse()
     const colorAccessor = config.lineColor ?? config.color
+    const seriesKeys = getSeriesKeys(stackedData.length, config.colorKeys)
+    const getSeriesKey = (d: AreaDatum[], i: number): string => seriesKeys[areaMaxIdx - i]
     const lines = this.g
       .selectAll<SVGPathElement, AreaDatum[]>(`.${s.areaLinePath}`)
-      .data(stackedDataReversed)
-
-    const areas = this.g.selectAll(`.${s.area}`).nodes()
+      .data(stackedDataReversed, seriesJoinKey(getSeriesKey))
 
     const getLineColor = (i: number): string => getColor(data, colorAccessor, areaMaxIdx - i, config.colorKeys?.[areaMaxIdx - i], colorOptions)
     const getLinePattern = (i: number, el?: SVGPathElement | null): { marker: string | null; dashArray: string | null } | null =>
@@ -217,7 +223,18 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
       .attr('stroke-opacity', 0)
       .style('marker', function (d, i) { return getLinePattern(i, this)?.marker ?? null })
 
-    const linesMerged = smartTransition(linesEnter.merge(lines), duration)
+    const linesJoined = linesEnter.merge(lines)
+    // Each line sits right after its area so the next area paints over it; a line kept by the key join may have moved.
+    // `areas` holds the current areas only, exiting ones are still in the DOM but must not shift the slots.
+    linesJoined
+      .attr(UNOVIS_SERIES_KEY_ATTR, getSeriesKey)
+      .attr(UNOVIS_PATTERN_INDEX_ATTR, (d, i) => areaMaxIdx - i)
+      .each((d, i, els) => {
+        const next = areas[i + 1] ?? null
+        if (els[i].nextSibling !== next) this.g.node().insertBefore(els[i], next)
+      })
+    const linesMerged = smartTransition(linesJoined, duration)
+      .style('opacity', 1)
       .attr('stroke', (d, i) => getLineColor(i))
       .attr('stroke-width', config.lineWidth)
       .attr('stroke-opacity', 1)
