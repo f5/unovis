@@ -48,6 +48,7 @@
 | @types/topojson-client           | perpetual      | MIT          | 3.1.5             | n/a                                                               |
 | @types/topojson-specification    | perpetual      | MIT          | 1.0.5             | n/a                                                               |
 | @maplibre/maplibre-gl-style-spec | perpetual      | ISC          | 26.4.1            | MapLibre                                                          |
+| @dagrejs/dagre                   | perpetual      | MIT          | 3.1.2             | Chris Pettitt <cpettitt@gmail.com>                                |
 | d3-geo-projection                | perpetual      | ISC          | 4.0.0             | Mike Bostock https://bost.ocks.org/mike                           |
 | d3-sankey                        | perpetual      | BSD-3-Clause | 0.12.3            | Mike Bostock https://bost.ocks.org/mike/                          |
 | elkjs                            | perpetual      | EPL-2.0      | 0.10.2            | Ulf Rüegg uruurumail@gmail.com                                    |
