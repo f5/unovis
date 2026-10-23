@@ -44,7 +44,7 @@ export const brush: Comparison<DataRecord[]> = {
     },
   ],
   unsupported: [
-    { library: 'chartjs', reason: 'No brush or range selector: the official chartjs-plugin-zoom zooms by dragging on the chart itself, and selecting a range takes a community plugin such as chartjs-plugin-selectdrag.', url: 'https://github.com/01CodeLT/chartjs-plugin-selectdrag' },
+    { library: 'chartjs', reason: 'No brush or range selector: selecting a range takes a community plugin such as chartjs-plugin-selectdrag. The official chartjs-plugin-zoom does draw the Zoom box preset (`zoom: { drag: { enabled: true }, mode: \'xy\' }`).', url: 'https://github.com/01CodeLT/chartjs-plugin-selectdrag' },
     { library: 'nivo', reason: 'No brush: a prototype (pull request #563) was never merged, so a range selection takes a custom layer with d3-brush.', url: 'https://github.com/plouc/nivo/pull/563' },
     { library: 'agcharts', reason: 'The Navigator, a range selector with a mini chart, is an Enterprise feature.', url: 'https://www.ag-grid.com/charts/javascript/navigator/', paid: true },
     { library: 'plot', reason: 'No brush (issue #5 is open): you attach d3-brush to the returned SVG and convert pixels with `plot.scale(\'x\').invert`.', url: 'https://observablehq.com/plot/features/interactions#selecting' },
