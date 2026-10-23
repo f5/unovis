@@ -1,6 +1,8 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
-import { RollingPinLegend, RollingPinLegendConfigInterface, RollingPinLegendItem } from '@unovis/ts'
+import { RollingPinLegend } from '@unovis/ts/components/rolling-pin-legend'
+import { RollingPinLegendConfigInterface } from '@unovis/ts/components/rolling-pin-legend/config'
+import { RollingPinLegendItem } from '@unovis/ts/components/rolling-pin-legend/types'
 import { VisGenericComponent } from '../../core'
 
 @Component({

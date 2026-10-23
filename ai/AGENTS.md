@@ -45,6 +45,11 @@ wrapper is generated from it.
    previews through a lossless PNG optimizer (for example, `oxipng`). Preserve their dimensions,
    transparency, and appearance, and visually verify the optimized images before staging them.
 
+10. **Prefer direct imports.** Import individual components, enums, utilities, and types from their
+   defining modules instead of package root barrels. This reduces bundler/test dependency traversal,
+   startup time, and memory; final bundle savings depend on tree-shaking. Follow each package's
+   `AGENTS.md` for supported paths and framework exceptions. Use `import type` for types.
+
 ## Setup & commands
 
 - **Tooling versions are pinned — read them, don't assume.** Package manager: the `packageManager`

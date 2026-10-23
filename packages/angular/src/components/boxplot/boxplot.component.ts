@@ -1,17 +1,11 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Boxplot,
-  BoxplotConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  ContinuousScale,
-  GenericAccessor,
-  StringAccessor,
-} from '@unovis/ts'
+import { Boxplot } from '@unovis/ts/components/boxplot'
+import { BoxplotConfigInterface } from '@unovis/ts/components/boxplot/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, GenericAccessor, StringAccessor } from '@unovis/ts/types/accessor'
+import { ContinuousScale } from '@unovis/ts/types/scale'
 import { VisXYComponent } from '../../core'
 
 @Component({

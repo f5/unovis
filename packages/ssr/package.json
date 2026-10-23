@@ -41,6 +41,7 @@
     "dist",
     "fonts",
     "README.md",
+    "AGENTS.md",
     "LICENSE"
   ],
   "scripts": {

@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { FlowLegendConfigInterface } from "@unovis/ts";
-import { FlowLegend } from "@unovis/ts";
+import { FlowLegend } from "@unovis/ts/components/flow-legend";
+import type { FlowLegendConfigInterface } from "@unovis/ts/components/flow-legend/config";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 

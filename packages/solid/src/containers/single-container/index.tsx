@@ -1,10 +1,8 @@
-import { SingleContainer } from '@unovis/ts'
-import type {
-  Annotations,
-  Tooltip,
-  SingleContainerConfigInterface,
-  ComponentCore,
-} from '@unovis/ts'
+import { SingleContainer } from '@unovis/ts/containers/single-container'
+import type { SingleContainerConfigInterface } from '@unovis/ts/containers/single-container/config'
+import type { Annotations } from '@unovis/ts/components/annotations'
+import type { Tooltip } from '@unovis/ts/components/tooltip'
+import type { ComponentCore } from '@unovis/ts/core/component'
 import type { JSX, ParentProps } from 'solid-js'
 import { createEffect, createSignal, on, onCleanup, splitProps } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'

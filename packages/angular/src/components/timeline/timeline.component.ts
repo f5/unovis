@@ -1,25 +1,15 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  Timeline,
-  TimelineConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  ContinuousScale,
-  StringAccessor,
-  GenericAccessor,
-  FillPatternType,
-  Arrangement,
-  TimelineRowLabel,
-  TimelineRowIcon,
-  TextAlign,
-  TrimMode,
-  TimelineArrow,
-  TimelineLineRenderState,
-} from '@unovis/ts'
+import { Timeline } from '@unovis/ts/components/timeline'
+import { TimelineConfigInterface } from '@unovis/ts/components/timeline/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { NumericAccessor, ColorAccessor, StringAccessor, GenericAccessor } from '@unovis/ts/types/accessor'
+import { ContinuousScale } from '@unovis/ts/types/scale'
+import { FillPatternType } from '@unovis/ts/styles/patterns'
+import { Arrangement } from '@unovis/ts/types/position'
+import { TimelineRowLabel, TimelineRowIcon, TimelineArrow, TimelineLineRenderState } from '@unovis/ts/components/timeline/types'
+import { TextAlign, TrimMode } from '@unovis/ts/types/text'
 import { VisXYComponent } from '../../core'
 
 @Component({

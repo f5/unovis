@@ -1,6 +1,10 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { FreeBrush, FreeBrushConfigInterface, ContainerCore, VisEventType, VisEventCallback, FreeBrushMode, FreeBrushSelection } from '@unovis/ts'
+import { FreeBrush } from '@unovis/ts/components/free-brush'
+import { FreeBrushConfigInterface } from '@unovis/ts/components/free-brush/config'
+import { ContainerCore } from '@unovis/ts/core/container'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
+import { FreeBrushMode, FreeBrushSelection } from '@unovis/ts/components/free-brush/types'
 import { D3BrushEvent } from 'd3-brush'
 import { VisXYComponent } from '../../core'
 

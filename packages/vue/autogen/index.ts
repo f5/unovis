@@ -17,8 +17,8 @@ const getComponentDirPath = (component: VueComponentInput): string =>
 
 runComponentGenerator<VueComponentInput>({
   generateComponentFiles: (component) => {
-    const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, skipProperties)
-    const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics)
+    const { configProperties, configInterfaceMembers, generics, statements, importSourceMap } = getConfigSummary(component, skipProperties)
+    const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, [], importSourceMap)
     const isStandAlone = component.isStandAlone
     const componentCode = getComponentCode(
       component.name,

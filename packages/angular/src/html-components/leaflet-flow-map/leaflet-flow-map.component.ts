@@ -1,25 +1,21 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
+import { LeafletFlowMap } from '@unovis/ts/components/leaflet-flow-map'
+import { LeafletFlowMapConfigInterface } from '@unovis/ts/components/leaflet-flow-map/config'
+import { GenericDataRecord } from '@unovis/ts/types/data'
+import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
 import {
-  LeafletFlowMap,
-  LeafletFlowMapConfigInterface,
-  GenericDataRecord,
-  VisEventType,
-  VisEventCallback,
   Bounds,
-  MapLibreStyleSpecs,
   LeafletMapRenderer,
   MapZoomState,
-  NumericAccessor,
-  StringAccessor,
-  GenericAccessor,
   LeafletMapPointShape,
-  ColorAccessor,
   LeafletMapPointDatum,
   LeafletMapClusterDatum,
   LeafletMapPointStyles,
-  Tooltip,
-} from '@unovis/ts'
+} from '@unovis/ts/components/leaflet-map/types'
+import { MapLibreStyleSpecs } from '@unovis/ts/components/leaflet-map/renderer/map-style'
+import { NumericAccessor, StringAccessor, GenericAccessor, ColorAccessor } from '@unovis/ts/types/accessor'
+import { Tooltip } from '@unovis/ts/components/tooltip'
 import { VisCoreComponent } from '../../core'
 
 @Component({

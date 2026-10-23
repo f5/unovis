@@ -1,4 +1,9 @@
-import { XYComponentCore, ComponentCore, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
+import { XYComponentCore } from '@unovis/ts/core/xy-component'
+import { ComponentCore } from '@unovis/ts/core/component'
+import { Tooltip } from '@unovis/ts/components/tooltip'
+import { Crosshair } from '@unovis/ts/components/crosshair'
+import { Axis } from '@unovis/ts/components/axis'
+import { Annotations } from '@unovis/ts/components/annotations'
 import { InjectionKey, Ref } from 'vue'
 
 export const componentAccessorKey = Symbol('componentAccessorKey') as InjectionKey<{

@@ -45,7 +45,7 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "pnpm check && vite build && rm -rf dist/.cache && cp LICENSE README.md package.json ./dist",
+    "build": "pnpm check && vite build && rm -rf dist/.cache && cp LICENSE README.md AGENTS.md package.json ./dist",
     "check": "vue-tsc --noEmit",
     "generate": "tsx ./autogen/index.ts",
     "publish:dist": "cd ./dist; npm publish",

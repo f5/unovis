@@ -1,6 +1,8 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
-import { FlowLegend, FlowLegendConfigInterface, Spacing } from '@unovis/ts'
+import { FlowLegend } from '@unovis/ts/components/flow-legend'
+import { FlowLegendConfigInterface } from '@unovis/ts/components/flow-legend/config'
+import { Spacing } from '@unovis/ts/types/spacing'
 import { VisGenericComponent } from '../../core'
 
 @Component({
