@@ -259,12 +259,6 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     }
   })
 
-  // Resolve the label font size CSS variable once per update instead of once per node:
-  // reading a computed style in the loop forces repeated style recalculations
-  const labelFontSize = selection.empty()
-    ? 12
-    : getCSSVariableValueInPixels('var(--vis-graph-node-label-font-size)', selection.node()) || 12
-
   // Update nodes themselves
   selection.each((d, i, elements) => {
     const groupElement = elements[i] as GraphNodeSVGGElement
