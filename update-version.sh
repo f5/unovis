@@ -50,4 +50,6 @@ for (const file of packageFiles) {
 }
 NODE
 
-pnpm install --ignore-scripts
+if [[ "${1:-}" != '--no-install' ]]; then
+	pnpm install --ignore-scripts
+fi
