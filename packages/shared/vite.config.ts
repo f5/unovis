@@ -130,10 +130,12 @@ export default defineConfig({
                 // self-host fonts can tighten this to `'self' data:`.
                 "font-src 'self' data: https:",
                 "connect-src 'self' ws: wss: http: https:",
-                // ELK.js (elk-layered-graph example) spawns its layout engine
-                // in a Worker created from a `Blob` URL — falls back to
-                // script-src otherwise, which doesn't allow blob:.
-                "worker-src 'self' blob:",
+                // Strict by default: workers may only start from same-origin files, so
+                // `blob:` workers (ELK.js in the elk-layered-graph example, LeafletMap with the
+                // default `useMaplibreWorkerBlob: true`) are expected to be blocked, while the
+                // `leaflet-map-csp-worker` example must work. `UNOVIS_CSP_ALLOW_BLOB_WORKERS=1
+                // pnpm dev:gallery:csp` allows `blob:` to match the recommended CSP from the docs.
+                process.env.UNOVIS_CSP_ALLOW_BLOB_WORKERS ? "worker-src 'self' blob:" : "worker-src 'self'",
               ].join('; ')
             )
             next()

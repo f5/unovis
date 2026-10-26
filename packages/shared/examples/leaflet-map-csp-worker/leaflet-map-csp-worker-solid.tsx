@@ -1,0 +1,36 @@
+import { JSX } from 'solid-js'
+import { VisLeafletMap } from '@unovis/solid'
+
+// Data
+import { MapPointDataRecord, data } from '../basic-leaflet-map/data'
+
+// !!! Get your own access key from https://maptiler.com
+import { mapKey } from '../basic-leaflet-map/constants'
+
+const LeafletMapCspWorker = (): JSX.Element => {
+  const style = `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`
+  const pointLatitude = (d: MapPointDataRecord) => d.latitude
+  const pointLongitude = (d: MapPointDataRecord) => d.longitude
+  const pointBottomLabel = (d: MapPointDataRecord) => d.id
+  const pointColor = '#286e47'
+
+  return (
+    <VisLeafletMap
+      height='50dvh'
+      style={style}
+      data={data}
+      useMaplibreWorkerBlob={false}
+      pointLatitude={pointLatitude}
+      pointLongitude={pointLongitude}
+      pointBottomLabel={pointBottomLabel}
+      pointColor={pointColor}
+      clusterExpandOnClick={false}
+      attribution={[
+        '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
+        '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
+      ]}
+    />
+  )
+}
+
+export default LeafletMapCspWorker
