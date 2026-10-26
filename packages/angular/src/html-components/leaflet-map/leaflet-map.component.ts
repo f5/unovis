@@ -130,6 +130,15 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
    * Has no effect when renderer is `LeafletMapRenderer.Raster`. Default: `false` */
   @Input() preserveDrawingBuffer?: boolean
 
+  /** Start the MapLibre worker from a Blob URL of Unovis's prebuilt worker bundle, which works around
+   * bundlers that can't resolve maplibre-gl's own worker via `import.meta.url`. Set to `false` to load the same
+   * worker from a same-origin file (`maplibre-gl-worker.js`, shipped next to the component) instead, which is needed
+   * when your Content Security Policy doesn't allow `blob:` in `worker-src`. Your bundler has to emit that file
+   * (`new URL('./maplibre-gl-worker.js', import.meta.url)`), otherwise provide the worker yourself with `setWorkerUrl()`
+   * before the map is initialized, which takes precedence over both modes.
+   * Has no effect when renderer is `LeafletMapRenderer.Raster`. Default: `true` */
+  @Input() useMaplibreWorkerBlob?: boolean
+
   /** Function to be called after the map's async initialization is done. Default: `undefined` */
   @Input() onMapInitialized?: (() => void)
 
@@ -274,8 +283,8 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   }
 
   private getConfig (): LeafletMapConfigInterface<Datum> {
-    const { duration, events, attributes, width, height, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, style, styleDarkTheme, accessToken, attribution, renderer, preserveDrawingBuffer, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, pointRingWidth, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip, ariaLabel } = this
-    const config = { duration, events, attributes, width, height, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, style, styleDarkTheme, accessToken, attribution, renderer, preserveDrawingBuffer, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, pointRingWidth, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip, ariaLabel }
+    const { duration, events, attributes, width, height, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, style, styleDarkTheme, accessToken, attribution, renderer, preserveDrawingBuffer, useMaplibreWorkerBlob, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, pointRingWidth, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip, ariaLabel } = this
+    const config = { duration, events, attributes, width, height, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, style, styleDarkTheme, accessToken, attribution, renderer, preserveDrawingBuffer, useMaplibreWorkerBlob, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, pointRingWidth, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip, ariaLabel }
     const keys = Object.keys(config) as (keyof LeafletMapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

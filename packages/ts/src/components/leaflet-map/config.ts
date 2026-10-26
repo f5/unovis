@@ -57,9 +57,11 @@ export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> exte
    * Has no effect when renderer is `LeafletMapRenderer.Raster`. Default: `false` */
   preserveDrawingBuffer?: boolean;
   /** Start the MapLibre worker from a Blob URL of Unovis's prebuilt worker bundle, which works around
-   * bundlers that can't resolve maplibre-gl's own worker via `import.meta.url`. Set to `false` if your
-   * bundler serves maplibre-gl's worker files correctly and you want MapLibre to load its worker normally,
-   * or if you provide a custom worker via `setWorkerUrl()` yourself before the map is initialized.
+   * bundlers that can't resolve maplibre-gl's own worker via `import.meta.url`. Set to `false` to load the same
+   * worker from a same-origin file (`maplibre-gl-worker.js`, shipped next to the component) instead, which is needed
+   * when your Content Security Policy doesn't allow `blob:` in `worker-src`. Your bundler has to emit that file
+   * (`new URL('./maplibre-gl-worker.js', import.meta.url)`), otherwise provide the worker yourself with `setWorkerUrl()`
+   * before the map is initialized, which takes precedence over both modes.
    * Has no effect when renderer is `LeafletMapRenderer.Raster`. Default: `true` */
   useMaplibreWorkerBlob?: boolean;
 
