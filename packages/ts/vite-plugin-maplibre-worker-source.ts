@@ -11,6 +11,9 @@ import type { Plugin, Rollup } from 'vite'
 export const MAPLIBRE_WORKER_SOURCE_ID = 'virtual:maplibre-worker-source'
 // Where the module lands in `dist` (instead of rollup's `_virtual/` folder); the dev gallery aliases the virtual id to it
 export const MAPLIBRE_WORKER_SOURCE_DIST_PATH = 'components/leaflet-map/modules/maplibre-worker-source.js'
+// The same worker as a plain classic-script file next to `map.js`, for `useMaplibreWorkerBlob: false`, where it's loaded from a
+//   same-origin URL (no `blob:` in `worker-src`). Keep the file name in sync with the `new URL()` in `leaflet-map/modules/map.ts`
+export const MAPLIBRE_WORKER_FILE_DIST_PATH = 'components/leaflet-map/modules/maplibre-gl-worker.js'
 const resolvedId = `\0${MAPLIBRE_WORKER_SOURCE_ID}`
 const require = createRequire(import.meta.url)
 
@@ -60,6 +63,10 @@ export function maplibreWorkerSource (): Plugin {
       // The version lets `LeafletMap` detect a main-thread maplibre-gl that differs from the one the worker was built from
       const { version } = require('maplibre-gl/package.json')
       return source.then(code => `export default ${JSON.stringify(code)}\nexport const version = ${JSON.stringify(version)}`)
+    },
+    async generateBundle () {
+      source ??= bundleMaplibreWorker()
+      this.emitFile({ type: 'asset', fileName: MAPLIBRE_WORKER_FILE_DIST_PATH, source: await source })
     },
     outputOptions (options) {
       const { entryFileNames = '[name].js' } = options

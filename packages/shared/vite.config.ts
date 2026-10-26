@@ -11,7 +11,7 @@ import vue from '@vitejs/plugin-vue'
 import solid from 'vite-plugin-solid'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 
-import { MAPLIBRE_WORKER_SOURCE_DIST_PATH, MAPLIBRE_WORKER_SOURCE_ID } from '../ts/vite-plugin-maplibre-worker-source'
+import { MAPLIBRE_WORKER_FILE_DIST_PATH, MAPLIBRE_WORKER_SOURCE_DIST_PATH, MAPLIBRE_WORKER_SOURCE_ID } from '../ts/vite-plugin-maplibre-worker-source'
 
 const here = fileURLToPath(new URL('.', import.meta.url))
 const pkgSrc = (name: string): string => resolve(here, '..', name, 'src')
@@ -80,6 +80,18 @@ export default defineConfig({
         }
         visit(source)
         return `export default ${JSON.stringify(Object.fromEntries(await Promise.all(entries)))}`
+      },
+    },
+    // `@unovis/ts` is aliased to its sources here, where the prebuilt MapLibre worker file that
+    // `useMaplibreWorkerBlob: false` loads via `new URL(..., import.meta.url)` doesn't exist. Serve it from `dist`.
+    {
+      name: 'unovis-maplibre-worker-file',
+      configureServer (server: ViteDevServer) {
+        server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next: (err?: unknown) => void) => {
+          if (!req.url?.split('?')[0].endsWith(`/${MAPLIBRE_WORKER_FILE_DIST_PATH}`)) return next()
+          res.setHeader('Content-Type', 'text/javascript')
+          res.end(await readFile(resolve(pkgDist('ts'), MAPLIBRE_WORKER_FILE_DIST_PATH)))
+        })
       },
     },
     // Opt-in Content-Security-Policy for verifying the @unovis/ts Emotion nonce

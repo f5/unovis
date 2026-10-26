@@ -393,11 +393,16 @@ a `Blob` URL of a prebuilt worker bundled with _Unovis_ (`useMaplibreWorkerBlob:
 the box with every bundler and doesn't require any extra configuration, but does require `worker-src blob:`
 in your [CSP](../guides/csp#recommended-csp-header) if you enforce one.
 
-Set `useMaplibreWorkerBlob: false` if you'd rather serve MapLibre's actual worker file yourself (e.g. to
-avoid `blob:` in your CSP, or to keep the worker version pinned to whatever `maplibre-gl` build you install).
-When disabled, _LeafletMap_ won't set a worker URL at all, so you must:
+Set `useMaplibreWorkerBlob: false` if your [CSP](../guides/csp#recommended-csp-header) doesn't allow `blob:` in
+`worker-src`. _LeafletMap_ then loads the same prebuilt worker from a same-origin file that ships with _Unovis_
+(`maplibre-gl-worker.js`, next to the component's module), so your bundler has to emit that file via
+`new URL('./maplibre-gl-worker.js', import.meta.url)` (Vite and webpack 5 do this out of the box). If your
+bundler can't, or you'd rather keep the worker version pinned to whatever `maplibre-gl` build you install,
+serve a worker file yourself. A worker URL you set via `setWorkerUrl()` always takes precedence over both
+modes, so you must:
 
-1. Copy `node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs` into a folder your app serves as a static
+1. Copy `node_modules/@unovis/ts/components/leaflet-map/modules/maplibre-gl-worker.js` (or MapLibre's own
+   `node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs`) into a folder your app serves as a static
    asset (its name doesn't matter, but it must be reachable by URL at runtime).
 2. Call MapLibre's `setWorkerUrl()` with that URL yourself, **before** the map is initialized.
 

@@ -147,10 +147,13 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
       // maplibre-gl locates its worker via `import.meta.url`, which bundlers can't reliably follow for a
       //   dependency (webpack ignores it; Vite emits `.mjs` files that stock servers won't run as a module
       //   worker), silently breaking tile parsing so only the style background renders. Unless the consumer
-      //   has set a worker URL themselves, start the worker from a Blob of our prebuilt self-contained bundle.
-      //   `useMaplibreWorkerBlob: false` opts out and leaves maplibre-gl's own worker resolution
-      if (!maplibre.getWorkerUrl() && config.useMaplibreWorkerBlob) {
-        maplibre.setWorkerUrl(await getMaplibreWorkerUrl(maplibre))
+      //   has set a worker URL themselves, start the worker from our prebuilt self-contained bundle: from a Blob
+      //   URL by default, or, with `useMaplibreWorkerBlob: false`, from a same-origin file shipped next to this
+      //   module (for CSPs without `blob:` in `worker-src`). The `new URL()` has to stay a literal for bundlers to emit the file
+      if (!maplibre.getWorkerUrl()) {
+        maplibre.setWorkerUrl(config.useMaplibreWorkerBlob
+          ? await getMaplibreWorkerUrl(maplibre)
+          : new URL('./maplibre-gl-worker.js', import.meta.url).href)
       }
       // eslint-disable-next-line no-case-declarations
       const { getMaplibreGLLayer } = await import('../renderer/mapboxgl-layer')
