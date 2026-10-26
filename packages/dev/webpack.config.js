@@ -22,7 +22,7 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|tsx|js|jsx)?$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /maplibre-gl-worker\.js$/], // The prebuilt worker must be emitted as is
         use: [
           {
             loader: require.resolve('ts-loader'),
@@ -114,6 +114,12 @@ module.exports = {
     new NormalModuleReplacementPlugin(
       /^virtual:maplibre-worker-source$/,
       path.resolve(__dirname, '../ts/dist/components/leaflet-map/modules/maplibre-worker-source.js')
+    ),
+    // `LeafletMap` references the same-origin worker file via `new URL('./maplibre-gl-worker.js', import.meta.url)`.
+    //   The file only exists in the core's `dist` (emitted by the Vite build), not next to the sources webpack compiles.
+    new NormalModuleReplacementPlugin(
+      /^\.\/maplibre-gl-worker\.js$/,
+      path.resolve(__dirname, '../ts/dist/components/leaflet-map/modules/maplibre-gl-worker.js')
     ),
     new HtmlWebpackPlugin({
       template: 'public/index.html',

@@ -1,3 +1,4 @@
+import './worker-report'
 import { mountReact } from './mounts/react'
 import { mountVue } from './mounts/vue'
 import { mountSolid } from './mounts/solid'
@@ -108,12 +109,15 @@ const byId = (id: string): HTMLElement => {
 }
 
 async function mountAll (slug: string): Promise<void> {
-  const reactLoader = pickReact(slug)
-  const solidLoader = pickSolid(slug)
-  const vueLoader = pickVue(slug)
-  const svelteLoader = pickSvelte(slug)
-  const tsLoader = pickTs(slug)
-  const angular = pickAngular(slug)
+  // `?only=<react|vue|solid|svelte|ts|angular>` mounts a single framework. Needed for anything backed by a page-global
+  // singleton (e.g. MapLibre's worker pool, shared by every map on the page), where the first panel would decide for all
+  const only = new URLSearchParams(window.location.search).get('only')
+  const reactLoader = only && only !== 'react' ? undefined : pickReact(slug)
+  const solidLoader = only && only !== 'solid' ? undefined : pickSolid(slug)
+  const vueLoader = only && only !== 'vue' ? undefined : pickVue(slug)
+  const svelteLoader = only && only !== 'svelte' ? undefined : pickSvelte(slug)
+  const tsLoader = only && only !== 'ts' ? undefined : pickTs(slug)
+  const angular = only && only !== 'angular' ? undefined : pickAngular(slug)
 
   if (reactLoader) {
     try { mountReact(byId('root-react'), (await reactLoader()).default as React.ComponentType) } catch (e) { showError(byId('root-react'), 'react', e) }

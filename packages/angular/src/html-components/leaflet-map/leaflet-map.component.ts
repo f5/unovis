@@ -126,13 +126,9 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
    * Has no effect when renderer is `LeafletMapRenderer.Raster`. Default: `false` */
   @Input() preserveDrawingBuffer?: boolean
 
-  /** Start the MapLibre worker from a Blob URL of Unovis's prebuilt worker bundle, which works around
-   * bundlers that can't resolve maplibre-gl's own worker via `import.meta.url`. Set to `false` to load the same
-   * worker from a same-origin file (`maplibre-gl-worker.js`, shipped next to the component) instead, which is needed
-   * when your Content Security Policy doesn't allow `blob:` in `worker-src`. Your bundler has to emit that file
-   * (`new URL('./maplibre-gl-worker.js', import.meta.url)`), otherwise provide the worker yourself with `setWorkerUrl()`
-   * before the map is initialized, which takes precedence over both modes.
-   * Has no effect when renderer is `LeafletMapRenderer.Raster`. Default: `true` */
+  /** Start the MapLibre worker from a Blob URL (requires `blob:` in CSP `worker-src`). Set to `false` to load it from the
+   * same-origin `maplibre-gl-worker.js` file next to the component instead; your bundler has to emit it, or call maplibre-gl's
+   * `setWorkerUrl()` before the map initializes. Has no effect with `LeafletMapRenderer.Raster`. Default: `true` */
   @Input() useMaplibreWorkerBlob?: boolean
 
   /** Function to be called after the map's async initialization is done. Default: `undefined` */
