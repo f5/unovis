@@ -37,8 +37,8 @@ export function HomepageWhyUnovis (): JSX.Element {
       </div>
       <h2 className={s.subheading}>Bundle size</h2>
       <p>
-        The same React line chart in every library, with smooth lines, a legend, a tooltip, a crosshair and animation,
-        minified and gzipped. Unovis takes {unovisSize.gzipKb} KB, {sizeSummary}.
+        The same chart in every library: <strong>a React line chart with smooth lines, a legend, a tooltip, a crosshair
+        and animation</strong>, minified and gzipped. Unovis takes {unovisSize.gzipKb} KB, {sizeSummary}.
       </p>
       <BuildSizeChart/>
       <div className={s.actions}>

@@ -73,8 +73,9 @@ links to its source.
 
 ## Bundle size
 
-We bundled the same chart with every library: three smooth (monotone) lines, x and y axes, a legend, a tooltip showing
-all series, a crosshair at the hovered x and animation, which is what a Unovis line chart does out of the box. Each
+We bundled the same chart with every library: **a line chart with three smooth (monotone) lines, x and y axes, a
+legend, a tooltip showing all series, a crosshair at the hovered x and animation**, which is what a Unovis line chart
+does out of the box. Each
 library draws it with its own options, its React integration and tree-shaken imports wherever it supports them. Where a
 library can't do part of it, we measured it without that part: Observable Plot and Vega-Lite have no animation, AG Charts
 Community has neither the crosshair nor animation (both are Enterprise modules), and Nivo animates data updates but not
