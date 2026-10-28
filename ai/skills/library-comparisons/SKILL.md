@@ -422,13 +422,14 @@ Keep this list current, and remove items once they're done.
 - TopoJSONMap's flow animation has a fallback to the coordinates of the linked points (`modules/flow.ts`), but it never
   runs, because the flow coordinate accessors always have defaults; links without coordinate fields get no particles.
 - The default dark-mode grid color (`#6c778c`) is heavier than the other libraries' grids.
-- `Crosshair` logs "Y accessors have not been configured" on the first render (fixed in f5/unovis#936; the smoke test
-  in the bundle harness still prints the warning until it merges).
 
-Fixed already, keep the pages in step when they merge: f5/unovis#938 (direct d3-scale imports, native `ResizeObserver`,
-the `VisTimeSeries` CSS only where it's used) and f5/unovis#937 (the built-in CSS runtime that replaced Emotion, and the
-dark palette on `html`-based dark themes) took the React line chart from 67.1 KB to 52.8 KB gzip. The bundle-size rows
-already measure the repository build, so they include both.
+Open PRs, keep the pages in step when they merge: the pages sit on upstream `main`, where the React line chart is
+68.2 KB gzip, third after TanStack Charts and Chart.js. f5/unovis#938 (direct d3-scale imports, native `ResizeObserver`,
+the `VisTimeSeries` CSS only where it's used) and f5/unovis#937 (a built-in CSS runtime that replaces Emotion) took it
+to 52.8 KB gzip, first, on an earlier build with both. When they merge, rebuild (`pnpm build:ts && pnpm build:react`),
+re-run `bash measure.sh` and update `src/comparisons/build-sizes.ts`, RESULTS.md (the Unovis rows and notes, findings 10
+and 11, "Notes for the Unovis team") and the bundle-size paragraph of `why-unovis/index.mdx`. The homepage text
+(`src/components/HomepageWhyUnovis`) computes its wording from `build-sizes.ts`.
 
 **Claims to revisit when Unovis changes.** The overview's "When another library might suit you better" list (no wheel
 zoom on XY charts, no keyboard navigation of data points, missing chart types) and methodology rule 5 (legend toggles

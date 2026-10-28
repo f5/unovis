@@ -2,10 +2,9 @@
 
 Measured 2026-09-22; Observable Plot and Vega-Lite were added on 2026-10-09 and TanStack Charts 1.1.0 on 2026-10-13. On
 2026-10-13 every library was re-measured for the chart below, which now asks for smooth lines, a crosshair and animation,
-the behavior a Unovis line chart has out of the box. The Unovis rows measure the repository build (the stack `main` +
-[#938](https://github.com/f5/unovis/pull/938) + [#937](https://github.com/f5/unovis/pull/937) +
-[#939](https://github.com/f5/unovis/pull/939), commit `2d97a322`), with the published 1.7.1 kept as reference rows. Every
-number here is reproduced by `./measure.sh` (see [Reproduce](#reproduce)).
+the behavior a Unovis line chart has out of the box. The Unovis rows measure the repository build of upstream `main`
+(commit `5eeb0943`, measured 2026-10-28), with the published 1.7.1 kept as reference rows. Every number here is
+reproduced by `./measure.sh` (see [Reproduce](#reproduce)).
 
 **The chart:** 3 smooth (monotone) line series × 24 points, an x and a y axis (with grid lines), a legend, a hover
 tooltip that lists all three series at the hovered x, a crosshair line at that x, and animation. Every library gets the
@@ -23,9 +22,9 @@ counts are in [Raw numbers](#raw-numbers).
 
 | # | Library | Imports used | min (KB) | gzip (KB) | brotli (KB) | Notes |
 |---:|---|---|---:|---:|---:|---|
-| 1 | Unovis, repository build (`@unovis/react`) | `VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip, VisBulletLegend` | 164.0 | 52.8 | 46.7 | SVG. Monotone curves, the crosshair and animation are the defaults. Only the 6 used components are bundled (76.9 KB); the rest is d3 modules (77.1 KB), the React wrapper (4.4 KB) and the built-in CSS runtime's stylis (4.0 KB). The published 1.7.1 is 206.5 / 67.1 / 59.1 (reference rows below): #938 removed the `Scale` object and the `ResizeObserver` polyfill, #937 replaced Emotion. |
-| 2 | TanStack Charts 1.1.0 (`@tanstack/charts/react/core`) | `Chart` with the `motion()` renderer and a `defineChart` of `lineY` with `d3Curve(curveMonotoneX)`, `focusGuideX`, compact `scaleLinear`/`scaleOrdinal`, `colorLegend`, `focus: 'group-x'` and `tooltip` | 161.3 | 54.7 | 47.8 | SVG. `motion.js` alone is 44.5 KB; `d3Curve` brings d3-shape and d3-path (6.8 KB), everything else is `@tanstack/charts`. Its defaults are lighter: straight lines, no crosshair and no animation are 106.8 / 37.5, and the same chart with the `svgAnimation` update tween instead of `motion()` is 118.2 / 41.3 (reference rows, finding 11). |
-| 3 | Chart.js 4.5.1 + react-chartjs-2 5.3.1 | `Line` from react-chartjs-2; `Chart.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)`; a crosshair plugin | 162.1 | 56.8 | 49.9 | Canvas. `<Line>` registers `LineController` itself. Chart.js has no crosshair option, so the entry adds the usual few-line plugin (`libs/chartjs/crosshair-plugin.js`). The chart.js core accounts for 151.7 KB. |
+| 1 | TanStack Charts 1.1.0 (`@tanstack/charts/react/core`) | `Chart` with the `motion()` renderer and a `defineChart` of `lineY` with `d3Curve(curveMonotoneX)`, `focusGuideX`, compact `scaleLinear`/`scaleOrdinal`, `colorLegend`, `focus: 'group-x'` and `tooltip` | 161.3 | 54.7 | 47.8 | SVG. `motion.js` alone is 44.5 KB; `d3Curve` brings d3-shape and d3-path (6.8 KB), everything else is `@tanstack/charts`. Its defaults are lighter: straight lines, no crosshair and no animation are 106.8 / 37.5, and the same chart with the `svgAnimation` update tween instead of `motion()` is 118.2 / 41.3 (reference rows, finding 11). |
+| 2 | Chart.js 4.5.1 + react-chartjs-2 5.3.1 | `Line` from react-chartjs-2; `Chart.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)`; a crosshair plugin | 162.1 | 56.8 | 49.9 | Canvas. `<Line>` registers `LineController` itself. Chart.js has no crosshair option, so the entry adds the usual few-line plugin (`libs/chartjs/crosshair-plugin.js`). The chart.js core accounts for 151.7 KB. |
+| 3 | Unovis, repository build (`@unovis/react`) | `VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip, VisBulletLegend` | 209.4 | 68.2 | 60.0 | SVG. Monotone curves, the crosshair and animation are the defaults. Only the 6 used components are bundled (78.8 KB); the rest is d3 modules (100.0 KB, with all of d3-scale, d3-time and d3-time-format, which the `Scale` object keeps), Emotion and stylis (15.7 KB), the `@juggle/resize-observer` polyfill (8.3 KB) and the React wrapper (5.1 KB). The published 1.7.1 is 206.5 / 67.1 / 59.1 (reference rows below); `main` is 2.9 KB min / 1.0 KB gzip larger, mostly Crosshair code added since the release (its `index.js` grew from 6.8 to 8.0 KB). |
 | 4 | Observable Plot 0.6.17 | `Plot.plot` with `Plot.lineY`, `Plot.ruleX` + `Plot.pointerX` and `Plot.tip`, mounted in a `useEffect` (Plot has no React component) | 262.4 | 88.8 | 76.5 | SVG, no animation. Plot's own code is 114.7 KB. `Plot.plot` keeps every mark and scale reachable, so a line chart also bundles d3-geo (24.9 KB), d3-scale-chromatic (17.7 KB) and d3-zoom (finding 8). |
 | 5 | Nivo 0.99.0 (`@nivo/line`) | `ResponsiveLine` | 270.5 | 93.6 | 80.1 | SVG. Animates data updates, not the first render. Includes react-spring (45.0 KB), lodash (31.3 KB) and d3-scale-chromatic (17.6 KB). A plain `npm install` bundles 287.6 / 98.4 KB instead (see finding 5). |
 | 6 | Recharts 3.10.1 | `LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend` | 372.0 | 108.9 | 91.4 | SVG. Recharts' own code is 242.1 KB; it also pulls in Redux Toolkit, Immer, reselect and react-redux (32.9 KB), plus es-toolkit and decimal.js-light. The `react-is` peer dependency is bundled (2.0 KB). |
@@ -40,9 +39,9 @@ For context, React 18.3.1 + ReactDOM (`react`, `react-dom/client`, `react/jsx-ru
 
 | # | Library | Imports used | min (KB) | gzip (KB) | brotli (KB) | Notes |
 |---:|---|---|---:|---:|---:|---|
-| 1 | Unovis, repository build (`@unovis/ts`) | `XYContainer, Line, Axis, Crosshair, Tooltip, BulletLegend` from `@unovis/ts` | 159.5 | 52.2 | 45.8 | SVG. The root-barrel import tree-shakes to the same `@unovis/ts` code as the React wrapper's deep imports (76.9 KB in both). The published 1.7.1 is 201.5 / 66.2 / 58.0. |
-| 2 | TanStack Charts 1.1.0 | `mountChartRenderer` from `@tanstack/charts/renderer` with `motion()` and the same definition | 158.8 | 53.9 | 47.0 | SVG. |
-| 3 | Chart.js 4.5.1 | `Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)` and the crosshair plugin | 160.7 | 56.2 | 49.3 | Canvas. |
+| 1 | TanStack Charts 1.1.0 | `mountChartRenderer` from `@tanstack/charts/renderer` with `motion()` and the same definition | 158.8 | 53.9 | 47.0 | SVG. |
+| 2 | Chart.js 4.5.1 | `Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)` and the crosshair plugin | 160.7 | 56.2 | 49.3 | Canvas. |
+| 3 | Unovis, repository build (`@unovis/ts`) | `XYContainer, Line, Axis, Crosshair, Tooltip, BulletLegend` from `@unovis/ts` | 204.3 | 67.2 | 58.8 | SVG. The root-barrel import tree-shakes to the same `@unovis/ts` code as the React wrapper's deep imports (78.8 KB in both). The published 1.7.1 is 201.5 / 66.2 / 58.0. |
 | 4 | Observable Plot 0.6.17 | `Plot.plot(...)` appended to the container | 262.2 | 88.6 | 76.4 | SVG. |
 | 5 | ECharts 6.1.0 | `echarts/core` + `echarts.use([...])` as above, `echarts.init` | 508.3 | 172.5 | 147.3 | Canvas. |
 | 6 | Vega-Lite 6.5.0 | `vegaEmbed(el, spec)` (vega-embed 7.3.0, vega 6.4.0) | 823.5 | 283.8 | 242.4 | SVG. |
@@ -51,7 +50,7 @@ For context, React 18.3.1 + ReactDOM (`react`, `react-dom/client`, `react/jsx-ru
 Recharts and Nivo are React-only.
 
 **CSS:** none of the libraries needs a separate stylesheet. esbuild emitted no `.css` file for any entry.
-Unovis (its built-in CSS runtime), AG Charts, Nivo (through react-virtualized-auto-sizer), Observable Plot (a `<style>`
+Unovis (through Emotion), AG Charts, Nivo (through react-virtualized-auto-sizer), Observable Plot (a `<style>`
 element inside each SVG), vega-embed (the styles of its tooltip) and TanStack Charts (inline styles) style themselves from
 JavaScript at runtime, so that CSS is already counted above. Recharts, ECharts and Chart.js use inline styles or canvas.
 
@@ -63,7 +62,7 @@ JavaScript at runtime, so that CSS is already counted above. Recharts, ECharts a
 | ECharts | 508.3 / 172.5 | full `echarts`: 1,107.8 / 370.8 | −54.1% / −53.5% |
 | AG Charts | 1,320.1 / 396.6 | `AllCommunityModule`: 1,366.2 / 410.0 | **−3.4% / −3.3%** |
 | AG Charts | – | `import { ModuleRegistry }` alone, no modules, no chart: **1,303.4 / 391.6** | – |
-| Unovis | 159.5 / 52.2 | – (the metafile shows only the 6 used components; no maps, graph or other components) | – |
+| Unovis | 204.3 / 67.2 | – (the metafile shows only the 6 used components; no maps, graph or other components) | – |
 | Observable Plot | 262.1 / 88.6 | – (`Plot.plot` keeps every mark reachable: d3-geo, d3-scale-chromatic and d3-zoom are bundled for a line chart) | – |
 | Vega-Lite | 823.5 / 283.8 | – (the compiler and the whole Vega runtime are needed for any spec) | – |
 
@@ -75,18 +74,18 @@ then minified with the same esbuild minifier and target (`crosscheck/rollup.mjs`
 
 | Variant | esbuild min / gzip (KB) | Rollup min / gzip (KB) |
 |---|---:|---:|
-| Unovis (React, repository build) | 164.0 / 52.8 | 161.9 / 51.7 |
 | TanStack Charts (React) | 161.3 / 54.7 | 160.6 / 54.1 |
 | Chart.js + react-chartjs-2 | 162.1 / 56.8 | 153.4 / 53.7 |
+| Unovis (React, repository build) | 209.4 / 68.2 | 206.3 / 66.5 |
 | Observable Plot (React) | 262.4 / 88.8 | 261.9 / 88.4 |
 | Nivo | 270.5 / 93.6 | 265.1 / 91.9 |
 | Recharts | 372.0 / 108.9 | 360.7 / 106.0 |
 | ECharts + echarts-for-react | 538.1 / 182.8 | 531.5 / 180.2 |
 | Vega-Lite + react-vega | 825.4 / 284.5 | 829.0 / 284.7 |
 | AG Charts + ag-charts-react | 1,320.8 / 397.0 | 1,327.5 / 397.8 |
-| Unovis (vanilla, repository build) | 159.5 / 52.2 | 157.9 / 51.2 |
 | TanStack Charts (vanilla) | 158.8 / 53.9 | 158.2 / 53.3 |
 | Chart.js (vanilla) | 160.7 / 56.2 | 152.0 / 53.2 |
+| Unovis (vanilla, repository build) | 204.3 / 67.2 | 201.6 / 65.8 |
 | Observable Plot (vanilla) | 262.2 / 88.6 | 261.7 / 88.3 |
 | ECharts (vanilla) | 508.3 / 172.5 | 502.6 / 170.1 |
 | Vega-Lite (vanilla) | 823.5 / 283.8 | 827.2 / 284.0 |
@@ -101,8 +100,8 @@ then minified with the same esbuild minifier and target (`crosscheck/rollup.mjs`
 The ranking is the same under both bundlers except for one pair: Chart.js and TanStack Charts, which Rollup puts 0.3 KB
 gzip apart (React) and 0.1 KB (vanilla), swap places. For the sixteen compared variants, Rollup's output is 1.0–3.0%
 smaller for Unovis, Nivo, Recharts and ECharts, 5.4–5.5% smaller for Chart.js (min and gzip), within 1.2% for Observable
-Plot, Vega-Lite and TanStack Charts, and 0.5% larger for AG Charts. Under Rollup, Unovis stays 2.1 KB gzip under
-Chart.js (React) and 1.9 KB (vanilla), while Chart.js is 8.5 KB smaller minified. The `chart.js/auto` reference build is
+Plot, Vega-Lite and TanStack Charts, and 0.5% larger for AG Charts. Under Rollup, Unovis stays third, 12.8 KB gzip over
+Chart.js (React) and 12.6 KB (vanilla), against 11.3 KB and 11.0 KB with esbuild. The `chart.js/auto` reference build is
 1.2% larger. Changing the esbuild target to `es2022` or `esnext` moves gzip sizes by 0.5% at most (`dist-es2022/`, `dist-esnext/`),
 so the `es2020` target doesn't favor any library.
 
@@ -171,13 +170,13 @@ so the `es2020` target doesn't favor any library.
 | Bundle | Modules | Top 5 packages |
 |---|---:|---|
 | chartjs-react | 7 | chart.js 151.7, @kurkle/color 7.4, react-chartjs-2 1.4, (entry + shared data) 1.0 |
-| unovis-react | 245 | @unovis/ts 76.9, d3-shape 17.1, d3-selection 12.3, d3-transition 10.7, d3-color 7.1 |
+| unovis-react | 308 | @unovis/ts 78.8, d3-shape 17.1, d3-selection 12.3, d3-scale 12.0, d3-transition 10.7 |
 | nivo | 376 | lodash 31.3, @react-spring/core 23.0, @nivo/line 21.2, d3-shape 18.5, d3-scale-chromatic 17.6 |
 | recharts | 372 | recharts 242.1, d3-scale 14.0, d3-shape 13.5, @reduxjs/toolkit 13.4, es-toolkit 13.1 |
 | echarts-react | 267 | echarts 344.2, zrender 175.3, tslib 7.0, echarts-for-react 4.4, size-sensor 3.6 |
 | agcharts-react | 5 | ag-charts-community 1115.4, ag-charts-core 203.9, (entry + shared data) 0.7, ag-charts-react 0.7 |
 | chartjs | 6 | chart.js 151.7, @kurkle/color 7.4, (entry + shared data) 1.0 |
-| unovis-ts | 237 | @unovis/ts 76.9, d3-shape 17.1, d3-selection 12.3, d3-transition 10.7, d3-color 7.1 |
+| unovis-ts | 299 | @unovis/ts 78.8, d3-shape 17.1, d3-selection 12.3, d3-scale 12.0, d3-transition 10.7 |
 | plot-react | 369 | @observablehq/plot 114.7, d3-geo 24.9, d3-shape 18.1, d3-scale-chromatic 17.7, d3-selection 12.4 |
 | tanstack-react | 65 | @tanstack/charts 153.4, d3-shape 4.8, d3-path 2.0, (entry + shared data) 1.1 |
 | vegalite-react | 367 | vega-lite 251.9, vega-scenegraph 56.6, vega-parser 46.0, vega-transforms 39.4, vega-embed 36.6 |
@@ -232,16 +231,20 @@ The full per-package and per-file breakdown for every bundle is in `dist/report.
 10. **TanStack Charts' defaults are small because it skips d3 and turns features on by import.** Its default line chart
    (straight lines, no crosshair, no animation) is 52 modules, all its own; its compact scales format numbers with the
    platform instead of d3-scale + d3-format + d3-interpolate + d3-color (TanStack measures that swap at +7.2 KB gzip
-   itself). Of the 15.3 KB gzip gap between that and Unovis, measured by stubbing one part at a time: Unovis' animation
-   stack (d3-transition, d3-interpolate-path) is 7.2 KB and is bundled even with `duration: 0`; the d3 scale stack about
-   5.1 KB; features Unovis picks by config string, so a bundler can't drop them (the `Curve` map with all 18 d3 curves
-   1.9 KB, pattern fills about 1.5 KB, tick fitting and the symbol map about 1.4 KB) about 4.8 KB; the CSS runtime and
-   its 72 `--vis-*` variables about 4.1 KB. The other way, TanStack carries about 10.3 KB gzip more interaction and
-   accessibility code: keyboard focus, hit testing for every mark shape, an `aria-live` tooltip.
-11. **With the same behavior, the two are about the same size.** The measured TanStack chart turns on what Unovis does
-   by default: a monotone curve (`d3Curve`, which brings d3-shape), `focusGuideX` for the crosshair and its markers, and
-   the `motion()` renderer, which animates the first render and data updates as Unovis does: 161.3 / 54.7, 1.9 KB gzip
-   over Unovis. `motion.js` is 44.5 KB min of that. Animating only data updates, with the `svgAnimation` tween instead
+   itself). The gap between that and Unovis on `main` is 30.6 KB gzip. Part of it is Emotion and its prefixer (15.7 KB
+   min), the `@juggle/resize-observer` polyfill (8.3 KB min) and the `Scale` object's d3 scales, which #937 and #938
+   would remove: on an earlier build of `main` with both PRs (52.8 KB gzip) the gap was 15.3 KB. Measured on that build
+   by stubbing one part at a time: Unovis' animation stack (d3-transition, d3-interpolate-path) is 7.2 KB and is
+   bundled even with `duration: 0`; the d3 scale stack about 5.1 KB; features Unovis picks by config string, so a
+   bundler can't drop them (the `Curve` map with all 18 d3 curves 1.9 KB, pattern fills about 1.5 KB, tick fitting and
+   the symbol map about 1.4 KB) about 4.8 KB; #937's CSS runtime and its 72 `--vis-*` variables about 4.1 KB. The other
+   way, TanStack carries about 10.3 KB gzip more interaction and accessibility code: keyboard focus, hit testing for
+   every mark shape, an `aria-live` tooltip.
+11. **With the same behavior, TanStack Charts is 13.5 KB gzip smaller than Unovis on `main`.** The measured TanStack
+   chart turns on what Unovis does by default: a monotone curve (`d3Curve`, which brings d3-shape), `focusGuideX` for
+   the crosshair and its markers, and the `motion()` renderer, which animates the first render and data updates as
+   Unovis does: 161.3 / 54.7 (against 209.4 / 68.2; with #937 and #938 Unovis was 1.9 KB gzip under it).
+   `motion.js` is 44.5 KB min of that. Animating only data updates, with the `svgAnimation` tween instead
    of `motion()` (Nivo animates the same way), gives 118.2 / 41.3 (`libs/tanstack/tanstack-react-tween.jsx`); the
    library's defaults give 106.8 / 37.5 (`tanstack-react-defaults.jsx`). Unovis still morphs lines when the number of
    points changes, and wraps or trims tick labels; TanStack still adds keyboard navigation and server-rendered SVG markup.
@@ -268,7 +271,7 @@ The full per-package and per-file breakdown for every bundle is in `dist/report.
 
 | id | min (bytes) | gzip (bytes) | brotli (bytes) |
 |---|---:|---:|---:|
-| unovis-react | 167,885 | 54,068 | 47,813 |
+| unovis-react | 214,456 | 69,789 | 61,409 |
 | recharts | 380,941 | 111,528 | 93,586 |
 | chartjs-react | 166,027 | 58,188 | 51,055 |
 | echarts-react | 551,017 | 187,205 | 159,659 |
@@ -277,7 +280,7 @@ The full per-package and per-file breakdown for every bundle is in `dist/report.
 | plot-react | 268,741 | 90,929 | 78,318 |
 | vegalite-react | 845,188 | 291,332 | 248,810 |
 | tanstack-react | 165,159 | 56,007 | 48,908 |
-| unovis-ts | 163,325 | 53,419 | 46,868 |
+| unovis-ts | 209,180 | 68,841 | 60,226 |
 | chartjs | 164,545 | 57,590 | 50,485 |
 | echarts | 520,547 | 176,644 | 150,811 |
 | agcharts | 1,351,750 | 406,105 | 325,618 |
@@ -335,19 +338,22 @@ The builds are deterministic: re-running `measure.sh` reproduced every byte coun
 
 ## Notes for the Unovis team (not part of the comparison)
 
-The September run found three things in `@unovis/ts` 1.7.0 / `@unovis/react` 1.7.0; the repository build above has two
-of them fixed:
+The September run found three things in `@unovis/ts` 1.7.0 / `@unovis/react` 1.7.0. `main` has one of them fixed; the
+other two have open PRs. A build of `main` with both PRs (and #939, commit `2d97a322`) measured 164.0 / 52.8 / 46.7 KB
+for the React chart and 159.5 / 52.2 / 45.8 KB vanilla, first in both tables at the time:
 
-* Fixed in #938: `@unovis/react/index.js` injected the `VisTimeSeries` CSS in every bundle (511 unused bytes and an
-  unused `<style>` element), and `utils/resize-observer.js` always bundled the `@juggle/resize-observer` polyfill
-  (8.3 KB min). The same PR imports d3 scales directly instead of through the `Scale` object, which had kept all 16
-  scales and all of d3-time / d3-time-format in every XY chart (−7.6 KB gzip).
-* Fixed in #937: Emotion and its vendor prefixer (15.7 KB min) are replaced by a built-in CSS runtime on stylis (4.0 KB).
-* In review (#936): `Crosshair` logs "Y accessors have not been configured" on the first render, even though the
-  accessors come from the container and the crosshair works. The smoke test still prints the warning for the
-  repository build until that PR merges.
+* Open in [#938](https://github.com/f5/unovis/pull/938): `@unovis/react/index.js` injects the `VisTimeSeries` CSS in
+  every bundle (511 unused bytes and an unused `<style>` element), and `utils/resize-observer.js` always bundles the
+  `@juggle/resize-observer` polyfill (8.3 KB min). The PR also imports d3 scales directly instead of through the
+  `Scale` object, which keeps all 16 scales and all of d3-time / d3-time-format in every XY chart (−7.6 KB gzip).
+* Open in [#937](https://github.com/f5/unovis/pull/937): replaces Emotion and its vendor prefixer (15.7 KB min) with a
+  built-in CSS runtime on stylis (4.0 KB).
+* Fixed in #936 (merged): `Crosshair` logged "Y accessors have not been configured" on the first render, even though
+  the accessors come from the container and the crosshair works. The smoke test now prints the warning only for the
+  published 1.7.1 rows.
 
-Measured opportunities from the TanStack comparison (React line chart, stubbed or rebuilt one at a time):
+Measured opportunities from the TanStack comparison (React line chart on the #937 + #938 build, stubbed or rebuilt one
+at a time):
 
 | Change | Saves (min / gzip) | Notes |
 |---|---:|---|
