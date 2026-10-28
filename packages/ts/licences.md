@@ -70,7 +70,7 @@
 | jsdom                            | perpetual      | MIT          | 30.0.1            | n/a                                                               |
 | rimraf                           | perpetual      | ISC          | 3.0.2             | Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)               |
 | typescript                       | perpetual      | Apache-2.0   | 5.6.3             | Microsoft Corp.                                                   |
-| vite                             | perpetual      | MIT          | 7.3.6             | Evan You                                                          |
+| vite                             | perpetual      | MIT          | 7.3.7             | Evan You                                                          |
 | vite-plugin-dts                  | perpetual      | MIT          | 3.9.1             | qmhc                                                              |
 | vitest                           | perpetual      | MIT          | 4.1.11            | Anthony Fu <anthonyfu117@hotmail.com>                             |
 
