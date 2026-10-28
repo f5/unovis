@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 // Containers
 import { SingleContainer } from '@/containers/single-container'
@@ -15,6 +15,7 @@ const data: Datum[] = [
 ]
 
 const nextFrame = (): Promise<void> => new Promise(resolve => requestAnimationFrame(() => resolve()))
+const wait = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms))
 
 describe('NestedDonut', () => {
   it('reuses segment elements when it renders again', async () => {
@@ -93,6 +94,37 @@ describe('NestedDonut', () => {
     await nextFrame()
 
     expect(element.querySelector(`.${NestedDonut.selectors.centralBackground}`).getAttribute('r')).toBe('50')
+    container.destroy()
+    element.remove()
+  })
+
+  it('keeps the background arcs valid while animating the angle range', async () => {
+    const element = document.createElement('div')
+    document.body.appendChild(element)
+    const component = new NestedDonut<Datum>({
+      layers: [d => d.group, d => d.item],
+      value: d => d.value,
+      showSegmentLabels: false,
+      duration: 100,
+    })
+    const container = new SingleContainer<Datum>(element, { component, width: 200, height: 200 }, data)
+    await wait(150)
+
+    const setAttribute = vi.spyOn(Element.prototype, 'setAttribute')
+    component.setConfig({ ...component.config, angleRange: [-Math.PI / 2, Math.PI / 2] })
+    component.render()
+    await wait(150)
+
+    const backgroundPaths = setAttribute.mock.calls
+      .filter(([name], i) => name === 'd' && (setAttribute.mock.contexts[i] as Element).classList.contains(NestedDonut.selectors.background))
+      .map(([, path]) => path)
+    setAttribute.mockRestore()
+
+    expect(backgroundPaths.length).toBeGreaterThan(2)
+    const arcFlags = backgroundPaths.flatMap(path => [...path.matchAll(/A([^MLAZ]+)/g)]
+      .flatMap(([, params]) => params.split(',').filter((p, i) => i % 7 === 3 || i % 7 === 4)))
+    expect(arcFlags.length).toBeGreaterThan(0)
+    expect(arcFlags.every(flag => flag === '0' || flag === '1')).toBe(true)
     container.destroy()
     element.remove()
   })
