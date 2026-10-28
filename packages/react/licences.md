@@ -10,7 +10,7 @@
 | rimraf                         | perpetual      | ISC          | 3.0.2             | Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/) |
 | typescript                     | perpetual      | Apache-2.0   | 5.6.3             | Microsoft Corp.                                     |
 | tsx                            | perpetual      | MIT          | 4.21.0            | Hiroki Osame hiroki.osame@gmail.com                 |
-| vite                           | perpetual      | MIT          | 7.3.6             | Evan You                                            |
+| vite                           | perpetual      | MIT          | 7.3.7             | Evan You                                            |
 | vite-plugin-css-injected-by-js | perpetual      | MIT          | 3.5.2             | Marco Prontera                                      |
 | vite-plugin-dts                | perpetual      | MIT          | 3.9.1             | qmhc                                                |
 | react                          | perpetual      | MIT          | 18.3.1            | n/a                                                 |
