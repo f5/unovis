@@ -14,9 +14,9 @@ export type BuildSize = {
 // in `entry`. Unovis is the build from this repository, the others are the published packages; the numbers come from
 // `scripts/why-unovis-build-sizes` (see its RESULTS.md).
 export const lineChartBuildSizes: BuildSize[] = [
+  { library: 'unovis', entry: '@unovis/react, built from this repository', minKb: 162.9, gzipKb: 52.4 },
   { library: 'tanstack', entry: '@tanstack/charts/react/core with the motion() renderer, d3Curve(curveMonotoneX) and focusGuideX', minKb: 161.3, gzipKb: 54.7 },
   { library: 'chartjs', entry: 'react-chartjs-2 + chart.js, registered components only, and a few-line crosshair plugin', minKb: 162.1, gzipKb: 56.8 },
-  { library: 'unovis', entry: '@unovis/react, built from this repository', minKb: 209.4, gzipKb: 68.2 },
   { library: 'plot', entry: '@observablehq/plot in a useEffect, with a pointer rule as the crosshair; Plot doesn\'t animate', minKb: 262.4, gzipKb: 88.8 },
   { library: 'nivo', entry: '@nivo/line, with slices as the crosshair', minKb: 270.5, gzipKb: 93.6 },
   { library: 'recharts', entry: 'recharts', minKb: 372.0, gzipKb: 108.9 },
