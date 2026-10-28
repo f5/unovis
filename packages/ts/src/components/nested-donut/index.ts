@@ -1,4 +1,6 @@
 import { Selection } from 'd3-selection'
+import { Transition } from 'd3-transition'
+import { interpolate } from 'd3-interpolate'
 import { arc, pie } from 'd3-shape'
 import { hierarchy, HierarchyNode, partition } from 'd3-hierarchy'
 import { scaleLinear, ScaleLinear } from 'd3-scale'
@@ -34,7 +36,7 @@ import {
 import { NestedDonutDefaultConfig, NestedDonutConfigInterface } from './config'
 
 // Modules
-import { createArc, updateArc, removeArc } from './modules/arc'
+import { ArcNode, createArc, updateArc, removeArc } from './modules/arc'
 import { createLabel, updateLabel, removeLabel } from './modules/label'
 
 // Styles
@@ -112,13 +114,31 @@ NestedDonutConfigInterface<Datum>
       .style('transition', `fill ${duration}ms`)
       .style('fill', d => d.backgroundColor)
 
-    smartTransition(backgroundsMerged, duration)
-      .attr('d', d => this.arcGen({
-        x0: config.angleRange?.[0] ?? 0,
-        x1: config.angleRange?.[1] ?? 2 * Math.PI,
-        y0: d._innerRadius,
-        y1: d._outerRadius,
-      }))
+    const getBackgroundAnimState = (d: NestedDonutLayer): NestedDonutArcAnimState => ({
+      x0: config.angleRange?.[0] ?? 0,
+      x1: config.angleRange?.[1] ?? 2 * Math.PI,
+      y0: d._innerRadius,
+      y1: d._outerRadius,
+    })
+
+    if (duration) {
+      const transition = smartTransition(backgroundsMerged, duration) as Transition<SVGPathElement, NestedDonutLayer, SVGGElement, unknown>
+      transition.attrTween('d', (d, i, els) => {
+        const arcNode: ArcNode = els[i]
+        const nextAnimState = getBackgroundAnimState(d)
+        const datum = interpolate(arcNode._animState ?? nextAnimState, nextAnimState)
+        return (t: number): string => {
+          arcNode._animState = datum(t)
+          return this.arcGen(arcNode._animState)
+        }
+      })
+    } else {
+      backgroundsMerged.attr('d', (d, i, els) => {
+        const arcNode: ArcNode = els[i]
+        arcNode._animState = getBackgroundAnimState(d)
+        return this.arcGen(arcNode._animState)
+      })
+    }
 
     smartTransition(backgrounds.exit(), duration)
       .style('opacity', 0)

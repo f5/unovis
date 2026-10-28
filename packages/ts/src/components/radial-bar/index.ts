@@ -1,4 +1,6 @@
 import { Selection } from 'd3-selection'
+import { Transition } from 'd3-transition'
+import { interpolate } from 'd3-interpolate'
 import { arc } from 'd3-shape'
 import { max } from 'd3-array'
 
@@ -24,7 +26,7 @@ import { RadialBarArcDatum, RadialBarArcAnimState, RadialBarDatum } from './type
 import { RadialBarDefaultConfig, RadialBarConfigInterface } from './config'
 
 // Modules
-import { createBar, updateBar, removeBar } from './modules/bar'
+import { BarNode, createBar, updateBar, removeBar } from './modules/bar'
 
 // Utils
 import { getArcUnitBoundingBox } from './utils'
@@ -182,15 +184,36 @@ export class RadialBar<Datum> extends ComponentCore<Datum[], RadialBarConfigInte
       .style('opacity', 0)
 
     const tracksMerged = tracksSelection.merge(tracksEnter)
-    smartTransition(tracksMerged, duration)
-      .style('opacity', 1)
-      .attr('d', (d: RadialBarArcDatum<Datum>) => this.arcGen({
-        startAngle: bgAngleStart,
-        endAngle: bgAngleEnd,
-        innerRadius: d.innerRadius,
-        outerRadius: d.outerRadius,
-        padAngle: d.padAngle,
-      }))
+    const getTrackAnimState = (d: RadialBarArcDatum<Datum>): RadialBarArcAnimState => ({
+      startAngle: bgAngleStart,
+      endAngle: bgAngleEnd,
+      innerRadius: d.innerRadius,
+      outerRadius: d.outerRadius,
+      padAngle: d.padAngle,
+    })
+
+    if (duration) {
+      const transition = smartTransition(tracksMerged, duration)
+        .style('opacity', 1) as Transition<SVGPathElement, RadialBarArcDatum<Datum>, SVGGElement, unknown>
+
+      transition.attrTween('d', (d, i, els) => {
+        const arcNode: BarNode = els[i]
+        const nextAnimState = getTrackAnimState(d)
+        const datum = interpolate(arcNode._animState ?? nextAnimState, nextAnimState)
+        return (t: number): string => {
+          arcNode._animState = datum(t)
+          return this.arcGen(arcNode._animState)
+        }
+      })
+    } else {
+      tracksMerged
+        .style('opacity', 1)
+        .attr('d', (d, i, els) => {
+          const arcNode: BarNode = els[i]
+          arcNode._animState = getTrackAnimState(d)
+          return this.arcGen(arcNode._animState)
+        })
+    }
 
     smartTransition(tracksSelection.exit(), duration)
       .style('opacity', 0)
