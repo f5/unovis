@@ -9,6 +9,7 @@ import CodeBlock from '@theme/CodeBlock'
 import { kebabCase } from '@site/src/utils/text'
 import { HomepageFeatures } from '@site/src/components/HomepageFeatures'
 import { HomepageHeader } from '@site/src/components/HomepageHeader'
+import { HomepageWhyUnovis } from '@site/src/components/HomepageWhyUnovis'
 import ChartExample from '@unovis/shared/examples/stacked-area-chart'
 
 // Styles
@@ -23,6 +24,7 @@ export default function Home (): JSX.Element {
       <HomepageHeader />
       <main>
         <HomepageFeatures />
+        <HomepageWhyUnovis />
         <div className={s.example}>
           <div className={s.visContainer}>
             <div className={s.visualization}>
