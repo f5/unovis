@@ -7,6 +7,7 @@ import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
 import { NumericAccessor, ColorAccessor, GenericAccessor, StringAccessor } from '@unovis/ts/types/accessor'
 import { ContinuousScale } from '@unovis/ts/types/scale'
 import { FillPatternType, LinePatternType } from '@unovis/ts/styles/patterns'
+import { Gradient } from '@unovis/ts/types/gradient'
 import { CurveType } from '@unovis/ts/types/curve'
 import { VisXYComponent } from '../../core'
 
@@ -104,6 +105,10 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   /** Area fill pattern accessor. Resolves to a `FillPatternType`. The whole data array is passed as the first argument. Default: `undefined` */
   @Input() pattern?: GenericAccessor<FillPatternType, Datum[]>
 
+  /** Fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (a top to bottom fade within each area).
+   * The whole data array is passed as the first argument. Default: `undefined` */
+  @Input() gradient?: GenericAccessor<Gradient | boolean, Datum[]>
+
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   @Input() curveType?: CurveType | string
 
@@ -163,8 +168,8 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   }
 
   private getConfig (): AreaConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, curveType, baseline, opacity, cursor, line, lineColor, lineWidth, lineDashArray, linePattern, minHeight1Px, minHeight, stackMinHeight } = this
-    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, curveType, baseline, opacity, cursor, line, lineColor, lineWidth, lineDashArray, linePattern, minHeight1Px, minHeight, stackMinHeight }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, gradient, curveType, baseline, opacity, cursor, line, lineColor, lineWidth, lineDashArray, linePattern, minHeight1Px, minHeight, stackMinHeight } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, pattern, gradient, curveType, baseline, opacity, cursor, line, lineColor, lineWidth, lineDashArray, linePattern, minHeight1Px, minHeight, stackMinHeight }
     const keys = Object.keys(config) as (keyof AreaConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
