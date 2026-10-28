@@ -7,8 +7,9 @@
   position: sticky;
   top: var(--ifm-navbar-height);
   z-index: 5;
-  margin-bottom: 1rem;
-  padding: 0.75rem 0;
+  /* Wider than the cards, so that their borders and shadows don't show beside it while they scroll under it */
+  margin: 0 -1rem 1rem;
+  padding: 0.75rem 1rem;
   background: var(--ifm-background-color);
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
