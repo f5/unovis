@@ -9,7 +9,6 @@ import CodeBlock from '@theme/CodeBlock'
 import { kebabCase } from '@site/src/utils/text'
 import { HomepageFeatures } from '@site/src/components/HomepageFeatures'
 import { HomepageHeader } from '@site/src/components/HomepageHeader'
-import { HomepageLogos } from '@site/src/components/HomepageLogos'
 import ChartExample from '@unovis/shared/examples/stacked-area-chart'
 
 // Styles
@@ -78,7 +77,6 @@ export default function Home (): JSX.Element {
             </div>
           </div>
         </div>
-        <HomepageLogos/>
       </main>
     </Layout>
   )
