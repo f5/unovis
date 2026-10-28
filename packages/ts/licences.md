@@ -65,5 +65,5 @@
 | typescript                       | perpetual      | Apache-2.0   | 5.6.3             | Microsoft Corp.                                                   |
 | vite                             | perpetual      | MIT          | 7.3.7             | Evan You                                                          |
 | vite-plugin-dts                  | perpetual      | MIT          | 3.9.1             | qmhc                                                              |
-| vitest                           | perpetual      | MIT          | 4.1.11            | Anthony Fu <anthonyfu117@hotmail.com>                             |
+| vitest                           | perpetual      | MIT          | 4.1.12            | Anthony Fu <anthonyfu117@hotmail.com>                             |
 
