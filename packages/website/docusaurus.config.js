@@ -208,14 +208,6 @@ const config = {
         // Optional: path for search page that enabled by default (`false` to disable it)
         searchPagePath: 'search',
       },
-      announcementBar: {
-        id: 'version-1.7-svelte-announcement',
-        content:
-          '⚠️ Announcement: Svelte 4 support is being dropped in the next minor release of Unovis',
-        backgroundColor: '#4580C0',
-        textColor: '#FFFFFF',
-        isCloseable: false,
-      },
     }),
 
   plugins: [
