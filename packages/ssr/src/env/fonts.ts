@@ -17,7 +17,7 @@
  */
 import { createHash } from 'node:crypto'
 import { mkdirSync, readdirSync, writeFileSync, renameSync, rmSync } from 'node:fs'
-import { tmpdir, homedir } from 'node:os'
+import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { unzipSync } from 'fflate'
@@ -59,14 +59,14 @@ async function downloadInter (targetDir: string): Promise<boolean> {
   if (missing.length) throw new Error(`entries missing from Inter archive: ${missing.join(', ')}`)
 
   // Extract to a temp dir and move into place so a killed process can't
-  // leave a half-populated cache behind
-  const staging = join(tmpdir(), `unovis-ssr-fonts-${process.pid}`)
+  // leave a half-populated cache behind. The temp dir sits next to the target:
+  // rename fails with EXDEV across filesystems (e.g. /tmp and $HOME on CI)
+  const staging = `${targetDir}.tmp-${process.pid}`
   rmSync(staging, { recursive: true, force: true })
   mkdirSync(staging, { recursive: true })
   for (const [name, data] of Object.entries(entries)) {
     writeFileSync(join(staging, name.split('/').pop() as string), data)
   }
-  mkdirSync(join(targetDir, '..'), { recursive: true })
   rmSync(targetDir, { recursive: true, force: true })
   renameSync(staging, targetDir)
   return true
