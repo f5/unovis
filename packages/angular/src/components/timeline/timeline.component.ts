@@ -8,7 +8,7 @@ import { NumericAccessor, ColorAccessor, StringAccessor, GenericAccessor } from 
 import { ContinuousScale } from '@unovis/ts/types/scale'
 import { FillPatternType } from '@unovis/ts/styles/patterns'
 import { Arrangement } from '@unovis/ts/types/position'
-import { TimelineRowLabel, TimelineRowIcon, TimelineArrow, TimelineLineRenderState } from '@unovis/ts/components/timeline/types'
+import type { TimelineRowLabel, TimelineRowIcon, TimelineArrow, TimelineLineRenderState } from '@unovis/ts/components/timeline/types'
 import { TextAlign, TrimMode } from '@unovis/ts/types/text'
 import { VisXYComponent } from '../../core'
 
