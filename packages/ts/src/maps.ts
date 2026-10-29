@@ -1,3 +1,5 @@
+import type { Topology, GeometryCollection } from 'topojson-specification'
+
 import worldMap from './maps/world-simple.json'
 import worldMapSimplest from './maps/world-simplest.json'
 import worldMap110mAlpha from './maps/world-110m-alpha.json'
@@ -11,24 +13,24 @@ import india from './maps/ind-regions.json'
 import uk from './maps/uk-regions.json'
 
 export const WorldMapTopoJSON = worldMap as unknown as
-  TopoJSON.Topology<{countries: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{countries: GeometryCollection<{name: string; color: string}>}>
 export const WorldMap110mAlphaTopoJSON = worldMap110mAlpha as unknown as
-  TopoJSON.Topology<{countries: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{countries: GeometryCollection<{name: string; color: string}>}>
 export const WorldMapSimplestTopoJSON = worldMapSimplest as unknown as
-  TopoJSON.Topology<{countries: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{countries: GeometryCollection<{name: string; color: string}>}>
 
 export const USATopoJSON = unitedStates as unknown as
-  TopoJSON.Topology<{states: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{states: GeometryCollection<{name: string; color: string}>}>
 export const USCountiesTopoJSON = usCounties as unknown as
-  TopoJSON.Topology<{counties: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{counties: GeometryCollection<{name: string; color: string}>}>
 
 export const GermanyTopoJSON = germany as unknown as
-  TopoJSON.Topology<{regions: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{regions: GeometryCollection<{name: string; color: string}>}>
 export const UKTopoJSON = uk as unknown as
-  TopoJSON.Topology<{regions: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{regions: GeometryCollection<{name: string; color: string}>}>
 export const FranceTopoJSON = france as unknown as
-  TopoJSON.Topology<{regions: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{regions: GeometryCollection<{name: string; color: string}>}>
 export const IndiaTopoJSON = india as unknown as
-  TopoJSON.Topology<{regions: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{regions: GeometryCollection<{name: string; color: string}>}>
 export const ChinaTopoJSON = china as unknown as
-  TopoJSON.Topology<{provinces: TopoJSON.GeometryCollection<{name: string; color: string}>}>
+  Topology<{provinces: GeometryCollection<{name: string; color: string}>}>

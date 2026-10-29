@@ -28,7 +28,7 @@ import { Selection } from 'd3-selection'
 import { D3DragEvent } from 'd3-drag'
 import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
 import { D3BrushEvent } from 'd3-brush'
-import { GraphDataModel } from '@unovis/ts/data-models/graph'
+import type { GraphDataModel } from '@unovis/ts/data-models/graph'
 import { VisCoreComponent } from '../../core'
 
 @Component({
