@@ -697,9 +697,6 @@ importers:
 
   packages/ts:
     dependencies:
-      '@emotion/css':
-        specifier: ^11.7.1
-        version: 11.13.5
       '@maplibre/maplibre-gl-style-spec':
         specifier: 26.4.1
         version: 26.4.1
@@ -766,6 +763,9 @@ importers:
       '@types/leaflet':
         specifier: 1.7.6
         version: 1.7.6
+      '@types/stylis':
+        specifier: ~4.2.0
+        version: 4.2.7
       '@types/supercluster':
         specifier: ^5.0.2
         version: 5.0.3
@@ -865,6 +865,9 @@ importers:
       striptags:
         specifier: ^3.2.0
         version: 3.2.0
+      stylis:
+        specifier: ~4.2.0
+        version: 4.2.0
       supercluster:
         specifier: ^7.1.5
         version: 7.1.5
@@ -5440,6 +5443,9 @@ packages:
 
   '@types/sizzle@2.3.10':
     resolution: {integrity: sha512-TC0dmN0K8YcWEAEfiPi5gJP14eJe30TTGjkvek3iM/1NdHHsdCA/Td6GvNndMOo/iSnIsZ4HuuhrYPDAmbxzww==}
+
+  '@types/stylis@4.2.7':
+    resolution: {integrity: sha512-VgDNokpBoKF+wrdvhAAfS55OMQpL6QRglwTwNC3kIgBrzZxA4WsFj+2eLfEA/uMUDzBcEhYmjSbwQakn/i3ajA==}
 
   '@types/supercluster@5.0.3':
     resolution: {integrity: sha512-XMSqQEr7YDuNtFwSgaHHOjsbi0ZGL62V9Js4CW45RBuRYlNWSW/KDqN+RFFE7HdHcGhJPtN0klKvw06r9Kg7rg==}
@@ -16048,7 +16054,7 @@ snapshots:
     dependencies:
       '@docusaurus/types': 3.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/history': 4.7.11
-      '@types/react': 19.2.14
+      '@types/react': 19.3.0
       '@types/react-router-config': 5.0.11
       '@types/react-router-dom': 5.3.3
       react: 18.3.1
@@ -16607,7 +16613,7 @@ snapshots:
       '@mdx-js/mdx': 3.1.1
       '@types/history': 4.7.11
       '@types/mdast': 4.0.4
-      '@types/react': 19.2.14
+      '@types/react': 19.3.0
       commander: 5.1.0
       joi: 17.13.8
       react: 18.3.1
@@ -19333,6 +19339,8 @@ snapshots:
   '@types/sinonjs__fake-timers@8.1.1': {}
 
   '@types/sizzle@2.3.10': {}
+
+  '@types/stylis@4.2.7': {}
 
   '@types/supercluster@5.0.3':
     dependencies:

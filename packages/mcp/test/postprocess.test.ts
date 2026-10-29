@@ -56,7 +56,7 @@ describe('svg post-processing', () => {
     expect(svg).not.toContain('#4D8CFD')
   })
 
-  it('keeps emotion classes in keepClasses debug mode', async () => {
+  it('keeps generated classes in keepClasses debug mode', async () => {
     const { svg } = await renderChart(baseSpec, { idPrefix: 'pp-', keepClasses: true })
     expect(svg).toContain('class="')
   })

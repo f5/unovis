@@ -1,7 +1,7 @@
 import type L from 'leaflet'
 import type { Map, LngLat } from 'maplibre-gl'
 
-import { injectGlobal } from '@/styles/emotion'
+import { injectGlobal } from '@/styles/css'
 
 // Utils
 import { isObject } from '@/utils/data'
