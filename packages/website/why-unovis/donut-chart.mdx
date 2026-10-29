@@ -1,0 +1,46 @@
+---
+title: Donut Chart
+description: A donut chart with a central label rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Vega-Lite and TanStack Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { donutChart } from '@site/src/comparisons/donut'
+
+<LibraryComparison comparison={donutChart}>
+
+# Donut Chart
+
+Website sessions in one month by traffic source, with the total in the middle.
+
+</LibraryComparison>
+
+## What to look for
+
+- **The label in the middle.** Unovis and AG Charts have options for it. Recharts places a `Label` and ECharts a title.
+  Chart.js needs a plugin: the official annotation plugin's `doughnutLabel`, or a few lines of custom plugin as here.
+  Nivo needs a custom layer, Vega-Lite a text layer with its own one-row data, and TanStack Charts two `radialText`
+  marks in a separate, `decorative()` polar layer. Open **Code** to compare.
+- **Hide a source.** The Unovis segments sweep closed and the others grow to fill the ring. Vega-Lite's legend
+  highlights a source and fades the others instead. TanStack Charts' legend doesn't hide polar marks itself, so the demo
+  zeroes the hidden source and the other slices close the ring, as in Unovis.
+- **Randomize the data.** Segments animate to their new angles; TanStack Charts tweens the slice shapes
+  (`svgAnimation`). AG Charts Community and Vega-Lite redraw without a transition.
+- **Styling.** The ring width, the gaps between segments and rounded corners are single options in Unovis
+  (`arcWidth`, `padAngle`, `cornerRadius`), and colors come from CSS variables.
+- **Presets.** *Rounded gaps* (`padAngle`, `cornerRadius`) is a pair of options in every library. *Half donut*
+  (`angleRange`) also recenters the ring in Unovis and moves the label under it; Chart.js and Nivo fit the half ring to
+  the card too; Recharts, ECharts and Vega-Lite need a hand-set center and radius; TanStack Charts has no center option
+  and needs a locked top `margin` and a hand-set radius; and the AG Charts donut has no start or end angle. *Patterns*
+  (`pattern`) gives every segment a built-in fill pattern, as ECharts' decals, Nivo's `defs` and AG Charts' pattern
+  fills do; Recharts, Chart.js, Vega-Lite and TanStack Charts have none. *Icons* (`icon`, `iconSize`) puts an SVG symbol
+  from the container's `svgDefs` in the middle of each segment and hides it when the segment is too small; ECharts draws
+  them as image backgrounds of rich-text labels, and Nivo and Recharts through a custom layer and label renderer; Chart.js,
+  TanStack Charts, AG Charts and Vega-Lite only label slices with text.
+
+## Feature comparison
+
+<FeatureTable features={['donut-central-label', 'donut-pad-angle', 'donut-corner-radius', 'arc-labels', 'sunburst', 'legend-toggle', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.
