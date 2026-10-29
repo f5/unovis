@@ -1,0 +1,13 @@
+{
+  "name": "charting-bundle-size",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Reproducible production bundle-size comparison of an equivalent 3-series line chart across charting libraries. Tooling only: every library lives in its own isolated install under libs/<library>/.",
+  "scripts": {
+    "measure": "bash ./measure.sh",
+    "verify": "node ./verify/verify.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

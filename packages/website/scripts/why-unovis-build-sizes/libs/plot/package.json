@@ -1,0 +1,10 @@
+{
+  "name": "bundle-size-plot",
+  "private": true,
+  "description": "Isolated install: only this library (+ React 18, which is external in the React bundles) so no other library can influence dependency resolution/hoisting",
+  "dependencies": {
+    "@observablehq/plot": "0.6.17",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}
