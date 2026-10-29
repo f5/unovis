@@ -1,4 +1,5 @@
 import { GeoProjection } from 'd3-geo'
+import type { Topology } from 'topojson-specification'
 import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
@@ -15,7 +16,7 @@ export interface TopoJSONMapConfigInterface<
   /** MapProjection (aka D3's GeoProjection) instance. Default: `MapProjection.Kavrayskiy7()` */
   projection?: GeoProjection;
   /** Map data in the TopoJSON topology format. Default: `undefined` */
-  topojson?: TopoJSON.Topology;
+  topojson?: Topology;
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
   mapFeatureName?: string;
   /** Set initial map fit to points instead of topojson features. Default: `false` */
