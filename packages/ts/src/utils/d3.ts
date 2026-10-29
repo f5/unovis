@@ -20,6 +20,18 @@ export function smartTransition<Element extends BaseType, Datum, ParentElement e
   } else return selection
 }
 
+/** Attribute carrying the series key an element was last rendered with, read by `seriesJoinKey` on the next data join */
+export const UNOVIS_SERIES_KEY_ATTR = 'unovis-series-key'
+
+/** Data join key function for per-series elements, so a series keeps its element when other series are added or removed.
+ * Existing elements are matched by their `UNOVIS_SERIES_KEY_ATTR`, because their bound datum doesn't always identify the series.
+ * d3 calls the key function with the parent node as `this` for incoming data, and the parent has no such attribute. */
+export function seriesJoinKey<Datum> (getKey: (d: Datum, i: number) => string): (this: BaseType, d: Datum, i: number) => string {
+  return function (d, i) {
+    return (this as Element).getAttribute?.(UNOVIS_SERIES_KEY_ATTR) ?? getKey(d, i)
+  }
+}
+
 // Inline style keys previously applied by `applyInlineStyles`, so keys that are no longer
 // returned by the accessor can be removed from the element on the next call
 const appliedInlineStyles = new WeakMap<Element, string[]>()
