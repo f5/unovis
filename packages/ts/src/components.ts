@@ -38,6 +38,7 @@ export { Annotations } from './components/annotations'
 export { Plotband } from './components/plotband'
 export { Plotline } from './components/plotline'
 export { Treemap } from './components/treemap'
+export { Zoom } from './components/zoom'
 
 // Constants
 export * from './components/donut/constants'
@@ -93,3 +94,4 @@ export type { AnnotationsConfigInterface } from './components/annotations/config
 export type { PlotbandConfigInterface } from './components/plotband/config'
 export type { PlotlineConfigInterface } from './components/plotline/config'
 export type { TreemapConfigInterface } from './components/treemap/config'
+export type { ZoomConfigInterface } from './components/zoom/config'
