@@ -100,3 +100,24 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   fill: currentColor;
   vertical-align: middle;
 }
+
+/* Vega-Lite tooltips (vega-tooltip appends them to <body>) would otherwise get Infima's table borders, stripes and margin */
+#vg-tooltip-element table {
+  display: table;
+  margin: 0;
+  border: 0;
+}
+
+#vg-tooltip-element tr {
+  background: none;
+  border: 0;
+}
+
+#vg-tooltip-element td {
+  padding: 2px 0;
+  border: 0;
+}
+
+#vg-tooltip-element td.key {
+  padding-right: 4px;
+}

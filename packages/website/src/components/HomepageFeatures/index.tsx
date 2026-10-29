@@ -45,8 +45,8 @@ export const FeatureList: FeatureItem[] = [
     image: 'img/unovis-image-3.svg',
     description: (
       <>
-        Unovis is built with Typescript and allows you to import
-        individual component modules to reduce your app bundle size.
+        Unovis is built with TypeScript, with its options documented in its types
+        for your editor and your AI agent. Import individual components to keep your bundle small.
       </>
     ),
   },

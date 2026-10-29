@@ -1,0 +1,13 @@
+{
+  "name": "bundle-size-vegalite",
+  "private": true,
+  "description": "Isolated install: only this library (+ React 18, which is external in the React bundles) so no other library can influence dependency resolution/hoisting",
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-vega": "8.0.0",
+    "vega": "6.4.0",
+    "vega-embed": "7.3.0",
+    "vega-lite": "6.5.0"
+  }
+}

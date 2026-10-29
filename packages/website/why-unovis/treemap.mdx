@@ -1,0 +1,48 @@
+---
+title: Treemap
+description: A two-level treemap of cloud spend rendered with Unovis, TanStack Charts, Recharts, Chart.js, ECharts and Nivo, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { treemap } from '@site/src/comparisons/treemap'
+
+<LibraryComparison comparison={treemap}>
+
+# Treemap
+
+Monthly cloud spend of five teams, split into the services each team runs: every tile's area is the service's cost.
+
+</LibraryComparison>
+
+## What to look for
+
+- **Labels.** Unovis wraps each label inside its tile, sizes the text by the tile's value
+  (`enableTileLabelFontSizeVariation`, on by default) and skips tiles under 20px (`minTileSizeForLabel`). TanStack
+  Charts draws a label only where it fits. ECharts shortens labels with an ellipsis, Chart.js cuts them at the tile's
+  edge, and Nivo turns them sideways in tall tiles (`orientLabel`) and lets them run past small ones. Recharts' default
+  content shows names only and writes each team's name halfway down its group, at its left edge, under the service
+  names.
+- **Team colors.** Unovis draws every service in a lighter shade of its team's palette color. TanStack Charts and
+  ECharts give a team's services one color, Recharts fills the teams and draws the services transparent on top of them,
+  and Nivo draws every node at a third of its opacity, so the services get darker where they overlap their team. The
+  Chart.js treemap plugin has no default colors, so the demo takes the Chart.js palette.
+- **Hide a team.** Unovis' legend (a `BulletLegend` with a few lines of state, plus `tileColor` so the teams keep their
+  colors) and TanStack Charts' interactive legend remove the team, and the others fill the space. Recharts' and Nivo's
+  treemaps have no legend, and the ECharts and Chart.js legends list series and datasets, not the groups of a treemap.
+- **Click a tile.** ECharts zooms into it by default (`nodeClick: 'zoomToNode'`) and shows a breadcrumb to go back up;
+  Recharts can drill down with `type="nest"`. Unovis has no drill-down.
+- **Randomize the data.** Unovis, TanStack Charts, ECharts and Nivo move and resize the tiles. Recharts keys its nodes
+  by position and Chart.js grows every tile in again, so both replay their entry animation.
+- **Presets.** *Group labels* (`labelInternalNodes`, `tilePaddingTop`) are Chart.js' `captions`, ECharts'
+  `upperLabel` and Nivo's parent labels; TanStack Charts renders only the leaves and Recharts has no header option.
+  *Rounded tiles* (`tilePadding`, `tileBorderRadius`) are a pair of options in TanStack Charts, Chart.js and ECharts;
+  Recharts and Nivo have the gaps but no corner radius. *Shaded tiles* (`enableLightnessVariance`) shades each team's
+  services by cost; only ECharts can do the same, with a level's `colorSaturation` range.
+
+## Feature comparison
+
+<FeatureTable features={['treemap', 'data-labels', 'tooltip', 'animation', 'theming', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

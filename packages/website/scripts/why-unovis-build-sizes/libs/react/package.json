@@ -1,0 +1,9 @@
+{
+  "name": "bundle-size-react",
+  "private": true,
+  "description": "React itself: context row only (it is external in every React bundle); also provides React for the verify/ smoke test",
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

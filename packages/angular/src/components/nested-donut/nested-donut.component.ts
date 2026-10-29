@@ -76,7 +76,7 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
    *  Default: `NestedDonutDirection.Inwards` */
   @Input() direction?: NestedDonutDirection | string
 
-
+  /** Numeric accessor for segment size value. Default: `undefined`. */
   @Input() value?: NumericAccessor<Datum>
 
   /** Central label text. Default: `undefined` */
@@ -107,7 +107,7 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
    * } */
   @Input() layerSettings?: GenericAccessor<NestedDonutLayerSettings, number>
 
-
+  /** Space between layers in pixels. Default: `0` */
   @Input() layerPadding?: number
 
   /** Corner Radius. Default: `0` */

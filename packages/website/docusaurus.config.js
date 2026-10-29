@@ -120,6 +120,12 @@ const config = {
             label: 'Contributing',
           },
           {
+            position: 'left',
+            to: '/why-unovis',
+            activeBasePath: 'why-unovis',
+            label: 'Why Unovis',
+          },
+          {
             href: 'https://github.com/f5/unovis',
             position: 'right',
             className: 'brand__icon',
@@ -202,14 +208,6 @@ const config = {
         // Optional: path for search page that enabled by default (`false` to disable it)
         searchPagePath: 'search',
       },
-      announcementBar: {
-        id: 'version-1.7-svelte-announcement',
-        content:
-          '⚠️ Announcement: Svelte 4 support is being dropped in the next minor release of Unovis',
-        backgroundColor: '#4580C0',
-        textColor: '#FFFFFF',
-        isCloseable: false,
-      },
     }),
 
   plugins: [
@@ -241,10 +239,20 @@ const config = {
       },
     ],
     [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'why-unovis',
+        path: 'why-unovis',
+        routeBasePath: 'why-unovis',
+        sidebarPath: require.resolve('./sidebars-why-unovis.js'),
+      },
+    ],
+    [
       'docusaurus-plugin-react-docgen-typescript',
       {
         // pass in a single string or an array of strings
-        src: ['src/**/*.tsx', '../react/src/**/*.tsx'],
+        // The library comparison demos are excluded: their default exports share file names, and so would their docs
+        src: ['src/**/*.tsx', '!src/comparisons/**', '../react/src/**/*.tsx'],
         // global: true,
         parserOptions: {
           // pass parserOptions to react-docgen-typescript
@@ -275,6 +283,12 @@ const config = {
               '@unovis/react': require('path').resolve(__dirname, '../../packages/react/src'),
               // eslint-disable-next-line @typescript-eslint/no-var-requires
               src: require('path').resolve(__dirname, '../../packages/react/src'),
+              // Sets MapLibre's worker URL, only on the pages that load MapLibre
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              'maplibre-gl$': require('path').resolve(__dirname, 'src/utils/maplibre-gl.ts'),
+              // Vega's Node build imports node-canvas for server-side rendering; the Vega-Lite demos only render in the
+              // browser, so the server bundle doesn't need it
+              canvas: false,
             },
           },
           module: {
@@ -288,6 +302,17 @@ const config = {
               {
                 test: /\.module.ts|component.ts|.svelte|-solid.tsx$/,
                 loader: 'file-loader',
+              },
+              {
+                // MapLibre's worker imports its sibling `maplibre-gl-shared.mjs`, so both are emitted, unchanged,
+                // into the same folder. Used by `src/utils/maplibre-gl.ts`
+                test: /maplibre-gl-(worker|shared)\.mjs$/,
+                dependency: 'url',
+                type: 'asset/resource',
+                generator: {
+                  // eslint-disable-next-line @typescript-eslint/no-var-requires
+                  filename: `assets/maplibre-gl-${require('maplibre-gl/package.json').version}/[name][ext]`,
+                },
               },
             ],
           },

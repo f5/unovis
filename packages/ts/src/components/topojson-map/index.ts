@@ -53,6 +53,7 @@ import {
   getPointPathData,
   collideAreaLabels,
   collidePointBottomLabels,
+  getScreenBBox,
   getPointRadius,
   calculateClusterIndex,
   getClustersAndPoints,
@@ -446,6 +447,7 @@ export class TopoJSONMap<
       .text(d => d.labelText)
       .attr('transform', d => `translate(${d.centroid[0]},${d.centroid[1]})`)
       .style('font-size', `calc(var(${s.variables.mapPointLabelFontSize}) / ${this._currentZoomLevel})`)
+      .style('stroke-width', `calc(var(${s.variables.mapAreaLabelHaloWidth}) / ${this._currentZoomLevel})`)
       .style('text-anchor', 'middle')
       .style('dominant-baseline', 'middle')
 
@@ -1148,13 +1150,20 @@ export class TopoJSONMap<
     window.cancelAnimationFrame(this._collisionDetectionAnimFrameId)
     this._collisionDetectionAnimFrameId = window.requestAnimationFrame(() => {
       const duration = this.config.duration
-      // Run collision detection for area labels
-      const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, AreaLabelDatum>(`.${s.areaLabel}`)
-      collideAreaLabels(areaLabels, duration)
-
       // Run collision detection for point bottom labels
       const pointBottomLabels = this._pointsGroup.selectAll<SVGTextElement, TopoJSONMapPoint<PointDatum>>(`.${s.point} .${s.pointBottomLabel}`)
       collidePointBottomLabels(pointBottomLabels, duration)
+
+      // Run collision detection for area labels: they make way for the points and their visible bottom labels,
+      // and hide when they don't fit in the map
+      const obstacles = [
+        ...this._pointsGroup.selectAll<SVGGraphicsElement, unknown>(`.${s.point} .${s.pointShape}`).nodes(),
+        ...pointBottomLabels.nodes().filter(node => (node as SVGTextElement & { _labelVisible?: boolean })._labelVisible && node.textContent),
+      ].map(node => getScreenBBox(node))
+      const svgRect = this.g.node().ownerSVGElement?.getBoundingClientRect()
+      const bounds = svgRect && { x: svgRect.x, y: svgRect.y, width: svgRect.width, height: svgRect.height }
+      const areaLabels = this._areaLabelsGroup.selectAll<SVGTextElement, AreaLabelDatum>(`.${s.areaLabel}`)
+      collideAreaLabels(areaLabels, duration, obstacles, bounds)
     })
   }
 

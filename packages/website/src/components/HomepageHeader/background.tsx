@@ -1,6 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useId, useState } from 'react'
+
+import { HERO_GRADIENT_COLORS } from './constants'
 
 export default function Background (): JSX.Element {
+  const gradientId = useId()
   const [shift, setShift] = useState([0, 0])
   const [timeShift, setTimeShift] = useState([0, 0])
   const [scrollTop, setScrollTop] = useState(0)
@@ -56,41 +59,60 @@ export default function Background (): JSX.Element {
         strokeMiterlimit: 2,
       }}
     >
-      <rect x="0" y="0" width="2436" height="1125" style={{ fill: 'var(--header-banner-background)' }}/>
+      <defs>
+        <linearGradient id={`${gradientId}-background`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#f3f0f7"/>
+          <stop offset="0.55" stopColor="var(--header-banner-background)"/>
+          <stop offset="1" stopColor="#b8c8e4"/>
+        </linearGradient>
+        {Object.entries(HERO_GRADIENT_COLORS).map(([name, color]) => (
+          <React.Fragment key={name}>
+            <linearGradient id={`${gradientId}-${name}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor={color} stopOpacity={0.85}/>
+              <stop offset="1" stopColor={color} stopOpacity={0.5}/>
+            </linearGradient>
+            <radialGradient id={`${gradientId}-${name}-radial`}>
+              <stop offset="0" stopColor={color} stopOpacity={0.5}/>
+              <stop offset="1" stopColor={color}/>
+            </radialGradient>
+          </React.Fragment>
+        ))}
+      </defs>
+      <rect x="0" y="0" width="2436" height="1125" style={{ fill: `url(#${gradientId}-background)` }}/>
       <g transform={`translate(0, ${isSmallScreen ? 150 : 0}) rotate(${(dx + dy) / 300} ${window?.innerWidth / 2 || 0} ${window?.innerHeight / 2 || 0})`}>
         <g transform="matrix(0.251313,-0.0632911,0.108076,0.429143,625.985,411.389)">
-          <rect x={430 + dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: 'rgb(255,214,81)' }}/>
+          <rect x={430 + dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: `url(#${gradientId}-yellow)` }}/>
         </g>
         <g transform="matrix(0.222534,-0.0560433,0.0992659,0.39416,607.713,481.662)">
-          <rect x={430 - dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: 'rgb(142,141,149)' }}/>
+          <rect x={430 - dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: `url(#${gradientId}-grey)` }}/>
         </g>
         <g transform="matrix(0.116912,-0.277302,0.204417,0.0861831,545.703,1055.12)">
-          <rect x={430 - dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: 'rgb(226,32,58)' }}/>
+          <rect x={430 - dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: `url(#${gradientId}-red)` }}/>
         </g>
         <g transform="matrix(1.03374,0,0,1.03374,578.127,12.5196)">
-          <circle cx={400.25 + dx / 5} cy={702.75 - dy / 5} r={Math.abs(140.25 + dy / 10)} style={{ fill: 'rgb(23,19,41)' }}/>
+          <circle cx={400.25 + dx / 5} cy={702.75 - dy / 5} r={Math.abs(140.25 + dy / 10)} style={{ fill: `url(#${gradientId}-dark-radial)` }}/>
         </g>
         <g transform="matrix(0.322661,-0.0812596,0.210244,0.834827,736.738,-458.268)">
-          {!isSmallScreen && <rect x={430 + dx / 5} y={866 - dy / 5} width="788" height="77" style={{ fill: 'rgb(23,19,41)' }}/>}
+          {!isSmallScreen && <rect x={430 + dx / 5} y={866 - dy / 5} width="788" height="77" style={{ fill: `url(#${gradientId}-dark)` }}/>}
         </g>
         <g transform="matrix(0.322661,-0.0812596,0.210244,0.834827,424.271,-147.048)">
-          <rect x={430 + dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: 'rgb(23,19,41)' }}/>
+          <rect x={430 + dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: `url(#${gradientId}-dark)` }}/>
         </g>
         <g transform="matrix(0.470215,-0.11842,0.0366999,0.145726,1043.67,502.815)">
-          <rect x={430 - dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: 'rgb(226,32,58)' }}/>
+          <rect x={430 - dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: `url(#${gradientId}-red)` }}/>
         </g>
         <g transform="matrix(0.513012,-0.0833088,0.0256167,0.157746,1294.55,306.253)">
-          <rect x={430 + dx / 5} y={866 - dy / 5} width="788" height="77" style={{ fill: 'rgb(226,32,58)' }}/>
+          <rect x={430 + dx / 5} y={866 - dy / 5} width="788" height="77" style={{ fill: `url(#${gradientId}-red)` }}/>
         </g>
         <g transform="matrix(1.07501,-0.270732,0.0417494,0.165776,757.59,520.183)">
-          <rect x={430 - dx / 5} y={866 - dy / 5} width="788" height="77" style={{ fill: 'rgb(23,19,41)' }}/>
+          <rect x={430 - dx / 5} y={866 - dy / 5} width="788" height="77" style={{ fill: `url(#${gradientId}-dark)` }}/>
         </g>
         <g transform="matrix(0.264764,0.964313,-0.964313,0.264764,953.308,-1294.58)">
           <path
             transform={`rotate(${(dx + dy) / 300})`}
             // transform={`translate(${-dx / 35}, ${-dy / 30})`}
             d="M1771.16,15.199C1730.01,-53.294 1677.18,-114.058 1615.08,-164.345L1567.78,-105.926C1623.06,-61.158 1670.09,-7.062 1706.73,53.915L1771.16,15.199Z"
-            style={{ fill: '#2780EB' }}
+            style={{ fill: `url(#${gradientId}-blue-radial)` }}
           />
         </g>
         <g transform="matrix(0.264764,0.964313,-0.964313,0.264764,929.239,-1307.99)">
@@ -98,7 +120,7 @@ export default function Background (): JSX.Element {
             // transform={`rotate(-${(dx + dy) / 300})`}
             transform={`translate(${-dx / 35}, ${+dy / 30})`}
             d="M1738.18,-34.633C1686.48,-105.781 1621.58,-166.31 1547,-212.913L1507.16,-149.165C1573.56,-107.676 1631.34,-53.789 1677.36,9.551L1738.18,-34.633Z"
-            style={{ fill: 'rgb(190,178,139)' }}
+            style={{ fill: `url(#${gradientId}-sand-radial)` }}
           />
         </g>
         <g transform="matrix(0.264764,0.964313,-0.964313,0.264764,887.925,-1329.66)">
@@ -106,25 +128,25 @@ export default function Background (): JSX.Element {
             // transform={`rotate(${(dx + dy) / 200})`}
             transform={`translate(${dx / 35}, ${-dy / 30})`}
             d="M1869,368C1869,178.026 1790.11,-3.416 1651.17,-132.977L1599.9,-78.001C1723.59,37.343 1793.83,198.874 1793.83,368L1869,368Z"
-            style={{ fill: 'rgb(226,32,58)' }}
+            style={{ fill: `url(#${gradientId}-red-radial)` }}
           />
         </g>
         <g transform="matrix(0.592886,-0.148567,0.206842,0.128437,575.54,735.738)">
-          <rect x={810 - dx / 5} y={354 - dy / 5} width={Math.abs(477 + dy / 5)} height={Math.abs(477 + dy / 5)} style={{ fill: 'rgb(190,178,139)' }}/>
+          <rect x={810 - dx / 5} y={354 - dy / 5} width={Math.abs(477 + dy / 5)} height={Math.abs(477 + dy / 5)} style={{ fill: `url(#${gradientId}-sand)` }}/>
         </g>
         <g transform="matrix(0.901886,-0.225997,0.225997,0.901886,45.3694,186.384)">
-          <rect x={810 - dx / 5} y={354 - dy / 5} width={Math.abs(477 - dy / 4)} height={Math.abs(477 - dy / 4)} style={{ fill: '#2780EB' }}/>
+          <rect x={810 - dx / 5} y={354 - dy / 5} width={Math.abs(477 - dy / 4)} height={Math.abs(477 - dy / 4)} style={{ fill: `url(#${gradientId}-blue)` }}/>
         </g>
         <g transform="matrix(0.918438,-0.231301,0.339428,1.34778,-304.873,-400.661)">
-          <rect x={430 - dx / 2} y={866 - dy / 2} width="788" height="77" style={{ fill: 'rgb(226,32,58)' }}/>
+          <rect x={430 - dx / 2} y={866 - dy / 2} width="788" height="77" style={{ fill: `url(#${gradientId}-red)` }}/>
         </g>
         <g transform="matrix(-0.411462,-0.382888,0.70964,-0.25844,1485.61,929.546)">
-          <rect x={430 - dx / 5} y={866 - dy / 5} width="788" height="77" style={{ fill: 'rgb(255,214,81)' }}/>
+          <rect x={430 - dx / 5} y={866 - dy / 5} width="788" height="77" style={{ fill: `url(#${gradientId}-yellow)` }}/>
         </g>
         <path style={{
           transformBox: 'fill-box',
           transformOrigin: 'center',
-          fill: 'rgb(226,32,58)',
+          fill: `url(#${gradientId}-red)`,
         }}
         transform={`rotate(${(dx + dy) / 100}) translate(${dx / 15}, ${-dy / 10})`}
         d="M1503,730L1599,895L1977.88,661L1503,730Z"

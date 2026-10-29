@@ -6,8 +6,9 @@ import { FitMode, TrimMode } from '@/types/text'
 import { TreemapDatum, TreemapNode, TreemapTileFunction } from './types'
 
 export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface {
+  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   id?: ((d: Datum, i: number) => string | number);
-  /* Numeric accessor for segment size value. Default: `undefined`. */
+  /** Numeric accessor for segment size value. Default: `undefined`. */
   value?: NumericAccessor<Datum>;
 
   /** Array of accessor functions to defined the nested groups. Default: `[]` */

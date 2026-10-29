@@ -1,0 +1,48 @@
+---
+title: Timeline
+description: A timeline of deployments, incidents and maintenance windows rendered with Unovis, Recharts, Chart.js, ECharts, Observable Plot, Vega-Lite and TanStack Charts, side by side, with placeholders for Nivo and AG Charts
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { timeline } from '@site/src/comparisons/timeline'
+
+<LibraryComparison comparison={timeline}>
+
+# Timeline
+
+A week of deployments, incidents and maintenance windows across seven services, one lane per service. Every incident
+follows a deployment to another service, which caused it.
+
+</LibraryComparison>
+
+## What to look for
+
+- **Lanes.** Unovis takes each item's start, duration and lane (`x`, `lineDuration`, `lineRow`) and draws the lanes with
+  labels and alternating backgrounds. The other libraries draw floating bars on a band axis: Recharts, following its
+  timeline example, needs one row per lane and one `Bar` per item in it, ECharts draws every item in a custom series'
+  `renderItem` as in its Gantt example, and Chart.js needs `grouped: false` so the bars of different kinds share a lane.
+- **Time axis.** Chart.js' time scale needs a separate date adapter package, so its demo uses a linear scale with a step
+  of one day. TanStack Charts has no time scale of its own and takes d3-scale's `scaleTime`, as its docs recommend.
+- **Hover.** Every library shows the item's title, service, kind and time. Recharts' default tooltip loses its heading
+  with `shared={false}`, so the demo renders a custom `content` in the default style.
+- **Hide a kind.** Unovis, Recharts, Chart.js, ECharts, Observable Plot and TanStack Charts hide it; Vega-Lite's legend
+  highlights a kind instead. The added marks don't follow every legend: Chart.js annotations check the dataset's
+  visibility themselves, and TanStack Charts' legend filters lines, areas and grouped bars but not rectangles or arrows,
+  so the demo filters both itself.
+- **Randomize the data.** Unovis moves every item to its new place, matched by `id`. Observable Plot and Vega-Lite
+  redraw without a transition.
+- **Presets.** *Rounded* (`lineCap`) is one every library can draw; TanStack Charts draws the short items as ovals.
+  *Arrows* (`arrows`) are elbows in Unovis, down from the cause and along the incident's lane into it. Chart.js (with
+  the official annotation plugin), ECharts (a `lines` series), Observable Plot and TanStack Charts (`arrow` marks) draw
+  straight arrows; Recharts and Vega-Lite have no arrowheads. *Icons* (`lineStartIcon`, `lineEndIcon`) are SVG symbols
+  in Unovis. ECharts and Vega-Lite take the same SVG path as a symbol, Chart.js (a point annotation) and Observable Plot
+  (an `image` mark) take it as an image in a hard-coded color, and Recharts and TanStack Charts have no icon or custom
+  symbol option.
+
+## Feature comparison
+
+<FeatureTable features={['timeline', 'tooltip', 'legend-toggle', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

@@ -1,0 +1,62 @@
+---
+title: Circular Bar Chart
+description: A circular bar chart of daily goals, with per-bar targets and icons, rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, Vega-Lite and TanStack Charts side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { circularBarChart } from '@site/src/comparisons/circular-bar'
+
+<LibraryComparison comparison={circularBarChart}>
+
+# Circular Bar Chart
+
+Today's progress towards six daily health goals: one bar per goal, growing outward from the middle, over a faded track
+that shows the goal. Every goal has its own target, so each bar is scaled to its own maximum.
+
+</LibraryComparison>
+
+## What to look for
+
+- **One bar, one goal.** Unovis scales each bar to its own target (`maxValue` takes an accessor), so steps and sleep
+  share a chart without a shared unit. The other libraries draw every bar on one radial scale, so their data is
+  converted to percent of the goal first; open **Show the data** and **Code** to see where. Nivo then stretches the
+  longest bar to the outer radius, so its chart only shows the goals relative to each other.
+- **The shape.** The Unovis bars are petals: parallel sides with a constant gap, rounded outer corners and a rounded
+  tip, all derived from the chart radius so the proportions hold at any size, over a faded track that shows the goal.
+  ECharts draws rounded arcs over a track. Recharts draws them with an undocumented `layout="centric"` of its
+  `RadialBarChart`, without a track: its `background` is only drawn in the ring layout. Chart.js draws wedges from the
+  center, with rounded corners and a small gap but no hole and no track. Nivo draws rounded arcs with no gap between
+  them and no track. Vega-Lite has no polar bar chart, but its `arc` mark draws one, with a track, once the start and
+  end angle of every bar are computed in the data; open **Code** to see how. TanStack Charts draws it from its `polar`
+  module (`radialBarRadius` on a band angle scale, with a track in a separate layer). Observable Plot has no arc mark or
+  polar coordinates.
+- **Icons.** Unovis places an icon at the inner end of each bar (`icon`, an SVG symbol or an icon-font glyph) and hides
+  it when the bar is too short. None of the other libraries has an option for it.
+- **The legend.** Unovis, Recharts and Chart.js list the bars and hide one when you click it (Unovis and Recharts
+  with a few lines of state); the remaining Unovis bars spread out to fill the circle. Vega-Lite's legend highlights the
+  bar you click and fades the others. TanStack Charts' legend doesn't hide polar marks itself, so the demo filters the
+  bars. ECharts' legend lists series and Nivo's lists keys, so a single series of bars
+  gets no legend in either.
+- **Randomize the data.** Bar lengths animate to the new values in Unovis, Chart.js, ECharts, Nivo and TanStack Charts
+  (`svgAnimation`). Recharts animates angles only, so in this layout the bars jump to their new lengths, and Vega-Lite
+  redraws without a transition.
+- **Switch the site theme.** The faded tracks and icons follow the theme through CSS variables
+  (`--vis-circular-bar-background-color`, `--vis-circular-bar-icon-color`). TanStack Charts' default theme and the
+  demo's track follow it through `currentColor`; the other charts need their dark colors in code.
+- **Presets.** *Half circle* (`angleRange`) lays the bars out over the top half and enlarges the chart to fill the card.
+  Every library draws the half circle; ECharts, Recharts and Vega-Lite fill the card with a hand-set center and radius
+  (in Vega-Lite, the `arc` mark's `y` and the radius scale's `rangeMax`); TanStack Charts has no center option and
+  needs a locked top `margin` and a hand-set radius; and Chart.js and Nivo leave the lower half empty. *Square bars*
+  (`cornerRadius`, `innerCornerRadius`) is a corner radius of 0 in every library. *Wide gaps* (`barPadding`) keeps each
+  gap the same width from the hole to the edge. Vega-Lite does the same with its `arc` mark's `padAngle`, set per bar by
+  an expression from the bar's length, and TanStack Charts with D3's `padAngle` and a fixed `padRadius` on its
+  `radialArc` mark, whose `generator` option takes a D3 arc for bars of different lengths. ECharts, Recharts and
+  Chart.js pad by an angle, so their gaps widen towards the edge, and Nivo has no option for a gap at all.
+
+## Feature comparison
+
+<FeatureTable features={['circular-bar', 'radial-bar', 'donut', 'legend-toggle', 'animation', 'darkMode', 'renderer']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

@@ -12,26 +12,59 @@
 <text x="226.39999961853027" y="55" font-size="12" fill="#4b5563">Americas</text>
 </g>
 <g transform="translate(16,78)">
+<clipPath id="snap-0">
+<rect x="-2" y="-2" width="718.9999998092651" height="444.7"/>
+</clipPath>
+<defs>
+<filter id="snap-1" filterUnits="objectBoundingBox">
+<feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/>
+</filter>
+</defs>
+<defs/>
 <g axis-type="x" transform="translate(53.00000019073487,440.7)">
 <g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="user-select: none;">
 <path stroke="currentColor" d="M0.5, 0 V0.5 H715.4999998092651 V0" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none;"/>
+<g opacity="1" transform="translate(102.8441176251804,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">10,000</tspan></tspan></text>
+</g>
 <g opacity="1" transform="translate(195.28529406771938,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
 <line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
 <text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">20,000</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(287.7264705102583,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">30,000</tspan></tspan></text>
 </g>
 <g opacity="1" transform="translate(380.1676469527973,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
 <line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
 <text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">40,000</tspan></tspan></text>
 </g>
+<g opacity="1" transform="translate(472.60882339533623,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">50,000</tspan></tspan></text>
+</g>
 <g opacity="1" transform="translate(565.0499998378751,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
 <line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
 <text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">60,000</tspan></tspan></text>
+</g>
+<g opacity="1" transform="translate(657.4911762804143,0)" style="stroke: none; font-size: 12px; font-weight: 500;">
+<line stroke="currentColor" y2="6" style="stroke: #e8e9ef; stroke-width: 1px;"/>
+<text fill="currentColor" style="fill: #6c778c; cursor: default; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-decoration: none; stroke: none;"><tspan font-size="12" font-family="Inter,Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif" font-weight="500" y="20"><tspan x="0" dy="0em" dominant-baseline="central">70,000</tspan></tspan></text>
 </g>
 <text dy="0.75em" transform="translate(357.49999990463255,35.2) rotate(0)" style="fill: #6c778c; font-size: 14px; font-weight: 500; font-family: Inter, Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; text-anchor: middle;">GDP per capita (USD)</text>
 </g>
 <g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle" style="opacity: 1;">
 <path stroke="currentColor" d="M30.74,0.5H659.339999809265" style="opacity: 0;"/>
+<g opacity="1" transform="translate(56.62352940391091,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
 <g opacity="1" transform="translate(102.8441176251804,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+<g opacity="1" transform="translate(149.06470584644987,0)">
 <line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
 <text fill="currentColor" y="3" dy="0.71em"/>
 </g>
@@ -39,7 +72,15 @@
 <line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
 <text fill="currentColor" y="3" dy="0.71em"/>
 </g>
+<g opacity="1" transform="translate(241.50588228898883,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
 <g opacity="1" transform="translate(287.7264705102583,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+<g opacity="1" transform="translate(333.9470587315278,0)">
 <line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
 <text fill="currentColor" y="3" dy="0.71em"/>
 </g>
@@ -47,11 +88,23 @@
 <line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
 <text fill="currentColor" y="3" dy="0.71em"/>
 </g>
+<g opacity="1" transform="translate(426.3882351740668,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
 <g opacity="1" transform="translate(472.60882339533623,0)">
 <line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
 <text fill="currentColor" y="3" dy="0.71em"/>
 </g>
+<g opacity="1" transform="translate(518.8294116166057,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
 <g opacity="1" transform="translate(565.0499998378751,0)">
+<line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
+<text fill="currentColor" y="3" dy="0.71em"/>
+</g>
+<g opacity="1" transform="translate(611.2705880591448,0)">
 <line stroke="currentColor" y2="-440.7" style="stroke: #e8e9ef; stroke-width: 1px; stroke-dasharray: none; opacity: 1; transition: none;"/>
 <text fill="currentColor" y="3" dy="0.71em"/>
 </g>
@@ -218,14 +271,5 @@
 </g>
 </g>
 </g>
-<clipPath id="snap-0">
-<rect x="-2" y="-2" width="718.9999998092651" height="444.7"/>
-</clipPath>
-<defs>
-<filter id="snap-1" filterUnits="objectBoundingBox">
-<feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/>
-</filter>
-</defs>
-<defs/>
 </g>
 </svg>

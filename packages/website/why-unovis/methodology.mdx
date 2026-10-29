@@ -1,0 +1,139 @@
+---
+title: How We Compare
+description: How the Unovis comparison pages were built, which libraries they include and why
+---
+
+import { libraries } from '@site/src/comparisons/libraries'
+import { lineChartBuildSizes } from '@site/src/comparisons/build-sizes'
+
+# How We Compare
+
+A comparison written by the authors of one of the libraries deserves some skepticism. Here's how we built these pages,
+so you can judge them, and check them.
+
+## Which libraries
+
+We started from the most downloaded charting libraries on npm and rendered the ones that are free to use in a
+commercial product like Unovis:
+
+| Library | Weekly downloads | License | Rendered here |
+| --- | --- | --- | --- |
+| Recharts | 57.4M | MIT | Yes |
+| Chart.js | 12.7M | MIT | Yes |
+| Apache ECharts | 5.7M | Apache-2.0 | Yes |
+| Highcharts | 2.6M | Commercial | No: commercial use needs a paid license |
+| ApexCharts | 2.0M | Dual license | No: the free license excludes companies above $2M in annual revenue and competing charting products |
+| AG Charts | 1.8M | MIT (Community), commercial (Enterprise) | Yes, the Community edition |
+| Nivo | 1.6M | MIT | Yes |
+| Vega-Lite | 1.2M | BSD-3-Clause | Yes, through react-vega |
+| Observable Plot | 0.7M | ISC | Yes |
+| TanStack Charts | 0.5M | MIT | Yes |
+| Unovis | 0.3M | Apache-2.0 | Yes |
+
+Downloads are from npm for October 1–7, 2026, using `@nivo/core` for Nivo and `ag-charts-community` for AG Charts
+(TanStack Charts: October 5–11, its first full week after 1.0).
+D3 (22M weekly downloads) is a toolkit rather than a charting library; Unovis, Nivo and Observable Plot are built on
+it. Plotly.js and Victory are popular too, and may join later.
+
+## The rules
+
+1. **Same data, same chart.** Every library draws the same data with the same series, axes, legend and tooltip.
+2. **Idiomatic React.** Each library uses its documented React integration. Observable Plot has no React component
+   and its docs recommend mounting the plot in an effect, so that's what we do; Vega-Lite renders through react-vega,
+   the Vega organization's wrapper around vega-embed. The code under **Code** is exactly the code that renders the
+   chart next to it, and **Show the data** shows the data it gets.
+3. **Default look.** We kept each library's default colors, fonts and spacing. Recharts has no default color palette,
+   so we used the colors from its documentation.
+4. **Only what the chart needs.** We turned off point markers where a library draws them by default, formatted axis
+   values and tooltips, and turned on shared tooltips where a library has them.
+5. **Legend toggles.** Where a library doesn't hide series from its legend on its own (Unovis, Recharts and Observable
+   Plot), we added the few lines of state it takes. TanStack Charts' interactive legend is controlled, so its demos keep
+   the visible series in state too, and filter the hidden rows themselves where the legend doesn't (the polar charts and
+   the network graph).
+6. **Dark mode.** Each chart follows the site theme the way its library documents it: built-in dark themes for ECharts,
+   AG Charts and Vega-Lite (vega-embed's `dark` theme), colors passed in for Chart.js, Recharts and Nivo, and a
+   background color for Observable Plot, whose text and axes follow `currentColor`. Unovis and TanStack Charts need no
+   code for it.
+7. **Free editions.** AG Charts is used in its free Community edition. Features that need AG Charts Enterprise are
+   marked *Paid edition*.
+8. **Plugins where a chart needs one.** When a library can only draw a chart with a plugin, we used the most popular
+   one: chartjs-chart-graph, chartjs-chart-sankey and chartjs-chart-geo for Chart.js. The presets also use the Chart.js
+   team's own plugins: chartjs-plugin-annotation for bands and reference lines and chartjs-plugin-datalabels for data
+   labels. A library that can't draw a chart at all, or only in a paid edition, gets a placeholder with the reason and a
+   source.
+9. **Presets.** Every page has preset buttons that reconfigure all the charts at once, to show options beyond the
+   default chart. Each library draws a preset with its own documented options. Where it has no option for one, its card
+   keeps the default chart under a note that says what's missing, with a source.
+
+## Feature research
+
+Every cell in the feature tables was checked against the library's type definitions and source code for the version
+listed below, and against its official documentation. Where the docs and the code disagreed, we ran the code. Every cell
+links to its source.
+
+## Bundle size
+
+We bundled the same chart with every library: **a line chart with three smooth (monotone) lines, x and y axes, a
+legend, a tooltip showing all series, a crosshair at the hovered x and animation**, which is what a Unovis line chart
+does out of the box. Each
+library draws it with its own options, its React integration and tree-shaken imports wherever it supports them. Where a
+library can't do part of it, we measured it without that part: Observable Plot and Vega-Lite have no animation, AG Charts
+Community has neither the crosshair nor animation (both are Enterprise modules), and Nivo animates data updates but not
+the first render. Chart.js has no crosshair option, so its bundle includes the usual few-line plugin that draws one.
+
+Each library was installed on its own from a lockfile, bundled with esbuild (`--bundle --minify --format=esm
+--target=es2020`, production mode, React and ReactDOM external) and checked in a browser to make sure the chart rendered,
+animated and drew its crosshair. A second bundler, Rollup, gave sizes within about 3 KB gzipped and the same ranking,
+except that Chart.js and TanStack Charts, 0.3 KB apart there, swap places. Unovis is measured from the build in this
+repository, the same package a release publishes, so the numbers describe the version these pages document; the other
+libraries are the published packages at the versions listed below.
+
+<table>
+  <thead>
+    <tr><th>Library</th><th>What was bundled</th><th>Minified</th><th>Gzipped</th></tr>
+  </thead>
+  <tbody>
+    {lineChartBuildSizes.map(size => (
+      <tr key={size.library}>
+        <td>{libraries[size.library].name}</td>
+        <td>{size.entry}</td>
+        <td>{size.minKb} KB</td>
+        <td>{size.gzipKb} KB</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+TanStack Charts is where the configuration matters most. Its defaults draw straight lines with no crosshair and no
+animation: 106.8 KB minified / 37.5 KB gzipped. The measured chart adds `d3Curve(curveMonotoneX)`, `focusGuideX` and the
+`motion()` renderer, which animates the first render and data updates as Unovis does. Animating only data updates, with
+the `svgAnimation` option instead of `motion()`, gives 118.2 / 41.3 KB. The harness keeps both as reference builds.
+
+React and ReactDOM add another 44.8 KB gzipped if your app doesn't ship them already. None of the libraries needs a
+separate stylesheet. AG Charts requires registering the modules a chart uses, but registering fewer modules barely
+changes its bundle size.
+
+## Versions tested
+
+<table>
+  <thead>
+    <tr><th>Library</th><th>Packages</th><th>Version</th><th>Default renderer</th></tr>
+  </thead>
+  <tbody>
+    {Object.values(libraries).map(library => (
+      <tr key={library.id}>
+        <td><a href={library.website}>{library.name}</a></td>
+        <td>{library.packages.join(', ')}</td>
+        <td>{library.version}</td>
+        <td>{library.renderer}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Found a mistake?
+
+Libraries change quickly, and we'd like these pages to stay accurate. If something is wrong or out of date,
+[open an issue](https://github.com/f5/unovis/issues) and we'll fix it.
+
+*Last updated in October 2026.*

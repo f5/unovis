@@ -1,0 +1,12 @@
+{
+  "name": "bundle-size-rollup-crosscheck",
+  "private": true,
+  "description": "Optional cross-check: same entries tree-shaken by Rollup instead of esbuild (then minified by the same esbuild minifier)",
+  "type": "module",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "29.0.3",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-replace": "6.0.3",
+    "rollup": "4.63.4"
+  }
+}

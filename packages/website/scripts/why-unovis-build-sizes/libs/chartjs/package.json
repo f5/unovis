@@ -1,0 +1,11 @@
+{
+  "name": "bundle-size-chartjs",
+  "private": true,
+  "description": "Isolated install: only this library (+ React 18, which is external in the React bundles) so no other library can influence dependency resolution/hoisting",
+  "dependencies": {
+    "chart.js": "4.5.1",
+    "react": "18.3.1",
+    "react-chartjs-2": "5.3.1",
+    "react-dom": "18.3.1"
+  }
+}

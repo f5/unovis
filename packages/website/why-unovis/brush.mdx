@@ -1,0 +1,49 @@
+---
+title: Brush
+description: A chart zoomed by a brush, rendered with Unovis, Recharts, ECharts, Vega-Lite and TanStack Charts side by side, with Chart.js, Nivo, AG Charts and Observable Plot for reference
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { brush } from '@site/src/comparisons/brush'
+
+<LibraryComparison comparison={brush}>
+
+# Brush
+
+A year of daily API requests, with a brush under the chart that zooms it into a range of days. The line above each
+chart names the selected days and their total.
+
+</LibraryComparison>
+
+## What to look for
+
+- **Drag a handle.** The Unovis `Brush` sits in a small chart of its own and sets the main chart's `xDomain`;
+  `scaleByDomain` fits the y axis to the selected days. Recharts' `<Brush>` and ECharts' `dataZoom` slider live inside
+  the chart and fit the y axis too. In Vega-Lite, an interval selection on an overview view sets the x domain of the
+  main view, as in its overview + detail example; the y axis keeps the whole year's range. TanStack Charts' `brushX`
+  reports a range, and the demo filters the rows and sets the x domain itself.
+- **Move the range.** Unovis moves a range only by its handles unless you turn on `draggable`, which the *30-day window*
+  preset does. In the other libraries, dragging inside the selection moves it by default.
+- **Start without a selection.** The Unovis, Recharts, ECharts and TanStack brushes start on the whole year with a
+  handle at each end; Vega-Lite starts empty, and you drag out a range on the overview.
+- **Randomize the data.** Unovis keeps the selected days and animates the chart. Recharts draws its brush across the
+  whole year again while the chart stays on the selected days.
+- **Chart.js, Nivo, AG Charts and Observable Plot.** Chart.js, Nivo and Plot have no brush (Chart.js' official zoom
+  plugin can drag a zoom box), and AG Charts' Navigator is an Enterprise feature.
+- **Presets.** *30-day window* (`selection`, `draggable`) is one every library here can draw: Recharts takes data
+  indices, the others dates. *Outside handles* (`handlePosition`, `handleWidth`) sets 14-pixel handles: Recharts
+  (`travellerWidth`) and TanStack Charts (`handleSize`, 24 pixels by default) set the width, ECharts takes a handle icon
+  whose shape gives the width, and none of them has an option for where the handles sit. Vega-Lite's interval selection
+  has no handles. *Zoom box* (`VisFreeBrush` with `mode: xy`) zooms both axes into a rectangle you drag on the chart;
+  only ECharts has it built in, as the toolbox's `dataZoom` feature, which the demo switches on with a
+  `takeGlobalCursor` action; Chart.js gets it from its official chartjs-plugin-zoom (`drag.enabled` with `mode: 'xy'`).
+  Recharts' docs build one from mouse events and a `ReferenceArea`, TanStack Charts brushes and zooms the x axis only,
+  and a Vega-Lite rectangle selection sets the domains of another view, not its own.
+
+## Feature comparison
+
+<FeatureTable features={['brush', 'zoom-pan', 'crosshair', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

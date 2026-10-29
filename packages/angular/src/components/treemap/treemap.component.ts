@@ -67,10 +67,10 @@ export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>
     };
   }
 
-
+  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   @Input() id?: ((d: Datum, i: number) => string | number)
 
-
+  /** Numeric accessor for segment size value. Default: `undefined`. */
   @Input() value?: NumericAccessor<Datum>
 
   /** Array of accessor functions to defined the nested groups. Default: `[]` */

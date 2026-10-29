@@ -1,0 +1,64 @@
+---
+title: Network Graph
+description: A service map rendered with Unovis, ECharts, Nivo, Chart.js and TanStack Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { networkGraph } from '@site/src/comparisons/graph'
+
+<LibraryComparison comparison={networkGraph}>
+
+# Network Graph
+
+The services of a web application with their response times and open alerts, and the requests per second between
+them, grouped by the kind of service. Each update removes or brings back a few optional services.
+
+</LibraryComparison>
+
+## What to look for
+
+- **Layout.** Every chart here uses a force layout. Unovis also has ELK, Dagre, parallel, circular and concentric
+  layouts (`layoutType`) and panels around groups of nodes (`panels`); ECharts, Nivo and the Chart.js graph plugin have
+  no layered layout for general graphs. TanStack Charts' `forceLayout` settles a force layout once and you draw the
+  nodes, links and labels with ordinary marks: `link` can take a `curve`, and there's an `arrow` mark for directed
+  edges. Observable Plot and Vega-Lite have no layout for a network like this one (Plot's `tree`
+  mark takes strict hierarchies only): you would compute the positions yourself before drawing dots and links.
+- **Icons and alerts.** Unovis draws an SVG icon inside every node (`nodeIcon`, with symbols from the container's
+  `svgDefs`) and a red badge with the number of open alerts (`nodeSideLabels`). The other demos show alerts only in
+  their tooltips.
+- **Labels.** Unovis wraps long names (`nodeLabelFitMode`) and shows the response time underneath (`nodeSubLabel`).
+  ECharts labels the nodes too, with the response time on a second line. Nivo shows names only in tooltips, and so does
+  the Chart.js demo; Chart.js can add node labels with the official datalabels plugin.
+- **Traffic.** Link width shows requests per second. Unovis curves the links (`linkCurvature`) and sends particles along
+  them (`linkFlow`), so you can see which way the traffic goes.
+- **Zoom, pan and drag.** Unovis and ECharts let you drag nodes, and both can zoom and pan (turned off here with
+  `disableZoom` and `roam`, so the page keeps scrolling). Chart.js can zoom and pan with the official zoom plugin but
+  can't drag nodes in a force layout. TanStack Charts has no node drag (`forceLayout` runs no live simulation), and its
+  `zoomX` zooms and pans along x only. Nivo does none of these.
+- **Change the services.** Unovis animates services in and out while the rest of the graph settles into its new layout.
+- **Your own nodes.** When the built-in shapes, icons and labels aren't enough, Unovis lets you render nodes yourself:
+  `nodeEnterCustomRenderFunction`, `nodeUpdateCustomRenderFunction` and friends hand you each node's SVG group, so you
+  can draw anything and keep Unovis' layout, zoom, drag and transitions
+  ([custom rendering](/docs/components/Graph#custom-rendering-15)).
+- **Hide a group from the legend.** ECharts toggles categories on its own; Unovis takes a few lines of state, and so
+  does TanStack Charts, whose demo filters the hidden services out of its marks. Nivo and Chart.js have no legend for
+  this chart.
+- **Presets.** *Layered layout* switches Unovis to Dagre (`layoutType`, `dagreLayoutSettings`) and puts every service to
+  the right of its callers. TanStack Charts gets the same kind of columns from its Sankey layout (`sankeyDiagram` with
+  `align: 'left'`), which hands the node centers to the same `dot`, `link` and `text` marks. The ECharts graph series
+  has no layered layout and the Chart.js graph plugin's `tree` and `dendrogram` take one parent per node, so in those
+  two you'd compute the coordinates yourself. Nivo's network takes no coordinates: it always runs its link, charge and
+  center forces, so it can draw neither columns nor a ring. *Circular layout* (`layoutType`) is built into ECharts too.
+  Chart.js and TanStack Charts have no circular layout, but both get a ring from D3's radial force: the Chart.js plugin
+  has it as `simulation.forces.radial`, and TanStack's `forceLayout` takes it as a `custom` force. Unovis and TanStack
+  Charts move the nodes onto the ring and back. ECharts moves them onto the ring, but on the way back it puts them
+  straight where its force layout left them, and Chart.js draws a new chart and lets its simulation settle. *Size by
+  latency* (`nodeSize`) works in every library.
+
+## Feature comparison
+
+<FeatureTable features={['network', 'dag', 'graph-zoom', 'legend-toggle', 'data-labels', 'animation', 'darkMode', 'renderer']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

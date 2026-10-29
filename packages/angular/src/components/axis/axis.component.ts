@@ -127,7 +127,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() numTicks?: number
 
   /** Approximate spacing between ticks in pixels, used to derive the number of ticks
-   * when `numTicks` is not set. Only applies to the X axis. Default: `175` */
+   * when `numTicks` is not set. Only applies to the X axis. Default: `120` */
   @Input() tickSpacing?: number
 
   /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */

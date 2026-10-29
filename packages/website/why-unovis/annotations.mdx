@@ -1,0 +1,52 @@
+---
+title: Annotations
+description: A line chart with callout annotations rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot, Vega-Lite and TanStack Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { annotations } from '@site/src/comparisons/annotations'
+
+<LibraryComparison comparison={annotations}>
+
+# Annotations
+
+Daily active users of a SaaS app from March to May 2025, in thousands. Callouts point at the days of two releases and
+at the worst day of a login outage, which moves when you randomize the data.
+
+</LibraryComparison>
+
+## What to look for
+
+- **Text that wraps.** A Unovis annotation is a text frame: give it a `width` (here a fifth of the chart, in percent)
+  and the text wraps inside it, so it narrows with the card. ECharts wraps a label at a fixed `width` with
+  `overflow: 'break'`, AG Charts at a series label's `maxWidth`, Observable Plot at a `lineWidth` in ems, and Recharts
+  at a label's `width`. Chart.js, Vega-Lite and TanStack Charts don't wrap text: the demos break each callout into lines
+  by hand.
+- **Connectors.** Unovis draws the connector from the edge of the text to the subject, with a gap around the point. The
+  others draw it as a mark of its own: a `markLine` segment in ECharts, a `ReferenceLine` `segment` in Recharts, a
+  two-point line series in AG Charts, a rule or link in Plot, Vega-Lite and TanStack Charts. The Chart.js annotation
+  plugin has a `callout` on its labels; the label is lifted to its row with a pixel `yAdjust` that a scriptable option
+  computes from the y scale.
+- **Randomize the data.** The outage moves and every callout follows its point. The Unovis subjects are functions of the
+  chart's scales, so they're placed again on every render and resize.
+- **Nivo** has no annotations on line charts. Its `markers` draw a line across the whole plot at a value, with one line
+  of text, so the demo marks the three days with vertical text instead of callouts.
+- **AG Charts** Community has no annotations: its Annotations module is Enterprise. Each callout is a line series of
+  two points, from the day's value up to the callout row, and the text is the label of its top point.
+- **Presets.** *Rings* (`subject.radius`, `connectorLineStrokeDasharray`) puts a ring around each annotated day and
+  dashes the connectors; the other libraries draw the rings as point or dot marks of their own. Nivo draws a point on
+  every day, so only the event days' points get a border, from a `pointBorderColor` function.
+  *Rich text* (`content` as a list of styled text blocks) sets a bold headline over the detail. ECharts does it in one
+  label with `rich` styles, Chart.js with a `font` per line and AG Charts with text segments from a label `formatter`;
+  Recharts, Plot, Vega-Lite and TanStack Charts take one weight per mark or label, so the headline is a second mark at
+  a hand-set offset above the detail, and Recharts keeps the detail on one line to know where it ends. *Incident
+  window* (`VisPlotband`, `VisPlotline`) shades the outage days and adds a goal line, which Nivo can't do without a
+  custom layer.
+
+## Feature comparison
+
+<FeatureTable features={['annotations', 'reference-line', 'reference-band', 'crosshair', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.
