@@ -29,7 +29,7 @@ import * as s from './style'
 
 export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInterface<Datum>> {
   static selectors = s
-  clippable = true // Don't apply clipping path to this component. See XYContainer
+  clippable = false // The Crosshair is not clipped, so its circles can overflow into the container margins. See XYContainer
   protected _defaultConfig = CrosshairDefaultConfig as CrosshairConfigInterface<Datum>
   public config: CrosshairConfigInterface<Datum> = this._defaultConfig
   container: Selection<SVGSVGElement, any, SVGSVGElement, any>
@@ -113,12 +113,18 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   }
 
   get bleed (): Spacing {
-    const { config: { circleRadius } } = this
+    const { config: { circleRadius }, _containerMargin: margin } = this
 
+    // The circles are allowed to overflow into the container margins (e.g. the space reserved by the axes),
+    // so the bleed is only requested on the sides where the margin is smaller than the circle radius.
     // We leave the bottom bleed empty because usually the crosshair is used along with the X axis,
     // so we don't need extra space at the bottom. For inverted charts, the users will need to specify
     // the container margins themselves to avoid the crosshair circles from being cut off.
-    return { top: circleRadius, left: circleRadius, right: circleRadius }
+    return {
+      top: Math.max(0, circleRadius - margin.top),
+      left: Math.max(0, circleRadius - margin.left),
+      right: Math.max(0, circleRadius - margin.right),
+    }
   }
 
   setContainer (containerSvg: Selection<SVGSVGElement, unknown, SVGSVGElement, unknown>): void {

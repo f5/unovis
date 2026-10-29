@@ -92,3 +92,17 @@ describe('Crosshair circles paint order', () => {
     expect(circles.map(c => c.id)).toEqual(['stacked-0', 'stacked-1', 'regular-0'])
   })
 })
+
+describe('Crosshair bleed', () => {
+  const crosshair = new Crosshair<Datum>({ x: d => d.x, y: [d => d.a], circleRadius: 5 })
+
+  it('requests the circle radius on the sides without container margin', () => {
+    crosshair.setContainerMargin({ top: 0, bottom: 0, left: 0, right: 0 })
+    expect(crosshair.bleed).toEqual({ top: 5, left: 5, right: 5 })
+  })
+
+  it('skips the bleed on the sides covered by the container margin', () => {
+    crosshair.setContainerMargin({ top: 2, bottom: 20, left: 40, right: 0 })
+    expect(crosshair.bleed).toEqual({ top: 3, left: 0, right: 5 })
+  })
+})
