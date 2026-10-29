@@ -1,6 +1,7 @@
 import { select, Selection } from 'd3-selection'
-import { range, sum } from 'd3-array'
+import { mean, range, sum } from 'd3-array'
 import { Transition } from 'd3-transition'
+import { line as d3Line } from 'd3-shape'
 
 // Utils
 import { throttle, getValue, getNumber, getBoolean, ensureArray } from '@/utils/data'
@@ -11,6 +12,7 @@ import { toPx } from '@/utils/to-px'
 
 // Types
 import { GraphInputLink, GraphInputNode } from '@/types/graph'
+import { Curve, CurveType } from '@/types/curve'
 
 // Local Types
 import { GraphCircleLabel, GraphLink, GraphLinkArrowStyle, GraphLinkStyle } from '../../types'
@@ -27,8 +29,11 @@ import {
   getLinkColor,
   getLinkLabelTextColor,
   getLinkArrowStyle,
+  getSmoothStepPathData,
+  getSmoothStepPoints,
   LINK_MARKER_WIDTH,
 } from './helper'
+import { GRAPH_LINK_CURVE_SMOOTH_STEP, GRAPH_LINK_SMOOTH_STEP_BORDER_RADIUS, GRAPH_LINK_SMOOTH_STEP_OFFSET } from './constants'
 import { ZoomLevel } from '../zoom-levels'
 
 // Styles
@@ -96,6 +101,14 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
   getLinkArrowDefId: (arrow: GraphLinkArrowStyle | undefined) => string,
   linkPathLengthMap: Map<string, number>
 ): Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown> {
+  // Smooth-step links always exit/enter nodes on the same fixed side, so we need one axis + direction for the
+  // whole selection: the dominant axis the graph flows along, and `1`/`-1` for its direction along that axis
+  const linksData = selection.data()
+  const avgDx = mean(linksData, d => getX(d.target) - getX(d.source)) ?? 0
+  const avgDy = mean(linksData, d => getY(d.target) - getY(d.source)) ?? 0
+  const smoothStepAxis: 'x' | 'y' = Math.abs(avgDx) >= Math.abs(avgDy) ? 'x' : 'y'
+  const smoothStepDirection = (smoothStepAxis === 'x' ? avgDx : avgDy) >= 0 ? 1 : -1
+
   return selection.each((d, i, elements) => {
     const element = elements[i]
     const linkGroup = select(element)
@@ -121,7 +134,13 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
     const cp2x = x1 + (x2 - x1) * 0.5 * curvature
     const cp2y = y1 + (y2 - y1) * 1.0 * curvature
 
-    const pathData = `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
+    const curveType = config.linkCurveType as CurveType
+    const curveFactory = Curve[curveType]
+    const pathData = curveType === GRAPH_LINK_CURVE_SMOOTH_STEP
+      ? getSmoothStepPathData(getSmoothStepPoints(x1, y1, x2, y2, GRAPH_LINK_SMOOTH_STEP_OFFSET, smoothStepAxis, smoothStepDirection), GRAPH_LINK_SMOOTH_STEP_BORDER_RADIUS)
+      : curveFactory
+        ? d3Line().curve(curveFactory)([[x1, y1], [cp1x, cp1y], [cp2x, cp2y], [x2, y2]])
+        : `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
     const linkPathElement = linkSupport.attr('d', pathData).node()
     const cachedLinkPathLength = linkPathLengthMap.get(pathData)
     const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
