@@ -1,0 +1,118 @@
+name: Beta release
+
+on:
+  schedule:
+    - cron: '46 12 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Publish even if main has not changed since the last successful beta
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-beta
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'f5/unovis' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      publish: ${{ steps.version.outputs.publish }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - name: Check for changes
+      id: version
+      env:
+        GH_TOKEN: ${{ github.token }}
+        FORCE: ${{ inputs.force || false }}
+      run: |
+        previous=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/release-beta.yml/runs?status=success&branch=main&per_page=1" --jq '.workflow_runs[0].head_sha // ""')
+        if [[ "$previous" == "$GITHUB_SHA" && "$FORCE" != true ]]; then
+          echo "publish=false" >> "$GITHUB_OUTPUT"
+          echo "Main has not changed since the last successful beta." >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+        fi
+        base=$(node -p "require('./package.json').version.split('-')[0]")
+        echo "version=$base-beta.$GITHUB_RUN_NUMBER.g${GITHUB_SHA:0:12}" >> "$GITHUB_OUTPUT"
+        echo "publish=true" >> "$GITHUB_OUTPUT"
+    - uses: actions/setup-node@v4
+      if: steps.version.outputs.publish == 'true'
+      with:
+        node-version-file: '.nvmrc'
+    - uses: pnpm/action-setup@v4
+      if: steps.version.outputs.publish == 'true'
+    - name: Install dependencies
+      if: steps.version.outputs.publish == 'true'
+      run: pnpm install --frozen-lockfile
+    - name: Set temporary beta versions
+      if: steps.version.outputs.publish == 'true'
+      env:
+        BETA_VERSION: ${{ steps.version.outputs.version }}
+      run: printf '%s\n' "$BETA_VERSION" | bash update-version.sh --no-install
+    - name: Build packages
+      if: steps.version.outputs.publish == 'true'
+      run: |
+        pnpm build:ts
+        pnpm build:angular
+        pnpm build:react
+        pnpm build:svelte
+        pnpm build:vue
+        pnpm build:solid
+        pnpm build:mcp
+    - name: Test
+      if: steps.version.outputs.publish == 'true'
+      run: |
+        pnpm test:ts
+        pnpm --dir packages/ssr test
+        pnpm test:mcp
+    - name: Pack beta artifacts
+      if: steps.version.outputs.publish == 'true'
+      env:
+        BETA_VERSION: ${{ steps.version.outputs.version }}
+      run: bash scripts/release-beta.sh pack
+    - uses: actions/upload-artifact@v4
+      if: steps.version.outputs.publish == 'true'
+      with:
+        name: beta-packages
+        path: beta-packages/
+        if-no-files-found: error
+        retention-days: 14
+
+  publish:
+    needs: build
+    if: needs.build.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+        registry-url: 'https://registry.npmjs.org'
+    - name: Install npm with trusted publishing and dist-tag support
+      run: npm install --global npm@11.21.0 --ignore-scripts
+    - uses: actions/download-artifact@v4
+      with:
+        name: beta-packages
+        path: beta-packages/
+    - name: Publish beta artifacts
+      env:
+        BETA_VERSION: ${{ needs.build.outputs.version }}
+      run: bash scripts/release-beta.sh publish
