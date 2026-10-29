@@ -1,10 +1,11 @@
-import { Selection, pointer } from 'd3-selection'
+import { Selection, pointer, select } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
-import { least, bisectLeft, bisectRight } from 'd3-array'
+import { least, bisectLeft, bisectRight, extent } from 'd3-array'
 
 // Core
 import { XYComponentCore } from '@/core/xy-component'
 import { Tooltip } from '@/components/tooltip'
+import type { Zoom } from '@/components/zoom'
 
 // Utils
 import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest2D, isFunction } from '@/utils/data'
@@ -17,8 +18,17 @@ import { FindNearestDirection } from '@/types/data'
 import { Spacing } from '@/types/spacing'
 
 // Local Types
-import { CrosshairAccessors, CrosshairCircle } from './types'
-import { CrosshairSnapMode, CROSSHAIR_CIRCLE_OVERLAP_RADII } from './constants'
+import { CrosshairAccessors, CrosshairCircle, CrosshairSeries, CrosshairTickFormats } from './types'
+import {
+  CrosshairSnapMode,
+  CROSSHAIR_CIRCLE_OVERLAP_RADII,
+  CROSSHAIR_ACTIVE_CIRCLE_RADIUS_SCALE,
+  CROSSHAIR_KEYBOARD_PAGE_FRACTION,
+  CROSSHAIR_KEYBOARD_PAN_PADDING,
+} from './constants'
+
+// Local Utils
+import { getTextContent } from './utils'
 
 // Config
 import { CrosshairDefaultConfig, CrosshairConfigInterface } from './config'
@@ -39,6 +49,19 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   private _yPx: number | undefined = undefined
   private _mouseEvent: MouseEvent | undefined = undefined
   private _animFrameId: number = null
+  // Keyboard navigation state, see `showAtDatum`
+  private _keyboardDatumIndex: number | undefined = undefined
+  private _keyboardSeriesId: string | undefined = undefined
+  private _keyboardEvent: KeyboardEvent | undefined = undefined
+  /** The last data point navigated to with the keyboard, to continue from */
+  private _lastKeyboardDatumIndex: number | undefined = undefined
+  private _isKeyboardCrosshairShown = false
+  private _liveRegion: Selection<HTMLDivElement, unknown, null, undefined> | undefined
+
+  /** Zoom of the container, so keyboard navigation can pan the chart. Set by XYContainer */
+  public zoom: Zoom<Datum> | undefined
+  /** Tick formats of the axes, used in the screen reader announcements. Set by XYContainer */
+  public tickFormats: CrosshairTickFormats = {}
 
   /** Tooltip component to be used by Crosshair if not provided by the config.
    * This property is supposed to be set externally by a container component like XYContainer. */
@@ -125,18 +148,204 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     if (this.container === containerSvg) return
 
     this.container = containerSvg
-    this.container.on('mousemove.crosshair', this._onMouseMove.bind(this))
-    this.container.on('mouseout.crosshair', this._onMouseOut.bind(this))
+    this.container.on('pointermove.crosshair', this._onPointerMove.bind(this))
+    this.container.on('pointerout.crosshair', this._onPointerOut.bind(this))
     this.container.on('wheel.crosshair', this._onWheel.bind(this))
+    // A touch shows the crosshair only while the finger is down
+    this.container.on('pointerdown.crosshair', this._onPointerDown.bind(this))
+    this.container.on('pointerup.crosshair pointercancel.crosshair', this._onPointerUp.bind(this))
+    this._updateLiveRegion()
   }
 
   setData (data: Datum[]): void {
     super.setData(data)
     this._sortedDataCache = null
+    this._lastKeyboardDatumIndex = undefined
+    this._isKeyboardCrosshairShown = false
+  }
+
+  /** The series that have a value at the datum, ordered from top to bottom.
+   * Requires `snapToData` and is empty otherwise */
+  private _getSeries (datumIndex: number): CrosshairSeries[] {
+    const datum = this.datamodel.data?.[datumIndex]
+    if (datum === undefined) return []
+
+    return this.getCircleData(datum, datumIndex)
+      .filter(c => c.opacity !== 0 && isFinite(c.y))
+      .sort((a, b) => a.y - b.y)
+      .map(({ id, index, value, y }) => ({ id, index, value, y }))
+  }
+
+  /** Shows the crosshair at the datum (for example, when navigating the chart with the keyboard),
+   * optionally highlighting the series with the provided id (see `getSeries`). Any pointer movement or `hide()` resets it */
+  public showAtDatum (datumIndex: number, seriesId?: string, event?: KeyboardEvent): void {
+    this._keyboardSeriesId = seriesId
+    this._renderAtDatum(datumIndex, event)
+  }
+
+  private _renderAtDatum (datumIndex: number, event?: KeyboardEvent): void {
+    this._keyboardDatumIndex = datumIndex
+    this._keyboardEvent = event
+    this._xPx = undefined
+    this._yPx = undefined
+    this._mouseEvent = undefined
+
+    window.cancelAnimationFrame(this._animFrameId)
+    this._animFrameId = window.requestAnimationFrame(() => this._render())
+  }
+
+  private _resetKeyboardState (): void {
+    this._keyboardDatumIndex = undefined
+    this._keyboardEvent = undefined
+  }
+
+  /** Sets up the live region for the keyboard navigation announcements in the container's element */
+  private _updateLiveRegion (): void {
+    const element = this.container?.node().parentElement
+    if (this.config.keyboardNavigation && element) {
+      if (this._liveRegion?.node().parentElement !== element) {
+        this._liveRegion?.remove()
+        this._liveRegion = select(element).append('div')
+          .attr('class', s.liveRegion)
+          .attr('aria-live', 'polite')
+          .attr('aria-atomic', true)
+      }
+    } else {
+      this._liveRegion?.remove()
+      this._liveRegion = undefined
+    }
+  }
+
+  /** Indices of the data that keyboard navigation can reach, sorted by the x value:
+   * the ones within the zoom extent when the chart has a Zoom, or within the X domain otherwise */
+  private _getNavigableDataIndices (): number[] {
+    const data = this.datamodel.data ?? []
+    const domain = this.zoom ? this.zoom.getExtent() : this.xScale?.domain().map(Number)
+    if (!domain) return []
+
+    const [min, max] = extent(domain)
+    return this._getSortedData().indices.filter(i => {
+      const x = getNumber(data[i], this.accessors.x, i)
+      return x >= min && x <= max
+    })
+  }
+
+  /** Handles the keyboard navigation keys of the focused chart. Called by XYContainer */
+  onKeyDown (event: KeyboardEvent): void {
+    if (!this.config.keyboardNavigation || event.defaultPrevented) return
+
+    const indices = this._getNavigableDataIndices()
+    if (!indices.length) return
+
+    const last = indices.length - 1
+    const currentPosition = indices.indexOf(this._lastKeyboardDatumIndex)
+    const position = this._isKeyboardCrosshairShown && currentPosition !== -1 ? currentPosition : undefined
+    const pageStep = Math.max(1, Math.round(indices.length * CROSSHAIR_KEYBOARD_PAGE_FRACTION))
+    let newPosition: number
+    switch (event.key) {
+      case 'ArrowRight': newPosition = position === undefined ? 0 : position + 1; break
+      case 'ArrowLeft': newPosition = position === undefined ? last : position - 1; break
+      case 'PageDown': newPosition = (position ?? -1) + pageStep; break
+      case 'PageUp': newPosition = (position ?? last + 1) - pageStep; break
+      case 'Home': newPosition = 0; break
+      case 'End': newPosition = last; break
+      case 'ArrowUp':
+      case 'ArrowDown': {
+        // The series are ordered from top to bottom
+        newPosition = position ?? 0
+        const series = this._getSeries(indices[newPosition])
+        if (!series.length) return
+
+        const i = series.findIndex(d => d.id === this._keyboardSeriesId)
+        const next = event.key === 'ArrowUp' ? (i === -1 ? series.length - 1 : i - 1) : (i === -1 ? 0 : i + 1)
+        this._keyboardSeriesId = series[clamp(next, 0, series.length - 1)].id
+        break
+      }
+      case 'Escape':
+        if (!this._isKeyboardCrosshairShown) return
+        this._isKeyboardCrosshairShown = false
+        this._keyboardSeriesId = undefined
+        this._liveRegion?.text('')
+        this.hide(event)
+        event.preventDefault()
+        return
+      default:
+        return
+    }
+
+    event.preventDefault()
+    this._showKeyboardDatum(indices[clamp(newPosition, 0, last)], event)
+  }
+
+  /** X value of the data point the Crosshair has been moved to with the keyboard, if it's shown.
+   * The `+` and `-` keys zoom around it */
+  getKeyboardX (): number | undefined {
+    const datumIndex = this._lastKeyboardDatumIndex
+    if (!this._isKeyboardCrosshairShown || datumIndex === undefined) return undefined
+    return getNumber(this.datamodel.data[datumIndex], this.accessors.x, datumIndex)
+  }
+
+  /** Shows the Crosshair when the chart gets focused with the keyboard (not on click). Called by XYContainer */
+  onFocus (): void {
+    const element = this.container?.node().parentElement
+    if (!this.config.keyboardNavigation || !element?.matches(':focus-visible')) return
+
+    const indices = this._getNavigableDataIndices()
+    const datumIndex = indices.includes(this._lastKeyboardDatumIndex) ? this._lastKeyboardDatumIndex : indices[0]
+    if (datumIndex !== undefined) this._showKeyboardDatum(datumIndex)
+  }
+
+  /** Called by XYContainer when the chart loses focus */
+  onBlur (): void {
+    if (!this._isKeyboardCrosshairShown) return
+
+    this._isKeyboardCrosshairShown = false
+    this._liveRegion?.text('')
+    this.hide()
+  }
+
+  private _showKeyboardDatum (datumIndex: number, event?: KeyboardEvent): void {
+    const datum = this.datamodel.data[datumIndex]
+    const x = getNumber(datum, this.accessors.x, datumIndex)
+    // The highlighted series is remembered even when it doesn't have a value at this data point
+    const series = this._getSeries(datumIndex).find(d => d.id === this._keyboardSeriesId)
+
+    // Pan the zoomed chart to keep the data point visible
+    const domain = this.zoom?.getDomain()
+    if (domain && (x < domain[0] || x > domain[1])) {
+      const padding = (domain[1] - domain[0]) * CROSSHAIR_KEYBOARD_PAN_PADDING
+      const shift = x < domain[0] ? x - padding - domain[0] : x + padding - domain[1]
+      this.zoom.setDomain([domain[0] + shift, domain[1] + shift], event)
+    }
+
+    this._lastKeyboardDatumIndex = datumIndex
+    this._isKeyboardCrosshairShown = true
+    this._renderAtDatum(datumIndex, event)
+    this._liveRegion?.text(this._getKeyboardAnnouncement(datum, datumIndex, x, series))
+  }
+
+  private _getKeyboardAnnouncement (datum: Datum, datumIndex: number, x: number, series: CrosshairSeries | undefined): string {
+    const { config, tickFormats } = this
+    const xValue = this.xScale.invert(this.xScale.range()[0]) instanceof Date ? new Date(x) : x
+    if (config.keyboardAnnouncement) return config.keyboardAnnouncement(xValue, datum, datumIndex, series?.index)
+
+    const xText = tickFormats.x?.(xValue, 0, [xValue] as number[] | Date[]) ?? xValue.toLocaleString()
+    const formatY = (y: number): string => tickFormats.y?.(y, 0, [y]) ?? y.toLocaleString()
+    if (series) {
+      const seriesCount = (this.accessors.yStacked?.length ?? 0) + (this.accessors.y?.length ?? 0)
+      return `${xText}, series ${series.index + 1} of ${seriesCount}: ${formatY(series.value)}`
+    }
+
+    const templateText = getTextContent(config.template(datum, x, this.datamodel.data, datumIndex))
+    if (templateText) return templateText
+
+    const values = this._getSeries(datumIndex).sort((a, b) => a.index - b.index).map(d => formatY(d.value))
+    return values.length ? `${xText}: ${values.join(', ')}` : xText
   }
 
   setConfig (config: CrosshairConfigInterface<Datum>): void {
     super.setConfig(config)
+    this._updateLiveRegion()
     this._sortedDataCache = null
   }
 
@@ -176,7 +385,12 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     const { config, datamodel } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const isForceShowAtDefined = config.forceShowAt !== undefined
-    const xPx = isForceShowAtDefined ? this.xScale(config.forceShowAt) : this._xPx
+    const keyboardDatumIndex = isForceShowAtDefined ? undefined : this._keyboardDatumIndex
+    const keyboardDatum = keyboardDatumIndex === undefined ? undefined : datamodel.data?.[keyboardDatumIndex]
+    const isKeyboardActive = keyboardDatum !== undefined
+    const xPx = isForceShowAtDefined
+      ? this.xScale(config.forceShowAt)
+      : isKeyboardActive ? this.xScale(getNumber(keyboardDatum, this.accessors.x, keyboardDatumIndex)) : this._xPx
 
     const xValue = this.xScale.invert(xPx) as number
 
@@ -204,7 +418,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       // This requires a real pointer position, so we fall back to X-only snapping when `forceShowAt` is set
       // or there's no pointer Y available yet.
       const useXYMode = config.snapMode === CrosshairSnapMode.XY && !isForceShowAtDefined && this._yPx !== undefined
-      if (useXYMode) {
+      if (isKeyboardActive) {
+        nearestDatum = keyboardDatum
+        nearestDatumIndex = keyboardDatumIndex
+      } else if (useXYMode) {
         const nearest = getNearest2D(datamodel.data, [this._xPx, this._yPx], this.xScale, this.yScale, this.accessors.x, this.accessors.y, this.accessors.yStacked, this.accessors.baseline)
         if (nearest) {
           nearestDatum = nearest.datum
@@ -225,7 +442,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     const isCrosshairWithinXRange = (xPx >= xRange[0]) && (xPx <= xRange[1])
     const isCrosshairWithinYRange = (this._yPx >= Math.min(yRange[0], yRange[1])) && (this._yPx <= Math.max(yRange[0], yRange[1]))
-    let shouldShow = config.skipRangeCheck ? !!this._xPx : (this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange)
+    let shouldShow = isKeyboardActive ? isCrosshairWithinXRange
+      : config.skipRangeCheck ? !!this._xPx : (this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange)
 
     // Distance in pixels between the pointer and the snapped datum: the full 2D distance in
     // `CrosshairSnapMode.XY` mode (so a point that's close in X but far in Y still counts as far),
@@ -237,6 +455,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       shouldShow = false
     }
 
+    // The circle of the series highlighted with the keyboard
+    const activeCircle = isKeyboardActive && this._keyboardSeriesId !== undefined
+      ? this.getCircleData(nearestDatum, nearestDatumIndex).find(c => c.id === this._keyboardSeriesId)
+      : undefined
+
     const tooltip = config.tooltip ?? this.tooltip
     if (shouldShow && tooltip && this._isContainerInViewport()) {
       const container = tooltip.getContainer() || this.container.node()
@@ -244,13 +467,14 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       const nearestDatumXValue = (this.accessors.x && nearestDatum !== undefined) ? getNumber(nearestDatum, this.accessors.x, nearestDatumIndex) : undefined
       const tooltipXValue = nearestDatumXValue ?? xValue
 
-      if (isForceShowAtDefined) {
+      if (isForceShowAtDefined || isKeyboardActive) {
         // Convert SVG coordinates to screen coordinates
         const containerRect = this.container.node().getBoundingClientRect()
 
         // Use the actual left margin from the container
         const screenX = (isContainerBody ? xPx + containerRect.left : xPx) + this._containerMargin.left
-        const screenY = this._height / 2 + (isContainerBody ? containerRect.top : 0)
+        const y = activeCircle ? activeCircle.y + this._containerMargin.top : this._height / 2
+        const screenY = y + (isContainerBody ? containerRect.top : 0)
         const pos = [screenX, screenY] as [number, number]
         this._showTooltip(nearestDatum, tooltipXValue, pos, leftNearestDatumIndex)
       } else if (this._mouseEvent) {
@@ -259,10 +483,14 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       }
     } else this._hideTooltip()
 
-    // Trigger `onCrosshairMove` if the render was triggered by a mouse move event
-    if (this._mouseEvent) {
-      config.onCrosshairMove?.(shouldShow ? this.xScale.invert(this._xPx) as number : undefined, nearestDatum, nearestDatumIndex, this._mouseEvent)
+    // Trigger `onCrosshairMove` if the render was triggered by a pointer move or a keyboard event
+    const sourceEvent = this._mouseEvent ?? this._keyboardEvent
+    if (sourceEvent) {
+      // With `forceShowAt`, we report the pointer position, so it can drive `forceShowAt` (e.g. to sync multiple charts)
+      const reportedXPx = isKeyboardActive ? xPx : this._xPx
+      config.onCrosshairMove?.(shouldShow ? this.xScale.invert(reportedXPx) as number : undefined, nearestDatum, nearestDatumIndex, sourceEvent)
       this._mouseEvent = undefined
+      this._keyboardEvent = undefined
     }
 
     smartTransition(this.g, duration)
@@ -284,7 +512,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .attr('x1', xClamped)
       .attr('x2', xClamped)
 
-    const lineHorizontalY = config.showHorizontalLine ? this.getLineHorizontalY(circleData) : undefined
+    const lineHorizontalY = config.showHorizontalLine ? this.getLineHorizontalY(circleData, activeCircle?.y ?? this._yPx) : undefined
     this.lineHorizontal
       .style('display', lineHorizontalY === undefined ? 'none' : null)
       .attr('x1', 0)
@@ -315,7 +543,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     smartTransition(circlesMerged, duration, easeLinear)
       .attr('cx', xClamped)
       .attr('cy', d => d.y)
-      .attr('r', config.circleRadius)
+      .attr('r', d => d.id === activeCircle?.id ? config.circleRadius * CROSSHAIR_ACTIVE_CIRCLE_RADIUS_SCALE : config.circleRadius)
       .style('opacity', d => d.opacity)
       .style('fill', d => d.color)
       .style('stroke', d => d.strokeColor)
@@ -328,8 +556,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .on('interrupt', function () { this.remove() })
   }
 
-  hide (sourceEvent?: MouseEvent | WheelEvent): void {
+  hide (sourceEvent?: MouseEvent | WheelEvent | KeyboardEvent): void {
     window.cancelAnimationFrame(this._animFrameId)
+    this._resetKeyboardState()
     this._animFrameId = window.requestAnimationFrame(() => {
       this._xPx = undefined
       this._yPx = undefined
@@ -341,7 +570,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     })
   }
 
-  _onMouseMove (event: MouseEvent): void {
+  _onPointerMove (event: PointerEvent): void {
+    // Ignore all the fingers except the first one
+    if (event.pointerType === 'touch' && !event.isPrimary) return
+
     const { datamodel, element } = this
     if (!this.accessors.x && datamodel.data?.length) {
       console.warn('Unovis | Crosshair: X accessor function has not been configured. Please check if it\'s present in the configuration object')
@@ -350,6 +582,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     this._xPx = x
     this._yPx = y
     this._mouseEvent = event
+    this._resetKeyboardState()
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(() => {
@@ -359,20 +592,42 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     })
   }
 
-  _onMouseOut (event?: MouseEvent): void {
-    // Only hide if the mouse actually left the SVG, not just moved to a child
-    if (!event || !this.container?.node().contains((event as MouseEvent).relatedTarget as Node)) {
+  _onPointerOut (event?: PointerEvent): void {
+    if (event?.pointerType === 'touch' && !event.isPrimary) return
+
+    // Safari fires the boundary events of touches and pens without `relatedTarget`, so we look up the element under the pointer
+    const root = this.container?.node().getRootNode() as Document | ShadowRoot
+    const isDirectPointer = event?.pointerType === 'touch' || event?.pointerType === 'pen'
+    const relatedTarget = event?.relatedTarget ?? (isDirectPointer && isFunction(root?.elementFromPoint)
+      ? root.elementFromPoint(event.clientX, event.clientY)
+      : null)
+
+    // Only hide if the pointer actually left the SVG, not just moved to a child
+    if (!event || !this.container?.node().contains(relatedTarget as Node)) {
       this.hide(event)
     }
   }
 
+  _onPointerDown (event: PointerEvent): void {
+    // Mouse shows the crosshair on `pointermove` (hover), while a touch or a pen (it can't always hover) shows it right away
+    if (event.pointerType === 'touch' || event.pointerType === 'pen') this._onPointerMove(event)
+  }
+
+  _onPointerUp (event: PointerEvent): void {
+    // `pointercancel` is fired when the browser takes over the gesture, e.g. to scroll the page
+    if (event.isPrimary && (event.pointerType === 'touch' || event.type === 'pointercancel')) this.hide(event)
+  }
+
   _onWheel (event: WheelEvent): void {
-    this.hide(event)
+    // When the wheel zooms or pans the chart (the container prevents its default action), the crosshair stays under the pointer
+    if (event.defaultPrevented) this._onPointerMove(event as unknown as PointerEvent)
+    else this.hide(event)
   }
 
   protected _onDestroy (): void {
     window.cancelAnimationFrame(this._animFrameId)
     this.container?.on('.crosshair', null)
+    this._liveRegion?.remove()
   }
 
   _showTooltip (datum: Datum | undefined, xValue: number, pos: [number, number], nearestDatumIndex: number | undefined): void {
@@ -407,8 +662,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
   /** Y position of the horizontal crosshair line: the circle closest to the pointer (i.e. the snapped data point),
    * or the pointer position itself when there are no circles to snap to. `undefined` when there's nothing to draw */
-  private getLineHorizontalY (circles: CrosshairCircle[]): number | undefined {
-    const yPx = this._yPx
+  private getLineHorizontalY (circles: CrosshairCircle[], yPx: number | undefined): number | undefined {
     const circleYs = circles.filter(c => c.opacity !== 0 && isFinite(c.y)).map(c => c.y)
     const y = (yPx === undefined ? circleYs[0] : least(circleYs, cy => Math.abs(cy - yPx))) ?? yPx
     return isFinite(y) ? clamp(Math.round(y), 0, this._height) : undefined
@@ -445,7 +699,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     return order.map(i => circles[i])
   }
 
-  private getCircleData (datum: Datum, datumIndex: number): CrosshairCircle[] {
+  private getCircleData (datum: Datum, datumIndex: number): (CrosshairCircle & Pick<CrosshairSeries, 'index' | 'value'>)[] {
     const { config } = this
     const colorOptions = { colorFn: this._colorFunction }
     const colorKeys = this.colorKeys
@@ -454,9 +708,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       const yAccessors = this.accessors.y ?? []
       const yStackedAccessors = this.accessors.yStacked ?? []
       const baselineValue = getNumber(datum, this.accessors.baseline, datumIndex) || 0
-      const stackedValues: CrosshairCircle[] = getStackedValues(datum, datumIndex, ...yStackedAccessors)
+      const stackedValues = getStackedValues(datum, datumIndex, ...yStackedAccessors)
         .map((value, index) => ({
           id: `stacked-${index}`,
+          index,
+          value: getNumber(datum, yStackedAccessors[index], datumIndex),
           y: this.yScale(value + baselineValue),
           opacity: isNumber(getNumber(datum, yStackedAccessors[index], datumIndex)) ? 1 : 0,
           magnitude: Math.abs(getNumber(datum, yStackedAccessors[index], datumIndex)),
@@ -465,12 +721,14 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
           strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, index) : undefined,
         }))
 
-      const regularValues: CrosshairCircle[] = yAccessors
+      const regularValues = yAccessors
         .map((a, index) => {
           const value = getNumber(datum, a, datumIndex)
           const circleIndex = stackedValues.length + index
           return {
             id: `regular-${index}`,
+            index: circleIndex,
+            value,
             y: this.yScale(value),
             opacity: isNumber(value) ? 1 : 0,
             magnitude: Math.abs(value),

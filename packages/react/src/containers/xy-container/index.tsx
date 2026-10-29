@@ -8,6 +8,7 @@ import { Crosshair } from '@unovis/ts/components/crosshair'
 import { Axis } from '@unovis/ts/components/axis'
 import { AxisType } from '@unovis/ts/components/axis/types'
 import { Annotations } from '@unovis/ts/components/annotations'
+import type { Zoom } from '@unovis/ts/components/zoom'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
@@ -59,6 +60,7 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
       tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
       crosshair: container.current?.querySelector<VisComponentElement<Crosshair<Datum>>>('vis-crosshair')?.__component__,
       annotations: container.current?.querySelector<VisComponentElement<Annotations>>('vis-annotations')?.__component__,
+      zoom: container.current?.querySelector<VisComponentElement<Zoom<Datum>>>('vis-zoom')?.__component__,
       xAxis: Array
         .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
         .map(c => c.__component__)

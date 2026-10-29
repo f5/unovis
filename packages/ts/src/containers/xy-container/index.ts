@@ -1,6 +1,6 @@
 import { css } from '@/styles/emotion'
 import { extent, merge as mergeArrays } from 'd3-array'
-import { Selection } from 'd3-selection'
+import { Selection, select } from 'd3-selection'
 
 // Global CSS variables (side effects import)
 import '@/styles/index'
@@ -30,6 +30,7 @@ import { guid } from '@/utils/misc'
 // Config
 import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
 
+
 /** Configuration of any XY component. All fields are optional because `updateComponents` merges partial updates.
  * Concrete component config interfaces (e.g. `LineConfigInterface`) extend the base one,
  * so they can all be passed where this type is expected */
@@ -47,6 +48,11 @@ export class XYContainer<Datum> extends ContainerCore {
   private _firstRender = true
   private _defaultTooltip: Tooltip | undefined
 
+  /** Zoom gestures render the chart without animations */
+  private _isZoomRenderPending = false
+  /** Whether the container element had its own `tabindex` before the chart was created */
+  private _hasOwnTabIndex: boolean
+
   constructor (element: HTMLElement, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
 
@@ -59,14 +65,21 @@ export class XYContainer<Datum> extends ContainerCore {
     //  We have to provide tull url in order to fix that
     const highlightFilterId = 'saturate'
     const baseUrl = window.location.href.replace(window.location.hash, '')
-    this.svg.attr('class', css`
+    this.svg.classed(css`
       --highlight-filter-id: url(${baseUrl}#${highlightFilterId}); // defining a css variable
-    `)
+    `, true)
 
     this._svgDefs.append('filter')
       .attr('id', highlightFilterId)
       .attr('filterUnits', 'objectBoundingBox')
       .html('<feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/>')
+
+    // Keyboard navigation (see Crosshair) and keyboard zoom (see Zoom)
+    this._hasOwnTabIndex = element.hasAttribute('tabindex')
+    select(element)
+      .on('keydown.xy-keyboard', this._onKeyDown.bind(this))
+      .on('focus.xy-keyboard', this._onFocus.bind(this))
+      .on('blur.xy-keyboard', this._onBlur.bind(this))
 
     if (config) {
       this.updateContainer(config, true)
@@ -138,7 +151,12 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   public updateContainer (containerConfig: XYContainerConfigInterface<Datum>, preventRender?: boolean): void {
+    const prevXDomain = this.config.xDomain
     super.updateContainer(containerConfig)
+
+    // A new `xDomain` value (compared by value, so re-renders of the framework wrappers don't reset the zoom) replaces the zoomed domain
+    const xDomain = this.config.xDomain
+    if (prevXDomain?.[0] !== xDomain?.[0] || prevXDomain?.[1] !== xDomain?.[1]) this.config.zoom?.clear()
 
     const crosshair = containerConfig.crosshair
     const providedTooltip = containerConfig.tooltip === this._defaultTooltip ? undefined : containerConfig.tooltip
@@ -166,11 +184,32 @@ export class XYContainer<Datum> extends ContainerCore {
       tooltip.setComponents(this.components)
     }
 
+    // Set up the zoom. A replaced Zoom stops handling the gestures
+    const zoom = this.config.zoom
+    const prevZoom = (this.prevConfig as XYContainerConfigInterface<Datum>)?.zoom
+    if (prevZoom !== zoom) prevZoom?.setContainer(undefined)
+    zoom?.setContainer(this.svg, {
+      render: animate => {
+        this._isZoomRenderPending = this._isZoomRenderPending || !animate
+        this.render()
+      },
+      onPinchStart: event => {
+        this.config.crosshair?.hide(event)
+        this.config.tooltip?.hide()
+      },
+    })
+    zoom?.setComponents(this.components)
+
     // Set up the crosshair
     if (crosshair) {
       crosshair.setContainer(this.svg)
       crosshair.tooltip = tooltip
+      crosshair.zoom = zoom
     }
+
+    // Make the chart a tab stop when it can be zoomed or navigated with the keyboard
+    const isFocusable = zoom || crosshair?.config.keyboardNavigation
+    if (!this._hasOwnTabIndex) select(this._container).attr('tabindex', isFocusable ? 0 : null)
 
     // Sync the SVG children (clipping path, defs, axes, components, crosshair and annotations)
     // with the updated configuration, touching only the elements that changed.
@@ -221,7 +260,7 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Set the scales and update their domains once per render cycle
     // (the domains depend only on the data and the configuration, not on the sizing steps below)
-    const scaledComponents = clean([...this.components, config.xAxis, config.yAxis, config.crosshair])
+    const scaledComponents = clean([...this.components, config.xAxis, config.yAxis, config.crosshair, config.zoom])
     this._setScales(...scaledComponents)
     this._updateScalesDomain(...scaledComponents)
 
@@ -231,7 +270,7 @@ export class XYContainer<Datum> extends ContainerCore {
     }
 
     // Pass size, margin, and the color function to the components
-    const components = clean([...this.components, config.xAxis, config.yAxis, config.crosshair, config.annotations])
+    const components = clean([...this.components, config.xAxis, config.yAxis, config.crosshair, config.zoom, config.annotations])
     this._propagateSizeAndStyleToComponents(components, this._getMargin())
 
     // Update the scale ranges to the final size and margin
@@ -242,6 +281,9 @@ export class XYContainer<Datum> extends ContainerCore {
     const { config } = this
     super._render()
 
+    const duration = this._isZoomRenderPending ? 0 : customDuration
+    this._isZoomRenderPending = false
+
     // Get chart total margin after auto margin calculations
     const margin = this._getMargin()
 
@@ -251,10 +293,10 @@ export class XYContainer<Datum> extends ContainerCore {
         .style('clip-path', c.clippable ? `url(#${this._clipPathId})` : null)
         .style('-webkit-clip-path', c.clippable ? `url(#${this._clipPathId})` : null)
 
-      c.render(customDuration)
+      c.render(duration)
     }
 
-    this._renderAxes(this._firstRender ? 0 : customDuration)
+    this._renderAxes(this._firstRender ? 0 : duration)
 
     // Clip Rect
     // Extending the clipping path to allow small overflow (e.g. Line will looks better that way when it touches the edges)
@@ -270,6 +312,11 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Crosshair
     const crosshair = config.crosshair
+    // Let a touch drag move the Tooltip or the Crosshair instead of scrolling the page (see their `followTouchMove` options)
+    const followTouchMove = crosshair?.config.followTouchMove || config.tooltip?.followsTouchMove()
+    // With `zoom`, the chart handles pinch gestures by itself
+    const touchAction = config.zoom ? (followTouchMove ? 'none' : 'pan-y') : (followTouchMove ? 'pinch-zoom' : null)
+    this.svg.style('touch-action', touchAction)
     if (crosshair) {
       const nonStackedComponents = this.components.filter(c => !c.stacked)
       const stackedComponents = this.components.filter(c => c.stacked)
@@ -291,6 +338,7 @@ export class XYContainer<Datum> extends ContainerCore {
         .flatMap(c => flatten([c.config.y]).map((_, i) => c.config.colorKeys?.[i]))
 
       crosshair.colorKeys = colorKeys
+      crosshair.tickFormats = { x: config.xAxis?.config.tickFormat, y: config.yAxis?.config.tickFormat }
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
         .style('clip-path', `url(#${this._clipPathId})`)
         .style('-webkit-clip-path', `url(#${this._clipPathId})`)
@@ -344,6 +392,13 @@ export class XYContainer<Datum> extends ContainerCore {
         if (config.preventEmptyDomain || (config.preventEmptyDomain === null && (!hasDataProvided || dimension === ScaleDimension.Y))) {
           domain[1] = domain[0] + 1
         }
+      }
+
+      // Apply the zoomed X domain, keeping it within the data extent combined with the configured domain
+      if (dimension === ScaleDimension.X && config.zoom) {
+        const zoomedDomain = config.zoom.getZoomedDomain([domain[0], domain[1]], [min, max])
+        domain[0] = zoomedDomain[0]
+        domain[1] = zoomedDomain[1]
       }
 
       components.forEach(c => c.setScaleDomain(dimension, domain))
@@ -467,9 +522,30 @@ export class XYContainer<Datum> extends ContainerCore {
     return calculatedBleed
   }
 
+  private _onKeyDown (event: KeyboardEvent): void {
+    const { config } = this
+    // Ignore the keys pressed in other focusable elements inside the container (e.g. inputs rendered by the framework wrappers)
+    if (event.target !== this._container || event.altKey || event.ctrlKey || event.metaKey) return
+
+    config.crosshair?.onKeyDown(event)
+    config.zoom?.onKeyDown(event, config.crosshair?.getKeyboardX())
+  }
+
+  private _onFocus (): void {
+    this.config.crosshair?.onFocus()
+  }
+
+  private _onBlur (): void {
+    this.config.crosshair?.onBlur()
+  }
+
   public destroy (): void {
-    const { components, config: { tooltip, crosshair, annotations, xAxis, yAxis } } = this
+    const { components, config: { tooltip, crosshair, zoom, annotations, xAxis, yAxis } } = this
     super.destroy()
+
+    const container = select(this._container).on('.xy-keyboard', null)
+    if (!this._hasOwnTabIndex) container.attr('tabindex', null)
+    zoom?.destroy()
 
     for (const c of components) c?.destroy()
     tooltip?.destroy()

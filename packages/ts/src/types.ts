@@ -19,6 +19,7 @@ export * from '@/types/style'
 // Component Types
 export * from '@/core/component/types'
 export * from '@/components/crosshair/types'
+export * from '@/components/zoom/types'
 export * from '@/components/axis/types'
 export * from '@/components/chord-diagram/types'
 export * from '@/components/topojson-map/types'

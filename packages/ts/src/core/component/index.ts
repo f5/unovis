@@ -199,6 +199,8 @@ export class ComponentCore<
   public destroy (): void {
     if (this.isDestroyed()) return
 
+    this._setUpComponentEventsThrottled.cancel()
+    this._setCustomAttributesThrottled.cancel()
     this._onDestroy()
     this.g?.remove()
     this.element = undefined

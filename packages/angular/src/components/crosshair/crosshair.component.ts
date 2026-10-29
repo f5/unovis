@@ -163,17 +163,17 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    * - `x` is the horizontal position of the crosshair in the data space;
    * - `datum` is the nearest datum to the crosshair;
    * - `datumIndex` is the index of the nearest datum.
-   * - `event` is the event that triggered the crosshair move (mouse or wheel).
+   * - `event` is the event that triggered the crosshair move (pointer, wheel or keyboard).
    *
-   * When the mouse goes out of the container and on wheel events, all the arguments are `undefined` except for `event`.
+   * When the pointer goes out of the container, a touch ends and on wheel events, all the arguments are `undefined` except for `event`.
    * Default: `undefined` */
-  @Input() onCrosshairMove?: (x?: number | Date, datum?: Datum, datumIndex?: number, event?: MouseEvent | WheelEvent) => void
+  @Input() onCrosshairMove?: (x?: number | Date, datum?: Datum, datumIndex?: number, event?: MouseEvent | WheelEvent | KeyboardEvent) => void
 
   /** Force the crosshair to show at a specific position. Default: `undefined` */
   @Input() forceShowAt?: number | Date
 
   /** Skip range checks for crosshair visibility. When true, crosshair will show regardless of position within chart bounds. Default: `false`
-   * This is useful for testing, especially when you only triggers mousemove event but does not have real mouse event. */
+   * This is useful for testing, especially when you only trigger a synthetic `pointermove` event instead of moving a real pointer. */
   @Input() skipRangeCheck?: boolean
 
   /** Minimum fraction (`0` to `1`) of the container's area that must be visible in the
@@ -182,6 +182,27 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    * wider or taller than the viewport may never reach the default ratio, so lower this
    * value (or set it to `0` to always show the Crosshair) for large charts. Default: `0.35` */
   @Input() visibilityThreshold?: number
+
+  /** On touch devices, let the Crosshair follow the finger as it moves across the chart. To prevent the browser
+   * from taking over the gesture, the chart's SVG element gets `touch-action: pinch-zoom`: pinch-zoom keeps
+   * working, but a swipe that starts on the chart won't scroll the page or its scrollable containers. When `false`, the browser
+   * handles touch gestures as usual and a drag hides the Crosshair once the browser takes the gesture over. Default: `true` */
+  @Input() followTouchMove?: boolean
+
+  /** Lets keyboard users explore the data. In an XY Container, the chart becomes a single tab stop:
+   * - `←` / `→` move the Crosshair between the data points, `Home` / `End` jump to the first and last ones,
+   *  `Page Up` / `Page Down` jump by a tenth of them;
+   * - `↑` / `↓` highlight the series above or below;
+   * - `+` / `-` zoom around the active data point when the container has a `Zoom`;
+   * - `Esc` hides the Crosshair.
+   *
+   * The active data point is announced to screen readers. When the chart is zoomed, it pans to keep the data point visible. Default: `true` */
+  @Input() keyboardNavigation?: boolean
+
+  /** Custom screen reader announcement for the active data point. Receives the X value, the datum, its index, and
+   * the index of the highlighted series (in the order of the Crosshair circles: stacked first) or `undefined`.
+   * By default, the text of the `template` or the X and Y values. Default: `undefined` */
+  @Input() keyboardAnnouncement?: (x: number | Date, datum: Datum, datumIndex: number, seriesIndex?: number) => string
   @Input() data: Datum[]
 
   component: Crosshair<Datum> | undefined
@@ -203,8 +224,8 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold } = this
-    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold }
+    const { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold, followTouchMove, keyboardNavigation, keyboardAnnouncement } = this
+    const config = { duration, events, attributes, x, y, id, color, colorKeys, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, circleRadius, showHorizontalLine, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, snapMode, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck, visibilityThreshold, followTouchMove, keyboardNavigation, keyboardAnnouncement }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

@@ -24,6 +24,7 @@ export { default as VisTooltip, VisTooltipSelectors } from './components/tooltip
 export { default as VisTopoJSONMap, VisTopoJSONMapSelectors } from './components/topojson-map/index.vue'
 export { default as VisTreemap, VisTreemapSelectors } from './components/treemap/index.vue'
 export { default as VisXYLabels, VisXYLabelsSelectors } from './components/xy-labels/index.vue'
+export { default as VisZoom, VisZoomSelectors } from './components/zoom/index.vue'
 export { default as VisBulletLegend, VisBulletLegendSelectors } from './html-components/bullet-legend/index.vue'
 export { default as VisFlowLegend, VisFlowLegendSelectors } from './html-components/flow-legend/index.vue'
 export { default as VisLeafletFlowMap, VisLeafletFlowMapSelectors } from './html-components/leaflet-flow-map/index.vue'
