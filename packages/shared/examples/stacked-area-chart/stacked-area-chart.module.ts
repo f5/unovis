@@ -1,10 +1,18 @@
 import { NgModule } from '@angular/core'
-import { VisXYContainerModule, VisAreaModule, VisXYLabelsModule, VisAxisModule } from '@unovis/angular'
+import {
+  VisXYContainerModule,
+  VisAreaModule,
+  VisXYLabelsModule,
+  VisAxisModule,
+  VisCrosshairModule,
+  VisTooltipModule,
+  VisBulletLegendModule,
+} from '@unovis/angular'
 
 import { StackedAreaComponent } from './stacked-area-chart.component'
 
 @NgModule({
-  imports: [VisXYContainerModule, VisAreaModule, VisXYLabelsModule, VisAxisModule],
+  imports: [VisXYContainerModule, VisAreaModule, VisXYLabelsModule, VisAxisModule, VisCrosshairModule, VisTooltipModule, VisBulletLegendModule],
   declarations: [StackedAreaComponent],
   exports: [StackedAreaComponent],
 })
