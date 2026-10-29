@@ -47,6 +47,9 @@ import {
 // Config
 import { LeafletMapDefaultConfig, LeafletMapConfigInterface } from './config'
 
+// Constants
+import { LEAFLET_MAP_CLUSTERING_CONFIG_KEYS } from './constants'
+
 // Styles
 import * as s from './style'
 
@@ -212,7 +215,8 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
         mutations.forEach(change => {
           if (change.attributeName === 'class') {
             const isDarkTheme = isDarkThemeEnabled(change.target as HTMLElement)
-            if (this._isDarkThemeActive !== isDarkTheme) {
+            // Before the map is initialized there's no style to switch; the initialization applies the current theme
+            if (this._map && this._isDarkThemeActive !== isDarkTheme) {
               this.setTheme(isDarkTheme ? this.config.styleDarkTheme : this.config.style)
               this._isDarkThemeActive = isDarkTheme
             }
@@ -226,6 +230,11 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
 
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
     super.setConfig(config)
+
+    // The cluster index is built in `setData`, so it has to be rebuilt when the options it depends on change
+    const prevConfig = this.prevConfig as LeafletMapConfigInterface<Datum>
+    const clusteringChanged = prevConfig && LEAFLET_MAP_CLUSTERING_CONFIG_KEYS.some(key => prevConfig[key] !== this.config[key])
+    if (clusteringChanged && this.datamodel.data) this.setData(this.datamodel.data)
 
     if (config?.width) this._containerSelection.style('width', isString(config.width) ? config.width : `${config.width}px`)
     if (config?.height) this._containerSelection.style('height', isString(config.height) ? config.height : `${config.height}px`)
