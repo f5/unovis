@@ -1,0 +1,10 @@
+node_modules/
+# the repository build of Unovis, packed and installed by measure.sh
+libs/unovis-local/*.tgz
+libs/unovis-local/*.js
+libs/unovis-local/*.jsx
+dist*/
+verify/vendor/
+verify/screenshots/
+verify/.chrome-profile/
+verify/results-*.json
