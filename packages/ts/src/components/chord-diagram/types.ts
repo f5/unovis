@@ -1,5 +1,5 @@
 import { HierarchyRectangularNode } from 'd3-hierarchy'
-import { GraphLinkCore, GraphNodeCore } from '@/types'
+import { GraphInputNode, GraphLinkCore, GraphNodeCore } from '@/types'
 
 // Node data flow in the component:
 // Input data (N extends ChordInputNode, L extends ChordInputLink)
@@ -43,7 +43,7 @@ export type ChordNodeState = {
 }
 
 export type ChordNodeCore<N> = HierarchyRectangularNode<N> & ChordNodeState & {
-  data: GraphNodeCore<N, ChordInputLink>;
+  data: GraphNodeCore<N & GraphInputNode, ChordInputLink>;
   uid: string; // Unique id for textPath href
 }
 

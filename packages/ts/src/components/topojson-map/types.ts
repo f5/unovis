@@ -113,7 +113,7 @@ export type TopoJSONMapClusterDatum<D> = Partial<D> & {
   pointCount?: number;
   pointCountAbbreviated?: string;
   clusterPoints?: D[];
-  clusterIndex?: Supercluster<D>;
+  clusterIndex?: Supercluster<D & Supercluster.AnyProps>;
 }
 
 export type TopoJSONMapPoint<D> = {
@@ -126,7 +126,7 @@ export type TopoJSONMapPoint<D> = {
   properties: TopoJSONMapPointDatum<D> | TopoJSONMapClusterDatum<D>;
   donutData: TopoJSONMapPieDatum[];
   isCluster: boolean;
-  clusterIndex?: Supercluster<D>;
+  clusterIndex?: Supercluster<D & Supercluster.AnyProps>;
   _zIndex: number;
 }
 
