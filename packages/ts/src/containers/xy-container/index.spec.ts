@@ -4,6 +4,9 @@ import { Crosshair } from '@/components/crosshair'
 import { Tooltip } from '@/components/tooltip'
 import { XYContainer } from './index'
 
+// Container children except the keyboard navigation live region
+const getChildren = (element: HTMLElement): Element[] => [...element.children].filter(c => !c.hasAttribute('aria-live'))
+
 describe('XYContainer crosshair tooltip', () => {
   let element: HTMLDivElement
   let container: XYContainer<number>
@@ -50,7 +53,7 @@ describe('XYContainer crosshair tooltip', () => {
 
     expect(container.config.tooltip).toBeUndefined()
     expect(crosshair.tooltip).toBeUndefined()
-    expect(element.children).toHaveLength(1)
+    expect(getChildren(element)).toHaveLength(1)
   })
 
   it('uses an explicitly supplied container tooltip', () => {
@@ -60,7 +63,7 @@ describe('XYContainer crosshair tooltip', () => {
 
     expect(container.config.tooltip).toBe(tooltip)
     expect(crosshair.tooltip).toBe(tooltip)
-    expect(element.children).toHaveLength(2)
+    expect(getChildren(element)).toHaveLength(2)
   })
 
   it('does not create a fallback when the crosshair has its own tooltip', () => {
@@ -70,7 +73,7 @@ describe('XYContainer crosshair tooltip', () => {
 
     expect(container.config.tooltip).toBeUndefined()
     expect(crosshair.config.tooltip).toBe(tooltip)
-    expect(element.children).toHaveLength(2)
+    expect(getChildren(element)).toHaveLength(2)
     tooltip.destroy()
   })
 
@@ -86,7 +89,7 @@ describe('XYContainer crosshair tooltip', () => {
     expect(destroy).toHaveBeenCalledOnce()
     expect(fallback.element.isConnected).toBe(false)
     expect(crosshair.tooltip).toBe(tooltip)
-    expect(element.children).toHaveLength(2)
+    expect(getChildren(element)).toHaveLength(2)
   })
 
   it('removes the fallback when the custom template is removed', () => {
