@@ -9,3 +9,12 @@ export enum CrosshairSnapMode {
 
 /** Circles whose Y positions are closer than this many radii overlap each other */
 export const CROSSHAIR_CIRCLE_OVERLAP_RADII = 2
+
+/** The circle of the series highlighted with the keyboard is this many times larger */
+export const CROSSHAIR_ACTIVE_CIRCLE_RADIUS_SCALE = 1.5
+
+/** `PageUp` and `PageDown` move the Crosshair by this fraction of the navigable data points */
+export const CROSSHAIR_KEYBOARD_PAGE_FRACTION = 0.1
+
+/** When keyboard navigation pans a zoomed chart, the active data point is kept this fraction of the domain away from the edge */
+export const CROSSHAIR_KEYBOARD_PAN_PADDING = 0.05

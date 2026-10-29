@@ -40,3 +40,17 @@ export const circle = css`
   stroke-opacity: var(${variables.crosshairCircleStrokeOpacity});
   pointer-events: none;
 `
+
+// Keyboard navigation announcements: available to screen readers, but not displayed
+export const liveRegion = css`
+  label: crosshair-live-region;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+`
