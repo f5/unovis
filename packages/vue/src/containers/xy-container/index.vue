@@ -6,8 +6,9 @@ import { Tooltip } from '@unovis/ts/components/tooltip'
 import { Crosshair } from '@unovis/ts/components/crosshair'
 import { Axis } from '@unovis/ts/components/axis'
 import { Annotations } from '@unovis/ts/components/annotations'
+import type { Zoom } from '@unovis/ts/components/zoom'
 import { onUnmounted, ref, shallowRef, provide, watch, toRefs, shallowReactive, watchEffect, toRaw } from 'vue'
-import { componentAccessorKey, tooltipAccessorKey, axisAccessorKey, crosshairAccessorKey, annotationsAccessorKey } from "../../utils/context"
+import { componentAccessorKey, tooltipAccessorKey, axisAccessorKey, crosshairAccessorKey, annotationsAccessorKey, zoomAccessorKey } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"
 
 const props = defineProps<XYContainerConfigInterface<T> & { data?: T[] }>()
@@ -22,6 +23,7 @@ const config = shallowReactive({
   components: [],
   annotations: undefined,
   crosshair: undefined,
+  zoom: undefined,
   tooltip: undefined,
   xAxis: undefined,
   yAxis: undefined,
@@ -72,6 +74,13 @@ provide(crosshairAccessorKey, {
   data,
   update: (c: Crosshair<T>) => config.crosshair = c,
   destroy: () => { config.crosshair = undefined },
+  dirty,
+})
+
+provide(zoomAccessorKey, {
+  data,
+  update: (z: Zoom<T>) => config.zoom = z,
+  destroy: () => { config.zoom = undefined },
   dirty,
 })
 
