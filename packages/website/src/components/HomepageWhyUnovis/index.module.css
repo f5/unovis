@@ -1,0 +1,16 @@
+.root {
+  padding: 4rem 5%;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.actions :global(.button--primary.button):hover {
+  --ifm-button-background-color: var(--unovis-color-yellow);
+  --ifm-button-border-color: var(--unovis-color-yellow);
+  color: #171329;
+}

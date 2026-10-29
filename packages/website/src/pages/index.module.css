@@ -2,11 +2,15 @@
   padding: 5% 5%;
   background-color: rgba(218,197,187,0.1);
 
-  --vis-color0: #f45a6d;
-  --vis-color1: #2780eb;
-  --vis-color2: #ffc180;
-  --vis-color3: var(--unovis-color-pale-pink);
-  --vis-color4: var(--unovis-color-red);
+  --vis-tooltip-background-color: #fff;
+  --vis-tooltip-border-color: transparent;
+  --vis-tooltip-padding: 8px 12px;
+  --vis-tooltip-box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, .24);
+}
+
+[data-theme='dark'] .example {
+  --vis-tooltip-background-color: #303034;
+  --vis-tooltip-box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, .6);
 }
 
 .example > .visContainer {
@@ -30,6 +34,38 @@
 .example > .visContainer .code {
   flex: 2 2 auto;
   min-width: 0;
+  position: relative;
+  --ifm-code-font-size: 80%;
+}
+
+/* Side by side, the code column takes the chart column's height and scrolls inside */
+@media screen and (min-width: 967px) {
+  .example > .visContainer .codeInner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .example > .visContainer .codeInner > :global(.tabs-container) {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .example > .visContainer .codeInner > :global(.tabs-container) > :global(.margin-top--md) {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+}
+
+/* Up to a 14-inch MacBook Pro the chart gets more of the row */
+@media screen and (min-width: 967px) and (max-width: 1600px) {
+  .example > .visContainer .visualization {
+    flex: 0 0 55%;
+  }
 }
 
 .example > .visContainer .limitHeight {

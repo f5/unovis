@@ -9,7 +9,7 @@ import CodeBlock from '@theme/CodeBlock'
 import { kebabCase } from '@site/src/utils/text'
 import { HomepageFeatures } from '@site/src/components/HomepageFeatures'
 import { HomepageHeader } from '@site/src/components/HomepageHeader'
-import { HomepageLogos } from '@site/src/components/HomepageLogos'
+import { HomepageWhyUnovis } from '@site/src/components/HomepageWhyUnovis'
 import ChartExample from '@unovis/shared/examples/stacked-area-chart'
 
 // Styles
@@ -32,53 +32,55 @@ export default function Home (): JSX.Element {
               <Link className={s.link} to="/gallery">See more examples in Gallery {'->'}</Link>
             </div>
             <div className={s.code}>
-              <Tabs>
-                <TabItem value="react" label="React">
-                  <CodeBlock language="tsx">
-                    {example.codeReact}
-                  </CodeBlock>
-                </TabItem>
-                <TabItem value="angular" label="Angular">
-                  <CodeBlock language="html" title={`${kebabCase(example.title)}.html`}>
-                    {example.codeAngular.html}
-                  </CodeBlock>
-                  <CodeBlock language="ts" title={`${kebabCase(example.title)}.component.ts`}>
-                    {example.codeAngular.component}
-                  </CodeBlock>
-                  <CodeBlock language="ts" title={`${kebabCase(example.title)}.module.ts`}>
-                    {example.codeAngular.module}
-                  </CodeBlock>
-                </TabItem>
-                <TabItem value="svelte" label="Svelte">
-                  <CodeBlock language="html">
-                    {example.codeSvelte}
-                  </CodeBlock>
-                </TabItem>
-                <TabItem value="vue" label="Vue">
-                  <CodeBlock language="html">
-                    {example.codeVue}
-                  </CodeBlock>
-                </TabItem>
-                <TabItem value="solid" label="Solid">
-                  <CodeBlock language="tsx">
-                    {example.codeSolid}
-                  </CodeBlock>
-                </TabItem>
-                <TabItem value="typescript" label="TypeScript">
-                  <CodeBlock language="tsx">
-                    {example.codeTs}
-                  </CodeBlock>
-                </TabItem>
-                <TabItem className={s.limitHeight} value="data" label="Data">
-                  <CodeBlock language="typescript">
-                    {example.data}
-                  </CodeBlock>
-                </TabItem>
-              </Tabs>
+              <div className={s.codeInner}>
+                <Tabs>
+                  <TabItem value="react" label="React">
+                    <CodeBlock language="tsx">
+                      {example.codeReact}
+                    </CodeBlock>
+                  </TabItem>
+                  <TabItem value="angular" label="Angular">
+                    <CodeBlock language="html" title={`${kebabCase(example.title)}.html`}>
+                      {example.codeAngular.html}
+                    </CodeBlock>
+                    <CodeBlock language="ts" title={`${kebabCase(example.title)}.component.ts`}>
+                      {example.codeAngular.component}
+                    </CodeBlock>
+                    <CodeBlock language="ts" title={`${kebabCase(example.title)}.module.ts`}>
+                      {example.codeAngular.module}
+                    </CodeBlock>
+                  </TabItem>
+                  <TabItem value="svelte" label="Svelte">
+                    <CodeBlock language="html">
+                      {example.codeSvelte}
+                    </CodeBlock>
+                  </TabItem>
+                  <TabItem value="vue" label="Vue">
+                    <CodeBlock language="html">
+                      {example.codeVue}
+                    </CodeBlock>
+                  </TabItem>
+                  <TabItem value="solid" label="Solid">
+                    <CodeBlock language="tsx">
+                      {example.codeSolid}
+                    </CodeBlock>
+                  </TabItem>
+                  <TabItem value="typescript" label="TypeScript">
+                    <CodeBlock language="tsx">
+                      {example.codeTs}
+                    </CodeBlock>
+                  </TabItem>
+                  <TabItem className={s.limitHeight} value="data" label="Data">
+                    <CodeBlock language="typescript">
+                      {example.data}
+                    </CodeBlock>
+                  </TabItem>
+                </Tabs>
+              </div>
             </div>
           </div>
         </div>
-        <HomepageLogos/>
+        <HomepageWhyUnovis />
       </main>
     </Layout>
   )

@@ -38,8 +38,23 @@
 
 .buttons {
   display: flex;
+  flex-wrap: wrap;
   align-items: start;
   justify-content: flex-start;
+  gap: 12px;
+  --ifm-button-padding-horizontal: 1.1rem;
+}
+
+.buttons :global(.button--secondary) {
+  --ifm-button-background-color: rgba(235, 237, 240, 0.9);
+  --ifm-button-border-color: transparent;
+}
+
+.promptButton:hover,
+.promptButton:focus-visible {
+  --ifm-button-background-color: var(--unovis-color-yellow);
+  --ifm-button-border-color: var(--unovis-color-yellow);
+  color: #171329;
 }
 
 .background {

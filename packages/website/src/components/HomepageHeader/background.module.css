@@ -1,0 +1,35 @@
+.layers {
+  position: absolute;
+  inset: 0;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Scrolling runs off the main thread, so the parallax is driven by the compositor rather than by script */
+@supports (animation-timeline: scroll()) {
+  .parallax {
+    animation: parallax linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100vh;
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax {
+    animation: none;
+  }
+}
+
+.far { --hero-parallax-shift: 35vh; }
+.mid { --hero-parallax-shift: 15vh; }
+.near { --hero-parallax-shift: -15vh; }
+
+@keyframes parallax {
+  to { transform: translateY(var(--hero-parallax-shift)); }
+}
