@@ -3,7 +3,7 @@
 This file is the source of truth for AI agents (Claude Code, Codex, Cursor) working in this repo.
 It lives at `ai/AGENTS.md`; the root `AGENTS.md` and `CLAUDE.md` point here. Keep it short — deep,
 step-by-step procedures live in `ai/skills/` (invocable as `/commit`, `/open-pr`, `/add-component`,
-`/add-gallery-example`).
+`/add-gallery-example`, `/library-comparisons`).
 
 ## What Unovis is
 
@@ -122,6 +122,9 @@ Full rules, the parser regex, the type-picking cheatsheet, and ~25 real examples
 - **Add a gallery example:** `/add-gallery-example` — files in `packages/shared/examples/<slug>/`,
   register in `examples-list.tsx`, previews in `_previews/`. Prose tutorial:
   `packages/website/contributing/guides/gallery-examples.mdx`.
+- **Library comparisons ("Why Unovis"):** `/library-comparisons` — side-by-side demos in
+  `packages/website/src/comparisons/<chart>/`, pages in `packages/website/why-unovis/`, the feature matrix and the
+  bundle-size harness. Public rules: `packages/website/why-unovis/methodology.mdx`.
 
 ## Notes for agents
 
