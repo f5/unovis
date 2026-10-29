@@ -209,7 +209,7 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** When component height is larger than the height of all rows, render rows to fill empty space */
   @Input() rowFillEmptySpace?: boolean
 
-
+  /** Arrows connecting the timeline lines, see `TimelineArrow`. Default: `undefined` */
   @Input() arrows?: TimelineArrow[]
 
   /** Control the animation by specify the initial position for new lines as [x, y]. Default: `undefined` */
