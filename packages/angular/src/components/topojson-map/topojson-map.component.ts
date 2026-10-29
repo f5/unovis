@@ -5,6 +5,7 @@ import { TopoJSONMapConfigInterface } from '@unovis/ts/components/topojson-map/c
 import { ContainerCore } from '@unovis/ts/core/container'
 import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
 import { GeoProjection } from 'd3-geo'
+import type { Topology } from 'topojson-specification'
 import { NumericAccessor, ColorAccessor, StringAccessor } from '@unovis/ts/types/accessor'
 import { MapPointLabelPosition, TopoJSONMapClusterDatum, TopoJSONMapPointStyles } from '@unovis/ts/components/topojson-map/types'
 import { VisCoreComponent } from '../../core'
@@ -71,7 +72,7 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   @Input() projection?: GeoProjection
 
   /** Map data in the TopoJSON topology format. Default: `undefined` */
-  @Input() topojson?: TopoJSON.Topology
+  @Input() topojson?: Topology
 
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
   @Input() mapFeatureName?: string

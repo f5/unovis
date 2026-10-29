@@ -32,7 +32,7 @@ export function getComponentCode (
   generics: GenericParameter[],
   configProps: ConfigProperty[],
   provide: string,
-  importStatements: { source: string; elements: string[] }[],
+  importStatements: { source: string; elements: string[]; typeOnly?: boolean }[],
   dataType = 'any',
   kebabCaseName?: string,
   isStandAlone = false,
@@ -52,7 +52,7 @@ export function getComponentCode (
   // Override the default generic with specified type from generics array
   return `// !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges${isStandAlone ? ', ViewChild, ElementRef' : ''} } from '@angular/core'
-${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
+${importStatements.map(s => `import ${s.typeOnly ? 'type ' : ''}{ ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 import { ${provide} } from '../../core'
 
 @Component({

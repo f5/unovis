@@ -223,8 +223,9 @@ export function getImportStatements (
   generics: GenericParameter[] = [],
   additionalComponentTypes: string[] = [],
   importSourceMap?: Record<string, string>
-): { source: string; elements: string[] }[] {
+): { source: string; elements: string[]; typeOnly?: boolean }[] {
   const importSources: Record<string, string> = {}
+  const typeOnlyImports = new Set<string>()
 
   // We assume that all extend types in generics come from unovis/ts
   const genericExtends = generics.map(g => g.extends).filter(g => g)
@@ -240,6 +241,7 @@ export function getImportStatements (
     if (!namedBindings || !ts.isNamedImports(namedBindings)) continue
     for (const importEl of namedBindings.elements) {
       const typeName = importEl.name.escapedText as string
+      if (importDec.importClause.isTypeOnly || importEl.isTypeOnly) typeOnlyImports.add(typeName)
       if (importSourceMap?.[typeName]) {
         importSources[typeName] = importSourceMap[typeName]
       } else {
@@ -253,7 +255,7 @@ export function getImportStatements (
   const typeList = gatherTypeReferences(configInterfaceMembers.map(node => (node as ts.IndexSignatureDeclaration).type))
     .filter(name => !genericNames.includes(name)) // Filter out generics
 
-  const importStatements: { source: string; elements: string[] }[] = []
+  const importStatements: { source: string; elements: string[]; typeOnly?: boolean }[] = []
   for (const name of Array.from(new Set([...componentTypes, ...genericExtends, ...genericDefaults, ...typeList]))) {
     const importSource: string = importSources[name]
     if (!importSource) {
@@ -262,8 +264,11 @@ export function getImportStatements (
     }
 
     const statement = importStatements.find(s => s.source === importSource)
-    if (!statement) importStatements.push({ source: importSource, elements: [name] })
-    else statement.elements.push(name)
+    if (!statement) importStatements.push({ source: importSource, elements: [name], typeOnly: typeOnlyImports.has(name) })
+    else {
+      statement.elements.push(name)
+      statement.typeOnly &&= typeOnlyImports.has(name)
+    }
   }
 
   return importStatements
