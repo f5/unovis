@@ -1,5 +1,6 @@
 import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
-import { ColorAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { Gradient } from '@/types/gradient'
 import { FitMode, TrimMode } from '@/types/text'
 
 // Local Types
@@ -25,6 +26,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Color accessor function for tiles. Default: `undefined` */
   tileColor?: ColorAccessor<TreemapNode<Datum>>;
+
+  /** Tile fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (a top to bottom fade within each tile). Default: `undefined` */
+  tileGradient?: GenericAccessor<Gradient | boolean, TreemapNode<Datum>>;
 
   /** D3 tile function (e.g. `treemapSquarify`, `treemapDice` from `d3-hierarchy`). Default: `undefined`. */
   tileFunction?: TreemapTileFunction<TreemapDatum<Datum>>;
@@ -96,6 +100,7 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   id: (d: unknown, i: number): string | number => (d as { id: string }).id ?? i,
   value: undefined,
   tileColor: undefined,
+  tileGradient: undefined,
   layers: [],
   tileFunction: undefined,
   tileSort: undefined,

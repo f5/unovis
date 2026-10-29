@@ -20,6 +20,7 @@ import { roundedRectPath } from '@/utils/path'
 import { smartTransition, applyInlineStyles } from '@/utils/d3'
 import { getColor } from '@/utils/color'
 import { getPattern, getFillPatternValue, UNOVIS_PATTERN_INDEX_ATTR } from '@/utils/pattern'
+import { getGradient, getGradientFillValue } from '@/utils/gradient'
 
 // Types
 import { ContinuousScale } from '@/types/scale'
@@ -27,6 +28,10 @@ import { NumericAccessor } from '@/types/accessor'
 import { Spacing } from '@/types/spacing'
 import { Orientation } from '@/types/position'
 import { StyleDeclaration } from '@/types/style'
+import { GradientDirection } from '@/types/gradient'
+
+// Constants
+import { GRADIENT_BAR_DEFAULT_STOPS } from '@/styles/gradients'
 
 // Local Types
 import { StackedBarDataRecord } from './types'
@@ -188,12 +193,24 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
         d => d.stackIndex // Key function for proper transitions
       )
 
+    const gradientOptions = {
+      direction: this.isVertical() ? GradientDirection.TopToBottom : GradientDirection.RightToLeft,
+      stops: GRADIENT_BAR_DEFAULT_STOPS,
+      space: { x: 0, y: 0, width: this._width, height: this._height },
+    }
+    const getBarFill = (d: StackedBarDataRecord<Datum>): string => getGradientFillValue(
+      getGradient(d.datum, config.gradient, d.stackIndex),
+      getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions),
+      this.element,
+      gradientOptions
+    )
+
     const enteringGroupNodes = new Set(barGroupsEnter.nodes())
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
       .attr('d', (d, i, els) => this._getBarPath(d, true, enteringGroupNodes.has(els[i].parentNode as SVGGElement)))
       .attr(UNOVIS_PATTERN_INDEX_ATTR, d => d.stackIndex)
-      .style('fill', d => this._getBarStyle(d)?.fill ?? getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))
+      .style('fill', d => this._getBarStyle(d)?.fill ?? getBarFill(d))
       .style('mask', d => this._getBarStyle(d)?.mask ?? getFillPatternValue(getPattern(d.datum, config.pattern, d.stackIndex)))
 
     const barsMerged = barsEnter.merge(bars)
@@ -208,7 +225,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
       .attr('d', d => this._getBarPath(d))
       // A re-entering bar can be mid exit fade; bring it back instead of leaving it semi-transparent
       .style('opacity', d => this._getBarStyle(d)?.opacity ?? 1)
-      .style('fill', d => this._getBarStyle(d)?.fill ?? getColor(d.datum, config.color, d.stackIndex, config.colorKeys?.[d.stackIndex], colorOptions))
+      .style('fill', d => this._getBarStyle(d)?.fill ?? getBarFill(d))
       .style('cursor', d => this._getBarStyle(d)?.cursor ?? getString(d.datum, config.cursor, d.stackIndex))
 
     // No `interrupt` removal here: an interrupted exit means the next data join has re-adopted the node

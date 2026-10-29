@@ -485,6 +485,149 @@ need to recolor the palette (and not sync by key), prefer overriding the `--vis-
 [CSS variables](#color-palette) instead.
 :::
 
+## Gradients
+Gradient fills vary a shape's color or opacity across its surface. Set `gradient` to `true` to use a
+component's default gradient, or pass a `Gradient` object to customize it. Set it to `false` or leave it
+unset to use a solid fill.
+
+<XYWrapper
+  name='StackedBar'
+  data={data}
+  x={d => d.x}
+  y={[d => d.y, d => d.y1, d => d.y2]}
+  gradient
+  height={220}
+  showAxes
+/>
+
+Gradients affect the shape's fill. The solid `color` still controls outlines and supplies colors for
+tooltips, crosshairs, and label contrast. You can combine a gradient with a [fill pattern](#patterns).
+CSS variables and `currentColor` remain live, including variables scoped to a component's SVG group.
+
+### Component defaults
+
+| Component | Accessor | Default gradient | Stop opacity |
+| --------- | -------- | ---------------- | ------------ |
+| Area | `gradient` | Top to bottom within each area | `0.5 → 0.1` |
+| StackedBar / GroupedBar | `gradient` | Top to bottom for vertical bars; right to left for horizontal bars, within each segment or bar | `0.85 → 0.5` |
+| Timeline | `gradient` | Left to right within each item | `0.95 → 0.6` |
+| Donut / NestedDonut / RadialBar | `gradient` | Radial, from the inner edge to the outer edge of each ring | `0.5 → 1` |
+| Treemap | `tileGradient` | Top to bottom within each tile, with the final stop mixed with 20% white | `0.95 → 0.9` |
+| Sankey nodes | `nodeGradient` | Top to bottom within each node | `1 → 0.75` |
+| Sankey links | `linkGradient` | Left to right, from the source node's color to the target node's color | `1 → 1` |
+| BulletLegend | `gradient` on each item | Top to bottom within each filled bullet | `0.85 → 0.5` |
+
+Gradient stops use the element's color unless a stop supplies its own `color`. Sankey links use the
+source and target node colors. Component opacity settings still apply on top of the stop opacity.
+
+Accessors can return a `Gradient` object, `true`, or `false` to vary the gradient by datum or series.
+Area receives the whole data array and the series index. StackedBar and GroupedBar receive the datum
+and the series index, following their `color` accessor:
+
+```tsx
+<VisArea x={d => d.x} y={[y0, y1]} gradient={(_data, i) => i === 0} />
+<VisStackedBar x={d => d.x} y={[y0, y1]} gradient={(_d, i) => i === 0} />
+<VisDonut value={d => d.value} gradient={d => d.value > 10} />
+```
+
+### Custom stops and direction
+
+Import `Gradient`, `GradientType`, `GradientDirection`, and `GradientUnits` from `@unovis/ts`.
+A gradient object accepts these properties:
+
+| Property | Values | Default |
+| -------- | ------ | ------- |
+| `type` | `GradientType.Linear`, `GradientType.Radial` | Linear, or radial for Donut, NestedDonut, and RadialBar |
+| `direction` | `GradientDirection.TopToBottom`, `BottomToTop`, `LeftToRight`, `RightToLeft` | Depends on the component; applies to linear gradients |
+| `units` | `GradientUnits.ObjectBoundingBox`, `GradientUnits.UserSpaceOnUse` | Bounding box, or user space for the radial components |
+| `stops` | Array of gradient stops | The component's default stops |
+
+Each stop has an `offset` from `0` to `1` along the gradient, and optional appearance controls:
+
+| Stop property | Description | Default |
+| ------------- | ----------- | ------- |
+| `opacity` | Opacity from `0` to `1` | `1` |
+| `color` | CSS color, including CSS variables | The element's color |
+| `colorShift` | Mix with white for positive values or black for negative values, from `-1` to `1` | `0` |
+
+For example, keep the series color while making the lower edge lighter and more transparent:
+
+```tsx
+import { Gradient, GradientDirection } from '@unovis/ts'
+import { VisArea } from '@unovis/react'
+
+const gradient: Gradient = {
+  direction: GradientDirection.TopToBottom,
+  stops: [
+    { offset: 0, opacity: 0.8 },
+    { offset: 1, opacity: 0.1, colorShift: 0.3 },
+  ],
+}
+
+<VisArea x={d => d.x} y={d => d.y} gradient={gradient} line />
+```
+
+<XYWrapper
+  name='Area'
+  data={data}
+  x={d => d.x}
+  y={d => d.y}
+  line
+  gradient={{ stops: [{ offset: 0, opacity: 0.8 }, { offset: 1, opacity: 0.1, colorShift: 0.3 }] }}
+  height={220}
+  showAxes
+  excludeTabs
+/>
+
+### Per-shape and shared gradients
+
+`GradientUnits.ObjectBoundingBox` fits the gradient to each painted shape. Every bar or stacked
+segment therefore gets the full fade, regardless of its height.
+
+For Area, StackedBar, GroupedBar, and Treemap, `GradientUnits.UserSpaceOnUse` spans the component's plot
+area instead. For example, a shared vertical fade gives stacked segments the same opacity at the same
+height in the chart:
+
+```tsx
+import { GradientUnits } from '@unovis/ts'
+
+<VisStackedBar
+  x={d => d.x}
+  y={[y0, y1, y2]}
+  gradient={{ units: GradientUnits.UserSpaceOnUse }}
+/>
+```
+
+For bar charts, use the value-axis direction for a shared fade: vertical for vertical bars and
+horizontal for horizontal bars. A fade along the data axis is offset by each bar group's translation.
+Bar gradient directions also stay fixed for negative values.
+
+Donut, NestedDonut, and RadialBar use user space by default to center their radial gradients on the
+chart. The first stop sits at the ring's inner radius and the last at its outer radius:
+
+<DocWrapper {...donutProps()} data={[14, 32, 41, 23]} gradient arcWidth={40} excludeTabs/>
+
+Components without a shared gradient space, including Timeline, Sankey, and BulletLegend, fall back
+to bounding-box units when `UserSpaceOnUse` is requested.
+
+### Legend bullets
+
+Set `gradient` on each BulletLegend item to match the corresponding series. Pass the same recipe as
+the chart, or `true` for the bullet's default linear fade. Default stop arrays are exported individually
+from `@unovis/ts`, so you can reuse a component's stops in the legend:
+
+```tsx
+import { VisBulletLegend } from '@unovis/react'
+import { GRADIENT_AREA_DEFAULT_STOPS } from '@unovis/ts'
+
+<VisBulletLegend items={[
+  { name: 'Revenue', color: 'var(--vis-color0)', gradient: { stops: GRADIENT_AREA_DEFAULT_STOPS } },
+  { name: 'Forecast', color: 'var(--vis-color1)', gradient: { stops: GRADIENT_AREA_DEFAULT_STOPS } },
+]} />
+```
+
+Gradient fills apply to filled bullet shapes; line-shaped bullets retain their solid stroke.
+
 ## Patterns
 Patterns — stripes, dots, cross‑hatching, and so on — add a second visual channel on top of color. They're
 useful for color‑blind‑safe palettes, grayscale printing, or simply telling series apart in a dense chart.
@@ -712,6 +855,9 @@ as its fill. You can tweak the variables accordingly to create the desired effec
 </div>
 
 ## Gradient Fills with SVG defs
+Use the [`gradient` accessor](#gradients) for built-in linear and radial fills. To control additional
+SVG attributes, such as `gradientTransform`, define gradients manually with `svgDefs`.
+
 Use the `svgDefs` property on the container to inject custom SVG definitions — gradients, patterns, clip paths — that any component can reference by `id`.
 
 Start by building your defs string, then pass the string to `svgDefs` on the container and reference each gradient by id in the `color` array.
