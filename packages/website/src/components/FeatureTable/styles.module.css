@@ -1,0 +1,198 @@
+.root {
+  margin: 1rem 0 2rem;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-700);
+  cursor: pointer;
+  user-select: none;
+}
+
+.scroll {
+  overflow-x: auto;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  background: var(--ifm-background-surface-color);
+}
+
+.table {
+  display: table;
+  width: 100%;
+  margin: 0;
+  border: none;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.table tr,
+.table tr:nth-child(2n) {
+  background: none;
+  border: none;
+}
+
+.table th,
+.table td {
+  padding: 0.55rem 0.7rem;
+  border: none;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table thead th {
+  background: var(--ifm-background-surface-color);
+  font-size: 0.85rem;
+}
+
+.version {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.featureColumn {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 140px;
+  background: var(--ifm-background-surface-color);
+}
+
+.table tbody th.featureColumn {
+  font-weight: 600;
+}
+
+.unovis {
+  color: var(--ifm-color-primary);
+}
+
+.groupRow th {
+  padding-top: 1rem;
+  background: var(--ifm-color-emphasis-100);
+  font-size: 0.9rem;
+}
+
+.cell {
+  min-width: 48px;
+}
+
+.detailed .cell {
+  min-width: 150px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  white-space: normal;
+}
+
+.value {
+  display: block;
+  font-weight: 600;
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  background: var(--status-background);
+  color: var(--status-color);
+}
+
+.iconOnly {
+  cursor: default;
+  outline-offset: 2px;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 1000;
+  max-width: 280px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #fff;
+  color: #171329;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, .24);
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+.tooltipNote {
+  display: block;
+  margin-top: 2px;
+}
+
+.tooltipNote code {
+  font-size: 0.75rem;
+  padding: 0 0.2rem;
+}
+
+[data-theme='dark'] .tooltip {
+  background: #303034;
+  color: var(--ifm-font-color-base);
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, .6);
+}
+
+.note {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.note code {
+  font-size: 0.75rem;
+  padding: 0 0.2rem;
+}
+
+.source {
+  display: inline-block;
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+}
+
+.yes { --status-color: #fff; --status-background: #1a9d5c; }
+.partial { --status-color: #fff; --status-background: #d9900f; }
+.plugin-official { --status-color: #fff; --status-background: #2780eb; }
+.plugin-community { --status-color: #fff; --status-background: #6b8fc5; }
+.enterprise { --status-color: #fff; --status-background: #9057d6; }
+.custom { --status-color: #fff; --status-background: #8e8d95; }
+.no { --status-color: #fff; --status-background: #d7445b; }
+
+.legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+  gap: 0.5rem 1.25rem;
+  margin: 1rem 0;
+  font-size: 0.8rem;
+}
+
+.legendItem dd {
+  margin: 0 0 0 1.55rem;
+  color: var(--ifm-color-emphasis-700);
+}
