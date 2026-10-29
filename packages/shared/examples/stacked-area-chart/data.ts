@@ -16,6 +16,39 @@ export type Label = {
   color: string;
 }
 
+export const formatNames: Record<Format, string> = {
+  [Format.Vinyl]: 'Vinyl',
+  [Format.Cassette]: 'Cassette',
+  [Format.Cd]: 'CD',
+  [Format.Download]: 'Download',
+  [Format.Streaming]: 'Streaming',
+}
+
+export const colors = formats.map((_, i) => `var(--vis-color${i})`)
+export const legendItems = formats.map((f, i) => ({ name: formatNames[f], color: colors[i] }))
+
+// One gradient per format, added to the chart through the container's `svgDefs`
+export const svgDefs = formats.map((f, i) => `
+  <linearGradient id="gradient-${f}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" style="stop-color: ${colors[i]}; stop-opacity: 0.9"/>
+    <stop offset="1" style="stop-color: ${colors[i]}; stop-opacity: 0.6"/>
+  </linearGradient>
+`).join('')
+export const gradients = formats.map(f => `url(#gradient-${f})`)
+
+export function tooltipTemplate (d: DataRecord | undefined): string {
+  if (!d) return ''
+  const currency = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 1 }).format
+  const rows = [...formats].reverse()
+    .filter(f => d[f] >= 0.05)
+    .map(f => `<span style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 9px; height: 9px; border-radius: 50%; background: ${colors[formats.indexOf(f)]}"></span>${formatNames[f]}
+    </span><span style="text-align: right">${currency(d[f])}B</span>`)
+  return `<div style="display: grid; grid-template-columns: auto auto; column-gap: 24px; row-gap: 6px; font-size: 12px; line-height: 1.2">
+    <span style="grid-column: 1 / -1; font-size: 13px; margin-bottom: 2px">${d.year}</span>${rows.join('')}
+  </div>`
+}
+
 export function getMaxItems<T extends Record<string, number>> (
   array: T[],
   keys: (keyof T)[]
@@ -39,7 +72,7 @@ export function getLabels (data: DataRecord[]): Record<number, Label> {
     const [x, y] = [peakItems[format].year, offset + peakItems[format][format] / 2]
 
     obj[x] = {
-      label: format === 'cd' ? format.toUpperCase() : format.charAt(0).toUpperCase() + format.slice(1),
+      label: formatNames[format],
       value: y,
       color: 'none',
     }

@@ -1,14 +1,18 @@
 import React, { useCallback } from 'react'
-import { VisXYContainer, VisAxis, VisArea, VisXYLabels } from '@unovis/react'
-import { data, formats, DataRecord, getLabels } from './data'
+import { VisXYContainer, VisAxis, VisArea, VisXYLabels, VisCrosshair, VisTooltip, VisBulletLegend } from '@unovis/react'
+import { data, formats, DataRecord, getLabels, gradients, legendItems, svgDefs, tooltipTemplate } from './data'
 
+const labels = getLabels(data)
+const x = (d: DataRecord): number => d.year
+const y = formats.map(f => (d: DataRecord): number => d[f])
+const color = (_: DataRecord[], i: number): string => gradients[i]
 
 export default function StackedArea (): JSX.Element {
-  const labels = getLabels(data)
   return (
     <>
-      <VisXYContainer data={data} height={'50vh'}>
-        <VisArea x={useCallback((d: DataRecord) => d.year, [])} y={formats.map(g => useCallback((d: DataRecord) => d[g], []))}/>
+      <VisBulletLegend items={legendItems}/>
+      <VisXYContainer data={data} height={'50vh'} svgDefs={svgDefs}>
+        <VisArea x={x} y={y} color={color}/>
         <VisAxis type='x' label='Year' numTicks={10} gridLine={false} domainLine={false}/>
         <VisAxis type='y' label='Revenue (USD, billions)' numTicks={10}/>
         <VisXYLabels
@@ -19,6 +23,8 @@ export default function StackedArea (): JSX.Element {
           clusterBackgroundColor="none"
           clusterLabel={() => ''}
         />
+        <VisCrosshair x={x} yStacked={y} template={tooltipTemplate}/>
+        <VisTooltip/>
       </VisXYContainer>
     </>
   )
