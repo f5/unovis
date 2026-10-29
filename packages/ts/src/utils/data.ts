@@ -10,7 +10,7 @@ export const isNumber = <T>(a: T): a is T extends number ? T : never => typeof a
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const isFunction = <T>(a: T): a is T extends Function ? T : never => typeof a === 'function'
 export const isUndefined = <T>(a: T): a is T extends undefined ? T : never => a === undefined
-export const isNil = <T>(a: T): a is null | undefined => a == null
+export const isNil = (a: unknown): a is null | undefined => a == null
 export const isString = <T>(a: T): a is T extends string ? T : never => typeof a === 'string'
 export const isArray = <T>(a: T): a is T extends any[] ? T : never => Array.isArray(a)
 export const isObject = <T>(a: T): boolean => (a instanceof Object)
