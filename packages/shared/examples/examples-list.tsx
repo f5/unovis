@@ -136,6 +136,7 @@ export const examples: ExampleCollection[] = [
     examples: [
       require('./basic-annotations').default,
       require('./crosshair-stacked-bar').default,
+      require('./native-tooltip-content').default,
       require('./synced-crosshairs').default,
       require('./brush-grouped-bar').default,
       require('./free-brush-scatters').default,

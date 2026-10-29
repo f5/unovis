@@ -1,0 +1,31 @@
+.native-tooltip-content {
+  font-family: var(--vis-font-family);
+  font-size: 14px;
+}
+
+.native-tooltip-content h4 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.native-tooltip-content .hint {
+  margin: 0 0 16px;
+  opacity: 0.65;
+}
+
+.native-tooltip-content-popup .day {
+  margin-bottom: 4px;
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+.native-tooltip-content-popup .revenue {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.native-tooltip-content-popup .orders {
+  margin: 4px 0 12px;
+  font-size: 12px;
+  opacity: 0.65;
+}

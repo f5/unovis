@@ -7,13 +7,13 @@ step-by-step procedures live in `ai/skills/` (invocable as `/commit`, `/open-pr`
 
 ## What Unovis is
 
-A modular data-visualization library. The TypeScript core is the source of truth; every framework
-wrapper is generated from it.
+A modular data-visualization library. The TypeScript core is the source of truth; most framework
+wrappers are generated from the shared registry.
 
 | Package | Path | Role |
 | --- | --- | --- |
 | Core | `packages/ts` | The library. All component logic, configs, styles. **Edit here first.** |
-| Wrappers | `packages/{react,angular,svelte,vue,solid}` | Thin bindings. **Mostly auto-generated — do not hand-edit generated files.** |
+| Wrappers | `packages/{react,angular,svelte,vue,solid}` | Thin bindings. **Mostly auto-generated. Registry entries with `manual: true` are handwritten.** |
 | Shared | `packages/shared` | Gallery examples (`examples/`) + the component registry (`integrations/`) that the generators and commitlint read. |
 | Dev | `packages/dev` | React app for visually testing components (`pnpm dev`). |
 | Website | `packages/website` | Docusaurus docs + gallery (`pnpm website`). |
