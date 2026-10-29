@@ -92,6 +92,38 @@ The `onCrosshairMove` callback receives the `PointerEvent` (or the `WheelEvent`)
 _Crosshair_ listens to `pointermove` and `pointerout` events of the chart, so if you trigger it programmatically (e.g. in tests),
 dispatch them instead of `mousemove` and `mouseout`, the same way as for the [Tooltip](/docs/components/Tooltip#pointer-events).
 
+When the chart has a [Zoom](/docs/components/Zoom#touch-devices), two fingers pinch and pan it, while one finger keeps moving the _Crosshair_.
+
+## Keyboard Navigation
+In an _XYContainer_, the _Crosshair_ makes the chart explorable with the keyboard. The chart becomes a single tab stop,
+and when it's focused with the keyboard, the _Crosshair_ moves to the first data point:
+
+| Key | Action |
+| --- | --- |
+| <kbd>←</kbd> / <kbd>→</kbd> | Previous / next data point |
+| <kbd>Home</kbd> / <kbd>End</kbd> | First / last data point |
+| <kbd>Page Up</kbd> / <kbd>Page Down</kbd> | Jump by a tenth of the data points |
+| <kbd>↑</kbd> / <kbd>↓</kbd> | Highlight the series above / below |
+| <kbd>+</kbd> / <kbd>-</kbd> | Zoom in / out around the active data point (with a [Zoom](/docs/components/Zoom)) |
+| <kbd>Esc</kbd> | Hide the _Crosshair_ |
+
+Click the chart below and press <kbd>Tab</kbd> to try it:
+
+<XYWrapper {...crosshairProps('Line', {}, 10)} excludeTabs/>
+
+The active data point is announced to screen readers through a live region. By default, the announcement is the text
+of the `template`, or the X and Y values when there's no template. Provide `keyboardAnnouncement` to customize it:
+
+```tsx
+<VisCrosshair
+  template={template}
+  keyboardAnnouncement={(x, d, i, seriesIndex) => `${formatDate(x)}: ${d.revenue} US dollars`}
+/>
+```
+
+When the chart is zoomed, it pans to keep the active data point visible. The `onCrosshairMove` callback receives the
+`KeyboardEvent`. Set `keyboardNavigation` to `false` to turn keyboard navigation off.
+
 ## Horizontal Line
 Set `showHorizontalLine` to `true` to render a horizontal line in addition to the vertical crosshair.
 The line is placed at the Y position of the crosshair circle closest to the pointer (i.e. the snapped data point), or follows the pointer when there are no circles to snap to (for example, when `snapToData` is `false`).

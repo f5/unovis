@@ -1,0 +1,84 @@
+import { PropsTable } from '@site/src/components/PropsTable'
+import { generateDataRecords } from '../utils/data'
+import { XYWrapper } from '../wrappers/xy-wrapper'
+
+export const zoomData = generateDataRecords(150).map(d => ({ ...d, y: Math.abs(Math.cos(d.x / (10 * Math.PI))) * d.x }))
+
+export const zoomProps = (props = {}, containerProps = { scaleByDomain: true }) => ({
+  name: 'Zoom',
+  configKey: 'zoom',
+  data: zoomData,
+  showAxes: true,
+  height: 200,
+  containerProps,
+  components: [
+    { name: 'Line', props: { x: d => d.x, y: d => d.y }, key: 'components' },
+    { name: 'Crosshair', props: { template: d => `x: ${d.x}, y: ${d.y.toFixed(1)}` }, key: 'crosshair' },
+  ],
+  ...props,
+})
+
+## Basic Configuration
+_Zoom_ lets users zoom and pan an _XYContainer_ along the X axis. Add it to the container like a _Crosshair_ or a _Tooltip_.
+Charts without a _Zoom_ don't include its code.
+Click the chart below, then scroll over it:
+
+<XYWrapper {...zoomProps()} showContext="full"/>
+
+| Input | Action |
+| --- | --- |
+| Mouse wheel | Zoom around the pointer, once the chart has been clicked or focused, so it doesn't hijack the page scroll |
+| Trackpad pinch, <kbd>Ctrl</kbd> / <kbd>⌘</kbd> + wheel | Zoom right away |
+| Horizontal scroll, <kbd>Shift</kbd> + wheel | Pan |
+| Mouse drag | Pan the zoomed chart |
+| Two fingers on a touch screen | Pinch and pan |
+| <kbd>+</kbd> / <kbd>-</kbd> | Zoom the focused chart, around the [Crosshair's](/docs/components/Crosshair#keyboard-navigation) active data point when it's shown |
+| Double click | Reset the zoom |
+
+Set `scaleByDomain` on the container to fit the Y axis to the visible data. Without it, the Y domain is calculated from the whole dataset.
+
+## Zoom Limits
+By default, you can zoom out to the extent of the data combined with the container's `xDomain`, and zoom in until the
+domain is two data steps wide. Use `extent` and `minSpan` to change that:
+
+<XYWrapper {...zoomProps()} extent={[25, 125]} minSpan={10} excludeTabs/>
+
+## Zoom Events and `xDomain`
+_Zoom_ applies the zoom by itself and reports the visible X domain via the `onZoom` callback. The callback receives
+`undefined` when the zoom gets reset. You don't need to feed the domain back to the container, but a new `xDomain` value replaces
+the zoomed domain. That's how you can sync the chart with a [Brush](/docs/components/Brush):
+
+```tsx
+const [zoomDomain, setZoomDomain] = useState<[number, number] | undefined>()
+const [brushDomain, setBrushDomain] = useState<[number, number] | undefined>()
+
+<VisXYContainer data={data} xDomain={brushDomain} scaleByDomain>
+  <VisLine x={x} y={y}/>
+  <VisZoom onZoom={setZoomDomain}/>
+</VisXYContainer>
+<VisXYContainer data={data}>
+  <VisArea x={x} y={y}/>
+  <VisBrush
+    selection={zoomDomain ?? null}
+    onBrushMove={(selection, _, userDriven) => { if (userDriven) { setBrushDomain(selection); setZoomDomain(selection) } }}
+  />
+</VisXYContainer>
+```
+
+To reset the zoom programmatically, call `reset()`, or use `setDomain(domain)` to zoom to a specific domain:
+
+```ts
+const zoom = new Zoom({ onZoom: domain => console.log(domain) })
+const chart = new XYContainer(element, { components: [line], zoom }, data)
+
+zoom.setDomain([20, 40])
+zoom.reset()
+```
+
+## Touch Devices
+On touch screens, two fingers pinch and pan the chart, while one finger keeps moving the [Crosshair](/docs/components/Crosshair#touch-devices).
+To keep the browser from taking the pinch over, the chart's SVG element gets `touch-action: none`, or `pan-y` when
+neither the _Crosshair_ nor the _Tooltip_ follows touch moves. A swipe that starts on the chart won't scroll the page in the first case.
+
+## Component Props
+<PropsTable name="VisZoom"/>

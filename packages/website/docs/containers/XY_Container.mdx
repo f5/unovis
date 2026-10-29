@@ -269,6 +269,22 @@ It comes in hand when you're updating xDomain programmatically using, for exampl
   inputType="checkbox"
   showContext='container'/>
 
+## Zoom and Pan
+Add a [Zoom](/docs/components/Zoom) component to let users zoom and pan the chart along the X axis with the mouse wheel,
+the trackpad, mouse drags, touch gestures and the keyboard. Combine it with `scaleByDomain` to fit the Y axis to the visible data:
+
+<XYWrapper
+  {...xyContainerProps('Line', 150)}
+  data={variedData}
+  showAxes
+  containerProps={{ scaleByDomain: true }}
+  components={[
+    component('Line'),
+    { name: 'Crosshair', props: { template: d => `x: ${d.x}, y: ${d.y.toFixed(1)}` }, key: 'crosshair' },
+    { name: 'Zoom', props: {}, key: 'zoom' },
+  ]}
+  excludeTabs/>
+
 ## Y Direction
 You can set `yDirection` to change the direction of data along the Y axis. Supported values are `Direction.North` and `Direction.South`.
 <XYWrapper {...xyContainerProps()} yDirection='south' showContext='container'/>
@@ -394,6 +410,11 @@ users a text summary of the visualization:
   {/* … */}
 </VisXYContainer>
 ```
+
+### Keyboard Navigation
+Charts with a [Crosshair](/docs/components/Crosshair) can be explored with the keyboard: the chart becomes a single tab stop,
+the arrow keys move the Crosshair between the data points and the series, and the active data point is announced to screen readers.
+See [Keyboard Navigation](/docs/components/Crosshair#keyboard-navigation) in the _Crosshair_ docs for the keys and options.
 
 ## SVG Defs
 You can use the `svgDefs` property to inject custom SVG definitions — gradients, patterns, clip paths, and
