@@ -38,7 +38,7 @@ const changeAuthority = (event: Event): void => {
           :curveType="c.CurveType.StepAfter" />
         <VisCrosshair :forceShowAt="state.cursor" :onCrosshairMove="view.onMove" :template="c.generationTooltip" />
         <VisTooltip :container="c.tooltipContainer" />
-        <VisAxis :type="'x'" :tickFormat="c.dayLabel" :numTicks="7" />
+        <VisAxis :type="'x'" :label="'Time (UTC)'" :tickFormat="c.dayLabel" :numTicks="7" />
         <VisAxis :type="'y'" :label="'Generation (GW)'" />
       </VisXYContainer>
     </div>
@@ -48,7 +48,7 @@ const changeAuthority = (event: Event): void => {
         <VisLine :x="c.time" :y="c.demandAccessors" :color="c.demandColors" :curveType="c.CurveType.Linear" />
         <VisCrosshair :forceShowAt="state.cursor" :onCrosshairMove="view.onMove" :template="c.demandTooltip" />
         <VisTooltip />
-        <VisAxis :type="'x'" :tickFormat="c.dayLabel" :numTicks="7" />
+        <VisAxis :type="'x'" :label="'Time (UTC)'" :tickFormat="c.dayLabel" :numTicks="7" />
         <VisAxis :type="'y'" :label="'Demand (GW)'" />
       </VisXYContainer>
     </div>

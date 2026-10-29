@@ -21,7 +21,7 @@ export const fuelAccessors = fuelKeys.map(
 )
 export const legend = fuelNames.map((name, i) => ({ name, color: fuelColors[i] }))
 export const tooltipContainer = typeof document !== 'undefined' ? document.body : undefined
-export const chartMargin = { left: 60, right: 16, top: 8, bottom: 30 }
+export const chartMargin = { left: 60, right: 16, top: 8, bottom: 48 }
 export const byAuthority = Object.fromEntries(
   authorityOptions.map(option => [option.value, data.filter(d => d.authority === option.value)])
 )

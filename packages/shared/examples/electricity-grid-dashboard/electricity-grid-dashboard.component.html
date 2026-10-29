@@ -21,7 +21,7 @@
         [curveType]="c.CurveType.StepAfter"></vis-area>
       <vis-crosshair [forceShowAt]="state.cursor" [onCrosshairMove]="view.onMove" [template]="c.generationTooltip"></vis-crosshair>
       <vis-tooltip [container]="c.tooltipContainer"></vis-tooltip>
-      <vis-axis [type]="'x'" [tickFormat]="c.dayLabel" [numTicks]="7"></vis-axis>
+      <vis-axis [type]="'x'" [label]="'Time (UTC)'" [tickFormat]="c.dayLabel" [numTicks]="7"></vis-axis>
       <vis-axis [type]="'y'" [label]="'Generation (GW)'"></vis-axis>
     </vis-xy-container>
   </div>
@@ -31,7 +31,7 @@
       <vis-line [x]="c.time" [y]="c.demandAccessors" [color]="c.demandColors" [curveType]="c.CurveType.Linear"></vis-line>
       <vis-crosshair [forceShowAt]="state.cursor" [onCrosshairMove]="view.onMove" [template]="c.demandTooltip"></vis-crosshair>
       <vis-tooltip></vis-tooltip>
-      <vis-axis [type]="'x'" [tickFormat]="c.dayLabel" [numTicks]="7"></vis-axis>
+      <vis-axis [type]="'x'" [label]="'Time (UTC)'" [tickFormat]="c.dayLabel" [numTicks]="7"></vis-axis>
       <vis-axis [type]="'y'" [label]="'Demand (GW)'"></vis-axis>
     </vis-xy-container>
   </div>
