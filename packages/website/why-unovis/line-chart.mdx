@@ -1,0 +1,61 @@
+---
+title: Line Chart
+description: A multi-series line chart rendered with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot, Vega-Lite and TanStack Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { lineChart } from '@site/src/comparisons/line'
+
+<LibraryComparison comparison={lineChart}>
+
+# Line Chart
+
+Monthly active users on three platforms over three years, with a few months of iOS and Android data missing. Every
+chart gets the same data, and each library is set up to draw the same chart: lines without point markers, formatted
+axes, a legend that toggles series and a tooltip on hover.
+
+</LibraryComparison>
+
+## What to look for
+
+- **Hover.** The Unovis crosshair snaps to the nearest month, marks every line and shows one tooltip for all three.
+  Recharts and ECharts do the same. Chart.js and AG Charts Community show a shared tooltip without a guide line (AG
+  Charts' crosshair is an Enterprise feature), and Nivo draws the line without marking the points. Observable Plot and
+  Vega-Lite show one tooltip per month with a guide line, without marking the points: Plot with `Plot.tip` and
+  `pointerX`, Vega-Lite with a pivot transform and a hover rule. TanStack Charts shows one tooltip per month with a
+  crosshair (`focus: 'group-x'`), leaving out a series that has no data that month.
+- **Gaps in the data.** Unovis bridges the missing months with a dashed line from one option,
+  `interpolateMissingData`, so the trend stays readable and it's clear which months have no data. Chart.js draws the
+  same dashed bridges with `spanGaps` and a segment style. Recharts, ECharts and AG Charts can only bridge gaps with the
+  same solid line, which hides that data is missing, so they leave gaps here, and so does Nivo, which has no bridging
+  option: dropping the empty months from a series would join its line with the same solid stroke.
+  Observable Plot, Vega-Lite and TanStack Charts leave gaps by default too.
+  Randomize the data to move the gaps.
+- **Randomize the data.** Unovis morphs the lines and the axis ticks to the new values. AG Charts Community redraws
+  without a transition, because animations are an Enterprise feature, and so do Observable Plot and Vega-Lite, which
+  have no animations. TanStack Charts tweens the lines (`svgAnimation`), but only those without gaps; the others jump.
+- **Click the legend.** Hidden lines disappear and the y axis rescales to what's left. Unovis and Recharts need a few
+  lines of state for this; Chart.js, ECharts and AG Charts do it on their own, and Nivo with its `toggleSerie` option.
+  Observable Plot's legend is static, so it takes the same few lines of state. Vega-Lite's legend highlights the line
+  you click and fades the others, so the axis doesn't rescale. TanStack Charts has its own clickable legend, but a
+  hidden line keeps its room on the y axis.
+- **Switch the site theme.** Unovis follows it through CSS, Observable Plot's text and axes follow it through
+  `currentColor`, and so does TanStack Charts' whole default theme. Every other chart gets its dark colors or theme from
+  code; open **Code** to see how much.
+- **The x axis.** Unovis spaces its ticks by the width available, so labels never collide. Chart.js rotates the month
+  labels and skips every other one to fit them.
+- **Presets.** *Step line* (`curveType` in Unovis) works in every library. *Dashed iOS* (`lineDashArray`) has no option
+  in Nivo, where it takes a custom layer that redraws the lines, and Observable Plot and TanStack Charts draw the dashed
+  series as a second line mark, because their dash pattern is one value per mark. *Annotations* adds the `VisPlotband`
+  and `VisPlotline` components: Chart.js draws both with the official chartjs-plugin-annotation (a `box` and a `line`
+  annotation), Nivo's markers can't shade a band, and ECharts hangs the marks on a series so they hide with it. TanStack
+  Charts' `rect` takes both y ends in data units, so the demo binds the band to a hidden y scale fixed to [0, 1] to
+  span the plot's height.
+
+## Feature comparison
+
+<FeatureTable features={['crosshair', 'legend-toggle', 'animation', 'darkMode', 'line-gaps', 'line-interpolate', 'curve-types', 'reference-line', 'annotations', 'brush', 'zoom-pan']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

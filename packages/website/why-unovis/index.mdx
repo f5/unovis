@@ -1,0 +1,198 @@
+---
+title: Why Unovis
+description: What sets Unovis apart from other charting libraries, with live side-by-side comparisons against Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot, Vega-Lite and TanStack Charts
+slug: /
+hide_table_of_contents: true
+---
+
+import Link from '@docusaurus/Link'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { BuildSizeChart } from '@site/src/components/BuildSizeChart'
+import './styles.css'
+
+# Why Unovis
+
+Unovis is an open-source data visualization library built with care for how charts look and how they behave: when you
+hover them, when the data changes, when the theme switches and when the labels are long. Rather than taking our word
+for it, this section renders **the same data with Unovis and eight of the most popular charting libraries on npm**,
+side by side, with the code for each one.
+
+## What sets Unovis apart
+
+<div className="why-unovis-grid">
+  <div className="why-unovis-card">
+    <h3>Handcrafted</h3>
+
+    Charts look finished before you configure anything: a balanced palette, smooth monotone curves, rounded bars,
+    uncluttered axes, labels that wrap or trim to the space they have, and a crosshair that snaps to your data.
+    Every change animates, from lines morphing to axes rescaling.
+
+    <p><Link to="/why-unovis/line-chart">See it next to the others →</Link></p>
+  </div>
+  <div className="why-unovis-card">
+    <h3>Agentic-ready</h3>
+
+    Every option is documented in the type definitions with its default, so a coding agent reads the API straight
+    from the package. The MCP server and `@unovis/ssr` render charts to SVG or PNG locally, so an agent can look at
+    what it made.
+
+    <p><Link to="/docs/mcp">MCP server →</Link></p>
+  </div>
+  <div className="why-unovis-card">
+    <h3>Themeable</h3>
+
+    Every color, stroke and font is a CSS variable: theme an app, a chart or a single component without touching
+    chart config, and charts follow your page into dark mode.
+
+    <p><Link to="/docs/guides/theming">Theming guide →</Link></p>
+  </div>
+  <div className="why-unovis-card">
+    <h3>Modular</h3>
+
+    Build charts from components that share one container, one set of scales and one set of axes, and import only
+    what you use. The React, Angular, Vue, Svelte and Solid wrappers are generated from the same TypeScript core,
+    with the same props everywhere.
+
+    <p><Link to="/docs/quick-start">Quick start →</Link></p>
+  </div>
+  <div className="why-unovis-card">
+    <h3>Lightweight</h3>
+
+    A full line chart with axes, a legend, a tooltip, a crosshair and animation is about 52 KB gzipped, lighter
+    than most of the libraries compared here.
+
+    <p><Link to="#bundle-size">How we measured →</Link></p>
+  </div>
+  <div className="why-unovis-card">
+    <h3>Beyond the basics</h3>
+
+    Network graphs with force, Dagre and ELK layouts, Sankey and chord diagrams, Leaflet maps, timelines and
+    treemaps, with the same API and look as the XY charts.
+
+    <p><Link to="/gallery">Gallery →</Link></p>
+  </div>
+</div>
+
+## At a glance
+
+<FeatureTable features={['renderer', 'frameworks', 'theming', 'darkMode', 'animation', 'responsive', 'ssr', 'mcp-server', 'typescript']}/>
+
+The [feature comparison](/why-unovis/feature-comparison) covers more than 60 features (chart types, AI agent
+support, building blocks and chart details) with a source for every cell.
+
+### Bundle size
+
+The same chart in every library: **a line chart with three smooth lines, axes, a legend, a tooltip for all series, a
+crosshair and animation**, written with each library's React integration, minified and gzipped, React itself excluded:
+
+<BuildSizeChart/>
+
+Unovis comes out the smallest, with TanStack Charts and Chart.js close behind. TanStack Charts is lighter with its
+defaults: straight lines with no crosshair and no animation take 37.5 KB, and with the curves and the crosshair but only
+data updates animated, 41.3 KB. Observable Plot and Vega-Lite can't animate, and AG Charts Community
+has neither the crosshair nor animation (both are Enterprise features), so they're measured without them. Hover a bar to
+see what was bundled, and see [how we measured](/why-unovis/methodology#bundle-size).
+
+## When another library might suit you better
+
+We'd rather you pick the right tool than the wrong one:
+
+- **Tens of thousands of individual marks.** Unovis renders SVG. For a scatter plot with 50,000 points, a Canvas or
+  WebGL renderer such as ECharts, Chart.js or AG Charts will be faster.
+- **Chart types Unovis doesn't have.** There is no built-in candlestick, radar or funnel chart. A gauge can be
+  assembled from the [Radial Bar](/docs/components/RadialBar), but it isn't a dedicated component.
+- **Quick exploratory charts.** Observable Plot and Vega-Lite are grammars of graphics with faceting, binning and
+  aggregation built in, so exploring a dataset takes a few lines. Unovis has no faceting or data transforms.
+
+See [how we compare](/why-unovis/methodology) for the rules we followed, the versions we tested and why some popular
+libraries aren't rendered here.
+
+## Compare side by side
+
+Each page renders one dataset with Unovis, Recharts, Chart.js, ECharts, Nivo, AG Charts, Observable Plot, Vega-Lite
+and TanStack Charts. A library that can't draw
+the chart gets a placeholder that says why. Hover the charts, click the legends, randomize the data, switch the site
+theme and open the code.
+
+<div className="why-unovis-grid">
+  <Link className="why-unovis-card" to="/why-unovis/line-chart">
+    <h3>Line Chart</h3>
+    <p>Three series over three years: crosshairs, tooltips, time axes and gaps in the data.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/area-chart">
+    <h3>Area Chart</h3>
+    <p>Stacked areas and how they transition when the data or the visible series change.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/grouped-bar-chart">
+    <h3>Grouped Bar Chart</h3>
+    <p>Grouped bars with long category names.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/stacked-bar-chart">
+    <h3>Stacked Bar Chart</h3>
+    <p>Twelve months of stacked bars with a tooltip for the whole stack.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/scatter-plot">
+    <h3>Scatter Plot</h3>
+    <p>Real data from the Palmer penguins dataset, colored and shaped by species and sized by body mass.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/donut-chart">
+    <h3>Donut Chart</h3>
+    <p>Segments, legends and a total in the middle.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/circular-bar-chart">
+    <h3>Circular Bar Chart</h3>
+    <p>Progress towards six daily goals, one petal-shaped bar per goal, with icons.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/nested-donut-chart">
+    <h3>Nested Donut</h3>
+    <p>Website sessions by platform, OS and browser, in rings built from a flat table.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/radial-bar-chart">
+    <h3>Radial Bar Chart</h3>
+    <p>Usage against five plan quotas as concentric rings, each scaled to its own quota.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/heatmap">
+    <h3>Heatmap</h3>
+    <p>API error rates by hour and day of the week, with a monitoring gap.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/treemap">
+    <h3>Treemap</h3>
+    <p>Monthly cloud spend by team and service as nested tiles.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/box-plot">
+    <h3>Box Plot</h3>
+    <p>Response times per API endpoint: quartiles, whiskers and outliers.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/timeline">
+    <h3>Timeline</h3>
+    <p>A week of deployments, incidents and maintenance windows across seven services.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/network-graph">
+    <h3>Network Graph</h3>
+    <p>A service map with a force layout, icons, alerts and traffic.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/sankey-diagram">
+    <h3>Sankey Diagram</h3>
+    <p>Website visitor flows from the traffic source to what visitors did next.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/chord-diagram">
+    <h3>Chord Diagram</h3>
+    <p>Data transfer between six cloud regions, grouped by continent.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/choropleth-map">
+    <h3>Choropleth Map</h3>
+    <p>Users by country, with data centers and the traffic flowing between them.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/tile-map">
+    <h3>Tile Map</h3>
+    <p>A month of earthquakes, clustered on a vector tile map.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/brush">
+    <h3>Brush</h3>
+    <p>A year of daily API requests, zoomed with a brush strip or a zoom box.</p>
+  </Link>
+  <Link className="why-unovis-card" to="/why-unovis/annotations">
+    <h3>Annotations</h3>
+    <p>Callouts for two releases and an outage on a daily-users chart.</p>
+  </Link>
+</div>

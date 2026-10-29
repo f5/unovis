@@ -1,0 +1,56 @@
+.why-unovis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+@media screen and (max-width: 1200px) {
+  .why-unovis-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .why-unovis-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.why-unovis-card {
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  background: var(--ifm-background-surface-color);
+}
+
+.why-unovis-card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.why-unovis-card p {
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.why-unovis-card p:last-child {
+  margin-bottom: 0;
+}
+
+a.why-unovis-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+a.why-unovis-card:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 6px 24px -12px var(--ifm-color-primary);
+}
+
+a.why-unovis-card h3 {
+  color: var(--ifm-color-primary);
+}

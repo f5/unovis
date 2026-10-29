@@ -1,0 +1,50 @@
+---
+title: Heatmap
+description: A heatmap of API error rates by hour and day rendered with Unovis, Chart.js, ECharts, Nivo, Observable Plot, Vega-Lite and TanStack Charts, side by side
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { heatmap } from '@site/src/comparisons/heatmap'
+
+<LibraryComparison comparison={heatmap}>
+
+# Heatmap
+
+The API's error rate over one week, by hour of day: errors follow the weekday traffic, one weekday has an incident, and
+three hours have no data because the monitoring was down.
+
+</LibraryComparison>
+
+## What to look for
+
+- **Labels.** Unovis puts the hours and days around the grid with `columnLabel` and `rowLabel`, and hides the labels
+  that would overlap (`labelHideOverlapping`, on by default). ECharts, Chart.js and TanStack Charts skip labels too, and
+  Chart.js turns its hour labels at an angle. Vega-Lite turns them sideways, and Nivo and Observable Plot draw every
+  label, so they crowd at this width.
+- **Missing hours.** Unovis draws a cell without a value in its empty color (`--vis-heatmap-cell-fill-color`), so the
+  outage reads as no data. ECharts (`'-'` values), Vega-Lite and Observable Plot leave a hole. Nivo paints empty cells
+  black unless you set `emptyColor`, and TanStack Charts paints a null value in the scale's first color, the same as the
+  lowest rates, so its demo leaves those rows out, as the Chart.js demo does.
+- **One color scale.** Every library gets the same four steps, Unovis' default heatmap colors, over 0–4%
+  (`colorDomain`). In Unovis they're CSS variables, so the cells and the legend switch to the dark steps without any
+  code; the other demos pick the dark colors from `isDark`.
+- **Legends.** Unovis has no color legend on the heatmap itself; the demo puts a `BulletLegend` with the bucket colors
+  above it. Chart.js' legend lists datasets, so its buckets are custom legend items. ECharts draws the scale as a
+  piecewise `visualMap`, which hides a bucket's cells when you click it.
+- **Randomize the data.** Unovis, Chart.js and Nivo fade the cells to their new colors. TanStack Charts, Observable Plot
+  and Vega-Lite switch them at once. On hover, Nivo dims every cell outside the hovered row and column.
+- **Presets.** *Rounded gaps* (`cellPadding`, `cellCornerRadius`) are options in every library, in different units:
+  Nivo and Vega-Lite take the gap as a share of the band, Observable Plot and TanStack Charts as an `inset`, and
+  Chart.js as a cell size you compute from the chart area. ECharts has no gap option for heatmap cells, so its demo
+  draws a border in the card's background color. *Eight buckets* (`colorRange`) is a list of colors everywhere; the
+  Unovis and Chart.js legends wrap to a second row, while ECharts' `visualMap` stays on one row and cuts off its first
+  and last buckets. *Hours as rows* (`layout`) fills the grid row by row from the same flat list in Unovis; the other
+  libraries swap their x and y fields.
+
+## Feature comparison
+
+<FeatureTable features={['heatmap', 'legend', 'tooltip', 'animation', 'darkMode', 'responsive']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.

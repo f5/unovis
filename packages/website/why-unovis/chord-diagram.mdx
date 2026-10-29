@@ -1,0 +1,43 @@
+---
+title: Chord Diagram
+description: A chord diagram rendered with Unovis, ECharts and Nivo, side by side, with notes on why TanStack Charts, Recharts, Chart.js, AG Charts Community, Observable Plot and Vega-Lite can't draw one
+hide_table_of_contents: true
+---
+
+import { LibraryComparison } from '@site/src/components/LibraryComparison'
+import { FeatureTable } from '@site/src/components/FeatureTable'
+import { chordDiagram } from '@site/src/comparisons/chord'
+
+<LibraryComparison comparison={chordDiagram}>
+
+# Chord Diagram
+
+One month of data transfer between the six cloud regions of a SaaS product, both directions combined: each arc is a
+region, sized by all of its traffic, and each ribbon is the traffic between two regions.
+
+</LibraryComparison>
+
+## What to look for
+
+- **Who can draw it.** Three of the nine libraries have a chord diagram. AG Charts has one in its paid Enterprise
+  edition; TanStack Charts, Recharts, Chart.js, Observable Plot and Vega-Lite have none.
+- **The data.** Unovis and ECharts take the same list of nodes and links as their Sankey diagrams (ECharts links them
+  by name). Nivo takes a square matrix, so the demo builds one from the links and fills both cells of every pair.
+- **Colors and labels.** ECharts and Nivo give every region a palette color and paint its ribbons with it; Unovis
+  draws the nodes in its main color and the ribbons in a pale blue, so its demo sets `nodeColor` and `linkColor`.
+  Unovis curves the labels along the arcs and trims them to fit, ECharts writes them horizontally outside the ring,
+  and Nivo along the outside of it.
+- **Hover a region or a ribbon.** All three highlight its ribbons, fade the rest and show a tooltip. Nivo's ribbon
+  tooltip lists the value at both ends.
+- **Randomize the data.** The arcs and ribbons of all three animate to their new sizes.
+- **Presets.** *Grouped by continent* (`nodeLevels`) adds a ring of continent arcs, which only Unovis can draw:
+  ECharts and Nivo take a flat list of nodes. *Radial labels* (`nodeLabelAlignment`) is Nivo's `labelRotation`. ECharts'
+  chord series ignores `label.rotate`, so its demo turns each label with a `labelLayout` callback and computes the arc
+  angles from the data itself. *Thick arcs* (`nodeWidth`, `padAngle`) is a pair of
+  options in all three.
+
+## Feature comparison
+
+<FeatureTable features={['chord', 'sankey', 'tooltip', 'animation', 'darkMode']}/>
+
+Every cell links to its source. See [how we compare](/why-unovis/methodology) for the rules we followed.
