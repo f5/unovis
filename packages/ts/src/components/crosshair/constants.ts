@@ -9,3 +9,6 @@ export enum CrosshairSnapMode {
 
 /** Circles whose Y positions are closer than this many radii overlap each other */
 export const CROSSHAIR_CIRCLE_OVERLAP_RADII = 2
+
+/** Circles positioned further than this many pixels outside the Y range are hidden */
+export const CROSSHAIR_CIRCLE_Y_RANGE_TOLERANCE_PX = 1

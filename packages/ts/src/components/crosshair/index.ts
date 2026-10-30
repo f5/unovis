@@ -18,7 +18,7 @@ import { Spacing } from '@/types/spacing'
 
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'
-import { CrosshairSnapMode, CROSSHAIR_CIRCLE_OVERLAP_RADII } from './constants'
+import { CrosshairSnapMode, CROSSHAIR_CIRCLE_OVERLAP_RADII, CROSSHAIR_CIRCLE_Y_RANGE_TOLERANCE_PX } from './constants'
 
 // Config
 import { CrosshairDefaultConfig, CrosshairConfigInterface } from './config'
@@ -278,9 +278,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     // This looks off, so we stop further rendering when the `xPx` value is not finite.
     if (!isFinite(xPx)) return
 
-    const circleData = isFunction(config.getCircles)
+    const circleData = this.hideCirclesOutsideYRange(isFunction(config.getCircles)
       ? config.getCircles(xValue, datamodel.data, this.yScale, leftNearestDatumIndex)
-      : this.getCircleData(nearestDatum, nearestDatumIndex)
+      : this.getCircleData(nearestDatum, nearestDatumIndex))
 
     this.line
       .attr('y1', 0)
@@ -409,6 +409,15 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   // We don't want Crosshair to be be taken in to account in domain calculations
   getYDataExtent (): number[] {
     return [undefined, undefined]
+  }
+
+  /** The Crosshair isn't clipped by the container, so we hide the circles outside the Y range
+   * (e.g. values outside a fixed Y domain) to keep them from hanging over the axes and margins */
+  private hideCirclesOutsideYRange (circles: CrosshairCircle[]): CrosshairCircle[] {
+    const yRange = this.yScale.range()
+    const yMin = Math.min(yRange[0], yRange[1]) - CROSSHAIR_CIRCLE_Y_RANGE_TOLERANCE_PX
+    const yMax = Math.max(yRange[0], yRange[1]) + CROSSHAIR_CIRCLE_Y_RANGE_TOLERANCE_PX
+    return circles.map(c => (c.y < yMin || c.y > yMax) ? { ...c, opacity: 0 } : c)
   }
 
   /** Y position of the horizontal crosshair line: the circle closest to the pointer (i.e. the snapped data point),
