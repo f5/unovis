@@ -56,6 +56,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     this.setConfig(config)
   }
 
+  getBaselineAccessor (): NumericAccessor<Datum> {
+    return this.config.baseline
+  }
+
   get bleed (): Spacing {
     this._barData = this._getVisibleData()
     if (this._barData.length === 0) return { top: 0, bottom: 0, left: 0, right: 0 }
