@@ -291,9 +291,9 @@ export class XYContainer<Datum> extends ContainerCore {
         .flatMap(c => flatten([c.config.y]).map((_, i) => c.config.colorKeys?.[i]))
 
       crosshair.colorKeys = colorKeys
+      // The crosshair is not clipped, so its circles can overflow into the container margins
+      // on the sides where it doesn't request bleed (see `Crosshair.bleed`)
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
-        .style('clip-path', `url(#${this._clipPathId})`)
-        .style('-webkit-clip-path', `url(#${this._clipPathId})`)
       crosshair.render()
     }
 

@@ -14,6 +14,7 @@ type Datum = { x: number; a: number; b: number; c: number | undefined }
 type CrosshairInternals = {
   getCircleData: (datum: Datum, datumIndex: number) => CrosshairCircle[];
   getPaintOrder: (circles: CrosshairCircle[]) => CrosshairCircle[];
+  hideCirclesOutsideYRange: (circles: CrosshairCircle[]) => CrosshairCircle[];
 }
 
 const datum: Datum = { x: 5, a: 10, b: 20, c: 70 }
@@ -90,5 +91,35 @@ describe('Crosshair circles paint order', () => {
     crosshair.setScaleRange(ScaleDimension.Y, [300, 0])
     const circles = (crosshair as unknown as CrosshairInternals).getCircleData({ x: 0, a: 1600, b: 3, c: 1599 }, 0)
     expect(circles.map(c => c.id)).toEqual(['stacked-0', 'stacked-1', 'regular-0'])
+  })
+})
+
+describe('Crosshair bleed', () => {
+  const crosshair = new Crosshair<Datum>({ x: d => d.x, y: [d => d.a], circleRadius: 5 })
+
+  it('requests the circle radius on the sides without container margin', () => {
+    crosshair.setContainerMargin({ top: 0, bottom: 0, left: 0, right: 0 })
+    expect(crosshair.bleed).toEqual({ top: 5, left: 5, right: 5 })
+  })
+
+  it('skips the bleed on the sides covered by the container margin', () => {
+    crosshair.setContainerMargin({ top: 2, bottom: 20, left: 40, right: 0 })
+    expect(crosshair.bleed).toEqual({ top: 3, left: 0, right: 5 })
+  })
+})
+
+describe('Crosshair circles outside the Y range', () => {
+  const crosshair = new Crosshair<Datum>({ x: d => d.x, y: [d => d.a] })
+  crosshair.setScaleRange(ScaleDimension.Y, [300, 0])
+  const opacities = (ys: number[]): (number | undefined)[] => (crosshair as unknown as CrosshairInternals)
+    .hideCirclesOutsideYRange(ys.map(y => ({ y, color: '#000', opacity: 1 })))
+    .map(c => c.opacity)
+
+  it('hides the circles beyond the range', () => {
+    expect(opacities([-20, 320])).toEqual([0, 0])
+  })
+
+  it('keeps the circles within the range and on its edges', () => {
+    expect(opacities([0, 150, 300, -0.5, 300.5])).toEqual([1, 1, 1, 1, 1])
   })
 })
