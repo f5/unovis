@@ -3,9 +3,11 @@
 
 # Production
 /build
+/build-*
 
 # Generated files
 .docusaurus
+.docusaurus.*
 .cache-loader
 /static/llms/api/
 /static/llm.txt
