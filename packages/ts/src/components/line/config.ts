@@ -27,6 +27,14 @@ export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<D
   highlightOnHover?: boolean;
   /** Optional link cursor. Default: `null` */
   cursor?: StringAccessor<Datum[]>;
+  /** Distance in pixels between the markers of a line `pattern`. By default a marker is drawn on every
+   * point of the line, which the browser repaints on every frame — at a few thousand points that alone
+   * can halve the frame rate. Setting a spacing draws them on a separate, thinned out path instead, so
+   * the count follows the chart's width rather than the size of the data.
+   * Only applies when the line has at least one point per pixel; below that the markers stay on the line
+   * itself, because a smoothing `curveType` can place them noticeably off it.
+   * Default: `undefined` */
+  markerSpacing?: number;
   /** Enable interpolated line where data points are missing or fallbackValue is used.
    * You can customize the line's appearance with `--vis-line-gapfill-stroke-dasharray`
    * and `--vis-line-gapfill-stroke-opacity` CSS variables.
@@ -39,6 +47,7 @@ export const LineDefaultConfig: LineConfigInterface<unknown> = {
   curveType: CurveType.MonotoneX,
   lineWidth: 2,
   lineDashArray: undefined,
+  markerSpacing: undefined,
   fallbackValue: undefined,
   highlightOnHover: false,
   cursor: null,
