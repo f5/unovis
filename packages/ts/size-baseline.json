@@ -1,34 +1,34 @@
 {
   "xy-container-line": {
-    "min": 118053,
-    "gzip": 39489
+    "min": 107371,
+    "gzip": 35553
   },
   "line-chart": {
-    "min": 171657,
-    "gzip": 56814
+    "min": 161232,
+    "gzip": 52996
   },
   "stacked-bar-area": {
-    "min": 156018,
-    "gzip": 51703
+    "min": 145382,
+    "gzip": 47803
   },
   "donut": {
-    "min": 95544,
-    "gzip": 34065
+    "min": 84965,
+    "gzip": 30138
   },
   "sankey": {
-    "min": 135087,
-    "gzip": 46697
+    "min": 124507,
+    "gzip": 42757
   },
   "graph": {
-    "min": 197721,
-    "gzip": 63198
+    "min": 189225,
+    "gzip": 60136
   },
   "topojson-map": {
-    "min": 183569,
-    "gzip": 63171
+    "min": 172993,
+    "gzip": 59207
   },
   "leaflet-map": {
-    "min": 140248,
-    "gzip": 47723
+    "min": 129670,
+    "gzip": 43790
   }
 }
