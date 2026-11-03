@@ -9,6 +9,7 @@ import { smartTransition } from '@/utils/d3'
 import { getCSSVariableValueInPixels } from '@/utils/misc'
 import { estimateStringPixelLength } from '@/utils/text-measure'
 import { toPx } from '@/utils/to-px'
+import { interpolatePath } from '@/utils/interpolate-path'
 
 // Types
 import { GraphInputLink, GraphInputNode } from '@/types/graph'
@@ -134,7 +135,7 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
     const cp2x = x1 + (x2 - x1) * 0.5 * curvature
     const cp2y = y1 + (y2 - y1) * 1.0 * curvature
 
-    const curveFactory = config.linkCurve ?? Curve[config.linkCurveType]
+    const curveFactory = config.linkCurve ?? Curve[config.linkCurveType as keyof typeof Curve]
     const pathData = config.linkCurveType === GRAPH_LINK_CURVE_SMOOTH_STEP
       ? getSmoothStepPathData(getSmoothStepPoints(x1, y1, x2, y2, GRAPH_LINK_SMOOTH_STEP_OFFSET, smoothStepAxis, smoothStepDirection), GRAPH_LINK_SMOOTH_STEP_BORDER_RADIUS)
       : curveFactory
@@ -155,8 +156,12 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
       .style('stroke', linkColor)
       .attr('transform', linkShiftTransform)
 
-    smartTransition(link, duration)
-      .attr('d', pathData)
+    if (duration) {
+      (smartTransition(link, duration) as Transition<SVGPathElement, GraphLink<N, L>, SVGGElement, unknown>)
+        .attrTween('d', (_, j, nodes) => interpolatePath(select(nodes[j]).attr('d') || '', pathData))
+    } else {
+      link.attr('d', pathData)
+    }
 
     linkBand
       .attr('class', linkSelectors.linkBand)
@@ -164,8 +169,12 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
       .style('stroke-width', getLinkBandWidth(d, scale, config))
       .style('stroke', linkColor)
 
-    smartTransition(linkBand, duration)
-      .attr('d', pathData)
+    if (duration) {
+      (smartTransition(linkBand, duration) as Transition<SVGPathElement, GraphLink<N, L>, SVGGElement, unknown>)
+        .attrTween('d', (_, j, nodes) => interpolatePath(select(nodes[j]).attr('d') || '', pathData))
+    } else {
+      linkBand.attr('d', pathData)
+    }
 
 
     // Arrow
