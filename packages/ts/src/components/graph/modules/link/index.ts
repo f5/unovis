@@ -12,7 +12,7 @@ import { toPx } from '@/utils/to-px'
 
 // Types
 import { GraphInputLink, GraphInputNode } from '@/types/graph'
-import { Curve, CurveType } from '@/types/curve'
+import { Curve } from '@/types/curve'
 
 // Local Types
 import { GraphCircleLabel, GraphLink, GraphLinkArrowStyle, GraphLinkStyle } from '../../types'
@@ -134,9 +134,8 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
     const cp2x = x1 + (x2 - x1) * 0.5 * curvature
     const cp2y = y1 + (y2 - y1) * 1.0 * curvature
 
-    const curveType = config.linkCurveType as CurveType
-    const curveFactory = Curve[curveType]
-    const pathData = curveType === GRAPH_LINK_CURVE_SMOOTH_STEP
+    const curveFactory = config.linkCurve ?? Curve[config.linkCurveType]
+    const pathData = config.linkCurveType === GRAPH_LINK_CURVE_SMOOTH_STEP
       ? getSmoothStepPathData(getSmoothStepPoints(x1, y1, x2, y2, GRAPH_LINK_SMOOTH_STEP_OFFSET, smoothStepAxis, smoothStepDirection), GRAPH_LINK_SMOOTH_STEP_BORDER_RADIUS)
       : curveFactory
         ? d3Line().curve(curveFactory)([[x1, y1], [cp1x, cp1y], [cp2x, cp2y], [x2, y2]])

@@ -1,3 +1,4 @@
+import type { CurveFactory, CurveFactoryLineOnly } from 'd3-shape'
 import {
   curveBasis,
   curveBasisClosed,
@@ -18,6 +19,31 @@ import {
   curveStepAfter,
   curveStepBefore,
 } from 'd3-shape'
+
+// Re-export curve factories from d3-shape for direct, tree-shakeable imports
+export {
+  curveBasis,
+  curveBasisClosed,
+  curveBasisOpen,
+  curveBundle,
+  curveCardinal,
+  curveCardinalClosed,
+  curveCardinalOpen,
+  curveCatmullRom,
+  curveCatmullRomClosed,
+  curveCatmullRomOpen,
+  curveLinear,
+  curveLinearClosed,
+  curveMonotoneX,
+  curveMonotoneY,
+  curveNatural,
+  curveStep,
+  curveStepAfter,
+  curveStepBefore,
+}
+
+/** A d3-shape curve factory function that can be used with both line and area generators */
+export type CurveFunction = CurveFactory | CurveFactoryLineOnly
 
 export enum CurveType {
   Basis = 'basis',
