@@ -27,6 +27,7 @@ import {
   GraphCircleLabel,
   GraphLinkStyle,
   GraphLinkArrowStyle,
+  GraphLinkCurveType,
   GraphPanelConfig,
   GraphForceLayoutSettings,
   GraphElkLayoutSettings,
@@ -177,9 +178,9 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * Default: `0` */
   linkCurvature?: NumericAccessor<L>;
   /** D3 curve type to interpolate the link path with, see the `CurveType` enum for the full list of options.
-   * Also accepts `'smoothStep'`, which draws the link as a right-angle step with rounded corners.
+   * Also accepts `GraphLinkCurveType.SmoothStep` (`'smoothStep'`), which draws the link as a right-angle step with rounded corners.
    * Default: `undefined` (links are drawn as cubic Bezier curves shaped by `linkCurvature`) */
-  linkCurveType?: CurveType | 'smoothStep' | `${CurveType}`;
+  linkCurveType?: CurveType | GraphLinkCurveType | `${CurveType}` | `${GraphLinkCurveType}`;
   /** D3 curve factory function to interpolate the link path with. Allows passing curve functions directly
    * (e.g. `curveLinear`, `curveStep` from `d3-shape`) for better tree-shaking than `linkCurveType`.
    * Default: `undefined` */
