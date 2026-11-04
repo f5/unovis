@@ -23,7 +23,7 @@ export class XYLabels<Datum> extends XYComponentCore<Datum, XYLabelsConfigInterf
   protected _defaultConfig = XYLabelsDefaultConfig as XYLabelsConfigInterface<Datum>
   public config: XYLabelsConfigInterface<Datum> = this._defaultConfig
 
-  events = {
+  events: XYComponentCore<Datum>['events'] = {
     [XYLabels.selectors.label]: {},
   }
 

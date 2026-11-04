@@ -37,7 +37,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
   protected _defaultConfig = ScatterDefaultConfig as ScatterConfigInterface<Datum>
   public config: ScatterConfigInterface<Datum> = this._defaultConfig
 
-  events = {
+  events: XYComponentCore<Datum>['events'] = {
     [Scatter.selectors.point]: {
       mouseenter: this._onPointMouseOver.bind(this),
       mouseleave: this._onPointMouseOut.bind(this),

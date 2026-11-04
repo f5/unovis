@@ -34,7 +34,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
   public config: LineConfigInterface<Datum> = this._defaultConfig
   lineGen: LineGenInterface<{ x: number; y: number; defined: boolean }>
   curve: CurveFactoryLineOnly = Curve[CurveType.MonotoneX]
-  events = {
+  events: XYComponentCore<Datum>['events'] = {
     [Line.selectors.line]: {
       mouseover: this._highlight.bind(this),
       mouseleave: this._resetHighlight.bind(this),

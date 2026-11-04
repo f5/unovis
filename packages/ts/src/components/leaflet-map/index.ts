@@ -105,7 +105,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   // eslint-disable-next-line @typescript-eslint/naming-convention
   static DEFAULT_CONTAINER_HEIGHT = 600
 
-  protected events = {
+  protected events: ComponentCore<unknown>['events'] = {
     [LeafletMap.selectors.point]: {
       mouseup: this._onPointMouseUp.bind(this),
       mousedown: this._onPointMouseDown.bind(this),

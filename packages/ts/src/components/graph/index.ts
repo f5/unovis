@@ -127,7 +127,7 @@ export class Graph<
   private _linkPathLengthMap: Map<string, number> = new Map()
   private _linkFlowFrameElapsed = 0
 
-  events = {
+  events: ComponentCore<unknown>['events'] = {
     [Graph.selectors.background]: {
       click: this._onBackgroundClick.bind(this),
     },
