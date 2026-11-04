@@ -210,3 +210,39 @@ capture-mode checks, run through the regular configuration:
 ```bash
 pnpm exec playwright test capture-mode.spec.ts --project=chromium
 ```
+
+## Visual comparison between builds
+
+`playwright/visual/` compares every example between two builds without stored baselines:
+`capture.mjs` screenshots each example in capture mode from a served build, and `compare.mjs`
+diffs two capture directories pixel by pixel. CI runs this on every pull request against the
+merge base (the `visual` job in `.github/workflows/pull_request.yml`): the job summary lists the
+examples that changed, and the `visual-comparison` artifact holds `index.html` with before /
+after / diff images side by side. The job is advisory — a change is a prompt to open the report,
+not a failed check.
+
+Locally, from `packages/dev`, with `pnpm build:ts` already run (the Leaflet worker chunk comes
+from the core's `dist`):
+
+```bash
+pnpm build && pnpm visual:capture --serve dist --out /tmp/visual/before
+# switch branches or apply the change, then
+pnpm build && pnpm visual:capture --serve dist --out /tmp/visual/after
+pnpm visual:compare --before /tmp/visual/before --after /tmp/visual/after --out /tmp/visual/report
+open /tmp/visual/report/index.html
+```
+
+`--serve <dist>` serves the build for the duration of the run; without it, point `--base-url` at
+a running `pnpm serve` (default `http://localhost:9501`). Other capture options: `--theme light|dark`,
+`--width` / `--height` (default: the app's capture defaults), `--workers` (default 4) and
+`--filter <substring of "Category/Title">`. The `manifest.json` next to the PNGs records the URL,
+status and failure reason of every example. An example that never reports ready is recorded as a
+timeout with the frame's `data-capture-pending` reason and is not retried; the comparison lists it
+as "stopped capturing" when it captured before, and as "not captured (before and after)" otherwise.
+
+Two captures of the same build on the same machine are byte-identical for all examples,
+including the Leaflet/MapLibre maps (software WebGL is pinned, as in `playwright.config.ts`),
+so the tolerance in `playwright/visual/constants.mjs` only absorbs stray rasterization jitter.
+Always capture each build from a freshly served `dist`: the dev server has rasterized text
+differently after a hot-module state switch. Captures are only comparable within one machine
+and browser build — do not compare a local capture with one from CI.

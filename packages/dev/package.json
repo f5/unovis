@@ -12,7 +12,9 @@
     "test": "percy exec -- cypress run",
     "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md",
     "test:playwright": "playwright test",
-    "test:playwright:ui": "playwright test --ui"
+    "test:playwright:ui": "playwright test --ui",
+    "visual:capture": "node playwright/visual/capture.mjs",
+    "visual:compare": "node playwright/visual/compare.mjs"
   },
   "devDependencies": {
     "@percy/cli": "^1.29.1",
@@ -26,6 +28,8 @@
     "copy-webpack-plugin": "^12.0.2",
     "cypress": "^13.13.0",
     "html-webpack-plugin": "^5.5.0",
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0",
     "react-refresh": "^0.14.0",
     "react-refresh-typescript": "2.0.9",
     "ts-loader": "^9.4.2",
