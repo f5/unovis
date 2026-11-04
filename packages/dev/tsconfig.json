@@ -9,10 +9,10 @@
     "strict": true,
     "skipLibCheck": false,
     "paths": {
-      "@src/*": ["packages/dev/src/*"],
-      "@unovis/ts": ["packages/ts/src/"],
-      "@unovis/ts/*": ["packages/ts/src/*"],
-      "@/*": ["packages/ts/src/*"]
+      "@src/*": ["./src/*"],
+      "@unovis/ts": ["../ts/src/"],
+      "@unovis/ts/*": ["../ts/src/*"],
+      "@/*": ["../ts/src/*"]
     },
     "types": [
       "node",

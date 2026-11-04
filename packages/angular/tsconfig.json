@@ -2,7 +2,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -15,13 +14,12 @@
     "resolveJsonModule": true,
     "paths": {
       "lib": [
-        "dist/lib/lib",
-        "dist/lib"
+        "./dist/lib/lib",
+        "./dist/lib"
       ],
     },
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,

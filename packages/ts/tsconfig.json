@@ -2,11 +2,11 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "baseUrl": "./src",
     "outDir": "./dist",
     "declaration": true,
+    "target": "es2018",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     },
     "noImplicitAny": true,
     "alwaysStrict": true,
@@ -17,9 +17,11 @@
     "noImplicitThis": true,
     "strictBindCallApply": true
   },
+  "include": [
+    "src",
+    "*.d.ts"
+  ],
   "exclude": [
-    "index.ts",
-    "maps.ts",
     "**/*.spec.ts"
   ]
 }
