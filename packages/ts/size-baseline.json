@@ -5,7 +5,7 @@
   },
   "line-chart": {
     "min": 161232,
-    "gzip": 52996
+    "gzip": 52995
   },
   "stacked-bar-area": {
     "min": 145382,
@@ -20,12 +20,12 @@
     "gzip": 42757
   },
   "graph": {
-    "min": 189225,
-    "gzip": 60136
+    "min": 176960,
+    "gzip": 58133
   },
   "topojson-map": {
     "min": 172993,
-    "gzip": 59207
+    "gzip": 59209
   },
   "leaflet-map": {
     "min": 129670,

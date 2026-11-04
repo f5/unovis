@@ -19,7 +19,6 @@ import { Spacing } from '@/types/spacing'
 import { GraphInputLink, GraphInputNode, GraphInputData } from '@/types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from '@/types/accessor'
 import type { Curve } from '@/types/curve'
-import { CurveType } from '@/types/curve'
 
 // Local Types
 import {
@@ -177,14 +176,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * `1.5` - very curve.
    * Default: `0` */
   linkCurvature?: NumericAccessor<L>;
-  /** D3 curve type to interpolate the link path with, see the `CurveType` enum for the full list of options.
+  /** D3 curve factory function to interpolate the link path with (e.g. `curveLinear`, `curveStep` from `d3-shape`).
    * Also accepts `GraphLinkCurveType.SmoothStep` (`'smoothStep'`), which draws the link as a right-angle step with rounded corners.
    * Default: `undefined` (links are drawn as cubic Bezier curves shaped by `linkCurvature`) */
-  linkCurveType?: CurveType | GraphLinkCurveType | `${CurveType}` | `${GraphLinkCurveType}`;
-  /** D3 curve factory function to interpolate the link path with. Allows passing curve functions directly
-   * (e.g. `curveLinear`, `curveStep` from `d3-shape`) for better tree-shaking than `linkCurveType`.
-   * Default: `undefined` */
-  linkCurve?: (typeof Curve)[keyof typeof Curve];
+  linkCurve?: (typeof Curve)[keyof typeof Curve] | GraphLinkCurveType;
   /** Highlight links on hover. Default: `true` */
   linkHighlightOnHover?: boolean;
   /** Offset [x,y] in pixels from the source node's center point where the link should start. Default: `undefined` */
@@ -396,7 +391,6 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   linkNeighborSpacing: 8,
   linkDisabled: false,
   linkCurvature: 0,
-  linkCurveType: undefined,
   linkCurve: undefined,
   linkHighlightOnHover: true,
   linkSourcePointOffset: undefined,

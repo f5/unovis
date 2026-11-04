@@ -13,7 +13,6 @@ import { interpolatePath } from '@/utils/interpolate-path'
 
 // Types
 import { GraphInputLink, GraphInputNode } from '@/types/graph'
-import { Curve } from '@/types/curve'
 
 // Local Types
 import { GraphCircleLabel, GraphLink, GraphLinkArrowStyle, GraphLinkCurveType, GraphLinkStyle } from '../../types'
@@ -102,10 +101,6 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
   getLinkArrowDefId: (arrow: GraphLinkArrowStyle | undefined) => string,
   linkPathLengthMap: Map<string, number>
 ): Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown> {
-  if (config.linkCurveType && !config.linkCurve && config.linkCurveType !== GraphLinkCurveType.SmoothStep && !Curve[config.linkCurveType as keyof typeof Curve]) {
-    console.warn(`Unovis | Graph: Unknown \`linkCurveType\` "${config.linkCurveType}", falling back to the default Bezier links`)
-  }
-
   // Smooth-step links always exit/enter nodes on the same fixed side, so we need one axis + direction for the
   // whole selection: the dominant axis the graph flows along, and `1`/`-1` for its direction along that axis
   const linksData = selection.data()
@@ -139,11 +134,10 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
     const cp2x = x1 + (x2 - x1) * 0.5 * curvature
     const cp2y = y1 + (y2 - y1) * 1.0 * curvature
 
-    const curveFactory = config.linkCurve ?? Curve[config.linkCurveType as keyof typeof Curve]
-    const pathData = config.linkCurveType === GraphLinkCurveType.SmoothStep
+    const pathData = config.linkCurve === GraphLinkCurveType.SmoothStep
       ? getSmoothStepPathData(getSmoothStepPoints(x1, y1, x2, y2, GRAPH_LINK_SMOOTH_STEP_OFFSET, smoothStepAxis, smoothStepDirection), GRAPH_LINK_SMOOTH_STEP_BORDER_RADIUS)
-      : curveFactory
-        ? d3Line().curve(curveFactory)([[x1, y1], [cp1x, cp1y], [cp2x, cp2y], [x2, y2]])
+      : config.linkCurve
+        ? d3Line().curve(config.linkCurve)([[x1, y1], [cp1x, cp1y], [cp2x, cp2y], [x2, y2]])
         : `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
     const linkPathElement = linkSupport.attr('d', pathData).node()
     const cachedLinkPathLength = linkPathLengthMap.get(pathData)
