@@ -81,6 +81,75 @@ jobs:
         name: chart-samples
         path: packages/mcp/samples/out
         retention-days: 7
+  # Screenshots every dev example (packages/dev, capture mode) from the pull request's build
+  # and from its merge base, and reports the examples whose pixels changed. No baselines are
+  # stored: both sides are captured on the same runner in the same job. Advisory — a change
+  # is a prompt to open the `visual-comparison` artifact, not a failed check.
+  visual:
+    name: Visual comparison (dev examples vs merge base)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    # The checkout is the PR merged into its base, so the merge base is the base branch tip:
+    # the comparison shows what merging the PR changes
+    - name: Find the merge base
+      id: base
+      run: echo "sha=$(git merge-base "origin/${{ github.base_ref }}" HEAD)" >> "$GITHUB_OUTPUT"
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ steps.base.outputs.sha }}
+        path: base
+    - uses: pnpm/action-setup@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'pnpm'
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+    # The dev app bundles the core and the React wrapper from source; only the Leaflet
+    # worker chunk comes from the core's dist
+    - name: Build the pull request
+      run: pnpm run build:ts && pnpm run build:dev
+    # The base build only changes when the base branch moves, so it is cached by commit
+    - name: Restore the base build
+      id: base-build
+      uses: actions/cache@v4
+      with:
+        path: base/packages/dev/dist
+        key: dev-dist-${{ steps.base.outputs.sha }}
+    - name: Build the base
+      if: steps.base-build.outputs.cache-hit != 'true'
+      working-directory: base
+      run: pnpm install --frozen-lockfile && pnpm run build:ts && pnpm run build:dev
+    - name: Install Playwright Chromium
+      run: pnpm --dir packages/dev exec playwright install --with-deps chromium
+    # Both captures use the PR's scripts and the PR's `serve`; only the served dist differs
+    - name: Capture the base
+      run: pnpm --dir packages/dev visual:capture --serve "$PWD/base/packages/dev/dist" --out "$PWD/visual-captures/base"
+    - name: Capture the pull request
+      run: pnpm --dir packages/dev visual:capture --serve "$PWD/packages/dev/dist" --out "$PWD/visual-captures/head"
+    - name: Compare
+      continue-on-error: true
+      run: |
+        set -o pipefail
+        pnpm --dir packages/dev visual:compare --before "$PWD/visual-captures/base" --after "$PWD/visual-captures/head" --out "$PWD/visual-captures/report" | tee -a "$GITHUB_STEP_SUMMARY"
+    - name: Upload the report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: visual-comparison
+        path: visual-captures/report
+        retention-days: 14
+    - name: Upload the pull request captures
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: visual-captures
+        path: visual-captures/head
+        retention-days: 7
+
   test:
     runs-on: ubuntu-latest
     steps:
