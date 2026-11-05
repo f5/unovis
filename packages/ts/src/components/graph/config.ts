@@ -19,6 +19,8 @@ import { Spacing } from '@/types/spacing'
 import { GraphInputLink, GraphInputNode, GraphInputData } from '@/types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from '@/types/accessor'
 
+import type { CurveFunction } from '@/types/curve'
+
 // Local Types
 import {
   GraphLayoutType,
@@ -174,6 +176,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * `1.5` - very curve.
    * Default: `0` */
   linkCurvature?: NumericAccessor<L>;
+  /** D3 curve factory used to draw links (e.g. `curveBasis` or `curveSmoothStep`). Receives the source,
+   * two control points shaped by `linkCurvature`, and the target. `curveSmoothStep` uses only the endpoints.
+   * Default: `undefined` (the existing cubic Bezier path shaped by `linkCurvature`) */
+  linkCurve?: CurveFunction;
   /** Highlight links on hover. Default: `true` */
   linkHighlightOnHover?: boolean;
   /** Offset [x,y] in pixels from the source node's center point where the link should start. Default: `undefined` */
@@ -385,6 +391,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   linkNeighborSpacing: 8,
   linkDisabled: false,
   linkCurvature: 0,
+  linkCurve: undefined,
   linkHighlightOnHover: true,
   linkSourcePointOffset: undefined,
   linkTargetPointOffset: undefined,
