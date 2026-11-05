@@ -1,3 +1,4 @@
+import type { CurveFactory, CurveFactoryLineOnly } from 'd3-shape'
 import {
   curveBasis,
   curveBasisClosed,
@@ -18,6 +19,12 @@ import {
   curveStepAfter,
   curveStepBefore,
 } from 'd3-shape'
+
+export { curveSmoothStep, SmoothStepDirection } from '@/utils/curves/smooth-step'
+export type { SmoothStepCurveFactory } from '@/utils/curves/smooth-step'
+
+/** A d3-shape curve factory accepted by line generators. Line-only factories do not support areas. */
+export type CurveFunction = CurveFactory | CurveFactoryLineOnly
 
 export enum CurveType {
   Basis = 'basis',
