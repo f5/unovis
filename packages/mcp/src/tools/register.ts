@@ -191,6 +191,12 @@ const appsClients = new WeakSet<McpServer>()
 export function sniffAppsCapability (server: McpServer, transport: object): void {
   type Handler = (...args: never[]) => void
   let assigned: Handler | undefined
+  let owner: object | null = transport
+  let descriptor: PropertyDescriptor | undefined
+  while (owner && !descriptor) {
+    descriptor = Object.getOwnPropertyDescriptor(owner, 'onmessage')
+    owner = Object.getPrototypeOf(owner)
+  }
   Object.defineProperty(transport, 'onmessage', {
     configurable: true,
     enumerable: true,
@@ -203,6 +209,8 @@ export function sniffAppsCapability (server: McpServer, transport: object): void
         }
         handler.apply(transport, args)
       })
+      // HTTP transports forward handlers through an accessor to an inner transport.
+      descriptor?.set?.call(transport, assigned)
     },
   })
 }
