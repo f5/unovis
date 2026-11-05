@@ -41,9 +41,9 @@ wrapper is generated from it.
 8. **Use the repo's type-check helpers.** For runtime type checks reach for the helpers in
    `@/utils/data` (`isString`, `isNumber`, `isFunction`, `isArray`, `isObject`, `isPlainObject`)
    instead of hand-writing `typeof x === 'string'`, `typeof x === 'function'`, or `Array.isArray(…)`.
-9. **Optimize screenshots before committing.** Run new or changed PNG screenshots and gallery
-   previews through a lossless PNG optimizer (for example, `oxipng`). Preserve their dimensions,
-   transparency, and appearance, and visually verify the optimized images before staging them.
+9. **Optimize repository image assets before committing.** Run new or changed PNG assets, such as
+   gallery previews and test snapshots, through a lossless PNG optimizer (for example, `oxipng`).
+   Preserve their dimensions, transparency, and appearance, and visually verify them before staging.
 
 10. **Prefer direct imports.** Import individual components, enums, utilities, and types from their
    defining modules instead of package root barrels. This reduces bundler/test dependency traversal,
@@ -114,6 +114,9 @@ Full rules, the parser regex, the type-picking cheatsheet, and ~25 real examples
   contributions; there is no DCO/sign-off requirement.
 - PR body uses a checklist (Dev examples / Wrappers / Gallery example / Docs) with screenshots.
   For docs PRs, capture the changed section on the rendered website and attach it to the PR.
+- **Never commit screenshots or recordings intended for PR review.** Keep them outside the repository
+  and upload media with `gh pr create --attach <file>` or `gh pr edit <number> --attach <file>`.
+  Repeat `--attach` for multiple files; use the uploaded attachments in the PR body.
 - Immediately before PR submission, run `pnpm cmds-report` from the repo root after final changes
   and review the report. Fix failures introduced by the PR; document remaining failures and skipped
   checks in the PR description. The runner has exclusions, so also complete the required CI checks.
