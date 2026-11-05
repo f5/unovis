@@ -357,6 +357,43 @@ You can control link curvature by setting the `linkCurvature` property to a numb
 The default value is 0 which means straight lines.
 <GraphDoc hiddenProps={linkHiddenProps} linkCurvature={1} />
 
+### Link Curves
+Set `linkCurve` to a D3 curve factory to customize link interpolation. Leaving it unset preserves the default
+cubic Bézier path controlled by `linkCurvature`.
+
+```ts
+import { curveBasis } from 'd3-shape'
+
+const config = { linkCurve: curveBasis, linkCurvature: 1 }
+```
+
+Graph passes four points to the curve: the source, two control points shaped by `linkCurvature`, and the target.
+D3 curves interpret these points according to their own interpolation rules. Open curves can omit the endpoints,
+and closed curves create loops; choose a curve appropriate for node-to-node links.
+
+For orthogonal links with rounded corners, use `curveSmoothStep`:
+
+```ts
+import { curveSmoothStep, SmoothStepDirection } from '@unovis/ts/utils/curves/smooth-step'
+
+const config = {
+  linkCurve: curveSmoothStep.radius(5).offset(20).direction(SmoothStepDirection.Up),
+}
+```
+
+`radius` sets the maximum corner radius (default `5` pixels), clamped to half the adjacent segment lengths.
+`offset` sets the straight exit and entry offset (default `20` pixels). `direction` accepts the `SmoothStepDirection`
+enum: `Up`, `Down`, `Left`, `Right`, or `Auto` (default `Down`). Match a fixed direction to the graph layout; it remains fixed when nodes are dragged
+past one another. Each configuration method returns a new factory without changing the original.
+
+Use `curveSmoothStep.direction(SmoothStepDirection.Auto)` to choose the direction separately for each link from its endpoints.
+The larger absolute displacement determines the axis (horizontal on ties), and its sign determines the direction.
+It recalculates as nodes move, so exit and entry sides can change during dragging. This does not infer a shared
+direction from the whole graph or change its layout.
+
+`curveSmoothStep` routes between the first and last points of each line segment, ignoring intermediate points.
+Therefore, `linkCurvature` does not affect it. It supports `d3.line()` with SVG or Canvas contexts, but not `d3.area()`.
+
 ### Arrows
 Providing an accessor function to `linkArrow` will turn on arrows display on links. The function should return
 `GraphLinkArrowStyle.Single` (`"single"` or simply `true`) or `GraphLinkArrowStyle.Double` (`"double"`) or `null`.
