@@ -73,7 +73,7 @@
     "test:images:update": "UPDATE_IMAGES=1 vitest run test/recipes.test.ts"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@unovis/ssr": "workspace:*",
     "@unovis/ts": "workspace:*",
     "zod": "^3.25.0"

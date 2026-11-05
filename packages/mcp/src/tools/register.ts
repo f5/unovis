@@ -175,41 +175,9 @@ export function activeRecipes (filter: ToolFilterOptions = {}): AnyRecipe[] {
   return recipes.filter(r => !disabled.has(r.name) && (!enabled || enabled.has(r.name)))
 }
 
-/** Connections whose client advertised the MCP Apps extension.
- *
- * The SDK's ClientCapabilities schema predates SEP-1724, so it strips the
- * `extensions` key during initialize — getClientCapabilities() can never see
- * it (verified end-to-end). Until the SDK learns the field, the raw
- * initialize message is sniffed at the transport seam; the schema path below
- * takes over automatically once it stops returning undefined. */
-const appsClients = new WeakSet<McpServer>()
-
-/** Intercept a transport's onmessage assignment to sniff
- * `capabilities.extensions` from the raw initialize request. Must run BEFORE
- * connect — with an in-memory transport the initialize can arrive in the same
- * microtask the connection is established in. */
-export function sniffAppsCapability (server: McpServer, transport: object): void {
-  type Handler = (...args: never[]) => void
-  let assigned: Handler | undefined
-  Object.defineProperty(transport, 'onmessage', {
-    configurable: true,
-    enumerable: true,
-    get: () => assigned,
-    set: (handler: Handler | undefined) => {
-      assigned = handler && ((...args: never[]) => {
-        const message = args[0] as { method?: string; params?: { capabilities?: { extensions?: Record<string, unknown> } } }
-        if (message?.method === 'initialize' && message.params?.capabilities?.extensions?.[APPS_EXTENSION_ID]) {
-          appsClients.add(server)
-        }
-        handler.apply(transport, args)
-      })
-    },
-  })
-}
-
-/** Did the connected client advertise the MCP Apps extension capability? */
+/** Did the connected client advertise the MCP Apps extension capability?
+ * `capabilities.extensions` (SEP-1724) is parsed by the SDK since 1.29. */
 function appsCapableClient (server: McpServer): boolean {
-  if (appsClients.has(server)) return true
   const capabilities = server.server.getClientCapabilities() as { extensions?: Record<string, unknown> } | undefined
   return Boolean(capabilities?.extensions?.[APPS_EXTENSION_ID])
 }

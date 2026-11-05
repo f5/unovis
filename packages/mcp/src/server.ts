@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 
-import { registerTools, sniffAppsCapability, WIDGET_URI, APPS_MIME_TYPE } from './tools/register.js'
+import { registerTools, WIDGET_URI, APPS_MIME_TYPE } from './tools/register.js'
 import type { ToolFilterOptions } from './tools/register.js'
 import { buildEmbedDocument } from './html/document.js'
 
@@ -22,12 +22,6 @@ export function buildServer (options: ToolFilterOptions = {}): McpServer {
     name: 'unovis',
     version: getPackageVersion(),
   })
-  // Sniff the MCP Apps capability from the raw initialize (see register.ts)
-  const connect = server.connect.bind(server)
-  server.connect = async (transport) => {
-    sniffAppsCapability(server, transport)
-    await connect(transport)
-  }
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   registerWidgetResource(server)
   registerTools(server, options)
