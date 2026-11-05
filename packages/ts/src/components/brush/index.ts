@@ -29,7 +29,7 @@ export class Brush<Datum> extends XYComponentCore<Datum, BrushConfigInterface<Da
   public unselectedRange: Selection<SVGRectElement, BrushHandleType, SVGGElement, unknown>
   public handleLines: Selection<SVGLineElement, BrushHandleType, SVGGElement, unknown>
   public brushBehaviour: BrushBehavior<unknown> = brushX()
-  public events = {
+  public events: XYComponentCore<Datum>['events'] = {
     [Brush.selectors.brush]: {},
   }
 

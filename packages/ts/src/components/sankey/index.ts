@@ -78,7 +78,7 @@ export class Sankey<
   private _bleedCacheKey: unknown[] | null = null
 
   // Events
-  events = {
+  events: ComponentCore<unknown>['events'] = {
     [Sankey.selectors.nodeGroup]: {
       mouseenter: this._onNodeMouseOver.bind(this),
       mouseleave: this._onNodeMouseOut.bind(this),

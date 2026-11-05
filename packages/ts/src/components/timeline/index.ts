@@ -50,7 +50,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   protected _defaultConfig = TimelineDefaultConfig as TimelineConfigInterface<Datum>
   public config: TimelineConfigInterface<Datum> = this._defaultConfig
 
-  events = {
+  events: XYComponentCore<Datum>['events'] = {
     [Timeline.selectors.background]: {
       wheel: this._onMouseWheel.bind(this),
     },

@@ -105,7 +105,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   // eslint-disable-next-line @typescript-eslint/naming-convention
   static DEFAULT_CONTAINER_HEIGHT = 600
 
-  protected events = {
+  protected events: ComponentCore<unknown>['events'] = {
     [LeafletMap.selectors.point]: {
       mouseup: this._onPointMouseUp.bind(this),
       mousedown: this._onPointMouseDown.bind(this),
@@ -605,7 +605,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     if (clusterPoint) {
       const points: PointFeature<PointExpandedClusterProperties<Datum>>[] =
         clusterPoint.clusterIndex.getLeaves((clusterPoint.properties as LeafletMapClusterDatum<Datum>).cluster_id as number, Infinity)
-      const packPoints: {x: number; y: number; r: number }[] = points.map(p => ({
+      const packPoints = points.map<{ x: number; y: number; r: number }>(p => ({
         x: null,
         y: null,
         r: getPointRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding,

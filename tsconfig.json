@@ -1,13 +1,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-      "baseUrl": ".",
-      "downlevelIteration": true,
       "allowSyntheticDefaultImports": true,
       "sourceMap": true,
       "declaration": false,
       "module": "esnext",
-      "moduleResolution": "node",
+      "moduleResolution": "bundler",
       "resolveJsonModule": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,

@@ -6,6 +6,5 @@
   ],
   "compilerOptions": {
     "rootDir": "./src",
-    "baseUrl": "./",
   }
 }

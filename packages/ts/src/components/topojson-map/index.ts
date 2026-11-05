@@ -131,7 +131,7 @@ export class TopoJSONMap<
   private _sourcePoints: { x: number; y: number; radius: number; color: string; flowData: LinkDatum }[] = []
   private _animationId: number | null = null
 
-  events = {
+  events: ComponentCore<unknown>['events'] = {
     [TopoJSONMap.selectors.point]: {},
     [TopoJSONMap.selectors.feature]: {},
   }

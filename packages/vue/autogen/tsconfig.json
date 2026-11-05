@@ -7,7 +7,6 @@
     "strictNullChecks": false,
     "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "declaration": false,

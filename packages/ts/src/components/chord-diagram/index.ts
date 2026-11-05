@@ -61,7 +61,7 @@ export class ChordDiagram<
   arcGen = arc<ChordNode<N>>()
   radiusScale: ScalePower<number, number> = scalePow()
 
-  events = {
+  events: ComponentCore<unknown>['events'] = {
     [ChordDiagram.selectors.node]: {
       mouseover: this._onNodeMouseOver.bind(this),
       mouseout: this._onNodeMouseOut.bind(this),

@@ -47,7 +47,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
   private _lineGen: LineInterface<AreaDatum>
   private _prevNegative: boolean[] | undefined // To help guessing the stack direction when an accessor was set to null or 0
 
-  events = {
+  events: XYComponentCore<Datum>['events'] = {
     [Area.selectors.area]: {},
   }
 
