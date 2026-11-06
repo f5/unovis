@@ -7,13 +7,18 @@ import { ComponentCore } from '@/core/component'
 import { Position } from '@/types/position'
 
 // Utils
-import { mergeByReference, throttle } from '@/utils/data'
+import { isFunction, isString, mergeByReference, throttle } from '@/utils/data'
 
 // Config
 import { TooltipDefaultConfig, TooltipConfigInterface } from './config'
+import { TooltipContent, TooltipContentRenderer } from './types'
 
 // Style
 import * as s from './style'
+
+export type { TooltipContent, TooltipContentRenderer, TooltipContentMap, TooltipContentTemplate } from './types'
+
+export { getTooltipContentTargets } from './utils'
 
 export class Tooltip {
   element: HTMLElement
@@ -33,6 +38,11 @@ export class Tooltip {
   private _overriddenHorizontalPlacement: Position.Left | Position.Right | string | undefined
   private _hideDelayTimeoutId: ReturnType<typeof setTimeout> | undefined
   private _showDelayTimeoutId: ReturnType<typeof setTimeout> | undefined
+  private _contentRenderer: TooltipContentRenderer | undefined
+  private _content: TooltipContent | undefined
+  private _contentTargets: (string | symbol)[] = []
+  private _contentElement?: HTMLElement
+  private _legacyContentElement?: HTMLElement
 
   constructor (config: TooltipConfigInterface = {}) {
     this.element = document.createElement('div')
@@ -58,7 +68,7 @@ export class Tooltip {
       }
     })
 
-    this._mutationObserver.observe(this.div.node(), { childList: true, subtree: true })
+    this._mutationObserver.observe(this.div.node(), { childList: true, subtree: true, characterData: true })
   }
 
   public setConfig (config: TooltipConfigInterface): void {
@@ -105,8 +115,8 @@ export class Tooltip {
   }
 
   /** Show the tooltip immediately by providing content and position */
-  public show (html: string | HTMLElement | null | void, pos: { x: number; y: number }): void {
-    this.render(html)
+  public show (html: string | HTMLElement | null | void, pos: { x: number; y: number }, content?: TooltipContent): void {
+    this.render(html, content)
     this.place(pos)
   }
 
@@ -120,6 +130,7 @@ export class Tooltip {
       })
 
     this._isShown = false
+    this._contentRenderer?.(null)
   }
 
   /** Hides the tooltip after `hideDelay` */
@@ -135,6 +146,7 @@ export class Tooltip {
 
   private _display (): void {
     window.clearTimeout(this._hideDelayTimeoutId)
+    if (!this._isShown && this._content) this._contentRenderer?.(this._content)
     this.div
       .classed(s.hidden, false) // The `hidden` class sets `display: none;`
       .classed(s.show, true) // The `show` class triggers the opacity transition
@@ -144,6 +156,7 @@ export class Tooltip {
 
   /** Simply display the tooltip with its previous content on position, taking into account `showDelay` */
   public display (): void {
+    window.clearTimeout(this._hideDelayTimeoutId)
     if (this._isShown) return
 
     if (this.config.showDelay) {
@@ -278,13 +291,67 @@ export class Tooltip {
     this._overriddenHorizontalPlacement = placement
   }
 
-  public render (html: string | HTMLElement | null | void): void {
+  /** Stable mount target for framework-owned content, separate from legacy HTML. */
+  public get contentElement (): HTMLElement {
+    if (!this._contentElement) {
+      if (this.element.childNodes.length) {
+        this._legacyContentElement = document.createElement('div')
+        this._legacyContentElement.append(...Array.from(this.element.childNodes))
+        this.element.appendChild(this._legacyContentElement)
+      }
+      this._contentElement = document.createElement('div')
+      this._contentElement.style.display = 'contents'
+      this.element.appendChild(this._contentElement)
+    }
+    return this._contentElement
+  }
+
+  public setContentRenderer (renderer: TooltipContentRenderer | undefined, targets: (string | symbol)[] = []): void {
+    if (renderer && !this._contentElement) this.contentElement.style.display = 'none'
+    this._contentRenderer = renderer
+    this._contentTargets = renderer ? targets : []
+  }
+
+  public hasContent (target: string | symbol): boolean {
+    return (this._contentRenderer && this._contentTargets.includes(target)) || isFunction(this.config.content?.[target])
+  }
+
+  public render (html: string | HTMLElement | null | void, content?: TooltipContent): void {
     const { config, prevConfig } = this
-    if (html instanceof HTMLElement) {
-      const node = this.div.select(':first-child').node()
-      if (node !== html) this.div.html('').append(() => html)
-    } else if (html !== null && html !== undefined && html !== '') {
-      this.div.html(html as string)
+    const target = content?.trigger
+    const nativeContent = target !== undefined && this._contentRenderer && this._contentTargets.includes(target)
+    const template = target !== undefined ? config.content?.[target] : undefined
+    if (!nativeContent && template && content) {
+      html = template(content)
+      if (html === null) {
+        this.hide()
+        return
+      }
+    }
+    if (nativeContent) {
+      this.contentElement.style.display = 'contents'
+      if (this._legacyContentElement) this._legacyContentElement.style.display = 'none'
+      this._content = content ?? this._content ?? { datum: undefined }
+      if (this._isShown) this._contentRenderer(this._content)
+    } else {
+      this._content = undefined
+      this._contentRenderer?.(null)
+      let target = this.div
+      if (this._contentElement) {
+        this._contentElement.style.display = 'none'
+        if (!this._legacyContentElement) {
+          this._legacyContentElement = document.createElement('div')
+          this.element.appendChild(this._legacyContentElement)
+        }
+        this._legacyContentElement.style.display = 'contents'
+        target = select(this._legacyContentElement)
+      }
+      if (html instanceof HTMLElement) {
+        const node = target.select(':first-child').node()
+        if (node !== html) target.html('').append(() => html)
+      } else if (html !== null && html !== undefined && html !== '') {
+        target.html(html as string)
+      }
     }
 
     this.div
@@ -356,9 +423,15 @@ export class Tooltip {
           const path: (HTMLElement | SVGGElement)[] = (e.composedPath && e.composedPath()) || (e as any).path || [e.target]
 
           // Go through all of the configured triggers
-          for (const className of Object.keys(currentConfig.triggers)) {
+          const targets = new Set([
+            ...this._contentTargets.filter((target): target is string => isString(target)),
+            ...Object.keys(currentConfig.content ?? {}),
+            ...Object.keys(currentConfig.triggers),
+          ])
+          for (const className of targets) {
             const template = currentConfig.triggers[className]
-            if (!template) continue // Skip if the trigger is not configured
+            const hasContent = this.hasContent(className)
+            if (!hasContent && !template) continue // Skip if the trigger is not configured
 
             // Go through all of the elements in the event path (from the deepest element upwards)
             for (const el of path) {
@@ -368,7 +441,7 @@ export class Tooltip {
                 const els = selection.selectAll<HTMLElement | SVGGElement, unknown>(`.${className}`).nodes()
                 const i = els.indexOf(el)
                 const d = select(el).datum()
-                const content = template(d, i, els)
+                const content = hasContent ? undefined : template(d, i, els)
                 const [x, y] = this.isContainerBody() ? [e.clientX, e.clientY] : pointer(e, this._container)
                 if (content === null) {
                   // If the content is `null`, we hide the tooltip
@@ -376,7 +449,7 @@ export class Tooltip {
                 } else {
                   // Otherwise we show the tooltip, but don't render the content if it's `undefined` or
                   // an empty string. This way we can allow it to work with things like `createPortal` in React
-                  this.render(content)
+                  this.render(content, { datum: d, index: i, elements: els, trigger: className })
                   if (currentConfig.followCursor) this.place({ x, y })
                   else this.placeByElement(el)
                 }
@@ -423,6 +496,8 @@ export class Tooltip {
   }
 
   public destroy (): void {
+    this._contentRenderer = undefined
+    this._content = undefined
     this._mutationObserver.disconnect()
     window.clearTimeout(this._hideDelayTimeoutId)
     window.clearTimeout(this._showDelayTimeoutId)

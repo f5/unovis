@@ -16,6 +16,8 @@ export type GenericParameter = {
 
 export type ComponentInput = {
   name: string;
+  /** Maintain wrapper implementations by hand while still generating their barrel exports. */
+  manual?: boolean;
   sources: string[];
   kebabCaseName?: string;
   dataType?: string | null;

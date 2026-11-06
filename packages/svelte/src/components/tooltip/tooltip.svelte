@@ -1,29 +1,46 @@
 <script lang="ts">
-  // !!! This code was automatically generated. You should not change it !!!
-  import { Tooltip as TooltipCore } from '@unovis/ts/components/tooltip'
+  import { Tooltip, getTooltipContentTargets } from '@unovis/ts/components/tooltip'
+  import type { TooltipContent, TooltipContentMap } from '@unovis/ts/components/tooltip'
   import type { TooltipConfigInterface } from '@unovis/ts/components/tooltip/config'
-  import { cloneDeep } from '@unovis/ts/utils/data'
+  import { cloneDeep, isFunction } from '@unovis/ts/utils/data'
   import { onMount, getContext } from 'svelte'
-
+  import type { ComponentType } from 'svelte'
   import type { Lifecycle } from '../../types/context'
   import { arePropsEqual } from '../../utils/props'
 
+  type NativeContent = ComponentType | { component: ComponentType; props?: Record<string, any> }
+  type $$Props = Omit<TooltipConfigInterface, 'content'> & { content?: TooltipContentMap<NativeContent> }
+  export let content: $$Props['content'] = undefined
 
-  // config
   let prevConfig: TooltipConfigInterface
   let config: TooltipConfigInterface
   $: config = { ...$$restProps }
-
-  // component declaration
-  let component: TooltipCore
+  let component: Tooltip
+  let context: TooltipContent<any> | null = null
+  $: entry = context?.trigger !== undefined ? content?.[context.trigger] : undefined
+  $: nativeContent = isFunction(entry) ? { component: entry } : entry
   const lifecycle = getContext<Lifecycle>('tooltip')
-  // Notifies the container that this component's data or config has changed, so it can re-render
   const dirty = getContext<(() => void) | undefined>('dirty')
 
+  function renderContent (value: TooltipContent | null): void {
+    context = value as TooltipContent<any> | null
+  }
+
+  function mountContent (node: HTMLElement): { destroy: () => void } {
+    component.contentElement.appendChild(node)
+    return { destroy: () => node.remove() }
+  }
+
   onMount(() => {
-    component = new TooltipCore(config)
-    return () => component?.destroy()
+    component = new Tooltip(config)
+    component.setContentRenderer(renderContent, getTooltipContentTargets(content))
+    return () => {
+      component.setContentRenderer(undefined)
+      component.destroy()
+    }
   })
+
+  $: component?.setContentRenderer(renderContent, getTooltipContentTargets(content))
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = cloneDeep(config)
@@ -32,10 +49,12 @@
     dirty?.()
   }
 
-  // component accessor
-  export function getComponent (): TooltipCore { return component }
-
+  export function getComponent (): Tooltip { return component }
 </script>
 
 <vis-tooltip use:lifecycle={component}></vis-tooltip>
-
+{#if component && context && nativeContent}
+  <div use:mountContent>
+    <svelte:component this={nativeContent.component} {...nativeContent.props} {...context} />
+  </div>
+{/if}

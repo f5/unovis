@@ -34,7 +34,7 @@ export function getComponentList (
     { name: 'Treemap', sources: [coreComponentConfigPath, '/components/treemap'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent' },
 
     // Ancillary components
-    { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, angularProvide: 'VisGenericComponent', elementSuffix: 'tooltip' },
+    { name: 'Tooltip', manual: true, sources: ['/components/tooltip'], dataType: null, angularProvide: 'VisGenericComponent', elementSuffix: 'tooltip' },
     { name: 'Annotations', sources: [coreComponentConfigPath, '/components/annotations'], dataType: null, angularProvide: 'VisGenericComponent', elementSuffix: 'annotations' },
 
     // Standalone components

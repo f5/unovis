@@ -28,6 +28,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
+    "test": "tsx --test 'src/**/*.spec.ts'",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "generate": "tsx ./autogen/index.ts",

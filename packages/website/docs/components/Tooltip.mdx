@@ -64,7 +64,9 @@ Here is a minimal _Tooltip_ configuration alongside a _StackedBar_ chart:
 
 <Tooltip {...tooltipProps()} showContext="full" showTriggers/>
 
-## Triggers
+## Triggers (deprecated)
+
+Use [`content`](#content) for new code. `triggers` remains supported for existing HTML/DOM callbacks.
 The `triggers` property allows a _Tooltip_ component to display custom content for a given CSS selector.
 
 It accepts an object of the following type:
@@ -103,8 +105,7 @@ The arguments of the callback can be used to customize the string content or cus
 Returning `null` will hide the tooltip, while returning nothing or `undefined` will
 show the tooltip but won't render anything.
 
-You can use this behavior to make _Tooltip_ work with Portals (e.g. `createPortal` in React),
-when you want to render your custom tooltip component into Unovis's _Tooltip_.
+For framework components, use [native content](#content) to let the wrapper manage rendering and cleanup.
 
 :::
 
@@ -136,6 +137,124 @@ const triggers = {
     "[Line.selectors.line]": () => `Average`
   }}
 />
+
+## Content
+
+The `content` property maps component selectors to content. Each entry receives a `TooltipContent` context with `datum`, `index`, `elements`, and `trigger`. Different entries can declare different datum types. For example, Scatter supplies one record while Line supplies its generated `LineData` object (`import type { LineData } from '@unovis/ts/components/line/types'`).
+
+For a Solid tooltip with different datum types per selector, use `<VisTooltip<any>>` and type each callback context separately.
+
+In vanilla TypeScript, callbacks return an HTML string, an `HTMLElement`, or `null` to hide the tooltip. Framework wrappers accept native render functions, slots, components, or templates:
+
+<FrameworkTabs
+  react={`<VisTooltip
+  allowHover
+  followCursor={false}
+  hideDelay={500}
+  content={{
+    [Scatter.selectors.point]: ({ datum }: TooltipContent<Datum>) =>
+      datum && <PointTooltip datum={datum} />,
+    [Line.selectors.line]: ({ datum }: TooltipContent<LineData>) =>
+      datum && <LineTooltip line={datum} />,
+  }}
+/>`}
+  solid={`<VisTooltip<any>
+  allowHover
+  followCursor={false}
+  hideDelay={500}
+  content={{
+    [Scatter.selectors.point]: (context: Accessor<TooltipContent<Datum>>) => (
+      <Show when={context().datum}>{datum => <PointTooltip datum={datum()} />}</Show>
+    ),
+    [Line.selectors.line]: (context: Accessor<TooltipContent<LineData>>) => (
+      <Show when={context().datum}>{line => <LineTooltip line={line()} />}</Show>
+    ),
+  }}
+/>`}
+  vue={`<VisTooltip
+  :content="{
+    [Scatter.selectors.point]: 'point',
+    [Line.selectors.line]: 'line',
+  }"
+  :allow-hover="true"
+  :follow-cursor="false"
+  :hide-delay="500"
+>
+  <template #point="{ datum }">
+    <PointTooltip :datum="datum" />
+  </template>
+  <template #line="{ datum }">
+    <LineTooltip :line="datum" />
+  </template>
+</VisTooltip>`}
+  svelte={`<script lang="ts">
+  import { Line, Scatter } from '@unovis/ts'
+  import { VisTooltip } from '@unovis/svelte'
+  import PointTooltip from './PointTooltip.svelte'
+  import LineTooltip from './LineTooltip.svelte'
+
+  // Each component receives the TooltipContent fields as props.
+  const content = {
+    [Scatter.selectors.point]: PointTooltip,
+    [Line.selectors.line]: LineTooltip,
+  }
+</script>
+
+<VisTooltip {content} allowHover followCursor={false} hideDelay={500} />`}
+  angular={{ html: `<ng-template #point let-datum="datum">
+  <point-tooltip [datum]="datum"></point-tooltip>
+</ng-template>
+<ng-template #line let-datum="datum">
+  <line-tooltip [line]="datum"></line-tooltip>
+</ng-template>
+<vis-tooltip [content]="content" [allowHover]="true" [followCursor]="false" [hideDelay]="500"></vis-tooltip>`,
+  component: `@ViewChild('point', { static: true }) point: TemplateRef<TooltipContent<Datum>>
+@ViewChild('line', { static: true }) line: TemplateRef<TooltipContent<LineData>>
+content: TooltipContentMap<TemplateRef<any>>
+
+ngOnInit (): void {
+  this.content = {
+    [Scatter.selectors.point]: this.point,
+    [Line.selectors.line]: this.line,
+  }
+}` }}
+  typescript={`const tooltip = new Tooltip({
+  allowHover: true,
+  followCursor: false,
+  hideDelay: 500,
+  content: {
+    [Scatter.selectors.point]: ({ datum }: TooltipContent<Datum>) => {
+      if (!datum) return null
+      const button = document.createElement('button')
+      button.textContent = String(datum.y)
+      button.onclick = () => selectDatum(datum)
+      return button
+    },
+    [Line.selectors.line]: ({ datum }: TooltipContent<LineData>) =>
+      datum ? '<strong>' + datum.values.length + ' points</strong>' : null,
+  },
+})`}
+/>
+
+React callbacks return native React content: strings are rendered as escaped text, unlike HTML strings in vanilla TypeScript. Raw HTML in a framework uses that framework's explicit HTML facility. Solid callbacks receive reactive context accessors; read `context()` inside JSX or event handlers to keep the hovered datum current.
+
+Vue values name scoped slots. Angular values reference templates. Svelte 4 values reference components and can include extra props: `{ component: PointTooltip, props: { selected, onSave } }`. The context fields are supplied automatically and take precedence over extra props.
+
+`allowHover` enables interaction. Use `followCursor={false}` and a short `hideDelay` to give the pointer time to reach the tooltip. Native rendering preserves framework context and event handlers, including with `container={document.body}`. Content mounts when shown and unmounts when hidden; keep state that should survive hiding in a parent component.
+
+### Migrating from triggers
+
+`triggers` is deprecated but continues to support its existing positional callbacks and HTML/DOM return values. Change the property name to `content` and destructure the context argument:
+
+```ts
+// Before
+triggers: { [Scatter.selectors.point]: (datum, index) => renderPoint(datum, index) }
+
+// After (vanilla TypeScript)
+content: { [Scatter.selectors.point]: ({ datum, index }) => renderPoint(datum, index) }
+```
+
+Both properties can coexist during migration. A defined `content` entry takes precedence for its target without invoking the legacy callback; other `triggers` continue working. Framework users should return native content or provide their framework's slot, component, or template reference when migrating.
 
 ## Position
 ### Horizontal Placement
