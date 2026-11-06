@@ -4,6 +4,7 @@ import { Tooltip } from '@unovis/ts/components/tooltip'
 import { Crosshair } from '@unovis/ts/components/crosshair'
 import { Axis } from '@unovis/ts/components/axis'
 import { Annotations } from '@unovis/ts/components/annotations'
+import type { Zoom } from '@unovis/ts/components/zoom'
 import { InjectionKey, Ref } from 'vue'
 
 export const componentAccessorKey = Symbol('componentAccessorKey') as InjectionKey<{
@@ -37,6 +38,13 @@ export const axisAccessorKey = Symbol('axisAccessorKey') as InjectionKey< {
 export const annotationsAccessorKey = Symbol('annotationsAccessorKey') as InjectionKey<{
   data: Ref<any>;
   update: (c: Annotations) => void;
+  destroy: () => void;
+  dirty: () => void;
+}>
+
+export const zoomAccessorKey = Symbol('zoomAccessorKey') as InjectionKey<{
+  data: Ref<any>;
+  update: (c: Zoom<any>) => void;
   destroy: () => void;
   dirty: () => void;
 }>

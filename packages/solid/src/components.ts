@@ -3,6 +3,7 @@ export * from "./components/axis";
 export * from "./components/boxplot";
 export * from "./components/brush";
 export * from "./components/crosshair";
+export * from "./components/zoom";
 export * from "./components/free-brush";
 export * from "./components/grouped-bar";
 export * from "./components/line";

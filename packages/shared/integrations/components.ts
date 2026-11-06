@@ -11,6 +11,7 @@ export function getComponentList (
     { name: 'Boxplot', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/boxplot'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Brush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/brush'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Crosshair', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/crosshair'], dataType: 'Datum[]', angularProvide: 'VisXYComponent', elementSuffix: 'crosshair' },
+    { name: 'Zoom', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/zoom'], dataType: 'Datum[]', angularProvide: 'VisXYComponent', elementSuffix: 'zoom' },
     { name: 'FreeBrush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/free-brush'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'GroupedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/grouped-bar'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Line', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/line'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
