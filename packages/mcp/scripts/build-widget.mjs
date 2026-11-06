@@ -21,7 +21,7 @@ mkdirSync(dirname(outfile), { recursive: true })
 //  - elkjs: a 1.4MB layout engine behind a dynamic import that an IIFE bundle
 //    would inline. ELK works for static rendering via a hand-written spec, so
 //    it is deliberately absent from the tool's layout options.
-// dagre (with graphlibrary) is bundled — it costs ~80kB and keeps every layout
+// dagre is bundled — it costs ~50kB and keeps every layout
 // the tools expose working in interactive output too.
 const stubbed = ['leaflet', 'maplibre-gl', 'three', 'elkjs']
 const stubPlugin = {
