@@ -57,6 +57,42 @@
   color: #171329;
 }
 
+.announcement {
+  position: absolute;
+  left: 50%;
+  bottom: 4rem;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: min(320px, calc(100% - 4rem));
+  text-align: center;
+  padding: 12px 14px;
+  border-radius: 999px;
+  color: #171329;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.announcementText {
+  position: relative;
+}
+
+.announcement:hover,
+.announcement:focus-visible {
+  color: #171329;
+  text-decoration: none;
+}
+
+.announcement:hover path,
+.announcement:focus-visible path {
+  fill: var(--unovis-color-yellow);
+}
+
+@media screen and (max-width: 966px) {
+  .announcement { bottom: 2rem; }
+}
+
 .background {
   position: absolute;
   left: 0;
