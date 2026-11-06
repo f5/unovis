@@ -83,6 +83,11 @@ export enum GraphLinkStyle {
   Solid = 'solid',
 }
 
+export enum GraphLinkCurveType {
+  /** Right-angle step with rounded corners */
+  SmoothStep = 'smoothStep',
+}
+
 export enum GraphLinkArrowStyle {
   Single = 'single',
   Double = 'double',
