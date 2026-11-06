@@ -1,0 +1,13 @@
+.ripple {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.shape {
+  fill: rgba(235, 237, 240, 0.9);
+  transition: fill var(--ifm-transition-fast);
+}

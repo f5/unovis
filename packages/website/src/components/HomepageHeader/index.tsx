@@ -4,6 +4,7 @@ import Link from '@docusaurus/Link'
 
 // Internal Deps
 import Background from './background'
+import { Ripple } from './ripple'
 import { HERO_AGENT_PROMPT, HERO_COPY_LABELS, HERO_COPY_RESET_DELAY } from './constants'
 
 // Styles
@@ -44,6 +45,10 @@ export function HomepageHeader (): JSX.Element {
           </button>
         </div>
       </div>
+      <Link className={s.announcement} to="/releases/1.8">
+        <Ripple/>
+        <span className={s.announcementText}><b>Unovis 1.8</b> is here with new features, smaller bundles and faster builds</span>
+      </Link>
     </header>
   )
 }

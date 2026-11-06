@@ -29,3 +29,36 @@ export const HERO_COPY_LABELS = {
 
 /** How long the copied / failed state shows before the button resets, in milliseconds */
 export const HERO_COPY_RESET_DELAY = 2000
+
+/** Whether the wave runs across the announcement without pause instead of as separate ripples */
+export const RIPPLE_CONTINUOUS = true
+/** How long the continuous wave takes to travel the width of the announcement, in milliseconds */
+export const RIPPLE_CONTINUOUS_PERIOD = 5600
+/** Time before the announcement's first ripple, and between ripples, in milliseconds */
+export const RIPPLE_DELAY = 2000
+export const RIPPLE_INTERVAL = 2000
+/** How long one ripple takes to sweep across the announcement, in milliseconds */
+export const RIPPLE_DURATION = 1400
+/** How far the outline bulges out, in pixels */
+export const RIPPLE_AMPLITUDE = 0.67
+/** How much the crest height varies along the pill, as a fraction of the amplitude, and the wavelength of that variation in ripple wavelengths */
+export const RIPPLE_AMPLITUDE_VARIATION = 0.5
+export const RIPPLE_AMPLITUDE_VARIATION_WAVELENGTH = 2.6
+/** How far the bottom edge trails the top one, in pixels */
+export const RIPPLE_BOTTOM_LAG = 36
+/** Distance between two crests of the ripple, in pixels */
+export const RIPPLE_WAVELENGTH = 48
+/** Half-length of the wave packet, in wavelengths */
+export const RIPPLE_PACKET_LENGTH = 1.5
+/** Distance between the sampled outline points, in pixels */
+export const RIPPLE_POINT_SPACING = 2
+
+/** A splash is a ring spreading along the announcement from the point where the pointer crosses its outline */
+export const SPLASH_AMPLITUDE = 4
+/** How fast the ring spreads, in pixels per millisecond */
+export const SPLASH_SPEED = 0.25
+/** Distance between the ring's crest and its trough, in pixels */
+export const SPLASH_WAVELENGTH = 40
+/** Time constant of the ring's fade-out, in milliseconds, and when the splash is dropped altogether */
+export const SPLASH_DECAY = 500
+export const SPLASH_DURATION = 2000
