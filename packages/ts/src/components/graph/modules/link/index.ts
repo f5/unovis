@@ -1,6 +1,7 @@
 import { select, Selection } from 'd3-selection'
 import { range, sum } from 'd3-array'
 import { Transition } from 'd3-transition'
+import { line } from 'd3-shape'
 
 // Utils
 import { throttle, getValue, getNumber, getBoolean, ensureArray } from '@/utils/data'
@@ -8,6 +9,7 @@ import { smartTransition } from '@/utils/d3'
 import { getCSSVariableValueInPixels } from '@/utils/misc'
 import { estimateStringPixelLength } from '@/utils/text-measure'
 import { toPx } from '@/utils/to-px'
+import { interpolatePath } from '@/utils/interpolate-path'
 
 // Types
 import { GraphInputLink, GraphInputNode } from '@/types/graph'
@@ -96,6 +98,7 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
   getLinkArrowDefId: (arrow: GraphLinkArrowStyle | undefined) => string,
   linkPathLengthMap: Map<string, number>
 ): Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown> {
+  const lineGenerator = config.linkCurve ? line().curve(config.linkCurve) : undefined
   return selection.each((d, i, elements) => {
     const element = elements[i]
     const linkGroup = select(element)
@@ -121,7 +124,9 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
     const cp2x = x1 + (x2 - x1) * 0.5 * curvature
     const cp2y = y1 + (y2 - y1) * 1.0 * curvature
 
-    const pathData = `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
+    const pathData = lineGenerator
+      ? lineGenerator([[x1, y1], [cp1x, cp1y], [cp2x, cp2y], [x2, y2]])
+      : `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
     const linkPathElement = linkSupport.attr('d', pathData).node()
     const cachedLinkPathLength = linkPathLengthMap.get(pathData)
     const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
@@ -137,8 +142,13 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
       .style('stroke', linkColor)
       .attr('transform', linkShiftTransform)
 
-    smartTransition(link, duration)
-      .attr('d', pathData)
+    const linkTransition = smartTransition(link, duration)
+    if (duration) {
+      (linkTransition as Transition<SVGPathElement, GraphLink<N, L>, SVGGElement, unknown>)
+        .attrTween('d', (_, j, nodes) => interpolatePath(select(nodes[j]).attr('d') || '', pathData))
+    } else {
+      linkTransition.attr('d', pathData)
+    }
 
     linkBand
       .attr('class', linkSelectors.linkBand)
@@ -146,8 +156,13 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
       .style('stroke-width', getLinkBandWidth(d, scale, config))
       .style('stroke', linkColor)
 
-    smartTransition(linkBand, duration)
-      .attr('d', pathData)
+    const linkBandTransition = smartTransition(linkBand, duration)
+    if (duration) {
+      (linkBandTransition as Transition<SVGPathElement, GraphLink<N, L>, SVGGElement, unknown>)
+        .attrTween('d', (_, j, nodes) => interpolatePath(select(nodes[j]).attr('d') || '', pathData))
+    } else {
+      linkBandTransition.attr('d', pathData)
+    }
 
 
     // Arrow
