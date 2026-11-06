@@ -3,6 +3,7 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-
 // Types
 import { ColorAccessor, GenericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
+import { Gradient } from '@/types/gradient'
 import { Orientation } from '@/types/position'
 import { StyleDeclaration } from '@/types/style'
 
@@ -11,6 +12,9 @@ export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInter
   color?: ColorAccessor<Datum>;
   /** Bar fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   pattern?: GenericAccessor<FillPatternType, Datum>;
+  /** Fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (top to bottom for
+   * vertical bars and right to left for horizontal ones, spanning each bar). Default: `undefined` */
+  gradient?: GenericAccessor<Gradient | boolean, Datum>;
   /** Per-bar inline styles accessor, called with the datum and the bar's index within the group.
    * The returned object is applied as inline styles, with camelCase keys converted to kebab-case.
    * Keys the component manages itself (`fill`, `cursor`, `mask`) take precedence over their
@@ -43,6 +47,7 @@ export const GroupedBarDefaultConfig: GroupedBarConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
   color: undefined,
   pattern: undefined,
+  gradient: undefined,
   barStyle: undefined,
   groupMaxWidth: undefined,
   groupWidth: undefined,

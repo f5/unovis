@@ -17,6 +17,7 @@ import {
 import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
 import { StringAccessor, ColorAccessor, GenericAccessor, NumericAccessor } from '@unovis/ts/types/accessor'
 import { FillPatternType } from '@unovis/ts/styles/patterns'
+import { Gradient } from '@unovis/ts/types/gradient'
 import { Position } from '@unovis/ts/types/position'
 import { VerticalAlign, FitMode, TrimMode } from '@unovis/ts/types/text'
 import { D3ZoomEvent } from 'd3-zoom'
@@ -175,6 +176,9 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   /** Node fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   @Input() nodePattern?: GenericAccessor<FillPatternType, SankeyNode<N, L>>
 
+  /** Node fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (top to bottom, fading out the node color). Default: `undefined` */
+  @Input() nodeGradient?: GenericAccessor<Gradient | boolean, SankeyNode<N, L>>
+
   /** Node `fixedValue` accessor function or constant. It defines the node value that will be used to calculate
    * the height of the nodes by d3-sankey (by default the height will be based on aggregated `linkValue`).
    * Default: `n => n.fixedValue` */
@@ -188,6 +192,9 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
 
   /** Link fill pattern accessor. Resolves to a `FillPatternType`. Default: `undefined` */
   @Input() linkPattern?: GenericAccessor<FillPatternType, SankeyLink<N, L>>
+
+  /** Link fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient (left to right, from the source node color to the target node color). Default: `undefined` */
+  @Input() linkGradient?: GenericAccessor<Gradient | boolean, SankeyLink<N, L>>
 
   /** Link flow accessor function or value. Default: `l => l.value` */
   @Input() linkValue?: NumericAccessor<L>
@@ -299,8 +306,8 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   }
 
   private getConfig (): SankeyConfigInterface<N, L> {
-    const { duration, events, attributes, id, heightNormalizationCoeff, zoomScale, zoomPan, enableZoom, zoomExtent, zoomMode, disableZoomModifierKeys, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, nodeAdaptivePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodePattern, nodeFixedValue, nodeIconColor, linkColor, linkPattern, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelMaxWidthTakeAvailableSpace, labelMaxWidthTakeAvailableSpaceTolerance, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelTextDecoration, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelTextDecoration, subLabelToLabelInlineWidthRatio, onZoom, onLayoutCalculated, selectedNodeIds } = this
-    const config = { duration, events, attributes, id, heightNormalizationCoeff, zoomScale, zoomPan, enableZoom, zoomExtent, zoomMode, disableZoomModifierKeys, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, nodeAdaptivePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodePattern, nodeFixedValue, nodeIconColor, linkColor, linkPattern, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelMaxWidthTakeAvailableSpace, labelMaxWidthTakeAvailableSpaceTolerance, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelTextDecoration, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelTextDecoration, subLabelToLabelInlineWidthRatio, onZoom, onLayoutCalculated, selectedNodeIds }
+    const { duration, events, attributes, id, heightNormalizationCoeff, zoomScale, zoomPan, enableZoom, zoomExtent, zoomMode, disableZoomModifierKeys, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, nodeAdaptivePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodePattern, nodeGradient, nodeFixedValue, nodeIconColor, linkColor, linkPattern, linkGradient, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelMaxWidthTakeAvailableSpace, labelMaxWidthTakeAvailableSpaceTolerance, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelTextDecoration, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelTextDecoration, subLabelToLabelInlineWidthRatio, onZoom, onLayoutCalculated, selectedNodeIds } = this
+    const config = { duration, events, attributes, id, heightNormalizationCoeff, zoomScale, zoomPan, enableZoom, zoomExtent, zoomMode, disableZoomModifierKeys, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, nodeAdaptivePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodePattern, nodeGradient, nodeFixedValue, nodeIconColor, linkColor, linkPattern, linkGradient, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelMaxWidthTakeAvailableSpace, labelMaxWidthTakeAvailableSpaceTolerance, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelTextDecoration, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelTextDecoration, subLabelToLabelInlineWidthRatio, onZoom, onLayoutCalculated, selectedNodeIds }
     const keys = Object.keys(config) as (keyof SankeyConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
