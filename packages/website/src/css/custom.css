@@ -121,3 +121,29 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 #vg-tooltip-element td.key {
   padding-right: 4px;
 }
+
+/* Docusaurus leaves the sidebar's right spacing to the scrollbar gutter, which overlay scrollbars don't take up */
+.theme-doc-sidebar-container nav.menu {
+  padding-right: 0.5rem;
+  font-size: 14px;
+}
+
+.navbar-sidebar .menu {
+  font-size: 14px;
+}
+
+/* On phones the GitHub and Discord icons stay in the header instead of becoming bare icons in the sidebar menu */
+@media (max-width: 996px) {
+  .navbar__items--right .navbar__item.brand__icon {
+    display: inline-block;
+  }
+
+  /* The search button is positioned over the right end of the navbar on phones, so the icons move out from under it */
+  .navbar__items--right {
+    padding-right: 42px;
+  }
+
+  .navbar-sidebar .menu__list-item:has(> .brand__icon) {
+    display: none;
+  }
+}
