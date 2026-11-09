@@ -180,6 +180,11 @@ The `x` and `y` properties define the position of the annotation.
 They can be specified in pixels (number or string) or as a percentage of the container size.
 You can also add `textAlign` and `verticalAlign` properties to adjust the alignment of the text.
 
+In an _XY_ container, these coordinates are relative to the area inside the chart margins.
+The origin is at the top-left, and `y` increases downwards. The same rules apply to subject coordinates.
+Numbers represent pixels, not data values. To highlight a data point, use the component's scales as
+described in [Annotating Data Points](#annotating-data-points).
+
 For example, the following is a valid definition of 
 
 ```ts
@@ -226,6 +231,37 @@ const items= [
 />
 </div>
 
+### Computed Percentages in TypeScript
+
+Annotation positions and sizes use the `LengthUnit` type:
+
+```ts
+type LengthUnit = number | `${number}%` | `${number}px`
+```
+
+When storing a computed percentage in a variable, annotate it with `LengthUnit` so TypeScript
+checks the template string against the accepted format:
+
+```ts
+import type { AnnotationItem } from '@unovis/ts/components/annotations/types'
+import type { LengthUnit } from '@unovis/ts/types/misc'
+
+const x = 0.9
+const y = 0.8
+const xs: LengthUnit = `${Math.round(100 * x)}%`
+const ys: LengthUnit = `${Math.round(100 * y)}%`
+
+const items: AnnotationItem[] = [{
+  x: '50%',
+  y: '50%',
+  content: 'Computed position',
+  subject: { x: xs, y: ys, radius: 6 },
+}]
+```
+
+Without the type annotation, the computed value can be inferred as `string`, which is broader
+than `LengthUnit`. This pattern provides type checking without an `as LengthUnit` assertion.
+
 ## Subjects
 Subjects are focal points of the annotation. They can be used to highlight a specific area or point.
 The minimum configuration of a `subject` is an `x` and `y` coordinate.
@@ -271,6 +307,63 @@ items = [{
   content: 'Item with Subject',
   subject: { x: '50%', y: 2, radius: 4 }
 }]}/>
+
+### Annotating Data Points
+
+To align a subject with a scatter point, convert the data coordinates to pixels using the scatter
+component's `xScale` and `yScale`. Use callbacks so the coordinates are evaluated with the current
+scales whenever annotations render, including after a resize.
+
+Converting data values to percentages manually can produce an offset: the chart's scale ranges
+include space for point sizes ("bleed"), while annotation percentages use the full area inside
+the margins. Rounding percentages introduces additional positioning error.
+
+For example, using the TypeScript core:
+
+```ts
+import { Annotations } from '@unovis/ts/components/annotations'
+import { Axis } from '@unovis/ts/components/axis'
+import { Scatter } from '@unovis/ts/components/scatter'
+import { XYContainer } from '@unovis/ts/containers/xy-container'
+
+type Datum = { x: number; y: number }
+
+const data: Datum[] = [{ x: 0, y: 0 }, { x: 22, y: 70 }, { x: 100, y: 100 }]
+const point = data[1]
+const scatter = new Scatter<Datum>({ x: d => d.x, y: d => d.y, size: 24 })
+const annotations = new Annotations({
+  items: [{
+    x: '50%',
+    y: '50%',
+    content: `Point (${point.x}, ${point.y})`,
+    subject: {
+      x: () => scatter.xScale(point.x),
+      y: () => scatter.yScale(point.y),
+      radius: 6,
+    },
+  }],
+})
+
+const container = document.getElementById('vis-container')
+if (!container) throw new Error('Chart container not found')
+
+const chart = new XYContainer<Datum>(container, {
+  height: 400,
+  components: [scatter],
+  xAxis: new Axis(),
+  yAxis: new Axis(),
+  annotations,
+}, data)
+```
+
+Use the scales of the component containing the point you want to annotate. The annotation text
+can still use pixel or percentage positioning independently of its subject.
+
+Unovis's `Scale` export provides [D3 scale functions](https://d3js.org/d3-scale).
+A standalone `scaleLinear([min, max])` uses that single argument as its **range**, with a default
+domain of `[0, 1]`. Even when both domain and range are supplied, a separate scale must match the
+chart's final pixel range to align a subject correctly. Using the component's scales avoids
+duplicating those layout calculations.
 
 ### `AnnotationSubject` Type
 
