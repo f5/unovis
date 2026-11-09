@@ -49,6 +49,8 @@ wrapper is generated from it.
    defining modules instead of package root barrels. This reduces bundler/test dependency traversal,
    startup time, and memory; final bundle savings depend on tree-shaking. Follow each package's
    `AGENTS.md` for supported paths and framework exceptions. Use `import type` for types.
+11. **Use core TypeScript for shared docs examples.** If a shared feature is shown through wrappers,
+    include all supported frameworks. Use a single wrapper only for framework-specific behavior.
 
 ## Setup & commands
 
@@ -77,6 +79,9 @@ clipping bounds before refreshing snapshots. Report exactly what was tested. For
 clipping changes, check WebKit early; see the [visual-testing workflow](../packages/dev/playwright/README.md#agent-workflow).
 
 ## Commits
+
+Keep small PRs with one logical change in a single descriptive commit. When asked to tidy the
+history, fold follow-up revisions into the original commit.
 
 Commitlint (`commitlint.config.ts`) enforces a **custom format — not Conventional Commits**:
 
@@ -108,6 +113,7 @@ Full rules, the parser regex, the type-picking cheatsheet, and ~25 real examples
 - Branch from `main` (don't commit to `main` directly). The **F5 CLA bot** comments on first-time
   contributions; there is no DCO/sign-off requirement.
 - PR body uses a checklist (Dev examples / Wrappers / Gallery example / Docs) with screenshots.
+  For docs PRs, capture the changed section on the rendered website and attach it to the PR.
 - Immediately before PR submission, run `pnpm cmds-report` from the repo root after final changes
   and review the report. Fix failures introduced by the PR; document remaining failures and skipped
   checks in the PR description. The runner has exclusions, so also complete the required CI checks.
