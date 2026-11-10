@@ -62,7 +62,9 @@ describe('interactive widget bundle', () => {
     const bar = svgOf(page)!.querySelector('path[class*="bar"]') as SVGElement
     expect(bar, 'a bar mark exists to hover').toBeTruthy()
 
-    for (const type of ['mouseenter', 'mouseover', 'mousemove']) {
+    // The Tooltip listens to pointer events. This jsdom has no PointerEvent,
+    // and a MouseEvent without `pointerType` is handled as a mouse pointer
+    for (const type of ['pointerover', 'pointerenter', 'pointermove']) {
       bar.dispatchEvent(new page.window.MouseEvent(type, { bubbles: true, clientX: 100, clientY: 100 }))
     }
     await settle(page, '[class*="tooltip"]')
