@@ -10,8 +10,8 @@ import type { LineConfigInterface } from '@unovis/ts/components/line/config'
 ```
 
 Avoid the `@unovis/ts` root barrel for individual components, enums, utilities, and types.
-For native Node ESM, use explicit file paths such as
-`@unovis/ts/components/line/index.js` and `@unovis/ts/types/curve.js`.
+The published package supports these direct imports in native Node ESM as well as explicit
+file paths such as `@unovis/ts/components/line/index.js` and `@unovis/ts/types/curve.js`.
 
 Direct imports let bundlers and test runners load only the needed component graph instead of
 resolving every component and its map/graph dependencies before tree-shaking. Prefer them for
