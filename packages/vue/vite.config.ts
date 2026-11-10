@@ -1,7 +1,6 @@
 import { resolve } from 'node:path'
 import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts'
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import { UserConfig, defineConfig } from 'vite'
 import type { ModuleFormat, OutputOptions } from 'rollup'
 
@@ -31,7 +30,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
         dts({
           cleanVueFileName: true,
         }),
-        cssInjectedByJsPlugin(),
       ],
       build: {
         emptyOutDir: true,

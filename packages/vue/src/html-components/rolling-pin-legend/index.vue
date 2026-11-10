@@ -5,6 +5,7 @@ import type { RollingPinLegendConfigInterface } from '@unovis/ts/components/roll
 import { RollingPinLegend } from '@unovis/ts/components/rolling-pin-legend'
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
+import '../../styles'
 
 // data and required props
 type Props = RollingPinLegendConfigInterface
@@ -49,9 +50,3 @@ export const VisRollingPinLegendSelectors = RollingPinLegend.selectors
 <template>
   <div ref="elRef" data-vis-rolling-pin-legend />
 </template>
-
-<style>
-  [data-vis-rolling-pin-legend] {
-    display:block;
-  }
-</style>

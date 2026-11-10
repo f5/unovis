@@ -7,6 +7,7 @@ import { Annotations } from '@unovis/ts/components/annotations'
 import { onUnmounted, ref, shallowRef, provide, watch, toRefs, watchEffect, shallowReactive, toRaw } from 'vue'
 import { annotationsAccessorKey, componentAccessorKey, tooltipAccessorKey,  } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"
+import '../../styles'
 
 const props = defineProps<SingleContainerConfigInterface<T> & { data?: T }>()
 const { data } = toRefs(props)
@@ -79,13 +80,3 @@ defineExpose({
     <slot />
   </div>
 </template>
-
-
-
-<style>
-.unovis-single-container {
-  display: block;
-  position: relative;
-  width: 100%;
-}
-</style>

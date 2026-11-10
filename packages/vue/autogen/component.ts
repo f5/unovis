@@ -9,8 +9,7 @@ export function getComponentCode (
   dataType: string | null = 'Data',
   elementSuffix = 'component',
   isStandAlone = false,
-  renderIntoProvidedDomNode = false,
-  styles?: string[]
+  renderIntoProvidedDomNode = false
 ): string {
   const genericsExtend = generics ? `generic="${generics?.map((g, i) => g.extends ? `${g.name} extends ${g.extends}` : g.name)}"` : ''
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
@@ -31,7 +30,7 @@ export function getComponentCode (
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n  ')}${componentName === 'Timeline' ? '\nimport { XYComponentConfigInterface } from \'@unovis/ts/core/xy-component/config\'\nimport { StringAccessor } from \'@unovis/ts/types/accessor\'' : ''}
 import { onMounted, onUnmounted, computed, ref, shallowRef, watch, nextTick${isStandAlone ? '' : ', inject'} } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
-${isStandAlone ? '' : `import { ${elementSuffix}AccessorKey } from '../../utils/context'\n`}
+${isStandAlone ? "import '../../styles'\n" : `import { ${elementSuffix}AccessorKey } from '../../utils/context'\n`}
 ${isStandAlone ? '' : `const accessor = inject(${elementSuffix}AccessorKey, undefined)\n`}
 // data and required props ${isComplexPropComponent ? '\n// !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412' : ''}
 ${isComplexPropComponent
@@ -89,7 +88,5 @@ export const Vis${componentName}Selectors = ${componentName}.selectors
 <template>
   <div data-vis-${elementSuffix} ${isStandAlone ? 'ref="elRef"' : ''}/>
 </template>
-
-${isStandAlone ? `\n<style>\n  [data-vis-${elementSuffix}] {\n    ${styles?.join(';\n    ')};\n  }\n</style>` : ''}
 `
 }

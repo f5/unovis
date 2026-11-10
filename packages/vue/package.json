@@ -44,8 +44,11 @@
   "typings": "./index.d.ts",
   "type": "module",
   "sideEffects": [
-    "./index.js",
-    "./dist/index.js"
+    "./src/styles.ts",
+    "./styles.js",
+    "./styles.cjs",
+    "./dist/styles.js",
+    "./dist/styles.cjs"
   ],
   "scripts": {
     "build": "pnpm check && vite build && rm -rf dist/.cache && cp LICENSE README.md AGENTS.md package.json ./dist",
@@ -73,7 +76,6 @@
     "tslib": "^2.3.1",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plugin-css-injected-by-js": "^3.3.0",
     "vite-plugin-dts": "^3.5.3",
     "vue": "^3.5.13",
     "vue-tsc": "^2.1.0"

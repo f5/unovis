@@ -54,7 +54,8 @@ Core (single) component:
 ```
 Optional fields seen in the file: `kebabCaseName` (when the auto kebab is wrong, e.g.
 `TopoJSONMap` → `topojson-map`), `elementSuffix`, `isStandAlone`, `renderIntoProvidedDomNode`,
-`angularStyles` / `svelteStyles` / `vueStyles` / `solidStyles`.
+`angularStyles` / `svelteStyles` / `solidStyles`. Vue wrapper layout styles live in
+`packages/vue/src/styles.ts`.
 
 ## 4. Generate the wrappers
 

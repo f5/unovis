@@ -6,6 +6,7 @@ import type { GenericDataRecord } from '@unovis/ts/types/data'
 import { LeafletMap } from '@unovis/ts/components/leaflet-map'
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
+import '../../styles'
 
 // data and required props
 type Props = LeafletMapConfigInterface<Datum>
@@ -56,10 +57,3 @@ export const VisLeafletMapSelectors = LeafletMap.selectors
 <template>
   <div ref="elRef" data-vis-leaflet-map />
 </template>
-
-<style>
-  [data-vis-leaflet-map] {
-    display:block;
-    position:relative;
-  }
-</style>

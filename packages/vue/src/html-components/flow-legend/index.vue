@@ -5,6 +5,7 @@ import type { FlowLegendConfigInterface } from '@unovis/ts/components/flow-legen
 import { FlowLegend } from '@unovis/ts/components/flow-legend'
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
+import '../../styles'
 
 // data and required props
 type Props = FlowLegendConfigInterface
@@ -49,9 +50,3 @@ export const VisFlowLegendSelectors = FlowLegend.selectors
 <template>
   <div ref="elRef" data-vis-flow-legend />
 </template>
-
-<style>
-  [data-vis-flow-legend] {
-    display:block;
-  }
-</style>
