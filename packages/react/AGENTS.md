@@ -10,6 +10,8 @@ import type { LineConfigInterface } from '@unovis/ts/components/line/config'
 ```
 
 Avoid root barrels (`@unovis/react`, `@unovis/ts`) for individual symbols.
+The published package supports these direct imports in native Node ESM as well as explicit
+file paths such as `@unovis/react/components/line/index.js`.
 Direct imports let bundlers and test runners load only the needed component graph instead of
 resolving every component and its map/graph dependencies before tree-shaking. Prefer them for
 smaller dependency graphs, faster bundling and test startup, and lower memory use. Production
