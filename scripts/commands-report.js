@@ -94,7 +94,8 @@ const WS_SKIP_EXACT = new Set([
 // Per-workspace script skips (workspace name → Set of script names to skip)
 const WS_SPECIFIC_SKIP = {
   '@unovis/angular': new Set(['test']),
-  '@unovis/dev': new Set(['check', 'test']),
+  // `visual:*` need an `--out` directory and a served build, so they always exit 2 here
+  '@unovis/dev': new Set(['check', 'test', 'visual:capture', 'visual:compare']),
   '@unovis/ts': new Set(['test:watch']),
   '@unovis/mcp': new Set(['test:watch', 'test:browser', 'docs:tools', 'build', 'build:widget', 'samples', 'test:images:update', 'dev:tsx', 'docs:schema']),
   '@unovis/website': new Set(['typecheck']),
