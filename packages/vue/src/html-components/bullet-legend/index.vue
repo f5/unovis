@@ -5,6 +5,7 @@ import type { BulletLegendConfigInterface } from '@unovis/ts/components/bullet-l
 import { BulletLegend } from '@unovis/ts/components/bullet-legend'
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
+import '../../styles'
 
 // data and required props
 type Props = BulletLegendConfigInterface
@@ -49,9 +50,3 @@ export const VisBulletLegendSelectors = BulletLegend.selectors
 <template>
   <div ref="elRef" data-vis-bullet-legend />
 </template>
-
-<style>
-  [data-vis-bullet-legend] {
-    display:block;
-  }
-</style>

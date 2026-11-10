@@ -28,8 +28,7 @@ runComponentGenerator<VueComponentInput>({
       component.dataType,
       isStandAlone ? kebabCase(component.name) : component.elementSuffix,
       isStandAlone,
-      component.renderIntoProvidedDomNode,
-      component.vueStyles
+      component.renderIntoProvidedDomNode
     )
 
     return [{ path: `src/${getComponentDirPath(component)}/index.vue`, content: componentCode }]

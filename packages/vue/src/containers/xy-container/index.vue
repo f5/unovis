@@ -9,6 +9,7 @@ import { Annotations } from '@unovis/ts/components/annotations'
 import { onUnmounted, ref, shallowRef, provide, watch, toRefs, shallowReactive, watchEffect, toRaw } from 'vue'
 import { componentAccessorKey, tooltipAccessorKey, axisAccessorKey, crosshairAccessorKey, annotationsAccessorKey } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"
+import '../../styles'
 
 const props = defineProps<XYContainerConfigInterface<T> & { data?: T[] }>()
 const { data } = toRefs(props)
@@ -99,12 +100,3 @@ defineExpose({
     <slot />
   </div>
 </template>
-
-
-<style>
-.unovis-xy-container {
-  display: block;
-  position: relative;
-  width: 100%;
-}
-</style>

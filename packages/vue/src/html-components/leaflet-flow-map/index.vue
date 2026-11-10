@@ -6,6 +6,7 @@ import type { GenericDataRecord } from '@unovis/ts/types/data'
 import { LeafletFlowMap } from '@unovis/ts/components/leaflet-flow-map'
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
+import '../../styles'
 
 // data and required props
 type Props = LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
@@ -56,10 +57,3 @@ export const VisLeafletFlowMapSelectors = LeafletFlowMap.selectors
 <template>
   <div ref="elRef" data-vis-leaflet-flow-map />
 </template>
-
-<style>
-  [data-vis-leaflet-flow-map] {
-    display:block;
-    position:relative;
-  }
-</style>
