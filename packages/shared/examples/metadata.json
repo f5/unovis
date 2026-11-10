@@ -793,6 +793,16 @@
       }
     ]
   },
+  "native-tooltip-content": {
+    "title": "A week of daily revenue",
+    "kicker": "Illustrative sales week · line, points and tooltip",
+    "subtitle": "Move across the chart to inspect each day’s revenue and order count in a tooltip.",
+    "description": "Seven illustrative day records carry a weekday label, revenue in US dollars, and an order count; the values are made up for the demo.",
+    "prompt": "Build a responsive chart using Unovis in {framework}. Plot day and revenue records as a Line with Scatter points on an XY container, with weekday tick labels and currency-formatted y ticks. Add a Crosshair and a Tooltip whose content shows the weekday, revenue, and order count for the hovered day.\n\nData context: Seven illustrative day records carry a weekday label, revenue in US dollars, and an order count; the values are made up for the demo.\nUse the matching framework package and the public Unovis API, support light and dark themes, and include the imports and data types needed to run the example. Keep page headings outside the chart implementation.\n\nReference: https://unovis.dev/gallery/view?example=native-tooltip-content\nExample source and bundled data: https://github.com/f5/unovis/tree/main/packages/shared/examples/native-tooltip-content",
+    "legacyTitles": [
+      "Crosshair Tooltip"
+    ]
+  },
   "synced-crosshairs": {
     "title": "One cursor, two linked charts",
     "kicker": "Synchronized crosshairs · illustrative series",
