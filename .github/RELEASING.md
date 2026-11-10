@@ -2,11 +2,12 @@
 
 The `Beta release` workflow runs daily at 12:46 UTC. It publishes `main` when its
 commit differs from the last successful run. In GitHub Actions, use **Run workflow**
-on `main` to release sooner; select **force** to publish an unchanged commit again.
+on `main` to release sooner; select **force** to attempt publishing an unchanged commit.
 
-Versions use `<current-version>-beta.<workflow-run-number>.g<commit-sha>`. For
-example, `1.7.1-beta.123.g123456789abc` identifies a snapshot, without choosing the
-next stable release number. All eight packages receive the same version, including
+Versions use `<next-patch-version>-beta.<YYYYMMDD>.g<commit-sha>`, with the date in UTC.
+For example, when `package.json` is at `1.8.0`, a snapshot is `1.8.1-beta.20261110.g123456789abc`.
+The same commit on the same UTC day keeps the same version.
+All eight packages receive the same version, including
 their internal dependency references. Version changes stay in the CI checkout;
 the workflow creates no commits or Git tags and does not update npm's `latest` tag.
 

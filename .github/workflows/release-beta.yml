@@ -44,8 +44,8 @@ jobs:
           echo "Main has not changed since the last successful beta." >> "$GITHUB_STEP_SUMMARY"
           exit 0
         fi
-        base=$(node -p "require('./package.json').version.split('-')[0]")
-        echo "version=$base-beta.$GITHUB_RUN_NUMBER.g${GITHUB_SHA:0:12}" >> "$GITHUB_OUTPUT"
+        base=$(node -p "const version = require('./package.json').version.split('-')[0].split('.'); version[2] = Number(version[2]) + 1; version.join('.')")
+        echo "version=$base-beta.$(date -u +%Y%m%d).g${GITHUB_SHA:0:12}" >> "$GITHUB_OUTPUT"
         echo "publish=true" >> "$GITHUB_OUTPUT"
     - uses: actions/setup-node@v4
       if: steps.version.outputs.publish == 'true'

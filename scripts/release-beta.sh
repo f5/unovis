@@ -2,7 +2,7 @@
 set -euo pipefail
 
 : "${BETA_VERSION:?BETA_VERSION is required}"
-if [[ ! "$BETA_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+\.g[0-9a-f]{12}$ ]]; then
+if [[ ! "$BETA_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]{8}\.g[0-9a-f]{12}$ ]]; then
   echo "Invalid beta version: $BETA_VERSION" >&2
   exit 1
 fi
