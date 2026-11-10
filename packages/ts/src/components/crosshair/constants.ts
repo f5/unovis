@@ -12,3 +12,12 @@ export const CROSSHAIR_CIRCLE_OVERLAP_RADII = 2
 
 /** Circles positioned further than this many pixels outside the Y range are hidden */
 export const CROSSHAIR_CIRCLE_Y_RANGE_TOLERANCE_PX = 1
+
+/** The circle of the series highlighted with the keyboard is this many times larger */
+export const CROSSHAIR_ACTIVE_CIRCLE_RADIUS_SCALE = 1.5
+
+/** `PageUp` and `PageDown` move the Crosshair by this fraction of the navigable data points */
+export const CROSSHAIR_KEYBOARD_PAGE_FRACTION = 0.1
+
+/** When keyboard navigation pans a zoomed chart, the active data point is kept this fraction of the domain away from the edge */
+export const CROSSHAIR_KEYBOARD_PAN_PADDING = 0.05

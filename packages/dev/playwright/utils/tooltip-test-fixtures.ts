@@ -26,10 +26,10 @@ export class TooltipUtils {
     // Scroll into view if needed
     await element.scrollIntoViewIfNeeded()
 
-    // The Tooltip core listens for a real `mousemove` on the component and reads
+    // The Tooltip core listens for a real `pointermove` on the component and reads
     // the event's composedPath to find the trigger. WebKit (and WebGL maps under
     // load) can miss a single hover, so move the real pointer onto the element's
-    // center and nudge it by a pixel to guarantee a mousemove with the right path.
+    // center and nudge it by a pixel to guarantee a pointermove with the right path.
     const hoverOnce = async (): Promise<void> => {
       await element.hover({ force })
       const box = await element.boundingBox()

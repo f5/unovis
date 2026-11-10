@@ -4,6 +4,7 @@ import type { Annotations } from '@unovis/ts/components/annotations'
 import type { Axis } from '@unovis/ts/components/axis'
 import type { Crosshair } from '@unovis/ts/components/crosshair'
 import type { Tooltip } from '@unovis/ts/components/tooltip'
+import type { Zoom } from '@unovis/ts/components/zoom'
 import type { XYComponentCore } from '@unovis/ts/core/xy-component'
 import type { JSX, ParentProps } from 'solid-js'
 import {
@@ -41,6 +42,7 @@ export function VisXYContainer<Datum>(props: VisXYContainerProps<Datum>) {
     components: [],
     annotations: undefined,
     crosshair: undefined,
+    zoom: undefined,
     tooltip: undefined,
     xAxis: undefined,
     yAxis: undefined,
@@ -88,6 +90,9 @@ export function VisXYContainer<Datum>(props: VisXYContainerProps<Datum>) {
           case 'crosshair':
             c.crosshair = value() as Crosshair<Datum>
             break
+          case 'zoom':
+            c.zoom = value() as Zoom<Datum>
+            break
           case 'annotations':
             c.annotations = value() as Annotations
             break
@@ -112,6 +117,9 @@ export function VisXYContainer<Datum>(props: VisXYContainerProps<Datum>) {
             break
           case 'crosshair':
             c.crosshair = undefined
+            break
+          case 'zoom':
+            c.zoom = undefined
             break
           case 'annotations':
             c.annotations = undefined

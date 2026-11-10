@@ -7,6 +7,7 @@ type VisContainerContextType =
   | 'tooltip'
   | 'annotations'
   | 'crosshair'
+  | 'zoom'
 
 export type VisContainerContextProps = {
   update: (key: VisContainerContextType, value: Accessor<unknown>) => void

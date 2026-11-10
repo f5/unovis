@@ -6,6 +6,7 @@
   import type { Crosshair } from '@unovis/ts/components/crosshair'
   import type { Axis } from '@unovis/ts/components/axis'
   import type { Annotations } from '@unovis/ts/components/annotations'
+  import type { Zoom } from '@unovis/ts/components/zoom'
   import { onMount, setContext } from 'svelte'
 
   type Datum = $$Generic
@@ -36,6 +37,7 @@
   const config: XYContainerConfigInterface<Datum> = {
     components: [],
     crosshair: undefined,
+    zoom: undefined,
     tooltip: undefined,
     xAxis: undefined,
     yAxis: undefined,
@@ -123,6 +125,13 @@
       config.crosshair = c
     },
     destroy: () => { config.crosshair = undefined },
+  }))
+  setContext('zoom', () => ({
+    update: (z: Zoom<Datum>) => {
+      if (config.zoom === z) return
+      config.zoom = z
+    },
+    destroy: () => { config.zoom = undefined },
   }))
   setContext('tooltip', () => ({
     update: (t: Tooltip) => {

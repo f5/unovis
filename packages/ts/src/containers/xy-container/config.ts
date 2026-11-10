@@ -7,6 +7,7 @@ import { Annotations } from '@/components/annotations'
 import { Tooltip } from '@/components/tooltip'
 import { Axis } from '@/components/axis'
 import { Crosshair } from '@/components/crosshair'
+import { Zoom } from '@/components/zoom'
 
 // Types
 import { ContinuousScale } from '@/types/scale'
@@ -101,6 +102,10 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
    * Useful for synchronizing the scale ranges of multiple charts, since the final bleed is provided
    * to the `onRenderComplete` callback. Default: `undefined` */
   bleed?: Spacing | ((components: XYComponentCore<Datum>[]) => Spacing);
+
+  /** Zoom component that enables zooming and panning along the X axis. Default: `undefined` */
+  zoom?: Zoom<Datum> | undefined;
+
   /** Callback function to be called when the chart rendering is complete. Default: `undefined` */
   onRenderComplete?: (
     svgNode: SVGSVGElement,
@@ -142,5 +147,6 @@ export const XYContainerDefaultConfig: XYContainerConfigInterface<unknown> = {
 
   clipPathExtend: 2,
   bleed: undefined,
+  zoom: undefined,
 }
 
