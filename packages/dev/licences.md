@@ -24,6 +24,8 @@
 | copy-webpack-plugin                  | perpetual      | MIT          | 12.0.2            | Len Boyette                                                        |
 | cypress                              | perpetual      | MIT          | 13.17.0           | n/a                                                                |
 | html-webpack-plugin                  | perpetual      | MIT          | 5.6.6             | Jan Nicklas <j.nicklas@me.com> (https://github.com/jantimon)       |
+| pixelmatch                           | perpetual      | ISC          | 7.2.0             | Volodymyr Agafonkin                                                |
+| pngjs                                | perpetual      | MIT          | 7.0.0             | n/a                                                                |
 | react-refresh                        | perpetual      | MIT          | 0.14.2            | n/a                                                                |
 | react-refresh-typescript             | perpetual      | MIT          | 2.0.9             | n/a                                                                |
 | ts-loader                            | perpetual      | MIT          | 9.5.4             | John Reilly <johnny_reilly@hotmail.com> (https://johnnyreilly.com) |
