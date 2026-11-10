@@ -1,7 +1,7 @@
 import { min, max, group } from 'd3-array'
 import type { SimulationNodeDatum } from 'd3-force'
 import type { ElkNode } from 'elkjs/lib/elk.bundled.js'
-import type { graphlib, Node } from 'dagre'
+import type { NodeLabel } from '@dagrejs/dagre'
 
 // Core
 import { GraphDataModel } from '@/data-models/graph'
@@ -13,7 +13,7 @@ import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue
 import { GraphInputLink, GraphInputNode } from '@/types/graph'
 
 // Local Types
-import { GraphNode, GraphLink, GraphForceSimulationNode } from '../types'
+import { GraphNode, GraphLink, GraphForceSimulationNode, GraphDagreLayoutSetting } from '../types'
 
 // Config
 import { GraphConfigInterface } from '../config'
@@ -285,17 +285,11 @@ export async function applyLayoutDagre<N extends GraphInputNode, L extends Graph
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
   const { nodeSize, layoutNonConnectedAside, dagreLayoutSettings, nodeStrokeWidth, nodeLabel } = config
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/ban-ts-comment
-  // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { Graph } = await import('@unovis/graphlibrary')
-  // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { layout } = await import('@unovis/dagre-layout')
+  const { Graph, layout } = await import('@dagrejs/dagre')
 
   // https://github.com/dagrejs/dagre/wiki
-  const dagreGraph = new Graph() as graphlib.Graph<GraphNode<N, L>>
+  const dagreGraph = new Graph<GraphDagreLayoutSetting, NodeLabel & { originalNode: GraphNode<N, L> }>()
 
   // Set an object for the graph label
   dagreGraph.setGraph(dagreLayoutSettings)
@@ -330,7 +324,7 @@ export async function applyLayoutDagre<N extends GraphInputNode, L extends Graph
 
   // Apply coordinates to the graph
   dagreGraph.nodes().forEach(d => {
-    const node = dagreGraph.node(d) as Node<GraphNode<N, L>> & { originalNode: GraphNode<N, L>}
+    const node = dagreGraph.node(d)
     node.originalNode.x = node.x // width * d.x / dagreGraph._label.width
     node.originalNode.y = node.y // height * d.y / dagreGraph._label.height
   })
