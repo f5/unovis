@@ -100,36 +100,44 @@ export function getHref<T> (d: T, identifier: StringAccessor<T>): string {
 }
 
 function evaluateSimpleExpression (expr: string): number {
-  // Handle multiplication and division first (higher precedence)
-  // Keep applying until no more operations are found
-  while (/(-?\d+(?:\.\d+)?)\s*([*/])\s*(-?\d+(?:\.\d+)?)/.test(expr)) {
-    expr = expr.replace(/(-?\d+(?:\.\d+)?)\s*([*/])\s*(-?\d+(?:\.\d+)?)/, (_, a, op, b) => {
-      const numA = parseFloat(a)
-      const numB = parseFloat(b)
-      return String(op === '*' ? numA * numB : numA / numB)
-    })
+  // Split into numbers and operators. A sign is only read as part of a number
+  // where a number is expected (at the start or right after an operator)
+  const numbers: number[] = []
+  const operators: string[] = []
+  let rest = expr
+  for (;;) {
+    const number = rest.match(/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/i)
+    if (!number) throw new Error(`Invalid expression: ${expr}`)
+    numbers.push(parseFloat(number[0]))
+    rest = rest.slice(number[0].length)
+    if (!rest) break
+    if (!/^[*/+-]/.test(rest)) throw new Error(`Invalid expression: ${expr}`)
+    operators.push(rest[0])
+    rest = rest.slice(1)
   }
+
+  // Handle multiplication and division first (higher precedence)
+  const terms = [numbers[0]]
+  const termOperators: string[] = []
+  operators.forEach((op, i) => {
+    const num = numbers[i + 1]
+    if (op === '*') terms[terms.length - 1] *= num
+    else if (op === '/') terms[terms.length - 1] /= num
+    else {
+      terms.push(num)
+      termOperators.push(op)
+    }
+  })
 
   // Handle addition and subtraction (lower precedence)
-  // Keep applying until no more operations are found
-  while (/(-?\d+(?:\.\d+)?)\s*([+-])\s*(-?\d+(?:\.\d+)?)/.test(expr)) {
-    expr = expr.replace(/(-?\d+(?:\.\d+)?)\s*([+-])\s*(-?\d+(?:\.\d+)?)/, (_, a, op, b) => {
-      const numA = parseFloat(a)
-      const numB = parseFloat(b)
-      return String(op === '+' ? numA + numB : numA - numB)
-    })
-  }
-
-  const result = parseFloat(expr)
-  if (isNaN(result)) throw new Error(`Invalid expression: ${expr}`)
-  return result
+  return termOperators.reduce((acc, op, i) => op === '+' ? acc + terms[i + 1] : acc - terms[i + 1], terms[0])
 }
 
 function evaluateCalcExpression (expression: string, basis: number): number {
   try {
     // Replace percentages and pixels with resolved values
     let expr = expression
-      .replace(/(\d+(?:\.\d+)?)%/g, (_, num) => String((basis * parseFloat(num)) / 100))
+      .replace(/(\d*\.?\d+)%/g, (_, num) => String((basis * parseFloat(num)) / 100))
       .replace(/(\d+(?:\.\d+)?)px/g, '$1')
       .replace(/\s+/g, '')
 
