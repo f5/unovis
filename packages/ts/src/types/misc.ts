@@ -9,4 +9,4 @@ export type Rect = {
   height: number;
 }
 
-export type LengthUnit = number | `${number}%` | `${number}px`
+export type LengthUnit = number | `${number}%` | `${number}px` | `calc(${string})`
