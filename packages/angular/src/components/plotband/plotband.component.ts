@@ -92,6 +92,10 @@ export class VisPlotbandComponent<Datum> implements PlotbandConfigInterface<Datu
   /** Vertical offset (in pixels) for positioning the label. */
   @Input() labelOffsetY?: number
 
+  /** Allow the label to extend into the XY container's margins.
+   * The label still fits within the container and no longer adds scale bleed. */
+  @Input() labelAllowOverflow?: boolean
+
   /** Orientation of the label text. */
   @Input() labelOrientation?: PlotbandLabelOrientation
 
@@ -115,8 +119,8 @@ export class VisPlotbandComponent<Datum> implements PlotbandConfigInterface<Datu
   }
 
   private getConfig (): PlotbandConfigInterface<Datum> {
-    const { duration, events, attributes, axis, from, to, labelText, labelPosition, labelOffsetX, labelOffsetY, labelOrientation, labelColor, labelSize } = this
-    const config = { duration, events, attributes, axis, from, to, labelText, labelPosition, labelOffsetX, labelOffsetY, labelOrientation, labelColor, labelSize }
+    const { duration, events, attributes, axis, from, to, labelText, labelPosition, labelOffsetX, labelOffsetY, labelAllowOverflow, labelOrientation, labelColor, labelSize } = this
+    const config = { duration, events, attributes, axis, from, to, labelText, labelPosition, labelOffsetX, labelOffsetY, labelAllowOverflow, labelOrientation, labelColor, labelSize }
     const keys = Object.keys(config) as (keyof PlotbandConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

@@ -223,7 +223,7 @@ You can fine-tune the label’s position using the `labelOffsetX` and `labelOffs
 
 Examples:
 * A positive `labelOffsetX` moves the label to the right.
-* A negative `labelOffsetY` moves the label upward.
+* For a vertical plotline with `labelPosition: 'top'`, a negative `labelOffsetY` moves the label upward within the available bounds.
 
 Use these offsets to avoid overlap with the plotline or nearby chart elements, or to improve visual alignment.
 
@@ -236,6 +236,35 @@ Default: `14` for both `labelOffsetX` and `labelOffsetY`
   labelText="Sad label 🙃"
   inputProps={{ min: 0, max: 26, step: 1 }}
   defaultValue={16}
+/>
+
+### Labels in the Chart Margin
+
+Plotline fits labels inside the plot by default. Set `labelAllowOverflow` to `true` to let the label extend into the chart margins while the line stays clipped to the plot. Give the XY container room for the label with `margin: { top: 32 }`.
+
+```ts
+import { Plotline } from '@unovis/ts/components/plotline'
+import { PlotlineLabelPosition } from '@unovis/ts/components/plotline/types'
+
+const plotline = new Plotline({
+  axis: 'x',
+  value: 5,
+  labelText: 'Today',
+  labelPosition: PlotlineLabelPosition.Top,
+  labelOffsetY: -24,
+  labelAllowOverflow: true,
+})
+```
+
+<XYWrapper
+  {...plotlineProps()}
+  containerProps={{ yDomain: [0], margin: { top: 32 } }}
+  axis="x"
+  labelText="Today"
+  labelPosition="top"
+  labelOffsetY={-24}
+  labelAllowOverflow={true}
+  excludeTabs
 />
 
 ### Label Font Size

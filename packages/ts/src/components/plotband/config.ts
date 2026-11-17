@@ -63,6 +63,14 @@ export interface PlotbandConfigInterface<Datum> extends Partial<XYComponentConfi
    */
   labelOffsetY?: number;
 
+  /**
+   * Allow the label to extend into the XY container's margins.
+   * The label still fits within the container and no longer adds scale bleed.
+   *
+   * @default false
+   */
+  labelAllowOverflow?: boolean;
+
   /** Orientation of the label text.
    *  @default PlotbandLabelOrientation.Horizontal
    */
@@ -90,5 +98,6 @@ export const PlotbandDefaultConfig: PlotbandConfigInterface<unknown> = {
   labelPosition: PlotbandLabelPosition.TopLeftOutside,
   labelOffsetX: 14,
   labelOffsetY: 14,
+  labelAllowOverflow: false,
   labelOrientation: PlotbandLabelOrientation.Horizontal,
 }

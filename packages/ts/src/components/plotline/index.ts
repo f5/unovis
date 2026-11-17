@@ -35,13 +35,15 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
   plotline: Selection<SVGLineElement, unknown, null, undefined>
   labelGroup: Selection<SVGGElement, unknown, null, undefined>
   label: Selection<SVGTextElement, unknown, null, undefined>
+  private _plotlineGroup: Selection<SVGGElement, unknown, null, undefined>
 
   constructor (config: PlotlineConfigInterface<Datum>) {
     super()
     this.setConfig(config)
     this.g.style('display', 'none').style('opacity', 0)
 
-    this.plotline = this.g
+    this._plotlineGroup = this.g.append('g')
+    this.plotline = this._plotlineGroup
       .append('line')
       .attr('class', s.plotline)
 
@@ -55,10 +57,18 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       .attr('class', s.label)
   }
 
+  setClipPath (clipPath: string | null): void {
+    const { labelAllowOverflow } = this.config
+    super.setClipPath(labelAllowOverflow ? null : clipPath)
+    const plotlineClipPath = labelAllowOverflow ? clipPath : null
+    this._plotlineGroup.style('clip-path', plotlineClipPath).style('-webkit-clip-path', plotlineClipPath)
+  }
+
   /** Extra space required to fit the plotline label, which is otherwise clipped
    * when the plotline is drawn close to the edge of the chart. */
   get bleed (): Spacing {
     const { config } = this
+    if (config.labelAllowOverflow) return super.bleed
 
     // The plotline is clipped out completely when its value is outside of the domain, so there's nothing to fit in
     const labelTextBlocks = this._getLabelTextBlocks()
@@ -121,9 +131,8 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
     if (labelTextBlocks.length && this._isValueWithinDomain()) {
       const layout = this._getLabelLayout()
 
-      // Keep the label within the chart bounds: the bleed can hit its cap, and it can't help
-      // across the plotline's axis where the label doesn't follow the scale
-      const fit = getRectFitTranslation(this._getLabelBBox(layout, labelTextBlocks), { x: 0, y: 0, width: this._width, height: this._height })
+      const bounds = config.labelAllowOverflow ? this._containerBounds : { x: 0, y: 0, width: this._width, height: this._height }
+      const fit = getRectFitTranslation(this._getLabelBBox(layout, labelTextBlocks), bounds)
 
       renderTextToSvgTextElement(this.label.node(), labelTextBlocks, { x: 0, y: 0, textAlign: layout.textAlign, verticalAlign: layout.verticalAlign, fastMode: false }, 'hanging')
 

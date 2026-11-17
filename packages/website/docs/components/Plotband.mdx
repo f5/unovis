@@ -214,11 +214,42 @@ You can adjust the label’s position with pixel-based offsets using the `labelO
 
 For example:
 * A positive `labelOffsetX` will move the label further right.
-* A negative `labelOffsetY` will shift it upward.
+* For a vertical plotband with `labelPosition: 'top-outside'`, a negative `labelOffsetY` moves the label upward within the available bounds.
 
 <XYWrapper {...xyContainerLabelOffsetProps()} showContext="container"/>
 
 This is useful for fine-tuning alignment or preventing overlap with other visual elements.
+
+### Labels in the Chart Margin
+
+Plotband fits labels inside the plot by default. Set `labelAllowOverflow` to `true` to let the label extend into the chart margins while the band stays clipped to the plot. Give the XY container room for the label with `margin: { top: 32 }`.
+
+```ts
+import { Plotband } from '@unovis/ts/components/plotband'
+import { PlotbandLabelPosition } from '@unovis/ts/components/plotband/types'
+
+const plotband = new Plotband({
+  axis: 'x',
+  from: 4,
+  to: 6,
+  labelText: 'Forecast',
+  labelPosition: PlotbandLabelPosition.TopOutside,
+  labelOffsetY: -24,
+  labelAllowOverflow: true,
+})
+```
+
+<XYWrapper
+  {...createXYContainer({
+    customComponents: [{
+      name: 'Plotband',
+      props: { from: 4, to: 6, axis: 'x', labelText: 'Forecast', labelPosition: 'top-outside', labelOffsetY: -24, labelAllowOverflow: true },
+      key: 'plotBand',
+    }],
+  })}
+  margin={{ top: 32 }}
+  excludeTabs
+/>
 
 ### Label Font Size
 
