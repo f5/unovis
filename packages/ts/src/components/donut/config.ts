@@ -4,6 +4,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/compone
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 import { FillPatternType } from '@/styles/patterns'
+import { Gradient } from '@/types/gradient'
 
 export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
@@ -40,6 +41,9 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
    * and no more than 20 pixels. Default: `undefined`
    */
   iconSize?: NumericAccessor<Datum>;
+  /** Fill gradient accessor. Resolves to a `Gradient` object, or `true` for the default gradient
+   * (radial, spanning each segment's ring from the inner to the outer radius). Default: `undefined` */
+  gradient?: GenericAccessor<Gradient | boolean, Datum>;
   /** Explicitly set the donut outer radius. Default: `undefined` */
   radius?: number;
   /** Arc width in pixels. Set to `0` if you want to have a pie chart. Default: `20` */
@@ -84,6 +88,7 @@ export const DonutDefaultConfig: DonutConfigInterface<unknown> = {
   pattern: undefined,
   icon: undefined,
   iconSize: undefined,
+  gradient: undefined,
   radius: undefined,
   arcWidth: 20,
   centralLabel: undefined,
