@@ -4,7 +4,6 @@ import { Brush } from '@unovis/ts/components/brush'
 import { BrushConfigInterface } from '@unovis/ts/components/brush/config'
 import { ContainerCore } from '@unovis/ts/core/container'
 import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
-import { D3BrushEvent } from 'd3-brush'
 import { Arrangement } from '@unovis/ts/types/position'
 import { VisXYComponent } from '../../core'
 
@@ -68,19 +67,19 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+  @Input() onBrush?: Required<BrushConfigInterface<Datum>>['onBrush']
 
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+  @Input() onBrushStart?: Required<BrushConfigInterface<Datum>>['onBrushStart']
 
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+  @Input() onBrushMove?: Required<BrushConfigInterface<Datum>>['onBrushMove']
 
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushEnd?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+  @Input() onBrushEnd?: Required<BrushConfigInterface<Datum>>['onBrushEnd']
 
   /** Width of the Brush handle. Default: `1` */
   @Input() handleWidth?: number

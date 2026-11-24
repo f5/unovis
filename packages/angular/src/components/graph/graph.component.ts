@@ -25,10 +25,6 @@ import { StringAccessor, GenericAccessor, NumericAccessor, ColorAccessor, Boolea
 import { ElkShape } from 'elkjs'
 import type { CurveFunction } from '@unovis/ts/types/curve'
 import { TrimMode, FitMode } from '@unovis/ts/types/text'
-import { Selection } from 'd3-selection'
-import { D3DragEvent } from 'd3-drag'
-import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
-import { D3BrushEvent } from 'd3-brush'
 import type { GraphDataModel } from '@unovis/ts/data-models/graph'
 import { VisCoreComponent } from '../../core'
 
@@ -369,10 +365,10 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   @Input() nodeExitScale?: NumericAccessor<N> | undefined
 
   /** Custom "enter" function for node rendering. Default: `undefined` */
-  @Input() nodeEnterCustomRenderFunction?: (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void
+  @Input() nodeEnterCustomRenderFunction?: Required<GraphConfigInterface<N, L>>['nodeEnterCustomRenderFunction']
 
   /** Custom "update" function for node rendering. Default: `undefined` */
-  @Input() nodeUpdateCustomRenderFunction?: (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void
+  @Input() nodeUpdateCustomRenderFunction?: Required<GraphConfigInterface<N, L>>['nodeUpdateCustomRenderFunction']
 
   /** Custom partial "update" function for node rendering which will be triggered after the following events:
    * - Full node update (`nodeUpdateCustomRenderFunction`);
@@ -380,13 +376,13 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
    * - Node and Link mouseover and mouseout;
    * - Node brushing,
    * Default: `undefined` */
-  @Input() nodePartialUpdateCustomRenderFunction?: (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void
+  @Input() nodePartialUpdateCustomRenderFunction?: Required<GraphConfigInterface<N, L>>['nodePartialUpdateCustomRenderFunction']
 
   /** Custom "exit" function for node rendering. Default: `undefined` */
-  @Input() nodeExitCustomRenderFunction?: (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void
+  @Input() nodeExitCustomRenderFunction?: Required<GraphConfigInterface<N, L>>['nodeExitCustomRenderFunction']
 
   /** Custom render function that will be called while zooming / panning the graph. Default: `undefined` */
-  @Input() nodeOnZoomCustomRenderFunction?: (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, zoomLevel: number) => void
+  @Input() nodeOnZoomCustomRenderFunction?: Required<GraphConfigInterface<N, L>>['nodeOnZoomCustomRenderFunction']
 
   /** Define the mode for highlighting selected nodes in the graph. Default: `GraphNodeSelectionHighlightMode.GreyoutNonConnected` */
   @Input() nodeSelectionHighlightMode?: GraphNodeSelectionHighlightMode
@@ -401,34 +397,34 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   @Input() panels?: GraphPanelConfig[] | undefined
 
   /** Graph node drag start callback function. Default: `undefined` */
-  @Input() onNodeDragStart?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined
+  @Input() onNodeDragStart?: Required<GraphConfigInterface<N, L>>['onNodeDragStart']
 
   /** Graph node drag callback function. Default: `undefined` */
-  @Input() onNodeDrag?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined
+  @Input() onNodeDrag?: Required<GraphConfigInterface<N, L>>['onNodeDrag']
 
   /** Graph node drag end callback function. Default: `undefined` */
-  @Input() onNodeDragEnd?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined
+  @Input() onNodeDragEnd?: Required<GraphConfigInterface<N, L>>['onNodeDragEnd']
 
   /** Zoom event callback. Default: `undefined` */
-  @Input() onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void
+  @Input() onZoom?: Required<GraphConfigInterface<N, L>>['onZoom']
 
   /** Zoom start event callback. Default: `undefined` */
-  @Input() onZoomStart?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void
+  @Input() onZoomStart?: Required<GraphConfigInterface<N, L>>['onZoomStart']
 
   /** Zoom end event callback. Default: `undefined` */
-  @Input() onZoomEnd?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void
+  @Input() onZoomEnd?: Required<GraphConfigInterface<N, L>>['onZoomEnd']
 
   /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
   @Input() onLayoutCalculated?: (nodes: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void
 
   /** Graph node selection brush callback function. Default: `undefined` */
-  @Input() onNodeSelectionBrush?: (selectedNodes: GraphNode<N, L>[], event: D3BrushEvent<SVGGElement> | undefined) => void
+  @Input() onNodeSelectionBrush?: Required<GraphConfigInterface<N, L>>['onNodeSelectionBrush']
 
   /** Graph multiple node drag callback function. Default: `undefined` */
-  @Input() onNodeSelectionDrag?: (selectedNodes: GraphNode<N, L>[], event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void
+  @Input() onNodeSelectionDrag?: Required<GraphConfigInterface<N, L>>['onNodeSelectionDrag']
 
   /** Callback function to be called when the graph rendering is complete. Default: `undefined` */
-  @Input() onRenderComplete?: (g: Selection<SVGGElement, unknown, null, undefined>, nodes: GraphNode<N, L>[], links: GraphLink<N, L>[], config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number, width: number, height: number) => void
+  @Input() onRenderComplete?: Required<GraphConfigInterface<N, L>>['onRenderComplete']
 
   /** Determines whether the component should update when new data is provided.
    * This function takes the previous and new data as parameters and returns a boolean

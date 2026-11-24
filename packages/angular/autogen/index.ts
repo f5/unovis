@@ -1,3 +1,5 @@
+import ts from 'typescript'
+
 // Components
 import { runComponentGenerator } from '@unovis/shared/integrations/autogen'
 
@@ -5,7 +7,10 @@ import { runComponentGenerator } from '@unovis/shared/integrations/autogen'
 import { AngularComponentInput } from '@unovis/shared/integrations/types'
 
 // Utils
-import { getImportStatements, kebabCase, getConfigSummary } from '@unovis/shared/integrations/utils'
+import { gatherTypeReferences, getImportStatements, kebabCase, getConfigSummary } from '@unovis/shared/integrations/utils'
+
+// Constants
+import { D3_SELECTION_TYPE_MODULES } from './constants'
 
 // Component Code
 import { getComponentCode } from './component'
@@ -19,14 +24,28 @@ const getComponentDirPath = (component: AngularComponentInput): string =>
 runComponentGenerator<AngularComponentInput>({
   generateComponentFiles: (component) => {
     const { configProperties, configInterfaceMembers, generics, statements, importSourceMap } = getConfigSummary(component, skipProperties, false)
+    // Resolve D3 selections and the events that carry them through core.
+    const indexedInputs = new Set<string>()
+    const copiedMembers = configInterfaceMembers.filter(member => {
+      if (!ts.isPropertySignature(member) || !ts.isIdentifier(member.name)) return true
+      if (!gatherTypeReferences([member]).some(type => D3_SELECTION_TYPE_MODULES.has(importSourceMap[type]))) return true
+      indexedInputs.add(member.name.text)
+      return false
+    })
+    const typeArguments = generics?.length ? `<${generics.map(g => g.name).join(', ')}>` : ''
+    const configType = `${component.name}ConfigInterface${typeArguments}`
+    const inputs = configProperties.map(property => indexedInputs.has(property.name)
+      ? { ...property, type: `Required<${configType}>['${property.name}']` }
+      : property)
+
     const importSources = { ...importSourceMap }
     importSources.ContainerCore ??= '@unovis/ts/core/container'
-    const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, component.isStandAlone ? [] : ['ContainerCore'], importSources)
+    const importStatements = getImportStatements(component.name, statements, copiedMembers, generics, component.isStandAlone ? [] : ['ContainerCore'], importSources)
 
     const componentCode = getComponentCode(
       component.name,
       generics,
-      configProperties,
+      inputs,
       component.angularProvide,
       importStatements,
       component.dataType,
