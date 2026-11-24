@@ -5,7 +5,6 @@ import { FreeBrushConfigInterface } from '@unovis/ts/components/free-brush/confi
 import { ContainerCore } from '@unovis/ts/core/container'
 import { VisEventType, VisEventCallback } from '@unovis/ts/core/component/types'
 import { FreeBrushMode, FreeBrushSelection } from '@unovis/ts/components/free-brush/types'
-import { D3BrushEvent } from 'd3-brush'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -71,19 +70,19 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
+  @Input() onBrush?: Required<FreeBrushConfigInterface<Datum>>['onBrush']
 
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
+  @Input() onBrushStart?: Required<FreeBrushConfigInterface<Datum>>['onBrushStart']
 
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
+  @Input() onBrushMove?: Required<FreeBrushConfigInterface<Datum>>['onBrushMove']
 
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean)L void => {}` */
-  @Input() onBrushEnd?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
+  @Input() onBrushEnd?: Required<FreeBrushConfigInterface<Datum>>['onBrushEnd']
 
   /** Width of the Brush handle. Default: `1` */
   @Input() handleWidth?: number

@@ -20,7 +20,6 @@ import { FillPatternType } from '@unovis/ts/styles/patterns'
 import { Gradient } from '@unovis/ts/types/gradient'
 import { Position } from '@unovis/ts/types/position'
 import { VerticalAlign, FitMode, TrimMode } from '@unovis/ts/types/text'
-import { D3ZoomEvent } from 'd3-zoom'
 import { Spacing } from '@unovis/ts/types/spacing'
 import { VisCoreComponent } from '../../core'
 
@@ -278,7 +277,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() subLabelToLabelInlineWidthRatio?: number
 
   /** Zoom event callback. Default: `undefined` */
-  @Input() onZoom?: (horizontalScale: number, verticalScale: number, panX: number, panY: number, zoomExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void
+  @Input() onZoom?: Required<SankeyConfigInterface<N, L>>['onZoom']
 
   /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
   @Input() onLayoutCalculated?: (nodes: SankeyNode<N, L>[], links: SankeyLink<N, L>[], depth: number, width: number, height: number, bleed: Spacing) => void
