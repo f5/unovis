@@ -36,13 +36,15 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
   plotband: Selection<SVGRectElement, unknown, null, undefined>
   labelGroup: Selection<SVGGElement, unknown, null, undefined>
   label: Selection<SVGTextElement, unknown, null, undefined>
+  private _plotbandGroup: Selection<SVGGElement, unknown, null, undefined>
 
   constructor (config: PlotbandConfigInterface<Datum>) {
     super()
     this.setConfig(config)
     this.g.style('display', 'none').style('opacity', 0)
 
-    this.plotband = this.g.append('rect')
+    this._plotbandGroup = this.g.append('g')
+    this.plotband = this._plotbandGroup.append('rect')
       .attr('class', s.plotband)
 
     // The label is rendered into a group, so that its position can be transitioned
@@ -55,10 +57,18 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
       .attr('class', s.label)
   }
 
+  setClipPath (clipPath: string | null): void {
+    const { labelAllowOverflow } = this.config
+    super.setClipPath(labelAllowOverflow ? null : clipPath)
+    const plotbandClipPath = labelAllowOverflow ? clipPath : null
+    this._plotbandGroup.style('clip-path', plotbandClipPath).style('-webkit-clip-path', plotbandClipPath)
+  }
+
   /** Extra space required to fit the plotband label, which is otherwise clipped
    * when the plotband is drawn close to the edge of the chart. */
   get bleed (): Spacing {
     const { config } = this
+    if (config.labelAllowOverflow) return super.bleed
     const noBleed: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
     const labelTextBlocks = this._getLabelTextBlocks()
     if (!labelTextBlocks.length || !isNumber(config.from) || !isNumber(config.to)) return noBleed
@@ -120,9 +130,8 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
     if (labelTextBlocks.length && labelBandRect) {
       const layout = this._getLabelLayout(labelBandRect)
 
-      // Keep the label within the chart bounds: the bleed can hit its cap, and it can't help
-      // across the plotband's axis where the label doesn't follow the scale
-      const fit = getRectFitTranslation(this._getLabelBBox(layout, labelTextBlocks), { x: 0, y: 0, width: this._width, height: this._height })
+      const bounds = config.labelAllowOverflow ? this._containerBounds : { x: 0, y: 0, width: this._width, height: this._height }
+      const fit = getRectFitTranslation(this._getLabelBBox(layout, labelTextBlocks), bounds)
 
       renderTextToSvgTextElement(this.label.node(), labelTextBlocks, { x: 0, y: 0, textAlign: layout.textAlign, verticalAlign: layout.verticalAlign, fastMode: false }, 'hanging')
 

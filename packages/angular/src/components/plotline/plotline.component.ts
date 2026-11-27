@@ -98,6 +98,10 @@ export class VisPlotlineComponent<Datum> implements PlotlineConfigInterface<Datu
   /** Vertical offset of the label in pixels. */
   @Input() labelOffsetY?: number
 
+  /** Allow the label to extend into the XY container's margins.
+   * The label still fits within the container and no longer adds scale bleed. */
+  @Input() labelAllowOverflow?: boolean
+
   /** Orientation of the label: horizontal or vertical. */
   @Input() labelOrientation?: PlotlineLabelOrientation
 
@@ -122,8 +126,8 @@ export class VisPlotlineComponent<Datum> implements PlotlineConfigInterface<Datu
   }
 
   private getConfig (): PlotlineConfigInterface<Datum> {
-    const { duration, events, attributes, lineWidth, axis, value, lineStyle, labelText, labelPosition, labelOffsetX, labelOffsetY, labelOrientation, labelColor, labelSize } = this
-    const config = { duration, events, attributes, lineWidth, axis, value, lineStyle, labelText, labelPosition, labelOffsetX, labelOffsetY, labelOrientation, labelColor, labelSize }
+    const { duration, events, attributes, lineWidth, axis, value, lineStyle, labelText, labelPosition, labelOffsetX, labelOffsetY, labelAllowOverflow, labelOrientation, labelColor, labelSize } = this
+    const config = { duration, events, attributes, lineWidth, axis, value, lineStyle, labelText, labelPosition, labelOffsetX, labelOffsetY, labelAllowOverflow, labelOrientation, labelColor, labelSize }
     const keys = Object.keys(config) as (keyof PlotlineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

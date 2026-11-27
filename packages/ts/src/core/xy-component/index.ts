@@ -10,6 +10,7 @@ import { filterDataByRange, getExtent, isArray } from '@/utils/data'
 
 // Types
 import { NumericAccessor } from '@/types/accessor'
+import type { Rect } from '@/types/misc'
 import { ContinuousScale } from '@/types/scale'
 import { ScaleDimension } from '@/types/scale-dimension'
 
@@ -43,6 +44,19 @@ export class XYComponentCore<
 
   get yScale (): ContinuousScale {
     return this.config.yScale || this._yScale
+  }
+
+  protected get _containerBounds (): Rect {
+    return {
+      x: -(this._containerMargin.left ?? 0),
+      y: -(this._containerMargin.top ?? 0),
+      width: this._containerWidth ?? this._width,
+      height: this._containerHeight ?? this._height,
+    }
+  }
+
+  setClipPath (clipPath: string | null): void {
+    this.g.style('clip-path', clipPath).style('-webkit-clip-path', clipPath)
   }
 
   setConfig (config: ConfigInterface): void {
